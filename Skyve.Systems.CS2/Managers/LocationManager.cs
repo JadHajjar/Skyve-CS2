@@ -17,7 +17,6 @@ internal class LocationManager : ILocationManager
 {
 	internal const string LOCAL_APP_DATA_PATH = "%APPDATA%";
 	internal const string CITIES_PATH = "%CITIES%";
-	internal const string WS_CONTENT_PATH = "%WORKSHOP%";
 
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
@@ -32,45 +31,6 @@ internal class LocationManager : ILocationManager
 	public string MonoPath => CrossIO.Combine(DataPath, "Mono");
 	public string AddonsPath => CrossIO.Combine(AppDataPath, "Addons");
 	public string SkyveAppDataPath => CrossIO.Combine(AppDataPath, "Skyve");
-	public string SkyvePlaysetsAppDataPath => CrossIO.Combine(SkyveAppDataPath, "Profiles");
-	public string ModsPath => CrossIO.Combine(AddonsPath, "Mods");
-	public string AssetsPath => CrossIO.Combine(AddonsPath, "Assets");
-	public string MapThemesPath => CrossIO.Combine(AddonsPath, "MapThemes");
-	public string MapsPath => CrossIO.Combine(AppDataPath, "Maps");
-	public string StylesPath => CrossIO.Combine(AddonsPath, "Styles");
-
-	public string WorkshopContentPath
-	{
-		get
-		{
-			if (string.IsNullOrWhiteSpace(GamePath))
-			{
-				return string.Empty;
-			}
-
-			var parent = Path.GetDirectoryName(Path.GetDirectoryName(GamePath));
-
-			if (string.IsNullOrEmpty(parent))
-			{
-				return string.Empty;
-			}
-
-			return CrossIO.Combine(parent, "workshop", "content", "255710").FormatPath();
-		}
-	}
-
-	public string GameContentPath
-	{
-		get
-		{
-			if (CrossIO.CurrentPlatform == Platform.MacOSX)
-			{
-				return CrossIO.Combine(GamePath, "Cities.app", "Contents", "Resources", "Files");
-			}
-
-			return CrossIO.Combine(GamePath, "Files");
-		}
-	}
 
 	public string SteamPathWithExe => CrossIO.Combine(SteamPath, SteamExe);
 
@@ -121,9 +81,7 @@ internal class LocationManager : ILocationManager
 			$"Platform: {CrossIO.CurrentPlatform}\r\n" +
 			$"GamePath: {GamePath}\r\n" +
 			$"AppDataPath: {AppDataPath}\r\n" +
-			$"GameContentPath: {GameContentPath}\r\n" +
-			$"SteamPath: {SteamPath}\r\n" +
-			$"WorkshopContentPath: {WorkshopContentPath}");
+			$"SteamPath: {SteamPath}");
 	}
 
 	public void RunFirstTimeSetup()
@@ -270,7 +228,6 @@ internal class LocationManager : ILocationManager
 		return localPath
 			.Replace(AppDataPath, LOCAL_APP_DATA_PATH)
 			.Replace(GamePath, CITIES_PATH)
-			.Replace(WorkshopContentPath, WS_CONTENT_PATH)
 			.FormatPath();
 	}
 
@@ -284,7 +241,6 @@ internal class LocationManager : ILocationManager
 		return relativePath
 			.Replace(LOCAL_APP_DATA_PATH, AppDataPath)
 			.Replace(CITIES_PATH, GamePath)
-			.Replace(WS_CONTENT_PATH, WorkshopContentPath)
 			.FormatPath();
 	}
 }

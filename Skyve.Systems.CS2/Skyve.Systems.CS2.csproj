@@ -36,5 +36,14 @@
 		<Reference Include="System.Windows.Forms" />
 		<PackageReference Include="Mono.Cecil" Version="0.11.3" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+		<Reference Include="PDX.SDK">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.dll</HintPath>
+		</Reference>
+		<Reference Include="PDX.SDK.Contracts">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.Contracts.dll</HintPath>
+		</Reference>
+		<Reference Include="PDX.SDK.Network">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.Network.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 </Project>

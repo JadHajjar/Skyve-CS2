@@ -22,5 +22,14 @@
 		<ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Domain\Skyve.Domain.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Systems\Skyve.Systems.csproj" />
+		<Reference Include="PDX.SDK">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.dll</HintPath>
+		</Reference>
+		<Reference Include="PDX.SDK.Contracts">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.Contracts.dll</HintPath>
+		</Reference>
+		<Reference Include="PDX.SDK.Network">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.Network.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 </Project>

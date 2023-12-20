@@ -12,6 +12,7 @@ public static class Startup
 {
 	public static IServiceCollection AddCs2SkyveSystems(this IServiceCollection services)
 	{
+		services.AddSingleton<ILogger, CS2LoggerSystem>();
 		services.AddTransient<ICentralManager, CentralManager>();
 		services.AddSingleton<ICitiesManager, CitiesManager>();
 		services.AddSingleton<ILocationManager, LocationManager>();

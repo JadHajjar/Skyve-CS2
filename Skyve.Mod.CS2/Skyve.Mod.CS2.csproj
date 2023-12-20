@@ -1,79 +1,45 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net4.8</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<ManagedDLLPath>$(SolutionDir)/libs</ManagedDLLPath>
-		<SteamPath>~/Library/Application Support/Steam/</SteamPath>
-		<CSPath>/steamapps/common/Project Beverly Hills</CSPath>
-
-		<SteamPath Condition="! Exists ('$(SteamPath)$(CSPath)')">$(ProgramFiles)/Steam</SteamPath>
-		<SteamPath Condition="! Exists ('$(SteamPath)$(CSPath)')">$(Registry:HKEY_CURRENT_USER\Software\Valve\Steam@SteamPath)</SteamPath>
-		<SteamPath Condition="! Exists ('$(SteamPath)$(CSPath)')">E:\SteamLibrary</SteamPath>
-		<ManagedDLLPath Condition="! Exists ('$(ManagedDLLPath)')">$(SteamPath)$(CSPath)/Cities2_Data/Managed</ManagedDLLPath>
-
-		<AssemblySearchPaths>
-			$(AssemblySearchPaths);
-			$(ManagedDLLPath);
-			$(CitiesSkylinesBinaries);
-			$(SolutionDir)/libs/
-		</AssemblySearchPaths>
-	</PropertyGroup>
-
+	<Import Project="../Configuration.props" />
+	<Import Project="../Targets.props" />
+	<Import Project="../Version.props" />
+	<Import Project="../../Skyve/Config.props" />
+	
 	<ItemGroup>
-		<Reference Include="Assembly-CSharp">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Game">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Colossal.Core">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Colossal.IO">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Colossal.IO.AssetDatabase">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Colossal.Localization">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Colossal.Logging">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Colossal.Mathematics">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Colossal.UI.Binding">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.CoreModule">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Unity.Collections">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Unity.Burst">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Unity.Mathematics">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Unity.Entities">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="UnityEngine.IMGUIModule">
-			<Private>False</Private>
-		</Reference>
+		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Reference Include="Game">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Colossal.Core">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Colossal.Logging">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="UnityEngine.CoreModule">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Unity.Burst">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Unity.Collections">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Unity.Entities">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Unity.Mathematics">
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+	
 </Project>
