@@ -4,6 +4,7 @@ using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
+using System;
 using System.Collections.Generic;
 
 namespace Skyve.Domain.CS2;
@@ -12,14 +13,12 @@ public class UserSettings : ConfigFile, IUserSettings
 	#region Implementation
 	private const string FILE_NAME = nameof(UserSettings) + ".json";
 
-	public List<uint> RemovedDLCs { get; set; } = new();
-
 	public UserSettings() : base(GetFilePath())
 	{ }
 
 	private static string GetFilePath()
 	{
-		return CrossIO.Combine(ServiceCenter.Get<ILocationManager>().SkyveAppDataPath, FILE_NAME);
+		return CrossIO.Combine(Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("Cities Skylines II")), "Cities Skylines II", "ModSettings", FILE_NAME);
 	}
 
 	public static UserSettings Load()

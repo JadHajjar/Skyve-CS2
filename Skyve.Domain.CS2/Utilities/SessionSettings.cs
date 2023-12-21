@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 using Skyve.Domain.Systems;
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -13,14 +14,12 @@ public class SessionSettings : ConfigFile, ISessionSettings
 	#region Implementation
 	private const string FILE_NAME = nameof(SessionSettings) + ".json";
 
-	public List<uint> RemovedDLCs { get; set; } = new();
-
 	public SessionSettings() : base(GetFilePath())
 	{ }
 
 	private static string GetFilePath()
 	{
-		return CrossIO.Combine(ServiceCenter.Get<ILocationManager>().SkyveAppDataPath, FILE_NAME);
+		return CrossIO.Combine(Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("Cities Skylines II")), "Cities Skylines II", "ModSettings", FILE_NAME);
 	}
 
 	public static SessionSettings Load()
@@ -30,7 +29,6 @@ public class SessionSettings : ConfigFile, ISessionSettings
 	#endregion
 
 	public bool FirstTimeSetupCompleted { get; set; }
-	[JsonProperty("CurrentProfile")]
 	public string? CurrentPlayset { get; set; }
 	public Rectangle? LastWindowsBounds { get; set; }
 	public bool WindowWasMaximized { get; set; }

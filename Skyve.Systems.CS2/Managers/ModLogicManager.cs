@@ -12,8 +12,6 @@ using System.Linq;
 namespace Skyve.Systems.CS2.Managers;
 internal class ModLogicManager : IModLogicManager
 {
-	private const string HARMONY_ASSEMBLY = "CitiesHarmony.dll";
-	private const string PATCH_ASSEMBLY = "PatchLoaderMod.dll";
 	private const string Skyve_ASSEMBLY = "SkyveMod.dll";
 
 	private readonly ModCollection _modCollection = new(GetGroupInfo());
@@ -22,8 +20,6 @@ internal class ModLogicManager : IModLogicManager
 	{
 		return new(StringComparer.OrdinalIgnoreCase)
 		{
-			[HARMONY_ASSEMBLY] = new() { Required = true },
-			[PATCH_ASSEMBLY] = new() { Required = true },
 			[Skyve_ASSEMBLY] = new() { Required = true },
 		};
 	}
@@ -104,11 +100,6 @@ internal class ModLogicManager : IModLogicManager
 
 	public bool IsPseudoMod(IPackage package)
 	{
-		if (!package.IsLocal && package is ILocalPackage localPackage && CrossIO.FileExists(CrossIO.Combine(localPackage.Folder, "ThemeMix.xml")))
-		{
-			return true;
-		}
-
 		if (package.GetPackageInfo()?.Type is not null and not PackageType.GenericPackage and not PackageType.MusicPack and not PackageType.CSM and not PackageType.ContentPackage)
 		{
 			return true;
@@ -121,7 +112,7 @@ internal class ModLogicManager : IModLogicManager
 	{
 		skyveInstances = new();
 
-		skyveInstances.AddRange(_modCollection.GetCollection(Skyve_ASSEMBLY, out _)?.ToList(x => x.LocalParentPackage) ?? new());
+		//skyveInstances.AddRange(_modCollection.GetCollection(Skyve_ASSEMBLY, out _)?.ToList(x => x.LocalParentPackage) ?? new());
 
 		return skyveInstances.Count > 1;
 	}

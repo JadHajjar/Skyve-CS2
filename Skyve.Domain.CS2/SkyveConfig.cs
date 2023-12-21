@@ -18,7 +18,7 @@ public class DlcConfig : ConfigFile
 
 	private static string GetFilePath()
 	{
-		return CrossIO.Combine(ServiceCenter.Get<ILocationManager>().SkyveAppDataPath, FILE_NAME);
+		return CrossIO.Combine(ServiceCenter.Get<ILocationManager>().SkyveSettingsPath, FILE_NAME);
 	}
 
 	public static DlcConfig Load()
@@ -67,7 +67,7 @@ public class ModConfig : ConfigFile
 
 	private static string GetFilePath()
 	{
-		return CrossIO.Combine(ServiceCenter.Get<ILocationManager>().SkyveAppDataPath, FILE_NAME);
+		return CrossIO.Combine(ServiceCenter.Get<ILocationManager>().SkyveSettingsPath, FILE_NAME);
 	}
 
 	public static ModConfig Load()
@@ -98,7 +98,7 @@ public class AssetConfig : ConfigFile
 
 	private static string GetFilePath()
 	{
-		return CrossIO.Combine(ServiceCenter.Get<ILocationManager>().SkyveAppDataPath, FILE_NAME);
+		return CrossIO.Combine(ServiceCenter.Get<ILocationManager>().SkyveSettingsPath, FILE_NAME);
 	}
 
 	public static AssetConfig Load()

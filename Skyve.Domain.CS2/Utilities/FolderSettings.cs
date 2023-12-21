@@ -1,6 +1,9 @@
 ﻿using Extensions;
 
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
+
+using System;
 using System.Collections.Generic;
 
 
@@ -12,14 +15,12 @@ public class FolderSettings : ConfigFile, IFolderSettings
 	#region Implementation
 	private const string FILE_NAME = nameof(FolderSettings) + ".json";
 
-	public List<uint> RemovedDLCs { get; set; } = new();
-
 	public FolderSettings() : base(GetFilePath())
 	{ }
 
 	private static string GetFilePath()
 	{
-		return CrossIO.Combine(ServiceCenter.Get<ILocationManager>().SkyveAppDataPath, FILE_NAME);
+		return CrossIO.Combine(Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("Cities Skylines II")), "Cities Skylines II", "ModSettings", FILE_NAME);
 	}
 
 	public static FolderSettings Load()
@@ -31,6 +32,7 @@ public class FolderSettings : ConfigFile, IFolderSettings
 	public string GamePath { get; set; }
 	public string AppDataPath { get; set; }
 	public string SteamPath { get; set; }
+	public GamingPlatform GamingPlatform { get; set; }
 	public Platform Platform { get; set; }
 }
 #nullable enable

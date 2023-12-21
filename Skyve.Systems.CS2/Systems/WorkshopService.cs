@@ -11,6 +11,7 @@ using Skyve.Domain.CS2.Steam;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
+using Skyve.Systems.CS2.Managers;
 using Skyve.Systems.CS2.Utilities;
 
 using System;
@@ -23,11 +24,19 @@ using Platform = Extensions.Platform;
 namespace Skyve.Systems.CS2.Systems;
 internal class WorkshopService : IWorkshopService
 {
-	private readonly IContext _context;
+	private IContext? _context;
+	private readonly ILogger _logger;
+	private readonly ILocationManager _locationManager;
 
 	public WorkshopService(ILogger logger, ILocationManager locationManager)
 	{
-		var pdxSdkPath = CrossIO.Combine(locationManager.AppDataPath, ".pdxsdk");
+		_logger = logger;
+		_locationManager = locationManager;
+	}
+
+	public async Task Initialize()
+	{
+		var pdxSdkPath = CrossIO.Combine(_locationManager.AppDataPath, ".pdxsdk");
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
 
 		if (SteamUtil.GetLoggedInSteamId() != 0)
@@ -39,8 +48,12 @@ internal class WorkshopService : IWorkshopService
 		{
 			Language = Language.en,
 			//config.GameVersion = m_Configuration.gameVersion;
-			Logger = logger as CS2LoggerSystem,
+			Logger = _logger as CS2LoggerSystem,
+#if DEBUG
 			LogLevel = LogLevel.L0_Info,
+#else
+			LogLevel = LogLevel.L2_Warning,
+#endif
 			DiskIORoot = pdxSdkPath,
 			Environment = BackendEnvironment.Live,
 			TelemetryDebugEnabled = false,
@@ -48,17 +61,17 @@ internal class WorkshopService : IWorkshopService
 			UserIdType = "steam"
 		};
 
-		config.Mods.RootPath = CrossIO.Combine(locationManager.AppDataPath, ".cache", "Mods");
+		config.Mods.RootPath = CrossIO.Combine(_locationManager.AppDataPath, ".cache", "Mods");
 
 		if (Enum.TryParse<Language>(LocaleHelper.CurrentCulture.IetfLanguageTag.Substring(0, 2).ToLower(), out var result))
 		{
 			config.Language = result;
 		}
 
-		_context = Context.Create(
+		_context = await Context.Create(
 			platform: platform,
 			@namespace: "cities_skylines_2",
-			config: config).Result;
+			config: config);
 	}
 
 	public void CleanDownload(List<ILocalPackageWithContents> packages)

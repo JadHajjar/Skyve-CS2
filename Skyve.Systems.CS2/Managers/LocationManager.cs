@@ -4,10 +4,10 @@ using Microsoft.Win32;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Notifications;
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
-using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -15,31 +15,24 @@ using System.Windows.Forms;
 namespace Skyve.Systems.CS2.Managers;
 internal class LocationManager : ILocationManager
 {
-	internal const string LOCAL_APP_DATA_PATH = "%APPDATA%";
+	internal const string APP_DATA_PATH = "%APPDATA%";
 	internal const string CITIES_PATH = "%CITIES%";
 
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
 
-	// Base Folders
-	public string GamePath { get; set; }
-	public string AppDataPath { get; set; }
-	public string SteamPath { get; set; }
-
-	public string DataPath => CrossIO.Combine(GamePath, "Cities2_Data");
+	public string DataPath => CrossIO.Combine(_settings.FolderSettings.GamePath, "Cities2_Data");
 	public string ManagedDLL => CrossIO.Combine(DataPath, "Managed");
-	public string MonoPath => CrossIO.Combine(DataPath, "Mono");
-	public string AddonsPath => CrossIO.Combine(AppDataPath, "Addons");
-	public string SkyveAppDataPath => CrossIO.Combine(AppDataPath, "Skyve");
+	public string SkyveSettingsPath => CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsSettings", "Skyve");
+	public string SkyveDataPath => CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "Skyve");
 
-	public string SteamPathWithExe => CrossIO.Combine(SteamPath, SteamExe);
-
-	public string CitiesPathWithExe => CrossIO.Combine(GamePath, CitiesExe);
+	public string SteamPathWithExe => CrossIO.Combine(_settings.FolderSettings.SteamPath, SteamExe);
+	public string CitiesPathWithExe => CrossIO.Combine(_settings.FolderSettings.GamePath, CitiesExe);
 
 	private string CitiesExe => CrossIO.CurrentPlatform switch
 	{
-		Platform.MacOSX => "Cities_Loader.sh",
-		Platform.Linux => "Cities.x64",
+		Platform.MacOSX => "Cities2_Loader.sh",
+		Platform.Linux => "Cities2.x64",
 		Platform.Windows or _ => "Cities2.exe",
 	};
 
@@ -55,103 +48,125 @@ internal class LocationManager : ILocationManager
 		_logger = logger;
 		_settings = settings;
 
-		if (_settings.FolderSettings.GamePath is null)
+		if (!_settings.SessionSettings.FirstTimeSetupCompleted)
 		{
-			GamePath = string.Empty;
-			AppDataPath = string.Empty;
-			SteamPath = string.Empty;
-			return;
+			RunFirstTimeSetup();
 		}
+		else
+		{
+			SetCorrectPathSeparator();
 
-		GamePath = _settings.FolderSettings.GamePath?.FormatPath() ?? string.Empty;
-		AppDataPath = _settings.FolderSettings.AppDataPath?.FormatPath() ?? string.Empty;
-		SteamPath = _settings.FolderSettings.SteamPath?.FormatPath() ?? string.Empty;
-
-		SetCorrectPathSeparator();
+			_logger.Info("Folder Settings:\r\n" +
+				$"Platform: {CrossIO.CurrentPlatform}\r\n" +
+				$"GamingPlatform: {_settings.FolderSettings.GamingPlatform}\r\n" +
+				$"GamePath: {_settings.FolderSettings.GamePath}\r\n" +
+				$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
+				$"SteamPath: {_settings.FolderSettings.SteamPath}");
+		}
 
 		if (_settings.SessionSettings.FirstTimeSetupCompleted)
 		{
-			if (!CrossIO.FileExists(CitiesPathWithExe) || !Directory.Exists(AppDataPath) || (!string.IsNullOrEmpty(SteamPath) && !CrossIO.FileExists(SteamPathWithExe)))
+			if (!CrossIO.FileExists(CitiesPathWithExe) || !Directory.Exists(_settings.FolderSettings.AppDataPath))
 			{
 				notificationsService.SendNotification(new IncorrectLocationSettingsNotification());
 			}
 		}
+	}
 
-		_logger.Info("Folder Settings:\r\n" +
-			$"Platform: {CrossIO.CurrentPlatform}\r\n" +
-			$"GamePath: {GamePath}\r\n" +
-			$"AppDataPath: {AppDataPath}\r\n" +
-			$"SteamPath: {SteamPath}");
+	public void SetPaths(string gamePath, string appDataPath, string steamPath)
+	{
+		_settings.FolderSettings.GamePath = gamePath;
+		_settings.FolderSettings.AppDataPath = appDataPath;
+		_settings.FolderSettings.SteamPath = steamPath;
+
+		_settings.FolderSettings.Save();
+	}
+
+	private void SetCorrectPathSeparator()
+	{
+		var field = typeof(Path).GetField(nameof(Path.DirectorySeparatorChar), BindingFlags.Static | BindingFlags.Public);
+		field.SetValue(null, CrossIO.PathSeparator[0]);
+	}
+
+	public void CreateShortcut()
+	{
+		try
+		{
+			ExtensionClass.CreateShortcut(CrossIO.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Skyve CS-II.lnk"), Application.ExecutablePath);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to create shortcut");
+		}
+	}
+
+	public string ToRelativePath(string? localPath)
+	{
+		if (localPath is null or "")
+		{
+			return string.Empty;
+		}
+
+		return localPath
+			.Replace(_settings.FolderSettings.AppDataPath, APP_DATA_PATH)
+			.Replace(_settings.FolderSettings.GamePath, CITIES_PATH)
+			.FormatPath();
+	}
+
+	public string ToLocalPath(string? relativePath)
+	{
+		if (relativePath is null or "")
+		{
+			return string.Empty;
+		}
+
+		return relativePath
+			.Replace(APP_DATA_PATH, _settings.FolderSettings.AppDataPath)
+			.Replace(CITIES_PATH, _settings.FolderSettings.GamePath)
+			.FormatPath();
 	}
 
 	public void RunFirstTimeSetup()
 	{
-		var settings = _settings.FolderSettings;
-
-		settings.GamePath = ConfigurationManager.AppSettings[nameof(GamePath)] ?? string.Empty;
-		settings.AppDataPath = ConfigurationManager.AppSettings[nameof(AppDataPath)] ?? string.Empty;
-		settings.SteamPath = ConfigurationManager.AppSettings[nameof(SteamPath)] ?? string.Empty;
-		settings.Platform = Enum.TryParse(ConfigurationManager.AppSettings[nameof(Platform)], out Platform platform) ? platform : Platform.Windows;
-
-		CrossIO.CurrentPlatform = settings.Platform;
-
-		_logger.Info("FTS Folder Settings:\r\n" +
-			$"Platform: {settings.Platform}\r\n" +
-			$"GamePath: {settings.GamePath}\r\n" +
-			$"AppDataPath: {settings.AppDataPath}\r\n" +
-			$"SteamPath: {settings.SteamPath}");
+		_logger.Info("First time setup Folder settings:\r\n" +
+			$"Platform: {_settings.FolderSettings.Platform}\r\n" +
+			$"GamingPlatform: {_settings.FolderSettings.GamingPlatform}\r\n" +
+			$"GamePath: {_settings.FolderSettings.GamePath}\r\n" +
+			$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
+			$"SteamPath: {_settings.FolderSettings.SteamPath}");
 
 		try
 		{
-			if (settings.Platform is Platform.Windows)
-			{
-				return;
-			}
-
-			if (settings.Platform is Platform.MacOSX)
+			if (_settings.FolderSettings.Platform is Platform.MacOSX)
 			{
 				_logger.Info("Matching macOS Paths");
 
-				settings.GamePath = Path.GetDirectoryName(Path.GetDirectoryName(settings.GamePath)).Replace('\\', '/');
-				settings.AppDataPath = settings.AppDataPath.Replace('\\', '/');
-
-				if (Directory.Exists(settings.GamePath))
-				{
-					return;
-				}
+				_settings.FolderSettings.GamePath = Path.GetDirectoryName(Path.GetDirectoryName(_settings.FolderSettings.GamePath)).Replace('\\', '/');
+				_settings.FolderSettings.AppDataPath = _settings.FolderSettings.AppDataPath.Replace('\\', '/');
 			}
 		}
+		catch { }
 		finally
 		{
 			try
-			{ settings.SteamPath = FindSteamPath(settings); }
-			catch (Exception ex) { _logger.Exception(ex, "Failed to find steam's installation folder"); }
-
-			if (settings.Platform is not Platform.Windows)
 			{
-				settings.GamePath = settings.GamePath.Replace('\\', '/');
-				settings.AppDataPath = settings.AppDataPath.Replace('\\', '/');
-				settings.SteamPath = settings.SteamPath.Replace('\\', '/');
+				_settings.FolderSettings.SteamPath = FindSteamPath(_settings.FolderSettings);
+			}
+			catch (Exception ex)
+			{
+				_logger.Exception(ex, "Failed to find steam's installation folder");
 			}
 
-			settings.Save();
+			if (_settings.FolderSettings.Platform is not Platform.Windows)
+			{
+				_settings.FolderSettings.GamePath = _settings.FolderSettings.GamePath.Replace('\\', '/').TrimEnd('/', '\\');
+				_settings.FolderSettings.AppDataPath = _settings.FolderSettings.AppDataPath.Replace('\\', '/').TrimEnd('/', '\\');
+				_settings.FolderSettings.SteamPath = _settings.FolderSettings.SteamPath.Replace('\\', '/').TrimEnd('/', '\\');
+			}
 
-			GamePath = settings.GamePath.TrimEnd('/', '\\');
-			AppDataPath = settings.AppDataPath.TrimEnd('/', '\\');
-			SteamPath = settings.SteamPath.TrimEnd('/', '\\');
-
-			var externalConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			var appSettings = externalConfig.AppSettings;
-
-			appSettings.Settings[nameof(GamePath)].Value = string.Empty;
-			appSettings.Settings[nameof(AppDataPath)].Value = string.Empty;
-			appSettings.Settings[nameof(SteamPath)].Value = string.Empty;
-
-			externalConfig.Save();
+			_settings.FolderSettings.Save();
 
 			SetCorrectPathSeparator();
-
-			Directory.CreateDirectory(SkyveAppDataPath);
 		}
 	}
 
@@ -189,58 +204,5 @@ internal class LocationManager : ILocationManager
 		}
 
 		return settings.SteamPath.FormatPath();
-	}
-
-	public void SetPaths(string gamePath, string appDataPath, string steamPath)
-	{
-		_settings.FolderSettings.GamePath = gamePath;
-		_settings.FolderSettings.AppDataPath = appDataPath;
-		_settings.FolderSettings.SteamPath = steamPath;
-
-		_settings.FolderSettings.Save();
-	}
-
-	private void SetCorrectPathSeparator()
-	{
-		var field = typeof(Path).GetField(nameof(Path.DirectorySeparatorChar), BindingFlags.Static | BindingFlags.Public);
-		field.SetValue(null, CrossIO.PathSeparator[0]);
-	}
-
-	public void CreateShortcut()
-	{
-		try
-		{
-			ExtensionClass.CreateShortcut(CrossIO.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Skyve CS-I.lnk"), Application.ExecutablePath);
-		}
-		catch (Exception ex)
-		{
-			_logger.Exception(ex, "Failed to create shortcut");
-		}
-	}
-
-	public string ToRelativePath(string? localPath)
-	{
-		if (localPath is null or "")
-		{
-			return string.Empty;
-		}
-
-		return localPath
-			.Replace(AppDataPath, LOCAL_APP_DATA_PATH)
-			.Replace(GamePath, CITIES_PATH)
-			.FormatPath();
-	}
-
-	public string ToLocalPath(string? relativePath)
-	{
-		if (relativePath is null or "")
-		{
-			return string.Empty;
-		}
-
-		return relativePath
-			.Replace(LOCAL_APP_DATA_PATH, AppDataPath)
-			.Replace(CITIES_PATH, GamePath)
-			.FormatPath();
 	}
 }

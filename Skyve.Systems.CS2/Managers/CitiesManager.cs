@@ -70,96 +70,12 @@ internal class CitiesManager : ICitiesManager
 
 	public void Launch()
 	{
-		UpdateFiles();
-
 		var args = GetCommandArgs();
 		var file = (_profileManager.CurrentPlayset as Playset)!.LaunchSettings.UseCitiesExe
 			? _locationManager.CitiesPathWithExe
 			: _locationManager.SteamPathWithExe;
 
 		_iOUtil.Execute(file, string.Join(" ", args));
-	}
-
-	private void UpdateFiles()
-	{
-		try
-		{
-			bool success;
-
-			var launchSettings = (_profileManager.CurrentPlayset as Playset)!.LaunchSettings;
-
-			if (launchSettings.DebugMono)
-			{
-				var sessionSettings = (_settings.SessionSettings as SessionSettings)!;
-
-				if (!CommandUtil.NoWindow && !sessionSettings.FpsBoosterLogWarning)
-				{
-					var fpsBooster = _contentManager.Mods.FirstOrDefault(mod => Path.GetFileNameWithoutExtension(mod.FilePath) == "FPS_Booster");
-
-					if (fpsBooster != null && _modUtil.IsIncluded(fpsBooster) && _modUtil.IsEnabled(fpsBooster))
-					{
-						var result = MessagePrompt.Show(Locale.DisableFpsBoosterDebug, PromptButtons.YesNo);
-
-						if (result == System.Windows.Forms.DialogResult.Yes)
-						{
-							_modUtil.SetIncluded(fpsBooster, false);
-						}
-						else
-						{
-							sessionSettings.FpsBoosterLogWarning = true;
-							sessionSettings.Save();
-						}
-					}
-				}
-
-				success = MonoFile.Instance.UseDebug();
-			}
-			else
-			{
-				success = MonoFile.Instance.UseRelease();
-			}
-
-			if (!success)
-			{
-				if (MonoFile.Instance.ReleaseIsUsed() is bool bReleaseMono)
-				{
-					_logger.Warning("reverting launchSettings.ReleaseMono to " + bReleaseMono);
-					launchSettings.DebugMono = !bReleaseMono;
-				}
-			}
-
-			if (launchSettings.UnityProfiler)
-			{
-				success = CitiesFile.Instance.UseDebug();
-			}
-			else
-			{
-				success = CitiesFile.Instance.UseRelease();
-			}
-
-			if (!success)
-			{
-				if (CitiesFile.Instance.ReleaseIsUsed() is bool bReleaseCities)
-				{
-					_logger.Warning("reverting launchSettings.ReleaseMono to " + bReleaseCities);
-					launchSettings.UnityProfiler = !bReleaseCities;
-				}
-			}
-
-			if (!_settings.UserSettings.AdvancedIncludeEnable)
-			{
-				foreach (var item in _contentManager.Mods)
-				{
-					_colossalOrderUtil.SetEnabled(item, item.IsIncluded());
-				}
-
-				_colossalOrderUtil.SaveSettings();
-			}
-		}
-		catch (Exception ex)
-		{
-			_logger.Exception(ex, "Failed to update files");
-		}
 	}
 
 	private string quote(string path)

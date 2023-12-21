@@ -91,7 +91,7 @@ internal class PlaysetManager : IPlaysetManager
 
 		CurrentPlayset ??= Playset.TemporaryPlayset;
 
-		if (Directory.Exists(_locationManager.SkyveAppDataPath))
+		if (Directory.Exists(_locationManager.SkyveSettingsPath))
 		{
 			Directory.CreateDirectory(_locationManager.SkyvePlaysetsAppDataPath);
 
@@ -342,14 +342,14 @@ internal class PlaysetManager : IPlaysetManager
 
 			try
 			{
-				CrossIO.DeleteFile(CrossIO.Combine(_locationManager.SkyveAppDataPath, "CurrentPlayset"));
+				CrossIO.DeleteFile(CrossIO.Combine(_locationManager.SkyveSettingsPath, "CurrentPlayset"));
 			}
 			catch { }
 
 			return;
 		}
 
-		File.WriteAllText(CrossIO.Combine(_locationManager.SkyveAppDataPath, "CurrentPlayset"), playset.Name);
+		File.WriteAllText(CrossIO.Combine(_locationManager.SkyveSettingsPath, "CurrentPlayset"), playset.Name);
 
 		if (SystemsProgram.MainForm as SlickForm is null)
 		{

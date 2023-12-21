@@ -31,7 +31,7 @@ internal class LogUtil : ILogUtil
 
 		try
 		{
-			foreach (var item in Directory.GetFiles(CrossIO.Combine(_locationManager.SkyveAppDataPath, "Support Logs")))
+			foreach (var item in Directory.GetFiles(CrossIO.Combine(_locationManager.SkyveSettingsPath, "Support Logs")))
 			{
 				if (DateTime.Now - File.GetLastWriteTime(item) > TimeSpan.FromDays(15))
 				{

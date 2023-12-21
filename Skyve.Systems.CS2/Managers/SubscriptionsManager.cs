@@ -48,7 +48,7 @@ internal class SubscriptionsManager : ISubscriptionsManager
 		_logger = logger;
 		_notifier = notifier;
 
-		_filePath = Path.Combine(_locationManager.SkyveAppDataPath, "SubscriptionTransfer.xml");
+		_filePath = Path.Combine(_locationManager.SkyveSettingsPath, "SubscriptionTransfer.xml");
 		_delayedDownloadsAction = new(4000, RunDownload);
 
 		if (CrossIO.FileExists(_filePath))
@@ -204,7 +204,7 @@ internal class SubscriptionsManager : ISubscriptionsManager
 
 		SubscriptionListWatcher = new FileWatcher
 		{
-			Path = _locationManager.SkyveAppDataPath,
+			Path = _locationManager.SkyveSettingsPath,
 			NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
 			Filter = "SubscriptionList.txt"
 		};
@@ -216,7 +216,7 @@ internal class SubscriptionsManager : ISubscriptionsManager
 
 		SubscriptionTransferWatcher = new FileWatcher
 		{
-			Path = _locationManager.SkyveAppDataPath,
+			Path = _locationManager.SkyveSettingsPath,
 			NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
 			Filter = "SubscriptionTransfer.xml"
 		};

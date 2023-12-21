@@ -196,9 +196,9 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info("Saved Session Settings");
 
-		Directory.CreateDirectory(_locationManager.SkyveAppDataPath);
+		Directory.CreateDirectory(_locationManager.SkyveSettingsPath);
 
-		File.WriteAllText(CrossIO.Combine(_locationManager.SkyveAppDataPath, "SetupComplete.txt"), "Delete this file if your LOT hasn't been set up correctly and want to try again.\r\n\r\nLaunch the game, enable the mod and open Skyve from the main menu after deleting this file.");
+		File.WriteAllText(CrossIO.Combine(_locationManager.SkyveSettingsPath, "SetupComplete.txt"), "Delete this file if your LOT hasn't been set up correctly and want to try again.\r\n\r\nLaunch the game, enable the mod and open Skyve from the main menu after deleting this file.");
 	}
 
 	private void AnalyzePackages(List<ILocalPackageWithContents> content)

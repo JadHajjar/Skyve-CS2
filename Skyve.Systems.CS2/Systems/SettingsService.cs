@@ -5,6 +5,9 @@ using Skyve.Domain.CS2;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
+using System;
+using System.Runtime;
+
 namespace Skyve.Systems.CS2.Systems;
 internal class SettingsService : ISettings
 {
@@ -23,6 +26,10 @@ internal class SettingsService : ISettings
 		UserSettings = UserSettings.Load();
 
 		CrossIO.CurrentPlatform = FolderSettings.Platform;
+
+		FolderSettings.GamePath = FolderSettings.GamePath?.FormatPath() ?? string.Empty;
+		FolderSettings.AppDataPath = FolderSettings.AppDataPath?.FormatPath() ?? string.Empty;
+		FolderSettings.SteamPath = FolderSettings.SteamPath?.FormatPath() ?? string.Empty;
 	}
 
 	public void ResetFolderSettings()
