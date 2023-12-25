@@ -4,8 +4,6 @@ using Skyve.Domain;
 using Skyve.Domain.CS2;
 using Skyve.Domain.Systems;
 
-using SkyveShared;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,11 +13,9 @@ using System.Text.RegularExpressions;
 namespace Skyve.Systems.CS2.Utilities;
 internal class AssetsUtil : IAssetUtil
 {
-	private readonly AssetConfig _config;
 	private Dictionary<string, IAsset> assetIndex = new();
 
 	public HashSet<string> ExcludedHashSet { get; }
-	public Dictionary<string, AssetInfoCache.Asset> AssetInfoCache { get; }
 
 	private readonly IPackageManager _contentManager;
 	private readonly INotifier _notifier;
@@ -28,22 +24,6 @@ internal class AssetsUtil : IAssetUtil
 	{
 		_contentManager = contentManager;
 		_notifier = notifier;
-
-		AssetInfoCache = new(new PathEqualityComparer());
-
-		var assets = SkyveShared.AssetInfoCache.Deserialize().Assets;
-
-		if (assets is not null)
-		{
-			foreach (var item in assets)
-			{
-				AssetInfoCache[item.Path] = item;
-			}
-		}
-
-		_config = AssetConfig.Deserialize() ?? new();
-
-		ExcludedHashSet = new HashSet<string>(_config.ExcludedAssets, new PathEqualityComparer());
 
 		_notifier.ContentLoaded += BuildAssetIndex;
 	}
@@ -58,19 +38,15 @@ internal class AssetsUtil : IAssetUtil
 			yield break;
 		}
 
-		var files = Directory.GetFiles(package.Folder, $"*.crp", withSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+		//var files = Directory.GetFiles(package.Folder, $"*.crp", withSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 
-		foreach (var file in files)
-		{
-			if (Regex.IsMatch(Path.GetFileName(file), ExtensionClass.CharBlackListPattern))
-				continue;
+		//foreach (var file in files)
+		//{
+		//	if (Regex.IsMatch(Path.GetFileName(file), ExtensionClass.CharBlackListPattern))
+		//		continue;
 
-			var fileName = file.FormatPath();
-
-			AssetInfoCache.TryGetValue(fileName, out var asset);
-
-			yield return new Asset(package, fileName, asset);
-		}
+		//	yield return new Asset(package, fileName, asset);
+		//}
 	}
 
 	public bool IsIncluded(IAsset asset)
@@ -107,9 +83,9 @@ internal class AssetsUtil : IAssetUtil
 			return;
 		}
 
-		_config.ExcludedAssets = ExcludedHashSet.ToList();
+		//_config.ExcludedAssets = ExcludedHashSet.ToList();
 
-		_config.Serialize();
+		//_config.Serialize();
 	}
 
 	internal void SetExcludedAssets(IEnumerable<string> excludedAssets)

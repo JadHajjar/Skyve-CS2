@@ -1,13 +1,10 @@
 ﻿using Extensions;
 
-using Skyve.Domain;
-using Skyve.Domain.CS2;
-using Skyve.Domain.CS2.Utilities;
-using Skyve.Domain.Systems;
-using Skyve.Systems.CS2.Utilities;
-using Skyve.Systems.CS2.Utilities.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-using SlickControls;
+using Skyve.Domain;
+using Skyve.Domain.Systems;
 
 using System;
 using System.Collections.Generic;
@@ -22,28 +19,20 @@ namespace Skyve.Systems.CS2.Managers;
 internal class CitiesManager : ICitiesManager
 {
 	private readonly ILogger _logger;
-	private readonly ILocationManager _locationManager;
-	private readonly IPlaysetManager _profileManager;
-	private readonly IPackageManager _contentManager;
-	private readonly IModUtil _modUtil;
-	private readonly ISettings _settings;
+	private readonly ILocationService _locationManager;
 	private readonly IIOUtil _iOUtil;
-	private readonly ColossalOrderUtil _colossalOrderUtil;
 
 	public event MonitorTickDelegate? MonitorTick;
 
 	public event Action<bool>? LaunchingStatusChanged;
 
-	public CitiesManager(ILogger logger, ILocationManager locationManager, IPlaysetManager profileManager, ISettings settings, IPackageManager contentManager, IIOUtil iOUtil, IModUtil modUtil, ColossalOrderUtil colossalOrderUtil)
+	public string GameVersion { get; }
+
+	public CitiesManager(ILogger logger, ILocationService locationManager, ISettings settings, IIOUtil iOUtil)
 	{
 		_logger = logger;
 		_locationManager = locationManager;
-		_profileManager = profileManager;
-		_settings = settings;
-		_contentManager = contentManager;
 		_iOUtil = iOUtil;
-		_modUtil = modUtil;
-		_colossalOrderUtil = colossalOrderUtil;
 
 		var citiesMonitorTimer = new Timer(1000);
 
@@ -51,6 +40,17 @@ internal class CitiesManager : ICitiesManager
 		{
 			citiesMonitorTimer.Elapsed += CitiesMonitorTimer_Elapsed;
 			citiesMonitorTimer.Start();
+		}
+
+		var launcherSettings = CrossIO.Combine(settings.FolderSettings.GamePath, "Launcher", "launcher-settings.json");
+
+		if (CrossIO.FileExists(launcherSettings))
+		{
+			GameVersion = (JsonConvert.DeserializeObject(File.ReadAllText(launcherSettings)) as JObject)?.Value<string>("version") ?? "1.0";
+		}
+		else
+		{
+			GameVersion = "1.0";
 		}
 	}
 
@@ -61,9 +61,9 @@ internal class CitiesManager : ICitiesManager
 
 	public bool IsAvailable()
 	{
-		var file = (_profileManager.CurrentPlayset as Playset)!.LaunchSettings.UseCitiesExe
+		var file =/* (_profileManager.CurrentPlayset as Playset)!.LaunchSettings.UseCitiesExe
 			? _locationManager.CitiesPathWithExe
-			: _locationManager.SteamPathWithExe;
+			:*/ _locationManager.SteamPathWithExe;
 
 		return CrossIO.FileExists(file);
 	}
@@ -71,101 +71,96 @@ internal class CitiesManager : ICitiesManager
 	public void Launch()
 	{
 		var args = GetCommandArgs();
-		var file = (_profileManager.CurrentPlayset as Playset)!.LaunchSettings.UseCitiesExe
+		var file = /*(_profileManager.CurrentPlayset as Playset)!.LaunchSettings.UseCitiesExe
 			? _locationManager.CitiesPathWithExe
-			: _locationManager.SteamPathWithExe;
+			:*/ _locationManager.SteamPathWithExe;
 
 		_iOUtil.Execute(file, string.Join(" ", args));
-	}
-
-	private string quote(string path)
-	{
-		return '"' + path + '"';
 	}
 
 	private string[] GetCommandArgs()
 	{
 		var args = new List<string>();
 
-		var launchSettings = (_profileManager.CurrentPlayset as Playset)!.LaunchSettings;
+		//var launchSettings = (_profileManager.CurrentPlayset as Playset)!.LaunchSettings;
 
-		if (!launchSettings.UseCitiesExe)
+		//if (!launchSettings.UseCitiesExe)
 		{
 			args.Add("-applaunch 949230");
 		}
 
-		if (launchSettings.NoWorkshop)
-		{
-			args.Add("-noWorkshop");
-		}
+		//if (launchSettings.NoWorkshop)
+		//{
+		//	args.Add("-noWorkshop");
+		//}
 
-		if (launchSettings.ResetAssets)
-		{
-			args.Add("-reset-assets");
-		}
+		//if (launchSettings.ResetAssets)
+		//{
+		//	args.Add("-reset-assets");
+		//}
 
-		if (launchSettings.NoAssets)
-		{
-			args.Add("-noAssets");
-		}
+		//if (launchSettings.NoAssets)
+		//{
+		//	args.Add("-noAssets");
+		//}
 
-		if (launchSettings.NoMods)
-		{
-			args.Add("-disableMods");
-		}
+		//if (launchSettings.NoMods)
+		//{
+		//	args.Add("-disableMods");
+		//}
 
-		if (launchSettings.LHT)
-		{
-			args.Add("-LHT");
-		}
+		//if (launchSettings.LHT)
+		//{
+		//	args.Add("-LHT");
+		//}
 
-		if (launchSettings.DevUi)
-		{
-			args.Add("-enable-dev-ui");
-		}
+		//if (launchSettings.DevUi)
+		//{
+		//	args.Add("-enable-dev-ui");
+		//}
 
-		if (launchSettings.RefreshWorkshop)
-		{
-			args.Add("-refreshWorkshop");
-		}
+		//if (launchSettings.RefreshWorkshop)
+		//{
+		//	args.Add("-refreshWorkshop");
+		//}
 
-		if (launchSettings.NewAsset)
-		{
-			args.Add("-newAsset");
-		}
+		//if (launchSettings.NewAsset)
+		//{
+		//	args.Add("-newAsset");
+		//}
 
-		if (launchSettings.LoadAsset)
-		{
-			args.Add("-loadAsset");
-		}
+		//if (launchSettings.LoadAsset)
+		//{
+		//	args.Add("-loadAsset");
+		//}
 
-		if (launchSettings.LoadSaveGame)
-		{
-			if (CrossIO.FileExists(launchSettings.SaveToLoad))
-			{
-				args.Add("--loadSave=" + quote(launchSettings.SaveToLoad!));
-			}
-			else
-			{
-				args.Add("-continuelastsave");
-			}
-		}
-		else if (launchSettings.StartNewGame)
-		{
-			if (CrossIO.FileExists(launchSettings.MapToLoad))
-			{
-				args.Add("--newGame=" + quote(launchSettings.MapToLoad!));
-			}
-			else
-			{
-				args.Add("-newGame");
-			}
-		}
+		//if (launchSettings.LoadSaveGame)
+		//{
+		//	if (CrossIO.FileExists(launchSettings.SaveToLoad))
+		//	{
+		//		args.Add("--loadSave=" + quote(launchSettings.SaveToLoad!));
+		//	}
+		//	else
+		//	{
+		//		args.Add("-continuelastsave");
+		//	}
+		//}
+		//else if (launchSettings.StartNewGame)
+		//{
+		//	if (CrossIO.FileExists(launchSettings.MapToLoad))
+		//	{
+		//		args.Add("--newGame=" + quote(launchSettings.MapToLoad!));
+		//	}
+		//	else
+		//	{
+		//		args.Add("-newGame");
+		//	}
+		//}
 
-		if (!string.IsNullOrWhiteSpace(launchSettings.CustomArgs))
-		{
-			args.Add(launchSettings.CustomArgs!);
-		}
+		//if (!string.IsNullOrWhiteSpace(launchSettings.CustomArgs))
+		//{
+		//	args.Add(launchSettings.CustomArgs!);
+		//}
 
 		return args.ToArray();
 	}

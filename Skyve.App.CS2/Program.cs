@@ -1,16 +1,15 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 
 using Skyve.App.CS2.Services;
 using Skyve.App.Interfaces;
-using Skyve.Domain;
-using Skyve.Domain.Systems;
-using Skyve.Systems;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Systems.CS2;
 using Skyve.Systems.CS2.Utilities;
 
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 using static System.Environment;
@@ -24,9 +23,10 @@ internal static class Program
 		App.Program.IsRunning = true;
 		App.Program.CurrentDirectory = Application.StartupPath;
 		App.Program.ExecutablePath = Application.ExecutablePath;
+		App.Program.AppDataPath = Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II");
 
-		ISave.AppName = "Skyve-CS2";
-		ISave.CustomSaveDirectory = CurrentDirectory;
+		ISave.CustomSaveDirectory = Path.Combine(App.Program.AppDataPath, "ModsData");
+		ISave.AppName = "Skyve";
 
 		ServiceCenter.Provider = BuildServices();
 	}
@@ -40,6 +40,8 @@ internal static class Program
 		services.AddCs2SkyveSystems();
 
 		services.AddSingleton<IInterfaceService, InterfaceService>();
+		services.AddSingleton<IAppInterfaceService, InterfaceService>();
+		services.AddSingleton<ICustomPackageService, CustomPackageService>();
 
 		return services.BuildServiceProvider();
 	}
@@ -53,19 +55,6 @@ internal static class Program
 			{
 				return;
 			}
-
-			try
-			{
-				var folder = GetFolderPath(SpecialFolder.LocalApplicationData);
-
-				Directory.CreateDirectory(Path.Combine(folder, ISave.AppName));
-
-				if (Directory.Exists(Path.Combine(folder, ISave.AppName)))
-				{
-					ISave.CustomSaveDirectory = folder;
-				}
-			}
-			catch { }
 
 			try
 			{
@@ -84,6 +73,23 @@ internal static class Program
 
 			BackgroundAction.BackgroundTaskError += BackgroundAction_BackgroundTaskError;
 
+			try
+			{
+				Locale.Load();
+				LocaleCR.Load();
+				LocaleCRNotes.Load();
+				LocaleSlickUI.Load();
+				LocaleCS2.Load();
+			}
+			catch (Exception ex)
+			{
+#if DEBUG
+				throw ex;
+#else
+				ServiceCenter.Get<ILogger>().Exception(ex, "Localization Failed to Initialize");
+#endif
+			}
+
 			if (CommandUtil.NoWindow)
 			{
 				ServiceCenter.Get<ILogger>().Info("[Console] Running without UI window");
@@ -92,24 +98,12 @@ internal static class Program
 			}
 
 			SlickCursors.Initialize();
-			Locale.Load();
-			LocaleCR.Load();
-			LocaleSlickUI.Load();
-
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			if (OSVersion.Version.Major == 6)
+			if (OSVersion.Version.Major >= 6)
 			{
 				SetProcessDPIAware();
-			}
-
-			if (!ServiceCenter.Get<ISettings>().SessionSettings.FirstTimeSetupCompleted && string.IsNullOrEmpty(ConfigurationManager.AppSettings[nameof(ILocationManager.GamePath)]))
-			{
-				if (MessagePrompt.Show(Locale.FirstSetupInfo, Locale.SetupIncomplete, PromptButtons.OKIgnore, PromptIcons.Hand) == DialogResult.OK)
-				{
-					return;
-				}
 			}
 
 			Application.Run(SystemsProgram.MainForm = App.Program.MainForm = new MainForm());

@@ -6,6 +6,7 @@ using Skyve.Domain.Systems;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Skyve.Domain.CS2;
 public class UserSettings : ConfigFile, IUserSettings
@@ -13,17 +14,18 @@ public class UserSettings : ConfigFile, IUserSettings
 	#region Implementation
 	private const string FILE_NAME = nameof(UserSettings) + ".json";
 
-	public UserSettings() : base(GetFilePath())
+	public UserSettings() : base(FILE_NAME)
 	{ }
 
-	private static string GetFilePath()
+	public static UserSettings Load(string appDataPath)
 	{
-		return CrossIO.Combine(Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("Cities Skylines II")), "Cities Skylines II", "ModSettings", FILE_NAME);
-	}
+		var path = CrossIO.Combine(appDataPath, FILE_NAME);
 
-	public static UserSettings Load()
-	{
-		return Load<UserSettings>(GetFilePath()) ?? new();
+		var settings = Load<UserSettings>(path) ?? new();
+
+		settings.FilePath = path;
+
+		return settings;
 	}
 	#endregion
 
@@ -49,4 +51,6 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool AssumeInternetConnectivity { get; set; }
 	public bool SnapDashToGrid { get; set; }
 	public Dictionary<SkyvePage, SkyvePageContentSettings> PageSettings { get; set; } = new();
+	public ParadoxLoginInfo ParadoxLogin { get; set; }
+	public bool ExtendedListInfo { get; set; }
 }

@@ -7,6 +7,7 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 
 namespace Skyve.Domain.CS2.Utilities;
 public class SessionSettings : ConfigFile, ISessionSettings
@@ -14,17 +15,18 @@ public class SessionSettings : ConfigFile, ISessionSettings
 	#region Implementation
 	private const string FILE_NAME = nameof(SessionSettings) + ".json";
 
-	public SessionSettings() : base(GetFilePath())
+	public SessionSettings() : base(FILE_NAME)
 	{ }
 
-	private static string GetFilePath()
+	public static SessionSettings Load(string appDataPath)
 	{
-		return CrossIO.Combine(Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("Cities Skylines II")), "Cities Skylines II", "ModSettings", FILE_NAME);
-	}
+		var path = CrossIO.Combine(appDataPath, FILE_NAME);
 
-	public static SessionSettings Load()
-	{
-		return Load<SessionSettings>(GetFilePath()) ?? new();
+		var settings = Load<SessionSettings>(path) ?? new();
+
+		settings.FilePath = path;
+
+		return settings;
 	}
 	#endregion
 

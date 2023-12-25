@@ -4,8 +4,6 @@ using Skyve.Domain;
 using Skyve.Domain.CS2.Steam;
 using Skyve.Domain.Systems;
 
-using SkyveShared;
-
 using SlickControls;
 
 using System;
@@ -24,9 +22,7 @@ namespace Skyve.Systems.CS2.Utilities;
 public static class SteamUtil
 {
 	private const string DLC_CACHE_FILE = "SteamDlcsCache.json";
-	private static readonly AssetInfoCache _csCache;
 
-	private static readonly SteamItemProcessor _workshopItemProcessor;
 	private static readonly SteamUserProcessor _steamUserProcessor;
 
 	public static List<SteamDlc> Dlcs { get; private set; }
@@ -35,41 +31,25 @@ public static class SteamUtil
 
 	static SteamUtil()
 	{
-		_csCache = AssetInfoCache.Deserialize();
-
 		ISave.Load(out List<SteamDlc>? cache, DLC_CACHE_FILE);
 
 		Dlcs = cache ?? new();
 
-		_workshopItemProcessor = new();
 		_steamUserProcessor = new();
 
 		var notifier = ServiceCenter.Get<INotifier>();
 
-		_workshopItemProcessor.ItemsLoaded += notifier.OnWorkshopInfoUpdated;
 		_steamUserProcessor.ItemsLoaded += notifier.OnWorkshopUsersInfoLoaded;
 	}
-
-	public static IEnumerable<SteamWorkshopInfo> Packages => _workshopItemProcessor.GetCache().Values;
 
 	public static SteamUser? GetUser(ulong steamId)
 	{
 		return steamId == 0 ? null : _steamUserProcessor.Get(steamId, false).Result;
 	}
 
-	public static SteamWorkshopInfo? GetItem(ulong steamId)
-	{
-		return steamId == 0 ? null : _workshopItemProcessor.Get(steamId, false).Result;
-	}
-
 	public static async Task<SteamUser?> GetUserAsync(ulong steamId)
 	{
 		return steamId == 0 ? null : await _steamUserProcessor.Get(steamId, true);
-	}
-
-	public static async Task<SteamWorkshopInfo?> GetItemAsync(ulong steamId)
-	{
-		return steamId == 0 ? null : await _workshopItemProcessor.Get(steamId, true);
 	}
 
 	public static void Download(IEnumerable<IPackageIdentity> packages)
@@ -126,7 +106,7 @@ public static class SteamUtil
 
 	public static bool IsDlcInstalledLocally(uint dlcId)
 	{
-		return _csCache?.AvailableDLCs?.Contains(dlcId) ?? false;
+		return false;// _csCache?.AvailableDLCs?.Contains(dlcId) ?? false;
 	}
 
 	public static ulong GetLoggedInSteamId()
@@ -145,12 +125,12 @@ public static class SteamUtil
 
 	public static bool IsSteamAvailable()
 	{
-		return CrossIO.FileExists(ServiceCenter.Get<ILocationManager>().SteamPathWithExe);
+		return CrossIO.FileExists(ServiceCenter.Get<ILocationService>().SteamPathWithExe);
 	}
 
 	public static void ExecuteSteam(string args)
 	{
-		var file = ServiceCenter.Get<ILocationManager>().SteamPathWithExe;
+		var file = ServiceCenter.Get<ILocationService>().SteamPathWithExe;
 
 		if (CrossIO.CurrentPlatform is Platform.Windows)
 		{
@@ -188,163 +168,6 @@ public static class SteamUtil
 		return new();
 	}
 
-	public static async Task<Dictionary<ulong, SteamWorkshopInfo>> GetWorkshopInfoAsync(List<ulong> ids)
-	{
-		ids.RemoveAll(x => x == 0);
-
-		if (ids.Count == 0)
-		{
-			return new();
-		}
-
-		var query = new List<(string, object)>
-		{
-			("key", KEYS.STEAM_API_KEY),
-			("includetags", true),
-			("includechildren", true),
-			("includevotes", true),
-			("appid", 949230)
-		};
-
-		for (var i = 0; i < ids.Count; i++)
-		{
-			query.Add(($"publishedfileids[{i}]", ids[i]));
-		}
-
-		return (await ConvertPublishedFileResponse("https://api.steampowered.com/IPublishedFileService/GetDetails/v1/", query)).Item2;
-	}
-
-	public static async Task<Dictionary<ulong, SteamWorkshopInfo>> GetWorkshopItemsByUserAsync(ulong userId, bool all = false)
-	{
-		if (userId == 0)
-		{
-			return new();
-		}
-
-		var url = "https://api.steampowered.com/IPublishedFileService/GetUserFiles/v1/";
-		var query = new (string, object)[]
-		{
-			("key", KEYS.STEAM_API_KEY),
-			("steamid", userId),
-			("appid", 949230),
-			("file_type", 0),
-			("numperpage", 100),
-			("return_vote_data", true),
-			("return_tags", true),
-			("return_children", true),
-		};
-
-		var data = new Dictionary<ulong, SteamWorkshopInfo>();
-		var page = 1;
-
-		while (true)
-		{
-			var newData = await ConvertPublishedFileResponse(url, query.Concat(new (string, object)[]
-			{
-				("page", page)
-			}));
-
-			data.AddRange(newData.Item2);
-
-			_workshopItemProcessor.AddToCache(newData.Item2);
-
-			if (!all || data.Count == newData.Item1)
-			{
-				return data;
-			}
-
-			page++;
-		}
-	}
-
-	public static async Task<Dictionary<ulong, SteamWorkshopInfo>> QueryFilesAsync(SteamQueryOrder order, string? query = null, string[]? requiredTags = null, string[]? excludedTags = null, (DateTime, DateTime)? dateRange = null, bool all = false)
-	{
-		var url = $"https://api.steampowered.com/IPublishedFileService/QueryFiles/v1/";
-		var queryItems = new List<(string, object)>
-		{
-			("key", KEYS.STEAM_API_KEY),
-			("query_type", (int)order),
-			("numperpage", 100),
-			("appid", 949230),
-			("match_all_tags", true),
-			("return_vote_data", true),
-			("return_tags", true),
-			("return_children", true),
-			("return_details", true),
-		};
-
-		if (!string.IsNullOrWhiteSpace(query))
-		{
-			queryItems.Add(("search_text", query!));
-		}
-
-		if (requiredTags?.Any() ?? false)
-		{
-			for (var i = 0; i < requiredTags.Length; i++)
-			{
-				queryItems.Add(($"requiredtags[{i}]", requiredTags[i]!));
-			}
-		}
-
-		if (excludedTags?.Any() ?? false)
-		{
-			for (var i = 0; i < excludedTags.Length; i++)
-			{
-				queryItems.Add(($"excludedtags[{i}]", excludedTags[i]!));
-			}
-		}
-
-		if (dateRange is not null)
-		{
-			queryItems.Add(($"date_range_updated[0]", dateRange.Value.Item1));
-			queryItems.Add(($"date_range_updated[1]", dateRange.Value.Item2));
-		}
-
-		var data = new Dictionary<ulong, SteamWorkshopInfo>();
-		var page = 0;
-
-		while (true)
-		{
-			var newData = await ConvertPublishedFileResponse(url, queryItems.Concat(new (string, object)[]
-			{
-				("page", page)
-			}));
-
-			data.AddRange(newData.Item2);
-
-			_workshopItemProcessor.AddToCache(newData.Item2);
-
-			if (!all || data.Count == newData.Item1)
-			{
-				return data;
-			}
-
-			page++;
-		}
-	}
-
-	private static async Task<(int, Dictionary<ulong, SteamWorkshopInfo>)> ConvertPublishedFileResponse(string url, IEnumerable<(string, object)> query)
-	{
-		try
-		{
-			var info = await ApiUtil.Get<SteamFileServiceInfo>(url, query.ToArray());
-
-			var data = info?.response?.publishedfiledetails?
-				.Select(x => new SteamWorkshopInfo(x))
-				.ToList() ?? new();
-
-			_steamUserProcessor.AddRange(data.Select(x => x.AuthorId));
-
-			return (info?.response?.total ?? 0, data.ToDictionary(x => x.Id));
-		}
-		catch (Exception ex)
-		{
-			ServiceCenter.Get<ILogger>().Error("failed to get steam data: " + ex.Message);
-		}
-
-		return (0, new());
-	}
-
 	public static async Task<Dictionary<string, SteamAppInfo>> GetSteamAppInfoAsync(uint steamId)
 	{
 		try
@@ -361,7 +184,7 @@ public static class SteamUtil
 		return new();
 	}
 
-	public static async void LoadDlcs()
+	public static async Task LoadDlcs()
 	{
 		ServiceCenter.Get<ILogger>().Info($"Loading DLCs..");
 
@@ -408,7 +231,6 @@ public static class SteamUtil
 
 	public static void ClearCache()
 	{
-		_workshopItemProcessor.Clear();
 		_steamUserProcessor.Clear();
 
 		try
@@ -428,15 +250,6 @@ public static class SteamUtil
 		catch (Exception ex)
 		{
 			ServiceCenter.Get<ILogger>().Exception(ex, "Failed to clear STEAM_USER_CACHE_FILE");
-		}
-
-		try
-		{
-			CrossIO.DeleteFile(ISave.GetPath(SteamItemProcessor.STEAM_CACHE_FILE));
-		}
-		catch (Exception ex)
-		{
-			ServiceCenter.Get<ILogger>().Exception(ex, "Failed to clear STEAM_CACHE_FILE");
 		}
 	}
 }

@@ -4,6 +4,7 @@ using Skyve.Systems;
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Skyve.Domain.CS2;
 public class Mod : IMod
@@ -40,6 +41,11 @@ public class Mod : IMod
 	public override int GetHashCode()
 	{
 		return 901043656 + EqualityComparer<string>.Default.GetHashCode(FilePath);
+	}
+
+	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		return LocalParentPackage.GetThumbnail(out thumbnail, out thumbnailUrl);
 	}
 
 	public IWorkshopInfo? GetWorkshopInfo()

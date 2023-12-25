@@ -606,8 +606,6 @@ partial class PC_Utilities
 			this.DD_Unused.Size = new System.Drawing.Size(332, 150);
 			this.DD_Unused.TabIndex = 17;
 			this.DD_Unused.Text = "LsmImportUnusedInfo";
-			this.DD_Unused.FileSelected += new System.Action<string>(this.LSM_UnusedDrop_FileSelected);
-			this.DD_Unused.ValidFile += new System.Func<object, string, bool>(this.LSMDragDrop_ValidFile);
 			// 
 			// DD_Missing
 			// 
@@ -619,8 +617,6 @@ partial class PC_Utilities
 			this.DD_Missing.Size = new System.Drawing.Size(332, 150);
 			this.DD_Missing.TabIndex = 16;
 			this.DD_Missing.Text = "LsmImportMissingInfo";
-			this.DD_Missing.FileSelected += new System.Action<string>(this.LSMDragDrop_FileSelected);
-			this.DD_Missing.ValidFile += new System.Func<object, string, bool>(this.LSMDragDrop_ValidFile);
 			// 
 			// P_ModIssues
 			// 

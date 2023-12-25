@@ -1,7 +1,6 @@
 ﻿using Extensions;
 
 using Skyve.Domain;
-using Skyve.Domain.CS2;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
@@ -16,18 +15,20 @@ namespace Skyve.Systems.CS2.Utilities;
 internal class LogUtil : ILogUtil
 {
 	private readonly ICompatibilityManager _compatibilityManager;
-	private readonly ILocationManager _locationManager;
+	private readonly ILocationService _locationManager;
 	private readonly IPackageManager _contentManager;
-	private readonly IPlaysetManager _profileManager;
+	private readonly IPlaysetManager _playsetManager;
 	private readonly ILogger _logger;
+	private readonly ISettings _settings;
 
-	public LogUtil(ILocationManager locationManager, IPackageManager contentManager, IPlaysetManager profileManager, ILogger logger, ICompatibilityManager compatibilityManager)
+	public LogUtil(ILocationService locationManager, IPackageManager contentManager, IPlaysetManager profileManager, ILogger logger, ICompatibilityManager compatibilityManager, ISettings settings)
 	{
 		_compatibilityManager = compatibilityManager;
 		_locationManager = locationManager;
 		_contentManager = contentManager;
-		_profileManager = profileManager;
+		_playsetManager = profileManager;
 		_logger = logger;
+		_settings = settings;
 
 		try
 		{
@@ -42,17 +43,12 @@ internal class LogUtil : ILogUtil
 		catch { }
 	}
 
-	public string GameLogFile => CrossIO.CurrentPlatform switch
-	{
-		Platform.MacOSX => $"/Users/{Environment.UserName}/Library/Logs/Unity/Player.log",
-		Platform.Linux => $"/home/{Environment.UserName}/.config/unity3d/Colossal Order/Cities_ Skylines/Player.log",
-		_ => CrossIO.Combine(_locationManager.GamePath, "Cities_Data", "output_log.txt")
-	};
+	public string GameLogFile => CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Player.log");
 
 	public string GameDataPath => CrossIO.CurrentPlatform switch
 	{
-		Platform.MacOSX => CrossIO.Combine(_locationManager.GamePath, "Cities.app", "Contents"),
-		_ => CrossIO.Combine(_locationManager.GamePath, "Cities_Data")
+		Platform.MacOSX => CrossIO.Combine(_settings.FolderSettings.GamePath, "Cities2.app", "Contents"),
+		_ => CrossIO.Combine(_settings.FolderSettings.GamePath, "Cities2_Data")
 	};
 
 	public string CreateZipFileAndSetToClipboard(string? folder = null)
@@ -95,24 +91,18 @@ internal class LogUtil : ILogUtil
 	private IEnumerable<string> GetFilesForZip()
 	{
 		yield return GetLastCrashLog();
-		yield return GetLastLSMReport();
 
 		if (!Directory.Exists(GameDataPath))
 		{
 			yield break;
 		}
 
-		foreach (var item in new DirectoryInfo(CrossIO.Combine(GameDataPath, "Logs")).GetFiles("*.log"))
-		{
-			if (DateTime.Now - item.LastWriteTime < TimeSpan.FromDays(1))
-			{
-				yield return item.FullName;
-			}
-		}
+		var logFiles = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Logs")).GetFiles("*.log");
+		var maxDate = logFiles.Max(x => x.LastWriteTime);
 
-		foreach (var item in new DirectoryInfo(GameDataPath).GetFiles("*.log"))
+		foreach (var item in logFiles)
 		{
-			if (DateTime.Now - item.LastWriteTime < TimeSpan.FromDays(1) && Path.GetFileName(GameLogFile) != item.Name)
+			if (maxDate - item.LastWriteTime < TimeSpan.FromDays(1))
 			{
 				yield return item.FullName;
 			}
@@ -173,13 +163,14 @@ internal class LogUtil : ILogUtil
 
 	private void AddProfile(ZipArchive zipArchive)
 	{
-		var profileEntry = zipArchive.CreateEntry("Skyve\\LogProfile.json");
-		using var writer = new StreamWriter(profileEntry.Open());
-		var profile = new Playset("LogProfile");
-		_profileManager.GatherInformation(profile);
-		profile.Temporary = true;
+		if (_playsetManager.CurrentPlayset is null)
+		{
+			return;
+		}
 
-		writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(profile, Newtonsoft.Json.Formatting.Indented));
+		var profileEntry = zipArchive.CreateEntry("Skyve\\CurrentPlayset.json");
+		using var writer = new StreamWriter(profileEntry.Open());
+		writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(_playsetManager.CurrentPlayset, Newtonsoft.Json.Formatting.Indented));
 	}
 
 	private static void AddErrors(ZipArchive zipArchive, List<ILogTrace> logTrace)
@@ -227,24 +218,6 @@ internal class LogUtil : ILogUtil
 		catch (Exception ex)
 		{
 			_logger.Exception(ex, "Failed to load the previous crash dump log");
-		}
-
-		return string.Empty;
-	}
-
-	private string GetLastLSMReport()
-	{
-		try
-		{
-			var path = LsmUtil.GetReportFolder();
-
-			var reports = Directory.GetFiles(path, "*Assets Report*.htm");
-
-			return reports.OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault();
-		}
-		catch (Exception e)
-		{
-			_logger.Exception(e, "Failed to get the last LSM report");
 		}
 
 		return string.Empty;

@@ -1,5 +1,7 @@
 ﻿using Skyve.Systems;
 
+using System.Drawing;
+
 namespace Skyve.Domain.CS2.Steam;
 
 internal class SteamPackageRequirement : IPackageRequirement
@@ -16,4 +18,18 @@ internal class SteamPackageRequirement : IPackageRequirement
 	public ulong Id { get; }
 	public string? Url { get; }
 	public string Name => this.GetWorkshopInfo()?.Name ?? Id.ToString();
+
+	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		var info = this.GetWorkshopInfo();
+
+		if (info is not null)
+		{
+			return info.GetThumbnail(out thumbnail, out thumbnailUrl);
+		}
+
+		thumbnail = null;
+		thumbnailUrl = null;
+		return false;
+	}
 }

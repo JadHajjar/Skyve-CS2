@@ -51,16 +51,15 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		citiesManager.MonitorTick += CitiesManager_MonitorTick;
 	}
 
-	public void Start(ITroubleshootSettings settings)
+	public async void Start(ITroubleshootSettings settings)
 	{
-		var playset = new Playset();
-
-		_playsetManager.GatherInformation(playset);
+		if (_playsetManager.CurrentPlayset is null)
+			return;
 
 		currentState = new()
 		{
 			Stage = ActionStage.WaitingForConfirmation,
-			Playset = playset,
+			Playset = (Playset)_playsetManager.CurrentPlayset,
 			Mods = settings.Mods,
 			ItemIsCausingIssues = settings.ItemIsCausingIssues,
 			ItemIsMissing = settings.ItemIsMissing,
@@ -107,7 +106,9 @@ internal class TroubleshootSystem : ITroubleshootSystem
 			return;
 		}
 
-		_playsetManager.SetCurrentPlayset(Playset.TemporaryPlayset);
+		var playset = await _playsetManager.ClonePlayset(_playsetManager.CurrentPlayset);
+
+		_playsetManager.SetCurrentPlayset(playset);
 
 		ApplyConfirmation(true);
 	}
@@ -152,7 +153,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 			_playsetManager.ApplyPlayset(currentState.Playset!, false);
 		}
 
-		_playsetManager.CurrentPlayset = _playsetManager.Playsets.FirstOrDefault(x => x.Name == currentState.PlaysetName) ?? Playset.TemporaryPlayset;
+		_playsetManager.SetCurrentPlayset(_playsetManager.Playsets.FirstOrDefault(x => x.Name == currentState.PlaysetName));
 
 		_notifier.OnPlaysetChanged();
 

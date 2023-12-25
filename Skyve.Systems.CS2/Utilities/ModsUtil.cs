@@ -3,12 +3,14 @@
 using Skyve.Domain;
 using Skyve.Domain.CS2;
 using Skyve.Domain.Systems;
+using Skyve.Systems.CS2.Services;
 using Skyve.Systems.CS2.Utilities.IO;
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
 internal class ModsUtil : IModUtil
@@ -16,18 +18,18 @@ internal class ModsUtil : IModUtil
 	private readonly ModConfig _config;
 	private readonly Dictionary<string, ModConfig.ModInfo> _modConfigInfo;
 
-	private readonly ColossalOrderUtil _colossalOrderUtil;
 	private readonly AssemblyUtil _assemblyUtil;
 	private readonly MacAssemblyUtil _macAssemblyUtil;
+	private readonly WorkshopService _workshopService;
 	private readonly IModLogicManager _modLogicManager;
 	private readonly INotifier _notifier;
 	private readonly ISettings _settings;
 
-	public ModsUtil(IModLogicManager modLogicManager, INotifier notifier, ColossalOrderUtil colossalOrderUtil, AssemblyUtil assemblyUtil, MacAssemblyUtil macAssemblyUtil, ISettings settings)
+	public ModsUtil(IWorkshopService workshopService, IModLogicManager modLogicManager, INotifier notifier, AssemblyUtil assemblyUtil, MacAssemblyUtil macAssemblyUtil, ISettings settings)
 	{
 		_assemblyUtil = assemblyUtil;
+		_workshopService = (WorkshopService)workshopService;
 		_modLogicManager = modLogicManager;
-		_colossalOrderUtil = colossalOrderUtil;
 		_macAssemblyUtil = macAssemblyUtil;
 		_notifier = notifier;
 		_settings = settings;
@@ -76,8 +78,6 @@ internal class ModsUtil : IModUtil
 		}
 
 		_config.Save();
-
-		_colossalOrderUtil.SaveSettings();
 	}
 
 	public bool IsIncluded(IMod mod)
@@ -87,7 +87,7 @@ internal class ModsUtil : IModUtil
 
 	public bool IsEnabled(IMod mod)
 	{
-		return _colossalOrderUtil.IsEnabled(mod);
+		return IsIncluded(mod);// (await _workshopService.Context!.Mods.GetDetails((Mod)mod)).Mod.Playsets?.;
 	}
 
 	public void SetIncluded(IMod mod, bool value)
@@ -103,10 +103,10 @@ internal class ModsUtil : IModUtil
 			_modConfigInfo[mod.Folder] = modInfo;
 		}
 
-		if (!_settings.UserSettings.AdvancedIncludeEnable)
-		{
-			_colossalOrderUtil.SetEnabled(mod, value);
-		}
+		//if (!_settings.UserSettings.AdvancedIncludeEnable)
+		//{
+		//	_colossalOrderUtil.SetEnabled(mod, value);
+		//}
 
 		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
 		{
@@ -123,7 +123,7 @@ internal class ModsUtil : IModUtil
 	{
 		value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
 
-		_colossalOrderUtil.SetEnabled(mod, value);
+		//_colossalOrderUtil.SetEnabled(mod, value);
 
 		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
 		{

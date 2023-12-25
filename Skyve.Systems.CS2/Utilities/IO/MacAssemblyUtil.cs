@@ -11,12 +11,13 @@ using System.Windows.Forms;
 namespace Skyve.Systems.CS2.Utilities.IO;
 internal class MacAssemblyUtil
 {
-	private readonly ILocationManager _locationManager;
+	private readonly ILocationService _locationManager;
 	private readonly IModDllManager _contentUtil;
 	private readonly IIOUtil _iOUtil;
 	private readonly ILogger _logger;
+	private readonly ISettings _settings;
 
-	public MacAssemblyUtil(ILocationManager locationManager, IModDllManager contentUtil, ILogger logger, IIOUtil iOUtil)
+	public MacAssemblyUtil(ILocationService locationManager, IModDllManager contentUtil, ILogger logger, IIOUtil iOUtil)
 	{
 		_locationManager = locationManager;
 		_contentUtil = contentUtil;
@@ -82,8 +83,7 @@ internal class MacAssemblyUtil
 		{
 			dllPath,
 			_locationManager.ManagedDLL,
-			_locationManager.ModsPath,
-			_locationManager.WorkshopContentPath
+			_settings.FolderSettings.AppDataPath
 		}.Select(x => $"\"{x}\"")), false, true);
 
 		if (process is null)

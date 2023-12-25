@@ -13,7 +13,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 	private readonly SlickCheckbox[] _launchOptions;
 
 	private readonly IPlaysetManager _playsetManager;
-	private readonly ILocationManager _locationManager;
+	private readonly ILocationService _locationManager;
 	private readonly IPackageManager _packageManager;
 	private readonly ISettings _settings;
 	private readonly IBulkUtil _bulkUtil;
@@ -49,10 +49,10 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		var saveGameTag = new ITag[] { new TagItem(TagSource.InGame, "SaveGame") };
 		var mapTag = new ITag[] { new TagItem(TagSource.InGame, "Map") };
 
-		DD_SaveFile.StartingFolder = CrossIO.Combine(_locationManager.AppDataPath, "Saves");
+		DD_SaveFile.StartingFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves");
 		DD_SaveFile.PinnedFolders = new()
 		{
-			["Your Save-games"] = CrossIO.Combine(_locationManager.AppDataPath, "Saves"),
+			["Your Save-games"] = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves"),
 			["Workshop Save-games"] = IOSelectionDialog.CustomDirectory,
 		};
 		DD_SaveFile.CustomFiles = _packageManager.Assets.Where(x => _tagsService.HasAllTags(x, saveGameTag)).Select(x => new IOSelectionDialog.CustomFile
@@ -62,16 +62,16 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 			Path = x.FilePath
 		}).ToList();
 
-		DD_SkipFile.StartingFolder = _locationManager.AppDataPath;
-		DD_SkipFile.PinnedFolders = new() { ["App Data"] = _locationManager.AppDataPath };
+		DD_SkipFile.StartingFolder = _settings.FolderSettings.AppDataPath;
+		DD_SkipFile.PinnedFolders = new() { ["App Data"] = _settings.FolderSettings.AppDataPath };
 
-		DD_NewMap.StartingFolder = _locationManager.MapsPath;
-		DD_NewMap.PinnedFolders = new()
-		{
-			["Custom Maps"] = _locationManager.MapsPath,
-			["Vanilla Maps"] = CrossIO.Combine(_locationManager.GameContentPath, "Maps"),
-			["Workshop Maps"] = IOSelectionDialog.CustomDirectory,
-		};
+		//DD_NewMap.StartingFolder = _locationManager.MapsPath;
+		//DD_NewMap.PinnedFolders = new()
+		//{
+		//	["Custom Maps"] = _locationManager.MapsPath,
+		//	["Vanilla Maps"] = CrossIO.Combine(_locationManager.GameContentPath, "Maps"),
+		//	["Workshop Maps"] = IOSelectionDialog.CustomDirectory,
+		//};
 		DD_NewMap.CustomFiles = _packageManager.Assets.Where(x => _tagsService.HasAllTags(x, mapTag)).Select(x => new IOSelectionDialog.CustomFile
 		{
 			Name = x.Name,
@@ -188,27 +188,27 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		CB_AutoSave.Checked = profile.AutoSave;
 		DD_ProfileUsage.SelectedItem = profile.Usage > 0 ? profile.Usage : (PackageUsage)(-1);
 
-		CB_NoWorkshop.Checked = profile.LaunchSettings.NoWorkshop;
-		CB_NoAssets.Checked = profile.LaunchSettings.NoAssets;
-		CB_NoMods.Checked = profile.LaunchSettings.NoMods;
-		CB_LHT.Checked = profile.LaunchSettings.LHT;
-		CB_UseCitiesExe.Checked = profile.LaunchSettings.UseCitiesExe;
-		CB_UnityProfiler.Checked = profile.LaunchSettings.UnityProfiler;
-		CB_DebugMono.Checked = profile.LaunchSettings.DebugMono;
-		CB_LoadSave.Checked = profile.LaunchSettings.LoadSaveGame;
-		CB_StartNewGame.Checked = profile.LaunchSettings.StartNewGame;
-		CB_DevUI.Checked = profile.LaunchSettings.DevUi;
-		CB_RefreshWorkshop.Checked = profile.LaunchSettings.RefreshWorkshop;
-		DD_NewMap.SelectedFile = profile.LaunchSettings.MapToLoad;
-		DD_SaveFile.SelectedFile = profile.LaunchSettings.SaveToLoad;
-		TB_CustomArgs.Text = profile.LaunchSettings.CustomArgs;
-		CB_NewAsset.Checked = profile.LaunchSettings.NewAsset;
-		CB_LoadAsset.Checked = profile.LaunchSettings.LoadAsset;
+		//CB_NoWorkshop.Checked = profile.LaunchSettings.NoWorkshop;
+		//CB_NoAssets.Checked = profile.LaunchSettings.NoAssets;
+		//CB_NoMods.Checked = profile.LaunchSettings.NoMods;
+		//CB_LHT.Checked = profile.LaunchSettings.LHT;
+		//CB_UseCitiesExe.Checked = profile.LaunchSettings.UseCitiesExe;
+		//CB_UnityProfiler.Checked = profile.LaunchSettings.UnityProfiler;
+		//CB_DebugMono.Checked = profile.LaunchSettings.DebugMono;
+		//CB_LoadSave.Checked = profile.LaunchSettings.LoadSaveGame;
+		//CB_StartNewGame.Checked = profile.LaunchSettings.StartNewGame;
+		//CB_DevUI.Checked = profile.LaunchSettings.DevUi;
+		//CB_RefreshWorkshop.Checked = profile.LaunchSettings.RefreshWorkshop;
+		//DD_NewMap.SelectedFile = profile.LaunchSettings.MapToLoad;
+		//DD_SaveFile.SelectedFile = profile.LaunchSettings.SaveToLoad;
+		//TB_CustomArgs.Text = profile.LaunchSettings.CustomArgs;
+		//CB_NewAsset.Checked = profile.LaunchSettings.NewAsset;
+		//CB_LoadAsset.Checked = profile.LaunchSettings.LoadAsset;
 
-		CB_LoadUsed.Checked = profile.LsmSettings.LoadUsed;
-		CB_LoadEnabled.Checked = profile.LsmSettings.LoadEnabled;
-		CB_SkipFile.Checked = profile.LsmSettings.UseSkipFile;
-		DD_SkipFile.SelectedFile = profile.LsmSettings.SkipFile;
+		//CB_LoadUsed.Checked = profile.LsmSettings.LoadUsed;
+		//CB_LoadEnabled.Checked = profile.LsmSettings.LoadEnabled;
+		//CB_SkipFile.Checked = profile.LsmSettings.UseSkipFile;
+		//DD_SkipFile.SelectedFile = profile.LsmSettings.SkipFile;
 
 		DD_SaveFile.Enabled = CB_LoadSave.Checked;
 		DD_SkipFile.Enabled = CB_SkipFile.Checked;
@@ -246,29 +246,29 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		playset.AutoSave = CB_AutoSave.Checked;
 		playset.Usage = DD_ProfileUsage.SelectedItem;
 
-		playset.LaunchSettings.NoWorkshop = CB_NoWorkshop.Checked;
-		playset.LaunchSettings.NoAssets = CB_NoAssets.Checked;
-		playset.LaunchSettings.NoMods = CB_NoMods.Checked;
-		playset.LaunchSettings.LHT = CB_LHT.Checked;
-		playset.LaunchSettings.StartNewGame = CB_StartNewGame.Checked;
-		playset.LaunchSettings.MapToLoad = _iOUtil.ToRealPath(DD_NewMap.SelectedFile);
-		playset.LaunchSettings.SaveToLoad = _iOUtil.ToRealPath(DD_SaveFile.SelectedFile);
-		playset.LaunchSettings.LoadSaveGame = CB_LoadSave.Checked;
-		playset.LaunchSettings.UseCitiesExe = CB_UseCitiesExe.Checked;
-		playset.LaunchSettings.UnityProfiler = CB_UnityProfiler.Checked;
-		playset.LaunchSettings.DebugMono = CB_DebugMono.Checked;
-		playset.LaunchSettings.RefreshWorkshop = CB_RefreshWorkshop.Checked;
-		playset.LaunchSettings.DevUi = CB_DevUI.Checked;
-		playset.LaunchSettings.CustomArgs = TB_CustomArgs.Text;
-		playset.LaunchSettings.NewAsset = CB_NewAsset.Checked;
-		playset.LaunchSettings.LoadAsset = CB_LoadAsset.Checked;
+		//playset.LaunchSettings.NoWorkshop = CB_NoWorkshop.Checked;
+		//playset.LaunchSettings.NoAssets = CB_NoAssets.Checked;
+		//playset.LaunchSettings.NoMods = CB_NoMods.Checked;
+		//playset.LaunchSettings.LHT = CB_LHT.Checked;
+		//playset.LaunchSettings.StartNewGame = CB_StartNewGame.Checked;
+		//playset.LaunchSettings.MapToLoad = _iOUtil.ToRealPath(DD_NewMap.SelectedFile);
+		//playset.LaunchSettings.SaveToLoad = _iOUtil.ToRealPath(DD_SaveFile.SelectedFile);
+		//playset.LaunchSettings.LoadSaveGame = CB_LoadSave.Checked;
+		//playset.LaunchSettings.UseCitiesExe = CB_UseCitiesExe.Checked;
+		//playset.LaunchSettings.UnityProfiler = CB_UnityProfiler.Checked;
+		//playset.LaunchSettings.DebugMono = CB_DebugMono.Checked;
+		//playset.LaunchSettings.RefreshWorkshop = CB_RefreshWorkshop.Checked;
+		//playset.LaunchSettings.DevUi = CB_DevUI.Checked;
+		//playset.LaunchSettings.CustomArgs = TB_CustomArgs.Text;
+		//playset.LaunchSettings.NewAsset = CB_NewAsset.Checked;
+		//playset.LaunchSettings.LoadAsset = CB_LoadAsset.Checked;
 
-		playset.LsmSettings.SkipFile = _iOUtil.ToRealPath(DD_SkipFile.SelectedFile);
-		playset.LsmSettings.LoadEnabled = CB_LoadEnabled.Checked;
-		playset.LsmSettings.LoadUsed = CB_LoadUsed.Checked;
-		playset.LsmSettings.UseSkipFile = CB_SkipFile.Checked;
+		//playset.LsmSettings.SkipFile = _iOUtil.ToRealPath(DD_SkipFile.SelectedFile);
+		//playset.LsmSettings.LoadEnabled = CB_LoadEnabled.Checked;
+		//playset.LsmSettings.LoadUsed = CB_LoadUsed.Checked;
+		//playset.LsmSettings.UseSkipFile = CB_SkipFile.Checked;
 
-		_playsetManager.Save(playset);
+		//_playsetManager.Save(playset);
 	}
 
 	private void B_LoadProfiles_Click(object sender, EventArgs e)
@@ -347,11 +347,11 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 			return;
 		}
 
-		if (!_playsetManager.RenamePlayset(_playsetManager.CurrentPlayset, TB_Name.Text))
-		{
-			TB_Name.SetError();
-			return;
-		}
+		//if (!_playsetManager.RenamePlayset(_playsetManager.CurrentPlayset, TB_Name.Text))
+		//{
+		//	TB_Name.SetError();
+		//	return;
+		//}
 
 		if (_playsetManager.CurrentPlayset.Name != TB_Name.Text)
 		{
@@ -400,7 +400,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 		ValueChanged(sender, e);
 
-		_playsetManager.SaveLsmSettings(_playsetManager.CurrentPlayset);
+		//_playsetManager.SaveLsmSettings(_playsetManager.CurrentPlayset);
 	}
 
 	private void B_Save_Click(object sender, EventArgs e)
@@ -422,7 +422,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 	private void B_TempProfile_Click(object sender, EventArgs e)
 	{
-		_playsetManager.SetCurrentPlayset(Playset.TemporaryPlayset);
+		//_playsetManager.SetCurrentPlayset(Playset.TemporaryPlayset);
 	}
 
 	private void DD_SaveFile_FileSelected(string obj)
@@ -460,7 +460,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		TLP_ProfileName.BackColor = colorDialog.Color;
 		TLP_ProfileName.ForeColor = TLP_ProfileName.BackColor.GetTextColor();
 		_playsetManager.CurrentPlayset.Color = colorDialog.Color;
-		_playsetManager.Save(_playsetManager.CurrentPlayset);
+		//_playsetManager.Save(_playsetManager.CurrentPlayset);
 	}
 
 	private void I_Favorite_Click(object sender, EventArgs e)
@@ -471,7 +471,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		}
 
 		_playsetManager.CurrentPlayset.IsFavorite = !_playsetManager.CurrentPlayset.IsFavorite;
-		_playsetManager.Save(_playsetManager.CurrentPlayset);
+		//_playsetManager.Save(_playsetManager.CurrentPlayset);
 
 		I_Favorite.ImageName = _playsetManager.CurrentPlayset.IsFavorite ? "I_StarFilled" : "I_Star";
 		SlickTip.SetTo(I_Favorite, _playsetManager.CurrentPlayset.IsFavorite ? "UnFavoriteThisPlayset" : "FavoriteThisPlayset");

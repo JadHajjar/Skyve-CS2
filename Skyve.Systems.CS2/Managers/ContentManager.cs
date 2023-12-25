@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
 internal class ContentManager : IContentManager
@@ -20,15 +21,17 @@ internal class ContentManager : IContentManager
 	private readonly object _contentUpdateLock = new();
 
 	private readonly IPackageManager _packageManager;
-	private readonly ILocationManager _locationManager;
+	private readonly ILocationService _locationManager;
 	private readonly ICompatibilityManager _compatibilityManager;
 	private readonly IPackageUtil _packageUtil;
 	private readonly IModUtil _modUtil;
 	private readonly IAssetUtil _assetUtil;
 	private readonly ILogger _logger;
 	private readonly INotifier _notifier;
+	private readonly ISettings _settings;
+	private readonly IWorkshopService _workshopService;
 
-	public ContentManager(IPackageManager packageManager, ILocationManager locationManager, ICompatibilityManager compatibilityManager, ILogger logger, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IPackageUtil packageUtil)
+	public ContentManager(IPackageManager packageManager, ILocationService locationManager, ICompatibilityManager compatibilityManager, ILogger logger, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IPackageUtil packageUtil, ISettings settings, IWorkshopService workshopService)
 	{
 		_packageManager = packageManager;
 		_locationManager = locationManager;
@@ -38,37 +41,8 @@ internal class ContentManager : IContentManager
 		_assetUtil = assetUtil;
 		_logger = logger;
 		_notifier = notifier;
-	}
-
-	public IEnumerable<string> GetSubscribedItemPaths()
-	{
-		if (!Directory.Exists(_locationManager.WorkshopContentPath))
-		{
-			_logger.Warning($"Folder not found: '{_locationManager.WorkshopContentPath}'");
-			yield break;
-		}
-
-		_logger.Info($"Looking for packages in: '{_locationManager.WorkshopContentPath}'");
-
-		foreach (var path in Directory.EnumerateDirectories(_locationManager.WorkshopContentPath))
-		{
-			if (!ulong.TryParse(Path.GetFileName(path), out _))
-			{
-#if DEBUG
-				_logger.Debug("Skipping invalid workshop folder: " + path);
-#endif
-				continue;
-			}
-
-			var files = Directory.GetFiles(path);
-			if (files.Length == 1 && files[0].EndsWith(".excluded"))
-			{
-				_packageManager.DeleteAll(path);
-				continue;
-			}
-
-			yield return path;
-		}
+		_settings = settings;
+		_workshopService = workshopService;
 	}
 
 	public IEnumerable<ILocalPackage> GetReferencingPackage(ulong steamId, bool includedOnly)
@@ -94,11 +68,6 @@ internal class ContentManager : IContentManager
 				yield return item;
 			}
 		}
-	}
-
-	public string GetSubscribedItemPath(ulong id)
-	{
-		return CrossIO.Combine(_locationManager.WorkshopContentPath, id.ToString());
 	}
 
 	public static DateTime GetLocalUpdatedTime(string path)
@@ -159,39 +128,18 @@ internal class ContentManager : IContentManager
 		return 0;
 	}
 
-	public List<ILocalPackageWithContents> LoadContents()
+	public async Task<List<ILocalPackageWithContents>> LoadContents()
 	{
 		var packages = new List<ILocalPackageWithContents>();
-		var gameModsPath = CrossIO.Combine(_locationManager.GameContentPath, "Mods");
-		var addonsModsPath = _locationManager.ModsPath;
-		var addonsAssetsPath = new[]
-		{
-			_locationManager.AssetsPath,
-			_locationManager.StylesPath,
-			_locationManager.MapThemesPath
-		};
-
-		foreach (var folder in addonsAssetsPath)
-		{
-			_logger.Info($"Looking for packages in: '{folder}'");
-
-			if (Directory.Exists(folder))
-			{
-				foreach (var subFolder in Directory.GetDirectories(folder))
-				{
-					getPackage(subFolder, false, false, true);
-				}
-			}
-
-			getPackage(folder, false, false, true, false);
-		}
+		var gameModsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods");
 
 		if (Directory.Exists(gameModsPath))
 		{
 			_logger.Info($"Looking for packages in: '{gameModsPath}'");
+
 			foreach (var folder in Directory.GetDirectories(gameModsPath))
 			{
-				getPackage(folder, true, false, false);
+				getPackage(folder, false, false, false);
 			}
 		}
 		else
@@ -199,25 +147,12 @@ internal class ContentManager : IContentManager
 			_logger.Warning($"Folder not found: '{gameModsPath}'");
 		}
 
-		if (Directory.Exists(addonsModsPath))
-		{
-			_logger.Info($"Looking for packages in: '{addonsModsPath}'");
-			foreach (var folder in Directory.GetDirectories(addonsModsPath))
-			{
-				getPackage(folder, false, false, false);
-			}
-		}
-		else
-		{
-			_logger.Warning($"Folder not found: '{addonsModsPath}'");
-		}
+		var subscribedItems = await _workshopService.GetInstalledPackages();
 
-		var subscribedItems = GetSubscribedItemPaths().ToList();
-
-		Parallelism.ForEach(subscribedItems, (folder) =>
+		lock (packages)
 		{
-			getPackage(folder, false, true, false);
-		});
+			packages.AddRange(subscribedItems);
+		}
 
 		return packages;
 
@@ -243,7 +178,7 @@ internal class ContentManager : IContentManager
 				_logger.Debug("Creating package for: " + folder);
 #endif
 
-				var package = new Package(folder, builtIn, workshop, GetTotalSize(folder), GetLocalUpdatedTime(folder));
+				var package = new Package(folder, GetTotalSize(folder), GetLocalUpdatedTime(folder));
 
 				package.Assets = _assetUtil.GetAssets(package, withSubDirectories).ToArray();
 				package.Mod = expectAssets ? null : _modUtil.GetMod(package);
@@ -273,15 +208,15 @@ internal class ContentManager : IContentManager
 	{
 		lock (_contentUpdateLock)
 		{
-			if ((!workshop &&
-				!path.PathContains(_locationManager.AssetsPath) &&
-				!path.PathContains(_locationManager.StylesPath) &&
-				!path.PathContains(_locationManager.MapThemesPath) &&
-				!path.PathContains(_locationManager.ModsPath)) ||
-				path.PathEquals(_locationManager.ModsPath))
-			{
-				return;
-			}
+			//if ((!workshop &&
+			//	!path.PathContains(_locationManager.AssetsPath) &&
+			//	!path.PathContains(_locationManager.StylesPath) &&
+			//	!path.PathContains(_locationManager.MapThemesPath) &&
+			//	!path.PathContains(_locationManager.ModsPath)) ||
+			//	path.PathEquals(_locationManager.ModsPath))
+			//{
+			//	return;
+			//}
 
 			var existingPackage = _packageManager.Packages.FirstOrDefault(x => x.Folder.PathEquals(path));
 
@@ -303,7 +238,7 @@ internal class ContentManager : IContentManager
 			return;
 		}
 
-		var package = new Package(path, builtIn, workshop, GetTotalSize(path), GetLocalUpdatedTime(path));
+		var package = new Package(path, GetTotalSize(path), GetLocalUpdatedTime(path));
 
 		package.Assets = _assetUtil.GetAssets(package, !self).ToArray();
 		package.Mod = _modUtil.GetMod(package);
@@ -356,20 +291,8 @@ internal class ContentManager : IContentManager
 	{
 		PackageWatcher.Dispose();
 
-		var addonsAssetsPath = new[]
-		{
-			_locationManager.AssetsPath,
-			_locationManager.StylesPath,
-			_locationManager.MapThemesPath
-		};
+		//PackageWatcher.Create(_locationManager.ModsPath, false, false);
 
-		foreach (var folder in addonsAssetsPath)
-		{
-			PackageWatcher.Create(folder, true, false);
-		}
-
-		PackageWatcher.Create(_locationManager.ModsPath, false, false);
-
-		PackageWatcher.Create(_locationManager.WorkshopContentPath, false, true);
+		//PackageWatcher.Create(_locationManager.WorkshopContentPath, false, true);
 	}
 }

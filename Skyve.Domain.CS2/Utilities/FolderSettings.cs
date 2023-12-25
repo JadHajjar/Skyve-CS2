@@ -5,7 +5,7 @@ using Skyve.Domain.Systems;
 
 using System;
 using System.Collections.Generic;
-
+using System.IO;
 
 #nullable disable
 
@@ -15,17 +15,19 @@ public class FolderSettings : ConfigFile, IFolderSettings
 	#region Implementation
 	private const string FILE_NAME = nameof(FolderSettings) + ".json";
 
-	public FolderSettings() : base(GetFilePath())
+	public FolderSettings() : base(FILE_NAME)
 	{ }
 
-	private static string GetFilePath()
+	public static FolderSettings Load(string appDataPath)
 	{
-		return CrossIO.Combine(Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.IndexOf("Cities Skylines II")), "Cities Skylines II", "ModSettings", FILE_NAME);
-	}
+		var path = CrossIO.Combine(appDataPath, FILE_NAME);
 
-	public static FolderSettings Load()
-	{
-		return Load<FolderSettings>(GetFilePath()) ?? new();
+		var settings = Load<FolderSettings>(path) ?? new();
+
+		settings.AppDataPath = Path.GetDirectoryName(Path.GetDirectoryName(appDataPath));
+		settings.FilePath = path;
+
+		return settings;
 	}
 	#endregion
 
@@ -34,5 +36,6 @@ public class FolderSettings : ConfigFile, IFolderSettings
 	public string SteamPath { get; set; }
 	public GamingPlatform GamingPlatform { get; set; }
 	public Platform Platform { get; set; }
+	public string UserIdentifier { get; set; }
 }
 #nullable enable

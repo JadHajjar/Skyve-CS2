@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
+	<Import Project="../../Skyve/Config.props" />
+	<PropertyGroup>
+		<LangVersion>latest</LangVersion>
+		<Description>Helps to manage your mods and assets</Description>
+		<DebugType>embedded</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<Nullable>enable</Nullable>
+		<DefineConstants>$(DefineConstants);</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Deterministic>false</Deterministic>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net4.7.2</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<PathMap>$(MSBuildProjectDirectory)\=$(ProjectName)\</PathMap>
+		<StartupObject>Skyve.App.CS2.Installer.Program</StartupObject>
+		<ApplicationIcon>Resources\Skyve.ico</ApplicationIcon>
+		<SignAssembly>True</SignAssembly>
+		<NeutralLanguage>en</NeutralLanguage>
+		<Title>Skyve</Title>
+		<AssemblyName>Skyve.App.CS2.Setup</AssemblyName>
+		<TargetName>Skyve Setup</TargetName>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Resources\Skyve.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Costura.Fody" Version="5.7.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
+	</ItemGroup>
+</Project>

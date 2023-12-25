@@ -4,6 +4,7 @@ using Skyve.Systems;
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 
 namespace Skyve.Domain.CS2;
@@ -56,6 +57,11 @@ public class Asset : IAsset
 	public IWorkshopInfo? GetWorkshopInfo()
 	{
 		return LocalParentPackage.GetWorkshopInfo();
+	}
+
+	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		return LocalParentPackage.GetThumbnail(out thumbnail, out thumbnailUrl);
 	}
 
 	public static bool operator ==(Asset? left, Asset? right)

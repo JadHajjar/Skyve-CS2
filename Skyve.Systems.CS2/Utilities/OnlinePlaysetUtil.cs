@@ -45,7 +45,7 @@ internal class OnlinePlaysetUtil : IOnlinePlaysetUtil
 				profile.ProfileId = (int)Convert.ChangeType(result.Data, typeof(int));
 				profile.Author = SteamUtil.GetLoggedInSteamId();
 
-				_playsetManager.Save(item);
+				//_playsetManager.Save(item);
 			}
 			else
 			{
@@ -80,7 +80,7 @@ internal class OnlinePlaysetUtil : IOnlinePlaysetUtil
 
 			_playsetManager.AddPlayset(generatedProfile);
 
-			return _playsetManager.Save(generatedProfile);
+			return true;// _playsetManager.Save(generatedProfile);
 		}
 		catch (Exception ex)
 		{
@@ -106,7 +106,7 @@ internal class OnlinePlaysetUtil : IOnlinePlaysetUtil
 			generatedProfile.Assets = profile.Contents.Where(x => !x.IsMod).ToList(x => new Playset.Asset(x));
 			generatedProfile.Mods = profile.Contents.Where(x => x.IsMod).ToList(x => new Playset.Mod(x));
 
-			return _playsetManager.Save(generatedProfile);
+			return true;// _playsetManager.Save(generatedProfile);
 		}
 		catch (Exception ex)
 		{
@@ -129,7 +129,7 @@ internal class OnlinePlaysetUtil : IOnlinePlaysetUtil
 			else
 			{
 				profile.Public = @public;
-				return _playsetManager.Save(profile);
+				return true;//_playsetManager.Save(profile);
 			}
 
 			return result.Success;

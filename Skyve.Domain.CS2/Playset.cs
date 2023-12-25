@@ -2,6 +2,8 @@
 
 using Newtonsoft.Json;
 
+using PDX.SDK.Contracts.Service.Mods.Result;
+
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems;
@@ -13,13 +15,15 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
+using PdxPlayset = PDX.SDK.Contracts.Service.Mods.Models.Playset;
+
 namespace Skyve.Domain.CS2;
-public class Playset : ICustomPlayset
+public class Playset : ICustomPlayset, IEquatable<Playset?>
 {
 	private Bitmap? _banner;
 	private byte[]? _bannerBytes;
-	public static readonly Playset TemporaryPlayset = new(ServiceCenter.Get<ILocale>().Get("TemporaryPlayset")) { Temporary = true, AutoSave = false };
 
+	[CloneIgnore] public int Id { get; set; }
 	[CloneIgnore] public string? Name { get; set; }
 	[CloneIgnore] public bool Temporary { get; set; }
 	[JsonIgnore] public DateTime LastEditDate { get; set; }
@@ -30,34 +34,46 @@ public class Playset : ICustomPlayset
 	[JsonIgnore] public IEnumerable<IPlaysetEntry> Entries => Assets.Concat(Mods);
 	[JsonIgnore] public IEnumerable<IPackage> Packages => Assets.Concat(Mods);
 
-	public Playset(string name) : this()
+	public Playset(string name)
 	{
 		Name = name;
-	}
-
-	public Playset()
-	{
-		Name = string.Empty;
 		Assets = new();
 		Mods = new();
 		ExcludedDLCs = new();
 		AutoSave = true;
 	}
 
-	public bool Save()
+	//public Playset()
+	//{
+	//	Name = string.Empty;
+	//	Assets = new();
+	//	Mods = new();
+	//	ExcludedDLCs = new();
+	//	AutoSave = true;
+	//}
+
+	public Playset(PdxPlayset playset)
 	{
-		var playsetManager = ServiceCenter.Get<IPlaysetManager>();
-
-		playsetManager.GatherInformation(this);
-
-		UnsavedChanges = false;
-
-		return playsetManager.Save(this);
+		Id = playset.PlaysetId;
+		Name = playset.Name;
 	}
 
-	public override string ToString()
+	public Playset(CreatePlaysetResult playset)
 	{
-		return Name ?? base.ToString();
+		Id = playset.PlaysetId;
+		Name = playset.Name;
+	}
+
+	public bool Save()
+	{
+		return true;
+	//	var playsetManager = ServiceCenter.Get<IPlaysetManager>();
+
+	//	playsetManager.GatherInformation(this);
+
+	//	UnsavedChanges = false;
+
+	//	return playsetManager.Save(this);
 	}
 
 	[CloneIgnore] public List<Asset> Assets { get; set; }
@@ -152,8 +168,8 @@ public class Playset : ICustomPlayset
 		[JsonIgnore] public bool IsMod { get; set; }
 		[JsonIgnore, CloneIgnore] public bool IsLocal => SteamId == 0;
 		[JsonIgnore, CloneIgnore] public bool IsBuiltIn { get; }
-		[JsonIgnore, CloneIgnore] public virtual ILocalPackageWithContents? LocalParentPackage => ServiceCenter.Get<IPlaysetManager>().GetAsset(this)?.LocalParentPackage;
-		[JsonIgnore, CloneIgnore] public virtual ILocalPackage? LocalPackage => ServiceCenter.Get<IPlaysetManager>().GetAsset(this);
+		[JsonIgnore, CloneIgnore] public virtual ILocalPackageWithContents? LocalParentPackage => null;// ServiceCenter.Get<IPlaysetManager>().GetAsset(this)?.LocalParentPackage;
+		[JsonIgnore, CloneIgnore] public virtual ILocalPackage? LocalPackage => null;// ServiceCenter.Get<IPlaysetManager>().GetAsset(this);
 		[JsonIgnore, CloneIgnore] public IEnumerable<IPackageRequirement> Requirements => LocalParentPackage?.Requirements ?? Enumerable.Empty<IPackageRequirement>();
 		[JsonIgnore, CloneIgnore] public ulong Id => SteamId;
 		[JsonIgnore, CloneIgnore] public string? Url => SteamId == 0 ? null : $"https://steamcommunity.com/workshop/filedetails/?id={Id}";
@@ -163,7 +179,7 @@ public class Playset : ICustomPlayset
 		{
 			SteamId = asset.Id;
 			Name = asset.Name;
-			RelativePath = ServiceCenter.Get<ILocationManager>().ToRelativePath(asset.FilePath);
+			RelativePath = ServiceCenter.Get<ILocationService>().ToRelativePath(asset.FilePath);
 		}
 
 		public Asset()
@@ -198,13 +214,27 @@ public class Playset : ICustomPlayset
 				SteamId = SteamId,
 			};
 		}
+
+		public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+		{
+			var info = this.GetWorkshopInfo();
+
+			if (info is not null)
+			{
+				return info.GetThumbnail(out thumbnail, out thumbnailUrl);
+			}
+
+			thumbnail = null;
+			thumbnailUrl = null;
+			return false;
+		}
 	}
 
 	public class Mod : Asset
 	{
 		public bool Enabled { get; set; }
-		[JsonIgnore, CloneIgnore] public override ILocalPackageWithContents? LocalParentPackage => ServiceCenter.Get<IPlaysetManager>().GetMod(this)?.LocalParentPackage;
-		[JsonIgnore, CloneIgnore] public override ILocalPackage? LocalPackage => ServiceCenter.Get<IPlaysetManager>().GetMod(this);
+		[JsonIgnore, CloneIgnore] public override ILocalPackageWithContents? LocalParentPackage => null; //ServiceCenter.Get<IPlaysetManager>().GetMod(this)?.LocalParentPackage;
+		[JsonIgnore, CloneIgnore] public override ILocalPackage? LocalPackage => null; //ServiceCenter.Get<IPlaysetManager>().GetMod(this);
 
 		public Mod(IMod mod)
 		{
@@ -212,7 +242,7 @@ public class Playset : ICustomPlayset
 			SteamId = mod.Id;
 			Name = mod.Name;
 			Enabled = ServiceCenter.Get<IModUtil>().IsEnabled(mod);
-			RelativePath = ServiceCenter.Get<ILocationManager>().ToRelativePath(mod.Folder);
+			RelativePath = ServiceCenter.Get<ILocationService>().ToRelativePath(mod.Folder);
 		}
 
 		public Mod(IPackage package)
@@ -247,5 +277,36 @@ public class Playset : ICustomPlayset
 				SteamId = SteamId,
 			};
 		}
+	}
+
+	public override string ToString()
+	{
+		return Name ?? base.ToString();
+	}
+
+	public override bool Equals(object? obj)
+	{
+		return Equals(obj as Playset);
+	}
+
+	public bool Equals(Playset? other)
+	{
+		return other is not null &&
+			   Id == other.Id;
+	}
+
+	public override int GetHashCode()
+	{
+		return 2108858624 + Id.GetHashCode();
+	}
+
+	public static bool operator ==(Playset? left, Playset? right)
+	{
+		return EqualityComparer<Playset>.Default.Equals(left, right);
+	}
+
+	public static bool operator !=(Playset? left, Playset? right)
+	{
+		return !(left == right);
 	}
 }

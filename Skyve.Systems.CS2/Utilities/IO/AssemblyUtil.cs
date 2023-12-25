@@ -13,11 +13,11 @@ using System.Reflection;
 namespace Skyve.Systems.CS2.Utilities.IO;
 internal class AssemblyUtil
 {
-	private readonly ILocationManager _locationManager;
+	private readonly ILocationService _locationManager;
 	private readonly IModDllManager _contentUtil;
 	private readonly ILogger _logger;
 
-	public AssemblyUtil(ILocationManager locationManager, IModDllManager contentUtil, ILogger logger)
+	public AssemblyUtil(ILocationService locationManager, IModDllManager contentUtil, ILogger logger)
 	{
 		_locationManager = locationManager;
 		_contentUtil = contentUtil;
@@ -60,7 +60,7 @@ internal class AssemblyUtil
 		{
 			var cache = _contentUtil.GetDllModCache(path, out version);
 
-			if (cache == true || cache is null && CheckDllImplementsInterface(path, "ICities.IUserMod", out version))
+			if (cache == true || cache is null && CheckDllImplementsInterface(path, "Game.Modding.IMod", out version))
 			{
 				_contentUtil.SetDllModCache(path, true, version);
 				dllPath = path;

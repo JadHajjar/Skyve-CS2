@@ -15,7 +15,7 @@ public partial class PC_Utilities : PanelContent
 	private readonly ICitiesManager _citiesManager;
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly INotifier _notifier;
-	private readonly ILocationManager _locationManager;
+	private readonly ILocationService _locationManager;
 	private readonly IPackageManager _contentManager;
 	private readonly IPackageUtil _packageUtil;
 	private readonly IWorkshopService _workshopService;
@@ -33,8 +33,7 @@ public partial class PC_Utilities : PanelContent
 
 		_notifier.PackageInformationUpdated += RefreshModIssues;
 
-		DD_BOB.StartingFolder = _locationManager.AppDataPath;
-		DD_Missing.StartingFolder = DD_Unused.StartingFolder = LsmUtil.GetReportFolder();
+		DD_BOB.StartingFolder = _settings.FolderSettings.AppDataPath;
 		DD_Missing.ValidExtensions = DD_Unused.ValidExtensions = new[] { ".htm", ".html" };
 
 		SlickTip.SetTo(B_LoadCollection, "LoadCollectionTip");
@@ -181,25 +180,6 @@ public partial class PC_Utilities : PanelContent
 
 			e.IsInputKey = false;
 		}
-	}
-
-	private void LSMDragDrop_FileSelected(string obj)
-	{
-		var assets = LsmUtil.LoadMissingAssets(obj);
-
-		Form.PushPanel(null, new PC_GenericPackageList(assets, false) { Text = Locale.MissingLSMReport });
-	}
-
-	private bool LSMDragDrop_ValidFile(object sender, string arg)
-	{
-		return LsmUtil.IsValidLsmReportFile(arg);
-	}
-
-	private void LSM_UnusedDrop_FileSelected(string obj)
-	{
-		var assets = LsmUtil.LoadUnusedAssets(obj);
-
-		Form.PushPanel(null, new PC_GenericPackageList(assets, false) { Text = Locale.UnusedLSMReport });
 	}
 
 	private void DD_BOB_FileSelected(string obj)

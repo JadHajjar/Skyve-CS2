@@ -6,6 +6,7 @@ using Skyve.Systems.Compatibility;
 using Skyve.Systems.CS2.Utilities;
 
 using System;
+using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Systems;
 internal class UserService : IUserService
@@ -20,10 +21,10 @@ internal class UserService : IUserService
 	{
 		_user = new();
 
-		new BackgroundAction(RefreshUserState).RunEvery(60000, true);
+		//new BackgroundAction(RefreshUserState).RunEvery(60000, true);
 	}
 
-	private async void RefreshUserState()
+	private async Task RefreshUserState()
 	{
 		var steamId = SteamUtil.GetLoggedInSteamId();
 

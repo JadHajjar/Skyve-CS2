@@ -3,6 +3,7 @@ using Skyve.Domain.Systems;
 using Skyve.Systems;
 
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace Skyve.Domain.CS2.Steam;
@@ -30,8 +31,21 @@ public class WorkshopPackage : IPackage
 	public ILocalPackageWithContents? LocalParentPackage => ServiceCenter.Get<IPackageManager>().GetPackageById(this);
 	public ILocalPackage? LocalPackage => ServiceCenter.Get<IPackageManager>().GetPackageById(this);
 	public IEnumerable<IPackageRequirement> Requirements => GetInfo()?.Requirements ?? Enumerable.Empty<IPackageRequirement>();
-	public IEnumerable<ITag> Tags => GetInfo()?.Tags.Select(x => (ITag)new TagItem(TagSource.Workshop, x)) ?? Enumerable.Empty<ITag>();
+	public IEnumerable<ITag> Tags => GetInfo()?.Tags.Select(x => (ITag)new TagItem(TagSource.Workshop, x.Value)) ?? Enumerable.Empty<ITag>();
 
+	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		var info = GetInfo();
+
+		if (info is not null)
+		{
+			return info.GetThumbnail(out thumbnail, out thumbnailUrl);
+		}
+
+		thumbnail = null;
+		thumbnailUrl = null;
+		return false;
+	}
 
 	private IWorkshopInfo? GetInfo()
 	{

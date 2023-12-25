@@ -1,11 +1,17 @@
-﻿using System;
+﻿using Extensions;
+
+using Microsoft.Win32;
+
+using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Skyve.Systems.CS2.Utilities;
 public static class CommandUtil
 {
-	public static string? PreSelectedProfile { get; private set; }
+	public static string? PreSelectedPlayset { get; private set; }
 	public static bool LaunchOnLoad { get; private set; }
 	public static bool CloseWhenFinished { get; private set; }
 	public static bool NoWindow { get; private set; }
@@ -33,9 +39,9 @@ public static class CommandUtil
 			return true;
 		}
 
-		if (isCommand("profile", out var profileName))
+		if (isCommand("playset", out var playsetName))
 		{
-			PreSelectedProfile = profileName;
+			PreSelectedPlayset = playsetName;
 		}
 
 		if (isCommand("launch", out _))

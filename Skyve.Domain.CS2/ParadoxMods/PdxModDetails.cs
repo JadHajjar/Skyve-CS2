@@ -10,6 +10,7 @@ using Skyve.Systems;
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,6 +62,14 @@ public class PdxModDetails : IWorkshopInfo
 	public string? Url { get; set; }
 	public DateTime Timestamp { get; set; }
 
-	[JsonIgnore] public IEnumerable<IPackageRequirement> Requirements => RequiredPackageIds?.Select(x => new SteamPackageRequirement(ServiceCenter.Get<ICompatibilityManager>().GetFinalSuccessor(new GenericPackageIdentity(x)).Id, !IsMod)) ?? Enumerable.Empty<IPackageRequirement>();
-	[JsonIgnore] public IUser? Author => ServiceCenter.Get<IWorkshopService>().GetUser(AuthorId) ?? (AuthorId > 0 ? new SteamUser { SteamId = AuthorId, Name = AuthorId.ToString() } : null);
+	[JsonIgnore] public IEnumerable<IPackageRequirement> Requirements => null;// RequiredPackageIds?.Select(x => new SteamPackageRequirement(ServiceCenter.Get<ICompatibilityManager>().GetFinalSuccessor(new GenericPackageIdentity(x)).Id, !IsMod)) ?? Enumerable.Empty<IPackageRequirement>();
+	[JsonIgnore] public IUser? Author => null;//ServiceCenter.Get<IWorkshopService>().GetUser(AuthorId) ?? (AuthorId > 0 ? new SteamUser { SteamId = AuthorId, Name = AuthorId.ToString() } : null);
+
+	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		thumbnail = null;
+		thumbnailUrl = ThumbnailUrl;
+
+		return false;
+	}
 }

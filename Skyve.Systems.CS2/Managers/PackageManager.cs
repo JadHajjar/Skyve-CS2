@@ -22,9 +22,9 @@ internal class PackageManager : IPackageManager
 	private readonly ISettings _settings;
 	private readonly ILogger _logger;
 	private readonly INotifier _notifier;
-	private readonly ILocationManager _locationManager;
+	private readonly ILocationService _locationManager;
 
-	public PackageManager(IModLogicManager modLogicManager, ISettings settings, ILogger logger, INotifier notifier, ILocationManager locationManager)
+	public PackageManager(IModLogicManager modLogicManager, ISettings settings, ILogger logger, INotifier notifier, ILocationService locationManager)
 	{
 		_modLogicManager = modLogicManager;
 		_settings = settings;
@@ -95,8 +95,6 @@ internal class PackageManager : IPackageManager
 
 	public void AddPackage(ILocalPackageWithContents package)
 	{
-		var info = SteamUtil.GetItem(package.Id);
-
 		if (packages is null)
 		{
 			packages = new() { package };
@@ -180,13 +178,13 @@ internal class PackageManager : IPackageManager
 			.ToDictionary(x => x.Key, x => x.ToList())!;
 	}
 
-	public void DeleteAll(IEnumerable<ulong> ids)
-	{
-		foreach (var id in ids.ToList())
-		{
-			DeleteAll(CrossIO.Combine(_locationManager.WorkshopContentPath, id.ToString()));
-		}
-	}
+	//public void DeleteAll(IEnumerable<ulong> ids)
+	//{
+	//	foreach (var id in ids.ToList())
+	//	{
+	//		DeleteAll(CrossIO.Combine(_locationManager.WorkshopContentPath, id.ToString()));
+	//	}
+	//}
 
 	public void DeleteAll(string folder)
 	{
@@ -206,29 +204,30 @@ internal class PackageManager : IPackageManager
 
 	public void MoveToLocalFolder(ILocalPackage item)
 	{
-		if (item is Asset asset)
-		{
-			CrossIO.CopyFile(asset.FilePath, CrossIO.Combine(_locationManager.AssetsPath, Path.GetFileName(asset.FilePath)), true);
-			return;
-		}
+		throw new NotImplementedException();
+		//if (item is Asset asset)
+		//{
+		//	CrossIO.CopyFile(asset.FilePath, CrossIO.Combine(_locationManager.AssetsPath, Path.GetFileName(asset.FilePath)), true);
+		//	return;
+		//}
 
-		if (item.LocalParentPackage?.Assets?.Any() ?? false)
-		{
-			var target = new DirectoryInfo(CrossIO.Combine(_locationManager.AssetsPath, Path.GetFileName(item.Folder)));
+		//if (item.LocalParentPackage?.Assets?.Any() ?? false)
+		//{
+		//	var target = new DirectoryInfo(CrossIO.Combine(_locationManager.AssetsPath, Path.GetFileName(item.Folder)));
 
-			new DirectoryInfo(item.Folder).CopyAll(target, x => Path.GetExtension(x).Equals(".crp", StringComparison.CurrentCultureIgnoreCase));
+		//	new DirectoryInfo(item.Folder).CopyAll(target, x => Path.GetExtension(x).Equals(".crp", StringComparison.CurrentCultureIgnoreCase));
 
-			target.RemoveEmptyFolders();
-		}
+		//	target.RemoveEmptyFolders();
+		//}
 
-		if (item.LocalParentPackage?.Mod is not null)
-		{
-			var target = new DirectoryInfo(CrossIO.Combine(_locationManager.ModsPath, Path.GetFileName(item.Folder)));
+		//if (item.LocalParentPackage?.Mod is not null)
+		//{
+		//	var target = new DirectoryInfo(CrossIO.Combine(_locationManager.ModsPath, Path.GetFileName(item.Folder)));
 
-			new DirectoryInfo(item.Folder).CopyAll(target, x => !Path.GetExtension(x).Equals(".crp", StringComparison.CurrentCultureIgnoreCase));
+		//	new DirectoryInfo(item.Folder).CopyAll(target, x => !Path.GetExtension(x).Equals(".crp", StringComparison.CurrentCultureIgnoreCase));
 
-			target.RemoveEmptyFolders();
-		}
+		//	target.RemoveEmptyFolders();
+		//}
 	}
 
 	public List<IMod> GetModsByName(string modName)

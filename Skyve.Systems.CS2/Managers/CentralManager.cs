@@ -5,8 +5,6 @@ using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Utilities;
 
-using SkyveShared;
-
 using SlickControls;
 
 using System;
@@ -21,11 +19,10 @@ internal class CentralManager : ICentralManager
 	private readonly ICompatibilityManager _compatibilityManager;
 	private readonly IPlaysetManager _playsetManager;
 	private readonly ICitiesManager _citiesManager;
-	private readonly ILocationManager _locationManager;
+	private readonly ILocationService _locationService;
 	private readonly ISubscriptionsManager _subscriptionManager;
 	private readonly IPackageManager _packageManager;
 	private readonly IContentManager _contentManager;
-	private readonly ColossalOrderUtil _colossalOrderUtil;
 	private readonly ISettings _settings;
 	private readonly ILogger _logger;
 	private readonly INotifier _notifier;
@@ -35,18 +32,18 @@ internal class CentralManager : ICentralManager
 	private readonly INotificationsService _notificationsService;
 	private readonly IUpdateManager _updateManager;
 	private readonly IAssetUtil _assetUtil;
+	private readonly IWorkshopService _workshopService;
 
-	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationManager locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ColossalOrderUtil colossalOrderUtil, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IBulkUtil bulkUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil)
+	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IBulkUtil bulkUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService)
 	{
 		_modLogicManager = modLogicManager;
 		_compatibilityManager = compatibilityManager;
 		_playsetManager = profileManager;
 		_citiesManager = citiesManager;
-		_locationManager = locationManager;
+		_locationService = locationManager;
 		_subscriptionManager = subscriptionManager;
 		_packageManager = packageManager;
 		_contentManager = contentManager;
-		_colossalOrderUtil = colossalOrderUtil;
 		_settings = settings;
 		_logger = logger;
 		_notifier = notifier;
@@ -56,14 +53,17 @@ internal class CentralManager : ICentralManager
 		_notificationsService = notificationsService;
 		_updateManager = updateManager;
 		_assetUtil = assetUtil;
+		_workshopService = workshopService;
 	}
 
-	public void Start()
+	public async void Start()
 	{
 		if (!_settings.SessionSettings.FirstTimeSetupCompleted)
 		{
 			try
-			{ RunFirstTimeSetup(); }
+			{ 
+				RunFirstTimeSetup();
+			}
 			catch (Exception ex)
 			{
 				_logger.Exception(ex, "Failed to complete the First Time Setup");
@@ -72,13 +72,18 @@ internal class CentralManager : ICentralManager
 			}
 		}
 
-		ConnectionHandler.AssumeInternetConnectivity = _settings.UserSettings.AssumeInternetConnectivity;
+		_logger.Info("Checking for internet connection..");
 
+		ConnectionHandler.AssumeInternetConnectivity = _settings.UserSettings.AssumeInternetConnectivity;
 		ConnectionHandler.Start();
+
+		_logger.Info("Starting PDX SDK..");
+
+		await _workshopService.Initialize();
 
 		_logger.Info("Loading packages..");
 
-		var content = _contentManager.LoadContents();
+		var content = await _contentManager.LoadContents();
 
 		_logger.Info($"Loaded {content.Count} packages");
 
@@ -100,6 +105,8 @@ internal class CentralManager : ICentralManager
 
 		_notifier.OnContentLoaded();
 
+		await _workshopService.Login();
+
 		if (_modLogicManager.AreMultipleSkyvesPresent(out var skyveInstances))
 		{
 			_notificationsService.SendNotification(new MultipleSkyvesNotification(skyveInstances));
@@ -107,13 +114,11 @@ internal class CentralManager : ICentralManager
 
 		_subscriptionManager.Start();
 
-		if (CommandUtil.PreSelectedProfile == _playsetManager.CurrentPlayset.Name)
+		if (_playsetManager.CurrentPlayset is not null && CommandUtil.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
 		{
 			_logger.Info($"[Command] Applying Playset ({_playsetManager.CurrentPlayset.Name})..");
 			_playsetManager.SetCurrentPlayset(_playsetManager.CurrentPlayset);
 		}
-
-		_colossalOrderUtil.Start();
 
 		if (CommandUtil.LaunchOnLoad)
 		{
@@ -180,25 +185,19 @@ internal class CentralManager : ICentralManager
 	{
 		_logger.Info("Running First Time Setup");
 
-		_locationManager.RunFirstTimeSetup();
+		_locationService.RunFirstTimeSetup();
 
 		_logger.Info("First Time Setup Completed");
 
 		if (CrossIO.CurrentPlatform is Platform.Windows)
 		{
-			_locationManager.CreateShortcut();
+			_locationService.CreateShortcut();
 		}
-
-		_playsetManager.RunFirstTimeSetup();
 
 		_settings.SessionSettings.FirstTimeSetupCompleted = true;
 		_settings.SessionSettings.Save();
 
 		_logger.Info("Saved Session Settings");
-
-		Directory.CreateDirectory(_locationManager.SkyveSettingsPath);
-
-		File.WriteAllText(CrossIO.Combine(_locationManager.SkyveSettingsPath, "SetupComplete.txt"), "Delete this file if your LOT hasn't been set up correctly and want to try again.\r\n\r\nLaunch the game, enable the mod and open Skyve from the main menu after deleting this file.");
 	}
 
 	private void AnalyzePackages(List<ILocalPackageWithContents> content)
@@ -246,14 +245,14 @@ internal class CentralManager : ICentralManager
 
 		content.RemoveAll(x => blackList.Contains(x));
 
-		if (blackList.Count > 0)
-		{
-			BlackListTransfer.SendList(blackList.Select(x => x.Id), false);
-		}
-		else if (CrossIO.FileExists(BlackListTransfer.FilePath))
-		{
-			CrossIO.DeleteFile(BlackListTransfer.FilePath);
-		}
+		//if (blackList.Count > 0)
+		//{
+		//	BlackListTransfer.SendList(blackList.Select(x => x.Id), false);
+		//}
+		//else if (CrossIO.FileExists(BlackListTransfer.FilePath))
+		//{
+		//	CrossIO.DeleteFile(BlackListTransfer.FilePath);
+		//}
 
 		foreach (var item in blackList)
 		{
