@@ -16,22 +16,22 @@ using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
 namespace Skyve.Domain.CS2;
 
-public class Package : ILocalPackageWithContents, IEqualityComparer<Package>
+public class Package : ILocalPackageData, IEqualityComparer<Package>
 {
 	public IAsset[] Assets { get; set; }
 	public IMod? Mod { get; set; }
 	public long LocalSize { get; set; }
 	public DateTime LocalTime { get; set; }
 	public string Folder { get; protected set; }
-	public bool IsMod { get; protected set; }
+	public bool IsCodeMod { get; protected set; }
 	public bool IsLocal { get; protected set; }
 	public bool IsBuiltIn { get; protected set; }
 	public string FilePath { get; protected set; }
 	public ulong Id { get; protected set; }
 	public string Name { get; protected set; }
 	public string? Url { get; protected set; }
-	public ILocalPackage? LocalPackage => this;
-	public ILocalPackageWithContents LocalParentPackage => this;
+	public ILocalPackageData? LocalPackage => this;
+	public ILocalPackageData LocalParentPackage => this;
 	public IEnumerable<IPackageRequirement> Requirements => this.GetWorkshopInfo()?.Requirements ?? Enumerable.Empty<IPackageRequirement>();
 
 	public Package(string folder, long localSize, DateTime localTime)
@@ -66,7 +66,7 @@ public class Package : ILocalPackageWithContents, IEqualityComparer<Package>
 
 	public override bool Equals(object? obj)
 	{
-		return obj is ILocalPackage package && Folder == package.Folder;
+		return obj is ILocalPackageData package && Folder == package.Folder;
 	}
 
 	public override int GetHashCode()

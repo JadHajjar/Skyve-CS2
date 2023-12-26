@@ -184,7 +184,7 @@ internal class TagsService : ITagsService
 			}
 		}
 
-		if (package.LocalPackage is ILocalPackage localPackage)
+		if (package.LocalPackage is ILocalPackageData localPackage)
 		{
 			if (_customTagsDictionary.TryGetValue(localPackage.FilePath, out var customTags))
 			{
@@ -199,7 +199,7 @@ internal class TagsService : ITagsService
 			}
 		}
 
-		if (!ignoreParent && package.LocalParentPackage is ILocalPackageWithContents lp && _customTagsDictionary.TryGetValue(lp.Folder, out var customParentTags))
+		if (!ignoreParent && package.LocalParentPackage is ILocalPackageData lp && _customTagsDictionary.TryGetValue(lp.Folder, out var customParentTags))
 		{
 			foreach (var item in customParentTags)
 			{
@@ -220,7 +220,7 @@ internal class TagsService : ITagsService
 
 			ISave.Save(_customTagsDictionary, "CustomTags.json");
 		}
-		else if (package.LocalParentPackage is ILocalPackageWithContents lp)
+		else if (package.LocalParentPackage is ILocalPackageData lp)
 		{
 			_customTagsDictionary[lp.Folder] = value.WhereNotEmpty().ToArray();
 
@@ -234,7 +234,7 @@ internal class TagsService : ITagsService
 	{
 		var workshopTags = package.GetWorkshopInfo()?.Tags;
 
-		if (package is ILocalPackage localPackage)
+		if (package is ILocalPackageData localPackage)
 		{
 			foreach (var tag in tags)
 			{

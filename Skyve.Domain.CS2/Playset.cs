@@ -165,11 +165,11 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 		public string? RelativePath { get; set; }
 		public ulong SteamId { get; set; }
 
-		[JsonIgnore] public bool IsMod { get; set; }
+		[JsonIgnore] public bool IsCodeMod { get; set; }
 		[JsonIgnore, CloneIgnore] public bool IsLocal => SteamId == 0;
 		[JsonIgnore, CloneIgnore] public bool IsBuiltIn { get; }
-		[JsonIgnore, CloneIgnore] public virtual ILocalPackageWithContents? LocalParentPackage => null;// ServiceCenter.Get<IPlaysetManager>().GetAsset(this)?.LocalParentPackage;
-		[JsonIgnore, CloneIgnore] public virtual ILocalPackage? LocalPackage => null;// ServiceCenter.Get<IPlaysetManager>().GetAsset(this);
+		[JsonIgnore, CloneIgnore] public virtual ILocalPackageData? LocalParentPackage => null;// ServiceCenter.Get<IPlaysetManager>().GetAsset(this)?.LocalParentPackage;
+		[JsonIgnore, CloneIgnore] public virtual ILocalPackageData? LocalPackage => null;// ServiceCenter.Get<IPlaysetManager>().GetAsset(this);
 		[JsonIgnore, CloneIgnore] public IEnumerable<IPackageRequirement> Requirements => LocalParentPackage?.Requirements ?? Enumerable.Empty<IPackageRequirement>();
 		[JsonIgnore, CloneIgnore] public ulong Id => SteamId;
 		[JsonIgnore, CloneIgnore] public string? Url => SteamId == 0 ? null : $"https://steamcommunity.com/workshop/filedetails/?id={Id}";
@@ -233,12 +233,12 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 	public class Mod : Asset
 	{
 		public bool Enabled { get; set; }
-		[JsonIgnore, CloneIgnore] public override ILocalPackageWithContents? LocalParentPackage => null; //ServiceCenter.Get<IPlaysetManager>().GetMod(this)?.LocalParentPackage;
-		[JsonIgnore, CloneIgnore] public override ILocalPackage? LocalPackage => null; //ServiceCenter.Get<IPlaysetManager>().GetMod(this);
+		[JsonIgnore, CloneIgnore] public override ILocalPackageData? LocalParentPackage => null; //ServiceCenter.Get<IPlaysetManager>().GetMod(this)?.LocalParentPackage;
+		[JsonIgnore, CloneIgnore] public override ILocalPackageData? LocalPackage => null; //ServiceCenter.Get<IPlaysetManager>().GetMod(this);
 
 		public Mod(IMod mod)
 		{
-			IsMod = true;
+			IsCodeMod = true;
 			SteamId = mod.Id;
 			Name = mod.Name;
 			Enabled = ServiceCenter.Get<IModUtil>().IsEnabled(mod);
@@ -247,7 +247,7 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 
 		public Mod(IPackage package)
 		{
-			IsMod = true;
+			IsCodeMod = true;
 			SteamId = package.Id;
 			Name = package.Name;
 			Enabled = true;
@@ -256,12 +256,12 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 
 		public Mod()
 		{
-			IsMod = true;
+			IsCodeMod = true;
 		}
 
 		public Mod(UserProfileContent content)
 		{
-			IsMod = true;
+			IsCodeMod = true;
 			Enabled = content.Enabled;
 			RelativePath = content.RelativePath;
 			SteamId = content.SteamId;
@@ -272,7 +272,7 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 			return new UserProfileContent
 			{
 				Enabled = Enabled,
-				IsMod = true,
+				IsCodeMod = true,
 				RelativePath = RelativePath,
 				SteamId = SteamId,
 			};

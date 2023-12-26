@@ -45,7 +45,7 @@ internal class ContentManager : IContentManager
 		_workshopService = workshopService;
 	}
 
-	public IEnumerable<ILocalPackage> GetReferencingPackage(ulong steamId, bool includedOnly)
+	public IEnumerable<ILocalPackageData> GetReferencingPackage(ulong steamId, bool includedOnly)
 	{
 		foreach (var item in _packageManager.Packages)
 		{
@@ -128,9 +128,9 @@ internal class ContentManager : IContentManager
 		return 0;
 	}
 
-	public async Task<List<ILocalPackageWithContents>> LoadContents()
+	public async Task<List<ILocalPackageData>> LoadContents()
 	{
-		var packages = new List<ILocalPackageWithContents>();
+		var packages = new List<ILocalPackageData>();
 		var gameModsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods");
 
 		if (Directory.Exists(gameModsPath))
@@ -251,7 +251,7 @@ internal class ContentManager : IContentManager
 		_packageManager.AddPackage(package);
 	}
 
-	public void RefreshPackage(ILocalPackage localPackage, bool self)
+	public void RefreshPackage(ILocalPackageData localPackage, bool self)
 	{
 		if (localPackage is not Package package)
 		{

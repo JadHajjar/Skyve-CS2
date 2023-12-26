@@ -250,7 +250,7 @@ internal class PlaysetManager : IPlaysetManager
 		return new Playset(newPlayset) { LastEditDate = DateTime.Now };
 	}
 
-	public List<ILocalPackageWithContents> GetInvalidPackages(PackageUsage usage)
+	public List<ILocalPackageData> GetInvalidPackages(PackageUsage usage)
 	{
 		if ((int)usage == -1)
 		{

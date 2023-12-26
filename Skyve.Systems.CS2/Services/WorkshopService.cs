@@ -136,7 +136,7 @@ internal class WorkshopService : IWorkshopService
 		}
 	}
 
-	public void CleanDownload(List<ILocalPackageWithContents> packages)
+	public void CleanDownload(List<ILocalPackageData> packages)
     {
         PackageWatcher.Pause();
         foreach (var item in packages)
@@ -227,7 +227,7 @@ internal class WorkshopService : IWorkshopService
         throw new NotImplementedException();
     }
 
-    public async Task<List<ILocalPackageWithContents>> GetInstalledPackages()
+    public async Task<List<ILocalPackageData>> GetInstalledPackages()
     {
         if (Context is null)
         {
@@ -241,7 +241,7 @@ internal class WorkshopService : IWorkshopService
             return new();
         }
 
-        return mods.Mods.ToList(mod => (ILocalPackageWithContents)new PdxPackage(mod));
+        return mods.Mods.ToList(mod => (ILocalPackageData)new PdxPackage(mod));
     }
 
     public async Task<List<ICustomPlayset>> GetAllPlaysets(bool localOnly)

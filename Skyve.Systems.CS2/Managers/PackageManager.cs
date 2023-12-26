@@ -14,9 +14,9 @@ using System.Linq;
 namespace Skyve.Systems.CS2.Managers;
 internal class PackageManager : IPackageManager
 {
-	private Dictionary<ulong, ILocalPackageWithContents>? indexedPackages;
+	private Dictionary<ulong, IPackage>? indexedPackages;
 	private Dictionary<string, List<IMod>>? indexedMods;
-	private List<ILocalPackageWithContents>? packages;
+	private List<IPackage>? packages;
 
 	private readonly IModLogicManager _modLogicManager;
 	private readonly ISettings _settings;
@@ -33,11 +33,11 @@ internal class PackageManager : IPackageManager
 		_locationManager = locationManager;
 	}
 
-	public IEnumerable<ILocalPackageWithContents> Packages
+	public IEnumerable<IPackage> Packages
 	{
 		get
 		{
-			var currentPackages = packages is null ? new() : new List<ILocalPackageWithContents>(packages);
+			var currentPackages = packages is null ? new() : new List<IPackage>(packages);
 
 			foreach (var package in currentPackages)
 			{
@@ -51,32 +51,11 @@ internal class PackageManager : IPackageManager
 		}
 	}
 
-	public IEnumerable<IMod> Mods
-	{
-		get
-		{
-			var currentPackages = packages is null ? new() : new List<ILocalPackageWithContents>(packages);
-
-			foreach (var package in currentPackages)
-			{
-				if (_settings.UserSettings.HidePseudoMods && _modLogicManager.IsPseudoMod(package))
-				{
-					continue;
-				}
-
-				if (package.Mod is not null)
-				{
-					yield return package.Mod;
-				}
-			}
-		}
-	}
-
 	public IEnumerable<IAsset> Assets
 	{
 		get
 		{
-			var currentPackages = packages is null ? new() : new List<ILocalPackageWithContents>(packages);
+			var currentPackages = packages is null ? new() : new List<IPackage>(packages);
 
 			foreach (var package in currentPackages)
 			{
@@ -93,7 +72,7 @@ internal class PackageManager : IPackageManager
 		}
 	}
 
-	public void AddPackage(ILocalPackageWithContents package)
+	public void AddPackage(IPackage package)
 	{
 		if (packages is null)
 		{
@@ -126,7 +105,7 @@ internal class PackageManager : IPackageManager
 		_notifier.OnContentLoaded();
 	}
 
-	public void RemovePackage(ILocalPackageWithContents package)
+	public void RemovePackage(IPackage package)
 	{
 		packages?.Remove(package);
 		indexedPackages?.Remove(package.Id);
@@ -147,8 +126,17 @@ internal class PackageManager : IPackageManager
 		DeleteAll(package.Folder);
 	}
 
-	public ILocalPackageWithContents? GetPackageById(IPackageIdentity identity)
+	public IPackage? GetPackageById(IPackageIdentity identity)
 	{
+		if (identity is ILocalPackageIdentity localPackageIdentity)
+		{
+			var folder = _locationManager.ToLocalPath(localPackageIdentity.Folder);
+			var matchedPackage = Packages.FirstOrDefault(x => x.LocalData!.Folder == folder);
+
+			if (matchedPackage is not null)
+				return matchedPackage;
+		}
+
 		if (indexedPackages?.TryGetValue(identity.Id, out var package) ?? false)
 		{
 			return package;
@@ -157,12 +145,12 @@ internal class PackageManager : IPackageManager
 		return null;
 	}
 
-	public ILocalPackageWithContents? GetPackageByFolder(string folder)
+	public IPackage? GetPackageByFolder(string folder)
 	{
 		return Packages.FirstOrDefault(x => x.Folder.PathEquals(folder));
 	}
 
-	public void SetPackages(List<ILocalPackageWithContents> content)
+	public void SetPackages(List<IPackage> content)
 	{
 		packages = content;
 
@@ -202,7 +190,7 @@ internal class PackageManager : IPackageManager
 		PackageWatcher.Resume();
 	}
 
-	public void MoveToLocalFolder(ILocalPackage item)
+	public void MoveToLocalFolder(IPackage item)
 	{
 		throw new NotImplementedException();
 		//if (item is Asset asset)

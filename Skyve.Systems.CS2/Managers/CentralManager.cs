@@ -200,9 +200,9 @@ internal class CentralManager : ICentralManager
 		_logger.Info("Saved Session Settings");
 	}
 
-	private void AnalyzePackages(List<ILocalPackageWithContents> content)
+	private void AnalyzePackages(List<ILocalPackageData> content)
 	{
-		var blackList = new List<ILocalPackageWithContents>();
+		var blackList = new List<ILocalPackageData>();
 		var firstTime = _updateManager.IsFirstTime();
 
 		_notifier.BulkUpdating = true;

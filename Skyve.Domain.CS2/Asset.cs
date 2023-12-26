@@ -10,7 +10,7 @@ using System.IO;
 namespace Skyve.Domain.CS2;
 public class Asset : IAsset
 {
-	public Asset(ILocalPackageWithContents package, string filePath)
+	public Asset(ILocalPackageData package, string filePath)
 	{
 		FilePath = filePath;
 		LocalParentPackage = package;
@@ -23,20 +23,20 @@ public class Asset : IAsset
 	}
 
 	public string FilePath { get; }
-	public ILocalPackageWithContents LocalParentPackage { get; }
+	public ILocalPackageData LocalParentPackage { get; }
 	public long LocalSize { get; }
 	public DateTime LocalTime { get; }
 	public string Name { get; }
 	public string[] AssetTags { get; }
 	public string FullName { get; }
-	public bool IsMod => LocalParentPackage.IsMod;
+	public bool IsCodeMod => LocalParentPackage.IsCodeMod;
 	public string Folder => LocalParentPackage.Folder;
 	public bool IsLocal => LocalParentPackage.IsLocal;
 	public bool IsBuiltIn => LocalParentPackage.IsBuiltIn;
 	public IEnumerable<IPackageRequirement> Requirements => LocalParentPackage.Requirements;
 	public ulong Id => LocalParentPackage.Id;
 	public string? Url => LocalParentPackage.Url;
-	ILocalPackage? IPackage.LocalPackage => this;
+	ILocalPackageData? IPackage.LocalPackage => this;
 
 	public override bool Equals(object? obj)
 	{
