@@ -5,7 +5,7 @@ using System.IO;
 namespace Skyve.Domain.CS2.Utilities;
 public class ModCollection
 {
-	private readonly Dictionary<string, List<IMod>> _modList = new(StringComparer.OrdinalIgnoreCase);
+	private readonly Dictionary<string, List<IPackage>> _modList = new(StringComparer.OrdinalIgnoreCase);
 	private readonly Dictionary<string, CollectionInfo> _collectionList;
 
 	public ModCollection(Dictionary<string, CollectionInfo> collectionList)
@@ -13,9 +13,9 @@ public class ModCollection
 		_collectionList = collectionList;
 	}
 
-	public void AddMod(IMod mod)
+	public void AddMod(IPackage mod)
 	{
-		var key = Path.GetFileName(mod.FilePath);
+		var key = Path.GetFileName(mod.LocalData?.FilePath);
 
 		if (_modList.ContainsKey(key))
 		{
@@ -27,9 +27,9 @@ public class ModCollection
 		}
 	}
 
-	public void RemoveMod(IMod mod)
+	public void RemoveMod(IPackage mod)
 	{
-		var key = Path.GetFileName(mod.FilePath);
+		var key = Path.GetFileName(mod.LocalData?.FilePath);
 
 		if (_modList.ContainsKey(key))
 		{
@@ -37,14 +37,14 @@ public class ModCollection
 		}
 	}
 
-	public List<IMod>? GetCollection(IMod mod, out CollectionInfo? collection)
+	public List<IPackage>? GetCollection(IPackage mod, out CollectionInfo? collection)
 	{
-		var key = Path.GetFileName(mod.FilePath);
+		var key = Path.GetFileName(mod.LocalData?.FilePath);
 
 		return GetCollection(key, out collection);
 	}
 
-	public List<IMod>? GetCollection(string key, out CollectionInfo? collection)
+	public List<IPackage>? GetCollection(string key, out CollectionInfo? collection)
 	{
 		if (_modList.ContainsKey(key))
 		{
@@ -57,9 +57,9 @@ public class ModCollection
 		return null;
 	}
 
-	public void CheckAndAdd(IMod mod)
+	public void CheckAndAdd(IPackage mod)
 	{
-		var fileName = Path.GetFileName(mod.FilePath);
+		var fileName = Path.GetFileName(mod.LocalData?.FilePath);
 
 		if (_collectionList.ContainsKey(fileName))
 		{
@@ -67,7 +67,7 @@ public class ModCollection
 		}
 	}
 
-	public IEnumerable<List<IMod>> Collections => _modList.Values;
+	public IEnumerable<List<IPackage>> Collections => _modList.Values;
 }
 
 public class CollectionInfo

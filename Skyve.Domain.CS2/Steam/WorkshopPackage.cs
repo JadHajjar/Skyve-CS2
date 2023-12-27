@@ -1,10 +1,7 @@
-﻿using Skyve.Domain.CS2.Enums;
-using Skyve.Domain.Systems;
+﻿using Skyve.Domain.Systems;
 using Skyve.Systems;
 
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace Skyve.Domain.CS2.Steam;
 public class WorkshopPackage : IPackage
@@ -14,7 +11,7 @@ public class WorkshopPackage : IPackage
 	public WorkshopPackage(ulong id)
 	{
 		Id = id;
-		Url = $"https://steamcommunity.com/workshop/filedetails/?id={Id}";
+		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
 	public WorkshopPackage(IWorkshopInfo info) : this(info.Id)
@@ -22,20 +19,17 @@ public class WorkshopPackage : IPackage
 		_info = info;
 	}
 
-	public ulong Id { get; }
-	public string Url { get; }
+	public bool IsCodeMod => WorkshopInfo?.IsMod ?? false;
 	public bool IsLocal { get; }
-	public bool IsBuiltIn { get; }
-	public string Name => GetInfo()?.Name ?? ServiceCenter.Get<ILocale>().Get("UnknownPackage");
-	public bool IsCodeMod => GetInfo()?.IsMod ?? false;
-	public ILocalPackageData? LocalParentPackage => ServiceCenter.Get<IPackageManager>().GetPackageById(this);
-	public ILocalPackageData? LocalPackage => ServiceCenter.Get<IPackageManager>().GetPackageById(this);
-	public IEnumerable<IPackageRequirement> Requirements => GetInfo()?.Requirements ?? Enumerable.Empty<IPackageRequirement>();
-	public IEnumerable<ITag> Tags => GetInfo()?.Tags.Select(x => (ITag)new TagItem(TagSource.Workshop, x.Value)) ?? Enumerable.Empty<ITag>();
+	public ILocalPackageData? LocalData => ServiceCenter.Get<IPackageManager>().GetPackageById(this)?.LocalData;
+	public IWorkshopInfo? WorkshopInfo => _info ?? this.GetWorkshopInfo();
+	public ulong Id { get; }
+	public string Name => WorkshopInfo?.Name ?? ServiceCenter.Get<ILocale>().Get("UnknownPackage");
+	public string? Url { get; }
 
 	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
-		var info = GetInfo();
+		var info = WorkshopInfo;
 
 		if (info is not null)
 		{
@@ -45,10 +39,5 @@ public class WorkshopPackage : IPackage
 		thumbnail = null;
 		thumbnailUrl = null;
 		return false;
-	}
-
-	private IWorkshopInfo? GetInfo()
-	{
-		return _info ?? this.GetWorkshopInfo();
 	}
 }

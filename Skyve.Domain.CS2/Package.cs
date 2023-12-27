@@ -16,32 +16,23 @@ using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
 namespace Skyve.Domain.CS2;
 
-public class Package : ILocalPackageData, IEqualityComparer<Package>
+public class Package : IPackage, IEquatable<Package?>
 {
-	public IAsset[] Assets { get; set; }
-	public IMod? Mod { get; set; }
-	public long LocalSize { get; set; }
-	public DateTime LocalTime { get; set; }
-	public string Folder { get; protected set; }
-	public bool IsCodeMod { get; protected set; }
-	public bool IsLocal { get; protected set; }
-	public bool IsBuiltIn { get; protected set; }
-	public string FilePath { get; protected set; }
 	public ulong Id { get; protected set; }
 	public string Name { get; protected set; }
 	public string? Url { get; protected set; }
-	public ILocalPackageData? LocalPackage => this;
-	public ILocalPackageData LocalParentPackage => this;
-	public IEnumerable<IPackageRequirement> Requirements => this.GetWorkshopInfo()?.Requirements ?? Enumerable.Empty<IPackageRequirement>();
+	public bool IsCodeMod { get; protected set; }
+	public bool IsLocal { get; protected set; }
+	public LocalPackageData LocalData { get; }
+	public virtual IWorkshopInfo? WorkshopInfo => this.GetWorkshopInfo();
+	ILocalPackageData? IPackage.LocalData => LocalData;
 
-	public Package(string folder, long localSize, DateTime localTime)
+	public Package(string folder, long localSize, DateTime localTime, string version, string filePath)
 	{
-		Folder = FilePath = folder.FormatPath();
-		Name = Path.GetFileName(Folder);
-		LocalSize = localSize;
-		LocalTime = localTime;
+		Name = Path.GetFileName(folder);
+		IsCodeMod = !string.IsNullOrEmpty(version);
 		IsLocal = true;
-		Assets = new Asset[0];
+		LocalData = new LocalPackageData(this, new IAsset[0], folder, localSize, localTime, version, filePath);
 	}
 
 	public virtual bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
@@ -66,27 +57,23 @@ public class Package : ILocalPackageData, IEqualityComparer<Package>
 
 	public override bool Equals(object? obj)
 	{
-		return obj is ILocalPackageData package && Folder == package.Folder;
+		return Equals(obj as Package);
+	}
+
+	public bool Equals(Package? other)
+	{
+		return other is not null &&
+			   LocalData.Folder == other.LocalData.Folder;
 	}
 
 	public override int GetHashCode()
 	{
-		return -1486376059 + EqualityComparer<string>.Default.GetHashCode(Folder);
-	}
-
-	public bool Equals(Package x, Package y)
-	{
-		return x.Folder == y.Folder;
-	}
-
-	public int GetHashCode(Package obj)
-	{
-		return obj.GetHashCode();
+		return 539060726 + EqualityComparer<string>.Default.GetHashCode(LocalData.Folder);
 	}
 
 	public static bool operator ==(Package? left, Package? right)
 	{
-		return left?.Folder == right?.Folder;
+		return left?.LocalData.Folder == right?.LocalData.Folder;
 	}
 
 	public static bool operator !=(Package? left, Package? right)
@@ -96,9 +83,43 @@ public class Package : ILocalPackageData, IEqualityComparer<Package>
 	#endregion
 }
 
-public class PdxPackage : Package, PdxIMod, IWorkshopInfo
+public class LocalPackageData : ILocalPackageData
 {
-	public PdxPackage(PdxMod mod) : base(mod.LocalData.FolderAbsolutePath, (long)mod.Size, mod.LatestUpdate ?? DateTime.Now)
+	public IPackage Package { get; }
+	public long LocalSize { get; }
+	public DateTime LocalTime { get; }
+	public string Version { get; }
+	public IAsset[] Assets { get; }
+	public string Folder { get; }
+	public string FilePath { get; }
+
+	public LocalPackageData(IPackage package, IAsset[] assets, string folder, long localSize, DateTime localTime, string version, string filePath)
+	{
+		Package = package;
+		LocalSize = localSize;
+		LocalTime = localTime;
+		Version = version;
+		Assets = assets;
+		Folder = folder;
+		FilePath = filePath;
+	}
+
+	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		return Package.GetThumbnail(out thumbnail, out thumbnailUrl); 
+	}
+
+	bool ILocalPackageData.IsCodeMod => Package.IsCodeMod;
+	ulong IPackageIdentity.Id => Package.Id;
+	string IPackageIdentity.Name => Package.Name;
+	string? IPackageIdentity.Url => Package.Url;
+}
+
+public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
+{
+	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
+
+	public LocalPdxPackage(PdxMod mod) : base(mod.LocalData.FolderAbsolutePath, (long)mod.Size, mod.LatestUpdate ?? DateTime.Now, mod.Version, mod.LocalData.FolderAbsolutePath)
 	{
 		IsLocal = false;
 		Id = (ulong)mod.Id;
@@ -112,21 +133,14 @@ public class PdxPackage : Package, PdxIMod, IWorkshopInfo
 		ThumbnailUrl = mod.ThumbnailPath;
 		Author = mod.Author;
 		Version = mod.Version;
-		LocalSize = (long)mod.Size;
 		//Tags
 		Rating = mod.Rating;
 		RatingsTotal = mod.RatingsTotal;
 		State = mod.State;
 		LatestUpdate = mod.LatestUpdate;
 		InstalledDate = mod.InstalledDate;
-		LocalData = mod.LocalData;
-
-		if (mod.LocalData is not null)
-		{
-			Folder = mod.LocalData.FolderAbsolutePath;
-			ThumbnailPath = CrossIO.Combine(Folder, mod.LocalData.ThumbnailFilename);
-		}
-
+		PdxLocalData = mod.LocalData;
+		ThumbnailPath = CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
 		Name = mod.DisplayName;
 		Description = mod.ShortDescription;
 		ServerTime = mod.LatestUpdate ?? default;
@@ -157,7 +171,7 @@ public class PdxPackage : Package, PdxIMod, IWorkshopInfo
 	public ModState State { get; set; }
 	public DateTime? LatestUpdate { get; set; }
 	public DateTime? InstalledDate { get; set; }
-	public PDX.SDK.Contracts.Service.Mods.Models.LocalData LocalData { get; set; }
+	PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
 	public string? ThumbnailUrl { get; set; }
 	public string? Description { get; set; }
 	public DateTime ServerTime { get; set; }

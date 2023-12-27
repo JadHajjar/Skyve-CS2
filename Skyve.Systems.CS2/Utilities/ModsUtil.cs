@@ -54,11 +54,11 @@ internal class ModsUtil : IModUtil
 		{
 			foreach (var mod in mods)
 			{
-				var modInfo = _modConfigInfo.TryGetValue(mod.Folder, out var info) ? info : new();
+				var modInfo = _modConfigInfo.TryGetValue(mod.LocalData.Folder, out var info) ? info : new();
 
 				modInfo.LoadOrder = index++;
 
-				_modConfigInfo[mod.Folder] = modInfo;
+				_modConfigInfo[mod.LocalData.Folder] = modInfo;
 			}
 		}
 
@@ -80,17 +80,17 @@ internal class ModsUtil : IModUtil
 		_config.Save();
 	}
 
-	public bool IsIncluded(IMod mod)
+	public bool IsIncluded(ILocalPackageIdentity mod)
 	{
 		return !(_modConfigInfo.TryGetValue(mod.Folder, out var info) && info.Excluded);
 	}
 
-	public bool IsEnabled(IMod mod)
+	public bool IsEnabled(ILocalPackageIdentity mod)
 	{
 		return IsIncluded(mod);// (await _workshopService.Context!.Mods.GetDetails((Mod)mod)).Mod.Playsets?.;
 	}
 
-	public void SetIncluded(IMod mod, bool value)
+	public void SetIncluded(ILocalPackageIdentity mod, bool value)
 	{
 		value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
 
@@ -119,7 +119,7 @@ internal class ModsUtil : IModUtil
 		SaveChanges();
 	}
 
-	public void SetEnabled(IMod mod, bool value)
+	public void SetEnabled(ILocalPackageIdentity mod, bool value)
 	{
 		value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
 
@@ -136,19 +136,14 @@ internal class ModsUtil : IModUtil
 		SaveChanges();
 	}
 
-	public IMod? GetMod(ILocalPackageData package)
-	{
-		return IsValidModFolder(package.Folder, out var dllPath, out var version) ? new Mod(package, dllPath!, version!) : (IMod?)null;
-	}
-
 	public int GetLoadOrder(IPackage package)
 	{
-		if (package.LocalPackage?.Folder is null)
+		if (package.LocalData?.Folder is null)
 		{
 			return 0;
 		}
 
-		if (_modConfigInfo.TryGetValue(package.LocalPackage.Folder, out var info))
+		if (_modConfigInfo.TryGetValue(package.LocalData.Folder, out var info))
 		{
 			return info.LoadOrder;
 		}
@@ -174,5 +169,10 @@ internal class ModsUtil : IModUtil
 		dllPath = null;
 		version = null;
 		return false;
+	}
+
+	public bool GetModInfo(ILocalPackageIdentity package, out string? modDll, out Version? version)
+	{
+		return IsValidModFolder(package.Folder, out modDll, out version);
 	}
 }

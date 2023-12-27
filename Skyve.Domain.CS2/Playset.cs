@@ -170,10 +170,13 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 		[JsonIgnore, CloneIgnore] public bool IsBuiltIn { get; }
 		[JsonIgnore, CloneIgnore] public virtual ILocalPackageData? LocalParentPackage => null;// ServiceCenter.Get<IPlaysetManager>().GetAsset(this)?.LocalParentPackage;
 		[JsonIgnore, CloneIgnore] public virtual ILocalPackageData? LocalPackage => null;// ServiceCenter.Get<IPlaysetManager>().GetAsset(this);
-		[JsonIgnore, CloneIgnore] public IEnumerable<IPackageRequirement> Requirements => LocalParentPackage?.Requirements ?? Enumerable.Empty<IPackageRequirement>();
 		[JsonIgnore, CloneIgnore] public ulong Id => SteamId;
 		[JsonIgnore, CloneIgnore] public string? Url => SteamId == 0 ? null : $"https://steamcommunity.com/workshop/filedetails/?id={Id}";
 		[JsonIgnore, CloneIgnore] public string FilePath => RelativePath!;
+
+		[JsonIgnore, CloneIgnore] public ILocalPackageData? LocalData { get; }
+		[JsonIgnore, CloneIgnore] public IWorkshopInfo? WorkshopInfo { get; }
+		[JsonIgnore, CloneIgnore] public string Folder { get; }
 
 		public Asset(IAsset asset)
 		{
@@ -236,14 +239,14 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 		[JsonIgnore, CloneIgnore] public override ILocalPackageData? LocalParentPackage => null; //ServiceCenter.Get<IPlaysetManager>().GetMod(this)?.LocalParentPackage;
 		[JsonIgnore, CloneIgnore] public override ILocalPackageData? LocalPackage => null; //ServiceCenter.Get<IPlaysetManager>().GetMod(this);
 
-		public Mod(IMod mod)
-		{
-			IsCodeMod = true;
-			SteamId = mod.Id;
-			Name = mod.Name;
-			Enabled = ServiceCenter.Get<IModUtil>().IsEnabled(mod);
-			RelativePath = ServiceCenter.Get<ILocationService>().ToRelativePath(mod.Folder);
-		}
+		//public Mod(IMod mod)
+		//{
+		//	IsCodeMod = true;
+		//	SteamId = mod.Id;
+		//	Name = mod.Name;
+		//	Enabled = ServiceCenter.Get<IModUtil>().IsEnabled(mod);
+		//	RelativePath = ServiceCenter.Get<ILocationService>().ToRelativePath(mod.Folder);
+		//}
 
 		public Mod(IPackage package)
 		{

@@ -241,7 +241,7 @@ internal class WorkshopService : IWorkshopService
             return new();
         }
 
-        return mods.Mods.ToList(mod => (ILocalPackageData)new PdxPackage(mod));
+        return mods.Mods.ToList(mod => (ILocalPackageData)new LocalPdxPackage(mod));
     }
 
     public async Task<List<ICustomPlayset>> GetAllPlaysets(bool localOnly)
