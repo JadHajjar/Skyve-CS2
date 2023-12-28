@@ -14,7 +14,7 @@ public class Asset : IAsset
 	public string Name { get; }
 	public string? Url { get; }
 	public IPackage Package { get; }
-	public long LocalSize { get; }
+	public long FileSize { get; }
 	public DateTime LocalTime { get; }
 	public string[] Tags { get; }
 
@@ -23,7 +23,7 @@ public class Asset : IAsset
 		FilePath = filePath;
 		Package = package;
 		Folder = package.LocalData!.Folder;
-		LocalSize = new FileInfo(FilePath).Length;
+		FileSize = new FileInfo(FilePath).Length;
 		LocalTime = File.GetLastWriteTimeUtc(FilePath);
 		Name = Path.GetFileNameWithoutExtension(FilePath).FormatWords();
 		Tags = new string[0];

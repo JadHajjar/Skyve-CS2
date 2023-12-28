@@ -18,7 +18,7 @@ internal class CompatibilityUtil : ICompatibilityUtil
 
 	public DateTime MinimumModDate { get; } = new DateTime(2023, 11, 01);
 
-	public void PopulateAutomaticPackageInfo(CompatibilityPackageData info, IPackage package, IWorkshopInfo? workshopInfo)
+	public void PopulateAutomaticPackageInfo(CompatibilityPackageData info, IPackageIdentity package, IWorkshopInfo? workshopInfo)
 	{
 		//if (workshopInfo?.Requirements?.Any(x => x.Id == MUSIC_MOD_ID) ?? false)
 		//{
