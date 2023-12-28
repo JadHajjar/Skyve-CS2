@@ -51,15 +51,15 @@ internal class UpdateManager : IUpdateManager
 
 		foreach (var package in _packageManager.Packages)
 		{
-			var date = _previousPackages.TryGet(package.Folder);
+			var date = _previousPackages.TryGet(package.LocalData!.Folder);
 
 			if (date == default)
 			{
-				newPackages.Add(package);
+				newPackages.Add(package.LocalData!);
 			}
-			else if (package.LocalTime > date)
+			else if (package.LocalData!.LocalTime > date)
 			{
-				updatedPackages.Add(package);
+				updatedPackages.Add(package.LocalData!);
 			}
 		}
 
@@ -73,7 +73,7 @@ internal class UpdateManager : IUpdateManager
 			_notificationsService.SendNotification(new UpdatedPackagesNotificationInfo(updatedPackages));
 		}
 
-		ISave.Save(ServiceCenter.Get<IPackageManager>().Packages.Select(x => new KnownPackage(x)), "LastPackages.json");
+		ISave.Save(ServiceCenter.Get<IPackageManager>().Packages.Select(x => new KnownPackage(x.LocalData!)), "LastPackages.json");
 	}
 
 	public bool IsPackageKnown(ILocalPackageData package)
@@ -100,11 +100,11 @@ internal class UpdateManager : IUpdateManager
 
 		foreach (var package in _packageManager.Packages)
 		{
-			var date = _previousPackages.TryGet(package.Folder);
+			var date = _previousPackages.TryGet(package.LocalData!.Folder);
 
-			if (package.LocalTime > date)
+			if (package.LocalData!.LocalTime > date)
 			{
-				yield return package;
+				yield return package.LocalData!;
 			}
 		}
 	}

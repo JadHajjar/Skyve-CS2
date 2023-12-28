@@ -1,4 +1,6 @@
-﻿using Skyve.Domain.Systems;
+﻿using Extensions;
+
+using Skyve.Domain.Systems;
 using Skyve.Systems;
 
 using System;
@@ -30,7 +32,7 @@ public class UpdatedPackagesNotificationInfo : INotificationInfo
 
 	public void OnClick()
 	{
-		ServiceCenter.Get<IInterfaceService>().ViewSpecificPackages(_packages, Title);
+		ServiceCenter.Get<IInterfaceService>().ViewSpecificPackages(_packages.ToList(x => (IPackageIdentity)x), Title);
 	}
 
 	public void OnRightClick()

@@ -32,7 +32,7 @@ internal class SubscriptionsManager : ISubscriptionsManager
 		throw new NotImplementedException();
 	}
 
-	public bool IsSubscribing(IPackage package)
+	public bool IsSubscribing(IPackageIdentity package)
 	{
 		return false;
 	}

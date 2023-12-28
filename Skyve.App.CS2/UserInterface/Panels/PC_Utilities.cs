@@ -50,8 +50,8 @@ public partial class PC_Utilities : PanelContent
 
 	private void RefreshModIssues()
 	{
-		var modsOutOfDate = _contentManager.Packages.AllWhere(x => _packageUtil.GetStatus(x, out _) == DownloadStatus.OutOfDate);
-		var modsIncomplete = _contentManager.Packages.AllWhere(x => _packageUtil.GetStatus(x, out _) == DownloadStatus.PartiallyDownloaded);
+		var modsOutOfDate = _contentManager.Packages.AllWhere(x => _packageUtil.GetStatus(x.LocalData, out _) == DownloadStatus.OutOfDate);
+		var modsIncomplete = _contentManager.Packages.AllWhere(x => _packageUtil.GetStatus(x.LocalData, out _) == DownloadStatus.PartiallyDownloaded);
 
 		this.TryInvoke(() =>
 		{
@@ -147,7 +147,7 @@ public partial class PC_Utilities : PanelContent
 				{
 					var contents = await _workshopService.GetPackageAsync(new GenericPackageIdentity(steamId));
 
-					if (contents?.Requirements?.Any() ?? false)
+					if (contents?.GetWorkshopInfo()?.Requirements?.Any() ?? false)
 					{
 						Form.PushPanel(null, new PC_ViewCollection(contents));
 
@@ -169,7 +169,7 @@ public partial class PC_Utilities : PanelContent
 	{
 		B_ReDownload.Loading = true;
 
-		await Task.Run(() => _downloadService.Download(_contentManager.Packages.Where(x => _packageUtil.GetStatus(x, out _) is DownloadStatus.OutOfDate or DownloadStatus.PartiallyDownloaded)));
+		await Task.Run(() => _downloadService.Download(_contentManager.Packages.Where(x => _packageUtil.GetStatus(x.LocalData, out _) is DownloadStatus.OutOfDate or DownloadStatus.PartiallyDownloaded)));
 	}
 
 	private void TB_CollectionLink_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)

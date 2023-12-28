@@ -86,10 +86,10 @@ internal class TagsService : ITagsService
 
 		var assetDictionary = new Dictionary<string, IAsset>(StringComparer.CurrentCultureIgnoreCase);
 
-		foreach (var asset in ServiceCenter.Get<IPackageManager>().Assets)
-		{
-			assetDictionary[(asset as Asset)!.FullName] = asset;
-		}
+		//foreach (var asset in ServiceCenter.Get<IPackageManager>().Assets)
+		//{
+		//	assetDictionary[(asset as Asset)!.FullName] = asset;
+		//}
 	}
 
 	private void UpdateWorkshopTags()
@@ -153,7 +153,7 @@ internal class TagsService : ITagsService
 		}
 	}
 
-	public IEnumerable<ITag> GetTags(IPackage package, bool ignoreParent = false)
+	public IEnumerable<ITag> GetTags(IPackageIdentity package, bool ignoreParent = false)
 	{
 		var returned = new List<string>();
 
@@ -184,7 +184,7 @@ internal class TagsService : ITagsService
 			}
 		}
 
-		if (package.LocalPackage is ILocalPackageData localPackage)
+		if (package.GetLocalPackageIdentity() is ILocalPackageData localPackage)
 		{
 			if (_customTagsDictionary.TryGetValue(localPackage.FilePath, out var customTags))
 			{
@@ -199,7 +199,7 @@ internal class TagsService : ITagsService
 			}
 		}
 
-		if (!ignoreParent && package.LocalParentPackage is ILocalPackageData lp && _customTagsDictionary.TryGetValue(lp.Folder, out var customParentTags))
+		if (!ignoreParent && package.GetLocalPackageIdentity() is ILocalPackageData lp && _customTagsDictionary.TryGetValue(lp.Folder, out var customParentTags))
 		{
 			foreach (var item in customParentTags)
 			{
@@ -212,7 +212,7 @@ internal class TagsService : ITagsService
 		}
 	}
 
-	public void SetTags(IPackage package, IEnumerable<string> value)
+	public void SetTags(IPackageIdentity package, IEnumerable<string> value)
 	{
 		if (package is IAsset asset)
 		{
@@ -220,7 +220,7 @@ internal class TagsService : ITagsService
 
 			ISave.Save(_customTagsDictionary, "CustomTags.json");
 		}
-		else if (package.LocalParentPackage is ILocalPackageData lp)
+		else if (package.GetLocalPackageIdentity() is ILocalPackageData lp)
 		{
 			_customTagsDictionary[lp.Folder] = value.WhereNotEmpty().ToArray();
 
@@ -230,7 +230,7 @@ internal class TagsService : ITagsService
 		_notifier.OnRefreshUI(true);
 	}
 
-	public bool HasAllTags(IPackage package, IEnumerable<ITag> tags)
+	public bool HasAllTags(IPackageIdentity package, IEnumerable<ITag> tags)
 	{
 		var workshopTags = package.GetWorkshopInfo()?.Tags;
 

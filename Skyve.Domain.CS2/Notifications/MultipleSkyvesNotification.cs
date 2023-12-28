@@ -35,7 +35,7 @@ public class MultipleSkyvesNotification : INotificationInfo
 
     public void OnClick()
     {
-		ServiceCenter.Get<IInterfaceService>().ViewSpecificPackages(_skyveInstances, Title);
+		ServiceCenter.Get<IInterfaceService>().ViewSpecificPackages(_skyveInstances.ToList(x => (IPackageIdentity)x), Title);
 	}
 
 	public void OnRightClick()
