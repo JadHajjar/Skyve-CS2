@@ -1,7 +1,7 @@
 ﻿using Extensions;
 
 using Skyve.Domain;
-using Skyve.Domain.CS2;
+using Skyve.Domain.CS2.Content;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Managers;

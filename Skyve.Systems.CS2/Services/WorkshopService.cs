@@ -8,8 +8,9 @@ using PDX.SDK.Contracts.Enums;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2;
+using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Notifications;
-using Skyve.Domain.CS2.ParadoxMods;
+using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.CS2.Steam;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Enums;
@@ -194,7 +195,7 @@ internal class WorkshopService : IWorkshopService
 
         if (info is not null)
         {
-            return new WorkshopPackage(info);
+            return new PdxModPackage(info);
         }
 
         throw new NotImplementedException();
@@ -207,7 +208,7 @@ internal class WorkshopService : IWorkshopService
 
         if (info is not null)
         {
-            return new WorkshopPackage(info);
+            return new PdxModPackage(info);
         }
 
         throw new NotImplementedException();

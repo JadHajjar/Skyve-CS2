@@ -6,6 +6,7 @@ using Skyve.Systems.Compatibility;
 using Skyve.Systems.CS2.Utilities;
 
 using System;
+using System.Drawing;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Systems;
@@ -92,6 +93,11 @@ internal class UserService : IUserService
 		public override int GetHashCode()
 		{
 			return 2139390487 + Id?.GetHashCode() ?? 0;
+		}
+
+		public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Skyve.Domain.CS2.ParadoxMods;
+namespace Skyve.Domain.CS2.Paradox;
 public class PdxModDetails : IWorkshopInfo
 {
 	public PdxModDetails(ModDetails mod)
@@ -62,8 +62,8 @@ public class PdxModDetails : IWorkshopInfo
 	public string? Url { get; set; }
 	public DateTime Timestamp { get; set; }
 
-	[JsonIgnore] public IEnumerable<IPackageRequirement> Requirements => null;// RequiredPackageIds?.Select(x => new SteamPackageRequirement(ServiceCenter.Get<ICompatibilityManager>().GetFinalSuccessor(new GenericPackageIdentity(x)).Id, !IsMod)) ?? Enumerable.Empty<IPackageRequirement>();
-	[JsonIgnore] public IUser? Author => null;//ServiceCenter.Get<IWorkshopService>().GetUser(AuthorId) ?? (AuthorId > 0 ? new SteamUser { SteamId = AuthorId, Name = AuthorId.ToString() } : null);
+	[JsonIgnore] public IUser? Author => string.IsNullOrWhiteSpace(AuthorId) ? null : new PdxUser(AuthorId!);
+	[JsonIgnore] public IEnumerable<IPackageRequirement> Requirements => Dependencies?.Select(x => new PdxModRequirement(x)) ?? [];
 
 	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
