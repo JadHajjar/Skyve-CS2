@@ -250,7 +250,7 @@ internal class PlaysetManager : IPlaysetManager
 		return new Playset(newPlayset) { LastEditDate = DateTime.Now };
 	}
 
-	public List<ILocalPackageData> GetInvalidPackages(PackageUsage usage)
+	public List<IPackage> GetInvalidPackages(PackageUsage usage)
 	{
 		if ((int)usage == -1)
 		{
@@ -271,7 +271,7 @@ internal class PlaysetManager : IPlaysetManager
 				return false;
 			}
 
-			return _packageUtil.IsIncluded(x, out var partial) || partial;
+			return _packageUtil.IsIncluded(x.LocalData!, out var partial) || partial;
 		});
 	}
 

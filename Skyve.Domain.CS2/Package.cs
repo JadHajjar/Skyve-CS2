@@ -23,16 +23,23 @@ public class Package : IPackage, IEquatable<Package?>
 	public string? Url { get; protected set; }
 	public bool IsCodeMod { get; protected set; }
 	public bool IsLocal { get; protected set; }
-	public LocalPackageData LocalData { get; }
+	public LocalPackageData LocalData { get; private set; }
 	public virtual IWorkshopInfo? WorkshopInfo => this.GetWorkshopInfo();
 	ILocalPackageData? IPackage.LocalData => LocalData;
 
-	public Package(string folder, long localSize, DateTime localTime, string version, string filePath)
+	public Package(string folder, long localSize, DateTime localTime, IAsset[] assets, bool isCodeMod, string version, string? filePath)
 	{
 		Name = Path.GetFileName(folder);
-		IsCodeMod = !string.IsNullOrEmpty(version);
+		IsCodeMod = isCodeMod;
 		IsLocal = true;
-		LocalData = new LocalPackageData(this, new IAsset[0], folder, localSize, localTime, version, filePath);
+		LocalData = new LocalPackageData(this, assets, folder, localSize, localTime, version, filePath ?? folder);
+	}
+
+	public void RefreshData(long localSize, DateTime localTime, IAsset[] assets, bool isCodeMod, string version, string? filePath)
+	{
+		IsCodeMod = isCodeMod;
+		IsLocal = true;
+		LocalData = new LocalPackageData(this, assets, LocalData.Folder, localSize, localTime, version, filePath ?? LocalData.Folder);
 	}
 
 	public virtual bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
@@ -89,7 +96,7 @@ public class LocalPackageData : ILocalPackageData
 	public long LocalSize { get; }
 	public DateTime LocalTime { get; }
 	public string Version { get; }
-	public IAsset[] Assets { get; }
+	public IAsset[] Assets { get; set; }
 	public string Folder { get; }
 	public string FilePath { get; }
 
@@ -119,7 +126,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 {
 	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
 
-	public LocalPdxPackage(PdxMod mod) : base(mod.LocalData.FolderAbsolutePath, (long)mod.Size, mod.LatestUpdate ?? DateTime.Now, mod.Version, mod.LocalData.FolderAbsolutePath)
+	public LocalPdxPackage(PdxMod mod) : base(mod.LocalData.FolderAbsolutePath, (long)mod.Size, mod.LatestUpdate ?? DateTime.Now, new IAsset[0], mod.Tags.Any(x=>x.DisplayName=="Mod"), mod.Version, mod.LocalData.FolderAbsolutePath)
 	{
 		IsLocal = false;
 		Id = (ulong)mod.Id;

@@ -45,11 +45,11 @@ internal class ContentManager : IContentManager
 		_workshopService = workshopService;
 	}
 
-	public IEnumerable<ILocalPackageData> GetReferencingPackage(ulong steamId, bool includedOnly)
+	public IEnumerable<IPackage> GetReferencingPackage(ulong steamId, bool includedOnly)
 	{
 		foreach (var item in _packageManager.Packages)
 		{
-			if (includedOnly && !(_packageUtil.IsIncluded(item, out var partiallyIncluded) || partiallyIncluded))
+			if (includedOnly && !(_packageUtil.IsIncluded(item.LocalData!, out var partiallyIncluded) || partiallyIncluded))
 			{
 				continue;
 			}
@@ -58,7 +58,7 @@ internal class ContentManager : IContentManager
 
 			if (crData == null)
 			{
-				if (item.Requirements.Any(x => x.Id == steamId))
+				if (item.GetWorkshopInfo()?.Requirements.Any(x => x.Id == steamId) == true)
 				{
 					yield return item;
 				}
@@ -128,9 +128,9 @@ internal class ContentManager : IContentManager
 		return 0;
 	}
 
-	public async Task<List<ILocalPackageData>> LoadContents()
+	public async Task<List<IPackage>> LoadContents()
 	{
-		var packages = new List<ILocalPackageData>();
+		var packages = new List<IPackage>();
 		var gameModsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods");
 
 		if (Directory.Exists(gameModsPath))
@@ -139,7 +139,12 @@ internal class ContentManager : IContentManager
 
 			foreach (var folder in Directory.GetDirectories(gameModsPath))
 			{
-				getPackage(folder, false, false, false);
+				var package = GetPackage(folder, false, false);
+
+				if (package is not null)
+				{
+					packages.Add(package);
+				}
 			}
 		}
 		else
@@ -149,58 +154,50 @@ internal class ContentManager : IContentManager
 
 		var subscribedItems = await _workshopService.GetInstalledPackages();
 
-		lock (packages)
-		{
-			packages.AddRange(subscribedItems);
-		}
+		packages.AddRange(subscribedItems);
 
 		return packages;
+	}
 
-		void getPackage(string folder, bool builtIn, bool workshop, bool expectAssets, bool withSubDirectories = true)
+	private Package? GetPackage(string folder, bool builtIn, bool workshop, bool withSubDirectories = true)
+	{
+		try
 		{
-			try
+			if (Regex.IsMatch(Path.GetFileName(folder), ExtensionClass.CharBlackListPattern))
 			{
-				if (Regex.IsMatch(Path.GetFileName(folder), ExtensionClass.CharBlackListPattern))
-				{
-					_logger.Warning($"Package folder contains blacklisted characters: '{folder}'");
+				_logger.Warning($"Package folder contains blacklisted characters: '{folder}'");
 
-					return;
-				}
+				return null;
+			}
 
-				if (!Directory.Exists(folder))
-				{
-					_logger.Warning($"Package folder not found: '{folder}'");
+			if (!Directory.Exists(folder))
+			{
+				_logger.Warning($"Package folder not found: '{folder}'");
 
-					return;
-				}
+				return null;
+			}
 
 #if DEBUG
-				_logger.Debug("Creating package for: " + folder);
+			_logger.Debug("Creating package for: " + folder);
 #endif
 
-				var package = new Package(folder, GetTotalSize(folder), GetLocalUpdatedTime(folder));
+			var isCodeMod = _modUtil.GetModInfo(folder, out var modDll, out var version);
+			var assets = _assetUtil.GetAssets(folder, withSubDirectories).ToArray();
+			var package = new Package(folder,
+				GetTotalSize(folder),
+				GetLocalUpdatedTime(folder),
+				assets,
+				isCodeMod,
+				version.GetString(),
+				modDll);
 
-				package.Assets = _assetUtil.GetAssets(package, withSubDirectories).ToArray();
-				package.Mod = expectAssets ? null : _modUtil.GetMod(package);
+			return package;
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, $"Failed to create a package from the folder: '{folder}'");
 
-				if (package.Assets.Length != 0 || package.Mod != null)
-				{
-					lock (packages)
-					{
-						packages.Add(package);
-					}
-				}
-#if DEBUG
-				else
-				{
-					_logger.Debug("No mods/assets found in: " + folder);
-				}
-#endif
-			}
-			catch (Exception ex)
-			{
-				_logger.Exception(ex, $"Failed to create a package from the folder: '{folder}'");
-			}
+			return null;
 		}
 	}
 
@@ -218,7 +215,7 @@ internal class ContentManager : IContentManager
 			//	return;
 			//}
 
-			var existingPackage = _packageManager.Packages.FirstOrDefault(x => x.Folder.PathEquals(path));
+			var existingPackage = _packageManager.Packages.FirstOrDefault(x => x.LocalData!.Folder.PathEquals(path));
 
 			if (existingPackage is Package package)
 			{
@@ -226,50 +223,46 @@ internal class ContentManager : IContentManager
 			}
 			else
 			{
-				AddNewPackage(path, builtIn, workshop, self);
+				var newPackage = GetPackage(path, false, workshop, self);
+
+				if (newPackage is null)
+					return;
+
+				if (newPackage.IsCodeMod)
+				{
+					ServiceCenter.Get<IModLogicManager>().Analyze(newPackage, _modUtil);
+				}
+
+				_packageManager.AddPackage(newPackage);
 			}
 		}
 	}
 
-	private void AddNewPackage(string path, bool builtIn, bool workshop, bool self)
-	{
-		if (workshop && !ulong.TryParse(Path.GetFileName(path), out _))
-		{
-			return;
-		}
-
-		var package = new Package(path, GetTotalSize(path), GetLocalUpdatedTime(path));
-
-		package.Assets = _assetUtil.GetAssets(package, !self).ToArray();
-		package.Mod = _modUtil.GetMod(package);
-
-		if (package.Mod is not null)
-		{
-			ServiceCenter.Get<IModLogicManager>().Analyze(package.Mod, _modUtil);
-		}
-
-		_packageManager.AddPackage(package);
-	}
-
-	public void RefreshPackage(ILocalPackageData localPackage, bool self)
+	public void RefreshPackage(IPackage localPackage, bool self)
 	{
 		if (localPackage is not Package package)
 		{
 			return;
 		}
 
-		if (IsDirectoryEmpty(package.Folder))
+		if (IsDirectoryEmpty(package.LocalData!.Folder))
 		{
 			_packageManager.RemovePackage(package);
 			return;
 		}
 
-		package.Assets = _assetUtil.GetAssets(package, !self).ToArray();
-		package.Mod = _modUtil.GetMod(package);
-		package.LocalSize = GetTotalSize(package.Folder);
-		package.LocalTime = GetLocalUpdatedTime(package.Folder);
+		var isCodeMod = _modUtil.GetModInfo(package.LocalData.Folder, out var modDll, out var version);
+		var assets = _assetUtil.GetAssets(package.LocalData.Folder, !self).ToArray();
+		
+		package.RefreshData(
+			GetTotalSize(package.LocalData.Folder),
+			GetLocalUpdatedTime(package.LocalData.Folder),
+			assets,
+			isCodeMod,
+			version.GetString(),
+			modDll);
 
-		if (package.IsLocal && package.Mod is null)
+		if (package.IsLocal && !package.IsCodeMod)
 		{
 			_notifier.OnContentLoaded();
 		}

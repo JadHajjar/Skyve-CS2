@@ -109,7 +109,7 @@ internal class ModLogicManager : IModLogicManager
 		return false;
 	}
 
-	public bool AreMultipleSkyvesPresent(out List<IPackage> skyveInstances)
+	public bool AreMultipleSkyvesPresent(out List<IPackageIdentity> skyveInstances)
 	{
 		skyveInstances = new();
 

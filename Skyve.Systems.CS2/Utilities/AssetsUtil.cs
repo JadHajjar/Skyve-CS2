@@ -28,12 +28,12 @@ internal class AssetsUtil : IAssetUtil
 		_notifier.ContentLoaded += BuildAssetIndex;
 	}
 
-	public IEnumerable<IAsset> GetAssets(ILocalPackageData package, bool withSubDirectories = true)
+	public IEnumerable<IAsset> GetAssets(string folder, bool withSubDirectories = true)
 	{
-		if (!Directory.Exists(package.Folder))
+		if (!Directory.Exists(folder))
 		{
 #if DEBUG
-			ServiceCenter.Get<ILogger>().Debug("Getting assets failed, directory not found: " + package.Folder);
+			ServiceCenter.Get<ILogger>().Debug("Getting assets failed, directory not found: " + folder);
 #endif
 			yield break;
 		}

@@ -24,7 +24,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 	public event Action? StageChanged;
 	public event Action? AskForConfirmation;
-	public event Action<List<ILocalPackageData>>? PromptResult;
+	public event Action<List<ILocalPackageIdentity>>? PromptResult;
 
 	public bool IsInProgress => currentState is not null;
 	public string CurrentAction => LocaleHelper.GetGlobalText(currentState?.Stage.ToString());
@@ -68,15 +68,15 @@ internal class TroubleshootSystem : ITroubleshootSystem
 			UnprocessedItems = new()
 		};
 
-		IEnumerable<ILocalPackageData> packages = settings.Mods ? _packageManager.Packages : _packageManager.Assets;
+		IEnumerable<IPackageIdentity> packages = settings.Mods ? _packageManager.Packages : _packageManager.Assets;
 
-		var packageToProcess = new List<ILocalPackageData>();
+		var packageToProcess = new List<ILocalPackageIdentity>();
 
 		foreach (var item in packages)
 		{
 			if (CheckPackageValidity(settings, item))
 			{
-				if (item is IMod mod && _modLogicManager.IsRequired(mod, _modUtil))
+				if (item.GetLocalPackageIdentity() is ILocalPackageIdentity mod && _modLogicManager.IsRequired(mod, _modUtil))
 				{
 					continue;
 				}
@@ -86,7 +86,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 					continue;
 				}
 
-				packageToProcess.Add(item);
+				packageToProcess.AddIfNotNull(item.GetLocalPackageIdentity());
 			}
 		}
 
@@ -113,26 +113,26 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		ApplyConfirmation(true);
 	}
 
-	private static bool CheckPackageValidity(ITroubleshootSettings settings, ILocalPackageData item)
+	private static bool CheckPackageValidity(ITroubleshootSettings settings, IPackageIdentity item)
 	{
 		if (settings.ItemIsCausingIssues)
 		{
-			return item.IsIncluded() == true;
+			return item.IsIncluded(out _) == true;
 		}
 
 		if (settings.ItemIsMissing)
 		{
-			return item.IsIncluded() == false;
+			return item.IsIncluded(out _) == false;
 		}
 
 		if (settings.NewItemCausingIssues)
 		{
-			if (!item.IsIncluded())
+			if (!item.IsIncluded(out _))
 			{
 				return false;
 			}
 
-			if (item.LocalTime > DateTime.Today.AddDays(-7))
+			if (item.GetLocalPackage()?.LocalTime > DateTime.Today.AddDays(-7))
 			{
 				return true;
 			}
@@ -264,7 +264,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		return (list1, list2);
 	}
 
-	private List<List<string>> GetItemGroups(List<ILocalPackageData> items)
+	private List<List<string>> GetItemGroups(List<ILocalPackageIdentity> items)
 	{
 		var groups = new List<List<string>>();
 
@@ -284,7 +284,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		return groups;
 	}
 
-	private void GetPairedItems(List<ILocalPackageData> items, List<string> group, ILocalPackageData current)
+	private void GetPairedItems(List<ILocalPackageIdentity> items, List<string> group, ILocalPackageIdentity current)
 	{
 		foreach (var item in items)
 		{
@@ -304,26 +304,26 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		}
 	}
 
-	private bool AreItemsPaired(ILocalPackageData packageA, ILocalPackageData packageB)
+	private bool AreItemsPaired(IPackageIdentity packageA, IPackageIdentity packageB)
 	{
 		if (packageA != null && packageB != null)
 		{
-			return packageA.Requirements.Any(x => x.Id == packageB.Id)
-				|| packageB.Requirements.Any(x => x.Id == packageA.Id);
+			return packageA.GetWorkshopInfo()?.Requirements.Any(x => x.Id == packageB.Id) == true
+				|| packageB.GetWorkshopInfo()?.Requirements.Any(x => x.Id == packageA.Id) == true;
 		}
 
 		return false;
 	}
 
-	private IEnumerable<ILocalPackageData> GetPackages(IEnumerable<string> packagePaths)
+	private IEnumerable<ILocalPackageIdentity> GetPackages(IEnumerable<string> packagePaths)
 	{
-		IEnumerable<ILocalPackageData> packages = currentState!.Mods ? _packageManager.Packages : _packageManager.Assets;
+		IEnumerable<IPackageIdentity> packages = currentState!.Mods ? _packageManager.Packages : _packageManager.Assets;
 
 		foreach (var package in packages)
 		{
-			if (packagePaths.Contains(package.FilePath))
+			if (packagePaths.Contains(package.GetLocalPackageIdentity()!.FilePath))
 			{
-				yield return package;
+				yield return package.GetLocalPackageIdentity()!;
 			}
 		}
 	}

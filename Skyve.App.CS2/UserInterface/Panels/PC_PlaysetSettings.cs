@@ -383,7 +383,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 				return;
 			}
 
-			_bulkUtil.SetBulkIncluded(invalidPackages, false);
+			_bulkUtil.SetBulkIncluded(invalidPackages.Select(x=>x.LocalData)!, false);
 		}
 
 		ValueChanged(sender, e);

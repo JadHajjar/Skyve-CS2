@@ -200,9 +200,9 @@ internal class CentralManager : ICentralManager
 		_logger.Info("Saved Session Settings");
 	}
 
-	private void AnalyzePackages(List<ILocalPackageData> content)
+	private void AnalyzePackages(List<IPackage> content)
 	{
-		var blackList = new List<ILocalPackageData>();
+		var blackList = new List<IPackage>();
 		var firstTime = _updateManager.IsFirstTime();
 
 		_notifier.BulkUpdating = true;
@@ -215,26 +215,26 @@ internal class CentralManager : ICentralManager
 				continue;
 			}
 
-			if (package.Mod is not null)
+			if (package.IsCodeMod)
 			{
 				if (!_settings.UserSettings.AdvancedIncludeEnable)
 				{
-					if (!firstTime && !_modUtil.IsEnabled(package.Mod) && _modUtil.IsIncluded(package.Mod))
+					if (!firstTime && !_modUtil.IsEnabled(package.LocalData!) && _modUtil.IsIncluded(package.LocalData!))
 					{
-						_modUtil.SetIncluded(package.Mod, false);
+						_modUtil.SetIncluded(package.LocalData!, false);
 					}
 				}
 
-				if (_settings.UserSettings.LinkModAssets && package.Assets is not null)
+				if (_settings.UserSettings.LinkModAssets && package.LocalData! is not null)
 				{
-					_bulkUtil.SetBulkIncluded(package.Assets, _modUtil.IsIncluded(package.Mod));
+					_bulkUtil.SetBulkIncluded(package.LocalData!.Assets, _modUtil.IsIncluded(package.LocalData!));
 				}
 
-				_modLogicManager.Analyze(package.Mod, _modUtil);
+				_modLogicManager.Analyze(package, _modUtil);
 
-				if (!firstTime && !_updateManager.IsPackageKnown(package))
+				if (!firstTime && !_updateManager.IsPackageKnown(package.LocalData!))
 				{
-					_modUtil.SetEnabled(package.Mod, _modUtil.IsIncluded(package.Mod));
+					_modUtil.SetEnabled(package.LocalData!, _modUtil.IsIncluded(package.LocalData!));
 				}
 			}
 		}
@@ -256,7 +256,7 @@ internal class CentralManager : ICentralManager
 
 		foreach (var item in blackList)
 		{
-			_packageManager.DeleteAll(item.Folder);
+			_packageManager.DeleteAll(item.LocalData!.Folder);
 		}
 
 		_logger.Info($"Applying analysis results..");

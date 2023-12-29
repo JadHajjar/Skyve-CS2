@@ -171,8 +171,8 @@ internal class ModsUtil : IModUtil
 		return false;
 	}
 
-	public bool GetModInfo(ILocalPackageIdentity package, out string? modDll, out Version? version)
+	public bool GetModInfo(string folder, out string? modDll, out Version? version)
 	{
-		return IsValidModFolder(package.Folder, out modDll, out version);
+		return IsValidModFolder(folder, out modDll, out version);
 	}
 }

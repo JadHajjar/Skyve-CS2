@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Skyve.Domain.CS2.Notifications;
 public class MultipleSkyvesNotification : INotificationInfo
 {
-	private readonly List<ILocalPackageData> _skyveInstances;
+	private readonly List<IPackageIdentity> _skyveInstances;
 
 	public DateTime Time { get; }
     public string Title { get; }
@@ -22,7 +22,7 @@ public class MultipleSkyvesNotification : INotificationInfo
     public Color? Color { get; }
     public bool HasAction { get; }
 
-    public MultipleSkyvesNotification(List<ILocalPackageData> skyveInstances)
+    public MultipleSkyvesNotification(List<IPackageIdentity> skyveInstances)
     {
         Time = DateTime.Now;
         Title = Locale.MultipleSkyvesDetected;
@@ -35,7 +35,7 @@ public class MultipleSkyvesNotification : INotificationInfo
 
     public void OnClick()
     {
-		ServiceCenter.Get<IInterfaceService>().ViewSpecificPackages(_skyveInstances.ToList(x => (IPackageIdentity)x), Title);
+		ServiceCenter.Get<IInterfaceService>().ViewSpecificPackages(_skyveInstances, Title);
 	}
 
 	public void OnRightClick()

@@ -197,7 +197,8 @@ internal class WorkshopService : IWorkshopService
             return new WorkshopPackage(info);
         }
 
-        return new GenericWorkshopPackage(identity);
+        throw new NotImplementedException();
+        //return new GenericWorkshopPackage(identity);
     }
 
     public async Task<IPackage> GetPackageAsync(IPackageIdentity identity)
@@ -209,7 +210,8 @@ internal class WorkshopService : IWorkshopService
             return new WorkshopPackage(info);
         }
 
-        return new GenericWorkshopPackage(identity);
+        throw new NotImplementedException();
+		// return new GenericWorkshopPackage(identity);
     }
 
     public IUser? GetUser(object userId)
@@ -227,7 +229,7 @@ internal class WorkshopService : IWorkshopService
         throw new NotImplementedException();
     }
 
-    public async Task<List<ILocalPackageData>> GetInstalledPackages()
+    public async Task<List<IPackage>> GetInstalledPackages()
     {
         if (Context is null)
         {
@@ -241,7 +243,7 @@ internal class WorkshopService : IWorkshopService
             return new();
         }
 
-        return mods.Mods.ToList(mod => (ILocalPackageData)new LocalPdxPackage(mod));
+        return mods.Mods.ToList(mod => (IPackage)new LocalPdxPackage(mod));
     }
 
     public async Task<List<ICustomPlayset>> GetAllPlaysets(bool localOnly)
