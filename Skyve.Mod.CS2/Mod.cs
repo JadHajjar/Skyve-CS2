@@ -1,11 +1,14 @@
-﻿using Colossal.Json;
+﻿using Colossal.IO.AssetDatabase;
+using Colossal.Json;
 using Colossal.Logging;
 
 using Game;
 using Game.Modding;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Skyve.Mod.CS2
 {
@@ -39,9 +42,32 @@ namespace Skyve.Mod.CS2
 				{
 					new FolderSettings().Save();
 				}
-			}catch (Exception ex)
+			}
+			catch (Exception ex)
 			{
 				Log.Error(ex);
+			}
+
+			var assets = AssetDatabase.global.GetAssets<AssetData>();
+
+			Log.Info("ASSETS " + assets.Count());
+
+			var dic = new Dictionary<string, int>();
+
+			foreach (var item in assets)
+			{
+				var name = item.GetType().Name;
+
+				if (dic.ContainsKey(name))
+					dic[name]++;
+				else
+					dic[name] = 1;
+			}
+
+			foreach (var item in dic)
+			{
+				Log.Info("  " + item.Key + "  " + item.Value);
+
 			}
 		}
 	}

@@ -56,14 +56,12 @@ internal class PlaysetManager : IPlaysetManager
 	private readonly IAssetUtil _assetUtil;
 	private readonly IDlcManager _dlcManager;
 
-	public PlaysetManager(ILogger logger, ILocationService locationManager, ISettings settings, IPackageManager packageManager, IPackageUtil packageUtil, ICompatibilityManager compatibilityManager, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IDlcManager dlcManager, IWorkshopService workshopService)
+	public PlaysetManager(ILogger logger, ILocationService locationManager, ISettings settings, IPackageManager packageManager, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IDlcManager dlcManager, IWorkshopService workshopService)
 	{
 		_logger = logger;
 		_locationManager = locationManager;
 		_settings = settings;
 		_packageManager = packageManager;
-		_packageUtil = packageUtil;
-		_compatibilityManager = compatibilityManager;
 		_notifier = notifier;
 		_modUtil = modUtil;
 		_assetUtil = assetUtil;
@@ -212,16 +210,24 @@ internal class PlaysetManager : IPlaysetManager
 		//}
 	}
 
-	private async Task LoadAllPlaysets()
+	public async Task Initialize()
 	{
 		try
 		{
-			var playsets = await _workshopService.GetAllPlaysets(true);
+			var playsets = await _workshopService.GetPlaysets(true);
+			var activePlayset = await _workshopService.GetActivePlaysetId();
 
 			lock (_playsets)
 			{
 				_playsets.Clear();
 				_playsets.AddRange(playsets);
+
+				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == activePlayset);
+			}
+
+			if (CurrentPlayset != null)
+			{
+				_notifier.OnPlaysetChanged();
 			}
 		}
 		catch (Exception ex)

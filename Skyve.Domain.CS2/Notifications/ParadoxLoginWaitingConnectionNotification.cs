@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Systems;
 
 using System;
@@ -12,8 +13,8 @@ public class ParadoxLoginWaitingConnectionNotification : INotificationInfo
 	public ParadoxLoginWaitingConnectionNotification()
 	{
 		Time = DateTime.MaxValue;
-		Title = Locale.ParadoxLoginFailedNoConnectionTitle;
-		Description = Locale.ParadoxLoginFailedNoConnection;
+		Title = LocaleCS2.ParadoxLoginFailedNoConnectionTitle;
+		Description = LocaleCS2.ParadoxLoginFailedNoConnection;
 		Icon = "I_Paradox";
 	}
 

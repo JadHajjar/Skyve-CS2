@@ -2,20 +2,15 @@
 using System.Collections.Generic;
 
 namespace Skyve.Domain.CS2.Content;
-public struct TagItem : ITag
+public struct TagItem(TagSource source, string key, string value) : ITag
 {
-    public TagSource Source { get; set; }
-    public string Value { get; set; }
-    public string Icon => Source switch { TagSource.Workshop => "I_Steam", TagSource.Custom => "I_Search", _ => "I_Tag" };
-    public bool IsCustom => Source is TagSource.Custom;
+	public TagSource Source { get; set; } = source;
+	public string Key { get; set; } = key;
+	public string Value { get; set; } = value;
+	public readonly string Icon => Source switch { TagSource.Workshop => "I_Paradox", TagSource.Custom => "I_Search", _ => "I_Tag" };
+	public readonly bool IsCustom => Source is TagSource.Custom;
 
-    public TagItem(TagSource source, string value)
-    {
-        Source = source;
-        Value = value;
-    }
-
-    public override readonly string ToString()
+	public override readonly string ToString()
     {
         return Value;
     }

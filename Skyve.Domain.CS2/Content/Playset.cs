@@ -176,8 +176,11 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
         [JsonIgnore, CloneIgnore] public ILocalPackageData? LocalData { get; }
         [JsonIgnore, CloneIgnore] public IWorkshopInfo? WorkshopInfo { get; }
         [JsonIgnore, CloneIgnore] public string Folder { get; }
+		string? IPackage.Version { get; }
+		long ILocalPackageIdentity.FileSize { get; }
+		DateTime ILocalPackageIdentity.LocalTime { get; }
 
-        public Asset(IAsset asset)
+		public Asset(IAsset asset)
         {
             SteamId = asset.Id;
             Name = asset.Name;
@@ -217,13 +220,13 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
             };
         }
 
-        public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
-        {
+        public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+		{
             var info = this.GetWorkshopInfo();
 
             if (info is not null)
             {
-                return info.GetThumbnail(out thumbnail, out thumbnailUrl);
+                return info.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
             }
 
             thumbnail = null;

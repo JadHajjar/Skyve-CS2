@@ -25,12 +25,13 @@ public class UserSettings : ConfigFile, IUserSettings
 
         return settings;
     }
-    #endregion
+	#endregion
 
-    public bool LinkModAssets { get; set; } = true;
+	bool IUserSettings.AdvancedIncludeEnable { get; set; }
+
+	public bool LinkModAssets { get; set; } = true;
     public bool ShowDatesRelatively { get; set; } = true;
-    public bool AdvancedIncludeEnable { get; set; }
-    public bool DisableNewModsByDefault { get; set; } = true;
+    public bool DisableNewModsByDefault { get; set; }
     public bool DisableNewAssetsByDefault { get; set; }
     public bool OverrideGameChanges { get; set; }
     public bool FilterOutPackagesWithOneAsset { get; set; }

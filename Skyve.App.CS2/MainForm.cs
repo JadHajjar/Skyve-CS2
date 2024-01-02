@@ -1,4 +1,5 @@
-﻿using Skyve.App.Interfaces;
+﻿using Skyve.App.CS2.UserInterface.Content;
+using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Panels;
 
@@ -15,7 +16,8 @@ public partial class MainForm : BasePanelForm
 	private readonly System.Timers.Timer _startTimeoutTimer = new(15000) { AutoReset = false };
 	private bool isGameRunning;
 	private bool? buttonStateRunning;
-	private readonly TroubleshootInfoControl TroubleshootInfoControl;
+	private readonly TroubleshootInfoControl _troubleshootInfoControl;
+	private readonly DownloadsInfoControl _downloadsInfoControl;
 
 	private readonly IPlaysetManager _playsetManager;
 	private readonly IPackageManager _packageManager;
@@ -33,11 +35,14 @@ public partial class MainForm : BasePanelForm
 
 		_userService.UserInfoUpdated += _userService_UserInfoUpdated;
 
-		TroubleshootInfoControl = new() { Dock = DockStyle.Top };
+		_downloadsInfoControl = new() { Dock = DockStyle.Top };
+		_troubleshootInfoControl = new() { Dock = DockStyle.Top };
 
-		TLP_SideBarTools.Controls.Add(TroubleshootInfoControl, 0, 2);
+		TLP_SideBarTools.Controls.Add(_downloadsInfoControl, 0, 0);
+		TLP_SideBarTools.Controls.Add(_troubleshootInfoControl, 0, 2);
 
-		TLP_SideBarTools.SetColumnSpan(TroubleshootInfoControl, 2);
+		TLP_SideBarTools.SetColumnSpan(_downloadsInfoControl, 2);
+		TLP_SideBarTools.SetColumnSpan(_troubleshootInfoControl, 2);
 
 		base_PB_Icon.UserDraw = true;
 		base_PB_Icon.Paint += Base_PB_Icon_Paint;
@@ -543,5 +548,10 @@ public partial class MainForm : BasePanelForm
 	private void PI_ManageAllCompatibility_OnClick(object sender, MouseEventArgs e)
 	{
 		PushPanel<PC_CompatibilityManagement>(PI_ManageAllCompatibility);
+	}
+
+	private void button1_Click(object sender, EventArgs e)
+	{
+		ServiceCenter.Get<ISubscriptionsManager>().Subscribe([new GenericPackageIdentity(71208)]);
 	}
 }

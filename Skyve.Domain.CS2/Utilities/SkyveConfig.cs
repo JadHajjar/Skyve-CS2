@@ -26,65 +26,65 @@ public class DlcConfig : ConfigFile
     }
 }
 
-public class ModConfig : ConfigFile
-{
-    public const string FILE_NAME = "ModConfig.json";
+//public class ModConfig : ConfigFile
+//{
+//    public const string FILE_NAME = "ModConfig.json";
 
-    [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
-    public List<SavedModInfo> SavedModsInfo { get; set; } = new();
-    public Dictionary<string, ModInfo> GetModsInfo()
-    {
-        var dictionary = new Dictionary<string, ModInfo>(new PathEqualityComparer());
+//    [EditorBrowsable(EditorBrowsableState.Never), Browsable(false)]
+//    public List<SavedModInfo> SavedModsInfo { get; set; } = new();
+//    public Dictionary<string, ModInfo> GetModsInfo()
+//    {
+//        var dictionary = new Dictionary<string, ModInfo>(new PathEqualityComparer());
 
-        foreach (var item in SavedModsInfo)
-        {
-            dictionary[item.Path ?? string.Empty] = item;
-        }
+//        foreach (var item in SavedModsInfo)
+//        {
+//            dictionary[item.Path ?? string.Empty] = item;
+//        }
 
-        return dictionary;
-    }
+//        return dictionary;
+//    }
 
-    public void SetModsInfo(Dictionary<string, ModInfo> value)
-    {
-        var list = new List<SavedModInfo>();
+//    public void SetModsInfo(Dictionary<string, ModInfo> value)
+//    {
+//        var list = new List<SavedModInfo>();
 
-        foreach (var item in value)
-        {
-            list.Add(new()
-            {
-                Path = item.Key,
-                Excluded = item.Value.Excluded,
-                LoadOrder = item.Value.LoadOrder,
-            });
-        }
+//        foreach (var item in value)
+//        {
+//            list.Add(new()
+//            {
+//                Path = item.Key,
+//                Excluded = item.Value.Excluded,
+//                LoadOrder = item.Value.LoadOrder,
+//            });
+//        }
 
-        SavedModsInfo = list;
-    }
+//        SavedModsInfo = list;
+//    }
 
-    public ModConfig() : base(GetFilePath())
-    { }
+//    public ModConfig() : base(GetFilePath())
+//    { }
 
-    private static string GetFilePath()
-    {
-        return CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveSettingsPath, FILE_NAME);
-    }
+//    private static string GetFilePath()
+//    {
+//        return CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveSettingsPath, FILE_NAME);
+//    }
 
-    public static ModConfig Load()
-    {
-        return Load<ModConfig>(GetFilePath()) ?? new();
-    }
+//    public static ModConfig Load()
+//    {
+//        return Load<ModConfig>(GetFilePath()) ?? new();
+//    }
 
-    public class SavedModInfo : ModInfo
-    {
-        public string? Path { get; set; }
-    }
+//    public class SavedModInfo : ModInfo
+//    {
+//        public string? Path { get; set; }
+//    }
 
-    public class ModInfo
-    {
-        public bool Excluded { get; set; }
-        public int LoadOrder { get; set; }
-    }
-}
+//    public class ModInfo
+//    {
+//        public bool Excluded { get; set; }
+//        public int LoadOrder { get; set; }
+//    }
+//}
 
 public class AssetConfig : ConfigFile
 {

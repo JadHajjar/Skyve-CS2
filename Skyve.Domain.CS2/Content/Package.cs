@@ -1,9 +1,11 @@
-﻿using Skyve.Systems;
+﻿using Skyve.Domain.Systems;
+using Skyve.Systems;
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Security.Principal;
 
 namespace Skyve.Domain.CS2.Content;
 
@@ -14,11 +16,12 @@ public class Package : IPackage, IEquatable<Package?>
     public string? Url { get; protected set; }
     public bool IsCodeMod { get; protected set; }
     public bool IsLocal { get; protected set; }
-    public LocalPackageData LocalData { get; private set; }
-    public virtual IWorkshopInfo? WorkshopInfo => this.GetWorkshopInfo();
+	public LocalPackageData LocalData { get; private set; }
+	public virtual IWorkshopInfo? WorkshopInfo { get; }
     ILocalPackageData? IPackage.LocalData => LocalData;
+	string? IPackage.Version => LocalData.Version;
 
-    public Package(string folder, long localSize, DateTime localTime, IAsset[] assets, bool isCodeMod, string version, string? filePath)
+	public Package(string folder, long localSize, DateTime localTime, IAsset[] assets, bool isCodeMod, string version, string? filePath)
     {
         Name = Path.GetFileName(folder);
         IsCodeMod = isCodeMod;
@@ -33,13 +36,13 @@ public class Package : IPackage, IEquatable<Package?>
         LocalData = new LocalPackageData(this, assets, LocalData.Folder, localSize, localTime, version, filePath ?? LocalData.Folder);
     }
 
-    public virtual bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
-    {
+    public virtual bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
         var info = this.GetWorkshopInfo();
 
         if (info is not null)
         {
-            return info.GetThumbnail(out thumbnail, out thumbnailUrl);
+            return info.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
         }
 
         thumbnail = null;

@@ -1,19 +1,20 @@
 ﻿using Extensions;
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
-
+using Skyve.Domain.CS2.Content;
 using Skyve.Domain.Systems;
 using Skyve.Systems;
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 
 using PdxIMod = PDX.SDK.Contracts.Service.Mods.Models.IMod;
 using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
-namespace Skyve.Domain.CS2.Content;
+namespace Skyve.Domain.CS2.Paradox;
 
 public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 {
@@ -33,7 +34,6 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
         ThumbnailUrl = mod.ThumbnailPath;
         Author = mod.Author;
         Version = mod.Version;
-        //Tags
         Rating = mod.Rating;
         RatingsTotal = mod.RatingsTotal;
         State = mod.State;
@@ -46,14 +46,15 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
         ServerTime = mod.LatestUpdate ?? default;
         ServerSize = (long)mod.Size;
         IsCollection = false;
-        Score = mod.Rating;
-        ScoreVoteCount = mod.RatingsTotal;
+        VoteCount = mod.RatingsTotal;
         IsRemoved = mod.State is ModState.Removed;
         IsInvalid = mod.State is ModState.Unknown;
         IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
         Tags = mod.Tags;
         Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
     }
+
+    public override IWorkshopInfo? WorkshopInfo => this;
 
     public string Version { get; set; }
     public string DisplayName { get; set; }
@@ -77,26 +78,28 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
     public DateTime ServerTime { get; set; }
     public long ServerSize { get; set; }
     public int Subscribers { get; set; }
-    public int Score { get; set; }
-    public int ScoreVoteCount { get; set; }
-    public bool IsMod { get; set; }
+    public int VoteCount { get; set; }
     public bool IsRemoved { get; set; }
     public bool IsIncompatible { get; set; }
     public bool IsBanned { get; set; }
     public bool IsCollection { get; set; }
     public bool IsInvalid { get; set; }
-    public IEnumerable<IPackageRequirement> Requirements => this.GetWorkshopInfo()?.Requirements ?? [];
+    public IEnumerable<IPackageRequirement> Requirements => [];
     public string Guid { get; set; }
-    IUser? IWorkshopInfo.Author { get; }
+    IUser? IWorkshopInfo.Author => new PdxUser(Author);
     Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);
     int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
     string PdxIMod.Name { get => Guid; set => Guid = value; }
+    public bool HasVoted { get; set; }
 
-    public override bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+    public override bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
     {
         thumbnailUrl = ThumbnailUrl;
 
-        thumbnail = ServiceCenter.Get<IImageService>().GetImage(ThumbnailPath, true, isFilePath: true).Result;
+		if (string.IsNullOrEmpty(ThumbnailPath))
+		{ thumbnail = null; }
+		else
+			thumbnail = ServiceCenter.Get<IImageService>().GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailPath)}", isFilePath: true).Result;
 
         return thumbnail is not null;
     }

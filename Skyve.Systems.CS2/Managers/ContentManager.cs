@@ -152,7 +152,7 @@ internal class ContentManager : IContentManager
 			_logger.Warning($"Folder not found: '{gameModsPath}'");
 		}
 
-		var subscribedItems = await _workshopService.GetInstalledPackages();
+		var subscribedItems = await _workshopService.GetLocalPackages();
 
 		packages.AddRange(subscribedItems);
 

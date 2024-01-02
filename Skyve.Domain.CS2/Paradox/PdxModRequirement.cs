@@ -1,6 +1,7 @@
 ﻿using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
+using Skyve.Domain.Systems;
 using Skyve.Systems;
 
 using System;
@@ -28,7 +29,7 @@ internal class PdxModRequirement : IPackageRequirement
 	public string Name { get; }
 	public string? Url { get; }
 
-	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		if (!IsDlc)
 		{
@@ -36,7 +37,7 @@ internal class PdxModRequirement : IPackageRequirement
 
 			if (info is not null)
 			{
-				return info.GetThumbnail(out thumbnail, out thumbnailUrl);
+				return info.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
 			}
 		}
 

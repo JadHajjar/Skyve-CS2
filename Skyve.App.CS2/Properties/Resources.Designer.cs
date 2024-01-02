@@ -179,5 +179,15 @@ namespace Skyve.App.CS2.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_PdxMods {
+            get {
+                object obj = ResourceManager.GetObject("I_PdxMods", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Skyve.Domain.Systems;
+
+using System;
 using System.Drawing;
 
 namespace Skyve.Domain.CS2.Content;
@@ -6,7 +8,7 @@ namespace Skyve.Domain.CS2.Content;
 public class LocalPackageData : ILocalPackageData
 {
     public IPackage Package { get; }
-    public long LocalSize { get; }
+    public long FileSize { get; }
     public DateTime LocalTime { get; }
     public string Version { get; }
     public IAsset[] Assets { get; set; }
@@ -16,7 +18,7 @@ public class LocalPackageData : ILocalPackageData
     public LocalPackageData(IPackage package, IAsset[] assets, string folder, long localSize, DateTime localTime, string version, string filePath)
     {
         Package = package;
-        LocalSize = localSize;
+        FileSize = localSize;
         LocalTime = localTime;
         Version = version;
         Assets = assets;
@@ -24,9 +26,9 @@ public class LocalPackageData : ILocalPackageData
         FilePath = filePath;
     }
 
-    public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
-    {
-        return Package.GetThumbnail(out thumbnail, out thumbnailUrl);
+    public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+        return Package.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
     }
 
     bool ILocalPackageData.IsCodeMod => Package.IsCodeMod;

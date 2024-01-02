@@ -165,13 +165,6 @@ public partial class PC_Utilities : PanelContent
 		}
 	}
 
-	private async void B_ReDownload_Click(object sender, EventArgs e)
-	{
-		B_ReDownload.Loading = true;
-
-		await Task.Run(() => _downloadService.Download(_contentManager.Packages.Where(x => _packageUtil.GetStatus(x.LocalData, out _) is DownloadStatus.OutOfDate or DownloadStatus.PartiallyDownloaded)));
-	}
-
 	private void TB_CollectionLink_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
 	{
 		if (e.KeyData == Keys.Enter)
@@ -264,7 +257,6 @@ public partial class PC_Utilities : PanelContent
 		_citiesManager.RunStub();
 
 		B_Cleanup.Loading = true;
-		_subscriptionsManager.Redownload = true;
 	}
 
 	private void slickScroll1_Scroll(object sender, ScrollEventArgs e)

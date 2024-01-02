@@ -2,27 +2,23 @@
 	<Import Project="../../Skyve/CS2-Version.props" />
 	<Import Project="../../Skyve/Config.props" />
 	<PropertyGroup>
-		<LangVersion>latest</LangVersion>
+		<AssemblyName>Skyve.App.CS2</AssemblyName>
+		<Title>Skyve</Title>
+		<TargetName>Skyve</TargetName>
 		<Description>Helps to manage your mods and assets</Description>
-		<DebugType>embedded</DebugType>
-		<DebugSymbols>true</DebugSymbols>
-		<Nullable>enable</Nullable>
-		<DefineConstants>$(DefineConstants);SkyveApp;</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup>
-		<Deterministic>false</Deterministic>
+		<LangVersion>latest</LangVersion>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net4.7.2</TargetFramework>
+		<Deterministic>true</Deterministic>
+		<Nullable>enable</Nullable>
 		<UseWindowsForms>true</UseWindowsForms>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<PathMap>$(MSBuildProjectDirectory)\=$(ProjectName)\</PathMap>
 		<StartupObject>Skyve.App.CS2.Program</StartupObject>
 		<ApplicationIcon>Resources\Skyve.ico</ApplicationIcon>
 		<SignAssembly>True</SignAssembly>
 		<NeutralLanguage>en</NeutralLanguage>
-		<Title>Skyve</Title>
-		<AssemblyName>Skyve.App.CS2</AssemblyName>
-		<TargetName>Skyve</TargetName>
+		<DefineConstants>$(DefineConstants);SkyveApp;</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -67,6 +63,9 @@
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs">
+		  <SubType>UserControl</SubType>
 		</Compile>
 		<Compile Update="UserInterface\Panels\PC_PlaysetSettings.cs">
 		  <SubType>UserControl</SubType>

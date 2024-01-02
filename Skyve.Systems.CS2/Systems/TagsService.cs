@@ -48,7 +48,7 @@ internal class TagsService : ITagsService
 			}
 		}
 
-		_notifier.WorkshopInfoUpdated += UpdateWorkshopTags;
+		//_notifier.WorkshopInfoUpdated += UpdateWorkshopTags;
 		_notifier.ContentLoaded += GenerateCache;
 
 		Task.Run(UpdateWorkshopTags);
@@ -93,19 +93,25 @@ internal class TagsService : ITagsService
 		//}
 	}
 
-	private void UpdateWorkshopTags()
+	private async void UpdateWorkshopTags()
 	{
 		try
 		{
-			var packages = _workshopService.GetAllPackages().ToList();
+			var tags = await _workshopService.GetAvailableTags();
+			var packages = await _workshopService.GetLocalPackages();
 
 			lock (_workshopTags)
 			{
 				_workshopTags.Clear();
 
+				foreach (var item in tags)
+				{
+					_workshopTags[item.Value] = 0;
+				}
+
 				foreach (var package in packages)
 				{
-					foreach (var tag in package.Tags)
+					foreach (var tag in package.WorkshopInfo!.Tags)
 					{
 						_workshopTags[tag.Value] = _workshopTags.GetOrAdd(tag.Value) + 1;
 					}
@@ -126,7 +132,7 @@ internal class TagsService : ITagsService
 				if (!returned.Contains(item.Key))
 				{
 					returned.Add(item.Key);
-					yield return new TagItem(TagSource.Workshop, item.Key);
+					yield return new TagItem(TagSource.Workshop, item.Key, item.Key);
 				}
 			}
 		}
@@ -136,7 +142,7 @@ internal class TagsService : ITagsService
 			if (!returned.Contains(item))
 			{
 				returned.Add(item);
-				yield return new TagItem(TagSource.InGame, item);
+				yield return new TagItem(TagSource.InGame, item, item);
 			}
 		}
 
@@ -148,7 +154,7 @@ internal class TagsService : ITagsService
 				{
 					returned.Add(item);
 
-					yield return new TagItem(TagSource.Custom, item);
+					yield return new TagItem(TagSource.Custom, item, item);
 				}
 			}
 		}
@@ -165,7 +171,7 @@ internal class TagsService : ITagsService
 				if (!returned.Contains(item))
 				{
 					returned.Add(item);
-					yield return new TagItem(TagSource.Workshop, item);
+					yield return new TagItem(TagSource.Workshop, item, item);
 				}
 			}
 		}
@@ -179,7 +185,7 @@ internal class TagsService : ITagsService
 					if (!returned.Contains(item))
 					{
 						returned.Add(item);
-						yield return new TagItem(TagSource.InGame, item);
+						yield return new TagItem(TagSource.InGame, item, item);
 					}
 				}
 			}
@@ -194,7 +200,7 @@ internal class TagsService : ITagsService
 					if (!returned.Contains(item))
 					{
 						returned.Add(item);
-						yield return new TagItem(TagSource.Custom, item);
+						yield return new TagItem(TagSource.Custom, item, item);
 					}
 				}
 			}
@@ -207,7 +213,7 @@ internal class TagsService : ITagsService
 				if (!returned.Contains(item))
 				{
 					returned.Add(item);
-					yield return new TagItem(TagSource.Custom, item);
+					yield return new TagItem(TagSource.Custom, item, item);
 				}
 			}
 		}
@@ -280,16 +286,16 @@ internal class TagsService : ITagsService
 
 	public ITag CreateGlobalTag(string text)
 	{
-		return new TagItem(TagSource.Global, text);
+		return new TagItem(TagSource.Global, text, text);
 	}
 
 	public ITag CreateCustomTag(string text)
 	{
-		return new TagItem(TagSource.Custom, text);
+		return new TagItem(TagSource.Custom, text, text);
 	}
 
 	public ITag CreateWorkshopTag(string text)
 	{
-		return new TagItem(TagSource.Workshop, text);
+		return new TagItem(TagSource.Workshop, text	, text);
 	}
 }

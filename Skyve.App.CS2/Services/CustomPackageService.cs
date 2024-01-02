@@ -36,7 +36,6 @@ internal class CustomPackageService : ICustomPackageService
 		{
 			  new (Locale.IncludeAllItemsInThisPackage.FormatPlural(list.Count), "I_Ok", isInstalled && list.Any(item => !item.IsIncluded(out _)), action: () => { bulkUtil.SetBulkIncluded(list.SelectWhereNotNull(x => x.GetLocalPackageIdentity())!, true); })
 			, new (Locale.ExcludeAllItemsInThisPackage.FormatPlural(list.Count), "I_Cancel", isInstalled && list.Any(item => item.IsIncluded(out _)), action: () => { bulkUtil.SetBulkIncluded(list.SelectWhereNotNull(x => x.GetLocalPackageIdentity())!, false); })
-			, new ((isInstalled ? Locale.ReDownloadPackage : Locale.DownloadPackage).FormatPlural(list.Count), "I_Install", SteamUtil.IsSteamAvailable(), action: () => Redownload(list))
 			, new (Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "I_PC", isInstalled && !isLocal, action: () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => packageManager.MoveToLocalFolder(x.GetPackage()!)))
 			, new (string.Empty)
 			, new ((isLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "I_Disposable", isInstalled, action: () => AskThenDelete(list))
@@ -95,10 +94,5 @@ internal class CustomPackageService : ICustomPackageService
 				catch (Exception ex) { MessagePrompt.Show(ex, Locale.FailedToDeleteItem); }
 			}
 		}
-	}
-
-	private static void Redownload<T>(IEnumerable<T> item) where T : IPackageIdentity
-	{
-		ServiceCenter.Get<IDownloadService>().Download(item.Cast<IPackageIdentity>());
 	}
 }

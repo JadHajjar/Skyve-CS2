@@ -28,7 +28,7 @@ internal class LastVersionNotification : INotificationInfo
 
 		if (currentChangelog is null)
 		{
-			Title = string.Empty;
+			Title = $"v{currentVersion.GetString()} Update";
 			Icon = "I_Question";
 			return;
 		}

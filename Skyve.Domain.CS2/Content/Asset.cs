@@ -1,4 +1,7 @@
 ﻿using Extensions;
+
+using Skyve.Domain.Systems;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,9 +31,9 @@ public class Asset : IAsset
         Tags = new string[0];
     }
 
-    public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
-    {
-        return Package.GetThumbnail(out thumbnail, out thumbnailUrl);
+    public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+        return Package.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
     }
 
     public override bool Equals(object? obj)

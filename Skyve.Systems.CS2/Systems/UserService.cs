@@ -95,7 +95,7 @@ internal class UserService : IUserService
 			return 2139390487 + Id?.GetHashCode() ?? 0;
 		}
 
-		public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+		public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 		{
 			throw new NotImplementedException();
 		}

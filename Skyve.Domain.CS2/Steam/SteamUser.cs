@@ -66,7 +66,7 @@ public class SteamUser : IDynamicSql
 		return 2139390487 + SteamId.GetHashCode();
 	}
 
-	public bool GetThumbnail(out Bitmap? thumbnail, out string? thumbnailUrl)
+	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnail = ServiceCenter.Get<IImageService>().GetImage(thumbnailUrl = AvatarUrl, true).Result;
 

@@ -46,8 +46,8 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 		LoadProfile(_playsetManager.CurrentPlayset as Playset);
 
-		var saveGameTag = new ITag[] { new TagItem(TagSource.InGame, "SaveGame") };
-		var mapTag = new ITag[] { new TagItem(TagSource.InGame, "Map") };
+		var saveGameTag = new ITag[] { new TagItem(TagSource.InGame, "SaveGame", "SaveGame") };
+		var mapTag = new ITag[] { new TagItem(TagSource.InGame, "Map", "Map") };
 
 		DD_SaveFile.StartingFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves");
 		DD_SaveFile.PinnedFolders = new()

@@ -1,5 +1,8 @@
 ﻿using Extensions;
 
+using PDX.SDK.Contracts.Enums.Errors;
+using PDX.SDK.Contracts.Service.Mods.Models;
+
 using Skyve.Domain;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
@@ -15,8 +18,7 @@ using System.Threading.Tasks;
 namespace Skyve.Systems.CS2.Utilities;
 internal class ModsUtil : IModUtil
 {
-	private readonly ModConfig _config;
-	private readonly Dictionary<string, ModConfig.ModInfo> _modConfigInfo;
+	private Dictionary<ulong, bool> modConfig = []; 
 
 	private readonly AssemblyUtil _assemblyUtil;
 	private readonly MacAssemblyUtil _macAssemblyUtil;
@@ -35,34 +37,46 @@ internal class ModsUtil : IModUtil
 		_settings = settings;
 
 		_notifier.CompatibilityDataLoaded += BuildLoadOrder;
-
-		_config = ModConfig.Load();
-		_modConfigInfo = _config.GetModsInfo();
+		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
 	}
 
-	private void BuildLoadOrder()
+	private async void _notifier_PlaysetChanged()
 	{
-		if (!_notifier.IsContentLoaded)
+		if (_workshopService.Context is null)
+		{
+			modConfig = [];
+			return;
+		}
+
+		var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
+		var mods = await _workshopService.Context.Mods.GetActivePlaysetEnabledMods();
+
+		modConfig = mods.Mods.ToDictionary(x => (ulong)x.Id, x => x.Playsets.Any(p => p.PlaysetId == playset && p.ModIsEnabled));
+	}
+
+	private async void BuildLoadOrder()
+	{
+		if (!_notifier.IsContentLoaded || _workshopService.Context is null)
 		{
 			return;
 		}
 
 		var index = 1;
-		var mods = ServiceCenter.Get<ILoadOrderHelper>().GetOrderedMods().Reverse();
+		var mods = ServiceCenter.Get<ILoadOrderHelper>().GetOrderedMods().Reverse().OfType<IMod>();
+		var orderedMods = new List<ModLoadOrder>();
+		var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
+		await _workshopService.Context.Mods.ResetLoadOrder(playset);
 
-		lock (this)
+		foreach (var mod in mods)
 		{
-			foreach (var mod in mods)
+			orderedMods.Add(new ModLoadOrder
 			{
-				var modInfo = _modConfigInfo.TryGetValue(mod.LocalData.Folder, out var info) ? info : new();
-
-				modInfo.LoadOrder = index++;
-
-				_modConfigInfo[mod.LocalData.Folder] = modInfo;
-			}
+				Mod = mod,
+				LoadOrder = index++,
+			});
 		}
 
-		SaveChanges();
+		await _workshopService.Context.Mods.SetLoadOrder(orderedMods, playset);
 	}
 
 	public void SaveChanges()
@@ -72,41 +86,64 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
-		lock (this)
-		{
-			_config.SetModsInfo(_modConfigInfo);
-		}
+		//lock (this)
+		//{
+		//	_config.SetModsInfo(_modConfigInfo);
+		//}
 
-		_config.Save();
+		//_config.Save();
 	}
 
 	public bool IsIncluded(ILocalPackageIdentity mod)
 	{
-		return !(_modConfigInfo.TryGetValue(mod.Folder, out var info) && info.Excluded);
+		return mod.Id <= 0 || modConfig.ContainsKey(mod.Id);
 	}
 
 	public bool IsEnabled(ILocalPackageIdentity mod)
 	{
-		return IsIncluded(mod);// (await _workshopService.Context!.Mods.GetDetails((Mod)mod)).Mod.Playsets?.;
+		return mod.Id <= 0 || modConfig.TryGet(mod.Id);
 	}
 
-	public void SetIncluded(ILocalPackageIdentity mod, bool value)
+	public void SetIncluded(ILocalPackageIdentity mod, bool value) => SetIncluded([mod], value);
+
+	public async void SetIncluded(IEnumerable<ILocalPackageIdentity> mods, bool value)
 	{
-		value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
+		//value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
 
-		var modInfo = _modConfigInfo.TryGetValue(mod.Folder, out var info) ? info : new();
+		if (_workshopService.Context is null)
+			return;
 
-		modInfo.Excluded = !value;
-
-		lock (this)
+		if (value)
 		{
-			_modConfigInfo[mod.Folder] = modInfo;
-		}
+			var modKeys = mods.Where(x => x.Id > 0).Select(x => new KeyValuePair<int, string?>((int)x.Id, null));
+			var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
 
-		//if (!_settings.UserSettings.AdvancedIncludeEnable)
-		//{
-		//	_colossalOrderUtil.SetEnabled(mod, value);
-		//}
+			var result = await _workshopService.Context.Mods.SubscribeBulk(modKeys, playset, !_settings.UserSettings.DisableNewModsByDefault);
+
+			if (result.Success)
+			foreach (var item in mods)
+			{
+				if (item.Id <= 0)
+					continue;
+
+				modConfig[item.Id] = !_settings.UserSettings.DisableNewModsByDefault;
+			}
+		}
+		else
+		{
+			var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
+
+			foreach (var item in mods)
+			{
+				if (item.Id <= 0)
+					continue;
+
+				var result = await _workshopService.Context.Mods.Unsubscribe((int)item.Id, playset);
+
+				if (result.Success)
+					modConfig.Remove(item.Id);
+			}
+		}
 
 		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
 		{
@@ -119,11 +156,30 @@ internal class ModsUtil : IModUtil
 		SaveChanges();
 	}
 
-	public void SetEnabled(ILocalPackageIdentity mod, bool value)
-	{
-		value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
+	public void SetEnabled(ILocalPackageIdentity mod, bool value) => SetEnabled([mod], value);
 
-		//_colossalOrderUtil.SetEnabled(mod, value);
+	public async void SetEnabled(IEnumerable<ILocalPackageIdentity> mods, bool value)
+	{
+		//value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
+
+		if (_workshopService.Context is null)
+			return;
+
+		var modKeys = mods.Where(x => x.Id > 0).ToList(x => (int)x.Id);
+		var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
+
+		var result = value
+			? await _workshopService.Context.Mods.EnableBulk(modKeys, playset)
+			: await _workshopService.Context.Mods.DisableBulk(modKeys, playset);
+
+		if (result.Success)
+			foreach (var item in mods)
+			{
+				if (item.Id <= 0)
+					continue;
+
+				modConfig[item.Id] = value;
+			}
 
 		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
 		{
@@ -143,10 +199,10 @@ internal class ModsUtil : IModUtil
 			return 0;
 		}
 
-		if (_modConfigInfo.TryGetValue(package.LocalData.Folder, out var info))
-		{
-			return info.LoadOrder;
-		}
+		//if (modConfig.TryGetValue(package.LocalData.Folder, out var info))
+		//{
+		//	return info.LoadOrder;
+		//}
 
 		return 0;
 	}

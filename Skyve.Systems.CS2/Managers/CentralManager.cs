@@ -81,6 +81,8 @@ internal class CentralManager : ICentralManager
 
 		await _workshopService.Initialize();
 
+		await _playsetManager.Initialize();
+
 		_logger.Info("Loading packages..");
 
 		var content = await _contentManager.LoadContents();
@@ -111,8 +113,6 @@ internal class CentralManager : ICentralManager
 		{
 			_notificationsService.SendNotification(new MultipleSkyvesNotification(skyveInstances));
 		}
-
-		_subscriptionManager.Start();
 
 		if (_playsetManager.CurrentPlayset is not null && CommandUtil.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
 		{

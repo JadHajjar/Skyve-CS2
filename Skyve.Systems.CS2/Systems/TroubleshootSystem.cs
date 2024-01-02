@@ -2,9 +2,11 @@
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Managers;
+using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -348,6 +350,26 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		{
 			NextStage();
 		}
+	}
+
+	public void CleanDownload(List<ILocalPackageData> packages)
+	{
+		PackageWatcher.Pause();
+		foreach (var item in packages)
+		{
+			try
+			{
+				CrossIO.DeleteFolder(item.Folder);
+			}
+			catch (Exception ex)
+			{
+				ServiceCenter.Get<ILogger>().Exception(ex, $"Failed to delete the folder '{item.Folder}'");
+			}
+		}
+
+		PackageWatcher.Resume();
+
+		SteamUtil.Download(packages);
 	}
 
 	public class TroubleshootState : ITroubleshootSettings

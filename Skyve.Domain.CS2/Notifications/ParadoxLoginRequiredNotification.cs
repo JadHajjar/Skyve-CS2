@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 using Skyve.Systems;
 
@@ -16,8 +17,8 @@ public class ParadoxLoginRequiredNotification : INotificationInfo
 	public ParadoxLoginRequiredNotification(bool badLogin)
 	{
 		Time = DateTime.MaxValue;
-		Title = Locale.ParadoxLoginFailedTitle;
-		Description = badLogin ? Locale.ParadoxLoginFailedBadCredentials : Locale.ParadoxLoginFailedEmpty;
+		Title = LocaleCS2.ParadoxLoginFailedTitle;
+		Description = badLogin ? LocaleCS2.ParadoxLoginFailedBadCredentials : LocaleCS2.ParadoxLoginFailedEmpty;
 		Icon = "I_Paradox";
 		HasAction = true;
 	}
