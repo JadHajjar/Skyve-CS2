@@ -86,21 +86,30 @@ internal class WorkshopService : IWorkshopService
 			config.Language = result;
 		}
 
-		Context = await PDX.SDK.Context.Create(
-			platform: platform,
-			@namespace: "cities_skylines_2",
-			config: config);
+		try
+		{
+			Context = await PDX.SDK.Context.Create(
+				platform: platform,
+				@namespace: "cities_skylines_2",
+				config: config);
 
-		new WorkshopEventsManager(this).RegisterModsCallbacks(Context);
+			new WorkshopEventsManager(this).RegisterModsCallbacks(Context);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to create PDX Context");
+		}
 	}
 
 	public async Task Login()
 	{
-		var startupResult = await Context!.Account.Startup();
+		if (Context is null)
+			return;
+
+		var startupResult = await Context.Account.Startup();
 
 		if (!startupResult.IsLoggedIn)
 		{
-
 			if (!ConnectionHandler.CheckConnection())
 			{
 				loginWaitingConnection = true;
