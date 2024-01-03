@@ -27,7 +27,7 @@ public class PdxModIdentityPackage : IPackage
 		Name = string.Empty;
 	}
 
-	public ILocalPackageData? LocalData => ServiceCenter.Get<IPackageManager>().GetPackageById(this)?.LocalData;
+	public ILocalPackageData? LocalData { get; }
 	public IWorkshopInfo? WorkshopInfo => null;
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }

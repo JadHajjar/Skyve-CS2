@@ -34,8 +34,8 @@ internal class CustomPackageService : ICustomPackageService
 
 		return new SlickStripItem[]
 		{
-			  new (Locale.IncludeAllItemsInThisPackage.FormatPlural(list.Count), "I_Ok", isInstalled && list.Any(item => !item.IsIncluded(out _)), action: () => { bulkUtil.SetBulkIncluded(list.SelectWhereNotNull(x => x.GetLocalPackageIdentity())!, true); })
-			, new (Locale.ExcludeAllItemsInThisPackage.FormatPlural(list.Count), "I_Cancel", isInstalled && list.Any(item => item.IsIncluded(out _)), action: () => { bulkUtil.SetBulkIncluded(list.SelectWhereNotNull(x => x.GetLocalPackageIdentity())!, false); })
+			  new (Locale.IncludeAllItemsInThisPackage.FormatPlural(list.Count), "I_Ok", isInstalled && list.Any(item => !item.IsIncluded()), action: () => { bulkUtil.SetBulkIncluded(list.SelectWhereNotNull(x => x.GetLocalPackageIdentity())!, true); })
+			, new (Locale.ExcludeAllItemsInThisPackage.FormatPlural(list.Count), "I_Cancel", isInstalled && list.Any(item => item.IsIncluded()), action: () => { bulkUtil.SetBulkIncluded(list.SelectWhereNotNull(x => x.GetLocalPackageIdentity())!, false); })
 			, new (Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "I_PC", isInstalled && !isLocal, action: () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => packageManager.MoveToLocalFolder(x.GetPackage()!)))
 			, new (string.Empty)
 			, new ((isLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "I_Disposable", isInstalled, action: () => AskThenDelete(list))

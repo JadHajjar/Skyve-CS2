@@ -248,12 +248,12 @@ internal class WorkshopService : IWorkshopService
 			searchQuery = query,
 			tags = requiredTags?.ToList(),
 			orderBy = GetPdxOrder(sorting),
-			pageSize = 9999
+			pageSize = 100
 		});
 
 		if (result.Success)
 		{
-			return result.Mods.ToList(x => new PdxPackage(x));
+			return result.Mods?.ToList(x => new PdxPackage(x)) ?? new();
 		}
 
 		_logger.Error(result.Error.Raw);

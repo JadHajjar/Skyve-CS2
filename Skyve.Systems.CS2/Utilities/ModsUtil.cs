@@ -1,10 +1,8 @@
 ﻿using Extensions;
 
-using PDX.SDK.Contracts.Enums.Errors;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain;
-using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 using Skyve.Systems.CS2.Utilities.IO;
@@ -18,7 +16,7 @@ using System.Threading.Tasks;
 namespace Skyve.Systems.CS2.Utilities;
 internal class ModsUtil : IModUtil
 {
-	private Dictionary<ulong, bool> modConfig = []; 
+	private Dictionary<ulong, bool> modConfig = [];
 
 	private readonly AssemblyUtil _assemblyUtil;
 	private readonly MacAssemblyUtil _macAssemblyUtil;
@@ -49,9 +47,11 @@ internal class ModsUtil : IModUtil
 		}
 
 		var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
-		var mods = await _workshopService.Context.Mods.GetActivePlaysetEnabledMods();
-
-		modConfig = mods.Mods.ToDictionary(x => (ulong)x.Id, x => x.Playsets.Any(p => p.PlaysetId == playset && p.ModIsEnabled));
+		var mods = await _workshopService.Context.Mods.ListModsInPlayset(playset);
+		
+		modConfig = mods.Mods
+			.OfType<PlaysetSubscribedMod>()
+			.ToDictionary(x => (ulong)x.Id, x => x.IsEnabled);
 	}
 
 	private async void BuildLoadOrder()
@@ -94,33 +94,29 @@ internal class ModsUtil : IModUtil
 		//_config.Save();
 	}
 
-	public bool IsIncluded(ILocalPackageIdentity mod)
+	public bool IsIncluded(IPackageIdentity mod)
 	{
 		return mod.Id <= 0 || modConfig.ContainsKey(mod.Id);
 	}
 
-	public bool IsEnabled(ILocalPackageIdentity mod)
+	public bool IsEnabled(IPackageIdentity mod)
 	{
 		return mod.Id <= 0 || modConfig.TryGet(mod.Id);
 	}
 
-	public void SetIncluded(ILocalPackageIdentity mod, bool value) => SetIncluded([mod], value);
+	public async Task SetIncluded(IPackageIdentity mod, bool value) => await SetIncluded([mod], value);
 
-	public async void SetIncluded(IEnumerable<ILocalPackageIdentity> mods, bool value)
+	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value)
 	{
 		//value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
 
 		if (_workshopService.Context is null)
 			return;
 
+		var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
+
 		if (value)
 		{
-			var modKeys = mods.Where(x => x.Id > 0).Select(x => new KeyValuePair<int, string?>((int)x.Id, null));
-			var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
-
-			var result = await _workshopService.Context.Mods.SubscribeBulk(modKeys, playset, !_settings.UserSettings.DisableNewModsByDefault);
-
-			if (result.Success)
 			foreach (var item in mods)
 			{
 				if (item.Id <= 0)
@@ -128,10 +124,31 @@ internal class ModsUtil : IModUtil
 
 				modConfig[item.Id] = !_settings.UserSettings.DisableNewModsByDefault;
 			}
+
+			var modKeys = mods.Where(x => x.Id > 0).Select(x => new KeyValuePair<int, string?>((int)x.Id, null));
+
+			var result = await _workshopService.Context.Mods.SubscribeBulk(modKeys, playset, !_settings.UserSettings.DisableNewModsByDefault);
+
+			if (!result.Success)
+				foreach (var item in mods)
+				{
+					if (item.Id <= 0)
+						continue;
+
+					modConfig.Remove(item.Id);
+				}
 		}
 		else
 		{
-			var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
+			var tempConfig = new Dictionary<ulong, bool>(modConfig);
+
+			foreach (var item in mods)
+			{
+				if (item.Id <= 0)
+					continue;
+
+				modConfig.Remove(item.Id);
+			}
 
 			foreach (var item in mods)
 			{
@@ -140,8 +157,8 @@ internal class ModsUtil : IModUtil
 
 				var result = await _workshopService.Context.Mods.Unsubscribe((int)item.Id, playset);
 
-				if (result.Success)
-					modConfig.Remove(item.Id);
+				if (!result.Success)
+					modConfig[item.Id] = tempConfig.TryGet(item.Id);
 			}
 		}
 
@@ -156,14 +173,24 @@ internal class ModsUtil : IModUtil
 		SaveChanges();
 	}
 
-	public void SetEnabled(ILocalPackageIdentity mod, bool value) => SetEnabled([mod], value);
+	public async Task SetEnabled(IPackageIdentity mod, bool value) => await SetEnabled([mod], value);
 
-	public async void SetEnabled(IEnumerable<ILocalPackageIdentity> mods, bool value)
+	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value)
 	{
 		//value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
 
 		if (_workshopService.Context is null)
 			return;
+
+		var tempConfig = new Dictionary<ulong, bool>(modConfig);
+
+		foreach (var item in mods)
+		{
+			if (item.Id <= 0)
+				continue;
+
+			modConfig[item.Id] = value;
+		}
 
 		var modKeys = mods.Where(x => x.Id > 0).ToList(x => (int)x.Id);
 		var playset = (await _workshopService.Context.Mods.GetActivePlayset()).PlaysetId;
@@ -172,14 +199,16 @@ internal class ModsUtil : IModUtil
 			? await _workshopService.Context.Mods.EnableBulk(modKeys, playset)
 			: await _workshopService.Context.Mods.DisableBulk(modKeys, playset);
 
-		if (result.Success)
+		if (!result.Success)
 			foreach (var item in mods)
 			{
 				if (item.Id <= 0)
 					continue;
 
-				modConfig[item.Id] = value;
+				modConfig[item.Id] = tempConfig.TryGet(item.Id);
 			}
+		else
+			await _workshopService.Context.Mods.Sync(PDX.SDK.Contracts.Service.Mods.Enums.SyncDirection.Downstream);
 
 		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
 		{

@@ -119,17 +119,17 @@ internal class TroubleshootSystem : ITroubleshootSystem
 	{
 		if (settings.ItemIsCausingIssues)
 		{
-			return item.IsIncluded(out _) == true;
+			return item.IsIncluded() == true;
 		}
 
 		if (settings.ItemIsMissing)
 		{
-			return item.IsIncluded(out _) == false;
+			return item.IsIncluded() == false;
 		}
 
 		if (settings.NewItemCausingIssues)
 		{
-			if (!item.IsIncluded(out _))
+			if (!item.IsIncluded())
 			{
 				return false;
 			}

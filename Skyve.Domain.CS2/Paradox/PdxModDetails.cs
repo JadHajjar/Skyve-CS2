@@ -69,7 +69,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public Dictionary<string, string> Tags { get; set; }
 	[JsonIgnore] public bool IsLocal { get; }
 	[JsonIgnore] public bool IsCodeMod => Tags.Any(x => x.Key == "Mod");
-	[JsonIgnore] public ILocalPackageData? LocalData => ServiceCenter.Get<IPackageManager>().GetPackageById(this)?.LocalData;
+	[JsonIgnore] public ILocalPackageData? LocalData { get; }
 	[JsonIgnore] public IWorkshopInfo? WorkshopInfo => this;
 	[JsonIgnore] public IUser? Author => string.IsNullOrWhiteSpace(AuthorId) ? null : new PdxUser(AuthorId!);
 	[JsonIgnore] public IEnumerable<IPackageRequirement> Requirements => Dependencies?.Select(x => new PdxModRequirement(x)) ?? [];

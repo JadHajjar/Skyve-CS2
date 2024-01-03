@@ -89,7 +89,7 @@ public class PdxPackage : IPackage, IWorkshopInfo
 	public bool HasVoted { get; set; }
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
-	public ILocalPackageData? LocalData => this.GetLocalPackage();
+	public ILocalPackageData? LocalData { get; }
 	public ulong Id { get; }
 	public string Name { get; }
 	public string? Url { get; }
@@ -99,9 +99,9 @@ public class PdxPackage : IPackage, IWorkshopInfo
 		thumbnailUrl = ThumbnailUrl;
 
 		if (string.IsNullOrEmpty(ThumbnailPath))
-		{ thumbnail = null; }
+			thumbnail = imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailUrl)}").Result;
 		else
-			thumbnail = ServiceCenter.Get<IImageService>().GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailPath)}", isFilePath: true).Result;
+			thumbnail = imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailPath)}", isFilePath: true).Result;
 
 		return thumbnail is not null;
 	}
