@@ -5,81 +5,79 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Security.Principal;
 
 namespace Skyve.Domain.CS2.Content;
 
 public class Package : IPackage, IEquatable<Package?>
 {
-    public ulong Id { get; protected set; }
-    public string Name { get; protected set; }
-    public string? Url { get; protected set; }
-    public bool IsCodeMod { get; protected set; }
-    public bool IsLocal { get; protected set; }
+	public ulong Id { get; protected set; }
+	public string Name { get; protected set; }
+	public string? Url { get; protected set; }
+	public bool IsCodeMod { get; protected set; }
+	public bool IsLocal { get; protected set; }
 	public LocalPackageData LocalData { get; private set; }
-	public virtual IWorkshopInfo? WorkshopInfo { get; }
-    ILocalPackageData? IPackage.LocalData => LocalData;
+	ILocalPackageData? IPackage.LocalData => LocalData;
 	string? IPackage.Version => LocalData.Version;
 
-	public Package(string folder, long localSize, DateTime localTime, IAsset[] assets, bool isCodeMod, string version, string? filePath)
-    {
-        Name = Path.GetFileName(folder);
-        IsCodeMod = isCodeMod;
-        IsLocal = true;
-        LocalData = new LocalPackageData(this, assets, folder, localSize, localTime, version, filePath ?? folder);
-    }
-
-    public void RefreshData(long localSize, DateTime localTime, IAsset[] assets, bool isCodeMod, string version, string? filePath)
-    {
-        IsCodeMod = isCodeMod;
-        IsLocal = true;
-        LocalData = new LocalPackageData(this, assets, LocalData.Folder, localSize, localTime, version, filePath ?? LocalData.Folder);
-    }
-
-    public virtual bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	public Package(string folder, IAsset[] assets, bool isCodeMod, string? version, string? filePath)
 	{
-        var info = this.GetWorkshopInfo();
+		Name = Path.GetFileName(folder);
+		IsCodeMod = isCodeMod;
+		IsLocal = true;
+		LocalData = new LocalPackageData(this, assets, folder, version, filePath ?? folder);
+	}
 
-        if (info is not null)
-        {
-            return info.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
-        }
+	public void RefreshData(IAsset[] assets, bool isCodeMod, string version, string? filePath)
+	{
+		IsCodeMod = isCodeMod;
+		IsLocal = true;
+		LocalData = new LocalPackageData(this, assets, LocalData.Folder, version, filePath ?? LocalData.Folder);
+	}
 
-        thumbnail = null;
-        thumbnailUrl = null;
-        return false;
-    }
+	public virtual bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		var info = this.GetWorkshopInfo();
 
-    #region EqualityOverrides
-    public override string ToString()
-    {
-        return Name;
-    }
+		if (info is not null)
+		{
+			return info.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
+		}
 
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as Package);
-    }
+		thumbnail = null;
+		thumbnailUrl = null;
+		return false;
+	}
 
-    public bool Equals(Package? other)
-    {
-        return other is not null &&
-               LocalData.Folder == other.LocalData.Folder;
-    }
+	#region EqualityOverrides
+	public override string ToString()
+	{
+		return Name;
+	}
 
-    public override int GetHashCode()
-    {
-        return 539060726 + EqualityComparer<string>.Default.GetHashCode(LocalData.Folder);
-    }
+	public override bool Equals(object? obj)
+	{
+		return Equals(obj as Package);
+	}
 
-    public static bool operator ==(Package? left, Package? right)
-    {
-        return left?.LocalData.Folder == right?.LocalData.Folder;
-    }
+	public bool Equals(Package? other)
+	{
+		return other is not null &&
+			   LocalData.Folder == other.LocalData.Folder;
+	}
 
-    public static bool operator !=(Package? left, Package? right)
-    {
-        return !(left == right);
-    }
-    #endregion
+	public override int GetHashCode()
+	{
+		return 539060726 + EqualityComparer<string>.Default.GetHashCode(LocalData.Folder);
+	}
+
+	public static bool operator ==(Package? left, Package? right)
+	{
+		return left?.LocalData.Folder == right?.LocalData.Folder;
+	}
+
+	public static bool operator !=(Package? left, Package? right)
+	{
+		return !(left == right);
+	}
+	#endregion
 }

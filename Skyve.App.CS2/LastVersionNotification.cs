@@ -1,14 +1,7 @@
 ﻿using Skyve.App.CS2.UserInterface.Panels;
 
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace Skyve.App.CS2;
 internal class LastVersionNotification : INotificationInfo
@@ -20,8 +13,8 @@ internal class LastVersionNotification : INotificationInfo
 	public Color? Color { get; }
 	public bool HasAction { get; }
 
-    public LastVersionNotification()
-    {
+	public LastVersionNotification()
+	{
 		var changelogs = PC_Changelog.GetChangelogs(Assembly.GetEntryAssembly(), $"Skyve.App.CS2.Changelog.json");
 		var currentVersion = Assembly.GetEntryAssembly().GetName().Version;
 		var currentChangelog = changelogs.FirstOrDefault(x => x.Version.Major == currentVersion.Major && x.Version.Minor == currentVersion.Minor && x.Version.Build == currentVersion.Build && Math.Max(0, x.Version.Revision) == Math.Max(0, currentVersion.Revision));

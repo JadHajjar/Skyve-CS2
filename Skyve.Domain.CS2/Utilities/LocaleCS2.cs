@@ -2,8 +2,6 @@
 
 using Skyve.Domain.Systems;
 
-using System;
-
 namespace Skyve.Domain.CS2.Utilities;
 public class LocaleCS2 : LocaleHelper, ILocale
 {
@@ -28,4 +26,5 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation DonwloadComplete => _instance.GetText(nameof(DonwloadComplete));
 	public static Translation Downloading => _instance.GetText(nameof(Downloading));
 	public static Translation ModDownloadFailed => _instance.GetText(nameof(Downloading));
+	public static Translation RemoveFromPlayset => _instance.GetText(nameof(RemoveFromPlayset));
 }

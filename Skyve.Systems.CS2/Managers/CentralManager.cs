@@ -27,14 +27,14 @@ internal class CentralManager : ICentralManager
 	private readonly ILogger _logger;
 	private readonly INotifier _notifier;
 	private readonly IModUtil _modUtil;
-	private readonly IBulkUtil _bulkUtil;
+	private readonly IPackageUtil _packageUtil;
 	private readonly IVersionUpdateService _versionUpdateService;
 	private readonly INotificationsService _notificationsService;
 	private readonly IUpdateManager _updateManager;
 	private readonly IAssetUtil _assetUtil;
 	private readonly IWorkshopService _workshopService;
 
-	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IBulkUtil bulkUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService)
+	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService)
 	{
 		_modLogicManager = modLogicManager;
 		_compatibilityManager = compatibilityManager;
@@ -48,7 +48,7 @@ internal class CentralManager : ICentralManager
 		_logger = logger;
 		_notifier = notifier;
 		_modUtil = modUtil;
-		_bulkUtil = bulkUtil;
+		_packageUtil = packageUtil;
 		_versionUpdateService = versionUpdateService;
 		_notificationsService = notificationsService;
 		_updateManager = updateManager;
@@ -80,6 +80,8 @@ internal class CentralManager : ICentralManager
 		_logger.Info("Starting PDX SDK..");
 
 		await _workshopService.Initialize();
+
+		await _modUtil.Initialize();
 
 		await _playsetManager.Initialize();
 
@@ -219,22 +221,22 @@ internal class CentralManager : ICentralManager
 			{
 				if (!_settings.UserSettings.AdvancedIncludeEnable)
 				{
-					if (!firstTime && !_modUtil.IsEnabled(package.LocalData!) && _modUtil.IsIncluded(package.LocalData!))
+					if (!firstTime && !_modUtil.IsEnabled(package) && _modUtil.IsIncluded(package))
 					{
-						_modUtil.SetIncluded(package.LocalData!, false);
+						_modUtil.SetIncluded(package, false);
 					}
 				}
 
-				if (_settings.UserSettings.LinkModAssets && package.LocalData! is not null)
+				if (_settings.UserSettings.LinkModAssets && package.LocalData is not null)
 				{
-					_bulkUtil.SetBulkIncluded(package.LocalData!.Assets, _modUtil.IsIncluded(package.LocalData!));
+					_packageUtil.SetIncluded(package.LocalData.Assets, _modUtil.IsIncluded(package));
 				}
 
 				_modLogicManager.Analyze(package, _modUtil);
 
 				if (!firstTime && !_updateManager.IsPackageKnown(package.LocalData!))
 				{
-					_modUtil.SetEnabled(package.LocalData!, _modUtil.IsIncluded(package.LocalData!));
+					_modUtil.SetEnabled(package, _modUtil.IsIncluded(package));
 				}
 			}
 		}

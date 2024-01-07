@@ -4,11 +4,8 @@ using PDX.SDK.Contracts;
 using PDX.SDK.Contracts.Configuration;
 using PDX.SDK.Contracts.Credential;
 using PDX.SDK.Contracts.Enums;
-using PDX.SDK.Contracts.Events.Download;
-using PDX.SDK.Contracts.Events.Mods;
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
-using PDX.SDK.Internal.Events.Internal.Mods;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
@@ -40,7 +37,9 @@ internal class WorkshopService : IWorkshopService
 	private bool loginWaitingConnection;
 	private List<ITag>? cachedTags;
 
-	internal IContext? Context { get; private set; }
+	private IContext? Context { get; set; }
+	public bool IsAvailable => Context is not null;
+	public bool IsReady => Context is not null && !Context.Mods.SyncOngoing();
 
 	public WorkshopService(ILogger logger, ISettings settings, ICitiesManager citiesManager, INotificationsService notificationsService)
 	{
@@ -81,9 +80,9 @@ internal class WorkshopService : IWorkshopService
 
 		config.Mods.RootPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods");
 
-		if (Enum.TryParse<Language>(LocaleHelper.CurrentCulture.IetfLanguageTag.Substring(0, 2).ToLower(), out var result))
+		if (Enum.TryParse<Language>(LocaleHelper.CurrentCulture.IetfLanguageTag.Substring(0, 2).ToLower(), out var lang))
 		{
-			config.Language = result;
+			config.Language = lang;
 		}
 
 		try
@@ -104,7 +103,9 @@ internal class WorkshopService : IWorkshopService
 	public async Task Login()
 	{
 		if (Context is null)
+		{
 			return;
+		}
 
 		var startupResult = await Context.Account.Startup();
 
@@ -121,7 +122,7 @@ internal class WorkshopService : IWorkshopService
 				return;
 			}
 
-			if (!_settings.UserSettings.ParadoxLogin.IsValid())
+			if (!_settings.UserSettings.ParadoxLogin.IsValid(KEYS.SALT))
 			{
 				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false));
 
@@ -163,18 +164,12 @@ internal class WorkshopService : IWorkshopService
 
 	public IWorkshopInfo? GetInfo(IPackageIdentity identity)
 	{
-		if (identity.Id <= 0)
-			return null;
-
-		return _modProcessor.Get((int)identity.Id).Result;
+		return identity.Id <= 0 ? null : (IWorkshopInfo)_modProcessor.Get((int)identity.Id).Result;
 	}
 
 	public async Task<IWorkshopInfo?> GetInfoAsync(IPackageIdentity identity)
 	{
-		if (identity.Id <= 0)
-			return null;
-
-		return await _modProcessor.Get((int)identity.Id, true);
+		return identity.Id <= 0 ? null : (IWorkshopInfo)await _modProcessor.Get((int)identity.Id, true);
 	}
 
 	internal async Task<PdxModDetails?> GetInfoAsync(int id)
@@ -187,6 +182,8 @@ internal class WorkshopService : IWorkshopService
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
 		var result = await Context.Mods.GetDetails(id, null, platform);
 
+		ProcessResult(result);
+
 		if (result?.Mod is not null)
 		{
 			var ratingResult = await Context.Mods.GetUserRating(id);
@@ -195,6 +192,21 @@ internal class WorkshopService : IWorkshopService
 		}
 
 		return null;
+	}
+
+	internal async Task<ModDetails?> GetInfoRawAsync(int id)
+	{
+		if (Context is null || id <= 0)
+		{
+			return null;
+		}
+
+		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
+		var result = await Context.Mods.GetDetails(id, null, platform);
+
+		ProcessResult(result);
+
+		return result?.Mod is not null ? result.Mod : null;
 	}
 
 	public IPackage GetPackage(IPackageIdentity identity)
@@ -225,6 +237,8 @@ internal class WorkshopService : IWorkshopService
 			pageSize = 9999
 		});
 
+		ProcessResult(result);
+
 		if (result.Success)
 		{
 			return result.Mods.ToList(x => new PdxPackage(x));
@@ -251,14 +265,120 @@ internal class WorkshopService : IWorkshopService
 			pageSize = 100
 		});
 
+		ProcessResult(result);
+
 		if (result.Success)
 		{
-			return result.Mods?.ToList(x => new PdxPackage(x)) ?? new();
+			return result.Mods?.ToList(x => new PdxPackage(x)) ?? [];
 		}
 
 		_logger.Error(result.Error.Raw);
 
 		return [];
+	}
+
+	public async Task<IEnumerable<ITag>> GetAvailableTags()
+	{
+		if (cachedTags is not null)
+		{
+			return cachedTags;
+		}
+
+		if (Context is null)
+		{
+			return [];
+		}
+
+		var gameData = ProcessResult(await Context.Mods.GetGameData());
+
+		return cachedTags = gameData.Tags.ToList(x => (ITag)new TagItem(Domain.CS2.Enums.TagSource.Workshop, x.Value.Id, x.Value.DisplayName));
+	}
+	
+	internal async Task<List<Mod>> GetLocalPackages()
+	{
+		if (Context is null)
+		{
+			return [];
+		}
+
+		var mods = ProcessResult(await Context.Mods.List());
+
+		return !mods.Success || mods.Mods is null ? (List<Mod>)([]) : mods.Mods;
+	}
+
+	public async Task<List<ICustomPlayset>> GetPlaysets(bool localOnly)
+	{
+		if (Context is null)
+		{
+			return [];
+		}
+
+		var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(!localOnly));
+
+		return !playsets.Success ? (List<ICustomPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (ICustomPlayset)new Domain.CS2.Content.Playset(playset));
+	}
+
+	public async Task<bool> ToggleVote(IPackageIdentity packageIdentity)
+	{
+		if (Context is null)
+		{
+			return false;
+		}
+
+		bool? hasVoted = null;
+
+		if (packageIdentity.GetWorkshopInfo() is IWorkshopInfo workshopInfo)
+		{
+			hasVoted = workshopInfo.HasVoted;
+
+			workshopInfo.HasVoted = !workshopInfo.HasVoted;
+			workshopInfo.VoteCount += workshopInfo.HasVoted ? 1 : -1;
+		}
+
+		hasVoted ??= ProcessResult(await Context.Mods.GetUserRating((int)packageIdentity.Id)).Rating != 0;
+
+		var result = await Context.Mods.Rate((int)packageIdentity.Id, hasVoted.Value ? 0 : 5);
+
+		ProcessResult(result);
+
+		if (!result.Success && packageIdentity.GetWorkshopInfo() is IWorkshopInfo workshopInfo_)
+		{
+			workshopInfo_.HasVoted = !workshopInfo_.HasVoted;
+			workshopInfo_.VoteCount -= workshopInfo_.HasVoted ? 1 : -1;
+		}
+		else
+		{
+			await _modProcessor.Get((int)packageIdentity.Id, true);
+		}
+
+		_modProcessor.CacheItems();
+
+		return result.Success;
+	}
+
+	public async Task<int> GetActivePlaysetId()
+	{
+		return Context is null ? 0 : ProcessResult(await Context.Mods.GetActivePlayset()).PlaysetId;
+	}
+
+	public async Task<IEnumerable<IPackage>> GetModsInPlayset(int playsetId, bool includeOnline = false)
+	{
+		if (Context is null)
+		{
+			return [];
+		}
+
+		var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId));
+
+		return result.Mods?.ToList(x => new PdxPlaysetPackage(x)) ?? [];
+	}
+
+	public async Task WaitUntilReady()
+	{
+		while (!IsReady)
+		{
+			await Task.Delay(50);
+		}
 	}
 
 	private SearchOrder GetPdxOrder(WorkshopQuerySorting sorting)
@@ -285,100 +405,117 @@ internal class WorkshopService : IWorkshopService
 		};
 	}
 
-	public async Task<IEnumerable<ITag>> GetAvailableTags()
+	private T ProcessResult<T>(T result) where T : Result
 	{
-		if (cachedTags is not null)
+		if (result.Error is not null)
 		{
-			return cachedTags;
+			_logger.Error(result.Error.Raw);
 		}
 
-		if (Context is null)
-		{
-			return [];
-		}
-
-		var gameData = await Context.Mods.GetGameData();
-
-		return cachedTags = gameData.Tags.ToList(x => (ITag)new TagItem(Domain.CS2.Enums.TagSource.Workshop, x.Value.Id, x.Value.DisplayName));
+		return result;
 	}
 
-	public async Task<List<IPackage>> GetLocalPackages()
-	{
-		if (Context is null)
-		{
-			return new();
-		}
-
-		var mods = await Context.Mods.List();
-
-		if (!mods.Success)
-		{
-			return new();
-		}
-
-		return mods.Mods.Where(x => x.LocalData is not null).ToList(mod => (IPackage)(mod.LocalData is null ? new PdxPackage(mod) : new LocalPdxPackage(mod)));
-	}
-
-	public async Task<List<ICustomPlayset>> GetPlaysets(bool localOnly)
-	{
-		if (Context is null)
-		{
-			return new();
-		}
-
-		var playsets = await Context.Mods.ListAllPlaysets(!localOnly);
-
-		if (!playsets.Success)
-		{
-			return new();
-		}
-
-		return playsets.AllPlaysets.ToList(playset => (ICustomPlayset)new Domain.CS2.Content.Playset(playset));
-	}
-
-	public async Task<bool> ToggleVote(IPackageIdentity packageIdentity)
+	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset, bool enable)
 	{
 		if (Context is null)
 		{
 			return false;
 		}
 
-		bool? hasVoted = null;
+		var result = await Context.Mods.SubscribeBulk(
+			mods,
+			playset,
+			enable);
 
-		if (packageIdentity.GetWorkshopInfo() is IWorkshopInfo workshopInfo)
+		return ProcessResult(result).Success;
+	}
+
+	internal async Task<bool> UnsubscribeBulk(IEnumerable<int> mods, int playset)
+	{
+		if (Context is null)
 		{
-			hasVoted = workshopInfo.HasVoted;
-
-			workshopInfo.HasVoted = !workshopInfo.HasVoted;
-			workshopInfo.VoteCount += workshopInfo.HasVoted ? 1 : -1;
+			return false;
 		}
 
-		hasVoted ??= (await Context.Mods.GetUserRating((int)packageIdentity.Id)).Rating != 0;
+		var results = new List<Result>();
 
-		var result = await Context.Mods.Rate((int)packageIdentity.Id, hasVoted.Value ? 0 : 5);
+		foreach (var id in mods)
+		{
+			var result = await Context.Mods.Unsubscribe(id, playset);
 
-		if (!result.Success&& packageIdentity.GetWorkshopInfo() is IWorkshopInfo workshopInfo_)
-		{
-			workshopInfo_.HasVoted = !workshopInfo_.HasVoted;
-			workshopInfo_.VoteCount -= workshopInfo_.HasVoted ? 1 : -1;
-		}
-		else
-		{
-			await _modProcessor.Get((int)packageIdentity.Id, true);
+			results.Add(ProcessResult(result));
 		}
 
-		_modProcessor.CacheItems();
+		return results.All(x => x.Success);
+	}
+
+	public async Task<bool> DeletePlayset(int playset)
+	{
+		return Context is not null && ProcessResult(await Context.Mods.DeletePlayset(playset)).Success;
+	}
+
+	public async Task<bool> ActivatePlayset(int playset)
+	{
+		return Context is not null && ProcessResult(await Context.Mods.ActivatePlayset(playset)).Success;
+	}
+
+	public async Task<bool> RenamePlayset(int playset, string name)
+	{
+		return Context is not null && ProcessResult(await Context.Mods.RenamePlayset(playset, name)).Success;
+	}
+
+	internal async Task<ICustomPlayset?> CreatePlayset(string playsetName)
+	{
+		if (Context is null)
+		{
+			return null;
+		}
+
+		var result = ProcessResult(await Context.Mods.CreatePlayset(playsetName));
+
+		return result.Success ? new Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+	}
+
+	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, int playset)
+	{
+		if (Context is null)
+		{
+			return;
+		}
+
+		ProcessResult(await Context.Mods.SetLoadOrder(orderedMods, playset));
+	}
+
+	internal async Task<bool> SetEnableBulk(List<int> modKeys, int playset, bool enable)
+	{
+		if (Context is null)
+		{
+			return false;
+		}
+
+		var result = enable
+				? await Context.Mods.EnableBulk(modKeys, playset)
+				: await Context.Mods.DisableBulk(modKeys, playset);
+
+		ProcessResult(result);
+
+		if (result.Success)
+		{
+			await Context.Mods.Sync();
+		}
 
 		return result.Success;
 	}
 
-	public async Task<int> GetActivePlaysetId()
+	internal async Task<ICustomPlayset?> ClonePlayset(int id)
 	{
 		if (Context is null)
 		{
-			return 0;
+			return null;
 		}
 
-		return (await Context.Mods.GetActivePlayset()).PlaysetId;
+		var result = ProcessResult(await Context.Mods.ClonePlayset(id));
+
+		return result.Success ? new Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
 	}
 }

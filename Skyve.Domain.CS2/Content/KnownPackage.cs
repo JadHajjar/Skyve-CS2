@@ -3,17 +3,17 @@
 namespace Skyve.Domain.CS2.Content;
 public class KnownPackage
 {
-    public KnownPackage(ILocalPackageData x)
-    {
-        Folder = x.Folder;
-        UpdateTime = x.LocalTime;
-    }
+	public KnownPackage(ILocalPackageData x)
+	{
+		Folder = x.Folder;
+		UpdateTime = x.LocalTime;
+	}
 
-    public KnownPackage()
-    {
+	public KnownPackage()
+	{
 
-    }
+	}
 
-    public string? Folder { get; set; }
-    public DateTime UpdateTime { get; set; }
+	public string? Folder { get; set; }
+	public DateTime UpdateTime { get; set; }
 }

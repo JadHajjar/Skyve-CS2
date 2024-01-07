@@ -22,6 +22,10 @@
 	<Import Project="../../Skyve/CS2-Version.props" />
 	<Import Project="../../Skyve/Config.props" />
 
+	<PropertyGroup>
+		<PublishConfigurationPath>Properties\$(BuildType)\PublishConfiguration.xml</PublishConfigurationPath>
+	</PropertyGroup>
+
 	<Target Name="CopyFiles" BeforeTargets="PreBuildEvent">
 		<ItemGroup>
 			<AppFiles Include="..\Skyve.App.CS2\bin\$(BuildType)\**\*.*" />

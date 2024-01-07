@@ -1,10 +1,14 @@
 ﻿using Extensions;
 
+using PDX.SDK.Contracts.Service.Mods.Enums;
+
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
+using Skyve.Systems.CS2.Services;
 
 using System;
 using System.Collections.Generic;
@@ -29,7 +33,7 @@ internal class ContentManager : IContentManager
 	private readonly ILogger _logger;
 	private readonly INotifier _notifier;
 	private readonly ISettings _settings;
-	private readonly IWorkshopService _workshopService;
+	private readonly WorkshopService _workshopService;
 
 	public ContentManager(IPackageManager packageManager, ILocationService locationManager, ICompatibilityManager compatibilityManager, ILogger logger, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IPackageUtil packageUtil, ISettings settings, IWorkshopService workshopService)
 	{
@@ -42,14 +46,14 @@ internal class ContentManager : IContentManager
 		_logger = logger;
 		_notifier = notifier;
 		_settings = settings;
-		_workshopService = workshopService;
+		_workshopService = (WorkshopService)workshopService;
 	}
 
 	public IEnumerable<IPackage> GetReferencingPackage(ulong steamId, bool includedOnly)
 	{
 		foreach (var item in _packageManager.Packages)
 		{
-			if (includedOnly && !(_packageUtil.IsIncluded(item.LocalData!, out var partiallyIncluded) || partiallyIncluded))
+			if (includedOnly && !(_packageUtil.IsIncluded(item, out var partiallyIncluded) || partiallyIncluded))
 			{
 				continue;
 			}
@@ -120,7 +124,9 @@ internal class ContentManager : IContentManager
 		{
 			if (Directory.Exists(path))
 			{
-				return new DirectoryInfo(path).GetFiles("*", SearchOption.AllDirectories).Sum(f => f.Length);
+				return new DirectoryInfo(path)
+					.GetFiles("*", SearchOption.AllDirectories)
+					.Sum(f => f.Length);
 			}
 		}
 		catch { }
@@ -139,7 +145,7 @@ internal class ContentManager : IContentManager
 
 			foreach (var folder in Directory.GetDirectories(gameModsPath))
 			{
-				var package = GetPackage(folder, false, false);
+				var package = GetPackage(folder);
 
 				if (package is not null)
 				{
@@ -154,12 +160,27 @@ internal class ContentManager : IContentManager
 
 		var subscribedItems = await _workshopService.GetLocalPackages();
 
-		packages.AddRange(subscribedItems);
+		foreach (var mod in subscribedItems)
+		{
+			if (mod.LocalData is null)
+			{
+				packages.Add(new PdxPackage(mod));
+			}
+			else if (mod.LocalData.LocalType == LocalType.Subscribed)
+			{
+				var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
+
+				if (pdxPackage is not null)
+				{
+					packages.Add(pdxPackage);
+				}
+			}
+		}
 
 		return packages;
 	}
 
-	private Package? GetPackage(string folder, bool builtIn, bool workshop, bool withSubDirectories = true)
+	internal Package? GetPackage(string folder, bool withSubDirectories = true, PDX.SDK.Contracts.Service.Mods.Models.Mod? pdxMod = null)
 	{
 		try
 		{
@@ -183,15 +204,18 @@ internal class ContentManager : IContentManager
 
 			var isCodeMod = _modUtil.GetModInfo(folder, out var modDll, out var version);
 			var assets = _assetUtil.GetAssets(folder, withSubDirectories).ToArray();
-			var package = new Package(folder,
-				GetTotalSize(folder),
-				GetLocalUpdatedTime(folder),
+
+			return pdxMod is null
+				? new Package(folder,
 				assets,
 				isCodeMod,
 				version.GetString(),
-				modDll);
-
-			return package;
+				modDll)
+				: new LocalPdxPackage(pdxMod,
+					assets,
+					isCodeMod,
+					version?.GetString(),
+					modDll);
 		}
 		catch (Exception ex)
 		{
@@ -215,7 +239,7 @@ internal class ContentManager : IContentManager
 			//	return;
 			//}
 
-			var existingPackage = _packageManager.Packages.FirstOrDefault(x => x.LocalData!.Folder.PathEquals(path));
+			var existingPackage = _packageManager.Packages.FirstOrDefault(x => x.LocalData?.Folder.PathEquals(path) ?? false);
 
 			if (existingPackage is Package package)
 			{
@@ -223,10 +247,12 @@ internal class ContentManager : IContentManager
 			}
 			else
 			{
-				var newPackage = GetPackage(path, false, workshop, self);
+				var newPackage = GetPackage(path, self);
 
 				if (newPackage is null)
+				{
 					return;
+				}
 
 				if (newPackage.IsCodeMod)
 				{
@@ -245,7 +271,7 @@ internal class ContentManager : IContentManager
 			return;
 		}
 
-		if (IsDirectoryEmpty(package.LocalData!.Folder))
+		if (IsDirectoryEmpty(package.LocalData.Folder))
 		{
 			_packageManager.RemovePackage(package);
 			return;
@@ -253,10 +279,8 @@ internal class ContentManager : IContentManager
 
 		var isCodeMod = _modUtil.GetModInfo(package.LocalData.Folder, out var modDll, out var version);
 		var assets = _assetUtil.GetAssets(package.LocalData.Folder, !self).ToArray();
-		
+
 		package.RefreshData(
-			GetTotalSize(package.LocalData.Folder),
-			GetLocalUpdatedTime(package.LocalData.Folder),
 			assets,
 			isCodeMod,
 			version.GetString(),
@@ -272,12 +296,7 @@ internal class ContentManager : IContentManager
 
 	private bool IsDirectoryEmpty(string path)
 	{
-		if (!Directory.Exists(path))
-		{
-			return true;
-		}
-
-		return GetTotalSize(path) == 0;
+		return !Directory.Exists(path) || GetTotalSize(path) == 0;
 	}
 
 	public void StartListeners()

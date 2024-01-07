@@ -4,7 +4,6 @@ using PDX.SDK.Contracts.Service.Mods.Enums;
 
 using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Systems;
-using Skyve.Systems;
 
 using System;
 using System.Collections.Generic;
@@ -12,12 +11,15 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
+using PdxIMod = PDX.SDK.Contracts.Service.Mods.Models.IMod;
 using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
 namespace Skyve.Domain.CS2.Content;
 
-public class PdxPackage : IPackage, IWorkshopInfo
+public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo
 {
+	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
+
 	public PdxPackage(PdxMod mod)
 	{
 		Id = (ulong)mod.Id;
@@ -36,8 +38,12 @@ public class PdxPackage : IPackage, IWorkshopInfo
 		State = mod.State;
 		LatestUpdate = mod.LatestUpdate;
 		InstalledDate = mod.InstalledDate;
-		if(mod.LocalData is not null)
-		ThumbnailPath = CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
+		PdxLocalData = mod.LocalData;
+
+		ThumbnailPath = mod.LocalData is not null
+			? CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename)
+			: mod.ThumbnailPath;
+
 		Name = mod.DisplayName;
 		Description = mod.ShortDescription;
 		ServerTime = mod.LatestUpdate ?? default;
@@ -52,8 +58,6 @@ public class PdxPackage : IPackage, IWorkshopInfo
 		Tags = mod.Tags;
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
-
-	public IWorkshopInfo? WorkshopInfo => this;
 
 	public string Version { get; set; }
 	public string DisplayName { get; set; }
@@ -90,18 +94,21 @@ public class PdxPackage : IPackage, IWorkshopInfo
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
 	public ILocalPackageData? LocalData { get; }
-	public ulong Id { get; }
+	public ulong Id { get; private set; }
 	public string Name { get; }
 	public string? Url { get; }
+	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
+	string PdxIMod.Name { get => Guid; set => Guid = value; }
+	PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
+	public IEnumerable<IModChangelog> Changelog => [];
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
 
-		if (string.IsNullOrEmpty(ThumbnailPath))
-			thumbnail = imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailUrl)}").Result;
-		else
-			thumbnail = imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailPath)}", isFilePath: true).Result;
+		thumbnail = string.IsNullOrEmpty(ThumbnailPath)
+			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailUrl)}").Result
+			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailPath)}", isFilePath: true).Result;
 
 		return thumbnail is not null;
 	}

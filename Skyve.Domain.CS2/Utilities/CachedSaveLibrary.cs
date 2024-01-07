@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Skyve.Domain.CS2.Utilities;
 public class CachedSaveLibrary<TKey, TValue>
 {
-	internal readonly Dictionary<TKey, CachedSaveItem<TKey, TValue>> _dictionary = new();
+	internal readonly Dictionary<TKey, CachedSaveItem<TKey, TValue>> _dictionary = [];
 	private readonly Func<TKey, TValue> _getter;
 	private readonly Action<TKey, TValue> _setter;
 

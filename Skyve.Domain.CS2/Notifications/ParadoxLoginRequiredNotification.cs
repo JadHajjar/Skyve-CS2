@@ -2,14 +2,9 @@
 
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
-using Skyve.Systems;
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Skyve.Domain.CS2.Notifications;
 public class ParadoxLoginRequiredNotification : INotificationInfo

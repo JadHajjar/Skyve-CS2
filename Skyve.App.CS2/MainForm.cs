@@ -1,4 +1,5 @@
 ﻿using Skyve.App.CS2.UserInterface.Content;
+using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Panels;

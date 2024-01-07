@@ -8,7 +8,7 @@ public class LogTrace : ILogTrace
 {
 	public LogTrace(List<string> lines, int index, bool crash)
 	{
-		Trace = new();
+		Trace = [];
 		Crash = crash;
 
 		for (var i = 1; i <= 3; i++)

@@ -4,11 +4,10 @@ using PDX.SDK.Contracts.Service.Mods.Models;
 using Skyve.Domain.Systems;
 using Skyve.Systems;
 
-using System;
 using System.Drawing;
 
 namespace Skyve.Domain.CS2.Paradox;
-internal class PdxModRequirement : IPackageRequirement
+public class PdxModRequirement : IPackageRequirement
 {
 	public PdxModRequirement(ModDependency x)
 	{

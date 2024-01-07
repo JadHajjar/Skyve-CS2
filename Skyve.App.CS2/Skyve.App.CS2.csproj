@@ -67,9 +67,10 @@
 		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="UserInterface\Panels\PC_PlaysetSettings.cs">
+		<Compile Update="UserInterface\Panels\PC_Options.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
+		<Compile Update="UserInterface\Panels\PC_PlaysetSettings.cs" />
 		<Compile Update="UserInterface\Panels\PC_SkyveChangeLog.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>

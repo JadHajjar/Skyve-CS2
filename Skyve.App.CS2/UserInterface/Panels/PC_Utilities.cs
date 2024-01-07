@@ -1,6 +1,5 @@
 ﻿using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Panels;
-using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
 using System.IO;
@@ -27,19 +26,8 @@ public partial class PC_Utilities : PanelContent
 
 		InitializeComponent();
 
-		RefreshModIssues();
-
-		B_LoadCollection.Height = 0;
-
-		_notifier.PackageInformationUpdated += RefreshModIssues;
-
 		DD_BOB.StartingFolder = _settings.FolderSettings.AppDataPath;
-		DD_Missing.ValidExtensions = DD_Unused.ValidExtensions = new[] { ".htm", ".html" };
 
-		SlickTip.SetTo(B_LoadCollection, "LoadCollectionTip");
-		SlickTip.SetTo(DD_Missing, "LsmMissingTip");
-		SlickTip.SetTo(DD_Unused, "LsmUnusedTip");
-		SlickTip.SetTo(B_ReDownload, "FixAllTip");
 		SlickTip.SetTo(DD_BOB, "XMLTip");
 	}
 
@@ -48,56 +36,9 @@ public partial class PC_Utilities : PanelContent
 		return FormDesign.Design.AccentBackColor;
 	}
 
-	private void RefreshModIssues()
-	{
-		var modsOutOfDate = _contentManager.Packages.AllWhere(x => _packageUtil.GetStatus(x.LocalData, out _) == DownloadStatus.OutOfDate);
-		var modsIncomplete = _contentManager.Packages.AllWhere(x => _packageUtil.GetStatus(x.LocalData, out _) == DownloadStatus.PartiallyDownloaded);
-
-		this.TryInvoke(() =>
-		{
-			L_OutOfDate.Text = Locale.OutOfDateCount.FormatPlural(modsOutOfDate.Count, Locale.Package.FormatPlural(modsOutOfDate.Count).ToLower());
-			L_Incomplete.Text = Locale.IncompleteCount.FormatPlural(modsIncomplete.Count, Locale.Package.FormatPlural(modsIncomplete.Count).ToLower());
-
-			P_OutOfDate.Controls.Clear(true);
-			P_Incomplete.Controls.Clear(true);
-
-			foreach (var mod in modsOutOfDate)
-			{
-				P_OutOfDate.Controls.Add(new MiniPackageControl(mod) { Dock = DockStyle.Top, ReadOnly = true });
-			}
-
-			foreach (var mod in modsIncomplete)
-			{
-				P_Incomplete.Controls.Add(new MiniPackageControl(mod) { Dock = DockStyle.Top, ReadOnly = true });
-			}
-
-			P_ModIssues.ColumnStyles[0].Width = modsOutOfDate.Count > 0 ? 50 : 0;
-			P_ModIssues.ColumnStyles[1].Width = modsIncomplete.Count > 0 ? 50 : 0;
-
-			L_OutOfDate.Visible = P_OutOfDate.Visible = modsOutOfDate.Count > 0;
-			L_Incomplete.Visible = P_Incomplete.Visible = modsIncomplete.Count > 0;
-			P_ModIssues.Visible = modsOutOfDate.Count > 0 || modsIncomplete.Count > 0;
-
-			if (B_ReDownload.Loading)
-			{
-				B_ReDownload.Loading = false;
-
-				ShowPrompt(Locale.RedownloadComplete, LocaleSlickUI.TaskCompleted, icon: PromptIcons.Ok);
-			}
-
-			if (B_Cleanup.Loading)
-			{
-				B_Cleanup.Loading = false;
-
-				ShowPrompt(Locale.CleanupComplete, LocaleSlickUI.TaskCompleted, icon: PromptIcons.Ok);
-			}
-		});
-	}
-
 	protected override void LocaleChanged()
 	{
 		Text = Locale.Utilities;
-		L_CleanupInfo.Text = Locale.CleanupInfo;
 		L_Troubleshoot.Text = Locale.TroubleshootInfo;
 	}
 
@@ -105,12 +46,10 @@ public partial class PC_Utilities : PanelContent
 	{
 		base.UIChanged();
 
-		B_ReDownload.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		B_Troubleshoot.Margin = P_Cleanup.Margin = P_Collections.Margin = P_BOB.Margin = P_LsmReport.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = P_ModIssues.Margin = UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
-		B_ReDownload.Margin = TB_CollectionLink.Margin = B_LoadCollection.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		B_Troubleshoot.Margin = P_BOB.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin =  UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
 		B_ImportClipboard.Margin = UI.Scale(new Padding(10), UI.FontScale);
-		L_Troubleshoot.Font = L_CleanupInfo.Font = L_OutOfDate.Font = L_Incomplete.Font = UI.Font(9F);
-		L_Troubleshoot.Margin = L_CleanupInfo.Margin = L_OutOfDate.Margin = L_Incomplete.Margin = UI.Scale(new Padding(3), UI.FontScale);
+		L_Troubleshoot.Font =  UI.Font(9F);
+		L_Troubleshoot.Margin = UI.Scale(new Padding(3), UI.FontScale);
 
 		foreach (Control item in P_Reset.Controls)
 		{
@@ -123,55 +62,10 @@ public partial class PC_Utilities : PanelContent
 		base.DesignChanged(design);
 
 		BackColor = design.AccentBackColor;
-		L_CleanupInfo.ForeColor = design.LabelColor;
-		L_OutOfDate.ForeColor = design.YellowColor;
-		L_Incomplete.ForeColor = design.RedColor;
 
 		foreach (Control item in TLP_Main.Controls)
 		{
 			item.BackColor = design.BackColor.Tint(Lum: design.Type.If(FormDesignType.Dark, 1, -1));
-		}
-	}
-
-	private async void B_LoadCollection_Click(object sender, EventArgs e)
-	{
-		try
-		{
-			if (!B_LoadCollection.Loading && this.CheckValidation())
-			{
-				B_LoadCollection.Loading = true;
-
-				var collectionId = Regex.Match(TB_CollectionLink.Text, TB_CollectionLink.ValidationRegex).Groups[1].Value;
-
-				if (ulong.TryParse(collectionId, out var steamId))
-				{
-					var contents = await _workshopService.GetPackageAsync(new GenericPackageIdentity(steamId));
-
-					if (contents?.GetWorkshopInfo()?.Requirements?.Any() ?? false)
-					{
-						Form.PushPanel(null, new PC_ViewCollection(contents));
-
-						TB_CollectionLink.Text = string.Empty;
-					}
-				}
-
-				B_LoadCollection.Loading = false;
-			}
-		}
-		catch (Exception ex)
-		{
-			B_LoadCollection.Loading = false;
-			ShowPrompt(ex, LocaleSlickUI.UnexpectedError);
-		}
-	}
-
-	private void TB_CollectionLink_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-	{
-		if (e.KeyData == Keys.Enter)
-		{
-			B_LoadCollection_Click(this, EventArgs.Empty);
-
-			e.IsInputKey = false;
 		}
 	}
 
@@ -236,27 +130,6 @@ public partial class PC_Utilities : PanelContent
 		}
 
 		Form.PushPanel(null, new PC_GenericPackageList(assets, true) { Text = LocaleHelper.GetGlobalText(B_ImportClipboard.Text) });
-	}
-
-	private void B_Cleanup_Click(object sender, EventArgs e)
-	{
-		if (_citiesManager.IsRunning())
-		{
-			MessagePrompt.Show(Locale.CloseCitiesToClean, PromptButtons.OK, PromptIcons.Hand, App.Program.MainForm);
-			return;
-		}
-
-		if (!_settings.SessionSettings.CleanupFirstTimeShown)
-		{
-			MessagePrompt.Show(Locale.CleanupRequiresGameToOpen, Locale.CleanupInfoTitle, PromptButtons.OK, PromptIcons.Info, App.Program.MainForm);
-
-			_settings.SessionSettings.CleanupFirstTimeShown = true;
-			_settings.SessionSettings.Save();
-		}
-
-		_citiesManager.RunStub();
-
-		B_Cleanup.Loading = true;
 	}
 
 	private void slickScroll1_Scroll(object sender, ScrollEventArgs e)

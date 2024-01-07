@@ -52,20 +52,16 @@ internal class PlaysetManager : IPlaysetManager
 	private readonly IPackageUtil _packageUtil;
 	private readonly ICompatibilityManager _compatibilityManager;
 	private readonly INotifier _notifier;
-	private readonly IModUtil _modUtil;
-	private readonly IAssetUtil _assetUtil;
-	private readonly IDlcManager _dlcManager;
 
-	public PlaysetManager(ILogger logger, ILocationService locationManager, ISettings settings, IPackageManager packageManager, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IDlcManager dlcManager, IWorkshopService workshopService)
+	public PlaysetManager(ILogger logger, ILocationService locationManager, ISettings settings, IPackageManager packageManager, INotifier notifier, IPackageUtil packageUtil, IWorkshopService workshopService, ICompatibilityManager compatibilityManager)
 	{
 		_logger = logger;
 		_locationManager = locationManager;
 		_settings = settings;
 		_packageManager = packageManager;
 		_notifier = notifier;
-		_modUtil = modUtil;
-		_assetUtil = assetUtil;
-		_dlcManager = dlcManager;
+		_packageUtil = packageUtil;
+		_compatibilityManager = compatibilityManager;
 		_workshopService = (workshopService as WorkshopService)!;
 		_playsets ??= new();
 
@@ -74,13 +70,13 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<bool> MergeIntoCurrentPlayset(IPlayset playset)
 	{
-		var modsInPlayset = await _workshopService.Context!.Mods.ListModsInPlayset(playset.Id);
+		var modsInPlayset = await _workshopService.GetModsInPlayset(playset.Id, true);
 
-		if (modsInPlayset.Success)
+		if (modsInPlayset.Any())
 		{
-			var result = await _workshopService.Context.Mods.SubscribeBulk(modsInPlayset.Mods.Select(x => new KeyValuePair<int, string>(((PlaysetSubscribedMod)x).Id, x.DisplayName)), playset.Id);
-		
-			return result.Success;
+			await _packageUtil.SetIncluded(modsInPlayset, true);
+
+			return true;
 		}
 
 		return false;
@@ -88,14 +84,11 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<bool> ExcludeFromCurrentPlayset(IPlayset playset)
 	{
-		var modsInPlayset = await _workshopService.Context!.Mods.ListModsInPlayset(playset.Id);
-		
-		if (modsInPlayset.Success)
+		var modsInPlayset = await _workshopService.GetModsInPlayset(playset.Id);
+
+		if (modsInPlayset.Any())
 		{
-			foreach (var item in modsInPlayset.Mods)
-			{
-				await _workshopService.Context.Mods.Unsubscribe(((PlaysetSubscribedMod)item).Id, playset.Id);
-			}
+			await _packageUtil.SetIncluded(modsInPlayset, false);
 
 			return true;
 		}
@@ -105,7 +98,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<bool> DeletePlayset(ICustomPlayset playset)
 	{
-		if ((await _workshopService.Context!.Mods.DeletePlayset(playset.Id)).Success)
+		if (await _workshopService.DeletePlayset(playset.Id))
 		{
 			lock (_playsets)
 			{
@@ -124,13 +117,13 @@ internal class PlaysetManager : IPlaysetManager
 
 	private async Task RefreshCurrentPlayset()
 	{
-		var currentPlayset = await _workshopService.Context!.Mods.GetActivePlayset();
+		var currentPlayset = await _workshopService.GetActivePlaysetId();
 
-		if (currentPlayset.Success)
+		if (currentPlayset > 0)
 		{
 			lock (_playsets)
 			{
-				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == currentPlayset.PlaysetId);
+				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == currentPlayset);
 
 				if(CurrentPlayset is null)
 				{
@@ -164,19 +157,21 @@ internal class PlaysetManager : IPlaysetManager
 
 		if (SystemsProgram.MainForm as SlickForm is null)
 		{
-			ApplyPlayset(playset, true);
+			ApplyPlayset(playset);
 		}
 		else
 		{
-			new BackgroundAction("Applying playset", () => ApplyPlayset(playset, true)).Run();
+			new BackgroundAction("Applying playset", () => ApplyPlayset(playset)).Run();
 		}
 	}
 
-	internal void ApplyPlayset(ICustomPlayset playset, bool setCurrentPlayset)
+	internal async void ApplyPlayset(ICustomPlayset playset)
 	{
 		try
 		{
-			_workshopService.Context!.Mods.ActivatePlayset(playset.Id);
+			await _workshopService.ActivatePlayset(playset.Id);
+
+			_notifier.OnPlaysetChanged();
 		}
 		catch (Exception ex)
 		{
@@ -247,14 +242,12 @@ internal class PlaysetManager : IPlaysetManager
 			return false;
 		}
 
-		return (await _workshopService.Context!.Mods.RenamePlayset(playset.Id, text)).Success;
+		return await _workshopService.RenamePlayset(playset.Id, text);
 	}
 
-	public async Task<ICustomPlayset> CreateNewPlayset(string playsetName)
+	public async Task<ICustomPlayset?> CreateNewPlayset(string playsetName)
 	{
-		var newPlayset = await _workshopService.Context!.Mods.CreatePlayset(playsetName);
-
-		return new Playset(newPlayset) { LastEditDate = DateTime.Now };
+		return await _workshopService.CreatePlayset(playsetName);
 	}
 
 	public List<IPackage> GetInvalidPackages(PackageUsage usage)
@@ -278,7 +271,7 @@ internal class PlaysetManager : IPlaysetManager
 				return false;
 			}
 
-			return _packageUtil.IsIncluded(x.LocalData!, out var partial) || partial;
+			return _packageUtil.IsIncluded(x, out var partial) || partial;
 		});
 	}
 
@@ -297,7 +290,7 @@ internal class PlaysetManager : IPlaysetManager
 		throw new NotImplementedException();
 	}
 
-	public void SetIncludedForAll(IPackage package, bool value)
+	public async Task SetIncludedForAll(IPackageIdentity package, bool value)
 	{
 		try
 		{
@@ -305,11 +298,11 @@ internal class PlaysetManager : IPlaysetManager
 			{
 				if (value)
 				{
-					_workshopService.Context!.Mods.Enable((int)package.Id, playset.Id);
+				await	_packageUtil.SetIncluded(package, true, playset.Id);
 				}
 				else
 				{
-					_workshopService.Context!.Mods.Disable((int)package.Id, playset.Id);
+				await	_packageUtil.SetIncluded(package, false, playset.Id);
 				}
 			}
 		}
@@ -319,33 +312,9 @@ internal class PlaysetManager : IPlaysetManager
 		}
 	}
 
-	public async Task<bool> IsPackageIncludedInPlayset(IPackage package, IPlayset playset)
-	{
-		var modDetail = await _workshopService.Context!.Mods.GetDetails((int)package.Id);
-
-		if (modDetail.Success && modDetail.Mod.Playsets.Any(x => x.PlaysetId == playset.Id))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	public void SetIncludedFor(IPackage package, IPlayset playset, bool value)
-	{
-		if (value)
-		{
-			_workshopService.Context!.Mods.Enable((int)package.Id, playset.Id);
-		}
-		else
-		{
-			_workshopService.Context!.Mods.Disable((int)package.Id, playset.Id);
-		}
-	}
-
 	public string GetFileName(IPlayset playset)
 	{
-		return CrossIO.Combine(_workshopService.Context!.Config.Mods.RootPath, "playsets_metadata", playset.Id.ToString());
+		return string.Empty;// CrossIO.Combine(_workshopService.Context!.Config.Mods.RootPath, "playsets_metadata", playset.Id.ToString());
 	}
 
 	public void CreateShortcut(IPlayset item)
@@ -364,10 +333,8 @@ internal class PlaysetManager : IPlaysetManager
 		}
 	}
 
-	internal async Task<ICustomPlayset> ClonePlayset(IPlayset playset)
+	internal async Task<ICustomPlayset?> ClonePlayset(IPlayset playset)
 	{
-		var newPlayset = await _workshopService.Context!.Mods.ClonePlayset(playset.Id);
-
-		return new Playset(newPlayset) { LastEditDate = DateTime.Now };
+		return await _workshopService.ClonePlayset(playset.Id);
 	}
 }

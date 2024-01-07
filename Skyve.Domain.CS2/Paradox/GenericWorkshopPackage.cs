@@ -19,7 +19,7 @@ public class PdxModIdentityPackage : IPackage
 	{
 		Id = id;
 		Name = id.ToString();
-        Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
+		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
 	public PdxModIdentityPackage()
@@ -28,13 +28,12 @@ public class PdxModIdentityPackage : IPackage
 	}
 
 	public ILocalPackageData? LocalData { get; }
-	public IWorkshopInfo? WorkshopInfo => null;
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
 	public ulong Id { get; }
 	public string Name { get; }
 	public string? Url { get; }
-	public string? Version => WorkshopInfo?.Version;
+	public string? Version => this.GetWorkshopInfo()?.Version;
 
 	public override string ToString()
 	{

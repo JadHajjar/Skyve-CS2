@@ -1,6 +1,4 @@
-﻿using PDX.SDK.Contracts;
-
-using Skyve.Domain;
+﻿using Skyve.Domain;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
@@ -12,8 +10,8 @@ using System.Threading.Tasks;
 namespace Skyve.Systems.CS2.Managers;
 internal class SubscriptionsManager(IWorkshopService workshopService, ISettings settings, INotifier notifier) : ISubscriptionsManager
 {
-	private readonly List<ulong> _subscribingTo = new();
-	private readonly List<ulong> _unsubscribingFrom = new();
+	private readonly List<ulong> _subscribingTo = [];
+	private readonly List<ulong> _unsubscribingFrom = [];
 	private readonly WorkshopService _workshopService = (WorkshopService)workshopService;
 	private readonly ISettings _settings = settings;
 	private readonly INotifier _notifier = notifier;
@@ -87,25 +85,27 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 	public async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids)
 	{
-		if (_workshopService.Context is null)
+		if (!_workshopService.IsAvailable)
 		{
 			return false;
 		}
 
-		var currentPlayset = await _workshopService.Context.Mods.GetActivePlayset();
+		var currentPlayset = await _workshopService.GetActivePlaysetId();
 
-		if (!currentPlayset.Success)
+		if (currentPlayset == 0)
 		{
 			return false;
 		}
 
-		_subscribingTo.AddRange(ids.Select(x => x.Id));
+		_subscribingTo.AddRange(ids.Select(x => x.Id).Where(x => x > 0));
 
 		_notifier.OnRefreshUI();
 
-		var result = await _workshopService.Context!.Mods.SubscribeBulk(
-			ids.Select(x => new KeyValuePair<int, string?>((int)x.Id, null)),
-			currentPlayset.PlaysetId,
+		await _workshopService.WaitUntilReady();
+
+		var result = await _workshopService.SubscribeBulk(
+			ids.Select(x => new KeyValuePair<int, string?>((int)x.Id, null)).Where(x => x.Key > 0),
+			currentPlayset,
 			!_settings.UserSettings.DisableNewModsByDefault);
 
 		foreach (var item in ids)
@@ -115,20 +115,20 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		_notifier.OnRefreshUI();
 		_notifier.OnPlaysetChanged();
-		
-		return result.Success;
+
+		return result;
 	}
 
 	public async Task<bool> UnSubscribe(IEnumerable<IPackageIdentity> ids)
 	{
-		if (_workshopService.Context is null)
+		if (!_workshopService.IsAvailable)
 		{
 			return false;
 		}
 
-		var currentPlayset = await _workshopService.Context.Mods.GetActivePlayset();
+		var currentPlayset = await _workshopService.GetActivePlaysetId();
 
-		if (!currentPlayset.Success)
+		if (currentPlayset == 0)
 		{
 			return false;
 		}
@@ -137,14 +137,9 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		_notifier.OnRefreshUI();
 
-		var results = new List<Result>();
+		await _workshopService.WaitUntilReady();
 
-		foreach (var id in ids)
-		{
-			var result = await _workshopService.Context!.Mods.Unsubscribe((int)id.Id, currentPlayset.PlaysetId);
-
-			results.Add(result);
-		}
+		var result = await _workshopService.UnsubscribeBulk(ids.Select(x => (int)x.Id), currentPlayset);
 
 		foreach (var item in ids)
 		{
@@ -154,6 +149,6 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		_notifier.OnRefreshUI();
 		_notifier.OnPlaysetChanged();
 
-		return results.All(x => x.Success);
+		return result;
 	}
 }

@@ -1,13 +1,6 @@
 ﻿using Extensions;
 
-using Newtonsoft.Json;
-
-using Skyve.Domain.Systems;
-
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 
 namespace Skyve.Domain.CS2.Utilities;
 public class SessionSettings : ConfigFile, ISessionSettings

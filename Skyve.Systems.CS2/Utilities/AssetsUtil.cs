@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
 internal class AssetsUtil : IAssetUtil
@@ -49,12 +50,12 @@ internal class AssetsUtil : IAssetUtil
 		//}
 	}
 
-	public bool IsIncluded(IAsset asset)
+	public bool IsIncluded(IAsset asset, int? playsetId = null)
 	{
 		return !ExcludedHashSet.Contains(asset.FilePath.ToLower());
 	}
 
-	public void SetIncluded(IAsset asset, bool value)
+	public async Task SetIncluded(IAsset asset, bool value, int? playsetId = null)
 	{
 		if (value)
 		{

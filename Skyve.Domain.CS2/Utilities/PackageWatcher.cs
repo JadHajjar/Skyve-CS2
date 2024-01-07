@@ -13,7 +13,7 @@ public class PackageWatcher
 	private readonly IContentManager _contentManager;
 	private readonly ILogger _logger;
 	private readonly DelayedAction<string> _delayedUpdate = new(5000);
-	private static readonly List<PackageWatcher> _watchers = new();
+	private static readonly List<PackageWatcher> _watchers = [];
 
 	private FileWatcher? watcher;
 

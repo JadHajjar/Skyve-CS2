@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Win32;
 
 using Skyve.App.CS2.Services;
 using Skyve.App.Interfaces;
@@ -9,7 +8,6 @@ using Skyve.Systems.CS2.Utilities;
 
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 
 using static System.Environment;

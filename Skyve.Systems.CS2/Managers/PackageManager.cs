@@ -16,7 +16,7 @@ internal class PackageManager : IPackageManager
 {
 	private readonly Dictionary<ulong, IPackage> indexedPackages = new();
 	private readonly Dictionary<string, List<IPackage>> indexedMods = new();
-	private readonly List<Package> packages = new();
+	private readonly List<IPackage> packages = new();
 
 	private readonly IModLogicManager _modLogicManager;
 	private readonly ISettings _settings;
@@ -37,7 +37,7 @@ internal class PackageManager : IPackageManager
 	{
 		get
 		{
-			var currentPackages = packages is null ? new() : new List<Package>(packages);
+			var currentPackages = packages is null ? new() : new List<IPackage>(packages);
 			
 			if (_settings.UserSettings.HidePseudoMods)
 			{
@@ -63,13 +63,13 @@ internal class PackageManager : IPackageManager
 	{
 		get
 		{
-			var currentPackages = packages is null ? new() : new List<Package>(packages);
+			var currentPackages = packages is null ? new() : new List<IPackage>(packages);
 
 			if (_settings.UserSettings.HidePseudoMods)
 			{
 				foreach (var package in currentPackages)
 				{
-					if (_modLogicManager.IsPseudoMod(package))
+					if (package.LocalData is null || _modLogicManager.IsPseudoMod(package))
 						continue;
 
 					foreach (var item in package.LocalData.Assets)
@@ -82,8 +82,8 @@ internal class PackageManager : IPackageManager
 			}
 
 			foreach (var package in currentPackages)
-			{
-				foreach (var item in package.LocalData!.Assets)
+			{if (package.LocalData is not null)
+				foreach (var item in package.LocalData.Assets)
 				{
 					yield return item;
 				}
@@ -93,16 +93,16 @@ internal class PackageManager : IPackageManager
 
 	public void AddPackage(IPackage package)
 	{
-		packages.Add((Package)package);
+		packages.Add(package);
 
 		if (indexedPackages is not null && package.Id != 0)
 		{
 			indexedPackages[package.Id] = package;
 		}
 
-		if (package.IsCodeMod)
+		if (package.IsCodeMod && package.LocalData is not null)
 		{
-			indexedMods.GetOrAdd(Path.GetFileName(package.LocalData!.FilePath)).Add(package);
+			indexedMods.GetOrAdd(Path.GetFileName(package.LocalData.FilePath)).Add(package);
 		}
 
 		_notifier.OnInformationUpdated();
@@ -111,7 +111,7 @@ internal class PackageManager : IPackageManager
 
 	public void RemovePackage(IPackage package)
 	{
-		packages.Remove((Package)package);
+		packages.Remove(package);
 		indexedPackages.Remove(package.Id);
 
 		if (package.IsCodeMod)
@@ -119,15 +119,16 @@ internal class PackageManager : IPackageManager
 			_modLogicManager.ModRemoved(package);
 		}
 
-		if (package.IsCodeMod)
+		if (package.IsCodeMod && package.LocalData is not null)
 		{
-			indexedMods.GetOrAdd(Path.GetFileName(package.LocalData!.FilePath)).Remove(package);
+			indexedMods.GetOrAdd(Path.GetFileName(package.LocalData.FilePath)).Remove(package);
 		}
 
 		_notifier.OnContentLoaded();
 		_notifier.OnWorkshopInfoUpdated();
 
-		DeleteAll(package.LocalData!.Folder);
+		if(package.LocalData is not null)
+		DeleteAll(package.LocalData.Folder);
 	}
 
 	public IPackage? GetPackageById(IPackageIdentity identity)
@@ -135,7 +136,7 @@ internal class PackageManager : IPackageManager
 		if (identity is ILocalPackageIdentity localPackageIdentity)
 		{
 			var folder = _locationManager.ToLocalPath(localPackageIdentity.Folder);
-			var matchedPackage = Packages.FirstOrDefault(x => x.LocalData!.Folder == folder);
+			var matchedPackage = Packages.FirstOrDefault(x => x.LocalData?.Folder == folder);
 
 			if (matchedPackage is not null)
 				return matchedPackage;
@@ -151,13 +152,13 @@ internal class PackageManager : IPackageManager
 
 	public IPackage? GetPackageByFolder(string folder)
 	{
-		return Packages.FirstOrDefault(x => x.LocalData!.Folder.PathEquals(folder));
+		return Packages.FirstOrDefault(x => x.LocalData?.Folder.PathEquals(folder) ?? false);
 	}
 
 	public void SetPackages(List<IPackage> content)
 	{
 		packages.Clear();
-		packages.AddRange(content.Cast<Package>());
+		packages.AddRange(content);
 
 		indexedPackages.Clear();
 		indexedPackages.AddRange(content
@@ -168,7 +169,8 @@ internal class PackageManager : IPackageManager
 		indexedPackages.Remove(0);
 
 		indexedMods.Clear();
-		indexedMods.AddRange(content.Where(x => x.IsCodeMod)
+		indexedMods.AddRange(content
+			.Where(x => x.IsCodeMod && x.LocalData is not null)
 			.GroupBy(x => Path.GetFileName(x.LocalData!.FilePath))
 			.ToDictionary(x => x.Key, x => x.ToList())!);
 	}
@@ -183,7 +185,7 @@ internal class PackageManager : IPackageManager
 
 	public void DeleteAll(string folder)
 	{
-		var package = Packages.FirstOrDefault(x => x.LocalData!.Folder.PathEquals(folder));
+		var package = Packages.FirstOrDefault(x => x.LocalData?.Folder.PathEquals(folder) ?? false);
 
 		if (package != null)
 		{

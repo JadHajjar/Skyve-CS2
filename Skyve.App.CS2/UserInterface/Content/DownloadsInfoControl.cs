@@ -36,14 +36,18 @@ public class DownloadsInfoControl : SlickControl
 		if (_subscriptionsManager.Status.IsActive)
 		{
 			if (!Visible)
+			{
 				this.TryInvoke(Show);
+			}
 		}
 		else
 		{
 			await Task.Delay(1000);
 
 			if (!_subscriptionsManager.Status.IsActive)
+			{
 				this.TryInvoke(Hide);
+			}
 		}
 	}
 
@@ -91,7 +95,7 @@ public class DownloadsInfoControl : SlickControl
 		using var brush = new SolidBrush(FormDesign.Design.MenuForeColor);
 		using var activeBrush = new SolidBrush(FormDesign.Design.ActiveColor);
 
-		e.Graphics.DrawString(workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), font, brush, new Rectangle(thumbRect.Right + Padding.Left, Padding.Top - Padding.Left / 2, Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.TopLeft), new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
+		e.Graphics.DrawString(workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), font, brush, new Rectangle(thumbRect.Right + Padding.Left, Padding.Top - (Padding.Left / 2), Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.TopLeft), new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
 
 		var barRect = new Rectangle(Padding.Left, Height - Padding.Bottom - (int)(8 * UI.FontScale), Width - Padding.Right, (int)(8 * UI.FontScale));
 
@@ -100,7 +104,9 @@ public class DownloadsInfoControl : SlickControl
 		var activeBarRect = barRect.Pad(0, 0, (int)((1f - _subscriptionsManager.Status.Progress) * barRect.Width), 0);
 
 		if (activeBarRect.Width >= barRect.Height)
-			e.Graphics.FillRoundedRectangle(activeBrush, activeBarRect, barRect.Height / 2, topRight: activeBarRect.Width + activeBarRect.Height / 2 > barRect.Width, botRight: activeBarRect.Width + activeBarRect.Height / 2 > barRect.Width);
+		{
+			e.Graphics.FillRoundedRectangle(activeBrush, activeBarRect, barRect.Height / 2, topRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width, botRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width);
+		}
 
 		var text = _subscriptionsManager.Status.Progress == 1f ? LocaleCS2.DonwloadComplete : LocaleCS2.Downloading;
 		var bottomTextRect = new Rectangle(thumbRect.Right + Padding.Left, thumbRect.Bottom + Padding.Left, Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.BottomLeft);
@@ -108,6 +114,8 @@ public class DownloadsInfoControl : SlickControl
 		e.Graphics.DrawString(text, smallFont, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Near });
 
 		if (_subscriptionsManager.Status.Progress < 1f)
+		{
 			e.Graphics.DrawString($"{_subscriptionsManager.Status.Progress * 100:0}%", font, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Far });
+		}
 	}
 }

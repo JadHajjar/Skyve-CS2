@@ -23,7 +23,7 @@ public class ModCollection
 		}
 		else
 		{
-			_modList.Add(key, new() { mod });
+			_modList.Add(key, [mod]);
 		}
 	}
 

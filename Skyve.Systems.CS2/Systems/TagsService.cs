@@ -6,6 +6,7 @@ using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
+using Skyve.Systems.CS2.Services;
 using Skyve.Systems.CS2.Utilities;
 
 using System;
@@ -25,7 +26,7 @@ internal class TagsService : ITagsService
 
 	private readonly INotifier _notifier;
 	private readonly ILogger _logger;
-	private readonly IWorkshopService _workshopService;
+	private readonly WorkshopService _workshopService;
 
 	public TagsService(INotifier notifier, IWorkshopService workshopService, ILogger logger)
 	{
@@ -34,7 +35,7 @@ internal class TagsService : ITagsService
 		_tagsCache = new(StringComparer.InvariantCultureIgnoreCase);
 		_notifier = notifier;
 		_logger = logger;
-		_workshopService = workshopService;
+		_workshopService =(WorkshopService)workshopService;
 		_assetTags = new HashSet<string>();
 		_workshopTags = new Dictionary<string, int>();
 
@@ -111,9 +112,9 @@ internal class TagsService : ITagsService
 
 				foreach (var package in packages)
 				{
-					foreach (var tag in package.WorkshopInfo!.Tags)
+					foreach (var tag in package.Tags ?? [])
 					{
-						_workshopTags[tag.Value] = _workshopTags.GetOrAdd(tag.Value) + 1;
+						_workshopTags[tag.DisplayName] = _workshopTags.GetOrAdd(tag.DisplayName) + 1;
 					}
 				}
 			}

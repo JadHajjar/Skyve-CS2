@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
 internal class PC_SkyveChangeLog : PC_Changelog

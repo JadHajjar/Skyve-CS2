@@ -5,9 +5,7 @@ using PDX.SDK.Contracts.Events.Download;
 using PDX.SDK.Contracts.Events.Mods;
 
 using Skyve.Domain;
-using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Notifications;
-using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
@@ -18,13 +16,15 @@ namespace Skyve.Systems.CS2.Managers;
 internal class WorkshopEventsManager
 {
 	private readonly WorkshopService _workshopService;
+	private readonly ContentManager _contentManager;
 	private readonly INotificationsService _notificationsService;
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly IPackageManager _packageManager;
 
 	internal WorkshopEventsManager(WorkshopService workshopService)
-    {
+	{
 		_workshopService = workshopService;
+		_contentManager = ServiceCenter.Get<IContentManager, ContentManager>();
 
 		ServiceCenter.Get(out _notificationsService, out _subscriptionsManager, out _packageManager);
 	}
@@ -70,7 +70,9 @@ internal class WorkshopEventsManager
 
 		var oldPackage = _packageManager.GetPackageById(new GenericPackageIdentity((ulong)unsubscribed.ManagedModId));
 		if (oldPackage is not null)
+		{
 			_packageManager.RemovePackage(oldPackage);
+		}
 	}
 
 	private async void OnDownloadComplete(IModDownloadCompleted completed)
@@ -81,12 +83,17 @@ internal class WorkshopEventsManager
 			Progress = 1
 		});
 
-		var allMods = await _workshopService.Context!.Mods.List();
-		var newMod = allMods.Mods.FirstOrDefault(x => x.Id == completed.ModId);
+		var allMods = await _workshopService.GetLocalPackages();
+		var newMod = allMods.FirstOrDefault(x => x.Id == completed.ModId);
 
 		if (newMod is not null)
 		{
-			_packageManager.AddPackage(new LocalPdxPackage(newMod));
+			var pdxPackage = _contentManager.GetPackage(newMod.LocalData.FolderAbsolutePath, true, newMod);
+		
+			if (pdxPackage is not null)
+			{
+				_packageManager.AddPackage(pdxPackage);
+			}
 		}
 	}
 

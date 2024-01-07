@@ -178,7 +178,7 @@ internal class CitiesManager : ICitiesManager
 	{
 		try
 		{
-			return CrossIO.CurrentPlatform is Platform.Windows && Process.GetProcessesByName("Cities").Length > 0;
+			return CrossIO.CurrentPlatform is Platform.Windows && Process.GetProcessesByName("Cities2").Length > 0;
 		}
 		catch { return false; }
 	}
@@ -187,7 +187,7 @@ internal class CitiesManager : ICitiesManager
 	{
 		try
 		{
-			foreach (var proc in Process.GetProcessesByName("Cities"))
+			foreach (var proc in Process.GetProcessesByName("Cities2"))
 			{
 				KillProcessAndChildren(proc);
 			}

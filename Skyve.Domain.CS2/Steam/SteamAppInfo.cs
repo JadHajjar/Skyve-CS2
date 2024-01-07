@@ -12,7 +12,7 @@ public class SteamAppData
 	public string? short_description { get; set; }
 	public uint[]? dlc { get; set; }
 	public SteamAppReleaseDate? release_date { get; set; }
-    public SteamPriceOverview? price_overview { get; set; }
+	public SteamPriceOverview? price_overview { get; set; }
 }
 
 public class SteamAppReleaseDate
@@ -23,7 +23,7 @@ public class SteamAppReleaseDate
 
 public class SteamPriceOverview
 {
-    public float discount_percent { get; set; }
-    public string? initial_formatted { get; set; }
-    public string? final_formatted { get; set; }
+	public float discount_percent { get; set; }
+	public string? initial_formatted { get; set; }
+	public string? final_formatted { get; set; }
 }

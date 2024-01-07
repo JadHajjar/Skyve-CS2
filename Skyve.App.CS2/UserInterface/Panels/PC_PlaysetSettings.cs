@@ -1,8 +1,8 @@
 ﻿using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Panels;
-using Skyve.Domain.CS2;
-using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Enums;
+
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -16,14 +16,14 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 	private readonly ILocationService _locationManager;
 	private readonly IPackageManager _packageManager;
 	private readonly ISettings _settings;
-	private readonly IBulkUtil _bulkUtil;
+	private readonly IPackageUtil _packageUtil;
 	private readonly IIOUtil _iOUtil;
 	private readonly INotifier _notifier;
 	private readonly ITagsService _tagsService;
 
 	public PC_PlaysetSettings()
 	{
-		ServiceCenter.Get(out _bulkUtil, out _iOUtil, out _locationManager, out _playsetManager, out _packageManager, out _notifier, out _settings, out _tagsService);
+		ServiceCenter.Get(out _packageUtil, out _iOUtil, out _locationManager, out _playsetManager, out _packageManager, out _notifier, out _settings, out _tagsService);
 
 		InitializeComponent();
 
@@ -284,7 +284,10 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		Form.PushPanel<PC_PlaysetAdd>();
 	}
 
-	public override void EditName() => B_EditName_Click(this, EventArgs.Empty);
+	public override void EditName()
+	{
+		B_EditName_Click(this, EventArgs.Empty);
+	}
 
 	internal void B_EditName_Click(object sender, EventArgs e)
 	{
@@ -383,7 +386,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 				return;
 			}
 
-			_bulkUtil.SetBulkIncluded(invalidPackages.Select(x=>x.LocalData)!, false);
+			_packageUtil.SetIncluded(invalidPackages.Select(x => x.LocalData)!, false);
 		}
 
 		ValueChanged(sender, e);
