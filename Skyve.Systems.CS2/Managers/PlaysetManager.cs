@@ -290,7 +290,9 @@ internal class PlaysetManager : IPlaysetManager
 		throw new NotImplementedException();
 	}
 
-	public async Task SetIncludedForAll(IPackageIdentity package, bool value)
+	public async Task SetIncludedForAll(IPackageIdentity package, bool value) => await SetIncludedForAll([package], value);
+
+	public async Task SetIncludedForAll(IEnumerable< IPackageIdentity> packages, bool value)
 	{
 		try
 		{
@@ -298,17 +300,17 @@ internal class PlaysetManager : IPlaysetManager
 			{
 				if (value)
 				{
-				await	_packageUtil.SetIncluded(package, true, playset.Id);
+					await _packageUtil.SetIncluded(packages, true, playset.Id);
 				}
 				else
 				{
-				await	_packageUtil.SetIncluded(package, false, playset.Id);
+					await _packageUtil.SetIncluded(packages, false, playset.Id);
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Failed to apply included status '{value}' to package: '{package}'");
+			_logger.Exception(ex, $"Failed to apply included status '{value}' to package: '{packages}'");
 		}
 	}
 
