@@ -27,4 +27,6 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation Downloading => _instance.GetText(nameof(Downloading));
 	public static Translation ModDownloadFailed => _instance.GetText(nameof(Downloading));
 	public static Translation RemoveFromPlayset => _instance.GetText(nameof(RemoveFromPlayset));
+	public static Translation ViewOnParadoxMods => _instance.GetText(nameof(ViewOnParadoxMods));
+	public static Translation OpenPackageFolder => _instance.GetText(nameof(OpenPackageFolder));
 }

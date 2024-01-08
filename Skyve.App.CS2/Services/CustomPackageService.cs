@@ -31,7 +31,9 @@ internal class CustomPackageService : ICustomPackageService
 
 		return
 		[
-			 new (LocaleCS2.RemoveFromPlayset.FormatPlural(list.Count), "I_Steam", isInstalled && !isLocal, action: () => subscriptionManager.UnSubscribe(list.Cast<IPackageIdentity>()))
+			  new (LocaleCS2.ViewOnParadoxMods.FormatPlural(list.Count), "I_Share", isInstalled && !isLocal, action: () => subscriptionManager.UnSubscribe(list.Cast<IPackageIdentity>()))
+			, new (LocaleCS2.OpenPackageFolder.FormatPlural(list.Count), "I_Folder", isInstalled && !isLocal, action: () => subscriptionManager.UnSubscribe(list.Cast<IPackageIdentity>()))
+			, new (LocaleCS2.RemoveFromPlayset.FormatPlural(list.Count), "I_X", isInstalled && !isLocal, action: () => subscriptionManager.UnSubscribe(list.Cast<IPackageIdentity>()))
 			, new (Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "I_PC", settings.UserSettings.ExtendedListInfo && isInstalled && !isLocal, action: () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => packageManager.MoveToLocalFolder(x!.Package)))
 			, new ((isLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "I_Disposable", isInstalled && isLocal, action: () => AskThenDelete(list))
 			, new (string.Empty)
@@ -39,8 +41,8 @@ internal class CustomPackageService : ICustomPackageService
 			, new (Locale.EditTags.FormatPlural(list.Count), "I_Tag", isInstalled, tab: 1, action: () => EditTags(list))
 			, new (Locale.EditCompatibility.FormatPlural(list.Count), "I_CompatibilityReport", userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author)), tab: 1, action: () => { App.Program.MainForm.PushPanel(null, new PC_CompatibilityManagement(items.Select(x => x.Id)));})
 			, new (Locale.OtherPlaysets, "I_ProfileSettings", fade: true)
-			, new (Locale.IncludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Ok", tab: 1, action: () => { new BackgroundAction(() => list.SelectWhereNotNull(x => x.GetPackage()).Foreach(x => profileManager.SetIncludedForAll(x!, true))).Run(); packageUtil.SetIncluded(list.SelectWhereNotNull(x => x.GetLocalPackageIdentity())!, true); })
-			, new (Locale.ExcludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Cancel", tab: 1, action: () => { new BackgroundAction(() => list.SelectWhereNotNull(x => x.GetPackage()).Foreach(x => profileManager.SetIncludedForAll(x!, false))).Run(); packageUtil.SetIncluded(list.SelectWhereNotNull(x => x.GetLocalPackageIdentity())!, false); })
+			, new (Locale.IncludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Ok", tab: 1, action: () => { new BackgroundAction(() => list.SelectWhereNotNull(x => x.GetPackage()).Foreach(x => profileManager.SetIncludedForAll(x!, true))).Run(); packageUtil.SetIncluded(list, true); })
+			, new (Locale.ExcludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Cancel", tab: 1, action: () => { new BackgroundAction(() => list.SelectWhereNotNull(x => x.GetPackage()).Foreach(x => profileManager.SetIncludedForAll(x!, false))).Run(); packageUtil.SetIncluded(list, false); })
 			, new (Locale.Copy, "I_Copy", !isLocal, fade: true)
 			, new (Locale.CopyWorkshopLink.FormatPlural(list.Count), null, !isLocal, tab: 1, action: () => Clipboard.SetText(list.ListStrings(x => x.Url, CrossIO.NewLine)))
 			, new (Locale.CopyPackageName.FormatPlural(list.Count), !isLocal ? null : "I_Copy", tab: !isLocal ? 1 : 0, action: () => Clipboard.SetText(list.ListStrings(CrossIO.NewLine)))
@@ -76,7 +78,7 @@ internal class CustomPackageService : ICustomPackageService
 					}
 					else if (item!.GetLocalPackage() is not null)
 					{
-						ServiceCenter.Get<IPackageManager>().DeleteAll(item!.GetLocalPackage().Folder);
+						ServiceCenter.Get<IPackageManager>().DeleteAll(item!.Folder);
 					}
 				}
 				catch (Exception ex)
