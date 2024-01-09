@@ -27,21 +27,4 @@ public class PdxModRequirement : IPackageRequirement
 	public ulong Id { get; }
 	public string Name { get; }
 	public string? Url { get; }
-
-	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
-	{
-		if (!IsDlc)
-		{
-			var info = this.GetWorkshopInfo();
-
-			if (info is not null)
-			{
-				return info.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
-			}
-		}
-
-		thumbnail = null;
-		thumbnailUrl = null;
-		return false;
-	}
 }

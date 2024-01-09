@@ -16,7 +16,7 @@ using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
 namespace Skyve.Domain.CS2.Content;
 
-public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo
+public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 {
 	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
 

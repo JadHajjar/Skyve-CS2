@@ -34,20 +34,6 @@ public class Package : IPackage, IEquatable<Package?>
 		LocalData = new LocalPackageData(this, assets, LocalData.Folder, version, filePath ?? LocalData.Folder);
 	}
 
-	public virtual bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
-	{
-		var info = this.GetWorkshopInfo();
-
-		if (info is not null)
-		{
-			return info.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
-		}
-
-		thumbnail = null;
-		thumbnailUrl = null;
-		return false;
-	}
-
 	#region EqualityOverrides
 	public override string ToString()
 	{

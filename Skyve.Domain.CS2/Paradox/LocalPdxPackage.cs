@@ -91,13 +91,10 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public IEnumerable<IPackageRequirement> Requirements => [];
 	public IEnumerable<IModChangelog> Changelog => [];
 
-	public override bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-
-		thumbnail = string.IsNullOrEmpty(ThumbnailPath)
-			? null
-			: ServiceCenter.Get<IImageService>().GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailPath)}", isFilePath: true).Result;
+		thumbnail = imageService.GetImage(ThumbnailPath.IfEmpty(ThumbnailUrl), true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailPath)}", isFilePath: true).Result;
 
 		return thumbnail is not null;
 	}

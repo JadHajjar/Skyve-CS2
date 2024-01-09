@@ -68,7 +68,7 @@ public class SteamUser : IDynamicSql
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
-		thumbnail = ServiceCenter.Get<IImageService>().GetImage(thumbnailUrl = AvatarUrl, true).Result;
+		thumbnail = imageService.GetImage(thumbnailUrl = AvatarUrl, true).Result;
 
 		return thumbnail is not null;
 	}

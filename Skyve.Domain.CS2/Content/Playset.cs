@@ -215,20 +215,6 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 				SteamId = SteamId,
 			};
 		}
-
-		public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
-		{
-			var info = this.GetWorkshopInfo();
-
-			if (info is not null)
-			{
-				return info.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
-			}
-
-			thumbnail = null;
-			thumbnailUrl = null;
-			return false;
-		}
 	}
 
 	public class Mod : Asset

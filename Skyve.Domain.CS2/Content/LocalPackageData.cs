@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Skyve.Domain.CS2.Content;
 
-public class LocalPackageData : ILocalPackageData
+public class LocalPackageData : ILocalPackageData, IThumbnailObject
 {
 	public IPackage Package { get; }
 	public long FileSize { get; }
@@ -48,7 +48,14 @@ public class LocalPackageData : ILocalPackageData
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
-		return Package.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
+		if (Package is IThumbnailObject thumbnailObject)
+		{
+			return thumbnailObject.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
+		}
+
+		thumbnail = null;
+		thumbnailUrl = null;
+		return false;
 	}
 
 	bool ILocalPackageData.IsCodeMod => Package.IsCodeMod;

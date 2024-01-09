@@ -28,9 +28,4 @@ public class PdxPlaysetPackage : IPackage
 	public ulong Id { get; }
 	public string Name { get; }
 	public string? Url { get; }
-
-	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
-	{
-		throw new NotImplementedException();
-	}
 }

@@ -8,7 +8,7 @@ using System.Drawing;
 using System.IO;
 
 namespace Skyve.Domain.CS2.Content;
-public class Asset : IAsset
+public class Asset : IAsset, IThumbnailObject
 {
 	public string Folder { get; }
 	public string FilePath { get; }
@@ -33,7 +33,14 @@ public class Asset : IAsset
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
-		return Package.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
+		if (Package is IThumbnailObject thumbnailObject)
+		{
+			return thumbnailObject.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);
+		}
+
+		thumbnail = null;
+		thumbnailUrl = null;
+		return false;
 	}
 
 	public override bool Equals(object? obj)
