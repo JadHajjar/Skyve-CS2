@@ -314,6 +314,31 @@ internal class PlaysetManager : IPlaysetManager
 		}
 	}
 
+	public async Task SetEnabledForAll(IPackageIdentity package, bool value) => await SetEnabledForAll([package], value);
+
+	public async Task SetEnabledForAll(IEnumerable<IPackageIdentity> packages, bool value)
+	{
+		try
+		{
+			foreach (var playset in Playsets)
+			{
+				if (value)
+				{
+					await _packageUtil.SetIncluded(packages, true, playset.Id);
+					await _packageUtil.SetEnabled(packages, true, playset.Id);
+				}
+				else
+				{
+					await _packageUtil.SetEnabled(packages, false, playset.Id);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, $"Failed to apply included status '{value}' to package: '{packages}'");
+		}
+	}
+
 	public string GetFileName(IPlayset playset)
 	{
 		return string.Empty;// CrossIO.Combine(_workshopService.Context!.Config.Mods.RootPath, "playsets_metadata", playset.Id.ToString());

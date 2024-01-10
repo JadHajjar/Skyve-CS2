@@ -10,58 +10,52 @@ internal class CustomPackageService : ICustomPackageService
 {
 	public SlickStripItem[] GetRightClickMenuItems(IPackageIdentity item)
 	{
-		return GetRightClickMenuItems(new[] { item });
+		return GetRightClickMenuItems([item]);
 	}
 
 	public SlickStripItem[] GetRightClickMenuItems(IEnumerable<IPackageIdentity> items)
 	{
 		var list = items.ToList();
-		var isInstalled = list.Any(item => item.GetLocalPackage() is not null);
-		var isLocal = isInstalled && list.Any(item => item.IsLocal());
 
 		var packageUtil = ServiceCenter.Get<IPackageUtil>();
-		var packageManager = ServiceCenter.Get<IPackageManager>();
-		var playsetManager = ServiceCenter.Get<IPlaysetManager>();
-		var compatibilityManager = ServiceCenter.Get<ICompatibilityManager>();
 		var userService = ServiceCenter.Get<IUserService>();
 		var settings = ServiceCenter.Get<ISettings>();
 
+		var anyIncluded = list.Any(x => packageUtil.IsIncluded(x));
+		var anyExcluded = list.Any(x => !packageUtil.IsIncluded(x));
+		var anyEnabled = list.Any(x => packageUtil.IsIncluded(x) && packageUtil.IsEnabled(x));
+		var anyDisabled = list.Any(x => packageUtil.IsIncluded(x) && !packageUtil.IsEnabled(x));
+		var anyInstalled = list.Any(x => x.GetLocalPackageIdentity() is not null);
+		var anyLocal = list.Any(x => x.IsLocal());
+		var anyWorkshop = list.Any(x => x.IsLocal());
+		var anyWorkshopAndInstalled = list.Any(x => !x.IsLocal() && x.GetLocalPackageIdentity() is not null);
+
 		return
 		[
-			new(LocaleCS2.ViewOnParadoxMods, "I_Link", list.Count == 1 && !string.IsNullOrWhiteSpace(list[0].Url), action: () => PlatformUtil.OpenUrl(list[0].Url))
-			,
-			new(LocaleCS2.OpenPackageFolder.FormatPlural(list.Count), "I_Folder", isInstalled && !isLocal, action: () => list.Select(x => x.GetLocalPackageIdentity()?.FilePath).WhereNotEmpty().Foreach(PlatformUtil.OpenFolder))
-			,
-			new(LocaleCS2.RemoveFromPlayset.FormatPlural(list.Count), "I_X", isInstalled && !isLocal, action: () => packageUtil.SetIncluded(list, false))
-			,
-			new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "I_PC", settings.UserSettings.ExtendedListInfo && isInstalled && !isLocal, action: () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => packageManager.MoveToLocalFolder(x!.Package)))
-			,
-			new((isLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "I_Disposable", isInstalled && isLocal, action: () => AskThenDelete(list))
-			,
-			new(string.Empty)
-			,
-		
-			new(Locale.Manage, "I_Wrench", fade: true)
-			,
-			new(Locale.EditTags.FormatPlural(list.Count), "I_Tag", isInstalled, tab: 1, action: () => EditTags(list))
-			,
-			new(Locale.EditCompatibility.FormatPlural(list.Count), "I_CompatibilityReport", userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author)), tab: 1, action: () => { App.Program.MainForm.PushPanel(null, new PC_CompatibilityManagement(items.Select(x => x.Id))); })
-			,
-			
-			new(Locale.OtherPlaysets, "I_Playsets", fade: true)
-			,
-			new(Locale.IncludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Ok", tab: 1, action: async () => await playsetManager.SetIncludedForAll(list, true))
-			,
-			new(Locale.ExcludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Cancel", tab: 1, action: async () => await playsetManager.SetIncludedForAll(list, false))
-			,
-			
-			new(Locale.Copy, "I_Copy", !isLocal, fade: true)
-			,
-			new(Locale.CopyWorkshopLink.FormatPlural(list.Count), null, !isLocal, tab: 1, action: () => Clipboard.SetText(list.ListStrings(x => x.Url, CrossIO.NewLine)))
-			,
-			new(Locale.CopyPackageName.FormatPlural(list.Count), !isLocal ? null : "I_Copy", tab: !isLocal ? 1 : 0, action: () => Clipboard.SetText(list.ListStrings(CrossIO.NewLine)))
-			,
-			new(Locale.CopyWorkshopId.FormatPlural(list.Count), null, !isLocal, tab: 1, action: () => Clipboard.SetText(list.ListStrings(x => x.Id.ToString(), CrossIO.NewLine)))
+			new(LocaleCS2.ViewOnParadoxMods, "I_Link", list.Count == 1 && !string.IsNullOrWhiteSpace(list[0].Url), action: () => PlatformUtil.OpenUrl(list[0].Url)),
+			new(LocaleCS2.OpenPackageFolder.FormatPlural(list.Count), "I_Folder", anyInstalled, action: () => list.Select(x => x.GetLocalPackageIdentity()?.FilePath).WhereNotEmpty().Foreach(PlatformUtil.OpenFolder)),
+			new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "I_PC", settings.UserSettings.ExtendedListInfo && anyWorkshopAndInstalled, action: () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => ServiceCenter.Get<IPackageManager>().MoveToLocalFolder(x!.Package))),
+			new((anyLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "I_Disposable", settings.UserSettings.ExtendedListInfo && anyLocal, action: () => AskThenDelete(list)),
+			new(string.Empty),
+
+			new(Locale.Manage, "I_Wrench", fade: true),
+			new(Locale.EnableAll, "I_Ok", list.Count == 1 && anyDisabled, tab: 1, action: async () => await packageUtil.SetEnabled(items, true)),
+			new(Locale.DisableAll, "I_Enabled", list.Count == 1 && anyEnabled, tab: 1, action: async () => await packageUtil.SetEnabled(items, false)),
+			new(Locale.IncludeAll, "I_Add", list.Count == 1 && anyExcluded, tab: 1, action: async () => await packageUtil.SetIncluded(items, true)),
+			new(Locale.ExcludeAll, "I_X", list.Count == 1 && anyIncluded, tab: 1, action: async () => await packageUtil.SetIncluded(items, false)),
+			new(Locale.EditTags.FormatPlural(list.Count), "I_Tag", tab: 1, action: () => EditTags(list)),
+			new(Locale.EditCompatibility.FormatPlural(list.Count), "I_CompatibilityReport", userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author)), tab: 1, action: () => { App.Program.MainForm.PushPanel(null, new PC_CompatibilityManagement(items.Select(x => x.Id))); }),
+
+			new(Locale.OtherPlaysets, "I_Playsets", fade: true),
+			new(Locale.IncludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Ok", tab: 1, action: async () => await ServiceCenter.Get<IPlaysetManager>().SetEnabledForAll(list, true)),
+			new(Locale.ExcludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Enabled", tab: 1, action: async () => await ServiceCenter.Get<IPlaysetManager>().SetEnabledForAll(list, false)),
+			new(Locale.IncludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Add", tab: 1, action: async () => await ServiceCenter.Get<IPlaysetManager>().SetIncludedForAll(list, true)),
+			new(Locale.ExcludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_X", tab: 1, action: async () => await ServiceCenter.Get<IPlaysetManager>().SetIncludedForAll(list, false)),
+
+			new(Locale.Copy, "I_Copy", anyWorkshop, fade: true),
+			new(Locale.CopyWorkshopLink.FormatPlural(list.Count), null, anyWorkshop, tab: 1, action: () => Clipboard.SetText(list.ListStrings(x => x.Url, CrossIO.NewLine))),
+			new(Locale.CopyPackageName.FormatPlural(list.Count), anyWorkshop ? null : "I_Copy", tab: anyWorkshop ? 1 : 0, action: () => Clipboard.SetText(list.ListStrings(CrossIO.NewLine))),
+			new(Locale.CopyWorkshopId.FormatPlural(list.Count), null, anyWorkshop, tab: 1, action: () => Clipboard.SetText(list.ListStrings(x => x.Id.ToString(), CrossIO.NewLine)))
 		];
 	}
 
