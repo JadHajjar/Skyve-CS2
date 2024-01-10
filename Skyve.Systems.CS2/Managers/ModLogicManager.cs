@@ -38,22 +38,29 @@ internal class ModLogicManager : IModLogicManager
 
 		if (IsForbidden(mod.LocalData))
 		{
-			modUtil.SetIncluded(mod.LocalData, false);
-			modUtil.SetEnabled(mod.LocalData, false);
+			modUtil.SetIncluded(mod, false);
+			modUtil.SetEnabled(mod, false);
 		}
 		else if (IsPseudoMod(mod) && _settings.UserSettings.HidePseudoMods)
 		{
-			modUtil.SetIncluded(mod.LocalData, true);
-			modUtil.SetEnabled(mod.LocalData, true);
+			modUtil.SetIncluded(mod, true);
+			modUtil.SetEnabled(mod, true);
 		}
 	}
 
-	public bool IsRequired(ILocalPackageIdentity mod, IModUtil modUtil)
+	public bool IsRequired(ILocalPackageIdentity? mod, IModUtil modUtil)
 	{
+		if (mod is null)
+		{
+			return false;
+		}
+
 		var list = _modCollection.GetCollection(Path.GetFileName(mod.FilePath), out var collection);
 
 		if (mod.IsLocal())
+		{
 			return true;
+		}
 
 		if (!(collection?.Required ?? false) || list is null)
 		{
@@ -62,7 +69,7 @@ internal class ModLogicManager : IModLogicManager
 
 		foreach (var modItem in list)
 		{
-			if (modItem != mod && modUtil.IsIncluded(modItem.LocalData) && modUtil.IsEnabled(modItem.LocalData))
+			if (modItem != mod && modUtil.IsIncluded(modItem) && modUtil.IsEnabled(modItem))
 			{
 				return false;
 			}
@@ -71,16 +78,16 @@ internal class ModLogicManager : IModLogicManager
 		return true;
 	}
 
-	public bool IsForbidden(ILocalPackageIdentity mod)
+	public bool IsForbidden(ILocalPackageIdentity? mod)
 	{
-		var list = _modCollection.GetCollection(Path.GetFileName(mod.FilePath), out var collection);
-
-		if (!(collection?.Forbidden ?? false) || list is null)
+		if (mod is null)
 		{
 			return false;
 		}
 
-		return true;
+		var list = _modCollection.GetCollection(Path.GetFileName(mod.FilePath), out var collection);
+
+		return (collection?.Forbidden ?? false) && list is not null;
 	}
 
 	public void ModRemoved(IPackage mod)
@@ -92,29 +99,24 @@ internal class ModLogicManager : IModLogicManager
 	{
 		foreach (var item in _modCollection.Collections)
 		{
-			if (item.Any(mod => modUtil.IsIncluded(mod.LocalData) && modUtil.IsEnabled(mod.LocalData)))
+			if (item.Any(mod => modUtil.IsIncluded(mod) && modUtil.IsEnabled(mod)))
 			{
 				continue;
 			}
 
-			modUtil.SetIncluded(item[0].LocalData, true);
-			modUtil.SetEnabled(item[0].LocalData, true);
+			modUtil.SetIncluded(item[0], true);
+			modUtil.SetEnabled(item[0], true);
 		}
 	}
 
 	public bool IsPseudoMod(IPackage package)
 	{
-		if (package.GetPackageInfo()?.Type is not null and not PackageType.GenericPackage and not PackageType.MusicPack and not PackageType.CSM and not PackageType.ContentPackage)
-		{
-			return true;
-		}
-
-		return false;
+		return package.GetPackageInfo()?.Type is not null and not PackageType.GenericPackage and not PackageType.MusicPack and not PackageType.CSM and not PackageType.ContentPackage;
 	}
 
 	public bool AreMultipleSkyvesPresent(out List<IPackageIdentity> skyveInstances)
 	{
-		skyveInstances = new();
+		skyveInstances = [];
 
 		//skyveInstances.AddRange(_modCollection.GetCollection(Skyve_ASSEMBLY, out _)?.ToList(x => x.GetLocalPackage()) ?? new());
 

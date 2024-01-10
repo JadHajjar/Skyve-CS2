@@ -164,7 +164,7 @@ internal class ModsUtil : IModUtil
 
 		//_notifier.OnRefreshUI(true);
 
-		mods = mods.Where(x => x.Id > 0 && IsEnabled(x, playset) != value);
+		mods = mods.Where(x => x.Id > 0 && IsIncluded(x, playset) != value);
 
 		var tempConfig = new Dictionary<ulong, bool>(modConfig[playset]);
 		var result = value

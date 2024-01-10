@@ -42,7 +42,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 
 		ThumbnailPath = mod.LocalData is not null
 			? CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename)
-			: mod.ThumbnailPath;
+			: string.Empty;
 
 		Name = mod.DisplayName;
 		Description = mod.ShortDescription;
