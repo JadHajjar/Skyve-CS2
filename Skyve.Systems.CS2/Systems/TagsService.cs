@@ -297,6 +297,11 @@ internal class TagsService : ITagsService
 
 	public ITag CreateWorkshopTag(string text)
 	{
-		return new TagItem(TagSource.Workshop, text	, text);
+		return new TagItem(TagSource.Workshop, text, text);
+	}
+
+	public ITag CreateIdTag(string text)
+	{
+		return new TagItem(TagSource.ID, text, text);
 	}
 }

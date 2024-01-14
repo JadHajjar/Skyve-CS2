@@ -555,4 +555,9 @@ public partial class MainForm : BasePanelForm
 	{
 		ServiceCenter.Get<ISubscriptionsManager>().Subscribe([new GenericPackageIdentity(71208)]);
 	}
+
+	private void panelItem1_OnClick(object sender, MouseEventArgs e)
+	{
+		PushPanel<PC_WorkshopList>(panelItem1);
+	}
 }

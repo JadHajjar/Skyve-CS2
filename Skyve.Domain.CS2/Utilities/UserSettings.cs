@@ -35,6 +35,7 @@ public class UserSettings : ConfigFile, IUserSettings
 	public ParadoxLoginInfo ParadoxLogin { get; set; }
 
 	public bool LinkModAssets { get; set; } = true;
+	public bool FadeDisabledItems { get; set; } = true;
 	public bool ShowDatesRelatively { get; set; } = true;
 	public bool DisableNewModsByDefault { get; set; }
 	public bool DisableNewAssetsByDefault { get; set; }

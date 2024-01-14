@@ -41,7 +41,7 @@ internal class PC_SkyveChangeLog : PC_Changelog
 
 			var json = Newtonsoft.Json.JsonConvert.SerializeObject(texts.WhereNotEmpty().Distinct().OrderBy(x => x.Length).ToDictionary(x => x), Newtonsoft.Json.Formatting.Indented);
 
-			System.IO.File.WriteAllText("../../../Properties/Changelog.json", json);
+			System.IO.File.WriteAllText("../../Properties/Changelog.json", json);
 		}
 #endif
 	}

@@ -38,12 +38,6 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 		State = mod.State;
 		LatestUpdate = mod.LatestUpdate;
 		InstalledDate = mod.InstalledDate;
-		PdxLocalData = mod.LocalData;
-
-		ThumbnailPath = mod.LocalData is not null
-			? CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename)
-			: string.Empty;
-
 		Name = mod.DisplayName;
 		Description = mod.ShortDescription;
 		ServerTime = mod.LatestUpdate ?? default;
@@ -57,6 +51,11 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
 		Tags = mod.Tags;
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
+
+		PdxLocalData = mod.LocalData;
+		ThumbnailPath = mod.LocalData is not null
+			? CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename)
+			: string.Empty;
 	}
 
 	public string Version { get; set; }
@@ -99,6 +98,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	public string? Url { get; }
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
+	string IPackage.Version => UserModVersion;
 	PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
 	public IEnumerable<IModChangelog> Changelog => [];
 
@@ -107,8 +107,8 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 		thumbnailUrl = ThumbnailUrl;
 
 		thumbnail = string.IsNullOrEmpty(ThumbnailPath)
-			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailUrl)}").Result
-			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailPath)}", isFilePath: true).Result;
+			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailUrl)}").Result
+			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailPath)}", isFilePath: true).Result;
 
 		return thumbnail is not null;
 	}

@@ -83,8 +83,9 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
-		thumbnail = string.IsNullOrEmpty(ThumbnailUrl) ? null : imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetFileName(ThumbnailUrl)}").Result;
 		thumbnailUrl = null;
+
+		thumbnail = imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailUrl)}").Result;
 
 		return true;
 	}

@@ -2,6 +2,7 @@
 
 public enum TagSource
 {
+	ID = -1,
 	Workshop,
 	Global,
 	InGame,

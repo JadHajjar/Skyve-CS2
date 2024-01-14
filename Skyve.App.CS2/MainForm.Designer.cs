@@ -48,6 +48,7 @@ namespace Skyve.App.CS2
 			SlickControls.DynamicIcon dynamicIcon16 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon17 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon18 = new SlickControls.DynamicIcon();
+			SlickControls.DynamicIcon dynamicIcon19 = new SlickControls.DynamicIcon();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.PI_Dashboard = new SlickControls.PanelItem();
 			this.PI_Mods = new SlickControls.PanelItem();
@@ -70,6 +71,7 @@ namespace Skyve.App.CS2
 			this.PI_ManageSinglePackage = new SlickControls.PanelItem();
 			this.PI_ReviewRequests = new SlickControls.PanelItem();
 			this.PI_ManageAllCompatibility = new SlickControls.PanelItem();
+			this.panelItem1 = new SlickControls.PanelItem();
 			this.base_P_SideControls.SuspendLayout();
 			this.base_P_Container.SuspendLayout();
 			this.TLP_SideBarTools.SuspendLayout();
@@ -77,8 +79,8 @@ namespace Skyve.App.CS2
 			// 
 			// base_P_Tabs
 			// 
-			this.base_P_Tabs.Location = new System.Drawing.Point(8, 117);
-			this.base_P_Tabs.Size = new System.Drawing.Size(268, 422);
+			this.base_P_Tabs.Location = new System.Drawing.Point(8, 125);
+			this.base_P_Tabs.Size = new System.Drawing.Size(291, 414);
 			// 
 			// base_P_Content
 			// 
@@ -91,7 +93,7 @@ namespace Skyve.App.CS2
 			this.base_P_SideControls.Font = new System.Drawing.Font("Nirmala UI", 6.75F);
 			this.base_P_SideControls.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(129)))), ((int)(((byte)(150)))));
 			this.base_P_SideControls.Location = new System.Drawing.Point(8, 539);
-			this.base_P_SideControls.Size = new System.Drawing.Size(268, 19);
+			this.base_P_SideControls.Size = new System.Drawing.Size(291, 19);
 			// 
 			// base_P_Container
 			// 
@@ -270,7 +272,7 @@ namespace Skyve.App.CS2
 			this.TLP_SideBarTools.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_SideBarTools.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_SideBarTools.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.TLP_SideBarTools.Size = new System.Drawing.Size(268, 19);
+			this.TLP_SideBarTools.Size = new System.Drawing.Size(291, 19);
 			this.TLP_SideBarTools.TabIndex = 34;
 			// 
 			// L_Text
@@ -289,7 +291,7 @@ namespace Skyve.App.CS2
 			// 
 			this.L_Version.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.L_Version.AutoSize = true;
-			this.L_Version.Location = new System.Drawing.Point(219, 0);
+			this.L_Version.Location = new System.Drawing.Point(242, 0);
 			this.L_Version.Margin = new System.Windows.Forms.Padding(0);
 			this.L_Version.Name = "L_Version";
 			this.L_Version.Padding = new System.Windows.Forms.Padding(2);
@@ -379,13 +381,25 @@ namespace Skyve.App.CS2
 			this.PI_ManageAllCompatibility.Text = "ManageCompatibilityData";
 			this.PI_ManageAllCompatibility.OnClick += new System.Windows.Forms.MouseEventHandler(this.PI_ManageAllCompatibility_OnClick);
 			// 
+			// panelItem1
+			// 
+			this.panelItem1.Data = null;
+			this.panelItem1.Highlighted = false;
+			dynamicIcon19.Name = "I_Paradox";
+			this.panelItem1.IconName = dynamicIcon19;
+			this.panelItem1.Loading = false;
+			this.panelItem1.Selected = false;
+			this.panelItem1.SubItems = new SlickControls.PanelItem[0];
+			this.panelItem1.Text = "PDX Mods";
+			this.panelItem1.OnClick += new System.Windows.Forms.MouseEventHandler(this.panelItem1_OnClick);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.ClientSize = new System.Drawing.Size(1002, 595);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.IconBounds = new System.Drawing.Rectangle(127, 33, 14, 42);
+			this.IconBounds = new System.Drawing.Rectangle(138, 37, 14, 42);
 			this.MaximizeBox = true;
 			this.MaximizedBounds = new System.Drawing.Rectangle(0, 0, 1920, 1032);
 			this.MinimizeBox = true;
@@ -401,7 +415,8 @@ namespace Skyve.App.CS2
         this.PI_Compatibility,
         this.PI_CompatibilityManagement,
         this.PI_Troubleshoot,
-        this.PI_Options};
+        this.PI_Options,
+        this.panelItem1};
 			this.Text = "Skyve";
 			this.base_P_SideControls.ResumeLayout(false);
 			this.base_P_SideControls.PerformLayout();
@@ -434,5 +449,6 @@ namespace Skyve.App.CS2
 		private PanelItem PI_ManageSinglePackage;
 		private PanelItem PI_ReviewRequests;
 		private PanelItem PI_ManageAllCompatibility;
+		private PanelItem panelItem1;
 	}
 }
