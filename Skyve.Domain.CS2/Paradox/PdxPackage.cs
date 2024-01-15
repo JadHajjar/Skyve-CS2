@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Systems;
@@ -56,6 +57,11 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 		ThumbnailPath = mod.LocalData is not null
 			? CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename)
 			: string.Empty;
+
+		if (mod is ModSearch modSearch)
+		{
+			Subscribers = modSearch.InstalledCount;
+		}
 	}
 
 	public string Version { get; set; }
