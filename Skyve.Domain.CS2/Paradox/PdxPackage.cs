@@ -106,7 +106,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	{
 		thumbnailUrl = ThumbnailUrl;
 
-		thumbnail = string.IsNullOrEmpty(ThumbnailPath)
+		thumbnail = !CrossIO.FileExists(ThumbnailPath)
 			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailUrl)}").Result
 			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailPath)}", isFilePath: true).Result;
 
