@@ -18,6 +18,7 @@ internal class ModsUtil : IModUtil
 {
 	private int currentPlayset;
 	private Dictionary<int, Dictionary<ulong, bool>> modConfig = [];
+	private readonly List<ulong> _enabling = [];
 
 	private readonly AssemblyUtil _assemblyUtil;
 	private readonly MacAssemblyUtil _macAssemblyUtil;
@@ -39,6 +40,11 @@ internal class ModsUtil : IModUtil
 
 		_notifier.CompatibilityDataLoaded += BuildLoadOrder;
 		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
+	}
+
+	public bool IsEnabling(IPackageIdentity package)
+	{
+		return _enabling.Contains(package.Id);
 	}
 
 	private void _notifier_PlaysetChanged()
@@ -168,8 +174,8 @@ internal class ModsUtil : IModUtil
 
 		var tempConfig = new Dictionary<ulong, bool>(modConfig[playset]);
 		var result = value
-			? await _subscriptionsManager.Subscribe(mods)
-			: await _subscriptionsManager.UnSubscribe(mods);
+			? await _subscriptionsManager.Subscribe(mods, playset)
+			: await _subscriptionsManager.UnSubscribe(mods, playset);
 
 		if (result)
 		{
@@ -247,28 +253,18 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
+		mods = mods.AllWhere(x => x.Id > 0 && IsEnabled(x, playset) != value);
+
+		_enabling.AddRange(mods.Select(x => x.Id).Where(x => x > 0));
+
+		_notifier.OnRefreshUI(true);
+
 		await _workshopService.WaitUntilReady();
 
 		if (!modConfig.ContainsKey(playset))
 		{
 			modConfig[playset] = [];
 		}
-
-		//var tempConfig = new Dictionary<ulong, bool>(modConfig[playset]);
-
-		//foreach (var item in mods)
-		//{
-		//	if (item.Id <= 0)
-		//	{
-		//		continue;
-		//	}
-
-		//	modConfig[playset][item.Id] = value;
-		//}
-
-		//_notifier.OnRefreshUI(true);
-
-		mods = mods.Where(x => x.Id > 0 && IsEnabled(x, playset) != value);
 
 		var modKeys = mods.ToList(x => (int)x.Id);
 
@@ -285,16 +281,9 @@ internal class ModsUtil : IModUtil
 
 				modConfig[playset][item.Id] = value;
 			}
-			//foreach (var item in mods)
-			//{
-			//	if (item.Id <= 0)
-			//	{
-			//		continue;
-			//	}
-
-			//	modConfig[playset][item.Id] = tempConfig.TryGet(item.Id);
-			//}
 		}
+
+		_enabling.RemoveAll(x => mods.Any(y => y.Id == x));
 
 		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
 		{

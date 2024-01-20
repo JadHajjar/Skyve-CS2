@@ -66,14 +66,6 @@ internal class LocationService : ILocationService
 				$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
 				$"SteamPath: {_settings.FolderSettings.SteamPath}");
 		}
-
-		if (_settings.SessionSettings.FirstTimeSetupCompleted)
-		{
-			if (!CrossIO.FileExists(CitiesPathWithExe) || !Directory.Exists(_settings.FolderSettings.AppDataPath))
-			{
-				notificationsService.SendNotification(new IncorrectLocationSettingsNotification());
-			}
-		}
 	}
 
 	public void SetPaths(string gamePath, string appDataPath, string steamPath)

@@ -52,58 +52,6 @@ public static class SteamUtil
 		return steamId == 0 ? null : await _steamUserProcessor.Get(steamId, true);
 	}
 
-	public static void Download(IEnumerable<IPackageIdentity> packages)
-	{
-		var currentPath = ServiceCenter.Get<IIOUtil>().ToRealPath(Path.GetDirectoryName(Application.StartupPath));
-
-		if (packages.Any(x => x is ILocalPackageData lp && lp.Folder.PathEquals(currentPath)))
-		{
-			if (MessagePrompt.Show(Locale.LOTWillRestart, PromptButtons.OKCancel, PromptIcons.Info, SystemsProgram.MainForm as SlickForm) == DialogResult.Cancel)
-			{
-				return;
-			}
-
-			ServiceCenter.Get<IIOUtil>().WaitForUpdate();
-
-			Application.Exit();
-		}
-
-		Download(packages.Select(x => x.Id));
-	}
-
-	public static void Download(IEnumerable<ulong> ids)
-	{
-		try
-		{
-			foreach (var id in ids.Reverse().Chunk(20))
-			{
-				var steamArguments = new StringBuilder("steam://open/console");
-
-				if (CrossIO.CurrentPlatform is not Platform.Windows)
-				{
-					steamArguments.Append(" \"");
-				}
-
-				foreach (var item in id)
-				{
-					steamArguments.AppendFormat(" +workshop_download_item 949230 {0}", item);
-				}
-
-				if (CrossIO.CurrentPlatform is not Platform.Windows)
-				{
-					steamArguments.Append("\"");
-				}
-
-				ExecuteSteam(steamArguments.ToString());
-
-				Thread.Sleep(250);
-			}
-
-			ExecuteSteam("steam://open/downloads");
-		}
-		catch (Exception) { }
-	}
-
 	public static bool IsDlcInstalledLocally(uint dlcId)
 	{
 		return false;// _csCache?.AvailableDLCs?.Contains(dlcId) ?? false;

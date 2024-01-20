@@ -91,10 +91,8 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 	protected override void LocaleChanged()
 	{
-		Text = Locale.PlaysetBubble;
-		L_TempProfile.Text = Locale.TemporaryPlaysetCanNotBeEdited;
+		Text = Locale.ActivePlayset;
 		DD_ProfileUsage.Text = Locale.PlaysetUsage;
-		L_Info.Text = Locale.PlaysetSaveInfo;
 	}
 
 	protected override void UIChanged()
@@ -358,8 +356,6 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 		if (_playsetManager.CurrentPlayset.Name != TB_Name.Text)
 		{
-			Notification.Create(Locale.PlaysetNameChangedIllegalChars, null, PromptIcons.Info, null)
-				.Show(Form, 15);
 		}
 
 		L_CurrentProfile.Text = _playsetManager.CurrentPlayset.Name;

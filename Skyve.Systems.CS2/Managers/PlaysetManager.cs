@@ -298,14 +298,7 @@ internal class PlaysetManager : IPlaysetManager
 		{
 			foreach (var playset in Playsets)
 			{
-				if (value)
-				{
-					await _packageUtil.SetIncluded(packages, true, playset.Id);
-				}
-				else
-				{
-					await _packageUtil.SetIncluded(packages, false, playset.Id);
-				}
+				await _packageUtil.SetIncluded(packages, value, playset.Id);
 			}
 		}
 		catch (Exception ex)

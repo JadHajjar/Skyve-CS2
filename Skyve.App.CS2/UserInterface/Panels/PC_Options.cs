@@ -58,7 +58,7 @@ public partial class PC_Options : PanelContent
 
 	protected override void LocaleChanged()
 	{
-		Text = Locale.Options;
+		Text = LocaleSlickUI.Options;
 	}
 
 	protected override void UIChanged()

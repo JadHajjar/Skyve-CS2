@@ -146,11 +146,6 @@ public partial class MainForm : BasePanelForm
 		this.TryInvoke(() => Invalidate(true));
 	}
 
-	private void PromptMissingItemsEvent(IPlaysetManager manager, IEnumerable<IPlaysetEntry> playsetEntries)
-	{
-		PC_MissingPackages.PromptMissingPackages(this, playsetEntries);
-	}
-
 	protected override void LocaleChanged()
 	{
 		PI_Packages.Text = Locale.Package.Plural;

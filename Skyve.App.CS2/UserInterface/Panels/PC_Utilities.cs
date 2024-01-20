@@ -38,7 +38,7 @@ public partial class PC_Utilities : PanelContent
 
 	protected override void LocaleChanged()
 	{
-		Text = Locale.Utilities;
+		Text = LocaleSlickUI.Utilities;
 		L_Troubleshoot.Text = Locale.TroubleshootInfo;
 	}
 

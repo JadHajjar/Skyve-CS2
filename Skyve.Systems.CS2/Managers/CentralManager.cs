@@ -111,11 +111,6 @@ internal class CentralManager : ICentralManager
 
 		await _workshopService.Login();
 
-		if (_modLogicManager.AreMultipleSkyvesPresent(out var skyveInstances))
-		{
-			_notificationsService.SendNotification(new MultipleSkyvesNotification(skyveInstances));
-		}
-
 		if (_playsetManager.CurrentPlayset is not null && CommandUtil.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
 		{
 			_logger.Info($"[Command] Applying Playset ({_playsetManager.CurrentPlayset.Name})..");

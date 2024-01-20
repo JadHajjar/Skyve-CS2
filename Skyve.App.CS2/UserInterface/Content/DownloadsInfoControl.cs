@@ -79,6 +79,8 @@ public class DownloadsInfoControl : SlickControl
 		var thumbnail = workshopInfo?.GetThumbnail();
 		var thumbRect = new Rectangle(new Point(Padding.Left, Padding.Top), UI.Scale(new Size(34, 34), UI.FontScale));
 
+		SlickTip.SetTo(this, workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), _subscriptionsManager.Status.TotalSize > 0 ? (_subscriptionsManager.Status.ProcessedBytes.SizeString(0) + "/" + _subscriptionsManager.Status.TotalSize.SizeString(0)) : null);
+
 		if (thumbnail is null)
 		{
 			using var generic = Properties.Resources.I_PdxMods;
@@ -108,7 +110,7 @@ public class DownloadsInfoControl : SlickControl
 			e.Graphics.FillRoundedRectangle(activeBrush, activeBarRect, barRect.Height / 2, topRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width, botRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width);
 		}
 
-		var text = _subscriptionsManager.Status.Progress == 1f ? LocaleCS2.DonwloadComplete : LocaleCS2.Downloading;
+		var text = _subscriptionsManager.Status.Progress == 1f ? LocaleCS2.DownloadComplete : LocaleCS2.Downloading;
 		var bottomTextRect = new Rectangle(thumbRect.Right + Padding.Left, thumbRect.Bottom + Padding.Left, Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.BottomLeft);
 
 		e.Graphics.DrawString(text, smallFont, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Near });

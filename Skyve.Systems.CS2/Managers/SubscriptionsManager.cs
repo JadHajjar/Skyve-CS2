@@ -53,7 +53,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		UpdateDisplayNotification?.Invoke();
 
-		_notifier.OnRefreshUI();
+		_notifier.OnRefreshUI(true);
 	}
 
 	public void OnInstallProgress(PackageInstallProgress info)
@@ -83,14 +83,14 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		UpdateDisplayNotification?.Invoke();
 	}
 
-	public async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids)
+	public async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null)
 	{
 		if (!_workshopService.IsAvailable)
 		{
 			return false;
 		}
 
-		var currentPlayset = await _workshopService.GetActivePlaysetId();
+		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
 
 		if (currentPlayset == 0)
 		{
@@ -99,7 +99,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		_subscribingTo.AddRange(ids.Select(x => x.Id).Where(x => x > 0));
 
-		_notifier.OnRefreshUI();
+		_notifier.OnRefreshUI(true);
 
 		await _workshopService.WaitUntilReady();
 
@@ -113,20 +113,20 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 			_subscribingTo.Remove(item.Id);
 		}
 
-		_notifier.OnRefreshUI();
+		_notifier.OnRefreshUI(true);
 		_notifier.OnPlaysetChanged();
 
 		return result;
 	}
 
-	public async Task<bool> UnSubscribe(IEnumerable<IPackageIdentity> ids)
+	public async Task<bool> UnSubscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null)
 	{
 		if (!_workshopService.IsAvailable)
 		{
 			return false;
 		}
 
-		var currentPlayset = await _workshopService.GetActivePlaysetId();
+		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
 
 		if (currentPlayset == 0)
 		{
@@ -135,7 +135,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		_unsubscribingFrom.AddRange(ids.Select(x => x.Id));
 
-		_notifier.OnRefreshUI();
+		_notifier.OnRefreshUI(true);
 
 		await _workshopService.WaitUntilReady();
 
@@ -146,7 +146,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 			_unsubscribingFrom.Remove(item.Id);
 		}
 
-		_notifier.OnRefreshUI();
+		_notifier.OnRefreshUI(true);
 		_notifier.OnPlaysetChanged();
 
 		return result;

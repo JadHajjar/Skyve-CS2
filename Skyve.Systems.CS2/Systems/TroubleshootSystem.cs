@@ -368,8 +368,6 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		}
 
 		PackageWatcher.Resume();
-
-		SteamUtil.Download(packages);
 	}
 
 	public class TroubleshootState : ITroubleshootSettings
