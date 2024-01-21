@@ -1,5 +1,51 @@
 {
   "StartCities": "Lancer Cities: Skylines",
   "StopCities": "Arrêter Cities: Skylines",
-  "NoWorkshop": "Désactiver les paquets du Workshop"
+  "NoWorkshop": "Désactiver les paquets du Workshop",
+  "ExcludeAll": "Retirer tous les éléments de votre profil actif",
+  "ExcludeAllDisabled": "Retirer tous les éléments désactivés de votre profil actif",
+  "IncludeAll": "Ajouter tous les éléments à votre profil actif",
+  "ExcludeAllFiltered": "Retirer les éléments filtrés de votre profil actif",
+  "ExcludeAllDisabledFiltered": "Retirer les éléments filtrés et désactivés de votre profil actif",
+  "IncludeAllFiltered": "Ajouter les éléments filtrés à votre profil actif",
+  "ExcludeAllSelected": "Retirer les éléments sélectionnés de votre profil actif",
+  "ExcludeAllDisabledSelected": "Retirer les éléments sélectionnés et désactivés de votre profil actif",
+  "IncludeAllSelected": "Ajouter les éléments sélectionnés à votre profil actif",
+  "ViewOnWorkshop": "Voir sur PDX Mods",
+  "CopyWorkshopLink": {
+    "One": "Copier le lien PDX Mods",
+    "Plural": "Copier les liens PDX Mods des paquets sélectionnés"
+  },
+  "CopyWorkshopId": {
+    "One": "Copier l'ID PDX Mods",
+    "Plural": "Copier les IDs PDX Mods des paquets sélectionnés"
+  },
+  "LaunchThroughCities": "Lancer avec Cities2.exe",
+  "IncludeItem": "Ajouter à votre profil actif",
+  "ExcludeItem": "Retirer de votre profil actif",
+  "SubscribeToItem": {
+    "One": "Ajouter cet élément à votre profil actif",
+    "Plural": "Ajouter ces éléments à votre profil actif"
+  },
+  "IncludeThisItemInAllPlaysets": {
+    "One": "Ajouter à tous vos profils",
+    "Plural": "Ajouter les éléments sélectionnés à tous vos profils"
+  },
+  "ExcludeThisItemInAllPlaysets": {
+    "One": "Retirer de tous vos profils",
+    "Plural": "Retirer les éléments sélectionnés de tous vos profils"
+  },
+  "PackageIsRemoved": "\"{0}\" a été supprimé de PDX Mods",
+  "PackageIsUnknown": "Les informations de PDX Mods pour \"{0}\" n'ont pas encore chargé",
+  "PackageIsIncomplete": "La taille locale de \"{0}\" ({1}) est différente que celle de PDX Mods {2}",
+  "OpenCitiesAppData": "Ouvrir le dossier AppData de C:S II",
+  "ResetSteamCache": "Vider le cache de PDX Mods",
+  "ParadoxLoginFailedTitle": "ParadoxLoginFailedTitle",
+  "ParadoxLoginFailedNoConnectionTitle": "ParadoxLoginFailedNoConnectionTitle",
+  "ParadoxLoginFailedNoConnection": "ParadoxLoginFailedNoConnection",
+  "ParadoxLoginFailedBadCredentials": "ParadoxLoginFailedBadCredentials",
+  "ParadoxLoginFailedEmpty": "ParadoxLoginFailedEmpty",
+  "DownloadComplete": "Téléchargement terminé",
+  "Downloading": "Téléchargement...",
+  "ModDownloadFailed": "Le téléchargement de \"{0}\" a échoué"
 }

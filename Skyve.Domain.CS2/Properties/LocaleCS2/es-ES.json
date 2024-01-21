@@ -1,5 +1,51 @@
 {
   "StartCities": "Iniciar Cities: Skylines",
   "StopCities": "Detener Cities: Skylines",
-  "NoWorkshop": "Desactivar paquetes del workshop"
+  "NoWorkshop": "Desactivar paquetes del workshop",
+  "ExcludeAll": "Eliminar todos los artículos de tu playset activo",
+  "ExcludeAllDisabled": "Eliminar todos los artículos desactivados de tu playset activo",
+  "IncludeAll": "Agregar todos los artículos a tu playset activo",
+  "ExcludeAllFiltered": "Eliminar todos los artículos filtrados de tu playset activo",
+  "ExcludeAllDisabledFiltered": "Eliminar artículos filtrados y desactivados de tu playset activo",
+  "IncludeAllFiltered": "Agregar artículos filtrados a tu playset activo",
+  "ExcludeAllSelected": "Eliminar artículos seleccionados de tu playset activo",
+  "ExcludeAllDisabledSelected": "Eliminar artículos seleccionaods y desactivados de tu playset activo",
+  "IncludeAllSelected": "Agregar artículos seleccionados a tu playset activo",
+  "ViewOnWorkshop": "Ver en PDX Mods",
+  "CopyWorkshopLink": {
+    "One": "Copiar enlace PDX Mods",
+    "Plural": "Copiar enlaces de este paquete en PDX Mods"
+  },
+  "CopyWorkshopId": {
+    "One": "Copiar enlaces PDX Mods",
+    "Plural": "Copiar identificadores (ID) de este paquete PDX Mods"
+  },
+  "LaunchThroughCities": "Ejecutar a través de Cities2.exe",
+  "IncludeItem": "Agregar al playset activo",
+  "ExcludeItem": "Eliminar del playset activo",
+  "SubscribeToItem": {
+    "One": "Agregar al playset activo",
+    "Plural": "Agregar estos al playset activo"
+  },
+  "IncludeThisItemInAllPlaysets": {
+    "One": "Agregar a todos tus playsets",
+    "Plural": "Agregar artículos seleccionados en todos tus playsets"
+  },
+  "ExcludeThisItemInAllPlaysets": {
+    "One": "Eliminar de todos tus playsets",
+    "Plural": "Eliminar artículos seleccionados en todos tus playsets"
+  },
+  "PackageIsRemoved": "'{0}' ha sido eliminado de PDX Mods",
+  "PackageIsUnknown": "La información de PDX MOds no ha sido cargada aún para '{0}'",
+  "PackageIsIncomplete": "El tamaño local de '{0}' ({1}) es diferente de {2} en PDX Mods",
+  "OpenCitiesAppData": "Abrir carpeta 'AppData' de C:S II",
+  "ResetSteamCache": "Limpiar caché de PDX Mods",
+  "ParadoxLoginFailedTitle": "Fallo en ParadoxLogin",
+  "ParadoxLoginFailedNoConnectionTitle": "ParadoxLoginFailedNoConnectionTitle",
+  "ParadoxLoginFailedNoConnection": "ParadoxLoginFailedNoConnection",
+  "ParadoxLoginFailedBadCredentials": "Error al iniciar sesión",
+  "ParadoxLoginFailedEmpty": "ParadoxLoginFailedEmpty",
+  "DownloadComplete": "Descarga finalizada",
+  "Downloading": "Descargando...",
+  "ModDownloadFailed": "'{0}' falló al descargar"
 }
