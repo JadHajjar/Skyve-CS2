@@ -2,27 +2,27 @@
   "StartCities": "Lancer Cities: Skylines",
   "StopCities": "Arrêter Cities: Skylines",
   "NoWorkshop": "Désactiver les paquets du Workshop",
-  "ExcludeAll": "Remove all items from your active playset",
-  "ExcludeAllDisabled": "Remove all disabled items from your active playset",
-  "IncludeAll": "Add all items to your active playset",
-  "ExcludeAllFiltered": "Remove filtered items from your active playset",
-  "ExcludeAllDisabledFiltered": "Remove filtered & disabled items from your active playset",
-  "IncludeAllFiltered": "Add filtered items to your active playset",
-  "ExcludeAllSelected": "Remove selected items from your active playset",
-  "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
-  "IncludeAllSelected": "Add selected items to your active playset",
-  "ViewOnWorkshop": "View on PDX Mods",
+  "ExcludeAll": "Enlever tous les éléments de votre profil actif",
+  "ExcludeAllDisabled": "Enlever tous les éléments désactivés de votre profil actif",
+  "IncludeAll": "Ajouter tous les éléments à votre profil actif",
+  "ExcludeAllFiltered": "Enlever les éléments filtrés de votre profil actif",
+  "ExcludeAllDisabledFiltered": "Enlever les éléments filtrés et désactivés de votre profil actif",
+  "IncludeAllFiltered": "Ajouter les éléments filtrés à votre profil actif",
+  "ExcludeAllSelected": "Enlever les éléments sélectionnés de votre profil actif",
+  "ExcludeAllDisabledSelected": "Enlever les éléments sélectionnés et désactivés de votre profil actif",
+  "IncludeAllSelected": "Ajouter les éléments sélectionnés à votre profil actif",
+  "ViewOnWorkshop": "Voir sur PDX Mods",
   "CopyWorkshopLink": {
-    "One": "Copy PDX Mods link",
-    "Plural": "Copy the selected packages' PDX Mods links"
+    "One": "Copier le lien PDX Mods",
+    "Plural": "Copier les liens PDX Mods des paquets sélectionnés"
   },
   "CopyWorkshopId": {
-    "One": "Copy PDX Mods ID",
-    "Plural": "Copy the selected packages' PDX Mods IDs"
+    "One": "Copier l'ID PDX Mods",
+    "Plural": "Copier les IDs PDX Mods des paquets sélectionnés"
   },
-  "LaunchThroughCities": "Launch through Cities2.exe",
-  "IncludeItem": "Add to your active playset",
-  "ExcludeItem": "Remove from your active playset",
+  "LaunchThroughCities": "Lancer avec Cities2.exe",
+  "IncludeItem": "Ajouter à votre profil actif",
+  "ExcludeItem": "Enlever de votre profil actif",
   "SubscribeToItem": {
     "One": "Add to your active playset",
     "Plural": "Add these to your active playset"
