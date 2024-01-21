@@ -9,7 +9,7 @@
 		<DefineConstants>$(DefineConstants);</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup>
-		<Deterministic>false</Deterministic>
+		<Deterministic>true</Deterministic>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net4.7.2</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>

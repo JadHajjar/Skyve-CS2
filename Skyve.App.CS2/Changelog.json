@@ -4,17 +4,11 @@
     "Beta": false,
     "Version": "0.1.0",
     "Date": "2023-07-07",
-    "Tagline": "A full rework! -behind the scenes",
+    "Tagline": "",
     "ChangeGroups": [
       {
         "Name": "Changes",
-        "Changes": [
-          "The core systems of Skyve have been changed, organised, and optimised.",
-          "Excluded mods no longer use the '.excluded' file, they instead use a new ModConfig file.",
-          "The Load Order of mods has been re-integrated, and is completely automated based on mods' requirements as well as other Compatibility-Report factors.",
-          "'Profiles' are now, appropriately, called 'Playsets'.",
-          "Improved the author info gathering, which will fix the issue of authors not loading."
-        ]
+        "Changes": []
       }
     ]
   }

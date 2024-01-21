@@ -44,6 +44,21 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ExcludeAll => _instance.GetText("ExcludeAll");
 
 	/// <summary>
+	/// Remove all disabled items from your active playset
+	/// </summary>
+	public static Translation ExcludeAllDisabled => _instance.GetText("ExcludeAllDisabled");
+
+	/// <summary>
+	/// Remove filtered &amp; disabled items from your active playset
+	/// </summary>
+	public static Translation ExcludeAllDisabledFiltered => _instance.GetText("ExcludeAllDisabledFiltered");
+
+	/// <summary>
+	/// Remove selected &amp; disabled items from your active playset
+	/// </summary>
+	public static Translation ExcludeAllDisabledSelected => _instance.GetText("ExcludeAllDisabledSelected");
+
+	/// <summary>
 	/// Remove filtered items from your active playset
 	/// </summary>
 	public static Translation ExcludeAllFiltered => _instance.GetText("ExcludeAllFiltered");

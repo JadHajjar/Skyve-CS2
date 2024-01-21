@@ -34,7 +34,6 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		AuthorId = mod.Author;
 		ShortDescription = mod.ShortDescription;
 		Description = mod.LongDescription;
-		ServerTime = mod.LatestUpdate ?? default;
 		ServerSize = (long)mod.Size;
 		Version = mod.UserModVersion;
 		Subscribers = mod.SubscriptionsTotal;
@@ -46,6 +45,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		Tags = mod.Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 		Requirements = mod.Dependencies?.ToArray(x => new PdxModRequirement(x)) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
+		ServerTime = mod.LatestUpdate ?? Changelog.Max(x => x.ReleasedDate) ?? default;
 		Timestamp = DateTime.Now;
 	}
 
