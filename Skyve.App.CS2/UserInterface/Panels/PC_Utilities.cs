@@ -65,7 +65,7 @@ public partial class PC_Utilities : PanelContent
 
 		foreach (Control item in TLP_Main.Controls)
 		{
-			item.BackColor = design.BackColor.Tint(Lum: design.Type.If(FormDesignType.Dark, 1, -1));
+			item.BackColor = design.BackColor.Tint(Lum: design.IsDarkTheme ? 1 : -1);
 		}
 	}
 
