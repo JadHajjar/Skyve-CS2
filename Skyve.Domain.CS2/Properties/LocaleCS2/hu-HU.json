@@ -2,50 +2,50 @@
   "StartCities": "Start Cities:Skylines",
   "StopCities": "Stop Cities:Skylines",
   "NoWorkshop": "Üzemen kívüli csomagok",
-  "ExcludeAll": "Remove all items from your active playset",
-  "ExcludeAllDisabled": "Remove all disabled items from your active playset",
-  "IncludeAll": "Add all items to your active playset",
-  "ExcludeAllFiltered": "Remove filtered items from your active playset",
-  "ExcludeAllDisabledFiltered": "Remove filtered & disabled items from your active playset",
-  "IncludeAllFiltered": "Add filtered items to your active playset",
-  "ExcludeAllSelected": "Remove selected items from your active playset",
-  "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
-  "IncludeAllSelected": "Add selected items to your active playset",
-  "ViewOnWorkshop": "View on PDX Mods",
+  "ExcludeAll": "Távolíts el minden elemet az aktív játékkészletből",
+  "ExcludeAllDisabled": "Távolítson el minden letiltott elemet az aktív játékkészletből",
+  "IncludeAll": "Adja hozzá az összes elemet az aktív játékkészlethez",
+  "ExcludeAllFiltered": "Távolíts el minden elemet az aktív játékkészletből",
+  "ExcludeAllDisabledFiltered": "Távolítson el minden letiltott elemet az aktív játékkészletből",
+  "IncludeAllFiltered": "Adja hozzá az összes elemet az aktív játékkészlethez",
+  "ExcludeAllSelected": "Távolítsa el a kiválasztott elemeket az aktív játékkészletből",
+  "ExcludeAllDisabledSelected": "Távolítsa el a kiválasztott és letiltott elemeket az aktív játékkészletből",
+  "IncludeAllSelected": "Adja hozzá az összes elemet az aktív játékkészlethez",
+  "ViewOnWorkshop": "Megtekintés a PDX modokon",
   "CopyWorkshopLink": {
-    "One": "Copy PDX Mods link",
-    "Plural": "Copy the selected packages' PDX Mods links"
+    "One": "PDX Mods link másolása",
+    "Plural": "Másolja ki a kiválasztott csomagok műhelyhivatkozásait"
   },
   "CopyWorkshopId": {
-    "One": "Copy PDX Mods ID",
-    "Plural": "Copy the selected packages' PDX Mods IDs"
+    "One": "PDX Mods link másolása",
+    "Plural": "Másolja ki a kiválasztott csomagok PDX mod azonosítóit"
   },
-  "LaunchThroughCities": "Launch through Cities2.exe",
-  "IncludeItem": "Add to your active playset",
-  "ExcludeItem": "Remove from your active playset",
+  "LaunchThroughCities": "Indítsa el a Cities2.exe-n keresztül",
+  "IncludeItem": "Add hozzá az aktív játékkészletedhez",
+  "ExcludeItem": "Távolítsa el az aktív játékkészletből",
   "SubscribeToItem": {
-    "One": "Add to your active playset",
-    "Plural": "Add these to your active playset"
+    "One": "Add hozzá az aktív játékkészletedhez",
+    "Plural": "Add hozzá ezeket az aktív játékkészletedhez"
   },
   "IncludeThisItemInAllPlaysets": {
-    "One": "Add to all your playsets",
-    "Plural": "Add the selected items to all your playsets"
+    "One": "Engedélyezze az összes játékkészletben",
+    "Plural": "Tedd bele a kiválasztott elemeket az összes játékkészletedbe"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Remove from all your playsets",
-    "Plural": "Remove the selected items from all your playsets"
+    "One": "Távolítsa el az összes játékkészletből",
+    "Plural": "Távolítsa el a kiválasztott elemeket az összes játékkészletből"
   },
-  "PackageIsRemoved": "'{0}' was removed from PDX Mods",
-  "PackageIsUnknown": "The information from PDX Mods hasn't loaded for '{0}' yet",
-  "PackageIsIncomplete": "The local size of '{0}' ({1}) is different than PDX Mods' {2}",
-  "OpenCitiesAppData": "Open C:S II's AppData folder",
-  "ResetSteamCache": "Clear PDX Mods cache",
-  "ParadoxLoginFailedTitle": "ParadoxLoginFailedTitle",
-  "ParadoxLoginFailedNoConnectionTitle": "ParadoxLoginFailedNoConnectionTitle",
-  "ParadoxLoginFailedNoConnection": "ParadoxLoginFailedNoConnection",
-  "ParadoxLoginFailedBadCredentials": "ParadoxLoginFailedBadCredentials",
-  "ParadoxLoginFailedEmpty": "ParadoxLoginFailedEmpty",
-  "DownloadComplete": "Download completed",
-  "Downloading": "Downloading...",
-  "ModDownloadFailed": "'{0}' failed to download"
+  "PackageIsRemoved": "A(z) „{0}” eltávolítva a PDX modokból",
+  "PackageIsUnknown": "A PDX Mods-tól származó információ még nem töltődött be a(z) '{0}' számára",
+  "PackageIsIncomplete": "A(z) „{0}” ({1}) helyi mérete eltér a PDX modok méretétől. {2}",
+  "OpenCitiesAppData": "Nyissa meg a C:S II AppData mappáját",
+  "ResetSteamCache": "PDX Mods gyorsítótár törlése",
+  "ParadoxLoginFailedTitle": "ParadoxSikertelenBejelentkezés",
+  "ParadoxLoginFailedNoConnectionTitle": "ParadoxSikertelenBejelentkezésNincsKapcsolat",
+  "ParadoxLoginFailedNoConnection": "ParadoxSikertelenBejelentkezésNincsKapcsolat",
+  "ParadoxLoginFailedBadCredentials": "SikertelenParadoxBejelentkezésRosszHitelesítőAdatok",
+  "ParadoxLoginFailedEmpty": "ParadoxSikertelenBejelentkezésNincsOk",
+  "DownloadComplete": "A letöltés befejeződött",
+  "Downloading": "Letöltés...",
+  "ModDownloadFailed": "A(z) „{0}” letöltése nem sikerült"
 }
