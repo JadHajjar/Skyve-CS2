@@ -2,50 +2,50 @@
   "StartCities": "Abrir Cities: Skylines",
   "StopCities": "Fechar Cities: Skylines",
   "NoWorkshop": "Desativar Pacotes da Oficina",
-  "ExcludeAll": "Remove all items from your active playset",
-  "ExcludeAllDisabled": "Remove all disabled items from your active playset",
-  "IncludeAll": "Add all items to your active playset",
-  "ExcludeAllFiltered": "Remove filtered items from your active playset",
-  "ExcludeAllDisabledFiltered": "Remove filtered & disabled items from your active playset",
-  "IncludeAllFiltered": "Add filtered items to your active playset",
-  "ExcludeAllSelected": "Remove selected items from your active playset",
-  "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
-  "IncludeAllSelected": "Add selected items to your active playset",
-  "ViewOnWorkshop": "View on PDX Mods",
+  "ExcludeAll": "Remova todos os itens do seu Perfil Ativo",
+  "ExcludeAllDisabled": "Remova todos os itens desativados do seu perfi ativo",
+  "IncludeAll": "Adicionar todos os itens ao seu perfil ativo",
+  "ExcludeAllFiltered": "Remover itens filtrados de seu perfil atual",
+  "ExcludeAllDisabledFiltered": "Remover itens filtrados e desativados do seu perfil atual",
+  "IncludeAllFiltered": "Adicionar itens filtrados ao seu perfil atual",
+  "ExcludeAllSelected": "Remover itens selecionados do perfil atual",
+  "ExcludeAllDisabledSelected": "Remover itens selecionados e desabilitados do seu perfil atual",
+  "IncludeAllSelected": "Adicionar itens selecionados ao seu perfil atual",
+  "ViewOnWorkshop": "Ver em Mods PDX",
   "CopyWorkshopLink": {
-    "One": "Copy PDX Mods link",
-    "Plural": "Copy the selected packages' PDX Mods links"
+    "One": "Copiar link dos Mods PDX",
+    "Plural": "Copiar os links dos PDX Mods dos pacotes selecionados"
   },
   "CopyWorkshopId": {
-    "One": "Copy PDX Mods ID",
-    "Plural": "Copy the selected packages' PDX Mods IDs"
+    "One": "Copiar ID dos Mods PDX",
+    "Plural": "Copiar os IDs dos Mods PDX dos pacotes selecionados"
   },
-  "LaunchThroughCities": "Launch through Cities2.exe",
-  "IncludeItem": "Add to your active playset",
-  "ExcludeItem": "Remove from your active playset",
+  "LaunchThroughCities": "Lançar através do Cities2.exe",
+  "IncludeItem": "Adicionar ao perfil atual",
+  "ExcludeItem": "Remover do seu perfil atual",
   "SubscribeToItem": {
-    "One": "Add to your active playset",
-    "Plural": "Add these to your active playset"
+    "One": "Adicionar ao perfil atual",
+    "Plural": "Adicionar estes para seu perfil atual"
   },
   "IncludeThisItemInAllPlaysets": {
-    "One": "Add to all your playsets",
-    "Plural": "Add the selected items to all your playsets"
+    "One": "Adicionar a todos os seus perfis",
+    "Plural": "Adicionar os itens selecionados a todos os seus perfis"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Remove from all your playsets",
-    "Plural": "Remove the selected items from all your playsets"
+    "One": "Remover de todos os seus perfis",
+    "Plural": "Remover os itens selecionados de todos os seus perfis"
   },
-  "PackageIsRemoved": "'{0}' was removed from PDX Mods",
-  "PackageIsUnknown": "The information from PDX Mods hasn't loaded for '{0}' yet",
-  "PackageIsIncomplete": "The local size of '{0}' ({1}) is different than PDX Mods' {2}",
-  "OpenCitiesAppData": "Open C:S II's AppData folder",
-  "ResetSteamCache": "Clear PDX Mods cache",
+  "PackageIsRemoved": "'{0}' foi removido dos Mods PDX",
+  "PackageIsUnknown": "As informações dos Mods PDX ainda não carregaram '{0}'",
+  "PackageIsIncomplete": "O tamanho local do '{0}' ({1}) é diferente do PDX Mods' {2}",
+  "OpenCitiesAppData": "Abrir pasta do C:S II em AppData",
+  "ResetSteamCache": "Limpar cache dos mods em PDX",
   "ParadoxLoginFailedTitle": "ParadoxLoginFailedTitle",
   "ParadoxLoginFailedNoConnectionTitle": "ParadoxLoginFailedNoConnectionTitle",
   "ParadoxLoginFailedNoConnection": "ParadoxLoginFailedNoConnection",
   "ParadoxLoginFailedBadCredentials": "ParadoxLoginFailedBadCredentials",
   "ParadoxLoginFailedEmpty": "ParadoxLoginFailedEmpty",
-  "DownloadComplete": "Download completed",
-  "Downloading": "Downloading...",
-  "ModDownloadFailed": "'{0}' failed to download"
+  "DownloadComplete": "Baixado com sucesso",
+  "Downloading": "Baixando...",
+  "ModDownloadFailed": "'{0}' falha no download"
 }
