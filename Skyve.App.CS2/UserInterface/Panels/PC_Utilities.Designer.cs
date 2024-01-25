@@ -99,7 +99,7 @@ partial class PC_Utilities
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_Main.Size = new System.Drawing.Size(1674, 531);
+			this.TLP_Main.Size = new System.Drawing.Size(1056, 373);
 			this.TLP_Main.TabIndex = 17;
 			// 
 			// P_Troubleshoot
@@ -117,13 +117,13 @@ partial class PC_Utilities
 			this.P_Troubleshoot.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon2.Name = "I_Wrench";
 			this.P_Troubleshoot.ImageName = dynamicIcon2;
-			this.P_Troubleshoot.Location = new System.Drawing.Point(3, 240);
+			this.P_Troubleshoot.Location = new System.Drawing.Point(3, 193);
 			this.P_Troubleshoot.Name = "P_Troubleshoot";
-			this.P_Troubleshoot.Padding = new System.Windows.Forms.Padding(9);
+			this.P_Troubleshoot.Padding = new System.Windows.Forms.Padding(6);
 			this.P_Troubleshoot.RowCount = 2;
-			this.P_Troubleshoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+			this.P_Troubleshoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
 			this.P_Troubleshoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.P_Troubleshoot.Size = new System.Drawing.Size(1668, 103);
+			this.P_Troubleshoot.Size = new System.Drawing.Size(1050, 65);
 			this.P_Troubleshoot.TabIndex = 23;
 			this.P_Troubleshoot.Text = "TroubleshootIssues";
 			this.P_Troubleshoot.UseFirstRowForPadding = true;
@@ -136,10 +136,10 @@ partial class PC_Utilities
 			this.B_Troubleshoot.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon1.Name = "I_ArrowRight";
 			this.B_Troubleshoot.ImageName = dynamicIcon1;
-			this.B_Troubleshoot.Location = new System.Drawing.Point(1392, 59);
+			this.B_Troubleshoot.Location = new System.Drawing.Point(864, 30);
 			this.B_Troubleshoot.Name = "B_Troubleshoot";
 			this.P_Troubleshoot.SetRowSpan(this.B_Troubleshoot, 2);
-			this.B_Troubleshoot.Size = new System.Drawing.Size(264, 32);
+			this.B_Troubleshoot.Size = new System.Drawing.Size(177, 26);
 			this.B_Troubleshoot.SpaceTriggersClick = true;
 			this.B_Troubleshoot.TabIndex = 14;
 			this.B_Troubleshoot.Text = "ViewTroubleshootOptions";
@@ -148,10 +148,10 @@ partial class PC_Utilities
 			// L_Troubleshoot
 			// 
 			this.L_Troubleshoot.AutoSize = true;
-			this.L_Troubleshoot.Location = new System.Drawing.Point(12, 64);
+			this.L_Troubleshoot.Location = new System.Drawing.Point(9, 46);
 			this.L_Troubleshoot.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
 			this.L_Troubleshoot.Name = "L_Troubleshoot";
-			this.L_Troubleshoot.Size = new System.Drawing.Size(71, 30);
+			this.L_Troubleshoot.Size = new System.Drawing.Size(38, 13);
 			this.L_Troubleshoot.TabIndex = 16;
 			this.L_Troubleshoot.Text = "label1";
 			// 
@@ -176,13 +176,13 @@ partial class PC_Utilities
 			dynamicIcon9.Name = "I_Undo";
 			this.P_Reset.ImageName = dynamicIcon9;
 			this.P_Reset.Info = "ResetInfo";
-			this.P_Reset.Location = new System.Drawing.Point(3, 349);
+			this.P_Reset.Location = new System.Drawing.Point(3, 264);
 			this.P_Reset.Name = "P_Reset";
-			this.P_Reset.Padding = new System.Windows.Forms.Padding(9, 54, 9, 9);
+			this.P_Reset.Padding = new System.Windows.Forms.Padding(6, 36, 6, 6);
 			this.P_Reset.RowCount = 2;
 			this.P_Reset.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.P_Reset.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.P_Reset.Size = new System.Drawing.Size(1668, 179);
+			this.P_Reset.Size = new System.Drawing.Size(1050, 106);
 			this.P_Reset.TabIndex = 22;
 			this.P_Reset.Text = "Reset";
 			// 
@@ -194,10 +194,9 @@ partial class PC_Utilities
 			this.B_ResetImageCache.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon3.Name = "I_RemoveImage";
 			this.B_ResetImageCache.ImageName = dynamicIcon3;
-			this.B_ResetImageCache.Location = new System.Drawing.Point(1112, 57);
+			this.B_ResetImageCache.Location = new System.Drawing.Point(701, 39);
 			this.B_ResetImageCache.Name = "B_ResetImageCache";
-			this.B_ResetImageCache.Padding = new System.Windows.Forms.Padding(10, 15, 10, 15);
-			this.B_ResetImageCache.Size = new System.Drawing.Size(204, 52);
+			this.B_ResetImageCache.Size = new System.Drawing.Size(132, 26);
 			this.B_ResetImageCache.SpaceTriggersClick = true;
 			this.B_ResetImageCache.TabIndex = 15;
 			this.B_ResetImageCache.Text = "ResetImageCache";
@@ -211,10 +210,9 @@ partial class PC_Utilities
 			this.B_ResetSnoozes.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon4.Name = "I_Snooze";
 			this.B_ResetSnoozes.ImageName = dynamicIcon4;
-			this.B_ResetSnoozes.Location = new System.Drawing.Point(12, 115);
+			this.B_ResetSnoozes.Location = new System.Drawing.Point(9, 71);
 			this.B_ResetSnoozes.Name = "B_ResetSnoozes";
-			this.B_ResetSnoozes.Padding = new System.Windows.Forms.Padding(10, 15, 10, 15);
-			this.B_ResetSnoozes.Size = new System.Drawing.Size(166, 52);
+			this.B_ResetSnoozes.Size = new System.Drawing.Size(110, 26);
 			this.B_ResetSnoozes.SpaceTriggersClick = true;
 			this.B_ResetSnoozes.TabIndex = 15;
 			this.B_ResetSnoozes.Text = "ResetSnoozes";
@@ -228,10 +226,9 @@ partial class PC_Utilities
 			this.B_ReloadAllData.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon5.Name = "I_Refresh";
 			this.B_ReloadAllData.ImageName = dynamicIcon5;
-			this.B_ReloadAllData.Location = new System.Drawing.Point(12, 57);
+			this.B_ReloadAllData.Location = new System.Drawing.Point(9, 39);
 			this.B_ReloadAllData.Name = "B_ReloadAllData";
-			this.B_ReloadAllData.Padding = new System.Windows.Forms.Padding(10, 15, 10, 15);
-			this.B_ReloadAllData.Size = new System.Drawing.Size(169, 52);
+			this.B_ReloadAllData.Size = new System.Drawing.Size(112, 26);
 			this.B_ReloadAllData.SpaceTriggersClick = true;
 			this.B_ReloadAllData.TabIndex = 15;
 			this.B_ReloadAllData.Text = "ReloadAllData";
@@ -245,10 +242,9 @@ partial class PC_Utilities
 			this.B_ResetSteamCache.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon6.Name = "I_RemoveSteam";
 			this.B_ResetSteamCache.ImageName = dynamicIcon6;
-			this.B_ResetSteamCache.Location = new System.Drawing.Point(1112, 115);
+			this.B_ResetSteamCache.Location = new System.Drawing.Point(701, 71);
 			this.B_ResetSteamCache.Name = "B_ResetSteamCache";
-			this.B_ResetSteamCache.Padding = new System.Windows.Forms.Padding(10, 15, 10, 15);
-			this.B_ResetSteamCache.Size = new System.Drawing.Size(204, 52);
+			this.B_ResetSteamCache.Size = new System.Drawing.Size(132, 26);
 			this.B_ResetSteamCache.SpaceTriggersClick = true;
 			this.B_ResetSteamCache.TabIndex = 15;
 			this.B_ResetSteamCache.Text = "ResetSteamCache";
@@ -262,10 +258,9 @@ partial class PC_Utilities
 			this.B_ResetCompatibilityCache.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon7.Name = "I_CompatibilityReport";
 			this.B_ResetCompatibilityCache.ImageName = dynamicIcon7;
-			this.B_ResetCompatibilityCache.Location = new System.Drawing.Point(562, 115);
+			this.B_ResetCompatibilityCache.Location = new System.Drawing.Point(355, 71);
 			this.B_ResetCompatibilityCache.Name = "B_ResetCompatibilityCache";
-			this.B_ResetCompatibilityCache.Padding = new System.Windows.Forms.Padding(10, 15, 10, 15);
-			this.B_ResetCompatibilityCache.Size = new System.Drawing.Size(273, 52);
+			this.B_ResetCompatibilityCache.Size = new System.Drawing.Size(170, 26);
 			this.B_ResetCompatibilityCache.SpaceTriggersClick = true;
 			this.B_ResetCompatibilityCache.TabIndex = 15;
 			this.B_ResetCompatibilityCache.Text = "ResetCompatibilityCache";
@@ -279,10 +274,9 @@ partial class PC_Utilities
 			this.B_ResetModsCache.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon8.Name = "I_Mods";
 			this.B_ResetModsCache.ImageName = dynamicIcon8;
-			this.B_ResetModsCache.Location = new System.Drawing.Point(562, 57);
+			this.B_ResetModsCache.Location = new System.Drawing.Point(355, 39);
 			this.B_ResetModsCache.Name = "B_ResetModsCache";
-			this.B_ResetModsCache.Padding = new System.Windows.Forms.Padding(10, 15, 10, 15);
-			this.B_ResetModsCache.Size = new System.Drawing.Size(199, 52);
+			this.B_ResetModsCache.Size = new System.Drawing.Size(128, 26);
 			this.B_ResetModsCache.SpaceTriggersClick = true;
 			this.B_ResetModsCache.TabIndex = 15;
 			this.B_ResetModsCache.Text = "ResetModsCache";
@@ -300,8 +294,8 @@ partial class PC_Utilities
 			this.P_Text.Info = "ImportFromTextInfo";
 			this.P_Text.Location = new System.Drawing.Point(3, 3);
 			this.P_Text.Name = "P_Text";
-			this.P_Text.Padding = new System.Windows.Forms.Padding(9, 54, 9, 9);
-			this.P_Text.Size = new System.Drawing.Size(831, 231);
+			this.P_Text.Padding = new System.Windows.Forms.Padding(6, 36, 6, 6);
+			this.P_Text.Size = new System.Drawing.Size(522, 184);
 			this.P_Text.TabIndex = 20;
 			this.P_Text.Text = "ImportFromText";
 			// 
@@ -315,12 +309,12 @@ partial class PC_Utilities
 			this.tableLayoutPanel3.Controls.Add(this.DD_TextImport, 0, 0);
 			this.tableLayoutPanel3.Controls.Add(this.B_ImportClipboard, 0, 1);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(9, 54);
+			this.tableLayoutPanel3.Location = new System.Drawing.Point(6, 36);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
 			this.tableLayoutPanel3.RowCount = 1;
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(813, 168);
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(510, 142);
 			this.tableLayoutPanel3.TabIndex = 0;
 			// 
 			// DD_TextImport
@@ -330,7 +324,7 @@ partial class PC_Utilities
 			this.DD_TextImport.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DD_TextImport.Location = new System.Drawing.Point(3, 3);
 			this.DD_TextImport.Name = "DD_TextImport";
-			this.DD_TextImport.Size = new System.Drawing.Size(807, 104);
+			this.DD_TextImport.Size = new System.Drawing.Size(504, 104);
 			this.DD_TextImport.TabIndex = 17;
 			this.DD_TextImport.Text = "TextImportMissingInfo";
 			this.DD_TextImport.ValidExtensions = new string[] {
@@ -346,10 +340,9 @@ partial class PC_Utilities
 			this.B_ImportClipboard.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon10.Name = "I_Copy";
 			this.B_ImportClipboard.ImageName = dynamicIcon10;
-			this.B_ImportClipboard.Location = new System.Drawing.Point(568, 113);
+			this.B_ImportClipboard.Location = new System.Drawing.Point(353, 113);
 			this.B_ImportClipboard.Name = "B_ImportClipboard";
-			this.B_ImportClipboard.Padding = new System.Windows.Forms.Padding(10, 15, 10, 15);
-			this.B_ImportClipboard.Size = new System.Drawing.Size(242, 52);
+			this.B_ImportClipboard.Size = new System.Drawing.Size(154, 26);
 			this.B_ImportClipboard.SpaceTriggersClick = true;
 			this.B_ImportClipboard.TabIndex = 15;
 			this.B_ImportClipboard.Text = "ImportFromClipboard";
@@ -365,10 +358,10 @@ partial class PC_Utilities
 			dynamicIcon12.Name = "I_XML";
 			this.P_BOB.ImageName = dynamicIcon12;
 			this.P_BOB.Info = "XMLImportInfo";
-			this.P_BOB.Location = new System.Drawing.Point(840, 3);
+			this.P_BOB.Location = new System.Drawing.Point(531, 3);
 			this.P_BOB.Name = "P_BOB";
-			this.P_BOB.Padding = new System.Windows.Forms.Padding(9, 54, 9, 9);
-			this.P_BOB.Size = new System.Drawing.Size(831, 176);
+			this.P_BOB.Padding = new System.Windows.Forms.Padding(6, 36, 6, 6);
+			this.P_BOB.Size = new System.Drawing.Size(522, 155);
 			this.P_BOB.TabIndex = 19;
 			this.P_BOB.Text = "XMLImport";
 			// 
@@ -380,11 +373,11 @@ partial class PC_Utilities
 			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel6.Controls.Add(this.DD_BOB, 0, 0);
 			this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel6.Location = new System.Drawing.Point(9, 54);
+			this.tableLayoutPanel6.Location = new System.Drawing.Point(6, 36);
 			this.tableLayoutPanel6.Name = "tableLayoutPanel6";
 			this.tableLayoutPanel6.RowCount = 1;
 			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel6.Size = new System.Drawing.Size(813, 113);
+			this.tableLayoutPanel6.Size = new System.Drawing.Size(510, 113);
 			this.tableLayoutPanel6.TabIndex = 0;
 			// 
 			// DD_BOB
@@ -394,7 +387,7 @@ partial class PC_Utilities
 			this.DD_BOB.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DD_BOB.Location = new System.Drawing.Point(3, 3);
 			this.DD_BOB.Name = "DD_BOB";
-			this.DD_BOB.Size = new System.Drawing.Size(807, 107);
+			this.DD_BOB.Size = new System.Drawing.Size(504, 107);
 			this.DD_BOB.TabIndex = 16;
 			this.DD_BOB.Text = "XMLImportMissingInfo";
 			this.DD_BOB.ValidExtensions = new string[] {
@@ -406,9 +399,9 @@ partial class PC_Utilities
 			// 
 			this.slickScroll1.Dock = System.Windows.Forms.DockStyle.Right;
 			this.slickScroll1.LinkedControl = this.TLP_Main;
-			this.slickScroll1.Location = new System.Drawing.Point(1715, 31);
+			this.slickScroll1.Location = new System.Drawing.Point(1719, 31);
 			this.slickScroll1.Name = "slickScroll1";
-			this.slickScroll1.Size = new System.Drawing.Size(11, 1046);
+			this.slickScroll1.Size = new System.Drawing.Size(7, 1046);
 			this.slickScroll1.SmallHandle = true;
 			this.slickScroll1.Style = SlickControls.StyleType.Vertical;
 			this.slickScroll1.TabIndex = 18;
@@ -422,7 +415,7 @@ partial class PC_Utilities
 			this.P_Container.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.P_Container.Location = new System.Drawing.Point(0, 31);
 			this.P_Container.Name = "P_Container";
-			this.P_Container.Size = new System.Drawing.Size(1715, 1046);
+			this.P_Container.Size = new System.Drawing.Size(1719, 1046);
 			this.P_Container.TabIndex = 19;
 			// 
 			// slickSpacer1
