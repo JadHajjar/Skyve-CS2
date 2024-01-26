@@ -20,7 +20,7 @@
     "One": "Copy PDX Mods ID",
     "Plural": "Copy the selected packages' PDX Mods IDs"
   },
-  "LaunchThroughCities": "Launch through Cities2.exe",
+  "LaunchThroughCities": "通过 Cities2.exe 启动游戏",
   "IncludeItem": "Add to your active playset",
   "ExcludeItem": "Remove from your active playset",
   "SubscribeToItem": {
@@ -45,7 +45,7 @@
   "ParadoxLoginFailedNoConnection": "ParadoxLoginFailedNoConnection",
   "ParadoxLoginFailedBadCredentials": "ParadoxLoginFailedBadCredentials",
   "ParadoxLoginFailedEmpty": "ParadoxLoginFailedEmpty",
-  "DownloadComplete": "Download completed",
-  "Downloading": "Downloading...",
-  "ModDownloadFailed": "'{0}' failed to download"
+  "DownloadComplete": "下载完毕",
+  "Downloading": "正在下载...",
+  "ModDownloadFailed": "'{0}' 下载失败"
 }
