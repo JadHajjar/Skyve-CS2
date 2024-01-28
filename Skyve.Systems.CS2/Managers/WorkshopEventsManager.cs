@@ -89,7 +89,7 @@ internal class WorkshopEventsManager
 		if (newMod is not null)
 		{
 			var pdxPackage = _contentManager.GetPackage(newMod.LocalData.FolderAbsolutePath, true, newMod);
-		
+
 			if (pdxPackage is not null)
 			{
 				_packageManager.AddPackage(pdxPackage);

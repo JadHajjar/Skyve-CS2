@@ -1,8 +1,8 @@
 ﻿using Extensions;
 
 using Skyve.Domain;
-using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 
 using System;

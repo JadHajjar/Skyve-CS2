@@ -1,8 +1,8 @@
 ﻿using Extensions;
 
+using Skyve.Compatibility.Domain.Enums;
 using Skyve.Domain;
 using Skyve.Domain.CS2.Utilities;
-using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;

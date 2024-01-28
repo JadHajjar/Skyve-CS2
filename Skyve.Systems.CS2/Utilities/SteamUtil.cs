@@ -12,10 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Skyve.Systems.CS2.Utilities;
 
@@ -104,7 +101,7 @@ public static class SteamUtil
 
 		try
 		{
-			var result = await ServiceCenter.Get<SkyveApiUtil>().Post<List<ulong>, List <SteamUser>>("/GetUsers", steamId64s);
+			var result = await ServiceCenter.Get<SkyveApiUtil>().Post<List<ulong>, List<SteamUser>>("/GetUsers", steamId64s);
 
 			return result?.ToDictionary(x => x.SteamId) ?? new();
 		}

@@ -68,17 +68,17 @@ internal class OnlinePlaysetUtil : IOnlinePlaysetUtil
 				return false;
 			}
 
-			var generatedProfile = (_playsetManager.Playsets.FirstOrDefault(x => x.Name?.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase) == true) ?? profile.CloneTo<IPlayset, Playset>()) as Playset;
+			//var generatedProfile = (_playsetManager.Playsets.FirstOrDefault(x => x.Name?.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase) == true) ?? profile.CloneTo<IPlayset, Playset>()) as Playset;
 
-			generatedProfile!.Color = ((ICustomPlayset)profile).Color;
-			generatedProfile.Author = profile.Author;
-			generatedProfile.ProfileId = profile.ProfileId;
-			generatedProfile.Usage = profile.Usage;
-			generatedProfile.BannerBytes = profile.Banner;
-			generatedProfile.Assets = profile.Contents.Where(x => !x.IsCodeMod).ToList(x => new Playset.Asset(x));
-			generatedProfile.Mods = profile.Contents.Where(x => x.IsCodeMod).ToList(x => new Playset.Mod(x));
+			//generatedProfile!.Color = ((ICustomPlayset)profile).Color;
+			//generatedProfile.Author = profile.Author;
+			//generatedProfile.ProfileId = profile.ProfileId;
+			//generatedProfile.Usage = (Skyve.Domain.Enums.PackageUsage) (profile.ProfileUsage ?? -1);
+			//generatedProfile.BannerBytes = profile.Banner;
+			//generatedProfile.Assets = profile.Contents.Where(x => !x.IsCodeMod).ToList(x => new Playset.Asset(x));
+			//generatedProfile.Mods = profile.Contents.Where(x => x.IsCodeMod).ToList(x => new Playset.Mod(x));
 
-			_playsetManager.AddPlayset(generatedProfile);
+			//_playsetManager.AddPlayset(generatedProfile);
 
 			return true;// _playsetManager.Save(generatedProfile);
 		}
@@ -96,17 +96,17 @@ internal class OnlinePlaysetUtil : IOnlinePlaysetUtil
 		{
 			var profile = await _skyveApiUtil.GetUserProfileByLink(link);
 
-			if (profile == null)
+			//if (profile == null)
 			{
 				return false;
 			}
 
-			var generatedProfile = profile.CloneTo<IPlayset, Playset>();
+			//var generatedProfile = profile.CloneTo<IPlayset, Playset>();
 
-			generatedProfile.Assets = profile.Contents.Where(x => !x.IsCodeMod).ToList(x => new Playset.Asset(x));
-			generatedProfile.Mods = profile.Contents.Where(x => x.IsCodeMod).ToList(x => new Playset.Mod(x));
+			//generatedProfile.Assets = profile.Contents.Where(x => !x.IsCodeMod).ToList(x => new Playset.Asset(x));
+			//generatedProfile.Mods = profile.Contents.Where(x => x.IsCodeMod).ToList(x => new Playset.Mod(x));
 
-			return true;// _playsetManager.Save(generatedProfile);
+			//return true;// _playsetManager.Save(generatedProfile);
 		}
 		catch (Exception ex)
 		{

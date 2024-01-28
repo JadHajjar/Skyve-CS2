@@ -5,7 +5,7 @@ using PDX.SDK.Contracts.Logging;
 namespace Skyve.Systems.CS2.Systems;
 internal class CS2LoggerSystem : LoggerSystem, ILogger
 {
-	public CS2LoggerSystem(Domain.Systems.ISettings settings) : base(settings)
+	public CS2LoggerSystem(Skyve.Domain.Systems.ISettings settings) : base(settings)
 	{ }
 
 	public void Log(string msg, LogLevel logLevel = LogLevel.L1_Debug, FlowData? flowData = null)

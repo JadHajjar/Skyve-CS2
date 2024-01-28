@@ -2,11 +2,11 @@
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
 
+using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.CS2.Utilities;
-using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
@@ -49,30 +49,30 @@ internal class ContentManager : IContentManager
 		_workshopService = (WorkshopService)workshopService;
 	}
 
-	public IEnumerable<IPackage> GetReferencingPackage(ulong steamId, bool includedOnly)
-	{
-		foreach (var item in _packageManager.Packages)
-		{
-			if (includedOnly && !(_packageUtil.IsIncluded(item, out var partiallyIncluded) || partiallyIncluded))
-			{
-				continue;
-			}
+	//public IEnumerable<IPackage> GetReferencingPackage(ulong steamId, bool includedOnly)
+	//{
+	//	foreach (var item in _packageManager.Packages)
+	//	{
+	//		if (includedOnly && !(_packageUtil.IsIncluded(item, out var partiallyIncluded) || partiallyIncluded))
+	//		{
+	//			continue;
+	//		}
 
-			var crData = _compatibilityManager.GetPackageInfo(item);
+	//		var crData = _compatibilityManager.GetPackageInfo(item);
 
-			if (crData == null)
-			{
-				if (item.GetWorkshopInfo()?.Requirements.Any(x => x.Id == steamId) == true)
-				{
-					yield return item;
-				}
-			}
-			else if (crData.Interactions?.Any(x => x.Type == InteractionType.RequiredPackages && (x.Packages?.Contains(steamId) ?? false)) ?? false)
-			{
-				yield return item;
-			}
-		}
-	}
+	//		if (crData == null)
+	//		{
+	//			if (item.GetWorkshopInfo()?.Requirements.Any(x => x.Id == steamId) == true)
+	//			{
+	//				yield return item;
+	//			}
+	//		}
+	//		else if (crData.Interactions?.Any(x => x.Type == InteractionType.RequiredPackages && (x.Packages?.Contains(steamId) ?? false)) ?? false)
+	//		{
+	//			yield return item;
+	//		}
+	//	}
+	//}
 
 	public static DateTime GetLocalUpdatedTime(string path)
 	{

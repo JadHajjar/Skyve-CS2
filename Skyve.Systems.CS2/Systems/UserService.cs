@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
 using Skyve.Domain.Systems;
 using Skyve.Systems.Compatibility;
@@ -23,6 +24,15 @@ internal class UserService : IUserService
 		_user = new();
 
 		//new BackgroundAction(RefreshUserState).RunEvery(60000, true);
+	}
+
+	public bool IsUserVerified(IUser author)
+	{
+#if CS2
+		return false;
+#else
+		return CompatibilityData.Authors.TryGet(ulong.Parse(author.Id?.ToString()))?.Verified ?? false;
+#endif
 	}
 
 	private async Task RefreshUserState()
@@ -52,7 +62,7 @@ internal class UserService : IUserService
 			}
 		}
 
-		var skyveUser = ServiceCenter.Get<ICompatibilityManager, CompatibilityManager>().CompatibilityData.Authors.TryGet(steamId);
+		var skyveUser = ServiceCenter.Get<ISkyveDataManager>().TryGetAuthor(steamId.ToString());
 
 		if (skyveUser is not null)
 		{
@@ -84,7 +94,6 @@ internal class UserService : IUserService
 		public string AvatarUrl { get; set; } = "";
 		public object? Id { get; set; }
 
-
 		public override bool Equals(object? obj)
 		{
 			return obj is IUser user && (Id?.Equals(user.Id) ?? false);
@@ -97,7 +106,9 @@ internal class UserService : IUserService
 
 		public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 		{
-			throw new NotImplementedException();
+			thumbnail = null;
+			thumbnailUrl = null;
+			return false;
 		}
 	}
 }

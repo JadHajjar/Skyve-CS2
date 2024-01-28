@@ -291,9 +291,9 @@ internal class WorkshopService : IWorkshopService
 
 		var gameData = ProcessResult(await Context.Mods.GetGameData());
 
-		return cachedTags = gameData.Tags.ToList(x => (ITag)new TagItem(Domain.CS2.Enums.TagSource.Workshop, x.Value.Id, x.Value.DisplayName));
+		return cachedTags = gameData.Tags.ToList(x => (ITag)new TagItem(Skyve.Domain.CS2.Enums.TagSource.Workshop, x.Value.Id, x.Value.DisplayName));
 	}
-	
+
 	internal async Task<List<Mod>> GetLocalPackages()
 	{
 		if (Context is null)
@@ -315,7 +315,7 @@ internal class WorkshopService : IWorkshopService
 
 		var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(!localOnly));
 
-		return !playsets.Success ? (List<ICustomPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (ICustomPlayset)new Domain.CS2.Content.Playset(playset));
+		return !playsets.Success ? (List<ICustomPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (ICustomPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
 	}
 
 	public async Task<bool> ToggleVote(IPackageIdentity packageIdentity)
@@ -473,7 +473,7 @@ internal class WorkshopService : IWorkshopService
 
 		var result = ProcessResult(await Context.Mods.CreatePlayset(playsetName));
 
-		return result.Success ? new Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
 	}
 
 	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, int playset)
@@ -516,6 +516,6 @@ internal class WorkshopService : IWorkshopService
 
 		var result = ProcessResult(await Context.Mods.ClonePlayset(id));
 
-		return result.Success ? new Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
 	}
 }

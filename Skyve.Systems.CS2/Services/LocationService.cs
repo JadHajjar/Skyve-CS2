@@ -3,7 +3,6 @@
 using Microsoft.Win32;
 
 using Skyve.Domain;
-using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 
 using System;
