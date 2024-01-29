@@ -111,13 +111,13 @@ internal class WorkshopService : IWorkshopService
 
 		if (!startupResult.IsLoggedIn)
 		{
-			if (!ConnectionHandler.CheckConnection())
+			if (!ConnectionHandler.IsConnected)
 			{
 				loginWaitingConnection = true;
 
 				_notificationsService.SendNotification(new ParadoxLoginWaitingConnectionNotification());
 
-				ConnectionHandler.WhenConnected(async () => await Login());
+				await ConnectionHandler.WhenConnected(Login);
 
 				return;
 			}
@@ -138,6 +138,9 @@ internal class WorkshopService : IWorkshopService
 				return;
 			}
 		}
+
+		_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+		_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 
 		await Context.Mods.Sync(SyncDirection.Downstream);
 	}

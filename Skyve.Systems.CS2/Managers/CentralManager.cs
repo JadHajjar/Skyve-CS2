@@ -9,6 +9,7 @@ using SlickControls;
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
 internal class CentralManager : ICentralManager
@@ -109,8 +110,6 @@ internal class CentralManager : ICentralManager
 
 		_notifier.OnContentLoaded();
 
-		await _workshopService.Login();
-
 		if (_playsetManager.CurrentPlayset is not null && CommandUtil.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
 		{
 			_logger.Info($"[Command] Applying Playset ({_playsetManager.CurrentPlayset.Name})..");
@@ -135,16 +134,17 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info($"Listeners Started");
 
-		if (ConnectionHandler.CheckConnection())
-		{
-			LoadDlcAndCR();
+		//if (ConnectionHandler.CheckConnection())
+		//{
+		//	await LoadDlcAndCR();
 
-			_notifier.OnWorkshopInfoUpdated();
+		//	_notifier.OnWorkshopInfoUpdated();
 
-			_updateManager.SendUpdateNotifications();
-		}
-		else
+		//	_updateManager.SendUpdateNotifications();
+		//}
+		//else
 		{
+		if (!ConnectionHandler.CheckConnection())
 			_logger.Warning("Not connected to the internet, delaying remaining loads.");
 
 			_notifier.OnWorkshopInfoUpdated();
@@ -155,18 +155,18 @@ internal class CentralManager : ICentralManager
 
 			_compatibilityManager.DoFirstCache();
 
-			ConnectionHandler.WhenConnected(() => new BackgroundAction(LoadDlcAndCR).Run());
+			await ConnectionHandler.WhenConnected(UpdateCompatibilityCatalogue);
+
+			await _workshopService.Login();
+
+			await ConnectionHandler.WhenConnected(SteamUtil.LoadDlcs);
 		}
 
 		_logger.Info($"Finished.");
 	}
 
-	private async void LoadDlcAndCR()
+	private async Task UpdateCompatibilityCatalogue()
 	{
-		try
-		{ await SteamUtil.LoadDlcs(); }
-		catch { }
-
 		_logger.Info($"Downloading compatibility data..");
 
 		await _skyveDataManager.DownloadData();

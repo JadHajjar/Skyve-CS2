@@ -143,35 +143,44 @@ public static class SteamUtil
 
 		var newDlcs = new List<SteamDlc>(Dlcs);
 
-		foreach (var dlc in dlcs["949230"].data!.dlc.Where(x => !Dlcs.Any(y => y.Id == x && y.Timestamp > DateTime.Now.AddDays(-7))))
+		try
 		{
-			var data = await GetSteamAppInfoAsync(dlc);
-
-			if (data.ContainsKey(dlc.ToString()))
+			foreach (var dlc in dlcs["949230"].data?.dlc?.Where(x => !Dlcs.Any(y => y.Id == x && y.Timestamp > DateTime.Now.AddDays(-7))) ?? [])
 			{
-				var info = data[dlc.ToString()].data!;
+				var data = await GetSteamAppInfoAsync(dlc);
 
-				newDlcs.RemoveAll(y => y.Id == dlc);
-
-				newDlcs.Add(new SteamDlc
+				if (data.ContainsKey(dlc.ToString()))
 				{
-					Timestamp = DateTime.Now,
-					Id = dlc,
-					Name = info.name!,
-					Description = info.short_description!,
-					Price = info.price_overview?.final_formatted,
-					OriginalPrice = info.price_overview?.initial_formatted,
-					Discount = info.price_overview?.discount_percent ?? 0F,
-					ReleaseDate = DateTime.TryParseExact(info.release_date?.date, "dd MMM, yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ? dt : DateTime.MinValue
-				});
+					var info = data[dlc.ToString()].data!;
+
+					newDlcs.RemoveAll(y => y.Id == dlc);
+
+					newDlcs.Add(new SteamDlc
+					{
+						Timestamp = DateTime.Now,
+						Id = dlc,
+						Name = info.name!,
+						Description = info.short_description!,
+						Price = info.price_overview?.final_formatted,
+						OriginalPrice = info.price_overview?.initial_formatted,
+						Discount = info.price_overview?.discount_percent ?? 0F,
+						ReleaseDate = DateTime.TryParseExact(info.release_date?.date, "dd MMM, yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ? dt : DateTime.MinValue
+					});
+				}
 			}
+
+			ServiceCenter.Get<ILogger>().Info($"DLCs ({newDlcs.Count}) loaded..");
+
+			ISave.Save(Dlcs = newDlcs, DLC_CACHE_FILE);
 		}
-
-		ServiceCenter.Get<ILogger>().Info($"DLCs ({newDlcs.Count}) loaded..");
-
-		ISave.Save(Dlcs = newDlcs, DLC_CACHE_FILE);
-
-		DLCsLoaded?.Invoke();
+		catch (Exception ex)
+		{
+			ServiceCenter.Get<ILogger>().Exception(ex, $"Failed to load DLCs..");
+		}
+		finally
+		{
+			DLCsLoaded?.Invoke();
+		}
 	}
 
 	public static void ClearCache()
