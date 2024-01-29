@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
-internal class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUtil _skyveApiUtil, ICompatibilityUtil _compatibilityUtil) : ISkyveDataManager
+public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUtil _skyveApiUtil, ICompatibilityUtil _compatibilityUtil) : ISkyveDataManager
 {
 	private const string DATA_CACHE_FILE = "CompatibilityDataCache.json";
 
@@ -207,7 +207,7 @@ internal class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiU
 
 	public IKnownUser TryGetAuthor(string? id)
 	{
-		return CompatibilityData.Authors.TryGetValue(id, out var author) ? author : new();
+		return id is null or "" ? new() : CompatibilityData.Authors.TryGetValue(id, out var author) ? author : new();
 	}
 
 	public IIndexedPackageCompatibilityInfo TryGetPackageInfo(ulong id)

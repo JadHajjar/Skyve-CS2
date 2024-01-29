@@ -61,6 +61,9 @@
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
 		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs" />
+		<Compile Update="UserInterface\Panels\PC_CompatibilityManagement.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 		<Compile Update="UserInterface\Panels\PC_Options.cs" />
 		<Compile Update="UserInterface\Panels\PC_PlaysetSettings.cs" />
 		<Compile Update="UserInterface\Panels\PC_SkyveChangeLog.cs" />

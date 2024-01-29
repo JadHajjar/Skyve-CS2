@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using Skyve.Domain;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Domain;
 
@@ -7,6 +8,7 @@ using SkyveApi.Domain.CS2;
 using SkyveApi.Domain.Generic;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
@@ -86,19 +88,23 @@ public class SkyveApiUtil : ISkyveApiUtil
 		return await Get<ReviewRequest>("/GetReviewRequest", (nameof(userId), userId), (nameof(packageId), packageId));
 	}
 
-	public async Task<UserProfile[]?> GetUserProfiles(object userId)
+	public async Task<IOnlinePlayset[]?> GetUserPlaysets(IUser userId)
 	{
-		return await Get<UserProfile[]>("/GetUserProfiles", (nameof(userId), userId));
+		return (await Get<UserProfile[]>("/GetUserProfiles", (nameof(userId), userId)))?.ToArray(x => new OnlinePlayset(x));
 	}
 
-	public async Task<UserProfile?> GetUserProfileContents(int profileId)
+	public async Task<IOnlinePlayset?> GetUserProfileContents(int profileId)
 	{
-		return await Get<UserProfile>("/GetUserProfileContents", (nameof(profileId), profileId));
+		var profile =  await Get<UserProfile>("/GetUserProfileContents", (nameof(profileId), profileId));
+
+		return profile is null ? null : new OnlinePlayset(profile);
 	}
 
-	public async Task<UserProfile?> GetUserProfileByLink(string link)
+	public async Task<IOnlinePlayset?> GetUserProfileByLink(string link)
 	{
-		return await Get<UserProfile>("/GetUserProfileByLink", (nameof(link), link));
+		var profile = await Get<UserProfile>("/GetUserProfileByLink", (nameof(link), link));
+
+		return profile is null ? null : new OnlinePlayset(profile);
 	}
 
 	public async Task<ApiResponse> DeleteUserProfile(int profileId)
@@ -111,9 +117,9 @@ public class SkyveApiUtil : ISkyveApiUtil
 		return await Post<UserProfile, ApiResponse>("/SaveUserProfile", profile);
 	}
 
-	public async Task<UserProfile[]?> GetPublicProfiles()
+	public async Task<IOnlinePlayset[]?> GetPublicPlaysets()
 	{
-		return await Get<UserProfile[]>("/GetPublicProfiles");
+		return (await Get<UserProfile[]>("/GetPublicProfiles"))?.ToArray(x => new OnlinePlayset(x));
 	}
 
 	public async Task<ApiResponse> SetProfileVisibility(int profileId, bool @public)

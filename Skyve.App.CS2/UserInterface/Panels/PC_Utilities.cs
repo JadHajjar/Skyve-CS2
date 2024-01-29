@@ -175,7 +175,7 @@ public partial class PC_Utilities : PanelContent
 		if (!B_ResetCompatibilityCache.Loading)
 		{
 			B_ResetCompatibilityCache.Loading = true;
-			await Task.Run(ServiceCenter.Get<ICompatibilityManager>().ResetCache);
+			await Task.Run(ServiceCenter.Get<ISkyveDataManager>().ResetCache);
 			B_ResetCompatibilityCache.Loading = false;
 			var img = B_ResetCompatibilityCache.ImageName;
 			B_ResetCompatibilityCache.ImageName = "I_Check";

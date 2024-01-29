@@ -1,6 +1,5 @@
 ﻿using Extensions;
 
-using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
@@ -184,19 +183,19 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 	}
 
 	#region IPackageCompatibilityInfo
-	public ulong Id => ((IPackageCompatibilityInfo)Package).Id;
-	public string? Name => ((IPackageCompatibilityInfo)Package).Name;
-	public string? FileName => ((IPackageCompatibilityInfo)Package).FileName;
-	public string? AuthorId => ((IPackageCompatibilityInfo)Package).AuthorId;
-	public string? Note => ((IPackageCompatibilityInfo)Package).Note;
-	public DateTime ReviewDate => ((IPackageCompatibilityInfo)Package).ReviewDate;
-	public PackageStability Stability => ((IPackageCompatibilityInfo)Package).Stability;
-	public PackageUsage Usage => ((IPackageCompatibilityInfo)Package).Usage;
-	public PackageType Type => ((IPackageCompatibilityInfo)Package).Type;
-	public uint[]? RequiredDLCs => ((IPackageCompatibilityInfo)Package).RequiredDLCs;
-	public List<string>? Tags => ((IPackageCompatibilityInfo)Package).Tags;
-	public List<ILink>? Links => ((IPackageCompatibilityInfo)Package).Links;
-	List<IPackageStatus<InteractionType>> IPackageCompatibilityInfo.Interactions { get => ((IPackageCompatibilityInfo)Package).Interactions; set => ((IPackageCompatibilityInfo)Package).Interactions = value; }
-	List<IPackageStatus<StatusType>> IPackageCompatibilityInfo.Statuses { get => ((IPackageCompatibilityInfo)Package).Statuses; set => ((IPackageCompatibilityInfo)Package).Statuses = value; }
+	public ulong Id => (Package).Id;
+	public string? Name => (Package).Name;
+	public string? FileName => (Package).FileName;
+	public string? AuthorId => (Package).AuthorId;
+	public string? Note => (Package).Note;
+	public DateTime ReviewDate => (Package).ReviewDate;
+	public PackageStability Stability => (Package).Stability;
+	public PackageUsage Usage => (Package).Usage;
+	public PackageType Type => (Package).Type;
+	public uint[]? RequiredDLCs => (Package).RequiredDLCs;
+	public List<string>? Tags => (Package).Tags;
+	public List<ILink>? Links => (Package).Links.ToList(x => (ILink)x);
+	List<IPackageStatus<InteractionType>> IPackageCompatibilityInfo.Interactions => (Package).Interactions.ToList(x => (IPackageStatus<InteractionType>)x);
+	List<IPackageStatus<StatusType>> IPackageCompatibilityInfo.Statuses => (Package).Statuses.ToList(x => (IPackageStatus<StatusType>)x);
 	#endregion
 }
