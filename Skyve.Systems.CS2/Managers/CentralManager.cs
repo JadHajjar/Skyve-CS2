@@ -96,7 +96,7 @@ internal class CentralManager : ICentralManager
 
 		_packageManager.SetPackages(content);
 
-		_logger.Info($"Loading and applying CR Data..");
+		_logger.Info($"Loading and applying Compatibility Data..");
 
 		_skyveDataManager.Start(content);
 
@@ -134,33 +134,24 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info($"Listeners Started");
 
-		//if (ConnectionHandler.CheckConnection())
-		//{
-		//	await LoadDlcAndCR();
+		_notifier.OnWorkshopInfoUpdated();
 
-		//	_notifier.OnWorkshopInfoUpdated();
+		_updateManager.SendUpdateNotifications();
 
-		//	_updateManager.SendUpdateNotifications();
-		//}
-		//else
-		{
+		_logger.Info($"Compatibility report cached");
+
+		_compatibilityManager.DoFirstCache();
+
 		if (!ConnectionHandler.CheckConnection())
+		{
 			_logger.Warning("Not connected to the internet, delaying remaining loads.");
-
-			_notifier.OnWorkshopInfoUpdated();
-
-			_updateManager.SendUpdateNotifications();
-
-			_logger.Info($"Compatibility report cached");
-
-			_compatibilityManager.DoFirstCache();
-
-			await ConnectionHandler.WhenConnected(UpdateCompatibilityCatalogue);
-
-			await _workshopService.Login();
-
-			await ConnectionHandler.WhenConnected(SteamUtil.LoadDlcs);
 		}
+
+		await ConnectionHandler.WhenConnected(UpdateCompatibilityCatalogue);
+
+		await _workshopService.Login();
+
+		await ConnectionHandler.WhenConnected(SteamUtil.LoadDlcs);
 
 		_logger.Info($"Finished.");
 	}
