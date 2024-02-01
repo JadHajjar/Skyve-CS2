@@ -30,6 +30,7 @@ internal class WorkshopService : IWorkshopService
 {
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
+	private readonly INotifier _notifier;
 	private readonly ICitiesManager _citiesManager;
 	private readonly INotificationsService _notificationsService;
 	private readonly PdxModProcessor _modProcessor;
@@ -41,10 +42,11 @@ internal class WorkshopService : IWorkshopService
 	public bool IsAvailable => Context is not null;
 	public bool IsReady => Context is not null && !Context.Mods.SyncOngoing();
 
-	public WorkshopService(ILogger logger, ISettings settings, ICitiesManager citiesManager, INotificationsService notificationsService)
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService)
 	{
 		_logger = logger;
 		_settings = settings;
+		_notifier = notifier;
 		_citiesManager = citiesManager;
 		_notificationsService = notificationsService;
 		_modProcessor = new PdxModProcessor(this);
@@ -142,7 +144,7 @@ internal class WorkshopService : IWorkshopService
 		_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 		_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 
-		await Context.Mods.Sync(SyncDirection.Downstream);
+		await RunSync();
 	}
 
 	public async Task<bool> Login(string email, string password, bool rememberMe)
@@ -163,6 +165,12 @@ internal class WorkshopService : IWorkshopService
 			};
 
 			_settings.UserSettings.Save();
+		}
+
+		if (loginResult.Success)
+		{
+			_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 		}
 
 		return loginResult.Success;
@@ -327,6 +335,8 @@ internal class WorkshopService : IWorkshopService
 			return [];
 		}
 
+		await WaitUntilReady();
+
 		var mods = ProcessResult(await Context.Mods.List());
 
 		return !mods.Success || mods.Mods is null ? (List<Mod>)([]) : mods.Mods;
@@ -435,7 +445,7 @@ internal class WorkshopService : IWorkshopService
 	{
 		if (result.Error is not null)
 		{
-			_logger.Error(result.Error.Raw);
+			_logger.Error($"[PDX] [{result.Error.Category}] [{result.Error.SubCategory}] {result.Error.Details}");
 		}
 
 		return result;
@@ -545,8 +555,26 @@ internal class WorkshopService : IWorkshopService
 		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
 	}
 
-	public Task RunSync()
+	public async Task RunSync()
 	{
-		throw new NotImplementedException();
+		if (Context is null || Context.Mods.SyncOngoing())
+		{
+			return;
+		}
+
+		_notifier.IsWorkshopSyncInProgress = true;
+		_notifier.OnWorkshopSyncStarted();
+
+		try
+		{
+			ProcessResult(await Context.Mods.Sync());
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to sync mods");
+		}
+
+		_notifier.IsWorkshopSyncInProgress = false;
+		_notifier.OnWorkshopSyncEnded();
 	}
 }

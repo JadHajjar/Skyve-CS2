@@ -193,7 +193,7 @@ internal class CentralManager : ICentralManager
 		var blackList = new List<IPackage>();
 		var firstTime = _updateManager.IsFirstTime();
 
-		_notifier.BulkUpdating = true;
+		_notifier.IsBulkUpdating = true;
 
 		foreach (var package in content)
 		{
@@ -227,7 +227,7 @@ internal class CentralManager : ICentralManager
 			}
 		}
 
-		_notifier.BulkUpdating = false;
+		_notifier.IsBulkUpdating = false;
 		_modUtil.SaveChanges();
 		_assetUtil.SaveChanges();
 

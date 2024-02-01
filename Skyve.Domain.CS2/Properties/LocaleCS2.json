@@ -43,12 +43,12 @@
   "ParadoxLoginFailedTitle": "Could not log you in to PDX Mods",
   "ParadoxLoginFailedNoConnection": "You're not connected to the internet, please check your connection and click here to try again.",
   "ParadoxLoginFailedBadCredentials": "Your saved username/password failed to log in. Click here to update your information.",
-  "ParadoxLoginFailedEmpty": "Your session probably expired. Try launching the game to log in again, or click here to log in through Skyve.",
+  "ParadoxLoginFailedEmpty": "Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.",
   "DownloadComplete": "Download completed",
   "Downloading": "Downloading...",
   "ModDownloadFailed": "'{0}' failed to download",
   "LoginToParadox": "Log in to Paradox",
   "LoginFailed": "Login failed, make sure your e-mail and password are correct. Or try again later.",
-  "RememberMeInfo": "* Your credentials will be encrypted and saved on your computer.",
-  "LoginDisclaimer": "The log in process is done directly through Paradox and does not go through any Skyve services."
+  "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
+  "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve."
 }

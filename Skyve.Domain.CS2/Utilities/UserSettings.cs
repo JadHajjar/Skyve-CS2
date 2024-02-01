@@ -30,6 +30,7 @@ public class UserSettings : ConfigFile, IUserSettings
 	bool IUserSettings.ForceDownloadAndDeleteAsSoonAsRequested { get; set; }
 	bool IUserSettings.DisablePackageCleanup { get; set; }
 	bool IUserSettings.OverrideGameChanges { get; set; }
+	bool IUserSettings.HidePseudoMods { get; set; }
 
 	public Dictionary<SkyvePage, SkyvePageContentSettings> PageSettings { get; set; } = [];
 	public ParadoxLoginInfo ParadoxLogin { get; set; }
@@ -42,7 +43,6 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool FilterOutPackagesWithOneAsset { get; set; }
 	public bool FilterOutPackagesWithMods { get; set; }
 	public bool AdvancedLaunchOptions { get; set; }
-	public bool HidePseudoMods { get; set; }
 	public bool ShowFolderSettings { get; set; }
 	public bool AlwaysOpenFiltersAndActions { get; set; }
 	public bool ResetScrollOnPackageClick { get; set; }
@@ -51,5 +51,5 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool TreatOptionalAsRequired { get; set; }
 	public bool AssumeInternetConnectivity { get; set; }
 	public bool SnapDashToGrid { get; set; }
-	public bool ExtendedListInfo { get; set; }
+	public bool ComplexListUI { get; set; }
 }

@@ -64,7 +64,7 @@ internal class AssetsUtil : IAssetUtil
 			ExcludedHashSet.Add(asset.FilePath.ToLower());
 		}
 
-		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
+		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
 		{
 			return;
 		}
@@ -77,7 +77,7 @@ internal class AssetsUtil : IAssetUtil
 
 	public void SaveChanges()
 	{
-		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
+		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
 		{
 			return;
 		}

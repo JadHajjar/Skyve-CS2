@@ -111,7 +111,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation LaunchThroughCities => _instance.GetText("LaunchThroughCities");
 
 	/// <summary>
-	/// The log in process is done directly through Paradox and does not go through any Skyve services.
+	/// The login process is securely handled through Paradox services and no data is shared with Skyve.
 	/// </summary>
 	public static Translation LoginDisclaimer => _instance.GetText("LoginDisclaimer");
 
@@ -161,7 +161,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ParadoxLoginFailedBadCredentials => _instance.GetText("ParadoxLoginFailedBadCredentials");
 
 	/// <summary>
-	/// Your session probably expired. Try launching the game to log in again, or click here to log in through Skyve.
+	/// Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.
 	/// </summary>
 	public static Translation ParadoxLoginFailedEmpty => _instance.GetText("ParadoxLoginFailedEmpty");
 
@@ -176,7 +176,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ParadoxLoginFailedTitle => _instance.GetText("ParadoxLoginFailedTitle");
 
 	/// <summary>
-	/// * Your credentials will be encrypted and saved on your computer.
+	/// * Your credentials will be encrypted and saved to your computer.
 	/// </summary>
 	public static Translation RememberMeInfo => _instance.GetText("RememberMeInfo");
 

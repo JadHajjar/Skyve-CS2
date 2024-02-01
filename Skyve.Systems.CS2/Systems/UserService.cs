@@ -21,7 +21,7 @@ internal class UserService : IUserService
 
 	public UserService()
 	{
-		_user = new();
+		_user = new() { Manager = true };
 
 		//new BackgroundAction(RefreshUserState).RunEvery(60000, true);
 	}

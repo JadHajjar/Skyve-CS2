@@ -22,9 +22,9 @@ public partial class ParadoxLoginForm : SlickForm
 		B_Login.Padding = UI.Scale(new Padding(5), UI.FontScale);
 		B_Login.Font = UI.Font(9F, FontStyle.Bold);
 		TB_Email.Margin = TB_Password.Margin = B_Login.Margin = CB_RememberMe.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		L_Title.MaximumSize = L_LoginFailed.MaximumSize = L_RememberMeInfo.MaximumSize = L_Disclaimer.MaximumSize = new Size((int)(UI.FontScale * 200), 9999);
-		TB_Email.MaximumSize = TB_Password.MaximumSize = new Size((int)(UI.FontScale * 200), L_Title.Font.Height);
-		TB_Email.MinimumSize = TB_Password.MinimumSize = new Size((int)(UI.FontScale * 200), L_Title.Font.Height * 4 / 3);
+		L_Title.MaximumSize = L_LoginFailed.MaximumSize = L_RememberMeInfo.MaximumSize = L_Disclaimer.MaximumSize = new Size((int)(UI.FontScale * 230), 9999);
+		TB_Email.MaximumSize = TB_Password.MaximumSize = new Size((int)(UI.FontScale * 230), L_Title.Font.Height * 5 / 3);
+		TB_Email.MinimumSize = TB_Password.MinimumSize = new Size((int)(UI.FontScale * 230), L_Title.Font.Height * 5 / 3);
 		I_Close.Size = UI.Scale(new Size(24, 24), UI.FontScale);
 	}
 
@@ -76,9 +76,13 @@ public partial class ParadoxLoginForm : SlickForm
 
 	private async void B_Login_Click(object sender, EventArgs e)
 	{
+		if (!this.CheckValidation())
+			return;
+
 		TB_Email.ReadOnly = TB_Password.ReadOnly = true;
 		B_Login.Loading = true;
 		B_Login.Enabled = false;
+		B_Login.Width = B_Login.CalculateAutoSize(default).Width;
 
 		try
 		{
@@ -103,6 +107,7 @@ public partial class ParadoxLoginForm : SlickForm
 		TB_Email.ReadOnly = TB_Password.ReadOnly = false;
 		B_Login.Loading = false;
 		B_Login.Enabled = true;
+		B_Login.Width = B_Login.CalculateAutoSize(default).Width;
 	}
 
 	private void CB_RememberMe_CheckChanged(object sender, EventArgs e)

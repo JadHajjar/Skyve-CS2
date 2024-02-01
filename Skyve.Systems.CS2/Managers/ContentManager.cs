@@ -47,6 +47,15 @@ internal class ContentManager : IContentManager
 		_notifier = notifier;
 		_settings = settings;
 		_workshopService = (WorkshopService)workshopService;
+
+		_notifier.WorkshopSyncEnded += _notifier_WorkshopSyncEnded;
+	}
+
+	private async void _notifier_WorkshopSyncEnded()
+	{
+		_packageManager.SetPackages(await LoadContents());
+
+		_notifier.OnContentLoaded();
 	}
 
 	//public IEnumerable<IPackage> GetReferencingPackage(ulong steamId, bool includedOnly)

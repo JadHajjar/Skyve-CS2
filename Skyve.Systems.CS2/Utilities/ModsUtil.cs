@@ -100,7 +100,7 @@ internal class ModsUtil : IModUtil
 
 	public void SaveChanges()
 	{
-		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
+		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
 		{
 			return;
 		}
@@ -223,7 +223,7 @@ internal class ModsUtil : IModUtil
 			//}
 		}
 
-		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
+		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
 		{
 			return;
 		}
@@ -285,7 +285,7 @@ internal class ModsUtil : IModUtil
 
 		_enabling.RemoveAll(x => mods.Any(y => y.Id == x));
 
-		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
+		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
 		{
 			return;
 		}

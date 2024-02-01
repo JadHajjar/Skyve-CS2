@@ -63,6 +63,7 @@ internal class PlaysetManager : IPlaysetManager
 		_playsets ??= new();
 
 		_notifier.AutoSaveRequested += OnAutoSave;
+		_notifier.WorkshopSyncEnded += async () => await Initialize();
 	}
 
 	public async Task<bool> MergeIntoCurrentPlayset(IPlayset playset)
@@ -178,7 +179,7 @@ internal class PlaysetManager : IPlaysetManager
 		}
 		finally
 		{
-			_notifier.ApplyingPlayset = false;
+			_notifier.IsApplyingPlayset = false;
 			disableAutoSave = false;
 		}
 	}
@@ -217,7 +218,7 @@ internal class PlaysetManager : IPlaysetManager
 				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == activePlayset);
 			}
 
-			if (CurrentPlayset != null)
+			if (CurrentPlayset != null && !_notifier.IsPlaysetsLoaded)
 			{
 				_notifier.OnPlaysetChanged();
 			}
@@ -227,7 +228,7 @@ internal class PlaysetManager : IPlaysetManager
 			_logger.Exception(ex, $"Could not load local playsets.");
 		}
 
-		_notifier.PlaysetsLoaded = true;
+		_notifier.IsPlaysetsLoaded = true;
 
 		_notifier.OnPlaysetUpdated();
 	}
