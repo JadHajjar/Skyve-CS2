@@ -32,6 +32,5 @@ public class ParadoxLoginRequiredNotification : INotificationInfo
 
 	public void OnRightClick()
 	{
-		throw new NotImplementedException();
 	}
 }

@@ -107,7 +107,7 @@ internal class WorkshopService : IWorkshopService
 			return;
 		}
 
-		var startupResult = await Context.Account.Startup();
+		var startupResult = ProcessResult(await Context.Account.Startup());
 
 		if (!startupResult.IsLoggedIn)
 		{
@@ -129,7 +129,7 @@ internal class WorkshopService : IWorkshopService
 				return;
 			}
 
-			var loginResult = await Context.Account.Login(GetCredentials());
+			var loginResult = ProcessResult(await Context.Account.Login(GetCredentials()));
 
 			if (!loginResult.Success)
 			{
@@ -143,6 +143,29 @@ internal class WorkshopService : IWorkshopService
 		_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 
 		await Context.Mods.Sync(SyncDirection.Downstream);
+	}
+
+	public async Task<bool> Login(string email, string password, bool rememberMe)
+	{
+		if (Context is null)
+		{
+			return false;
+		}
+
+		var loginResult = ProcessResult(await Context.Account.Login(new EmailAndPasswordCredential(email, password)));
+
+		if (rememberMe && loginResult.Success)
+		{
+			_settings.UserSettings.ParadoxLogin = new ParadoxLoginInfo
+			{
+				Email = Encryption.Encrypt(email, KEYS.SALT),
+				Password = Encryption.Encrypt(password, KEYS.SALT)
+			};
+
+			_settings.UserSettings.Save();
+		}
+
+		return loginResult.Success;
 	}
 
 	private ICredential GetCredentials()
@@ -520,5 +543,10 @@ internal class WorkshopService : IWorkshopService
 		var result = ProcessResult(await Context.Mods.ClonePlayset(id));
 
 		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+	}
+
+	public Task RunSync()
+	{
+		throw new NotImplementedException();
 	}
 }
