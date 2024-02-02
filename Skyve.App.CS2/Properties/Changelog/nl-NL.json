@@ -1,9 +1,3 @@
 {
-  "Changes": "Veranderingen",
-  "A full rework! -behind the scenes": "Volledige rework! -achter de scènes",
-  "'Profiles' are now, appropriately, called 'Playsets'.": "'Profielen' worden nu terecht 'Speelsets' genoemd.",
-  "The core systems of Skyve have been changed, organised, and optimised.": "De kernsystemen van Skyve zijn veranderd en geoptimaliseerd.",
-  "Improved the author info gathering, which will fix the issue of authors not loading.": "Verbeterd het verzamelen van de auteurs, wat het probleem van niet-laadende auteurs zal oplossen.",
-  "Excluded mods no longer use the '.excluded' file, they instead use a new ModConfig file.": "Uitgesloten mods gebruiken niet langer het bestand '.exclude', maar gebruiken een nieuw ModConfig bestand.",
-  "The Load Order of mods has been re-integrated, and is completely automated based on mods' requirements as well as other Compatibility-Report factors.": "De Load Order of mods is opnieuw geïntegreerd, en is volledig geautomatiseerd op basis van mod's vereisten en andere Compatibility-Report factoren."
+  "Changes": "Veranderingen"
 }
