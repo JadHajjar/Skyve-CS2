@@ -1,9 +1,3 @@
 {
-  "Changes": "Muutokset",
-  "A full rework! -behind the scenes": "Täydellinen uudelleen! -kulissien takana",
-  "'Profiles' are now, appropriately, called 'Playsets'.": "'Profiilit' ovat nyt sopivasti nimeltään 'Playsets'.",
-  "The core systems of Skyve have been changed, organised, and optimised.": "Skyven ydinjärjestelmiä on muutettu, organisoitu ja optimoitu.",
-  "Improved the author info gathering, which will fix the issue of authors not loading.": "Parannettu tekijä info kerääminen, joka korjaa ongelman tekijän ei ladata.",
-  "Excluded mods no longer use the '.excluded' file, they instead use a new ModConfig file.": "Pois jätetyt modit eivät enää käytä '.excluded' tiedostoa, vaan käyttävät uutta ModConfig-tiedostoa.",
-  "The Load Order of mods has been re-integrated, and is completely automated based on mods' requirements as well as other Compatibility-Report factors.": "Modien kuormatilaus on integroitu uudelleen ja se on täysin automatisoitu moodin vaatimusten sekä muiden Compatibility-Report -tekijöiden perusteella."
+  "Changes": "Muutokset"
 }
