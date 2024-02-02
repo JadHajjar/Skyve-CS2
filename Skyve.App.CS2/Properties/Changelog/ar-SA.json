@@ -1,9 +1,3 @@
 {
-  "Changes": "التغييرات",
-  "A full rework! -behind the scenes": "إعادة عمل كاملة! -خلف الكواليس",
-  "'Profiles' are now, appropriately, called 'Playsets'.": "\"الملامح الشخصية\" هي الآن، بشكل ملائم، تسمى \"اللعب\".",
-  "The core systems of Skyve have been changed, organised, and optimised.": "تم تغيير نظم سماء الأساسية وتنظيمها وتحسينها.",
-  "Improved the author info gathering, which will fix the issue of authors not loading.": "تحسين جمع معلومات المؤلف الذي سيحل مسألة عدم تحميل المؤلفين.",
-  "Excluded mods no longer use the '.excluded' file, they instead use a new ModConfig file.": "المودات المستبعدة لم تعد تستخدم الملف 'المستبعد'، وبدلا من ذلك تستخدم ملف ModConfig الجديد.",
-  "The Load Order of mods has been re-integrated, and is completely automated based on mods' requirements as well as other Compatibility-Report factors.": "وقد أعيد دمج ترتيب تحميل الموديات، وهو تلقائي تماما استنادا إلى متطلبات المودع، فضلا عن عوامل أخرى تتعلق بالتوافق - التقرير."
+  "Changes": "التغييرات"
 }
