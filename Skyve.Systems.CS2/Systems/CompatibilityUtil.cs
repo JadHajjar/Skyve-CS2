@@ -1,13 +1,13 @@
-﻿using Extensions;
-
+﻿using Skyve.Compatibility.Domain;
+using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
-using Skyve.Domain.Enums;
 using Skyve.Systems.Compatibility;
 using Skyve.Systems.Compatibility.Domain;
-using Skyve.Systems.Compatibility.Domain.Api;
+using Skyve.Systems.CS2.Domain;
+
+using SkyveApi.Domain.CS2;
 
 using System;
-using System.Linq;
 
 namespace Skyve.Systems.CS2.Systems;
 internal class CompatibilityUtil : ICompatibilityUtil
@@ -26,8 +26,7 @@ internal class CompatibilityUtil : ICompatibilityUtil
 		//}
 	}
 
-	public void PopulatePackageReport(IndexedPackage packageData, CompatibilityInfo info, CompatibilityHelper compatibilityHelper)
+	public void PopulatePackageReport(IPackageCompatibilityInfo packageData, CompatibilityInfo info, CompatibilityHelper compatibilityHelper)
 	{
-
 	}
 }

@@ -1,12 +1,11 @@
 ﻿using Extensions;
 
+using Skyve.Compatibility.Domain.Enums;
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Utilities;
-using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Managers;
-using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 	private readonly PlaysetManager _playsetManager;
 	private readonly ISettings _settings;
 	private readonly INotifier _notifier;
-	private readonly IPackageUtil  _packageUtil;
+	private readonly IPackageUtil _packageUtil;
 	private readonly IModUtil _modUtil;
 
 	public event Action? StageChanged;

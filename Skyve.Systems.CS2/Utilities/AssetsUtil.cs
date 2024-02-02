@@ -1,14 +1,12 @@
 ﻿using Extensions;
 
 using Skyve.Domain;
-using Skyve.Domain.CS2;
 using Skyve.Domain.Systems;
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
@@ -66,7 +64,7 @@ internal class AssetsUtil : IAssetUtil
 			ExcludedHashSet.Add(asset.FilePath.ToLower());
 		}
 
-		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
+		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
 		{
 			return;
 		}
@@ -79,7 +77,7 @@ internal class AssetsUtil : IAssetUtil
 
 	public void SaveChanges()
 	{
-		if (_notifier.ApplyingPlayset || _notifier.BulkUpdating)
+		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
 		{
 			return;
 		}

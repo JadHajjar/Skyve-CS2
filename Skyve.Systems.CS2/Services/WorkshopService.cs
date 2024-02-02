@@ -30,6 +30,7 @@ internal class WorkshopService : IWorkshopService
 {
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
+	private readonly INotifier _notifier;
 	private readonly ICitiesManager _citiesManager;
 	private readonly INotificationsService _notificationsService;
 	private readonly PdxModProcessor _modProcessor;
@@ -41,10 +42,11 @@ internal class WorkshopService : IWorkshopService
 	public bool IsAvailable => Context is not null;
 	public bool IsReady => Context is not null && !Context.Mods.SyncOngoing();
 
-	public WorkshopService(ILogger logger, ISettings settings, ICitiesManager citiesManager, INotificationsService notificationsService)
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService)
 	{
 		_logger = logger;
 		_settings = settings;
+		_notifier = notifier;
 		_citiesManager = citiesManager;
 		_notificationsService = notificationsService;
 		_modProcessor = new PdxModProcessor(this);
@@ -107,17 +109,17 @@ internal class WorkshopService : IWorkshopService
 			return;
 		}
 
-		var startupResult = await Context.Account.Startup();
+		var startupResult = ProcessResult(await Context.Account.Startup());
 
 		if (!startupResult.IsLoggedIn)
 		{
-			if (!ConnectionHandler.CheckConnection())
+			if (!ConnectionHandler.IsConnected)
 			{
 				loginWaitingConnection = true;
 
 				_notificationsService.SendNotification(new ParadoxLoginWaitingConnectionNotification());
 
-				ConnectionHandler.WhenConnected(async () => await Login());
+				await ConnectionHandler.WhenConnected(Login);
 
 				return;
 			}
@@ -129,7 +131,7 @@ internal class WorkshopService : IWorkshopService
 				return;
 			}
 
-			var loginResult = await Context.Account.Login(GetCredentials());
+			var loginResult = ProcessResult(await Context.Account.Login(GetCredentials()));
 
 			if (!loginResult.Success)
 			{
@@ -139,7 +141,39 @@ internal class WorkshopService : IWorkshopService
 			}
 		}
 
-		await Context.Mods.Sync(SyncDirection.Downstream);
+		_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+		_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+
+		await RunSync();
+	}
+
+	public async Task<bool> Login(string email, string password, bool rememberMe)
+	{
+		if (Context is null)
+		{
+			return false;
+		}
+
+		var loginResult = ProcessResult(await Context.Account.Login(new EmailAndPasswordCredential(email, password)));
+
+		if (rememberMe && loginResult.Success)
+		{
+			_settings.UserSettings.ParadoxLogin = new ParadoxLoginInfo
+			{
+				Email = Encryption.Encrypt(email, KEYS.SALT),
+				Password = Encryption.Encrypt(password, KEYS.SALT)
+			};
+
+			_settings.UserSettings.Save();
+		}
+
+		if (loginResult.Success)
+		{
+			_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+		}
+
+		return loginResult.Success;
 	}
 
 	private ICredential GetCredentials()
@@ -291,15 +325,17 @@ internal class WorkshopService : IWorkshopService
 
 		var gameData = ProcessResult(await Context.Mods.GetGameData());
 
-		return cachedTags = gameData.Tags.ToList(x => (ITag)new TagItem(Domain.CS2.Enums.TagSource.Workshop, x.Value.Id, x.Value.DisplayName));
+		return cachedTags = gameData.Tags.ToList(x => (ITag)new TagItem(Skyve.Domain.CS2.Enums.TagSource.Workshop, x.Value.Id, x.Value.DisplayName));
 	}
-	
+
 	internal async Task<List<Mod>> GetLocalPackages()
 	{
 		if (Context is null)
 		{
 			return [];
 		}
+
+		await WaitUntilReady();
 
 		var mods = ProcessResult(await Context.Mods.List());
 
@@ -315,7 +351,7 @@ internal class WorkshopService : IWorkshopService
 
 		var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(!localOnly));
 
-		return !playsets.Success ? (List<ICustomPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (ICustomPlayset)new Domain.CS2.Content.Playset(playset));
+		return !playsets.Success ? (List<ICustomPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (ICustomPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
 	}
 
 	public async Task<bool> ToggleVote(IPackageIdentity packageIdentity)
@@ -409,7 +445,7 @@ internal class WorkshopService : IWorkshopService
 	{
 		if (result.Error is not null)
 		{
-			_logger.Error(result.Error.Raw);
+			_logger.Error($"[PDX] [{result.Error.Category}] [{result.Error.SubCategory}] {result.Error.Details}");
 		}
 
 		return result;
@@ -473,7 +509,7 @@ internal class WorkshopService : IWorkshopService
 
 		var result = ProcessResult(await Context.Mods.CreatePlayset(playsetName));
 
-		return result.Success ? new Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
 	}
 
 	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, int playset)
@@ -516,6 +552,29 @@ internal class WorkshopService : IWorkshopService
 
 		var result = ProcessResult(await Context.Mods.ClonePlayset(id));
 
-		return result.Success ? new Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+	}
+
+	public async Task RunSync()
+	{
+		if (Context is null || Context.Mods.SyncOngoing())
+		{
+			return;
+		}
+
+		_notifier.IsWorkshopSyncInProgress = true;
+		_notifier.OnWorkshopSyncStarted();
+
+		try
+		{
+			ProcessResult(await Context.Mods.Sync());
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to sync mods");
+		}
+
+		_notifier.IsWorkshopSyncInProgress = false;
+		_notifier.OnWorkshopSyncEnded();
 	}
 }

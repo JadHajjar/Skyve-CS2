@@ -1,8 +1,8 @@
 ﻿using Extensions;
 
+using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
 using Skyve.Domain.CS2.Utilities;
-using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
@@ -153,7 +153,7 @@ internal class LogUtil : ILogUtil
 
 		//_compatibilityManager.CacheReport();
 		var reports = _contentManager.Packages.ToList(x => x.GetCompatibilityInfo());
-		reports.RemoveAll(x => x.GetNotification() < NotificationType.Warning && !(x.IsIncluded(out var partial) || partial));
+		reports.RemoveAll(x => x.GetNotification() < Skyve.Compatibility.Domain.Enums.NotificationType.Warning && !(x.IsIncluded(out var partial) || partial));
 
 		writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(reports, Newtonsoft.Json.Formatting.Indented));
 

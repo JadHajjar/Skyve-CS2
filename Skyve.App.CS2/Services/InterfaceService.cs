@@ -1,4 +1,5 @@
-﻿using Skyve.App.CS2.UserInterface.Panels;
+﻿using Skyve.App.CS2.UserInterface.Forms;
+using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Panels;
 
@@ -37,6 +38,6 @@ internal class InterfaceService : IAppInterfaceService
 
 	void IInterfaceService.OpenParadoxLogin()
 	{
-		throw new NotImplementedException();
+		new ParadoxLoginForm().ShowDialog(App.Program.MainForm);
 	}
 }

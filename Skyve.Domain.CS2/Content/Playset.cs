@@ -7,7 +7,8 @@ using PDX.SDK.Contracts.Service.Mods.Result;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems;
-using Skyve.Systems.Compatibility.Domain.Api;
+
+using SkyveApi.Domain.CS2;
 
 using System;
 using System.Collections.Generic;

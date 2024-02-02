@@ -24,8 +24,6 @@
 	<ItemGroup>
 		<None Remove="Properties\*.json" />
 		<None Remove="Properties\*\*.json" />
-	</ItemGroup>
-	<ItemGroup>
 		<EmbeddedResource Include="Properties\*.json" />
 		<EmbeddedResource Include="Properties\*\*.json" />
 	</ItemGroup>
@@ -56,24 +54,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="MainForm.cs">
-		  <SubType>Form</SubType>
-		</Compile>
+		<Compile Update="MainForm.cs" />
 		<Compile Update="Properties\Resources.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
-		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs">
+		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs" />
+		<Compile Update="UserInterface\Panels\PC_CompatibilityManagement.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="UserInterface\Panels\PC_Options.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="UserInterface\Panels\PC_Options.cs" />
 		<Compile Update="UserInterface\Panels\PC_PlaysetSettings.cs" />
-		<Compile Update="UserInterface\Panels\PC_SkyveChangeLog.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="UserInterface\Panels\PC_SkyveChangeLog.cs" />
 		<Compile Update="UserInterface\Panels\PC_Utilities.cs" />
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
@@ -83,4 +76,13 @@
 		<EmbeddedResource Include="Changelog.json" />
 	</ItemGroup>
 
+	<PropertyGroup>
+		<ChangelogToLocale>$([System.IO.Path]::GetFullPath('..\Skyve\ChangelogToLocale\ChangelogToLocale.exe'))</ChangelogToLocale>
+		<OriginalJsonFile>"$([System.IO.Path]::GetFullPath('..\Skyve-CS2\Skyve.App.CS2\Changelog.json'))"</OriginalJsonFile>
+		<LocaleJsonFile>"$([System.IO.Path]::GetFullPath('..\Skyve-CS2\Skyve.App.CS2\Properties\Changelog.json'))"</LocaleJsonFile>
+	</PropertyGroup>
+
+	<Target Name="BuildLocale" BeforeTargets="PreBuildEvent">
+		<Exec Command="$(ChangelogToLocale) $(OriginalJsonFile) $(LocaleJsonFile)" />
+	</Target>
 </Project>

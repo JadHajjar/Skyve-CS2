@@ -18,11 +18,9 @@ public class PdxModDownloadFailed(int modId) : INotificationInfo
 
 	public void OnClick()
 	{
-		throw new NotImplementedException();
 	}
 
 	public void OnRightClick()
 	{
-		throw new NotImplementedException();
 	}
 }

@@ -44,6 +44,21 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ExcludeAll => _instance.GetText("ExcludeAll");
 
 	/// <summary>
+	/// Remove all disabled items from your active playset
+	/// </summary>
+	public static Translation ExcludeAllDisabled => _instance.GetText("ExcludeAllDisabled");
+
+	/// <summary>
+	/// Remove filtered &amp; disabled items from your active playset
+	/// </summary>
+	public static Translation ExcludeAllDisabledFiltered => _instance.GetText("ExcludeAllDisabledFiltered");
+
+	/// <summary>
+	/// Remove selected &amp; disabled items from your active playset
+	/// </summary>
+	public static Translation ExcludeAllDisabledSelected => _instance.GetText("ExcludeAllDisabledSelected");
+
+	/// <summary>
 	/// Remove filtered items from your active playset
 	/// </summary>
 	public static Translation ExcludeAllFiltered => _instance.GetText("ExcludeAllFiltered");
@@ -96,6 +111,21 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation LaunchThroughCities => _instance.GetText("LaunchThroughCities");
 
 	/// <summary>
+	/// The login process is securely handled through Paradox services and no data is shared with Skyve.
+	/// </summary>
+	public static Translation LoginDisclaimer => _instance.GetText("LoginDisclaimer");
+
+	/// <summary>
+	/// Login failed, make sure your e-mail and password are correct. Or try again later.
+	/// </summary>
+	public static Translation LoginFailed => _instance.GetText("LoginFailed");
+
+	/// <summary>
+	/// Log in to Paradox
+	/// </summary>
+	public static Translation LoginToParadox => _instance.GetText("LoginToParadox");
+
+	/// <summary>
 	/// '{0}' failed to download
 	/// </summary>
 	public static Translation ModDownloadFailed => _instance.GetText("ModDownloadFailed");
@@ -126,29 +156,29 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation PackageIsUnknown => _instance.GetText("PackageIsUnknown");
 
 	/// <summary>
-	/// ParadoxLoginFailedBadCredentials
+	/// Your saved username/password failed to log in. Click here to update your information.
 	/// </summary>
 	public static Translation ParadoxLoginFailedBadCredentials => _instance.GetText("ParadoxLoginFailedBadCredentials");
 
 	/// <summary>
-	/// ParadoxLoginFailedEmpty
+	/// Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.
 	/// </summary>
 	public static Translation ParadoxLoginFailedEmpty => _instance.GetText("ParadoxLoginFailedEmpty");
 
 	/// <summary>
-	/// ParadoxLoginFailedNoConnection
+	/// You're not connected to the internet, please check your connection and click here to try again.
 	/// </summary>
 	public static Translation ParadoxLoginFailedNoConnection => _instance.GetText("ParadoxLoginFailedNoConnection");
 
 	/// <summary>
-	/// ParadoxLoginFailedNoConnectionTitle
-	/// </summary>
-	public static Translation ParadoxLoginFailedNoConnectionTitle => _instance.GetText("ParadoxLoginFailedNoConnectionTitle");
-
-	/// <summary>
-	/// ParadoxLoginFailedTitle
+	/// Could not log you in to PDX Mods
 	/// </summary>
 	public static Translation ParadoxLoginFailedTitle => _instance.GetText("ParadoxLoginFailedTitle");
+
+	/// <summary>
+	/// * Your credentials will be encrypted and saved to your computer.
+	/// </summary>
+	public static Translation RememberMeInfo => _instance.GetText("RememberMeInfo");
 
 	/// <summary>
 	/// Clear PDX Mods cache

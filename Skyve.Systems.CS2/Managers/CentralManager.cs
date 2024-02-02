@@ -1,7 +1,7 @@
 ﻿using Extensions;
 
+using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
-using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Utilities;
 
@@ -9,8 +9,7 @@ using SlickControls;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
 internal class CentralManager : ICentralManager
@@ -33,8 +32,9 @@ internal class CentralManager : ICentralManager
 	private readonly IUpdateManager _updateManager;
 	private readonly IAssetUtil _assetUtil;
 	private readonly IWorkshopService _workshopService;
+	private readonly ISkyveDataManager _skyveDataManager;
 
-	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService)
+	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager)
 	{
 		_modLogicManager = modLogicManager;
 		_compatibilityManager = compatibilityManager;
@@ -54,6 +54,7 @@ internal class CentralManager : ICentralManager
 		_updateManager = updateManager;
 		_assetUtil = assetUtil;
 		_workshopService = workshopService;
+		_skyveDataManager = skyveDataManager;
 	}
 
 	public async void Start()
@@ -61,7 +62,7 @@ internal class CentralManager : ICentralManager
 		if (!_settings.SessionSettings.FirstTimeSetupCompleted)
 		{
 			try
-			{ 
+			{
 				RunFirstTimeSetup();
 			}
 			catch (Exception ex)
@@ -95,9 +96,9 @@ internal class CentralManager : ICentralManager
 
 		_packageManager.SetPackages(content);
 
-		_logger.Info($"Loading and applying CR Data..");
+		_logger.Info($"Loading and applying Compatibility Data..");
 
-		_compatibilityManager.Start(content);
+		_skyveDataManager.Start(content);
 
 		_logger.Info($"Analyzing packages..");
 
@@ -108,8 +109,6 @@ internal class CentralManager : ICentralManager
 		_logger.Info($"Finished analyzing packages..");
 
 		_notifier.OnContentLoaded();
-
-		await _workshopService.Login();
 
 		if (_playsetManager.CurrentPlayset is not null && CommandUtil.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
 		{
@@ -135,41 +134,33 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info($"Listeners Started");
 
-		if (ConnectionHandler.CheckConnection())
-		{
-			LoadDlcAndCR();
+		_notifier.OnWorkshopInfoUpdated();
 
-			_notifier.OnWorkshopInfoUpdated();
+		_updateManager.SendUpdateNotifications();
 
-			_updateManager.SendUpdateNotifications();
-		}
-		else
+		_logger.Info($"Compatibility report cached");
+
+		_compatibilityManager.DoFirstCache();
+
+		if (!ConnectionHandler.CheckConnection())
 		{
 			_logger.Warning("Not connected to the internet, delaying remaining loads.");
-
-			_notifier.OnWorkshopInfoUpdated();
-			
-			_updateManager.SendUpdateNotifications();
-
-			_logger.Info($"Compatibility report cached");
-
-			_compatibilityManager.DoFirstCache();
-
-			ConnectionHandler.WhenConnected(() => new BackgroundAction(LoadDlcAndCR).Run());
 		}
+
+		await ConnectionHandler.WhenConnected(UpdateCompatibilityCatalogue);
+
+		await _workshopService.Login();
+
+		await ConnectionHandler.WhenConnected(SteamUtil.LoadDlcs);
 
 		_logger.Info($"Finished.");
 	}
 
-	private void LoadDlcAndCR()
+	private async Task UpdateCompatibilityCatalogue()
 	{
-		try
-		{ SteamUtil.LoadDlcs(); }
-		catch { }
-
 		_logger.Info($"Downloading compatibility data..");
 
-		_compatibilityManager.DownloadData();
+		await _skyveDataManager.DownloadData();
 
 		_logger.Info($"Compatibility data downloaded");
 
@@ -202,11 +193,11 @@ internal class CentralManager : ICentralManager
 		var blackList = new List<IPackage>();
 		var firstTime = _updateManager.IsFirstTime();
 
-		_notifier.BulkUpdating = true;
+		_notifier.IsBulkUpdating = true;
 
 		foreach (var package in content)
 		{
-			if (_compatibilityManager.IsBlacklisted(package))
+			if (_skyveDataManager.IsBlacklisted(package))
 			{
 				blackList.Add(package);
 				continue;
@@ -236,7 +227,7 @@ internal class CentralManager : ICentralManager
 			}
 		}
 
-		_notifier.BulkUpdating = false;
+		_notifier.IsBulkUpdating = false;
 		_modUtil.SaveChanges();
 		_assetUtil.SaveChanges();
 

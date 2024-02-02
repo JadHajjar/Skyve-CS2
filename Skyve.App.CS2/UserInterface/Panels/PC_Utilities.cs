@@ -1,5 +1,6 @@
 ﻿using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Panels;
+using Skyve.Compatibility.Domain.Interfaces;
 
 using System.Drawing;
 using System.IO;
@@ -65,7 +66,7 @@ public partial class PC_Utilities : PanelContent
 
 		foreach (Control item in TLP_Main.Controls)
 		{
-			item.BackColor = design.BackColor.Tint(Lum: design.Type.If(FormDesignType.Dark, 1, -1));
+			item.BackColor = design.BackColor.Tint(Lum: design.IsDarkTheme ? 1 : -1);
 		}
 	}
 
@@ -174,7 +175,7 @@ public partial class PC_Utilities : PanelContent
 		if (!B_ResetCompatibilityCache.Loading)
 		{
 			B_ResetCompatibilityCache.Loading = true;
-			await Task.Run(ServiceCenter.Get<ICompatibilityManager>().ResetCache);
+			await Task.Run(ServiceCenter.Get<ISkyveDataManager>().ResetCache);
 			B_ResetCompatibilityCache.Loading = false;
 			var img = B_ResetCompatibilityCache.ImageName;
 			B_ResetCompatibilityCache.ImageName = "I_Check";

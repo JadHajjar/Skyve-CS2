@@ -1,10 +1,8 @@
 ﻿using Extensions;
 
 using Skyve.Domain;
-using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
-using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -38,7 +36,7 @@ internal class PackageManager : IPackageManager
 		get
 		{
 			var currentPackages = packages is null ? new() : new List<IPackage>(packages);
-			
+
 			if (_settings.UserSettings.HidePseudoMods)
 			{
 				foreach (var package in currentPackages)
@@ -82,11 +80,12 @@ internal class PackageManager : IPackageManager
 			}
 
 			foreach (var package in currentPackages)
-			{if (package.LocalData is not null)
-				foreach (var item in package.LocalData.Assets)
-				{
-					yield return item;
-				}
+			{
+				if (package.LocalData is not null)
+					foreach (var item in package.LocalData.Assets)
+					{
+						yield return item;
+					}
 			}
 		}
 	}
@@ -127,8 +126,8 @@ internal class PackageManager : IPackageManager
 		_notifier.OnContentLoaded();
 		_notifier.OnWorkshopInfoUpdated();
 
-		if(package.LocalData is not null)
-		DeleteAll(package.LocalData.Folder);
+		if (package.LocalData is not null)
+			DeleteAll(package.LocalData.Folder);
 	}
 
 	public IPackage? GetPackageById(IPackageIdentity identity)

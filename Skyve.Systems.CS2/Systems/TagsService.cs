@@ -1,17 +1,13 @@
 ﻿using Extensions;
 
 using Skyve.Domain;
-using Skyve.Domain.CS2;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Enums;
-using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
-using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,7 +31,7 @@ internal class TagsService : ITagsService
 		_tagsCache = new(StringComparer.InvariantCultureIgnoreCase);
 		_notifier = notifier;
 		_logger = logger;
-		_workshopService =(WorkshopService)workshopService;
+		_workshopService = (WorkshopService)workshopService;
 		_assetTags = new HashSet<string>();
 		_workshopTags = new Dictionary<string, int>();
 

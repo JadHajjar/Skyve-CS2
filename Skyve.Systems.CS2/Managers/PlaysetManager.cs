@@ -1,8 +1,7 @@
 ﻿using Extensions;
 
+using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
-using Skyve.Domain.CS2;
-using Skyve.Domain.CS2.Content;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
@@ -15,8 +14,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using PlaysetSubscribedMod = PDX.SDK.Contracts.Service.Mods.Models.PlaysetSubscribedMod;
 
 namespace Skyve.Systems.CS2.Managers;
 internal class PlaysetManager : IPlaysetManager
@@ -66,6 +63,7 @@ internal class PlaysetManager : IPlaysetManager
 		_playsets ??= new();
 
 		_notifier.AutoSaveRequested += OnAutoSave;
+		_notifier.WorkshopSyncEnded += async () => await Initialize();
 	}
 
 	public async Task<bool> MergeIntoCurrentPlayset(IPlayset playset)
@@ -125,7 +123,7 @@ internal class PlaysetManager : IPlaysetManager
 			{
 				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == currentPlayset);
 
-				if(CurrentPlayset is null)
+				if (CurrentPlayset is null)
 				{
 					throw new NotImplementedException();
 				}
@@ -181,7 +179,7 @@ internal class PlaysetManager : IPlaysetManager
 		}
 		finally
 		{
-			_notifier.ApplyingPlayset = false;
+			_notifier.IsApplyingPlayset = false;
 			disableAutoSave = false;
 		}
 	}
@@ -220,7 +218,7 @@ internal class PlaysetManager : IPlaysetManager
 				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == activePlayset);
 			}
 
-			if (CurrentPlayset != null)
+			if (CurrentPlayset != null && !_notifier.IsPlaysetsLoaded)
 			{
 				_notifier.OnPlaysetChanged();
 			}
@@ -230,7 +228,7 @@ internal class PlaysetManager : IPlaysetManager
 			_logger.Exception(ex, $"Could not load local playsets.");
 		}
 
-		_notifier.PlaysetsLoaded = true;
+		_notifier.IsPlaysetsLoaded = true;
 
 		_notifier.OnPlaysetUpdated();
 	}
@@ -259,7 +257,7 @@ internal class PlaysetManager : IPlaysetManager
 
 		return _packageManager.Packages.AllWhere(x =>
 		{
-			var cr = _compatibilityManager.GetPackageInfo(x);
+			var cr = x.GetPackageInfo();
 
 			if (cr is null)
 			{
@@ -292,7 +290,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task SetIncludedForAll(IPackageIdentity package, bool value) => await SetIncludedForAll([package], value);
 
-	public async Task SetIncludedForAll(IEnumerable< IPackageIdentity> packages, bool value)
+	public async Task SetIncludedForAll(IEnumerable<IPackageIdentity> packages, bool value)
 	{
 		try
 		{

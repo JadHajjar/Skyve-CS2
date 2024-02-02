@@ -1,6 +1,8 @@
 ﻿using Skyve.Domain;
 using Skyve.Domain.Systems;
 
+using SlickControls;
+
 using System;
 using System.Collections.Generic;
 
@@ -24,6 +26,26 @@ internal class NotificationsService : INotificationsService
 		{
 			yield return item;
 		}
+	}
+
+	public void RemoveNotification(INotificationInfo notification)
+	{
+		lock (this)
+		{
+			_notifications.Remove(notification);
+		}
+
+		OnNewNotification?.Invoke();
+	}
+
+	public void RemoveNotificationsOfType<T>() where T : INotificationInfo
+	{
+		lock (this)
+		{
+			_notifications.RemoveAll(x => x is T);
+		}
+
+		OnNewNotification?.Invoke();
 	}
 
 	public void SendNotification(INotificationInfo notification)

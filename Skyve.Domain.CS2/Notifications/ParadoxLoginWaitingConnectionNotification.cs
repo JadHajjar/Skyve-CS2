@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using Skyve.Domain.CS2.Utilities;
+using Skyve.Domain.Systems;
 
 using System;
 using System.Drawing;
@@ -12,7 +13,7 @@ public class ParadoxLoginWaitingConnectionNotification : INotificationInfo
 	public ParadoxLoginWaitingConnectionNotification()
 	{
 		Time = DateTime.MaxValue;
-		Title = LocaleCS2.ParadoxLoginFailedNoConnectionTitle;
+		Title = LocaleCS2.ParadoxLoginFailedTitle;
 		Description = LocaleCS2.ParadoxLoginFailedNoConnection;
 		Icon = "I_Paradox";
 	}
@@ -26,11 +27,11 @@ public class ParadoxLoginWaitingConnectionNotification : INotificationInfo
 
 	public void OnClick()
 	{
-		throw new NotImplementedException();
+		ServiceCenter.Get<IWorkshopService>().Login();
 	}
 
 	public void OnRightClick()
 	{
-		throw new NotImplementedException();
+
 	}
 }
