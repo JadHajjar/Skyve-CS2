@@ -554,6 +554,11 @@ public partial class MainForm : BasePanelForm
 
 	private void panelItem1_OnClick(object sender, MouseEventArgs e)
 	{
-		PushPanel<PC_WorkshopList>(panelItem1);
+		PushPanel<PC_WorkshopList>(PI_PdxMods);
+	}
+
+	private void PI_Playsets_OnClick(object sender, MouseEventArgs e)
+	{
+		PushPanel<PC_PlaysetList>(PI_Playsets);
 	}
 }

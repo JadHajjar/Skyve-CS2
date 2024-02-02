@@ -23,6 +23,7 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 {
 	private Bitmap? _banner;
 	private byte[]? _bannerBytes;
+	private int? modCount;
 
 	[CloneIgnore] public int Id { get; set; }
 	[CloneIgnore] public string? Name { get; set; }
@@ -30,8 +31,7 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 	[JsonIgnore] public DateTime LastEditDate { get; set; }
 	[JsonIgnore] public DateTime DateCreated { get; set; }
 	[JsonIgnore, CloneIgnore] public bool IsMissingItems { get; set; }
-	[JsonIgnore] public int AssetCount => Assets.Count;
-	[JsonIgnore] public int ModCount => Mods.Count;
+	[JsonIgnore] public int ModCount => modCount ?? Mods.Count;
 	[JsonIgnore] public IEnumerable<IPlaysetEntry> Entries => Assets.Concat(Mods);
 	[JsonIgnore] public IEnumerable<IPackage> Packages => Assets.Concat(Mods);
 
@@ -57,6 +57,7 @@ public class Playset : ICustomPlayset, IEquatable<Playset?>
 	{
 		Id = playset.PlaysetId;
 		Name = playset.Name;
+		modCount = playset.ModsCount;
 		Assets = [];
 		Mods = [];
 		ExcludedDLCs = [];
