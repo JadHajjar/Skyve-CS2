@@ -1,9 +1,3 @@
 {
-  "Changes": "Mudanças",
-  "A full rework! -behind the scenes": "Uma reformulação completa! — por de trás dos bastidores",
-  "'Profiles' are now, appropriately, called 'Playsets'.": "Perfis são agora chamados corretamente como 'Coleção de Mods'(continua como Perfil para o Brasil).",
-  "The core systems of Skyve have been changed, organised, and optimised.": "Os sistemas centrais de Skyve foram alterados, organizados e otimizados.",
-  "Improved the author info gathering, which will fix the issue of authors not loading.": "Aprimorada a obtenção de informações do autor, o que resolverá o problema de não carregar os autores corretamente.",
-  "Excluded mods no longer use the '.excluded' file, they instead use a new ModConfig file.": "Mods excluídos não usam mais o arquivo '.excluded', invés disso usam um novo arquivo de ModConfig.",
-  "The Load Order of mods has been re-integrated, and is completely automated based on mods' requirements as well as other Compatibility-Report factors.": "LOM foi re-integrado, e é completamente automatizado baseado nos requerimentos dos mods, entre outros fatores do Relatório de Compatibilidade."
+  "Changes": "Mudanças"
 }
