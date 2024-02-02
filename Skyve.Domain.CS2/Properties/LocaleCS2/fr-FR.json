@@ -40,15 +40,15 @@
   "PackageIsIncomplete": "La taille locale de \"{0}\" ({1}) est différente que celle de PDX Mods {2}",
   "OpenCitiesAppData": "Ouvrir le dossier AppData de C:S II",
   "ResetSteamCache": "Vider le cache de PDX Mods",
-  "ParadoxLoginFailedTitle": "Could not log you in to PDX Mods",
-  "ParadoxLoginFailedNoConnection": "You're not connected to the internet, please check your connection and click here to try again.",
-  "ParadoxLoginFailedBadCredentials": "Your saved username/password failed to log in. Click here to update your information.",
-  "ParadoxLoginFailedEmpty": "Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.",
+  "ParadoxLoginFailedTitle": "Impossible de vous connecter à PDX Mods",
+  "ParadoxLoginFailedNoConnection": "Vous n'êtes pas connecté à Internet, vérifiez votre connexion et cliquez ici pour réessayer.",
+  "ParadoxLoginFailedBadCredentials": "Vos identifiants enregistrés n'ont pas pu vous connecter. Cliquez ici pour mettre à jour vos informations.",
+  "ParadoxLoginFailedEmpty": "Votre session a probablement expiré. Essayez de lancer le jeu pour vous reconnecter, ou cliquez ici pour vous connecter via Skyve.",
   "DownloadComplete": "Téléchargement terminé",
   "Downloading": "Téléchargement...",
   "ModDownloadFailed": "Le téléchargement de \"{0}\" a échoué",
-  "LoginToParadox": "Log in to Paradox",
-  "LoginFailed": "Login failed, make sure your e-mail and password are correct. Or try again later.",
-  "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
-  "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve."
+  "LoginToParadox": "Se connecter à Paradox",
+  "LoginFailed": "La connexion a échoué, vérifiez que votre email et votre mot de passe sont corrects. Ou réessayez plus tard.",
+  "RememberMeInfo": "* Vos identifiants seront chiffrés et enregistré sur votre ordinateur.",
+  "LoginDisclaimer": "Le processus de connexion est géré de manière sécurisée via les services Paradox et aucune donnée n'est partagé avec Skyve."
 }
