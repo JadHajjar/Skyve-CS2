@@ -40,12 +40,15 @@
   "PackageIsIncomplete": "O tamanho local do '{0}' ({1}) é diferente do PDX Mods' {2}",
   "OpenCitiesAppData": "Abrir pasta do C:S II em AppData",
   "ResetSteamCache": "Limpar cache dos mods em PDX",
-  "ParadoxLoginFailedTitle": "ParadoxLoginFailedTitle",
-  "ParadoxLoginFailedNoConnectionTitle": "ParadoxLoginFailedNoConnectionTitle",
-  "ParadoxLoginFailedNoConnection": "ParadoxLoginFailedNoConnection",
-  "ParadoxLoginFailedBadCredentials": "ParadoxLoginFailedBadCredentials",
-  "ParadoxLoginFailedEmpty": "ParadoxLoginFailedEmpty",
+  "ParadoxLoginFailedTitle": "Could not log you in to PDX Mods",
+  "ParadoxLoginFailedNoConnection": "You're not connected to the internet, please check your connection and click here to try again.",
+  "ParadoxLoginFailedBadCredentials": "Your saved username/password failed to log in. Click here to update your information.",
+  "ParadoxLoginFailedEmpty": "Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.",
   "DownloadComplete": "Baixado com sucesso",
   "Downloading": "Baixando...",
-  "ModDownloadFailed": "'{0}' falha no download"
+  "ModDownloadFailed": "'{0}' falha no download",
+  "LoginToParadox": "Log in to Paradox",
+  "LoginFailed": "Login failed, make sure your e-mail and password are correct. Or try again later.",
+  "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
+  "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve."
 }
