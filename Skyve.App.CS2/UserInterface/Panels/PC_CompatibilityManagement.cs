@@ -5,18 +5,18 @@ using Skyve.App.UserInterface.Forms;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
-using Skyve.Systems.Compatibility;
 using Skyve.Systems.CS2.Managers;
 using Skyve.Systems.CS2.Utilities;
 
 using SkyveApi.Domain.CS2;
 using SkyveApi.Domain.Generic;
+
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Skyve.App.UserInterface.Panels;
+namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_CompatibilityManagement : PanelContent
 {
 	private readonly Dictionary<ulong, IPackage?> _packages = new();

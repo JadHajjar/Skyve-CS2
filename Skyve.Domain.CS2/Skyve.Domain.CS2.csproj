@@ -25,6 +25,14 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <Compile Remove="Content\_Playset.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Include="Content\_Playset.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<Reference Include="System.Windows.Forms" />
 		<ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Domain\Skyve.Domain.csproj" />

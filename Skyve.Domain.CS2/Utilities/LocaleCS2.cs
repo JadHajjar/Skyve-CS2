@@ -39,6 +39,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation Downloading => _instance.GetText("Downloading");
 
 	/// <summary>
+	/// Drop or select a playset's file here to import it
+	/// </summary>
+	public static Translation DropNewPlayset => _instance.GetText("DropNewPlayset");
+
+	/// <summary>
 	/// Remove all items from your active playset
 	/// </summary>
 	public static Translation ExcludeAll => _instance.GetText("ExcludeAll");

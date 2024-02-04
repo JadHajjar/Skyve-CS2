@@ -116,6 +116,6 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailUrl)}").Result
 			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailPath)}", isFilePath: true).Result;
 
-		return thumbnail is not null;
+		return true;
 	}
 }

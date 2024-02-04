@@ -255,7 +255,12 @@ internal class WorkshopService : IWorkshopService
 
 	public IUser? GetUser(object authorId)
 	{
-		return new PdxUser(authorId.ToString());
+		if (string.IsNullOrWhiteSpace(authorId?.ToString()))
+		{
+			return null;
+		}
+
+		return new PdxUser(authorId!.ToString());
 	}
 
 	public async Task<IEnumerable<IWorkshopInfo>> GetWorkshopItemsByUserAsync(object userId)
@@ -342,7 +347,7 @@ internal class WorkshopService : IWorkshopService
 		return !mods.Success || mods.Mods is null ? (List<Mod>)([]) : mods.Mods;
 	}
 
-	public async Task<List<ICustomPlayset>> GetPlaysets(bool localOnly)
+	public async Task<List<IPlayset>> GetPlaysets(bool localOnly)
 	{
 		if (Context is null)
 		{
@@ -351,7 +356,7 @@ internal class WorkshopService : IWorkshopService
 
 		var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(!localOnly));
 
-		return !playsets.Success ? (List<ICustomPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (ICustomPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
+		return !playsets.Success ? (List<IPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (IPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
 	}
 
 	public async Task<bool> ToggleVote(IPackageIdentity packageIdentity)
@@ -500,7 +505,7 @@ internal class WorkshopService : IWorkshopService
 		return Context is not null && ProcessResult(await Context.Mods.RenamePlayset(playset, name)).Success;
 	}
 
-	internal async Task<ICustomPlayset?> CreatePlayset(string playsetName)
+	internal async Task<IPlayset?> CreatePlayset(string playsetName)
 	{
 		if (Context is null)
 		{
@@ -509,7 +514,7 @@ internal class WorkshopService : IWorkshopService
 
 		var result = ProcessResult(await Context.Mods.CreatePlayset(playsetName));
 
-		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) : (IPlayset?)null;
 	}
 
 	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, int playset)
@@ -543,7 +548,7 @@ internal class WorkshopService : IWorkshopService
 		return result.Success;
 	}
 
-	internal async Task<ICustomPlayset?> ClonePlayset(int id)
+	internal async Task<IPlayset?> ClonePlayset(int id)
 	{
 		if (Context is null)
 		{
@@ -552,7 +557,7 @@ internal class WorkshopService : IWorkshopService
 
 		var result = ProcessResult(await Context.Mods.ClonePlayset(id));
 
-		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) : (IPlayset?)null;
 	}
 
 	public async Task RunSync()
@@ -576,5 +581,15 @@ internal class WorkshopService : IWorkshopService
 
 		_notifier.IsWorkshopSyncInProgress = false;
 		_notifier.OnWorkshopSyncEnded();
+	}
+
+	public async Task DeactivateActivePlayset()
+	{
+		if (Context is null)
+		{
+			return;
+		}
+
+		ProcessResult(await Context.Mods.DeactivateActivePlayset());
 	}
 }

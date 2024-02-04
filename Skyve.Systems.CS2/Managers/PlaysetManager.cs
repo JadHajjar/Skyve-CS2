@@ -2,6 +2,7 @@
 
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
+using Skyve.Domain.CS2.Content;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
@@ -18,16 +19,16 @@ using System.Windows.Forms;
 namespace Skyve.Systems.CS2.Managers;
 internal class PlaysetManager : IPlaysetManager
 {
-	private readonly List<ICustomPlayset> _playsets;
-	private bool disableAutoSave;
-	private readonly FileWatcher? _watcher;
+	private readonly List<ICustomPlayset> _customPlaysets = [];
+	private readonly List<IPlayset> _playsets = [];
 
-	public ICustomPlayset? CurrentPlayset { get; internal set; }
-	public IEnumerable<ICustomPlayset> Playsets
+	public IPlayset? CurrentPlayset { get; internal set; }
+	public ICustomPlayset? CurrentCustomPlayset { get; internal set; }
+	public IEnumerable<IPlayset> Playsets
 	{
 		get
 		{
-			List<ICustomPlayset> playsets;
+			List<IPlayset> playsets;
 
 			lock (_playsets)
 			{
@@ -40,6 +41,7 @@ internal class PlaysetManager : IPlaysetManager
 			}
 		}
 	}
+
 
 	private readonly WorkshopService _workshopService;
 	private readonly ILogger _logger;
@@ -60,7 +62,6 @@ internal class PlaysetManager : IPlaysetManager
 		_packageUtil = packageUtil;
 		_compatibilityManager = compatibilityManager;
 		_workshopService = (workshopService as WorkshopService)!;
-		_playsets ??= new();
 
 		_notifier.AutoSaveRequested += OnAutoSave;
 		_notifier.WorkshopSyncEnded += async () => await Initialize();
@@ -94,7 +95,7 @@ internal class PlaysetManager : IPlaysetManager
 		return false;
 	}
 
-	public async Task<bool> DeletePlayset(ICustomPlayset playset)
+	public async Task<bool> DeletePlayset(IPlayset playset)
 	{
 		if (await _workshopService.DeletePlayset(playset.Id))
 		{
@@ -115,25 +116,26 @@ internal class PlaysetManager : IPlaysetManager
 
 	private async Task RefreshCurrentPlayset()
 	{
-		var currentPlayset = await _workshopService.GetActivePlaysetId();
+		var activePlayset = await _workshopService.GetActivePlaysetId();
 
-		if (currentPlayset > 0)
+		lock (_playsets)
 		{
-			lock (_playsets)
-			{
-				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == currentPlayset);
-
-				if (CurrentPlayset is null)
-				{
-					throw new NotImplementedException();
-				}
+			if (activePlayset > 0)
+		{
+				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == activePlayset);
+				CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
+			}
+			else
+			{ CurrentPlayset = null;
+				CurrentCustomPlayset = null;
 			}
 		}
 	}
 
-	public void SetCurrentPlayset(ICustomPlayset playset)
+	public void SetCurrentPlayset(IPlayset playset)
 	{
 		CurrentPlayset = playset;
+		CurrentCustomPlayset = GetCustomPlayset(playset);
 
 		if (playset.Temporary)
 		{
@@ -163,7 +165,7 @@ internal class PlaysetManager : IPlaysetManager
 		}
 	}
 
-	internal async void ApplyPlayset(ICustomPlayset playset)
+	internal async void ApplyPlayset(IPlayset playset)
 	{
 		try
 		{
@@ -180,7 +182,6 @@ internal class PlaysetManager : IPlaysetManager
 		finally
 		{
 			_notifier.IsApplyingPlayset = false;
-			disableAutoSave = false;
 		}
 	}
 
@@ -207,7 +208,7 @@ internal class PlaysetManager : IPlaysetManager
 	{
 		try
 		{
-			var playsets = await _workshopService.GetPlaysets(true);
+			var playsets = await _workshopService.GetPlaysets(!ConnectionHandler.IsConnected || !_notifier.IsPlaysetsLoaded);
 			var activePlayset = await _workshopService.GetActivePlaysetId();
 
 			lock (_playsets)
@@ -216,6 +217,7 @@ internal class PlaysetManager : IPlaysetManager
 				_playsets.AddRange(playsets);
 
 				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == activePlayset);
+				CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
 			}
 
 			if (CurrentPlayset != null && !_notifier.IsPlaysetsLoaded)
@@ -243,7 +245,7 @@ internal class PlaysetManager : IPlaysetManager
 		return await _workshopService.RenamePlayset(playset.Id, text);
 	}
 
-	public async Task<ICustomPlayset?> CreateNewPlayset(string playsetName)
+	public async Task<IPlayset?> CreateNewPlayset(string playsetName)
 	{
 		return await _workshopService.CreatePlayset(playsetName);
 	}
@@ -252,7 +254,7 @@ internal class PlaysetManager : IPlaysetManager
 	{
 		if ((int)usage == -1)
 		{
-			return new();
+			return [];
 		}
 
 		return _packageManager.Packages.AllWhere(x =>
@@ -273,7 +275,7 @@ internal class PlaysetManager : IPlaysetManager
 		});
 	}
 
-	public void AddPlayset(ICustomPlayset newPlayset)
+	public void AddPlayset(IPlayset newPlayset)
 	{
 		lock (_playsets)
 		{
@@ -283,12 +285,15 @@ internal class PlaysetManager : IPlaysetManager
 		_notifier.OnPlaysetUpdated();
 	}
 
-	public ICustomPlayset? ImportPlayset(string obj)
+	public IPlayset? ImportPlayset(string obj)
 	{
 		throw new NotImplementedException();
 	}
 
-	public async Task SetIncludedForAll(IPackageIdentity package, bool value) => await SetIncludedForAll([package], value);
+	public async Task SetIncludedForAll(IPackageIdentity package, bool value)
+	{
+		await SetIncludedForAll([package], value);
+	}
 
 	public async Task SetIncludedForAll(IEnumerable<IPackageIdentity> packages, bool value)
 	{
@@ -305,7 +310,10 @@ internal class PlaysetManager : IPlaysetManager
 		}
 	}
 
-	public async Task SetEnabledForAll(IPackageIdentity package, bool value) => await SetEnabledForAll([package], value);
+	public async Task SetEnabledForAll(IPackageIdentity package, bool value)
+	{
+		await SetEnabledForAll([package], value);
+	}
 
 	public async Task SetEnabledForAll(IEnumerable<IPackageIdentity> packages, bool value)
 	{
@@ -332,7 +340,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public string GetFileName(IPlayset playset)
 	{
-		return string.Empty;// CrossIO.Combine(_workshopService.Context!.Config.Mods.RootPath, "playsets_metadata", playset.Id.ToString());
+		return CrossIO.Combine(_locationManager.DataPath, ".cache", "Mods", "playsets_metadata", playset.Id.ToString());
 	}
 
 	public void CreateShortcut(IPlayset item)
@@ -351,8 +359,28 @@ internal class PlaysetManager : IPlaysetManager
 		}
 	}
 
-	internal async Task<ICustomPlayset?> ClonePlayset(IPlayset playset)
+	public async Task<IPlayset?> ClonePlayset(IPlayset playset)
 	{
 		return await _workshopService.ClonePlayset(playset.Id);
+	}
+
+	public IPlayset? GetPlayset(int id)
+	{
+		return _playsets.FirstOrDefault(x => x.Id == id);
+	}
+
+	public ICustomPlayset GetCustomPlayset(IPlayset playset)
+	{
+		return _customPlaysets.FirstOrDefault(x => x.Id == playset.Id) ?? new ExtendedPlayset(playset);
+	}
+
+	public async Task DeactivateActivePlayset()
+	{
+		await _workshopService.DeactivateActivePlayset();
+
+		CurrentPlayset = null;
+		CurrentCustomPlayset = null;
+
+		_notifier.OnPlaysetChanged();
 	}
 }

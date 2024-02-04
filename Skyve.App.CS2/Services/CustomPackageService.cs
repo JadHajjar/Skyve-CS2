@@ -1,7 +1,7 @@
-﻿using Skyve.App.Interfaces;
+﻿using Skyve.App.CS2.UserInterface.Panels;
+using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
-using Skyve.Domain.CS2.Utilities;
 
 using System.Windows.Forms;
 

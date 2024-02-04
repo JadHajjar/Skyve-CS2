@@ -90,22 +90,23 @@ public class SkyveApiUtil : ISkyveApiUtil
 
 	public async Task<IOnlinePlayset[]?> GetUserPlaysets(IUser userId)
 	{
-		return (await Get<UserProfile[]>("/GetUserProfiles", (nameof(userId), userId)))?.ToArray(x => new OnlinePlayset(x));
+		return new IOnlinePlayset[0];
+		//return (await Get<UserProfile[]>("/GetUserProfiles", (nameof(userId), userId)))?.ToArray(x => new OnlinePlayset(x));
 	}
 
-	public async Task<IOnlinePlayset?> GetUserProfileContents(int profileId)
-	{
-		var profile =  await Get<UserProfile>("/GetUserProfileContents", (nameof(profileId), profileId));
+	//public async Task<IOnlinePlayset?> GetUserProfileContents(int profileId)
+	//{
+	//	var profile =  await Get<UserProfile>("/GetUserProfileContents", (nameof(profileId), profileId));
 
-		return profile is null ? null : new OnlinePlayset(profile);
-	}
+	//	return profile is null ? null : new OnlinePlayset(profile);
+	//}
 
-	public async Task<IOnlinePlayset?> GetUserProfileByLink(string link)
-	{
-		var profile = await Get<UserProfile>("/GetUserProfileByLink", (nameof(link), link));
+	//public async Task<IOnlinePlayset?> GetUserProfileByLink(string link)
+	//{
+	//	var profile = await Get<UserProfile>("/GetUserProfileByLink", (nameof(link), link));
 
-		return profile is null ? null : new OnlinePlayset(profile);
-	}
+	//	return profile is null ? null : new OnlinePlayset(profile);
+	//}
 
 	public async Task<ApiResponse> DeleteUserProfile(int profileId)
 	{
@@ -119,7 +120,8 @@ public class SkyveApiUtil : ISkyveApiUtil
 
 	public async Task<IOnlinePlayset[]?> GetPublicPlaysets()
 	{
-		return (await Get<UserProfile[]>("/GetPublicProfiles"))?.ToArray(x => new OnlinePlayset(x));
+		return new IOnlinePlayset[0];
+		//return (await Get<UserProfile[]>("/GetPublicProfiles"))?.ToArray(x => new OnlinePlayset(x));
 	}
 
 	public async Task<ApiResponse> SetProfileVisibility(int profileId, bool @public)

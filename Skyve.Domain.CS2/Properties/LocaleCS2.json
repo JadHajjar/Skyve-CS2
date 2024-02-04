@@ -50,5 +50,6 @@
   "LoginToParadox": "Log in to Paradox",
   "LoginFailed": "Login failed, make sure your e-mail and password are correct. Or try again later.",
   "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
-  "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve."
+  "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve.",
+  "DropNewPlayset": "Drop or select a playset's file here to import it"
 }

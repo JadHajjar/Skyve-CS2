@@ -44,27 +44,27 @@ partial class PC_PlaysetSettings
 			SlickControls.DynamicIcon dynamicIcon7 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon8 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon9 = new SlickControls.DynamicIcon();
-			this.TLP_ProfileName = new SlickControls.RoundedTableLayoutPanel();
-			this.I_ProfileIcon = new SlickControls.SlickIcon();
-			this.L_CurrentProfile = new System.Windows.Forms.Label();
+			this.TLP_PlaysetName = new SlickControls.RoundedTableLayoutPanel();
+			this.I_PlaysetIcon = new SlickControls.SlickIcon();
+			this.L_CurrentPlayset = new System.Windows.Forms.Label();
 			this.TB_Name = new SlickControls.SlickTextBox();
 			this.B_Save = new SlickControls.SlickIcon();
 			this.I_Favorite = new SlickControls.SlickIcon();
 			this.B_EditName = new SlickControls.SlickIcon();
 			this.TLP_Main = new System.Windows.Forms.TableLayoutPanel();
-			this.B_AddProfile = new SlickControls.RoundedTableLayoutPanel();
+			this.B_AddPlayset = new SlickControls.RoundedTableLayoutPanel();
 			this.slickIcon2 = new SlickControls.SlickIcon();
-			this.B_TempProfile = new SlickControls.RoundedTableLayoutPanel();
+			this.B_TempPlayset = new SlickControls.RoundedTableLayoutPanel();
 			this.slickIcon1 = new SlickControls.SlickIcon();
-			this.I_TempProfile = new SlickControls.SlickIcon();
-			this.L_TempProfile = new System.Windows.Forms.Label();
+			this.I_TempPlayset = new SlickControls.SlickIcon();
+			this.L_TempPlayset = new System.Windows.Forms.Label();
 			this.P_Options = new SlickControls.RoundedPanel();
 			this.P_ScrollPanel = new System.Windows.Forms.Panel();
 			this.slickScroll = new SlickControls.SlickScroll();
 			this.TLP_Options = new System.Windows.Forms.TableLayoutPanel();
 			this.TLP_GeneralSettings = new SlickControls.RoundedGroupTableLayoutPanel();
 			this.CB_AutoSave = new SlickControls.SlickCheckbox();
-			this.DD_ProfileUsage = new Skyve.App.UserInterface.Dropdowns.PackageUsageSingleDropDown();
+			this.DD_PlaysetUsage = new Skyve.App.UserInterface.Dropdowns.PackageUsageSingleDropDown();
 			this.TLP_LaunchSettings = new SlickControls.RoundedGroupTableLayoutPanel();
 			this.DD_NewMap = new Skyve.App.UserInterface.Generic.DragAndDropControl();
 			this.CB_LHT = new SlickControls.SlickCheckbox();
@@ -91,11 +91,11 @@ partial class PC_PlaysetSettings
 			this.CB_DebugMono = new SlickControls.SlickCheckbox();
 			this.I_Info = new SlickControls.SlickIcon();
 			this.L_Info = new System.Windows.Forms.Label();
-			this.B_ViewProfiles = new SlickControls.SlickButton();
-			this.TLP_ProfileName.SuspendLayout();
+			this.B_ViewPlaysets = new SlickControls.SlickButton();
+			this.TLP_PlaysetName.SuspendLayout();
 			this.TLP_Main.SuspendLayout();
-			this.B_AddProfile.SuspendLayout();
-			this.B_TempProfile.SuspendLayout();
+			this.B_AddPlayset.SuspendLayout();
+			this.B_TempPlayset.SuspendLayout();
 			this.P_Options.SuspendLayout();
 			this.P_ScrollPanel.SuspendLayout();
 			this.TLP_Options.SuspendLayout();
@@ -107,54 +107,54 @@ partial class PC_PlaysetSettings
 			// 
 			// TLP_ProfileName
 			// 
-			this.TLP_ProfileName.AutoSize = true;
-			this.TLP_ProfileName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.TLP_ProfileName.ColumnCount = 6;
-			this.TLP_Main.SetColumnSpan(this.TLP_ProfileName, 3);
-			this.TLP_ProfileName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_ProfileName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_ProfileName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_ProfileName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_ProfileName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_ProfileName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_ProfileName.Controls.Add(this.I_ProfileIcon, 1, 0);
-			this.TLP_ProfileName.Controls.Add(this.L_CurrentProfile, 3, 0);
-			this.TLP_ProfileName.Controls.Add(this.TB_Name, 4, 0);
-			this.TLP_ProfileName.Controls.Add(this.B_Save, 5, 0);
-			this.TLP_ProfileName.Controls.Add(this.I_Favorite, 0, 0);
-			this.TLP_ProfileName.Controls.Add(this.B_EditName, 2, 0);
-			this.TLP_ProfileName.Location = new System.Drawing.Point(10, 10);
-			this.TLP_ProfileName.Margin = new System.Windows.Forms.Padding(10);
-			this.TLP_ProfileName.Name = "TLP_ProfileName";
-			this.TLP_ProfileName.Padding = new System.Windows.Forms.Padding(5);
-			this.TLP_ProfileName.RowCount = 1;
-			this.TLP_ProfileName.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_ProfileName.Size = new System.Drawing.Size(455, 42);
-			this.TLP_ProfileName.TabIndex = 3;
+			this.TLP_PlaysetName.AutoSize = true;
+			this.TLP_PlaysetName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.TLP_PlaysetName.ColumnCount = 6;
+			this.TLP_Main.SetColumnSpan(this.TLP_PlaysetName, 3);
+			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_PlaysetName.Controls.Add(this.I_PlaysetIcon, 1, 0);
+			this.TLP_PlaysetName.Controls.Add(this.L_CurrentPlayset, 3, 0);
+			this.TLP_PlaysetName.Controls.Add(this.TB_Name, 4, 0);
+			this.TLP_PlaysetName.Controls.Add(this.B_Save, 5, 0);
+			this.TLP_PlaysetName.Controls.Add(this.I_Favorite, 0, 0);
+			this.TLP_PlaysetName.Controls.Add(this.B_EditName, 2, 0);
+			this.TLP_PlaysetName.Location = new System.Drawing.Point(10, 10);
+			this.TLP_PlaysetName.Margin = new System.Windows.Forms.Padding(10);
+			this.TLP_PlaysetName.Name = "TLP_ProfileName";
+			this.TLP_PlaysetName.Padding = new System.Windows.Forms.Padding(5);
+			this.TLP_PlaysetName.RowCount = 1;
+			this.TLP_PlaysetName.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_PlaysetName.Size = new System.Drawing.Size(455, 42);
+			this.TLP_PlaysetName.TabIndex = 3;
 			// 
 			// I_ProfileIcon
 			// 
-			this.I_ProfileIcon.ActiveColor = null;
-			this.I_ProfileIcon.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.I_ProfileIcon.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.I_ProfileIcon.Location = new System.Drawing.Point(37, 5);
-			this.I_ProfileIcon.Margin = new System.Windows.Forms.Padding(0);
-			this.I_ProfileIcon.Name = "I_ProfileIcon";
-			this.I_ProfileIcon.Padding = new System.Windows.Forms.Padding(5);
-			this.I_ProfileIcon.Size = new System.Drawing.Size(32, 32);
-			this.I_ProfileIcon.TabIndex = 0;
-			this.I_ProfileIcon.TabStop = false;
-			this.I_ProfileIcon.Click += new System.EventHandler(this.I_ProfileIcon_Click);
+			this.I_PlaysetIcon.ActiveColor = null;
+			this.I_PlaysetIcon.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.I_PlaysetIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.I_PlaysetIcon.Location = new System.Drawing.Point(37, 5);
+			this.I_PlaysetIcon.Margin = new System.Windows.Forms.Padding(0);
+			this.I_PlaysetIcon.Name = "I_ProfileIcon";
+			this.I_PlaysetIcon.Padding = new System.Windows.Forms.Padding(5);
+			this.I_PlaysetIcon.Size = new System.Drawing.Size(32, 32);
+			this.I_PlaysetIcon.TabIndex = 0;
+			this.I_PlaysetIcon.TabStop = false;
+			this.I_PlaysetIcon.Click += new System.EventHandler(this.I_PlaysetIcon_Click);
 			// 
 			// L_CurrentProfile
 			// 
-			this.L_CurrentProfile.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.L_CurrentProfile.AutoSize = true;
-			this.L_CurrentProfile.Location = new System.Drawing.Point(104, 9);
-			this.L_CurrentProfile.Name = "L_CurrentProfile";
-			this.L_CurrentProfile.Size = new System.Drawing.Size(55, 23);
-			this.L_CurrentProfile.TabIndex = 1;
-			this.L_CurrentProfile.Text = "label1";
+			this.L_CurrentPlayset.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.L_CurrentPlayset.AutoSize = true;
+			this.L_CurrentPlayset.Location = new System.Drawing.Point(104, 9);
+			this.L_CurrentPlayset.Name = "L_CurrentProfile";
+			this.L_CurrentPlayset.Size = new System.Drawing.Size(55, 23);
+			this.L_CurrentPlayset.TabIndex = 1;
+			this.L_CurrentPlayset.Text = "label1";
 			// 
 			// TB_Name
 			// 
@@ -233,15 +233,15 @@ partial class PC_PlaysetSettings
 			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_Main.Controls.Add(this.B_AddProfile, 4, 0);
-			this.TLP_Main.Controls.Add(this.B_TempProfile, 3, 0);
-			this.TLP_Main.Controls.Add(this.I_TempProfile, 0, 1);
-			this.TLP_Main.Controls.Add(this.L_TempProfile, 1, 1);
-			this.TLP_Main.Controls.Add(this.TLP_ProfileName, 0, 0);
+			this.TLP_Main.Controls.Add(this.B_AddPlayset, 4, 0);
+			this.TLP_Main.Controls.Add(this.B_TempPlayset, 3, 0);
+			this.TLP_Main.Controls.Add(this.I_TempPlayset, 0, 1);
+			this.TLP_Main.Controls.Add(this.L_TempPlayset, 1, 1);
+			this.TLP_Main.Controls.Add(this.TLP_PlaysetName, 0, 0);
 			this.TLP_Main.Controls.Add(this.P_Options, 0, 3);
 			this.TLP_Main.Controls.Add(this.I_Info, 0, 2);
 			this.TLP_Main.Controls.Add(this.L_Info, 1, 2);
-			this.TLP_Main.Controls.Add(this.B_ViewProfiles, 5, 0);
+			this.TLP_Main.Controls.Add(this.B_ViewPlaysets, 5, 0);
 			this.TLP_Main.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TLP_Main.Location = new System.Drawing.Point(0, 30);
 			this.TLP_Main.Name = "TLP_Main";
@@ -256,16 +256,16 @@ partial class PC_PlaysetSettings
 			// 
 			// B_AddProfile
 			// 
-			this.B_AddProfile.AutoSize = true;
-			this.B_AddProfile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.B_AddProfile.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.B_AddProfile.Controls.Add(this.slickIcon2, 0, 0);
-			this.B_AddProfile.Location = new System.Drawing.Point(549, 10);
-			this.B_AddProfile.Margin = new System.Windows.Forms.Padding(10);
-			this.B_AddProfile.Name = "B_AddProfile";
-			this.B_AddProfile.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.B_AddProfile.Size = new System.Drawing.Size(44, 31);
-			this.B_AddProfile.TabIndex = 8;
+			this.B_AddPlayset.AutoSize = true;
+			this.B_AddPlayset.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.B_AddPlayset.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.B_AddPlayset.Controls.Add(this.slickIcon2, 0, 0);
+			this.B_AddPlayset.Location = new System.Drawing.Point(549, 10);
+			this.B_AddPlayset.Margin = new System.Windows.Forms.Padding(10);
+			this.B_AddPlayset.Name = "B_AddProfile";
+			this.B_AddPlayset.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.B_AddPlayset.Size = new System.Drawing.Size(44, 31);
+			this.B_AddPlayset.TabIndex = 8;
 			// 
 			// slickIcon2
 			// 
@@ -284,16 +284,16 @@ partial class PC_PlaysetSettings
 			// 
 			// B_TempProfile
 			// 
-			this.B_TempProfile.AutoSize = true;
-			this.B_TempProfile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.B_TempProfile.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.B_TempProfile.Controls.Add(this.slickIcon1, 0, 0);
-			this.B_TempProfile.Location = new System.Drawing.Point(485, 10);
-			this.B_TempProfile.Margin = new System.Windows.Forms.Padding(10);
-			this.B_TempProfile.Name = "B_TempProfile";
-			this.B_TempProfile.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.B_TempProfile.Size = new System.Drawing.Size(44, 31);
-			this.B_TempProfile.TabIndex = 7;
+			this.B_TempPlayset.AutoSize = true;
+			this.B_TempPlayset.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.B_TempPlayset.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.B_TempPlayset.Controls.Add(this.slickIcon1, 0, 0);
+			this.B_TempPlayset.Location = new System.Drawing.Point(485, 10);
+			this.B_TempPlayset.Margin = new System.Windows.Forms.Padding(10);
+			this.B_TempPlayset.Name = "B_TempProfile";
+			this.B_TempPlayset.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.B_TempPlayset.Size = new System.Drawing.Size(44, 31);
+			this.B_TempPlayset.TabIndex = 7;
 			// 
 			// slickIcon1
 			// 
@@ -312,34 +312,34 @@ partial class PC_PlaysetSettings
 			// 
 			// I_TempProfile
 			// 
-			this.I_TempProfile.ActiveColor = null;
-			this.I_TempProfile.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.I_TempProfile.ColorStyle = Extensions.ColorStyle.Yellow;
-			this.I_TempProfile.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.I_TempProfile.Enabled = false;
+			this.I_TempPlayset.ActiveColor = null;
+			this.I_TempPlayset.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.I_TempPlayset.ColorStyle = Extensions.ColorStyle.Yellow;
+			this.I_TempPlayset.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.I_TempPlayset.Enabled = false;
 			dynamicIcon3.Name = "I_Warning";
-			this.I_TempProfile.ImageName = dynamicIcon3;
-			this.I_TempProfile.Location = new System.Drawing.Point(18, 81);
-			this.I_TempProfile.Margin = new System.Windows.Forms.Padding(18, 3, 3, 3);
-			this.I_TempProfile.Name = "I_TempProfile";
-			this.I_TempProfile.Padding = new System.Windows.Forms.Padding(5);
-			this.I_TempProfile.Selected = true;
-			this.I_TempProfile.Size = new System.Drawing.Size(32, 32);
-			this.I_TempProfile.TabIndex = 2;
-			this.I_TempProfile.TabStop = false;
+			this.I_TempPlayset.ImageName = dynamicIcon3;
+			this.I_TempPlayset.Location = new System.Drawing.Point(18, 81);
+			this.I_TempPlayset.Margin = new System.Windows.Forms.Padding(18, 3, 3, 3);
+			this.I_TempPlayset.Name = "I_TempProfile";
+			this.I_TempPlayset.Padding = new System.Windows.Forms.Padding(5);
+			this.I_TempPlayset.Selected = true;
+			this.I_TempPlayset.Size = new System.Drawing.Size(32, 32);
+			this.I_TempPlayset.TabIndex = 2;
+			this.I_TempPlayset.TabStop = false;
 			// 
 			// L_TempProfile
 			// 
-			this.L_TempProfile.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.L_TempProfile.AutoSize = true;
-			this.TLP_Main.SetColumnSpan(this.L_TempProfile, 5);
-			this.L_TempProfile.Location = new System.Drawing.Point(56, 86);
-			this.L_TempProfile.Margin = new System.Windows.Forms.Padding(3, 10, 10, 10);
-			this.L_TempProfile.Name = "L_TempProfile";
-			this.L_TempProfile.Size = new System.Drawing.Size(55, 23);
-			this.L_TempProfile.TabIndex = 15;
-			this.L_TempProfile.Text = "label1";
-			this.L_TempProfile.UseMnemonic = false;
+			this.L_TempPlayset.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.L_TempPlayset.AutoSize = true;
+			this.TLP_Main.SetColumnSpan(this.L_TempPlayset, 5);
+			this.L_TempPlayset.Location = new System.Drawing.Point(56, 86);
+			this.L_TempPlayset.Margin = new System.Windows.Forms.Padding(3, 10, 10, 10);
+			this.L_TempPlayset.Name = "L_TempProfile";
+			this.L_TempPlayset.Size = new System.Drawing.Size(55, 23);
+			this.L_TempPlayset.TabIndex = 15;
+			this.L_TempPlayset.Text = "label1";
+			this.L_TempPlayset.UseMnemonic = false;
 			// 
 			// P_Options
 			// 
@@ -405,7 +405,7 @@ partial class PC_PlaysetSettings
 			this.TLP_GeneralSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.TLP_GeneralSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TLP_GeneralSettings.Controls.Add(this.CB_AutoSave, 0, 2);
-			this.TLP_GeneralSettings.Controls.Add(this.DD_ProfileUsage, 0, 0);
+			this.TLP_GeneralSettings.Controls.Add(this.DD_PlaysetUsage, 0, 0);
 			this.TLP_GeneralSettings.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon4.Name = "I_Cog";
 			this.TLP_GeneralSettings.ImageName = dynamicIcon4;
@@ -441,13 +441,13 @@ partial class PC_PlaysetSettings
 			// 
 			// DD_ProfileUsage
 			// 
-			this.DD_ProfileUsage.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.DD_ProfileUsage.Location = new System.Drawing.Point(10, 46);
-			this.DD_ProfileUsage.Name = "DD_ProfileUsage";
-			this.DD_ProfileUsage.Size = new System.Drawing.Size(310, 51);
-			this.DD_ProfileUsage.TabIndex = 2;
-			this.DD_ProfileUsage.Text = "Usage";
-			this.DD_ProfileUsage.SelectedItemChanged += new System.EventHandler(this.T_ProfileUsage_SelectedValueChanged);
+			this.DD_PlaysetUsage.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.DD_PlaysetUsage.Location = new System.Drawing.Point(10, 46);
+			this.DD_PlaysetUsage.Name = "DD_ProfileUsage";
+			this.DD_PlaysetUsage.Size = new System.Drawing.Size(310, 51);
+			this.DD_PlaysetUsage.TabIndex = 2;
+			this.DD_PlaysetUsage.Text = "Usage";
+			this.DD_PlaysetUsage.SelectedItemChanged += new System.EventHandler(this.T_PlaysetUsage_SelectedValueChanged);
 			// 
 			// TLP_LaunchSettings
 			// 
@@ -942,21 +942,21 @@ partial class PC_PlaysetSettings
 			// 
 			// B_ViewProfiles
 			// 
-			this.B_ViewProfiles.AutoSize = true;
-			this.B_ViewProfiles.ColorShade = null;
-			this.B_ViewProfiles.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.B_ViewProfiles.Dock = System.Windows.Forms.DockStyle.Right;
+			this.B_ViewPlaysets.AutoSize = true;
+			this.B_ViewPlaysets.ColorShade = null;
+			this.B_ViewPlaysets.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.B_ViewPlaysets.Dock = System.Windows.Forms.DockStyle.Right;
 			dynamicIcon9.Name = "I_Pages";
-			this.B_ViewProfiles.ImageName = dynamicIcon9;
-			this.B_ViewProfiles.LargeImage = true;
-			this.B_ViewProfiles.Location = new System.Drawing.Point(1022, 10);
-			this.B_ViewProfiles.Margin = new System.Windows.Forms.Padding(10);
-			this.B_ViewProfiles.Name = "B_ViewProfiles";
-			this.B_ViewProfiles.Size = new System.Drawing.Size(150, 56);
-			this.B_ViewProfiles.SpaceTriggersClick = true;
-			this.B_ViewProfiles.TabIndex = 0;
-			this.B_ViewProfiles.Text = "ViewPlaysets";
-			this.B_ViewProfiles.Click += new System.EventHandler(this.B_LoadProfiles_Click);
+			this.B_ViewPlaysets.ImageName = dynamicIcon9;
+			this.B_ViewPlaysets.LargeImage = true;
+			this.B_ViewPlaysets.Location = new System.Drawing.Point(1022, 10);
+			this.B_ViewPlaysets.Margin = new System.Windows.Forms.Padding(10);
+			this.B_ViewPlaysets.Name = "B_ViewProfiles";
+			this.B_ViewPlaysets.Size = new System.Drawing.Size(150, 56);
+			this.B_ViewPlaysets.SpaceTriggersClick = true;
+			this.B_ViewPlaysets.TabIndex = 0;
+			this.B_ViewPlaysets.Text = "ViewPlaysets";
+			this.B_ViewPlaysets.Click += new System.EventHandler(this.B_LoadProfiles_Click);
 			// 
 			// PC_Profile
 			// 
@@ -968,12 +968,12 @@ partial class PC_PlaysetSettings
 			this.Size = new System.Drawing.Size(1182, 819);
 			this.Controls.SetChildIndex(this.TLP_Main, 0);
 			this.Controls.SetChildIndex(this.base_Text, 0);
-			this.TLP_ProfileName.ResumeLayout(false);
-			this.TLP_ProfileName.PerformLayout();
+			this.TLP_PlaysetName.ResumeLayout(false);
+			this.TLP_PlaysetName.PerformLayout();
 			this.TLP_Main.ResumeLayout(false);
 			this.TLP_Main.PerformLayout();
-			this.B_AddProfile.ResumeLayout(false);
-			this.B_TempProfile.ResumeLayout(false);
+			this.B_AddPlayset.ResumeLayout(false);
+			this.B_TempPlayset.ResumeLayout(false);
 			this.P_Options.ResumeLayout(false);
 			this.P_ScrollPanel.ResumeLayout(false);
 			this.P_ScrollPanel.PerformLayout();
@@ -994,18 +994,18 @@ partial class PC_PlaysetSettings
 
 	#endregion
 
-	private SlickControls.RoundedTableLayoutPanel TLP_ProfileName;
-	private System.Windows.Forms.Label L_CurrentProfile;
+	private SlickControls.RoundedTableLayoutPanel TLP_PlaysetName;
+	private System.Windows.Forms.Label L_CurrentPlayset;
 	private SlickControls.SlickIcon B_EditName;
-	private SlickControls.SlickIcon I_ProfileIcon;
+	private SlickControls.SlickIcon I_PlaysetIcon;
 	private System.Windows.Forms.TableLayoutPanel TLP_Main;
-	private System.Windows.Forms.Label L_TempProfile;
+	private System.Windows.Forms.Label L_TempPlayset;
 	private SlickControls.RoundedPanel P_Options;
 	private SlickControls.SlickScroll slickScroll;
 	private SlickControls.RoundedGroupTableLayoutPanel TLP_LaunchSettings;
 	private SlickControls.SlickCheckbox CB_LHT;
 	private SlickControls.SlickCheckbox CB_NoWorkshop;
-	private SlickControls.SlickIcon I_TempProfile;
+	private SlickControls.SlickIcon I_TempPlayset;
 	private SlickControls.RoundedGroupTableLayoutPanel TLP_GeneralSettings;
 	private SlickControls.SlickCheckbox CB_AutoSave;
 	private System.Windows.Forms.TableLayoutPanel TLP_Options;
@@ -1036,10 +1036,10 @@ partial class PC_PlaysetSettings
 	private SlickControls.SlickTextBox TB_CustomArgs;
 	private SlickControls.SlickCheckbox CB_NewAsset;
 	private SlickControls.SlickCheckbox CB_LoadAsset;
-	private PackageUsageSingleDropDown DD_ProfileUsage;
-	private SlickControls.SlickButton B_ViewProfiles;
-	private SlickControls.RoundedTableLayoutPanel B_TempProfile;
+	private PackageUsageSingleDropDown DD_PlaysetUsage;
+	private SlickControls.SlickButton B_ViewPlaysets;
+	private SlickControls.RoundedTableLayoutPanel B_TempPlayset;
 	private SlickControls.SlickIcon slickIcon1;
-	private SlickControls.RoundedTableLayoutPanel B_AddProfile;
+	private SlickControls.RoundedTableLayoutPanel B_AddPlayset;
 	private SlickControls.SlickIcon slickIcon2;
 }

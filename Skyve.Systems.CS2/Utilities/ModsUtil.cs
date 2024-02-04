@@ -17,7 +17,9 @@ namespace Skyve.Systems.CS2.Utilities;
 internal class ModsUtil : IModUtil
 {
 	private int currentPlayset;
+	private int currentHistoryIndex;
 	private Dictionary<int, Dictionary<ulong, bool>> modConfig = [];
+	private readonly List<Dictionary<int, Dictionary<ulong, bool>>> _modConfigHistory = [];
 	private readonly List<ulong> _enabling = [];
 
 	private readonly AssemblyUtil _assemblyUtil;
@@ -40,6 +42,7 @@ internal class ModsUtil : IModUtil
 
 		_notifier.CompatibilityDataLoaded += BuildLoadOrder;
 		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
+		_notifier.WorkshopSyncEnded += async () => await RefreshModConfig();
 	}
 
 	public bool IsEnabling(IPackageIdentity package)
@@ -54,6 +57,8 @@ internal class ModsUtil : IModUtil
 
 	private async Task RefreshModConfig()
 	{
+		SaveHistory();
+
 		var mods = await _workshopService.GetLocalPackages();
 
 		var config = new Dictionary<int, Dictionary<ulong, bool>>();
@@ -144,31 +149,14 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
+		SaveHistory();
+
 		await _workshopService.WaitUntilReady();
 
-		//foreach (var item in mods)
-		//{
-		//	if (item.Id <= 0)
-		//	{
-		//		continue;
-		//	}
-
-		//	if (!modConfig.ContainsKey(playset))
-		//	{
-		//		modConfig[playset] = [];
-		//	}
-
-		//	if (value)
-		//	{
-		//		modConfig[playset][item.Id] = !_settings.UserSettings.DisableNewModsByDefault;
-		//	}
-		//	else
-		//	{
-		//		modConfig[playset].Remove(item.Id);
-		//	}
-		//}
-
-		//_notifier.OnRefreshUI(true);
+		if (!modConfig.ContainsKey(playset))
+		{
+			modConfig[playset] = [];
+		}
 
 		mods = mods.Where(x => x.Id > 0 && IsIncluded(x, playset) != value);
 
@@ -200,27 +188,8 @@ internal class ModsUtil : IModUtil
 					modConfig[playset].Remove(item.Id);
 				}
 			}
-			//foreach (var item in mods)
-			//{
-			//	if (item.Id <= 0)
-			//	{
-			//		continue;
-			//	}
 
-			//	if (!modConfig.ContainsKey(playset))
-			//	{
-			//		modConfig[playset] = [];
-			//	}
-
-			//	if (value)
-			//	{
-			//		modConfig[playset].Remove(item.Id);
-			//	}
-			//	else
-			//	{
-			//		modConfig[playset][item.Id] = tempConfig.TryGet(item.Id);
-			//	}
-			//}
+			SaveHistory();
 		}
 
 		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
@@ -253,6 +222,8 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
+		SaveHistory();
+
 		mods = mods.AllWhere(x => x.Id > 0 && IsEnabled(x, playset) != value);
 
 		_enabling.AddRange(mods.Select(x => x.Id).Where(x => x > 0));
@@ -281,6 +252,8 @@ internal class ModsUtil : IModUtil
 
 				modConfig[playset][item.Id] = value;
 			}
+
+			SaveHistory();
 		}
 
 		_enabling.RemoveAll(x => mods.Any(y => y.Id == x));
@@ -337,5 +310,186 @@ internal class ModsUtil : IModUtil
 	public async Task Initialize()
 	{
 		await RefreshModConfig();
+	}
+
+	private void SaveHistory()
+	{
+		if (modConfig.Count == 0)
+		{
+			return;
+		}
+
+		var differentConfig = _modConfigHistory.Count == 0;
+		var config = modConfig.ToDictionary(x => x.Key, x => new Dictionary<ulong, bool>(x.Value));
+
+		if (_modConfigHistory.Count == 0 || AreConfigsDifferent(config, _modConfigHistory[0]))
+		{
+			_modConfigHistory.Insert(0, config);
+
+			currentHistoryIndex = 0;
+		}
+	}
+
+	private bool AreConfigsDifferent(Dictionary<int, Dictionary<ulong, bool>> config1, Dictionary<int, Dictionary<ulong, bool>> config2)
+	{
+		if (!config1.Keys.SequenceEqual(config2.Keys))
+		{
+			return true;
+		}
+
+		foreach (var key in config1.Keys)
+		{
+			if (!config1[key].SequenceEqual(config2[key]))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public async Task UndoChanges()
+	{
+		if (currentHistoryIndex + 1 < _modConfigHistory.Count && _modConfigHistory.Count > 0)
+		{
+			currentHistoryIndex++;
+
+			await ApplyModConfig(_modConfigHistory[currentHistoryIndex]);
+		}
+	}
+
+	public async Task RedoChanges()
+	{
+		if (currentHistoryIndex - 1 > 0 && _modConfigHistory.Count > 0)
+		{
+			currentHistoryIndex--;
+
+			await ApplyModConfig(_modConfigHistory[currentHistoryIndex]);
+		}
+	}
+
+	public async Task ApplyModConfig(Dictionary<int, Dictionary<ulong, bool>> modConfigNew)
+	{
+		var modConfigOld = modConfig;
+
+		var itemsToExclude = new List<(int, ulong)>();
+		var itemsToInclude = new List<(int, ulong)>();
+		var itemsToDisable = new List<(int, ulong)>();
+		var itemsToEnable = new List<(int, ulong)>();
+
+		await _workshopService.WaitUntilReady();
+
+		foreach (var key in modConfigNew.Keys)
+		{
+			if (!modConfigOld.TryGetValue(key, out var dic))
+			{
+				foreach (var item in modConfigNew[key])
+				{
+					itemsToInclude.Add((key, item.Key));
+
+					if (item.Value)
+					{
+						itemsToEnable.Add((key, item.Key));
+					}
+					else
+					{
+						itemsToDisable.Add((key, item.Key));
+					}
+				}
+
+				continue;
+			}
+
+			foreach (var item in modConfigNew[key])
+			{
+				if (!dic.TryGetValue(item.Key, out var enabled))
+				{
+					itemsToInclude.Add((key, item.Key));
+
+					if (item.Value)
+					{
+						itemsToEnable.Add((key, item.Key));
+					}
+					else
+					{
+						itemsToDisable.Add((key, item.Key));
+					}
+
+					continue;
+				}
+
+				if (enabled != item.Value)
+				{
+					if (item.Value)
+					{
+						itemsToEnable.Add((key, item.Key));
+					}
+					else
+					{
+						itemsToDisable.Add((key, item.Key));
+					}
+				}
+			}
+		}
+
+		foreach (var key in modConfigOld.Keys)
+		{
+			if (!modConfigNew.TryGetValue(key, out var dic))
+			{
+				foreach (var item in modConfigOld[key])
+				{
+					itemsToExclude.Add((key, item.Key));
+				}
+
+				continue;
+			}
+
+			foreach (var item in modConfigOld[key])
+			{
+				if (!dic.TryGetValue(item.Key, out var enabled))
+				{
+					itemsToExclude.Add((key, item.Key));
+				}
+			}
+		}
+
+		_enabling.AddRange(itemsToExclude.Select(x => x.Item2));
+		_enabling.AddRange(itemsToInclude.Select(x => x.Item2));
+		_enabling.AddRange(itemsToDisable.Select(x => x.Item2));
+		_enabling.AddRange(itemsToEnable.Select(x => x.Item2));
+
+		_notifier.OnRefreshUI(true);
+
+		await _workshopService.WaitUntilReady();
+
+		foreach (var grp in itemsToExclude.GroupBy(x => x.Item1))
+		{
+			await _subscriptionsManager.UnSubscribe(grp.Select(x => (IPackageIdentity)new GenericPackageIdentity(x.Item2)), grp.Key);
+		}
+
+		foreach (var grp in itemsToInclude.GroupBy(x => x.Item1))
+		{
+			await _subscriptionsManager.Subscribe(grp.Select(x => (IPackageIdentity)new GenericPackageIdentity(x.Item2)), grp.Key);
+		}
+
+		foreach (var grp in itemsToEnable.GroupBy(x => x.Item1))
+		{
+			await _workshopService.SetEnableBulk(grp.ToList(x => (int)x.Item2), grp.Key, true);
+		}
+
+		foreach (var grp in itemsToDisable.GroupBy(x => x.Item1))
+		{
+			await _workshopService.SetEnableBulk(grp.ToList(x => (int)x.Item2), grp.Key, false);
+		}
+
+		modConfig = modConfigNew.ToDictionary(x => x.Key, x => new Dictionary<ulong, bool>(x.Value));
+
+		_enabling.RemoveRange(itemsToExclude.Select(x => x.Item2));
+		_enabling.RemoveRange(itemsToInclude.Select(x => x.Item2));
+		_enabling.RemoveRange(itemsToDisable.Select(x => x.Item2));
+		_enabling.RemoveRange(itemsToEnable.Select(x => x.Item2));
+
+		_notifier.OnInclusionUpdated();
+		_notifier.OnRefreshUI(true);
 	}
 }

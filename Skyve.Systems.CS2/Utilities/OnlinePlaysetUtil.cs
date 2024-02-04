@@ -26,138 +26,142 @@ internal class OnlinePlaysetUtil : IOnlinePlaysetUtil
 
 	public async Task Share(IPlayset item)
 	{
-		try
-		{
-			var profile = (item as Playset)!;
-			var result = await _skyveApiUtil.SaveUserProfile(new()
-			{
-				Author = SteamUtil.GetLoggedInSteamId(),
-				Banner = profile.BannerBytes,
-				Color = profile.Color?.ToArgb(),
-				Name = item.Name,
-				ProfileUsage = (int)item.Usage,
-				ProfileId = profile.ProfileId,
-				Contents = profile.Assets.Concat(profile.Mods).Select(x => x.AsProfileContent()).ToArray()
-			});
+		//try
+		//{
+		//	var profile = (item as Playset)!;
+		//	var result = await _skyveApiUtil.SaveUserProfile(new()
+		//	{
+		//		Author = SteamUtil.GetLoggedInSteamId(),
+		//		Banner = profile.BannerBytes,
+		//		Color = profile.Color?.ToArgb(),
+		//		Name = item.Name,
+		//		ProfileUsage = (int)item.Usage,
+		//		ProfileId = profile.ProfileId,
+		//		Contents = profile.Assets.Concat(profile.Mods).Select(x => x.AsProfileContent()).ToArray()
+		//	});
 
-			if (result.Success)
-			{
-				profile.ProfileId = (int)Convert.ChangeType(result.Data, typeof(int));
-				profile.Author = SteamUtil.GetLoggedInSteamId();
+		//	if (result.Success)
+		//	{
+		//		profile.ProfileId = (int)Convert.ChangeType(result.Data, typeof(int));
+		//		//profile.Author = SteamUtil.GetLoggedInSteamId();
 
-				//_playsetManager.Save(item);
-			}
-			else
-			{
-				SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show((profile.ProfileId == 0 ? Locale.FailedToUploadPlayset : Locale.FailedToUpdatePlayset) + "\r\n\r\n" + LocaleHelper.GetGlobalText(result.Message), PromptButtons.OK, PromptIcons.Error, form: SystemsProgram.MainForm as SlickForm));
-			}
-		}
-		catch (Exception ex)
-		{
-			SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(ex, (item as Playset)!.ProfileId == 0 ? Locale.FailedToUploadPlayset : Locale.FailedToUpdatePlayset, form: SystemsProgram.MainForm as SlickForm));
-		}
+		//		//_playsetManager.Save(item);
+		//	}
+		//	else
+		//	{
+		//		SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show((profile.ProfileId == 0 ? Locale.FailedToUploadPlayset : Locale.FailedToUpdatePlayset) + "\r\n\r\n" + LocaleHelper.GetGlobalText(result.Message), PromptButtons.OK, PromptIcons.Error, form: SystemsProgram.MainForm as SlickForm));
+		//	}
+		//}
+		//catch (Exception ex)
+		//{
+		//	SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(ex, (item as Playset)!.ProfileId == 0 ? Locale.FailedToUploadPlayset : Locale.FailedToUpdatePlayset, form: SystemsProgram.MainForm as SlickForm));
+		//}
 	}
 
 	public async Task<bool> DownloadPlayset(ICustomPlayset item)
 	{
-		try
-		{
-			var profile = await _skyveApiUtil.GetUserProfileContents(item.ProfileId);
-			if (profile == null)
-			{
-				return false;
-			}
+		return false;
+		//try
+		//{
+		//	var profile = await _skyveApiUtil.GetUserProfileContents(item.ProfileId);
+		//	if (profile == null)
+		//	{
+		//		return false;
+		//	}
 
-			//var generatedProfile = (_playsetManager.Playsets.FirstOrDefault(x => x.Name?.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase) == true) ?? profile.CloneTo<IPlayset, Playset>()) as Playset;
+		//	//var generatedProfile = (_playsetManager.Playsets.FirstOrDefault(x => x.Name?.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase) == true) ?? profile.CloneTo<IPlayset, Playset>()) as Playset;
 
-			//generatedProfile!.Color = ((ICustomPlayset)profile).Color;
-			//generatedProfile.Author = profile.Author;
-			//generatedProfile.ProfileId = profile.ProfileId;
-			//generatedProfile.Usage = (Skyve.Domain.Enums.PackageUsage) (profile.ProfileUsage ?? -1);
-			//generatedProfile.BannerBytes = profile.Banner;
-			//generatedProfile.Assets = profile.Contents.Where(x => !x.IsCodeMod).ToList(x => new Playset.Asset(x));
-			//generatedProfile.Mods = profile.Contents.Where(x => x.IsCodeMod).ToList(x => new Playset.Mod(x));
+		//	//generatedProfile!.Color = ((ICustomPlayset)profile).Color;
+		//	//generatedProfile.Author = profile.Author;
+		//	//generatedProfile.ProfileId = profile.ProfileId;
+		//	//generatedProfile.Usage = (Skyve.Domain.Enums.PackageUsage) (profile.ProfileUsage ?? -1);
+		//	//generatedProfile.BannerBytes = profile.Banner;
+		//	//generatedProfile.Assets = profile.Contents.Where(x => !x.IsCodeMod).ToList(x => new Playset.Asset(x));
+		//	//generatedProfile.Mods = profile.Contents.Where(x => x.IsCodeMod).ToList(x => new Playset.Mod(x));
 
-			//_playsetManager.AddPlayset(generatedProfile);
+		//	//_playsetManager.AddPlayset(generatedProfile);
 
-			return true;// _playsetManager.Save(generatedProfile);
-		}
-		catch (Exception ex)
-		{
-			_logger.Exception(ex, "Failed to download profile");
+		//	return true;// _playsetManager.Save(generatedProfile);
+		//}
+		//catch (Exception ex)
+		//{
+		//	_logger.Exception(ex, "Failed to download profile");
 
-			return false;
-		}
+		//	return false;
+		//}
 	}
 
 	public async Task<bool> DownloadPlayset(string link)
 	{
-		try
-		{
-			var profile = await _skyveApiUtil.GetUserProfileByLink(link);
+		return false;
+		//try
+		//{
+		//	var profile = await _skyveApiUtil.GetUserProfileByLink(link);
 
-			//if (profile == null)
-			{
-				return false;
-			}
+		//	//if (profile == null)
+		//	{
+		//		return false;
+		//	}
 
-			//var generatedProfile = profile.CloneTo<IPlayset, Playset>();
+		//	//var generatedProfile = profile.CloneTo<IPlayset, Playset>();
 
-			//generatedProfile.Assets = profile.Contents.Where(x => !x.IsCodeMod).ToList(x => new Playset.Asset(x));
-			//generatedProfile.Mods = profile.Contents.Where(x => x.IsCodeMod).ToList(x => new Playset.Mod(x));
+		//	//generatedProfile.Assets = profile.Contents.Where(x => !x.IsCodeMod).ToList(x => new Playset.Asset(x));
+		//	//generatedProfile.Mods = profile.Contents.Where(x => x.IsCodeMod).ToList(x => new Playset.Mod(x));
 
-			//return true;// _playsetManager.Save(generatedProfile);
-		}
-		catch (Exception ex)
-		{
-			_logger.Exception(ex, "Failed to download profile");
+		//	//return true;// _playsetManager.Save(generatedProfile);
+		//}
+		//catch (Exception ex)
+		//{
+		//	_logger.Exception(ex, "Failed to download profile");
 
-			return false;
-		}
+		//	return false;
+		//}
 	}
 
 	public async Task<bool> SetVisibility(ICustomPlayset profile, bool @public)
 	{
-		try
-		{
-			var result = await _skyveApiUtil.SetProfileVisibility(profile.ProfileId, @public);
+		return false;
+		//try
+		//{
+		//	var result = await _skyveApiUtil.SetProfileVisibility(profile.ProfileId, @public);
 
-			if (!result.Success)
-			{
-				SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(Locale.FailedToUpdatePlayset + "\r\n\r\n" + LocaleHelper.GetGlobalText(result.Message), PromptButtons.OK, PromptIcons.Error, form: SystemsProgram.MainForm as SlickForm));
-			}
-			else
-			{
-				profile.Public = @public;
-				return true;//_playsetManager.Save(profile);
-			}
+		//	if (!result.Success)
+		//	{
+		//		SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(Locale.FailedToUpdatePlayset + "\r\n\r\n" + LocaleHelper.GetGlobalText(result.Message), PromptButtons.OK, PromptIcons.Error, form: SystemsProgram.MainForm as SlickForm));
+		//	}
+		//	else
+		//	{
+		//		profile.Public = @public;
+		//		return true;//_playsetManager.Save(profile);
+		//	}
 
-			return result.Success;
-		}
-		catch (Exception ex)
-		{
-			SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToUpdatePlayset, form: SystemsProgram.MainForm as SlickForm));
-			return false;
-		}
+		//	return result.Success;
+		//}
+		//catch (Exception ex)
+		//{
+		//	SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToUpdatePlayset, form: SystemsProgram.MainForm as SlickForm));
+		//	return false;
+		//}
 	}
 
 	public async Task<bool> DeleteOnlinePlayset(IOnlinePlayset profile)
 	{
-		try
-		{
-			var result = await _skyveApiUtil.DeleteUserProfile(profile.ProfileId);
+		return false;
+		//try
+		//{
+		//	var result = await _skyveApiUtil.DeleteUserProfile(profile.ProfileId);
 
-			if (!result.Success)
-			{
-				SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(Locale.FailedToDeletePlayset + "\r\n\r\n" + LocaleHelper.GetGlobalText(result.Message), PromptButtons.OK, PromptIcons.Error, form: SystemsProgram.MainForm as SlickForm));
-			}
+		//	if (!result.Success)
+		//	{
+		//		SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(Locale.FailedToDeletePlayset + "\r\n\r\n" + LocaleHelper.GetGlobalText(result.Message), PromptButtons.OK, PromptIcons.Error, form: SystemsProgram.MainForm as SlickForm));
+		//	}
 
-			return result.Success;
-		}
-		catch (Exception ex)
-		{
-			SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDeletePlayset, form: SystemsProgram.MainForm as SlickForm));
-			return false;
-		}
+		//	return result.Success;
+		//}
+		//catch (Exception ex)
+		//{
+		//	SystemsProgram.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDeletePlayset, form: SystemsProgram.MainForm as SlickForm));
+		//	return false;
+		//}
 	}
 }

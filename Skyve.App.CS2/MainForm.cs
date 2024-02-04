@@ -214,7 +214,6 @@ public partial class MainForm : BasePanelForm
 		var useGlow = !ConnectionHandler.IsConnected
 			|| (buttonStateRunning is not null && buttonStateRunning != isGameRunning)
 			|| isGameRunning
-			|| _playsetManager.CurrentPlayset?.UnsavedChanges == true
 			|| base_PB_Icon.HoverState.HasFlag(HoverState.Pressed);
 
 		e.Graphics.DrawImage(icon, base_PB_Icon.ClientRectangle);
@@ -232,11 +231,11 @@ public partial class MainForm : BasePanelForm
 				color = Color.FromArgb(194, 38, 33);
 			}
 
-			if (_playsetManager.CurrentPlayset?.UnsavedChanges == true)
-			{
-				minimum = 0;
-				color = Color.FromArgb(122, 81, 207);
-			}
+			//if (_playsetManager.CurrentPlayset?.UnsavedChanges == true)
+			//{
+			//	minimum = 0;
+			//	color = Color.FromArgb(122, 81, 207);
+			//}
 
 			if (buttonStateRunning is null && isGameRunning)
 			{
@@ -460,11 +459,6 @@ public partial class MainForm : BasePanelForm
 		SetPanel<PC_CompatibilityReport>(PI_Compatibility);
 	}
 
-	private void PI_ViewPlaysets_OnClick(object sender, MouseEventArgs e)
-	{
-		SetPanel<PC_PlaysetList>(PI_ViewPlaysets);
-	}
-
 	private void PI_AddPlayset_OnClick(object sender, MouseEventArgs e)
 	{
 		SetPanel<PC_PlaysetAdd>(PI_AddPlayset);
@@ -547,18 +541,13 @@ public partial class MainForm : BasePanelForm
 		PushPanel<PC_CompatibilityManagement>(PI_ManageAllCompatibility);
 	}
 
-	private void button1_Click(object sender, EventArgs e)
+	private void PI_PdxMods_OnClick(object sender, MouseEventArgs e)
 	{
-		ServiceCenter.Get<ISubscriptionsManager>().Subscribe([new GenericPackageIdentity(71208)]);
-	}
-
-	private void panelItem1_OnClick(object sender, MouseEventArgs e)
-	{
-		PushPanel<PC_WorkshopList>(PI_PdxMods);
+		SetPanel<PC_WorkshopList>(PI_PdxMods);
 	}
 
 	private void PI_Playsets_OnClick(object sender, MouseEventArgs e)
 	{
-		PushPanel<PC_PlaysetList>(PI_Playsets);
+		SetPanel<PC_PlaysetList>(PI_Playsets);
 	}
 }

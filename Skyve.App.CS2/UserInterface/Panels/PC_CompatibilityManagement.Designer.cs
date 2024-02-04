@@ -2,7 +2,7 @@
 using Skyve.App.UserInterface.Dropdowns;
 using Skyve.App.UserInterface.Lists;
 
-namespace Skyve.App.UserInterface.Panels;
+namespace Skyve.App.CS2.UserInterface.Panels;
 
 partial class PC_CompatibilityManagement
 {

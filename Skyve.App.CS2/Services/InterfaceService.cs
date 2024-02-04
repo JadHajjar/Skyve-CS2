@@ -40,4 +40,9 @@ internal class InterfaceService : IAppInterfaceService
 	{
 		new ParadoxLoginForm().ShowDialog(App.Program.MainForm);
 	}
+
+	PanelContent IAppInterfaceService.NewPlaysetPanel()
+	{
+		return new PC_PlaysetAdd();
+	}
 }

@@ -70,7 +70,7 @@ public class SteamUser : IDynamicSql
 	{
 		thumbnail = imageService.GetImage(thumbnailUrl = AvatarUrl, true).Result;
 
-		return thumbnail is not null;
+		return true;
 	}
 #endif
 }

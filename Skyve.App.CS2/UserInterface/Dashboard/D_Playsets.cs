@@ -1,10 +1,7 @@
 ﻿using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Dashboard;
-using Skyve.Domain.CS2.Content;
-using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
@@ -47,7 +44,7 @@ internal class D_Playsets : IDashboardItem
 		});
 	}
 
-	private void SwitchTo(ICustomPlayset item)
+	private void SwitchTo(IPlayset item)
 	{
 		Enabled = false;
 		Loading = true;
@@ -67,7 +64,7 @@ internal class D_Playsets : IDashboardItem
 
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, e.ClipRectangle.ClipTo(mainSectionHeight), _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentPlayset?.GetIcon() ?? "I_Playsets", out var fore, ref preferredHeight, _playsetManager.CurrentPlayset?.Color ?? FormDesign.Design.MenuColor, Locale.ActivePlayset);
+		DrawSection(e, applyDrawing, e.ClipRectangle.ClipTo(mainSectionHeight), _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentCustomPlayset?.GetIcon() ?? "I_Playsets", out var fore, ref preferredHeight, _playsetManager.CurrentCustomPlayset?.Color ?? FormDesign.Design.MenuColor, Locale.ActivePlayset);
 
 		//var cs2Playset = (Playset)_playsetManager.CurrentPlayset;
 
@@ -129,7 +126,7 @@ internal class D_Playsets : IDashboardItem
 			Rectangle = e.ClipRectangle
 		});
 
-		var favs = _playsetManager.Playsets.AllWhere(x => x.IsFavorite);
+		var favs = _playsetManager.Playsets.AllWhere(x => x.GetCustomPlayset().IsFavorite);
 
 		if (favs.Count == 0)
 		{
@@ -144,17 +141,17 @@ internal class D_Playsets : IDashboardItem
 		using var font = UI.Font(9.75F);
 		using var fontBold = UI.Font(9.75F, FontStyle.Bold);
 
-		foreach (var item in favs.OrderByDescending(x => x.DateUsed))
+		foreach (var item in favs.OrderByDescending(x => x.GetCustomPlayset().DateUsed))
 		{
 			var args = new ButtonDrawArgs()
 			{
 				Text = item.Name,
 				Font = _playsetManager.CurrentPlayset == item ? fontBold : font,
-				Icon = item.GetIcon(),
-				BackColor = item.Color ?? default,
+				Icon = item.GetCustomPlayset().GetIcon(),
+				BackColor = item.GetCustomPlayset().Color ?? default,
 				Rectangle = e.ClipRectangle.Pad(2),
 				BorderRadius = Padding.Left,
-				ButtonType = item.Color == null ? ButtonType.Normal : ButtonType.Active
+				ButtonType = item.GetCustomPlayset().Color == null ? ButtonType.Normal : ButtonType.Active
 			};
 
 			DrawButton(e, applyDrawing, ref preferredHeight, () => SwitchTo(item), args);

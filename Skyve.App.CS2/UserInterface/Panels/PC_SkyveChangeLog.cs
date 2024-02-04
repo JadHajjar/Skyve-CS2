@@ -22,7 +22,7 @@ internal class PC_SkyveChangeLog : PC_Changelog
 		{
 			var current = changeLogs.First();
 
-            System.Windows.Forms.Clipboard.SetText($"# :skyve: Skyve v{current.VersionString}{(current.Stable ? " [Stable]" : "")}{(current.Beta ? " [Beta]" : "")}\r\n"
+			System.Windows.Forms.Clipboard.SetText($"# :skyve: Skyve v{current.VersionString}{(current.Stable ? " [Stable]" : "")}{(current.Beta ? " [Beta]" : "")}\r\n"
 				+ (string.IsNullOrEmpty(current.Tagline) ? string.Empty : $"### *{current.Tagline}*\r\n")
 				+ current.ChangeGroups.ListStrings(x => $"## {x.Name}\r\n{x.Changes.ListStrings(y => $"* {y}", "\r\n")}", "\r\n\r\n"));
 		}

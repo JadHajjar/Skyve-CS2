@@ -9,7 +9,7 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 {
-	private bool loadingProfile;
+	private bool loadingPlayset;
 	private readonly SlickCheckbox[] _launchOptions;
 
 	private readonly IPlaysetManager _playsetManager;
@@ -29,10 +29,10 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 		_launchOptions = new[] { CB_StartNewGame, CB_LoadSave, CB_NewAsset, CB_LoadAsset };
 
-		SlickTip.SetTo(B_AddProfile.Controls[0], "NewPlayset_Tip");
-		SlickTip.SetTo(B_TempProfile.Controls[0], "TempPlayset_Tip");
-		SlickTip.SetTo(B_ViewProfiles, "ViewPlayset_Tip");
-		SlickTip.SetTo(I_ProfileIcon, "ChangePlaysetColor");
+		SlickTip.SetTo(B_AddPlayset.Controls[0], "NewPlayset_Tip");
+		SlickTip.SetTo(B_TempPlayset.Controls[0], "TempPlayset_Tip");
+		SlickTip.SetTo(B_ViewPlaysets, "ViewPlayset_Tip");
+		SlickTip.SetTo(I_PlaysetIcon, "ChangePlaysetColor");
 		SlickTip.SetTo(B_EditName, "EditPlaysetName");
 		SlickTip.SetTo(B_Save, "SavePlaysetChanges");
 
@@ -44,7 +44,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 			}
 		}
 
-		LoadProfile(_playsetManager.CurrentPlayset as Playset);
+		LoadPlayset(_playsetManager.CurrentPlayset as Playset);
 
 		var saveGameTag = new ITag[] { new TagItem(TagSource.InGame, "SaveGame", "SaveGame") };
 		var mapTag = new ITag[] { new TagItem(TagSource.InGame, "Map", "Map") };
@@ -86,26 +86,26 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 	private void ProfileManager_ProfileChanged()
 	{
-		this.TryInvoke(() => LoadProfile(_playsetManager.CurrentPlayset as Playset));
+		this.TryInvoke(() => LoadPlayset(_playsetManager.CurrentPlayset as Playset));
 	}
 
 	protected override void LocaleChanged()
 	{
 		Text = Locale.ActivePlayset;
-		DD_ProfileUsage.Text = Locale.PlaysetUsage;
+		DD_PlaysetUsage.Text = Locale.PlaysetUsage;
 	}
 
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
-		slickIcon1.Size = slickIcon2.Size = B_EditName.Size = B_Save.Size = I_ProfileIcon.Size = I_Info.Size = I_TempProfile.Size = I_Favorite.Size = UI.Scale(new Size(24, 24), UI.FontScale) + new Size(8, 8);
+		slickIcon1.Size = slickIcon2.Size = B_EditName.Size = B_Save.Size = I_PlaysetIcon.Size = I_Info.Size = I_TempPlayset.Size = I_Favorite.Size = UI.Scale(new Size(24, 24), UI.FontScale) + new Size(8, 8);
 		slickSpacer1.Height = (int)(1.5 * UI.FontScale);
 		P_Options.Padding = UI.Scale(new Padding(5, 0, 5, 0), UI.UIScale);
-		slickSpacer1.Margin = B_TempProfile.Padding = B_AddProfile.Padding = TLP_ProfileName.Padding = P_Options.Margin = UI.Scale(new Padding(5), UI.UIScale);
-		L_TempProfile.Font = UI.Font(10.5F);
-		L_CurrentProfile.Font = UI.Font(12.75F, FontStyle.Bold);
-		B_ViewProfiles.Font = UI.Font(9.75F);
+		slickSpacer1.Margin = B_TempPlayset.Padding = B_AddPlayset.Padding = TLP_PlaysetName.Padding = P_Options.Margin = UI.Scale(new Padding(5), UI.UIScale);
+		L_TempPlayset.Font = UI.Font(10.5F);
+		L_CurrentPlayset.Font = UI.Font(12.75F, FontStyle.Bold);
+		B_ViewPlaysets.Font = UI.Font(9.75F);
 		TLP_AdvancedDev.Margin = TLP_GeneralSettings.Margin = TLP_LaunchSettings.Margin = TLP_LSM.Margin = UI.Scale(new Padding(10), UI.UIScale);
 	}
 
@@ -113,15 +113,15 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 	{
 		base.DesignChanged(design);
 
-		B_TempProfile.BackColor = B_AddProfile.BackColor = FormDesign.Design.ButtonColor;
+		B_TempPlayset.BackColor = B_AddPlayset.BackColor = FormDesign.Design.ButtonColor;
 		TLP_LaunchSettings.BackColor = TLP_AdvancedDev.BackColor = TLP_GeneralSettings.BackColor = TLP_LSM.BackColor = design.BackColor.Tint(Lum: design.IsDarkTheme ? 1 : -1);
-		L_TempProfile.ForeColor = design.YellowColor;
+		L_TempPlayset.ForeColor = design.YellowColor;
 		P_Options.BackColor = design.AccentBackColor;
 	}
 
 	public override bool CanExit(bool toBeDisposed)
 	{
-		if (I_ProfileIcon.Loading)
+		if (I_PlaysetIcon.Loading)
 		{
 			if (toBeDisposed)
 			{
@@ -144,47 +144,47 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		return true;
 	}
 
-	internal void Ctrl_LoadProfile(ICustomPlayset obj)
+	internal void Ctrl_LoadPlayset(IPlayset obj)
 	{
-		I_ProfileIcon.Loading = true;
-		L_CurrentProfile.Text = obj.Name;
+		I_PlaysetIcon.Loading = true;
+		L_CurrentPlayset.Text = obj.Name;
 		TLP_Options.Enabled = B_EditName.Visible = B_Save.Visible = false;
 		_playsetManager.SetCurrentPlayset(obj);
 	}
 
-	private void LoadProfile(Playset? profile)
+	private void LoadPlayset(Playset? playset)
 	{
-		if (profile == null)
+		if (playset == null)
 		{
 			return;
 		}
 
-		loadingProfile = true;
+		loadingPlayset = true;
+		var customPlayset = playset.GetCustomPlayset();
 
-		TLP_ProfileName.BackColor = profile.Color ?? FormDesign.Design.ButtonColor;
-		TLP_ProfileName.ForeColor = TLP_ProfileName.BackColor.GetTextColor();
-		I_ProfileIcon.ImageName = profile.GetIcon();
-		I_Favorite.ImageName = profile.IsFavorite ? "I_StarFilled" : "I_Star";
-		L_TempProfile.Visible = I_TempProfile.Visible = profile.Temporary;
-		B_TempProfile.Visible = !profile.Temporary;
-		I_Favorite.Visible = I_ProfileIcon.Enabled = L_Info.Visible = I_Info.Visible = !profile.Temporary;
+		TLP_PlaysetName.BackColor = customPlayset.Color ?? FormDesign.Design.ButtonColor;
+		TLP_PlaysetName.ForeColor = TLP_PlaysetName.BackColor.GetTextColor();
+		I_PlaysetIcon.ImageName = customPlayset.GetIcon();
+		I_Favorite.ImageName = customPlayset.IsFavorite ? "I_StarFilled" : "I_Star";
+		L_TempPlayset.Visible = I_TempPlayset.Visible = playset.Temporary;
+		B_TempPlayset.Visible = !playset.Temporary;
+		I_Favorite.Visible = I_PlaysetIcon.Enabled = L_Info.Visible = I_Info.Visible = !playset.Temporary;
 		TLP_Options.Enabled = true;
-		TLP_GeneralSettings.Visible = !profile.Temporary;
+		TLP_GeneralSettings.Visible = !playset.Temporary;
 
-		SlickTip.SetTo(I_Favorite, profile.IsFavorite ? "UnFavoriteThisPlayset" : "FavoriteThisPlayset");
+		SlickTip.SetTo(I_Favorite, customPlayset.IsFavorite ? "UnFavoriteThisPlayset" : "FavoriteThisPlayset");
 
-		TLP_Main.SetColumn(B_TempProfile, profile.Temporary ? 4 : 3);
-		TLP_Main.SetColumn(B_AddProfile, profile.Temporary ? 3 : 4);
+		TLP_Main.SetColumn(B_TempPlayset, playset.Temporary ? 4 : 3);
+		TLP_Main.SetColumn(B_AddPlayset, playset.Temporary ? 3 : 4);
 
-		TLP_Options.SetRow(TLP_GeneralSettings, profile.Temporary ? 2 : 0);
-		TLP_Options.SetRow(TLP_LSM, profile.Temporary ? 0 : 1);
+		TLP_Options.SetRow(TLP_GeneralSettings, playset.Temporary ? 2 : 0);
+		TLP_Options.SetRow(TLP_LSM, playset.Temporary ? 0 : 1);
 
-		B_EditName.Visible = B_Save.Visible = !profile.Temporary && !TB_Name.Visible;
+		B_EditName.Visible = B_Save.Visible = !playset.Temporary && !TB_Name.Visible;
 
-		I_ProfileIcon.Loading = false;
-		L_CurrentProfile.Text = profile.Name;
-		CB_AutoSave.Checked = profile.AutoSave;
-		DD_ProfileUsage.SelectedItem = profile.Usage > 0 ? profile.Usage : (PackageUsage)(-1);
+		I_PlaysetIcon.Loading = false;
+		L_CurrentPlayset.Text = playset.Name;
+		DD_PlaysetUsage.SelectedItem = customPlayset.Usage > 0 ? customPlayset.Usage : (PackageUsage)(-1);
 
 		//CB_NoWorkshop.Checked = profile.LaunchSettings.NoWorkshop;
 		//CB_NoAssets.Checked = profile.LaunchSettings.NoAssets;
@@ -212,7 +212,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		DD_SkipFile.Enabled = CB_SkipFile.Checked;
 		DD_NewMap.Enabled = CB_StartNewGame.Checked;
 
-		loadingProfile = false;
+		loadingPlayset = false;
 	}
 
 	private void ValueChanged(object sender, EventArgs e)
@@ -221,7 +221,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		DD_SkipFile.Enabled = CB_SkipFile.Checked;
 		DD_NewMap.Enabled = CB_StartNewGame.Checked;
 
-		if (loadingProfile)
+		if (loadingPlayset)
 		{
 			return;
 		}
@@ -241,8 +241,8 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 		var playset = (_playsetManager.CurrentPlayset as Playset)!;
 
-		playset.AutoSave = CB_AutoSave.Checked;
-		playset.Usage = DD_ProfileUsage.SelectedItem;
+		//playset.AutoSave = CB_AutoSave.Checked;
+		//playset.Usage = DD_PlaysetUsage.SelectedItem;
 
 		//playset.LaunchSettings.NoWorkshop = CB_NoWorkshop.Checked;
 		//playset.LaunchSettings.NoAssets = CB_NoAssets.Checked;
@@ -271,7 +271,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 	private void B_LoadProfiles_Click(object sender, EventArgs e)
 	{
-		if (!I_ProfileIcon.Loading)
+		if (!I_PlaysetIcon.Loading)
 		{
 			Form.PushPanel(new PC_PlaysetList());
 		}
@@ -291,8 +291,8 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 	{
 		TB_Name.Visible = true;
 		B_EditName.Visible = B_Save.Visible = false;
-		L_CurrentProfile.Visible = false;
-		TB_Name.Text = L_CurrentProfile.Text;
+		L_CurrentPlayset.Visible = false;
+		TB_Name.Text = L_CurrentPlayset.Text;
 
 		this.TryBeginInvoke(() =>
 		{
@@ -344,7 +344,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		{
 			TB_Name.Visible = false;
 			B_EditName.Visible = B_Save.Visible = true;
-			L_CurrentProfile.Visible = true;
+			L_CurrentPlayset.Visible = true;
 			return;
 		}
 
@@ -358,26 +358,26 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		{
 		}
 
-		L_CurrentProfile.Text = _playsetManager.CurrentPlayset.Name;
+		L_CurrentPlayset.Text = _playsetManager.CurrentPlayset.Name;
 		TB_Name.Visible = false;
 		B_EditName.Visible = B_Save.Visible = true;
-		L_CurrentProfile.Visible = true;
+		L_CurrentPlayset.Visible = true;
 	}
 
-	private void T_ProfileUsage_SelectedValueChanged(object sender, EventArgs e)
+	private void T_PlaysetUsage_SelectedValueChanged(object sender, EventArgs e)
 	{
-		if (loadingProfile)
+		if (loadingPlayset)
 		{
 			return;
 		}
 
-		var invalidPackages = _playsetManager.GetInvalidPackages(DD_ProfileUsage.SelectedItem);
+		var invalidPackages = _playsetManager.GetInvalidPackages(DD_PlaysetUsage.SelectedItem);
 
 		if (invalidPackages.Any())
 		{
 			if (ShowPrompt($"{Locale.SomePackagesWillBeDisabled}\r\n{Locale.AffectedPackagesAre}\r\n• {invalidPackages.ListStrings("\r\n• ")}", PromptButtons.OKCancel, PromptIcons.Warning) == DialogResult.Cancel)
 			{
-				DD_ProfileUsage.SelectedItem = (PackageUsage)(-1);
+				DD_PlaysetUsage.SelectedItem = (PackageUsage)(-1);
 
 				return;
 			}
@@ -387,12 +387,12 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 		ValueChanged(sender, e);
 
-		I_ProfileIcon.Image = _playsetManager.CurrentPlayset.GetIcon();
+		I_PlaysetIcon.Image = _playsetManager.CurrentCustomPlayset?.GetIcon();
 	}
 
 	private void LsmSettingsChanged(object sender, EventArgs e)
 	{
-		if (loadingProfile)
+		if (loadingPlayset)
 		{
 			return;
 		}
@@ -404,19 +404,19 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 	private void B_Save_Click(object sender, EventArgs e)
 	{
-		if (_playsetManager.CurrentPlayset.Save())
-		{
-			B_Save.ImageName = "I_Check";
+		//if (_playsetManager.CurrentPlayset.Save())
+		//{
+		//	B_Save.ImageName = "I_Check";
 
-			new BackgroundAction(() =>
-			{
-				B_Save.ImageName = "I_Save";
-			}).RunIn(2000);
-		}
-		else
-		{
-			ShowPrompt(Locale.CouldNotCreatePlayset, icon: PromptIcons.Error);
-		}
+		//	new BackgroundAction(() =>
+		//	{
+		//		B_Save.ImageName = "I_Save";
+		//	}).RunIn(2000);
+		//}
+		//else
+		//{
+		//	ShowPrompt(Locale.CouldNotCreatePlayset, icon: PromptIcons.Error);
+		//}
 	}
 
 	private void B_TempProfile_Click(object sender, EventArgs e)
@@ -442,23 +442,23 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		ValueChanged(DD_NewMap, EventArgs.Empty);
 	}
 
-	private void I_ProfileIcon_Click(object sender, EventArgs e)
+	private void I_PlaysetIcon_Click(object sender, EventArgs e)
 	{
 		if (_playsetManager.CurrentPlayset.Temporary)
 		{
 			return;
 		}
 
-		var colorDialog = new SlickColorPicker(_playsetManager.CurrentPlayset.Color ?? Color.Red);
+		var colorDialog = new SlickColorPicker(_playsetManager.CurrentCustomPlayset.Color ?? Color.Red);
 
 		if (colorDialog.ShowDialog() != DialogResult.OK)
 		{
 			return;
 		}
 
-		TLP_ProfileName.BackColor = colorDialog.Color;
-		TLP_ProfileName.ForeColor = TLP_ProfileName.BackColor.GetTextColor();
-		_playsetManager.CurrentPlayset.Color = colorDialog.Color;
+		TLP_PlaysetName.BackColor = colorDialog.Color;
+		TLP_PlaysetName.ForeColor = TLP_PlaysetName.BackColor.GetTextColor();
+		_playsetManager.CurrentCustomPlayset.Color = colorDialog.Color;
 		//_playsetManager.Save(_playsetManager.CurrentPlayset);
 	}
 
@@ -469,15 +469,15 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 			return;
 		}
 
-		_playsetManager.CurrentPlayset.IsFavorite = !_playsetManager.CurrentPlayset.IsFavorite;
+		_playsetManager.CurrentCustomPlayset.IsFavorite = !_playsetManager.CurrentCustomPlayset.IsFavorite;
 		//_playsetManager.Save(_playsetManager.CurrentPlayset);
 
-		I_Favorite.ImageName = _playsetManager.CurrentPlayset.IsFavorite ? "I_StarFilled" : "I_Star";
-		SlickTip.SetTo(I_Favorite, _playsetManager.CurrentPlayset.IsFavorite ? "UnFavoriteThisPlayset" : "FavoriteThisPlayset");
+		I_Favorite.ImageName = _playsetManager.CurrentCustomPlayset.IsFavorite ? "I_StarFilled" : "I_Star";
+		SlickTip.SetTo(I_Favorite, _playsetManager.CurrentCustomPlayset.IsFavorite ? "UnFavoriteThisPlayset" : "FavoriteThisPlayset");
 	}
 
-	public override void LoadProfile(ICustomPlayset customPlayset)
+	public override void LoadPlayset(IPlayset customPlayset)
 	{
-		Ctrl_LoadProfile(customPlayset);
+		Ctrl_LoadPlayset(customPlayset);
 	}
 }
