@@ -169,11 +169,11 @@ internal class ContentManager : IContentManager
 
 		var subscribedItems = await _workshopService.GetLocalPackages();
 
-		foreach (var mod in subscribedItems)
+		foreach (var mod in subscribedItems.OrderBy(x => x.LocalData is null).Distinct(x => x.Id))
 		{
 			if (mod.LocalData is null)
 			{
-				packages.Add(new PdxPackage(mod));
+				//packages.Add(new PdxPackage(mod));
 			}
 			else if (mod.LocalData.LocalType == LocalType.Subscribed)
 			{

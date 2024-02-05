@@ -237,7 +237,7 @@ internal class ModsUtil : IModUtil
 			modConfig[playset] = [];
 		}
 
-		var modKeys = mods.ToList(x => (int)x.Id);
+		var modKeys = mods.ToList(x => (int)x.Id).DistinctList();
 
 		var result = await _workshopService.SetEnableBulk(modKeys, playset, value);
 

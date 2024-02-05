@@ -37,6 +37,8 @@ internal class WorkshopService : IWorkshopService
 
 	private bool loginWaitingConnection;
 	private List<ITag>? cachedTags;
+	private ulong currentTicket;
+	private ulong processedTicket;
 
 	private IContext? Context { get; set; }
 	public bool IsAvailable => Context is not null;
@@ -416,9 +418,29 @@ internal class WorkshopService : IWorkshopService
 
 	public async Task WaitUntilReady()
 	{
-		while (!IsReady)
+		ulong ticket;
+
+		lock (this)
 		{
+			ticket = ++currentTicket;
+		}
+
+		while (true)
+		{
+			lock (this)
+			{
+				if (ticket == processedTicket + 1 && IsReady)
+				{
+					break;
+				}
+			}
+
 			await Task.Delay(50);
+		}
+
+		lock (this)
+		{
+			processedTicket++;
 		}
 	}
 

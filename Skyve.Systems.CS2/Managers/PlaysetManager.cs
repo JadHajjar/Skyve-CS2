@@ -19,8 +19,8 @@ using System.Windows.Forms;
 namespace Skyve.Systems.CS2.Managers;
 internal class PlaysetManager : IPlaysetManager
 {
-	private readonly List<ICustomPlayset> _customPlaysets = [];
-	private readonly List<IPlayset> _playsets = [];
+	private readonly Dictionary<int, ICustomPlayset> _customPlaysets = [];
+	private readonly Dictionary<int, IPlayset> _playsets = [];
 
 	public IPlayset? CurrentPlayset { get; internal set; }
 	public ICustomPlayset? CurrentCustomPlayset { get; internal set; }
@@ -32,7 +32,7 @@ internal class PlaysetManager : IPlaysetManager
 
 			lock (_playsets)
 			{
-				playsets = new(_playsets);
+				playsets = new(_playsets.Values);
 			}
 
 			foreach (var playset in playsets)
@@ -101,7 +101,7 @@ internal class PlaysetManager : IPlaysetManager
 		{
 			lock (_playsets)
 			{
-				_playsets.Remove(playset);
+				_playsets.Remove(playset.Id);
 			}
 
 			await RefreshCurrentPlayset();
@@ -121,12 +121,13 @@ internal class PlaysetManager : IPlaysetManager
 		lock (_playsets)
 		{
 			if (activePlayset > 0)
-		{
-				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == activePlayset);
+			{
+				CurrentPlayset = _playsets.TryGet(activePlayset);
 				CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
 			}
 			else
-			{ CurrentPlayset = null;
+			{
+				CurrentPlayset = null;
 				CurrentCustomPlayset = null;
 			}
 		}
@@ -208,15 +209,38 @@ internal class PlaysetManager : IPlaysetManager
 	{
 		try
 		{
+			var customPlaysets = new List<ICustomPlayset>();
 			var playsets = await _workshopService.GetPlaysets(!ConnectionHandler.IsConnected || !_notifier.IsPlaysetsLoaded);
 			var activePlayset = await _workshopService.GetActivePlaysetId();
+
+			foreach (var item in playsets)
+			{
+				ISave.Load(out ExtendedPlayset playset, CrossIO.Combine("Playsets", $"{item.Id}.json"));
+
+				if (playset is not null)
+				{
+					playset.Playset = item;
+
+					customPlaysets.Add(playset);
+				}
+			}
 
 			lock (_playsets)
 			{
 				_playsets.Clear();
-				_playsets.AddRange(playsets);
+				_customPlaysets.Clear();
 
-				CurrentPlayset = _playsets.FirstOrDefault(x => x.Id == activePlayset);
+				foreach (var item in playsets)
+				{
+					_playsets[item.Id] = item;
+				}
+
+				foreach (var item in customPlaysets)
+				{
+					_customPlaysets[item.Id] = item;
+				}
+
+				CurrentPlayset = _playsets.TryGet(activePlayset);
 				CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
 			}
 
@@ -279,7 +303,7 @@ internal class PlaysetManager : IPlaysetManager
 	{
 		lock (_playsets)
 		{
-			_playsets.Add(newPlayset);
+			_playsets[newPlayset.Id] = newPlayset;
 		}
 
 		_notifier.OnPlaysetUpdated();
@@ -366,12 +390,18 @@ internal class PlaysetManager : IPlaysetManager
 
 	public IPlayset? GetPlayset(int id)
 	{
-		return _playsets.FirstOrDefault(x => x.Id == id);
+		lock (_playsets)
+		{
+			return _playsets.TryGet(id);
+		}
 	}
 
 	public ICustomPlayset GetCustomPlayset(IPlayset playset)
 	{
-		return _customPlaysets.FirstOrDefault(x => x.Id == playset.Id) ?? new ExtendedPlayset(playset);
+		lock (_playsets)
+		{
+			return _customPlaysets.TryGet(playset.Id) ?? new ExtendedPlayset(playset);
+		}
 	}
 
 	public async Task DeactivateActivePlayset()
@@ -382,5 +412,15 @@ internal class PlaysetManager : IPlaysetManager
 		CurrentCustomPlayset = null;
 
 		_notifier.OnPlaysetChanged();
+	}
+
+	public void Save(ICustomPlayset customPlayset)
+	{
+		ISave.Save(customPlayset, CrossIO.Combine("Playsets", $"{customPlayset.Id}.json"));
+
+		lock (_playsets)
+		{
+			_customPlaysets[customPlayset.Id] = customPlayset;
+		}
 	}
 }

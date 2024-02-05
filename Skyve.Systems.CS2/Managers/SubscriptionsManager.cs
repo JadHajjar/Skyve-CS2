@@ -1,4 +1,6 @@
-﻿using Skyve.Domain;
+﻿using Extensions;
+
+using Skyve.Domain;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
@@ -104,7 +106,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		await _workshopService.WaitUntilReady();
 
 		var result = await _workshopService.SubscribeBulk(
-			ids.Select(x => new KeyValuePair<int, string?>((int)x.Id, null)).Where(x => x.Key > 0),
+			ids.Distinct(x => x.Id).Select(x => new KeyValuePair<int, string?>((int)x.Id, null)),
 			currentPlayset,
 			!_settings.UserSettings.DisableNewModsByDefault);
 
@@ -139,7 +141,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		await _workshopService.WaitUntilReady();
 
-		var result = await _workshopService.UnsubscribeBulk(ids.Select(x => (int)x.Id), currentPlayset);
+		var result = await _workshopService.UnsubscribeBulk(ids.Distinct(x => x.Id).Select(x => (int)x.Id), currentPlayset);
 
 		foreach (var item in ids)
 		{

@@ -1,4 +1,6 @@
-﻿using Skyve.Domain.Enums;
+﻿using Newtonsoft.Json;
+
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
@@ -22,14 +24,12 @@ public class ExtendedPlayset : ICustomPlayset
 		Id = playset.Id;
 	}
 
-	public IPlayset? Playset { get; set; }
 	public int Id { get; set; }
 	public DateTime DateUsed { get; set; }
 	public DateTime DateCreated { get; set; }
 	public PackageUsage Usage { get; set; }
 	public Color? Color { get; set; }
 	public bool IsFavorite { get; set; }
-	public IOnlinePlayset? OnlineInfo { get; set; }
 	public byte[]? BannerBytes
 	{
 		get => _bannerBytes;
@@ -40,6 +40,11 @@ public class ExtendedPlayset : ICustomPlayset
 			_banner = null;
 		}
 	}
+
+	[JsonIgnore]
+	public IPlayset? Playset { get; set; }
+	[JsonIgnore]
+	public IOnlinePlayset? OnlineInfo { get; set; }
 
 	bool IThumbnailObject.GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
@@ -55,7 +60,6 @@ public class ExtendedPlayset : ICustomPlayset
 			using var ms = new MemoryStream(BannerBytes);
 
 			thumbnail = _banner = new Bitmap(ms);
-
 		}
 		else if (Playset is not null)
 		{
