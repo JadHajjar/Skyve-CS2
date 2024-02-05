@@ -40,15 +40,15 @@
   "PackageIsIncomplete": "O tamanho local do '{0}' ({1}) é diferente do PDX Mods' {2}",
   "OpenCitiesAppData": "Abrir pasta do C:S II em AppData",
   "ResetSteamCache": "Limpar cache dos mods em PDX",
-  "ParadoxLoginFailedTitle": "Could not log you in to PDX Mods",
-  "ParadoxLoginFailedNoConnection": "You're not connected to the internet, please check your connection and click here to try again.",
-  "ParadoxLoginFailedBadCredentials": "Your saved username/password failed to log in. Click here to update your information.",
-  "ParadoxLoginFailedEmpty": "Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.",
+  "ParadoxLoginFailedTitle": "Não foi possível fazer login nos Mods PDX",
+  "ParadoxLoginFailedNoConnection": "Você não está conectado à internet, por favor verifique sua conexão e clique aqui para tentar novamente.",
+  "ParadoxLoginFailedBadCredentials": "Não foi possível acessar seu usuário/senha salvos. Clique aqui para atualizar seus dados.",
+  "ParadoxLoginFailedEmpty": "A sua sessão provavelmente expirou. Tente iniciar o jogo para entrar novamente, ou clique aqui para entrar pelo Skyve.",
   "DownloadComplete": "Baixado com sucesso",
   "Downloading": "Baixando...",
   "ModDownloadFailed": "'{0}' falha no download",
-  "LoginToParadox": "Log in to Paradox",
-  "LoginFailed": "Login failed, make sure your e-mail and password are correct. Or try again later.",
-  "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
-  "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve."
+  "LoginToParadox": "Faça login no Paradox",
+  "LoginFailed": "Falha no login, certifique-se de que seu e-mail e senha estão corretos. Ou tente novamente mais tarde.",
+  "RememberMeInfo": "* Suas credenciais serão criptografadas e salvas no seu computador.",
+  "LoginDisclaimer": "O processo de login é tratado com segurança pelos serviços Paradox e nenhum dado é compartilhado com o Skyve."
 }
