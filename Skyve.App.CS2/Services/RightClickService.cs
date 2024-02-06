@@ -2,11 +2,14 @@
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
+using Skyve.Domain;
+using Skyve.Domain.Systems;
 
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.Services;
-internal class CustomPackageService : ICustomPackageService
+internal class RightClickService : IRightClickService
 {
 	public SlickStripItem[] GetRightClickMenuItems(IPackageIdentity item)
 	{
@@ -111,5 +114,106 @@ internal class CustomPackageService : ICustomPackageService
 				}
 			}
 		}
+	}
+
+	public SlickStripItem[] GetRightClickMenuItems(IPlayset playset, bool isLocal)
+	{
+		var isCurrent = playset == ServiceCenter.Get<IPlaysetManager>().CurrentPlayset;
+		var customPlayset = playset.GetCustomPlayset();
+
+		return [
+			new(Locale.ViewThisPlaysetsPackages, "I_ViewFile", () => OpenPlaysetPage(playset)),
+			new(Locale.ActivatePlayset, "I_Check", action: () => ActivatePlayset(playset), visible: isLocal),
+			SlickStripItem.Empty,
+			new(Locale.Manage, "I_Wrench", visible: isLocal, disabled: true)
+			{
+				SubItems = [
+					new(customPlayset.IsFavorite ? Locale.UnFavoriteThisPlayset : Locale.FavoriteThisPlayset, "I_Star", () => TogglePlaysetFavorite(playset)),
+					new(Locale.ChangePlaysetColor, "I_Paint", () => ChangeColor(playset)),
+					SlickStripItem.Empty,
+					new(Locale.PlaysetMerge, "I_Merge", action: () => MergePlayset(playset), visible: !isCurrent),
+					new(Locale.PlaysetExclude, "I_Exclude", action: () => ExcludePlayset(playset), visible: !isCurrent),
+					SlickStripItem.Empty,
+					new(Locale.PlaysetDelete, "I_Disposable", () => DeletePlayset(playset))
+				]
+			},
+
+		];
+
+		//var items = new SlickStripItem[]
+		//{
+		//	  new (Locale.DownloadPlayset, "I_Install", !local, action: () => DownloadProfile(item))
+		//	, new (Locale.ViewThisPlaysetsPackages, "I_ViewFile", action: () => ShowProfileContents(item))
+		////	, new (item.IsFavorite ? Locale.UnFavoriteThisPlayset : Locale.FavoriteThisPlayset, "I_Star", local, action: () => { item.IsFavorite = !item.IsFavorite; _profileManager.Save(item); })
+		//	, new (Locale.ChangePlaysetColor, "I_Paint", local, action: () => this.TryBeginInvoke(() => ChangeColor(item)))
+		//	, new (Locale.CreateShortcutPlayset, "I_Link", local && CrossIO.CurrentPlatform is Platform.Windows, action: () => _profileManager.CreateShortcut(item!))
+		//	, new (Locale.OpenPlaysetFolder, "I_Folder", local, action: () => PlatformUtil.OpenFolder(_profileManager.GetFileName(item!)))
+		//	, new (string.Empty, show: local)
+		//	, new (Locale.SharePlayset, "I_Share", local && item.ProfileId == 0 && _userService.User.Id is not null && downloading != item, action: async () => await ShareProfile(item))
+		//	, new (item.Public ? Locale.MakePrivate : Locale.MakePublic, item.Public ? "I_UserSecure" : "I_People", local && item.ProfileId != 0 && _userService.User.Equals(item.Author), action: async () => await ServiceCenter.Get<IOnlinePlaysetUtil>().SetVisibility((item as IPlayset)!, !item.Public))
+		//	, new (Locale.UpdatePlayset, "I_Share", local && item.ProfileId != 0 && _userService.User.Equals(item.Author), action: async () => await ShareProfile(item))
+		//	, new (Locale.DownloadPlayset, "I_Refresh", local && item.ProfileId != 0 && item.Author != _userService.User.Id, action: () => DownloadProfile(item))
+		//	, new (Locale.CopyPlaysetLink, "I_LinkChain", local && item.ProfileId != 0, action: () => Clipboard.SetText(IdHasher.HashToShortString(item.ProfileId)))
+		//	, new (string.Empty, show: local)
+		//	, new (Locale.ActivatePlayset, "I_Install", local, action: () => LoadProfile?.Invoke(item!))
+		//	, new (Locale.PlaysetMerge, "I_Merge", local, action: () => MergeProfile?.Invoke(item!))
+		//	, new (Locale.PlaysetExclude, "I_Exclude", local, action: () => ExcludeProfile?.Invoke(item!))
+		//	, new (string.Empty)
+		//	, new (Locale.PlaysetDelete, "I_Disposable", local || _userService.User.Equals(item.Author), action: async () => { if(local) { DisposeProfile?.Invoke(item!); } else if(await ServiceCenter.Get<IOnlinePlaysetUtil>().DeleteOnlinePlayset((item as IOnlinePlayset)!)) { base.Remove(item); } })
+		//};
+	}
+
+	private async void ActivatePlayset(IPlayset playset)
+	{
+		await ServiceCenter.Get<IPlaysetManager>().ActivatePlayset(playset);
+	}
+
+	private async void ExcludePlayset(IPlayset playset)
+	{
+		await ServiceCenter.Get<IPlaysetManager>().ExcludeFromCurrentPlayset(playset);
+	}
+
+	private async void MergePlayset(IPlayset playset)
+	{
+		await ServiceCenter.Get<IPlaysetManager>().MergeIntoCurrentPlayset(playset);
+	}
+
+	private async void DeletePlayset(IPlayset playset)
+	{
+		await ServiceCenter.Get<IPlaysetManager>().DeletePlayset(playset);
+	}
+
+	private void ChangeColor(IPlayset playset)
+	{
+		App.Program.MainForm.TryBeginInvoke(() =>
+		{
+			var customPlayset = playset.GetCustomPlayset();
+			var colorDialog = new SlickColorPicker(customPlayset.Color ?? FormDesign.Design.ActiveColor);
+
+			if (colorDialog.ShowDialog(App.Program.MainForm) != DialogResult.OK)
+			{
+				return;
+			}
+
+			customPlayset.Color = colorDialog.Color;
+
+			ServiceCenter.Get<IPlaysetManager>().Save(customPlayset);
+
+			ServiceCenter.Get<INotifier>().OnRefreshUI(true);
+		});
+	}
+
+	private void TogglePlaysetFavorite(IPlayset playset)
+	{
+		var customPlayset = playset.GetCustomPlayset();
+
+		customPlayset.IsFavorite = !customPlayset.IsFavorite;
+		
+		ServiceCenter.Get<IPlaysetManager>().Save(customPlayset);
+	}
+
+	private void OpenPlaysetPage(IPlayset playset)
+	{
+		throw new NotImplementedException();
 	}
 }

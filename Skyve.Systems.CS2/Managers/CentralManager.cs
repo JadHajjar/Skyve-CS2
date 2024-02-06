@@ -113,7 +113,7 @@ internal class CentralManager : ICentralManager
 		if (_playsetManager.CurrentPlayset is not null && CommandUtil.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
 		{
 			_logger.Info($"[Command] Applying Playset ({_playsetManager.CurrentPlayset.Name})..");
-			_playsetManager.SetCurrentPlayset(_playsetManager.CurrentPlayset);
+			_playsetManager.ActivatePlayset(_playsetManager.CurrentPlayset);
 		}
 
 		if (CommandUtil.LaunchOnLoad)

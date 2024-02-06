@@ -51,5 +51,7 @@
   "LoginFailed": "Login failed, make sure your e-mail and password are correct. Or try again later.",
   "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
   "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve.",
-  "DropNewPlayset": "Drop or select a playset's file here to import it"
+  "DropNewPlayset": "Drop or select a playset's file here to import it",
+  "FilterIncludedByDefault": "Enable 'Included' filter for local content by default",
+  "FilterIncludedByDefault_Tip": "Only shows local content that are included in your active playset by default."
 }

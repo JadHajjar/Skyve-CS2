@@ -48,7 +48,7 @@ internal class D_Playsets : IDashboardItem
 	{
 		Enabled = false;
 		Loading = true;
-		_playsetManager.SetCurrentPlayset(item);
+		_playsetManager.ActivatePlayset(item);
 		OnResizeRequested();
 	}
 

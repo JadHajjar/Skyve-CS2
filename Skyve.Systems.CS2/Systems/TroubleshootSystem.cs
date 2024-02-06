@@ -109,7 +109,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 		var playset = await _playsetManager.ClonePlayset(_playsetManager.CurrentPlayset);
 
-		_playsetManager.SetCurrentPlayset(playset);
+		_playsetManager.ActivatePlayset(playset);
 
 		ApplyConfirmation(true);
 	}
@@ -154,7 +154,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 			_playsetManager.ApplyPlayset(currentState.Playset!);
 		}
 
-		_playsetManager.SetCurrentPlayset(_playsetManager.Playsets.FirstOrDefault(x => x.Name == currentState.PlaysetName));
+		_playsetManager.ActivatePlayset(_playsetManager.Playsets.FirstOrDefault(x => x.Name == currentState.PlaysetName));
 
 		_notifier.OnPlaysetChanged();
 

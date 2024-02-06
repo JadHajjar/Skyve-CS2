@@ -52,4 +52,5 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool AssumeInternetConnectivity { get; set; }
 	public bool SnapDashToGrid { get; set; }
 	public bool ComplexListUI { get; set; }
+	public bool FilterIncludedByDefault { get; set; } = true;
 }

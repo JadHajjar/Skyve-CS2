@@ -74,7 +74,7 @@ public class D_LaunchGame : IDashboardItem
 		{
 			Text = LocaleHelper.GetGlobalText(isRunning ? "StopCities" : "StartCities"),
 			Rectangle = e.ClipRectangle,
-			Icon = isRunning ? "I_Stop" : "I_AppIcon",
+			Icon = isRunning ? "I_Stop" : "I_CS",
 			Enabled = Enabled,
 			Control = this
 		});

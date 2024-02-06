@@ -133,8 +133,10 @@ internal class PlaysetManager : IPlaysetManager
 		}
 	}
 
-	public void SetCurrentPlayset(IPlayset playset)
+	public async Task ActivatePlayset(IPlayset playset)
 	{
+		await _workshopService.ActivatePlayset(playset.Id);
+
 		CurrentPlayset = playset;
 		CurrentCustomPlayset = GetCustomPlayset(playset);
 
@@ -145,16 +147,8 @@ internal class PlaysetManager : IPlaysetManager
 			_settings.SessionSettings.CurrentPlayset = null;
 			_settings.SessionSettings.Save();
 
-			try
-			{
-				CrossIO.DeleteFile(CrossIO.Combine(_locationManager.SkyveSettingsPath, "CurrentPlayset"));
-			}
-			catch { }
-
 			return;
 		}
-
-		File.WriteAllText(CrossIO.Combine(_locationManager.SkyveSettingsPath, "CurrentPlayset"), playset.Name);
 
 		if (SystemsProgram.MainForm as SlickForm is null)
 		{
@@ -299,7 +293,7 @@ internal class PlaysetManager : IPlaysetManager
 		});
 	}
 
-	public void AddPlayset(IPlayset newPlayset)
+	public async Task AddPlayset(IPlayset newPlayset)
 	{
 		lock (_playsets)
 		{
@@ -309,7 +303,7 @@ internal class PlaysetManager : IPlaysetManager
 		_notifier.OnPlaysetUpdated();
 	}
 
-	public IPlayset? ImportPlayset(string obj)
+	public Task<IPlayset?> ImportPlayset(string obj)
 	{
 		throw new NotImplementedException();
 	}

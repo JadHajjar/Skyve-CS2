@@ -43,7 +43,7 @@ public partial class PC_PlaysetAdd : PanelContent
 			return;
 		}
 
-		_playsetManager.SetCurrentPlayset(newPlayset);
+		await _playsetManager.ActivatePlayset(newPlayset);
 
 		var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel();
 
@@ -66,7 +66,7 @@ public partial class PC_PlaysetAdd : PanelContent
 			return;
 		}
 
-		_playsetManager.SetCurrentPlayset(newPlayset);
+		await _playsetManager.ActivatePlayset(newPlayset);
 
 		var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel();
 
@@ -81,13 +81,13 @@ public partial class PC_PlaysetAdd : PanelContent
 		PushBack();
 	}
 
-	private void DAD_NewProfile_FileSelected(string obj)
+	private async void DAD_NewProfile_FileSelected(string obj)
 	{
 		var profile = _playsetManager.Playsets.FirstOrDefault(x => x.Name!.Equals(Path.GetFileNameWithoutExtension(obj), StringComparison.InvariantCultureIgnoreCase));
 
 		if (profile is null)
 		{
-			profile = _playsetManager.ImportPlayset(obj);
+			profile = await _playsetManager.ImportPlayset(obj);
 		}
 
 		try

@@ -85,6 +85,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ExcludeThisItemInAllPlaysets => _instance.GetText("ExcludeThisItemInAllPlaysets");
 
 	/// <summary>
+	/// Enable 'Included' filter for local content by default
+	/// </summary>
+	public static Translation FilterIncludedByDefault => _instance.GetText("FilterIncludedByDefault");
+
+	/// <summary>
+	/// Only shows local content that are included in your active playset by default.
+	/// </summary>
+	public static Translation FilterIncludedByDefaultTip => _instance.GetText("FilterIncludedByDefault_Tip");
+
+	/// <summary>
 	/// Add all items to your active playset
 	/// </summary>
 	public static Translation IncludeAll => _instance.GetText("IncludeAll");

@@ -149,7 +149,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		I_PlaysetIcon.Loading = true;
 		L_CurrentPlayset.Text = obj.Name;
 		TLP_Options.Enabled = B_EditName.Visible = B_Save.Visible = false;
-		_playsetManager.SetCurrentPlayset(obj);
+		_playsetManager.ActivatePlayset(obj);
 	}
 
 	private void LoadPlayset(Playset? playset)
