@@ -17,13 +17,14 @@ public class User : IKnownUser
     {
         
     }
+
     public User(Author x)
 	{
 		Id = x.Id;
 		Retired = x.Retired;
 		Verified = x.Verified;
 		Malicious = x.Malicious;
-		Name = x.Name;
+		Name = x.Name ?? Locale.UnknownUser;
 		Manager = false;
 	}
 

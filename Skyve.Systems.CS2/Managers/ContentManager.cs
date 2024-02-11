@@ -147,6 +147,8 @@ internal class ContentManager : IContentManager
 	{
 		var packages = new List<IPackage>();
 		var gameModsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods");
+		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves");
+		var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps");
 
 		if (Directory.Exists(gameModsPath))
 		{
@@ -165,6 +167,19 @@ internal class ContentManager : IContentManager
 		else
 		{
 			_logger.Warning($"Folder not found: '{gameModsPath}'");
+		}
+
+		var savedPackage = GetPackage(gameSavesPath, true, null);
+		var mapsPackage = GetPackage(gameMapsPath, true, null);
+
+		if (savedPackage is not null)
+		{
+			packages.Add(savedPackage);
+		}
+
+		if (mapsPackage is not null)
+		{
+			packages.Add(mapsPackage);
 		}
 
 		var subscribedItems = await _workshopService.GetLocalPackages();
@@ -214,17 +229,20 @@ internal class ContentManager : IContentManager
 			var isCodeMod = _modUtil.GetModInfo(folder, out var modDll, out var version);
 			var assets = _assetUtil.GetAssets(folder, withSubDirectories).ToArray();
 
-			return pdxMod is null
-				? new Package(folder,
-				assets,
-				isCodeMod,
-				version.GetString(),
-				modDll)
-				: new LocalPdxPackage(pdxMod,
+			if (pdxMod is not null)
+			{
+				return new LocalPdxPackage(pdxMod,
 					assets,
 					isCodeMod,
 					version?.GetString(),
 					modDll);
+			}
+
+			return new Package(folder,
+				assets,
+				isCodeMod,
+				version?.GetString(),
+				modDll);
 		}
 		catch (Exception ex)
 		{

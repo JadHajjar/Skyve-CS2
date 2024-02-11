@@ -23,6 +23,8 @@ internal class RightClickService : IRightClickService
 		var packageUtil = ServiceCenter.Get<IPackageUtil>();
 		var userService = ServiceCenter.Get<IUserService>();
 		var settings = ServiceCenter.Get<ISettings>();
+		var modUtil = ServiceCenter.Get<IModUtil>();
+		var modLogicManager = ServiceCenter.Get<IModLogicManager>();
 
 		var anyIncluded = list.Any(x => packageUtil.IsIncluded(x));
 		var anyExcluded = list.Any(x => !packageUtil.IsIncluded(x));
@@ -32,6 +34,7 @@ internal class RightClickService : IRightClickService
 		var anyLocal = list.Any(x => x.IsLocal());
 		var anyWorkshop = list.Any(x => !x.IsLocal());
 		var anyWorkshopAndInstalled = list.Any(x => !x.IsLocal() && x.GetLocalPackageIdentity() is not null);
+		var anyNotRequired = list.Any(x => !modLogicManager.IsRequired(x.GetLocalPackageIdentity(), modUtil));
 
 		return
 		[
@@ -45,17 +48,17 @@ internal class RightClickService : IRightClickService
 			new(Locale.Manage, "I_Wrench", disabled: true)
 			{
 				SubItems = [
-					new(Locale.EnableItem, "I_Ok", async () => await packageUtil.SetEnabled(items, true), visible: list.Count == 1 && anyDisabled),
-					new(Locale.DisableItem, "I_Enabled", async () => await packageUtil.SetEnabled(items, false), visible: list.Count == 1 && anyEnabled),
-					new(Locale.IncludeItem, "I_Add", async () => await packageUtil.SetIncluded(items, true), visible: list.Count == 1 && anyExcluded),
-					new(Locale.ExcludeItem, "I_X", async () => await packageUtil.SetIncluded(items, false), visible: list.Count == 1 && anyIncluded),
+					new(list.Count == 1 ? Locale.EnableItem  : Locale.EnableAllSelected, "I_Ok", async () => await packageUtil.SetEnabled(items, true), visible: anyDisabled && anyNotRequired),
+					new(list.Count == 1 ? Locale.DisableItem : Locale.DisableAllSelected, "I_Enabled", async () => await packageUtil.SetEnabled(items, false), visible: anyEnabled && anyNotRequired),
+					new(list.Count == 1 ? Locale.IncludeItem : Locale.IncludeAllSelected, "I_Add", async () => await packageUtil.SetIncluded(items, true), visible: anyExcluded && anyNotRequired),
+					new(list.Count == 1 ? Locale.ExcludeItem : Locale.ExcludeAllSelected, "I_X", async () => await packageUtil.SetIncluded(items, false), visible: anyIncluded && anyNotRequired),
 					SlickStripItem.Empty,
 					new(Locale.EditTags.FormatPlural(list.Count), "I_Tag", () => EditTags(list)),
-					new(Locale.EditCompatibility.FormatPlural(list.Count), "I_CompatibilityReport", () => { App.Program.MainForm.PushPanel(null, new PC_CompatibilityManagement(items.Select(x => x.Id))); }, visible: userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author))),
+					new(Locale.EditCompatibility.FormatPlural(list.Count), "I_CompatibilityReport", () => { App.Program.MainForm.PushPanel(null, new PC_CompatibilityManagement(items.Select(x => x.Id))); }, visible: (userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author))) && anyWorkshop),
 				]
 			},
 
-			new(Locale.OtherPlaysets, "I_Playsets", disabled: true)
+			new(Locale.OtherPlaysets, "I_Playsets", disabled: true, visible: anyNotRequired)
 			{
 				SubItems = [
 					new(Locale.EnableThisItemInAllPlaysets.FormatPlural(list.Count), "I_Ok", async () => await ServiceCenter.Get<IPlaysetManager>().SetEnabledForAll(list, true)),

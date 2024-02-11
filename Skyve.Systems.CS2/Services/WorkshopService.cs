@@ -33,24 +33,27 @@ internal class WorkshopService : IWorkshopService
 	private readonly INotifier _notifier;
 	private readonly ICitiesManager _citiesManager;
 	private readonly INotificationsService _notificationsService;
+	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
 
 	private bool loginWaitingConnection;
 	private List<ITag>? cachedTags;
 	private ulong currentTicket;
 	private ulong processedTicket;
+	private bool isLoggedIn;
 
 	private IContext? Context { get; set; }
 	public bool IsAvailable => Context is not null;
-	public bool IsReady => Context is not null && !Context.Mods.SyncOngoing();
+	public bool IsReady => Context is not null && isLoggedIn && !Context.Mods.SyncOngoing();
 
-	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService)
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService, PdxLogUtil pdxLogUtil)
 	{
 		_logger = logger;
 		_settings = settings;
 		_notifier = notifier;
 		_citiesManager = citiesManager;
 		_notificationsService = notificationsService;
+		_pdxLogUtil = pdxLogUtil;
 		_modProcessor = new PdxModProcessor(this);
 	}
 
@@ -69,7 +72,7 @@ internal class WorkshopService : IWorkshopService
 		{
 			Language = Language.en,
 			GameVersion = _citiesManager.GameVersion,
-			Logger = _logger as CS2LoggerSystem,
+			Logger = _pdxLogUtil,
 			DiskIORoot = pdxSdkPath,
 			Environment = BackendEnvironment.Live,
 			TelemetryDebugEnabled = false,
@@ -106,7 +109,7 @@ internal class WorkshopService : IWorkshopService
 
 	public async Task Login()
 	{
-		if (Context is null)
+		if (Context is null || isLoggedIn)
 		{
 			return;
 		}
@@ -117,8 +120,15 @@ internal class WorkshopService : IWorkshopService
 		{
 			if (!ConnectionHandler.IsConnected)
 			{
+				if (loginWaitingConnection)
+				{
+					return;
+				}
+
 				loginWaitingConnection = true;
 
+				_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+				_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 				_notificationsService.SendNotification(new ParadoxLoginWaitingConnectionNotification());
 
 				await ConnectionHandler.WhenConnected(Login);
@@ -126,8 +136,12 @@ internal class WorkshopService : IWorkshopService
 				return;
 			}
 
+			loginWaitingConnection = false;
+
 			if (!_settings.UserSettings.ParadoxLogin.IsValid(KEYS.SALT))
 			{
+				_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+				_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false));
 
 				return;
@@ -137,11 +151,15 @@ internal class WorkshopService : IWorkshopService
 
 			if (!loginResult.Success)
 			{
+				_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+				_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(true));
 
 				return;
 			}
 		}
+
+		isLoggedIn = true;
 
 		_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 		_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
@@ -200,12 +218,12 @@ internal class WorkshopService : IWorkshopService
 
 	public IWorkshopInfo? GetInfo(IPackageIdentity identity)
 	{
-		return identity.Id <= 0 ? null : (IWorkshopInfo)_modProcessor.Get((int)identity.Id).Result;
+		return identity.Id <= 0 ? null : _modProcessor.Get((int)identity.Id).Result;
 	}
 
 	public async Task<IWorkshopInfo?> GetInfoAsync(IPackageIdentity identity)
 	{
-		return identity.Id <= 0 ? null : (IWorkshopInfo)await _modProcessor.Get((int)identity.Id, true);
+		return identity.Id <= 0 ? null : await _modProcessor.Get((int)identity.Id, true);
 	}
 
 	internal async Task<PdxModDetails?> GetInfoAsync(int id)
@@ -342,6 +360,7 @@ internal class WorkshopService : IWorkshopService
 			return [];
 		}
 
+		if (isLoggedIn)
 		await WaitUntilReady();
 
 		var mods = ProcessResult(await Context.Mods.List());

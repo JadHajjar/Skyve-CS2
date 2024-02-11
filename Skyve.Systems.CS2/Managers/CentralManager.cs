@@ -59,6 +59,18 @@ internal class CentralManager : ICentralManager
 
 	public async void Start()
 	{
+		try
+		{
+			await Initialize();
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Error in Initialization");
+		}
+	}
+
+	private async Task Initialize()
+	{
 		if (!_settings.SessionSettings.FirstTimeSetupCompleted)
 		{
 			try
@@ -113,7 +125,7 @@ internal class CentralManager : ICentralManager
 		if (_playsetManager.CurrentPlayset is not null && CommandUtil.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
 		{
 			_logger.Info($"[Command] Applying Playset ({_playsetManager.CurrentPlayset.Name})..");
-			_playsetManager.ActivatePlayset(_playsetManager.CurrentPlayset);
+			await _playsetManager.ActivatePlayset(_playsetManager.CurrentPlayset);
 		}
 
 		if (CommandUtil.LaunchOnLoad)

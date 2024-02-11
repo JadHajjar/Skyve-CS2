@@ -10,8 +10,6 @@ public class DownloadsInfoControl : SlickControl
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly INotifier _notifier;
 
-	private IWorkshopInfo? workshopInfo;
-
 	public DownloadsInfoControl()
 	{
 		_subscriptionsManager = ServiceCenter.Get<ISubscriptionsManager>();
@@ -26,11 +24,6 @@ public class DownloadsInfoControl : SlickControl
 
 	private async void SubscriptionsManager_UpdateDisplayNotification()
 	{
-		if (_subscriptionsManager.Status.ModId == 0)
-		{
-			workshopInfo = null;
-		}
-
 		Invalidate();
 
 		if (_subscriptionsManager.Status.IsActive)

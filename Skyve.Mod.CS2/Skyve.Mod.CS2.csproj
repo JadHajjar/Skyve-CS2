@@ -58,6 +58,9 @@
 		<Reference Include="Colossal.PSI.Common">
 			<Private>false</Private>
 		</Reference>
+		<Reference Include="Colossal.Localization">
+			<Private>false</Private>
+		</Reference>
 		<Reference Include="Colossal.IO.AssetDatabase">
 			<Private>false</Private>
 		</Reference>
@@ -99,7 +102,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Shared\" />
+		<EmbeddedResource Include="Properties\*.json" />
+		<EmbeddedResource Include="Properties\*\*.json" />
+		<None Remove="Properties\*.json" />
+		<None Remove="Properties\*\*.json" />
 	</ItemGroup>
 
 </Project>

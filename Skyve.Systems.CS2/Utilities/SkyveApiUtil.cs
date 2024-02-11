@@ -90,7 +90,7 @@ public class SkyveApiUtil : ISkyveApiUtil
 
 	public async Task<IOnlinePlayset[]?> GetUserPlaysets(IUser userId)
 	{
-		return new IOnlinePlayset[0];
+		return await Task.FromResult(new IOnlinePlayset[0]);
 		//return (await Get<UserProfile[]>("/GetUserProfiles", (nameof(userId), userId)))?.ToArray(x => new OnlinePlayset(x));
 	}
 
@@ -120,7 +120,7 @@ public class SkyveApiUtil : ISkyveApiUtil
 
 	public async Task<IOnlinePlayset[]?> GetPublicPlaysets()
 	{
-		return new IOnlinePlayset[0];
+		return await Task.FromResult(new IOnlinePlayset[0]);
 		//return (await Get<UserProfile[]>("/GetPublicProfiles"))?.ToArray(x => new OnlinePlayset(x));
 	}
 

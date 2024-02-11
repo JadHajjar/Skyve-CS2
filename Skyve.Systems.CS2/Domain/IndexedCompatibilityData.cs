@@ -18,7 +18,7 @@ public class IndexedCompatibilityData
 	{
 		Packages = data?.Packages?.ToDictionary(x => x.Id, x => GenerateIndexedPackage(x, data.Packages)) ?? [];
 		PackageNames = new(StringComparer.InvariantCultureIgnoreCase);
-		Authors = data?.Authors?.ToDictionary(x => x.Id, x => new User(x)) ?? [];
+		Authors = data?.Authors?.ToDictionary(x => x.Id!, x => new User(x)) ?? [];
 		BlackListedIds = new(data?.BlackListedIds ?? []);
 		BlackListedNames = new(data?.BlackListedNames ?? []);
 

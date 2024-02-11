@@ -4,6 +4,7 @@ using Skyve.App.CS2.Services;
 using Skyve.App.Interfaces;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Systems.CS2;
+using Skyve.Systems.CS2.Systems;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Diagnostics;
@@ -37,6 +38,7 @@ internal static class Program
 
 		services.AddCs2SkyveSystems();
 
+		services.AddSingleton<ILogger, AppLoggerSystem>();
 		services.AddSingleton<IInterfaceService, InterfaceService>();
 		services.AddSingleton<IAppInterfaceService, InterfaceService>();
 		services.AddSingleton<IRightClickService, RightClickService>();
@@ -49,6 +51,28 @@ internal static class Program
 	{
 		try
 		{
+			if (App.Program.CurrentDirectory.PathContains(App.Program.AppDataPath))
+			{
+				if (OSVersion.Version.Major >= 6)
+				{
+					SetProcessDPIAware();
+				}
+
+				var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "SkyveSetup.exe");
+
+				if (CrossIO.FileExists(setupFile))
+				{
+					if (MessagePrompt.Show(LocaleCS2.RunSetupOrRunApp, PromptButtons.OKCancel, PromptIcons.Hand) == DialogResult.OK)
+					{
+						Process.Start(setupFile);
+					}
+				}
+				else
+				{
+					MessagePrompt.Show(LocaleCS2.CantRunAppFromHere, PromptButtons.OK, PromptIcons.Hand);
+				}
+			}
+
 			if (CommandUtil.Parse(args))
 			{
 				return;
@@ -84,7 +108,7 @@ internal static class Program
 #if DEBUG
 				throw ex;
 #else
-				ServiceCenter.Get<ILogger>().Exception(ex, "Localization Failed to Initialize");
+				ServiceCenter.Get<ILogger>().Exception(ex, "Localization failed to Initialize");
 #endif
 			}
 
@@ -108,8 +132,12 @@ internal static class Program
 		}
 		catch (Exception ex)
 		{
-			MessagePrompt.GetError(ex, "App failed to start", out var message, out var details);
-			MessageBox.Show(details, message);
+			if (OSVersion.Version.Major >= 6)
+			{
+				SetProcessDPIAware();
+			}
+
+			MessagePrompt.Show(ex, "App failed to start");
 		}
 	}
 

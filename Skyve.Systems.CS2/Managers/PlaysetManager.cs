@@ -11,7 +11,6 @@ using SlickControls;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -293,14 +292,23 @@ internal class PlaysetManager : IPlaysetManager
 		});
 	}
 
-	public async Task AddPlayset(IPlayset newPlayset)
+	public async Task<IPlayset?> AddPlayset(IPlayset playset)
 	{
+		var newPlayset = await _workshopService.CreatePlayset(playset.Name!);
+
+		if (newPlayset == null)
+		{
+			return null;
+		}
+
 		lock (_playsets)
 		{
 			_playsets[newPlayset.Id] = newPlayset;
 		}
 
 		_notifier.OnPlaysetUpdated();
+
+		return newPlayset;
 	}
 
 	public Task<IPlayset?> ImportPlayset(string obj)

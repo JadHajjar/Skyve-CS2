@@ -201,6 +201,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ResetSteamCache => _instance.GetText("ResetSteamCache");
 
 	/// <summary>
+	/// 
+	/// </summary>
+	public static Translation RunSetupOrRunApp => _instance.GetText("RunSetupOrRunApp");
+
+	/// <summary>
 	/// Launch Cities: Skylines II
 	/// </summary>
 	public static Translation StartCities => _instance.GetText("StartCities");
