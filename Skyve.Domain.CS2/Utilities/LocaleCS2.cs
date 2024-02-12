@@ -17,6 +17,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public LocaleCS2() : base($"Skyve.Domain.CS2.Properties.LocaleCS2.json") { }
 
 	/// <summary>
+	/// You can't run Skyve from this folder. Either run the app from your Programs list, or run the Skyve Setup from the mod's folder.
+	/// </summary>
+	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
+
+	/// <summary>
 	/// <para>Copy PDX Mods ID</para>
 	/// <para>Plural: Copy the selected packages' PDX Mods IDs</para>
 	/// </summary>
@@ -201,7 +206,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ResetSteamCache => _instance.GetText("ResetSteamCache");
 
 	/// <summary>
-	/// 
+	/// You can't run Skyve from this folder. If you've installed it already, run it from your Programs list.  If not, click on 'Ok' to run the setup.
 	/// </summary>
 	public static Translation RunSetupOrRunApp => _instance.GetText("RunSetupOrRunApp");
 

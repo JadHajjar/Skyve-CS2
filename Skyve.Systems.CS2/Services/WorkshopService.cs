@@ -35,6 +35,7 @@ internal class WorkshopService : IWorkshopService
 	private readonly INotificationsService _notificationsService;
 	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
+	private readonly Locker _locker = new();
 
 	private bool loginWaitingConnection;
 	private List<ITag>? cachedTags;
@@ -44,7 +45,17 @@ internal class WorkshopService : IWorkshopService
 
 	private IContext? Context { get; set; }
 	public bool IsAvailable => Context is not null;
-	public bool IsReady => Context is not null && isLoggedIn && !Context.Mods.SyncOngoing();
+	public bool IsReady => Context is not null && isLoggedIn && !_locker.Locked && !Context.Mods.SyncOngoing();
+
+	public IDisposable Lock
+	{
+		get
+		{
+			_locker.Locked = true;
+
+			return _locker;
+		}
+	}
 
 	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService, PdxLogUtil pdxLogUtil)
 	{
@@ -509,6 +520,8 @@ internal class WorkshopService : IWorkshopService
 			playset,
 			enable);
 
+		_notifier.OnWorkshopSyncEnded();
+
 		return ProcessResult(result).Success;
 	}
 
@@ -527,6 +540,8 @@ internal class WorkshopService : IWorkshopService
 
 			results.Add(ProcessResult(result));
 		}
+
+		_notifier.OnWorkshopSyncEnded();
 
 		return results.All(x => x.Success);
 	}
@@ -575,18 +590,35 @@ internal class WorkshopService : IWorkshopService
 			return false;
 		}
 
-		var result = enable
-				? await Context.Mods.EnableBulk(modKeys, playset)
-				: await Context.Mods.DisableBulk(modKeys, playset);
-
-		ProcessResult(result);
-
-		if (result.Success)
+		if (modKeys.Count == 1)
 		{
-			await Context.Mods.Sync();
-		}
+			var result = enable
+				? await Context.Mods.Enable(modKeys[0], playset)
+				: await Context.Mods.Disable(modKeys[0], playset);
+			ProcessResult(result);
 
-		return result.Success;
+			if (result.Success)
+			{
+				await Context.Mods.Sync();
+			}
+
+			return result.Success;
+		}
+		else
+		{
+			var result = enable
+					? await Context.Mods.EnableBulk(modKeys, playset)
+					: await Context.Mods.DisableBulk(modKeys, playset);
+
+			ProcessResult(result);
+
+			if (result.Success)
+			{
+				await Context.Mods.Sync();
+			}
+
+			return result.Success;
+		}
 	}
 
 	internal async Task<IPlayset?> ClonePlayset(int id)
