@@ -41,11 +41,11 @@ internal class WorkshopService : IWorkshopService
 	private List<ITag>? cachedTags;
 	private ulong currentTicket;
 	private ulong processedTicket;
-	private bool isLoggedIn;
 
 	private IContext? Context { get; set; }
+	public bool IsLoggedIn { get; private set; }
 	public bool IsAvailable => Context is not null;
-	public bool IsReady => Context is not null && isLoggedIn && !_locker.Locked && !Context.Mods.SyncOngoing();
+	public bool IsReady => Context is not null && IsLoggedIn && !_locker.Locked && !Context.Mods.SyncOngoing();
 
 	public IDisposable Lock
 	{
@@ -120,7 +120,7 @@ internal class WorkshopService : IWorkshopService
 
 	public async Task Login()
 	{
-		if (Context is null || isLoggedIn)
+		if (Context is null || IsLoggedIn)
 		{
 			return;
 		}
@@ -170,7 +170,7 @@ internal class WorkshopService : IWorkshopService
 			}
 		}
 
-		isLoggedIn = true;
+		IsLoggedIn = true;
 
 		_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 		_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
@@ -371,7 +371,7 @@ internal class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		if (isLoggedIn)
+		if (IsLoggedIn)
 		await WaitUntilReady();
 
 		var mods = ProcessResult(await Context.Mods.List());
