@@ -265,7 +265,7 @@ public partial class PC_CompatibilityManagement : PanelContent
 			PB_Icon.Package = CurrentPackage;
 			PB_Icon.Image = null;
 			PB_Icon.LoadImage(CurrentPackage.GetWorkshopInfo()?.ThumbnailUrl, ServiceCenter.Get<IImageService>().GetImage);
-			P_Info.SetPackage(CurrentPackage, null);
+			P_Info.SetPackage(CurrentPackage);
 
 			B_Previous.Enabled = currentPage > 0;
 			B_Skip.Enabled = currentPage != _packages.Count - 1;

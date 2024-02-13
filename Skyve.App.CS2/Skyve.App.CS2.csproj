@@ -29,6 +29,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Markdig" Version="0.34.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Mono.Cecil" Version="0.11.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
@@ -71,6 +72,9 @@
 		  <SubType>UserControl</SubType>
 		</Compile>
 		<Compile Update="UserInterface\Panels\PC_Options.cs" />
+		<Compile Update="UserInterface\Panels\PC_PackagePage.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 		<Compile Update="UserInterface\Panels\PC_PlaysetAdd.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>

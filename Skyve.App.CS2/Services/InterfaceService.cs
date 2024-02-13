@@ -45,4 +45,9 @@ internal class InterfaceService : IAppInterfaceService
 	{
 		return new PC_PlaysetAdd();
 	}
+
+	void IInterfaceService.OpenPackagePage(IPackageIdentity package, bool openCompatibilityPage)
+	{
+		App.Program.MainForm.PushPanel(new PC_PackagePage(package, openCompatibilityPage));
+	}
 }

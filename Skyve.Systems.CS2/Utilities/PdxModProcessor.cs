@@ -17,7 +17,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 
 	private readonly WorkshopService _workshopService;
 
-	public PdxModProcessor(WorkshopService workshopService) : base(1, 30000, GetCachedInfo())
+	public PdxModProcessor(WorkshopService workshopService) : base(1, 5000, GetCachedInfo())
 	{
 		_workshopService = workshopService;
 
