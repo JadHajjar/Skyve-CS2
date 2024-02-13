@@ -17,9 +17,9 @@ internal class SettingsService : ISettings
 	ISessionSettings ISettings.SessionSettings => SessionSettings;
 	IFolderSettings ISettings.FolderSettings => FolderSettings;
 
-	public SettingsService()
+	public SettingsService(SaveHandler saveHandler)
 	{
-		var appDataPath = CrossIO.Combine(Path.GetDirectoryName(ISave.CustomSaveDirectory), "ModsSettings", "Skyve");
+		var appDataPath = CrossIO.Combine(Path.GetDirectoryName(saveHandler.SaveDirectory), "ModsSettings", "Skyve");
 
 		FolderSettings = FolderSettings.Load(appDataPath);
 		SessionSettings = SessionSettings.Load(appDataPath);

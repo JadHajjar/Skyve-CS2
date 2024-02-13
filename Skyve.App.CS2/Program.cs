@@ -24,8 +24,7 @@ internal static class Program
 		App.Program.ExecutablePath = Application.ExecutablePath;
 		App.Program.AppDataPath = Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II");
 
-		ISave.CustomSaveDirectory = Path.Combine(App.Program.AppDataPath, "ModsData");
-		ISave.AppName = "Skyve";
+		SaveHandler.AppName = "Skyve";
 
 		ServiceCenter.Provider = BuildServices();
 	}
@@ -38,6 +37,7 @@ internal static class Program
 
 		services.AddCs2SkyveSystems();
 
+		services.AddSingleton(new SaveHandler(Path.Combine(App.Program.AppDataPath, "ModsData")));
 		services.AddSingleton<ILogger, AppLoggerSystem>();
 		services.AddSingleton<IInterfaceService, InterfaceService>();
 		services.AddSingleton<IAppInterfaceService, InterfaceService>();

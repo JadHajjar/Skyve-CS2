@@ -105,10 +105,14 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		await _workshopService.WaitUntilReady();
 
-		var result = await _workshopService.SubscribeBulk(
-			ids.Distinct(x => x.Id).Select(x => new KeyValuePair<int, string?>((int)x.Id, null)),
-			currentPlayset,
-			!_settings.UserSettings.DisableNewModsByDefault);
+		bool result;
+		using (_workshopService.Lock)
+		{
+			result = await _workshopService.SubscribeBulk(
+				ids.Distinct(x => x.Id).Select(x => new KeyValuePair<int, string?>((int)x.Id, null)),
+				currentPlayset,
+				!_settings.UserSettings.DisableNewModsByDefault);
+		}
 
 		foreach (var item in ids)
 		{
@@ -141,7 +145,11 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		await _workshopService.WaitUntilReady();
 
-		var result = await _workshopService.UnsubscribeBulk(ids.Distinct(x => x.Id).Select(x => (int)x.Id), currentPlayset);
+		bool result;
+		using (_workshopService.Lock)
+		{
+			result = await _workshopService.UnsubscribeBulk(ids.Distinct(x => x.Id).Select(x => (int)x.Id), currentPlayset);
+		}
 
 		foreach (var item in ids)
 		{

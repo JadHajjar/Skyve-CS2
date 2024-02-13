@@ -28,7 +28,7 @@ public static class SteamUtil
 
 	static SteamUtil()
 	{
-		ISave.Load(out List<SteamDlc>? cache, DLC_CACHE_FILE);
+		ServiceCenter.Get<SaveHandler>().Load(out List<SteamDlc>? cache, DLC_CACHE_FILE);
 
 		Dlcs = cache ?? new();
 
@@ -171,7 +171,7 @@ public static class SteamUtil
 
 			ServiceCenter.Get<ILogger>().Info($"DLCs ({newDlcs.Count}) loaded..");
 
-			ISave.Save(Dlcs = newDlcs, DLC_CACHE_FILE);
+			ServiceCenter.Get<SaveHandler>().Save(Dlcs = newDlcs, DLC_CACHE_FILE);
 		}
 		catch (Exception ex)
 		{
@@ -190,7 +190,7 @@ public static class SteamUtil
 		try
 		{
 			Dlcs = new();
-			CrossIO.DeleteFile(ISave.GetPath(DLC_CACHE_FILE));
+			CrossIO.DeleteFile(ServiceCenter.Get<SaveHandler>().GetPath(DLC_CACHE_FILE));
 		}
 		catch (Exception ex)
 		{
@@ -199,7 +199,7 @@ public static class SteamUtil
 
 		try
 		{
-			CrossIO.DeleteFile(ISave.GetPath(SteamUserProcessor.STEAM_USER_CACHE_FILE));
+			CrossIO.DeleteFile(ServiceCenter.Get<SaveHandler>().GetPath(SteamUserProcessor.STEAM_USER_CACHE_FILE));
 		}
 		catch (Exception ex)
 		{

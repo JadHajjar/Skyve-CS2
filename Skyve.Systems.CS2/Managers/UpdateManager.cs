@@ -8,6 +8,7 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Skyve.Systems.CS2.Managers;
 internal class UpdateManager : IUpdateManager
@@ -15,15 +16,17 @@ internal class UpdateManager : IUpdateManager
 	private readonly Dictionary<string, DateTime> _previousPackages = new(new PathEqualityComparer());
 	private readonly INotificationsService _notificationsService;
 	private readonly IPackageManager _packageManager;
+	private readonly SaveHandler _saveHandler;
 
-	public UpdateManager(INotificationsService notificationsService, IPackageManager packageManager)
+	public UpdateManager(INotificationsService notificationsService, IPackageManager packageManager, SaveHandler saveHandler)
 	{
 		_notificationsService = notificationsService;
 		_packageManager = packageManager;
+		_saveHandler = saveHandler;
 
 		try
 		{
-			ISave.Load(out List<KnownPackage> packages, "LastPackages.json");
+			_saveHandler.Load(out List<KnownPackage> packages, "LastPackages.json");
 
 			if (packages != null)
 			{
@@ -73,7 +76,7 @@ internal class UpdateManager : IUpdateManager
 			_notificationsService.SendNotification(new UpdatedPackagesNotificationInfo(updatedPackages));
 		}
 
-		ISave.Save(ServiceCenter.Get<IPackageManager>().Packages.Where(x => x.LocalData is not null).Select(x => new KnownPackage(x.LocalData!)), "LastPackages.json");
+		_saveHandler.Save(ServiceCenter.Get<IPackageManager>().Packages.Where(x => x.LocalData is not null).Select(x => new KnownPackage(x.LocalData!)), "LastPackages.json");
 	}
 
 	public bool IsPackageKnown(ILocalPackageData package)

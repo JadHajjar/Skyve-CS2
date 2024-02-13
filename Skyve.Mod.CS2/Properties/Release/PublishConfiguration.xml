@@ -6,7 +6,7 @@
 	<!--Short description of the mod-->
 	<ShortDescription Value="The all-in-one mod manager for Cities: Skylines II PDX Mods" />
 	<!--Long description of the mod-->
-	<LongDescription Value="Skyve is your all-in-one mod manager for Cities: Skylines II PDX Mods.\r\n\r\n* Easily manage all your mods, download and subscribe to mods from outside of the game.\r\n* Manage your playsets, and easily manage mods across playsets.\r\n* Get real-time compatibility information foor the mods you're using." />
+	<LongDescription Value="Skyve is your all-in-one mod manager for Cities: Skylines II PDX Mods.<br>* Easily manage all your mods, download and subscribe to mods from outside of the game.\r\n* Manage your playsets, and easily manage mods across playsets.\r\n* Get real-time compatibility information foor the mods you're using." />
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Release/Thumbnail.png" />
 	<!--Screenshot, can be set multiple-->

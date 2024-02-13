@@ -20,6 +20,7 @@ using Skyve.Systems.CS2.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using PdxPlatform = PDX.SDK.Contracts.Enums.Platform;
@@ -52,12 +53,11 @@ internal class WorkshopService : IWorkshopService
 		get
 		{
 			_locker.Locked = true;
-
 			return _locker;
 		}
 	}
 
-	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService, PdxLogUtil pdxLogUtil)
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService, PdxLogUtil pdxLogUtil, SaveHandler saveHandler)
 	{
 		_logger = logger;
 		_settings = settings;
@@ -65,7 +65,7 @@ internal class WorkshopService : IWorkshopService
 		_citiesManager = citiesManager;
 		_notificationsService = notificationsService;
 		_pdxLogUtil = pdxLogUtil;
-		_modProcessor = new PdxModProcessor(this);
+		_modProcessor = new PdxModProcessor(this, saveHandler);
 	}
 
 	public async Task Initialize()

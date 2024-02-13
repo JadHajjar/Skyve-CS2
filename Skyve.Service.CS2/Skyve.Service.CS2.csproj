@@ -2,17 +2,23 @@
 	<Import Project="../../Skyve/CS2-Version.props" />
 	<Import Project="../../Skyve/Config.props" />
 	<PropertyGroup>
-		<LangVersion>latest</LangVersion>
+		<AssemblyName>Skyve.Service.CS2</AssemblyName>
+		<Title>Skyve Service</Title>
+		<TargetName>Skyve Service</TargetName>
 		<Description>Helps to manage your mods and assets</Description>
-		<Nullable>enable</Nullable>
-		<DefineConstants>$(DefineConstants);SkyveService</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup>
-		<Deterministic>true</Deterministic>
+		<LangVersion>latest</LangVersion>
+		<OutputType>WinExe</OutputType>
 		<TargetFramework>net4.7.2</TargetFramework>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Deterministic>true</Deterministic>
+		<Nullable>enable</Nullable>
+		<StartupObject>Skyve.Service.CS2.Program</StartupObject>
+		<ApplicationIcon>ServiceIcon.ico</ApplicationIcon>
 		<SignAssembly>True</SignAssembly>
 		<NeutralLanguage>en</NeutralLanguage>
+		<Description>Helps to manage your mods and assets</Description>
+		<DefineConstants>$(DefineConstants);SkyveService</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>

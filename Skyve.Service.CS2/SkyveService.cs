@@ -7,7 +7,13 @@ using Skyve.Systems;
 using Skyve.Systems.CS2;
 using Skyve.Systems.CS2.Systems;
 
+using System.Net.Mime;
 using System.ServiceProcess;
+using System.Security.Principal;
+using System.Management;
+using System.IO;
+using Extensions;
+using System.Linq;
 
 namespace Skyve.Service.CS2;
 
@@ -20,6 +26,10 @@ public class SkyveService : ServiceBase
 
 	protected override void OnStart(string[] args)
 	{
+		var folders = Directory.GetDirectories("C:\\Users")
+			.Select(x => Path.Combine(x, "AppData", "LocalLow", "Colossal Order", "Cities Skylines II"))
+			.AllWhere(Directory.Exists);
+
 		var services = new ServiceCollection();
 
 		services.AddSkyveSystems();

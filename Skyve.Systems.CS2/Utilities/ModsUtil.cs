@@ -151,7 +151,7 @@ internal class ModsUtil : IModUtil
 
 		SaveHistory();
 
-		await _workshopService.WaitUntilReady();
+		//await _workshopService.WaitUntilReady();
 
 		if (!modConfig.ContainsKey(playset))
 		{
@@ -239,7 +239,11 @@ internal class ModsUtil : IModUtil
 
 		var modKeys = mods.ToList(x => (int)x.Id).DistinctList();
 
-		var result = await _workshopService.SetEnableBulk(modKeys, playset, value);
+		bool result;
+		using (_workshopService.Lock)
+		{
+			result = await _workshopService.SetEnableBulk(modKeys, playset, value);
+		}
 
 		if (result)
 		{

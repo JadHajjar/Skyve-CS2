@@ -29,6 +29,7 @@
 	<Target Name="CopyFiles" BeforeTargets="PreBuildEvent">
 		<ItemGroup>
 			<AppFiles Include="..\Skyve.App.CS2\bin\$(BuildType)\**\*.*" />
+			<AppFiles Include="..\Skyve.Service.CS2\bin\$(BuildType)\**\*.*" />
 			<SetupFiles Include="..\Skyve.App.CS2.Installer\bin\$(BuildType)\Skyve Setup.*" />
 		</ItemGroup>
 

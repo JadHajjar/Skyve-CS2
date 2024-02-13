@@ -100,11 +100,11 @@ internal class AssetsUtil : IAssetUtil
 	{
 		if (value)
 		{
-			ExcludedHashSet.Remove(asset.FilePath.ToLower());
+			ExcludedHashSet?.Remove(asset.FilePath.ToLower());
 		}
 		else
 		{
-			ExcludedHashSet.Add(asset.FilePath.ToLower());
+			ExcludedHashSet?.Add(asset.FilePath.ToLower());
 		}
 
 		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)

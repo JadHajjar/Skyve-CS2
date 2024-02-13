@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
-public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUtil _skyveApiUtil, ICompatibilityUtil _compatibilityUtil) : ISkyveDataManager
+public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUtil _skyveApiUtil, ICompatibilityUtil _compatibilityUtil, SaveHandler saveHandler) : ISkyveDataManager
 {
 	private const string DATA_CACHE_FILE = "CompatibilityDataCache.json";
 
@@ -35,9 +35,9 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUti
 	{
 		try
 		{
-			var path = ISave.GetPath(DATA_CACHE_FILE);
+			var path = saveHandler.GetPath(DATA_CACHE_FILE);
 
-			ISave.Load(out CompatibilityData? data, DATA_CACHE_FILE);
+			saveHandler.Load(out CompatibilityData? data, DATA_CACHE_FILE);
 
 			CompatibilityData = new IndexedCompatibilityData(data);
 		}
@@ -50,7 +50,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUti
 
 		try
 		{
-			CrossIO.DeleteFile(ISave.GetPath(DATA_CACHE_FILE));
+			CrossIO.DeleteFile(saveHandler.GetPath(DATA_CACHE_FILE));
 		}
 		catch (Exception ex)
 		{
@@ -68,7 +68,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUti
 
 			if (data is not null)
 			{
-				ISave.Save(data, DATA_CACHE_FILE);
+				saveHandler.Save(data, DATA_CACHE_FILE);
 
 				CompatibilityData = new IndexedCompatibilityData(data);
 

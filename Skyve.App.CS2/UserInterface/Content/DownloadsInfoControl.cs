@@ -35,7 +35,7 @@ public class DownloadsInfoControl : SlickControl
 		}
 		else
 		{
-			await Task.Delay(1000);
+			await Task.Delay(1500);
 
 			if (!_subscriptionsManager.Status.IsActive)
 			{

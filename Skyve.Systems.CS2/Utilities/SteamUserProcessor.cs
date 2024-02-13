@@ -51,26 +51,26 @@ internal class SteamUserProcessor : PeriodicProcessor<ulong, SteamUser>
 
 	protected override void CacheItems(Dictionary<ulong, SteamUser> results)
 	{
-		try
-		{
-			ISave.Save(results, STEAM_USER_CACHE_FILE);
-		}
-		catch { }
+		//try
+		//{
+		//	ISave.Save(results, STEAM_USER_CACHE_FILE);
+		//}
+		//catch { }
 	}
 
 	private static Dictionary<ulong, SteamUser>? GetCachedInfo()
 	{
-		try
-		{
-			var path = ISave.GetPath(STEAM_USER_CACHE_FILE);
+		//try
+		//{
+		//	var path = ISave.GetPath(STEAM_USER_CACHE_FILE);
 
-			ISave.Load(out Dictionary<ulong, SteamUser>? dic, STEAM_USER_CACHE_FILE);
+		//	ISave.Load(out Dictionary<ulong, SteamUser>? dic, STEAM_USER_CACHE_FILE);
 
-			return dic;
-		}
-		catch
-		{
+		//	return dic;
+		//}
+		//catch
+		//{
 			return null;
-		}
+		//}
 	}
 }

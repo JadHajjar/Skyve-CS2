@@ -12,6 +12,7 @@ using SlickControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -49,9 +50,10 @@ internal class PlaysetManager : IPlaysetManager
 	private readonly IPackageManager _packageManager;
 	private readonly IPackageUtil _packageUtil;
 	private readonly ICompatibilityManager _compatibilityManager;
+	private readonly SaveHandler _saveHandler;
 	private readonly INotifier _notifier;
 
-	public PlaysetManager(ILogger logger, ILocationService locationManager, ISettings settings, IPackageManager packageManager, INotifier notifier, IPackageUtil packageUtil, IWorkshopService workshopService, ICompatibilityManager compatibilityManager)
+	public PlaysetManager(ILogger logger, ILocationService locationManager, ISettings settings, IPackageManager packageManager, INotifier notifier, IPackageUtil packageUtil, IWorkshopService workshopService, ICompatibilityManager compatibilityManager, SaveHandler saveHandler)
 	{
 		_logger = logger;
 		_locationManager = locationManager;
@@ -60,6 +62,7 @@ internal class PlaysetManager : IPlaysetManager
 		_notifier = notifier;
 		_packageUtil = packageUtil;
 		_compatibilityManager = compatibilityManager;
+		_saveHandler = saveHandler;
 		_workshopService = (workshopService as WorkshopService)!;
 
 		_notifier.AutoSaveRequested += OnAutoSave;
@@ -208,7 +211,7 @@ internal class PlaysetManager : IPlaysetManager
 
 			foreach (var item in playsets)
 			{
-				ISave.Load(out ExtendedPlayset playset, CrossIO.Combine("Playsets", $"{item.Id}.json"));
+				_saveHandler.Load(out ExtendedPlayset playset, CrossIO.Combine("Playsets", $"{item.Id}.json"));
 
 				if (playset is not null)
 				{
@@ -418,7 +421,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public void Save(ICustomPlayset customPlayset)
 	{
-		ISave.Save(customPlayset, CrossIO.Combine("Playsets", $"{customPlayset.Id}.json"));
+		_saveHandler.Save(customPlayset, CrossIO.Combine("Playsets", $"{customPlayset.Id}.json"));
 
 		lock (_playsets)
 		{

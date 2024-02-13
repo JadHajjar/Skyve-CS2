@@ -45,7 +45,8 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		ServerTime = mod.LatestUpdate ?? default;
 		ServerSize = (long)mod.Size;
 		IsCollection = false;
-		VoteCount = mod.RatingsTotal;
+		VoteCount = -1;// mod.RatingsTotal;
+		Subscribers = -1;
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
