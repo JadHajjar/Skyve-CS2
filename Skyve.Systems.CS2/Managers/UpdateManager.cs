@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Notifications;
@@ -16,12 +18,16 @@ internal class UpdateManager : IUpdateManager
 	private readonly Dictionary<string, DateTime> _previousPackages = new(new PathEqualityComparer());
 	private readonly INotificationsService _notificationsService;
 	private readonly IPackageManager _packageManager;
+	private readonly IServiceProvider _serviceProvider;
+	private readonly IInterfaceService _interfaceService;
 	private readonly SaveHandler _saveHandler;
 
-	public UpdateManager(INotificationsService notificationsService, IPackageManager packageManager, SaveHandler saveHandler)
+	public UpdateManager(INotificationsService notificationsService, IPackageManager packageManager, IServiceProvider serviceProvider, IInterfaceService interfaceService, SaveHandler saveHandler)
 	{
 		_notificationsService = notificationsService;
 		_packageManager = packageManager;
+		_serviceProvider = serviceProvider;
+		_interfaceService = interfaceService;
 		_saveHandler = saveHandler;
 
 		try
@@ -68,15 +74,15 @@ internal class UpdateManager : IUpdateManager
 
 		if (newPackages.Count > 0)
 		{
-			_notificationsService.SendNotification(new NewPackagesNotificationInfo(newPackages));
+			_notificationsService.SendNotification(new NewPackagesNotificationInfo(newPackages, _interfaceService));
 		}
 
 		if (updatedPackages.Count > 0)
 		{
-			_notificationsService.SendNotification(new UpdatedPackagesNotificationInfo(updatedPackages));
+			_notificationsService.SendNotification(new UpdatedPackagesNotificationInfo(updatedPackages, _interfaceService));
 		}
 
-		_saveHandler.Save(ServiceCenter.Get<IPackageManager>().Packages.Where(x => x.LocalData is not null).Select(x => new KnownPackage(x.LocalData!)), "LastPackages.json");
+		_saveHandler.Save(_serviceProvider.GetService<IPackageManager>()!.Packages.Where(x => x.LocalData is not null).Select(x => new KnownPackage(x.LocalData!)), "LastPackages.json");
 	}
 
 	public bool IsPackageKnown(ILocalPackageData package)

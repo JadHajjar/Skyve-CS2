@@ -6,24 +6,10 @@ using System.Collections.Generic;
 
 namespace Skyve.Domain.CS2.Utilities;
 
+[SaveName(nameof(DlcConfig) + ".json")]
 public class DlcConfig : ConfigFile
 {
-	private const string FILE_NAME = "DlcConfig.json";
-
 	public List<uint> RemovedDLCs { get; set; } = [];
-
-	public DlcConfig() : base(GetFilePath())
-	{ }
-
-	private static string GetFilePath()
-	{
-		return CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveSettingsPath, FILE_NAME);
-	}
-
-	public static DlcConfig Load()
-	{
-		return Load<DlcConfig>(GetFilePath()) ?? new();
-	}
 }
 
 //public class ModConfig : ConfigFile
@@ -86,22 +72,7 @@ public class DlcConfig : ConfigFile
 //    }
 //}
 
+[SaveName(nameof(AssetConfig) + ".json")]
 public class AssetConfig : ConfigFile
 {
-	public const string FILE_NAME = "AssetConfig.json";
-
-	public List<string> ExcludedAssets { get; set; } = [];
-
-	public AssetConfig() : base(GetFilePath())
-	{ }
-
-	private static string GetFilePath()
-	{
-		return CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveSettingsPath, FILE_NAME);
-	}
-
-	public static AssetConfig Load()
-	{
-		return Load<AssetConfig>(GetFilePath()) ?? new();
-	}
 }

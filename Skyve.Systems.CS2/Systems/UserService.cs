@@ -35,53 +35,53 @@ internal class UserService : IUserService
 #endif
 	}
 
-	private async Task RefreshUserState()
-	{
-		var steamId = SteamUtil.GetLoggedInSteamId();
+	//private async Task RefreshUserState()
+	//{
+	//	var steamId = SteamUtil.GetLoggedInSteamId();
 
-		if (_user.Id?.Equals(steamId) ?? false)
-		{
-			return;
-		}
+	//	if (_user.Id?.Equals(steamId) ?? false)
+	//	{
+	//		return;
+	//	}
 
-		if (steamId == 0)
-		{
-			_user = new();
-		}
-		else
-		{
-			_user = new() { Id = steamId };
+	//	if (steamId == 0)
+	//	{
+	//		_user = new();
+	//	}
+	//	else
+	//	{
+	//		_user = new() { Id = steamId };
 
-			var steamUser = SteamUtil.GetUser(steamId);
+	//		var steamUser = SteamUtil.GetUser(steamId);
 
-			if (steamUser != null)
-			{
-				_user.Name = steamUser.Name;
-				_user.ProfileUrl = steamUser.ProfileUrl;
-				_user.AvatarUrl = steamUser.AvatarUrl;
-			}
-		}
+	//		if (steamUser != null)
+	//		{
+	//			_user.Name = steamUser.Name;
+	//			_user.ProfileUrl = steamUser.ProfileUrl;
+	//			_user.AvatarUrl = steamUser.AvatarUrl;
+	//		}
+	//	}
 
-		var skyveUser = ServiceCenter.Get<ISkyveDataManager>().TryGetAuthor(steamId.ToString());
+	//	var skyveUser = ServiceCenter.Get<ISkyveDataManager>().TryGetAuthor(steamId.ToString());
 
-		if (skyveUser is not null)
-		{
-			_user.Name ??= skyveUser.Name ?? string.Empty;
-			_user.Verified = skyveUser.Verified;
-			_user.Retired = skyveUser.Retired;
-		}
+	//	if (skyveUser is not null)
+	//	{
+	//		_user.Name ??= skyveUser.Name ?? string.Empty;
+	//		_user.Verified = skyveUser.Verified;
+	//		_user.Retired = skyveUser.Retired;
+	//	}
 
-		try
-		{
-			_user.Manager = await ServiceCenter.Get<SkyveApiUtil>().IsCommunityManager();
-		}
-		catch
-		{
-			_user.Manager = false;
-		}
+	//	try
+	//	{
+	//		_user.Manager = await ServiceCenter.Get<SkyveApiUtil>().IsCommunityManager();
+	//	}
+	//	catch
+	//	{
+	//		_user.Manager = false;
+	//	}
 
-		UserInfoUpdated?.Invoke();
-	}
+	//	UserInfoUpdated?.Invoke();
+	//}
 
 	private class KnownUser : IKnownUser
 	{

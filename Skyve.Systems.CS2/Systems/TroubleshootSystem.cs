@@ -364,7 +364,6 @@ internal class TroubleshootSystem : ITroubleshootSystem
 			}
 			catch (Exception ex)
 			{
-				ServiceCenter.Get<ILogger>().Exception(ex, $"Failed to delete the folder '{item.Folder}'");
 			}
 		}
 

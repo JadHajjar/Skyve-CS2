@@ -149,7 +149,7 @@ public partial class PC_PackagePage : PanelContent
 
 	protected async Task<IEnumerable<IPackageIdentity>> GetItems()
 	{
-		return await Task.FromResult(_packageUtil.GetPackagesThatReference(Package, _settings.UserSettings.ShowAllReferencedPackages));
+		return await Task.FromResult(_compatibilityManager.GetPackagesThatReference(Package, _settings.UserSettings.ShowAllReferencedPackages));
 	}
 
 	protected async Task SetIncluded(IEnumerable<IPackageIdentity> filteredItems, bool included)

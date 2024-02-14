@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using PDX.SDK.Contracts;
 using PDX.SDK.Contracts.Events.Download;
 using PDX.SDK.Contracts.Events.Mods;
@@ -8,7 +10,9 @@ using Skyve.Domain;
 using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
+using Skyve.Systems.CS2.Systems;
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,17 +20,17 @@ namespace Skyve.Systems.CS2.Managers;
 internal class WorkshopEventsManager
 {
 	private readonly WorkshopService _workshopService;
-	private readonly ContentManager _contentManager;
 	private readonly INotificationsService _notificationsService;
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly IPackageManager _packageManager;
 
-	internal WorkshopEventsManager(WorkshopService workshopService)
+	internal WorkshopEventsManager(WorkshopService workshopService, IServiceProvider serviceProvider)
 	{
 		_workshopService = workshopService;
-		_contentManager = ServiceCenter.Get<IContentManager, ContentManager>();
 
-		ServiceCenter.Get(out _notificationsService, out _subscriptionsManager, out _packageManager);
+		_notificationsService = serviceProvider.GetService<INotificationsService>()!;
+		_subscriptionsManager = serviceProvider.GetService<ISubscriptionsManager>()!;
+		_packageManager = serviceProvider.GetService<IPackageManager>()!;
 	}
 
 	internal void RegisterModsCallbacks(IContext context)

@@ -49,7 +49,7 @@ public class SteamUser : IDynamicSql
 #if !API
 	[DynamicSqlProperty]
 	[JsonIgnore] public object? Id => SteamId;
-	[JsonIgnore] public Bitmap? AvatarImage => ServiceCenter.Get<IImageService>().GetImage(AvatarUrl, true).Result;
+	//[JsonIgnore] public Bitmap? AvatarImage => ServiceCenter.Get<IImageService>().GetImage(AvatarUrl, true).Result;
 
 	public override string ToString()
 	{

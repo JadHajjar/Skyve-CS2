@@ -34,6 +34,8 @@ internal class WorkshopService : IWorkshopService
 	private readonly INotifier _notifier;
 	private readonly ICitiesManager _citiesManager;
 	private readonly INotificationsService _notificationsService;
+	private readonly IInterfaceService _interfaceService;
+	private readonly IServiceProvider _serviceProvider;
 	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
 	private readonly Locker _locker = new();
@@ -57,15 +59,17 @@ internal class WorkshopService : IWorkshopService
 		}
 	}
 
-	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService, PdxLogUtil pdxLogUtil, SaveHandler saveHandler)
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler)
 	{
 		_logger = logger;
 		_settings = settings;
 		_notifier = notifier;
 		_citiesManager = citiesManager;
 		_notificationsService = notificationsService;
+		_interfaceService = interfaceService;
+		_serviceProvider = serviceProvider;
 		_pdxLogUtil = pdxLogUtil;
-		_modProcessor = new PdxModProcessor(this, saveHandler);
+		_modProcessor = new PdxModProcessor(this, saveHandler, _notifier);
 	}
 
 	public async Task Initialize()
@@ -110,7 +114,7 @@ internal class WorkshopService : IWorkshopService
 				@namespace: "cities_skylines_2",
 				config: config);
 
-			new WorkshopEventsManager(this).RegisterModsCallbacks(Context);
+			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
 		}
 		catch (Exception ex)
 		{
@@ -140,7 +144,7 @@ internal class WorkshopService : IWorkshopService
 
 				_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 				_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
-				_notificationsService.SendNotification(new ParadoxLoginWaitingConnectionNotification());
+				_notificationsService.SendNotification(new ParadoxLoginWaitingConnectionNotification(this));
 
 				await ConnectionHandler.WhenConnected(Login);
 
@@ -153,7 +157,7 @@ internal class WorkshopService : IWorkshopService
 			{
 				_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 				_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
-				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false));
+				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false, _interfaceService));
 
 				return;
 			}
@@ -164,7 +168,7 @@ internal class WorkshopService : IWorkshopService
 			{
 				_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 				_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
-				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(true));
+				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(true, _interfaceService));
 
 				return;
 			}

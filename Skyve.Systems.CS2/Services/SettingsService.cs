@@ -19,11 +19,11 @@ internal class SettingsService : ISettings
 
 	public SettingsService(SaveHandler saveHandler)
 	{
-		var appDataPath = CrossIO.Combine(Path.GetDirectoryName(saveHandler.SaveDirectory), "ModsSettings", "Skyve");
+		var settingsSaveHandler = new SaveHandler(CrossIO.Combine(Path.GetDirectoryName(saveHandler.SaveDirectory), "ModsSettings"));
 
-		FolderSettings = FolderSettings.Load(appDataPath);
-		SessionSettings = SessionSettings.Load(appDataPath);
-		UserSettings = UserSettings.Load(appDataPath);
+		FolderSettings = settingsSaveHandler.Load<FolderSettings>();
+		SessionSettings = settingsSaveHandler.Load<SessionSettings>();
+		UserSettings = settingsSaveHandler.Load<UserSettings>();
 
 		CrossIO.CurrentPlatform = FolderSettings.Platform;
 

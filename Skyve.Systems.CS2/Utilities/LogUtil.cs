@@ -51,7 +51,7 @@ internal class LogUtil : ILogUtil
 		_ => CrossIO.Combine(_settings.FolderSettings.GamePath, "Cities2_Data")
 	};
 
-	public string CreateZipFileAndSetToClipboard(string? folder = null)
+	public string CreateZipFile(string? folder = null)
 	{
 		var file = CrossIO.Combine(folder ?? Path.GetTempPath(), $"LogReport_{DateTime.Now:yy-MM-dd_HH-mm}.zip");
 
@@ -59,8 +59,6 @@ internal class LogUtil : ILogUtil
 		{
 			CreateZipToStream(fileStream);
 		}
-
-		PlatformUtil.SetFileInClipboard(file);
 
 		return file;
 	}

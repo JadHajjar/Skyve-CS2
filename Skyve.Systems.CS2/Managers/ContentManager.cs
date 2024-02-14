@@ -33,9 +33,10 @@ internal class ContentManager : IContentManager
 	private readonly ILogger _logger;
 	private readonly INotifier _notifier;
 	private readonly ISettings _settings;
+	private readonly IModLogicManager _modLogicManager;
 	private readonly WorkshopService _workshopService;
 
-	public ContentManager(IPackageManager packageManager, ILocationService locationManager, ICompatibilityManager compatibilityManager, ILogger logger, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IPackageUtil packageUtil, ISettings settings, IWorkshopService workshopService)
+	public ContentManager(IPackageManager packageManager, ILocationService locationManager, ICompatibilityManager compatibilityManager, ILogger logger, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IPackageUtil packageUtil, ISettings settings, IWorkshopService workshopService, IModLogicManager modLogicManager)
 	{
 		_packageManager = packageManager;
 		_locationManager = locationManager;
@@ -46,6 +47,7 @@ internal class ContentManager : IContentManager
 		_logger = logger;
 		_notifier = notifier;
 		_settings = settings;
+		_modLogicManager = modLogicManager;
 		_workshopService = (WorkshopService)workshopService;
 
 		_notifier.WorkshopSyncEnded += _notifier_WorkshopSyncEnded;
@@ -283,7 +285,7 @@ internal class ContentManager : IContentManager
 
 				if (newPackage.IsCodeMod)
 				{
-					ServiceCenter.Get<IModLogicManager>().Analyze(newPackage, _modUtil);
+					_modLogicManager.Analyze(newPackage, _modUtil);
 				}
 
 				_packageManager.AddPackage(newPackage);

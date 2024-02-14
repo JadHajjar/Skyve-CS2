@@ -11,8 +11,10 @@ using System.Linq;
 namespace Skyve.Domain.CS2.Notifications;
 public class NewPackagesNotificationInfo : INotificationInfo
 {
-	public NewPackagesNotificationInfo(List<ILocalPackageData> newPackages)
+	private readonly IInterfaceService _interfaceService;
+	public NewPackagesNotificationInfo(List<ILocalPackageData> newPackages, IInterfaceService interfaceService)
 	{
+		_interfaceService = interfaceService;
 		_packages = newPackages;
 		Time = newPackages.Max(x => x.LocalTime);
 		Title = Locale.NewPackages;
@@ -32,7 +34,7 @@ public class NewPackagesNotificationInfo : INotificationInfo
 
 	public void OnClick()
 	{
-		ServiceCenter.Get<IInterfaceService>().ViewSpecificPackages(_packages.ToList(x => (IPackageIdentity)x), Title);
+		_interfaceService.ViewSpecificPackages(_packages.ToList(x => (IPackageIdentity)x), Title);
 	}
 
 	public void OnRightClick()

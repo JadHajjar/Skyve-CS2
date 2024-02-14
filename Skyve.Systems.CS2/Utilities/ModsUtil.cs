@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain;
@@ -29,8 +31,9 @@ internal class ModsUtil : IModUtil
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly INotifier _notifier;
 	private readonly ISettings _settings;
+	private readonly IServiceProvider _serviceProvider;
 
-	public ModsUtil(IWorkshopService workshopService, ISubscriptionsManager subscriptionsManager, IModLogicManager modLogicManager, INotifier notifier, AssemblyUtil assemblyUtil, MacAssemblyUtil macAssemblyUtil, ISettings settings)
+	public ModsUtil(IWorkshopService workshopService, ISubscriptionsManager subscriptionsManager, IModLogicManager modLogicManager, INotifier notifier, AssemblyUtil assemblyUtil, MacAssemblyUtil macAssemblyUtil, ISettings settings, IServiceProvider serviceProvider)
 	{
 		_assemblyUtil = assemblyUtil;
 		_workshopService = (WorkshopService)workshopService;
@@ -39,7 +42,7 @@ internal class ModsUtil : IModUtil
 		_subscriptionsManager = subscriptionsManager;
 		_notifier = notifier;
 		_settings = settings;
-
+		_serviceProvider = serviceProvider;
 		_notifier.CompatibilityDataLoaded += BuildLoadOrder;
 		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
 		_notifier.WorkshopSyncEnded += async () => await RefreshModConfig();
@@ -52,7 +55,7 @@ internal class ModsUtil : IModUtil
 
 	private void _notifier_PlaysetChanged()
 	{
-		currentPlayset = ServiceCenter.Get<IPlaysetManager>().CurrentPlayset?.Id ?? 0;
+		currentPlayset = _serviceProvider.GetService<IPlaysetManager>()?.CurrentPlayset?.Id ?? 0;
 	}
 
 	private async Task RefreshModConfig()
@@ -87,9 +90,12 @@ internal class ModsUtil : IModUtil
 		}
 
 		var index = 1;
-		var mods = ServiceCenter.Get<ILoadOrderHelper>().GetOrderedMods().Reverse().OfType<IMod>();
+		var mods = _serviceProvider.GetService<ILoadOrderHelper>()?.GetOrderedMods().Reverse().OfType<IMod>();
 		var orderedMods = new List<ModLoadOrder>();
 		var playset = await _workshopService.GetActivePlaysetId();
+
+		if (mods is null)
+			return;
 
 		foreach (var mod in mods)
 		{

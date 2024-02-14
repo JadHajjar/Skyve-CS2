@@ -13,12 +13,17 @@
 		<TargetFramework>net4.7.2</TargetFramework>
 		<Deterministic>true</Deterministic>
 		<Nullable>enable</Nullable>
+		<UseWindowsForms >true</UseWindowsForms>
 		<StartupObject>Skyve.Service.CS2.Program</StartupObject>
 		<ApplicationIcon>ServiceIcon.ico</ApplicationIcon>
 		<SignAssembly>True</SignAssembly>
 		<NeutralLanguage>en</NeutralLanguage>
 		<Description>Helps to manage your mods and assets</Description>
 		<DefineConstants>$(DefineConstants);SkyveService</DefineConstants>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(BuildType)' == 'Debug'">
+		<UseWindowsForms >true</UseWindowsForms>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,20 +1,16 @@
 ﻿using Extensions;
 
 using Skyve.Compatibility.Domain.Interfaces;
-using Skyve.Domain;
 using Skyve.Domain.Systems;
 using Skyve.Systems;
-using Skyve.Systems.CS2.Utilities;
-
-using SlickControls;
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Skyve.Service.CS2.Systems;
 internal class ServiceSystem
 {
+	private readonly UpdateSystem _updateSystem;
 	private readonly IModLogicManager _modLogicManager;
 	private readonly ICompatibilityManager _compatibilityManager;
 	private readonly IPlaysetManager _playsetManager;
@@ -35,27 +31,36 @@ internal class ServiceSystem
 	private readonly IWorkshopService _workshopService;
 	private readonly ISkyveDataManager _skyveDataManager;
 
+	public ServiceSystem(UpdateSystem updateSystem, IWorkshopService workshopService, ILogger logger)
+	{
+		_updateSystem = updateSystem;
+		_workshopService = workshopService;
+		_logger = logger;
+	}
+
 	internal async void Start()
 	{
 		await _workshopService.Initialize();
 
 		await _workshopService.Login();
 
-
-		await RunUpdate();
+		new BackgroundAction(UpdateLoop).Run();
 	}
 
-	private async Task RunUpdate()
+	private async void UpdateLoop()
 	{
-		await Task.Delay(TimeSpan.FromMinutes(15));
+		while (true)
+		{
+			await Task.Delay(TimeSpan.FromMinutes(15));
 
-		if (_workshopService.IsReady)
-		{
-			await _workshopService.RunSync();
-		}
-		else
-		{
-			await _workshopService.Login();
+			try
+			{
+				await _updateSystem.RunUpdate();
+			}
+			catch (Exception ex)
+			{
+				_logger.Exception(ex, "Error during Update cycle");
+			}
 		}
 	}
 }

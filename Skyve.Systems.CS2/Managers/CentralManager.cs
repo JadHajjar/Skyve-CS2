@@ -33,8 +33,9 @@ internal class CentralManager : ICentralManager
 	private readonly IAssetUtil _assetUtil;
 	private readonly IWorkshopService _workshopService;
 	private readonly ISkyveDataManager _skyveDataManager;
+	private readonly IDlcManager _dlcManager;
 
-	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager)
+	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager, IDlcManager dlcManager)
 	{
 		_modLogicManager = modLogicManager;
 		_compatibilityManager = compatibilityManager;
@@ -55,6 +56,7 @@ internal class CentralManager : ICentralManager
 		_assetUtil = assetUtil;
 		_workshopService = workshopService;
 		_skyveDataManager = skyveDataManager;
+		_dlcManager = dlcManager;
 	}
 
 	public async void Start()
@@ -163,7 +165,7 @@ internal class CentralManager : ICentralManager
 
 		await _workshopService.Login();
 
-		await ConnectionHandler.WhenConnected(SteamUtil.LoadDlcs);
+		await ConnectionHandler.WhenConnected(_dlcManager.UpdateDLCs);
 
 		_logger.Info($"Finished.");
 	}

@@ -9,8 +9,11 @@ using System.Drawing;
 namespace Skyve.Domain.CS2.Notifications;
 public class ParadoxLoginRequiredNotification : INotificationInfo
 {
-	public ParadoxLoginRequiredNotification(bool badLogin)
+	private readonly IInterfaceService _interfaceService;
+
+	public ParadoxLoginRequiredNotification(bool badLogin, IInterfaceService interfaceService)
 	{
+		_interfaceService = interfaceService;
 		Time = DateTime.MaxValue;
 		Title = LocaleCS2.ParadoxLoginFailedTitle;
 		Description = badLogin ? LocaleCS2.ParadoxLoginFailedBadCredentials : LocaleCS2.ParadoxLoginFailedEmpty;
@@ -27,7 +30,7 @@ public class ParadoxLoginRequiredNotification : INotificationInfo
 
 	public void OnClick()
 	{
-		ServiceCenter.Get<IInterfaceService>().OpenParadoxLogin();
+		_interfaceService.OpenParadoxLogin();
 	}
 
 	public void OnRightClick()

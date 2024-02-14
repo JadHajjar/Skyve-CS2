@@ -38,9 +38,6 @@ internal class AssetsUtil : IAssetUtil
 	{
 		if (!Directory.Exists(folder))
 		{
-#if DEBUG
-			ServiceCenter.Get<ILogger>().Debug("Getting assets failed, directory not found: " + folder);
-#endif
 			yield break;
 		}
 

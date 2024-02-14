@@ -17,12 +17,13 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 
 	private readonly WorkshopService _workshopService;
 	private readonly SaveHandler _saveHandler;
+	private readonly INotifier _notifier;
 
-	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler) : base(1, 5000, GetCachedInfo(saveHandler))
+	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(1, 5000, GetCachedInfo(saveHandler))
 	{
 		_workshopService = workshopService;
 		_saveHandler = saveHandler;
-
+		_notifier = notifier;
 		MaxCacheTime = TimeSpan.FromHours(1);
 	}
 
@@ -54,7 +55,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 		}
 		finally
 		{
-			ServiceCenter.Get<INotifier>().OnWorkshopInfoUpdated();
+			_notifier.OnWorkshopInfoUpdated();
 		}
 	}
 

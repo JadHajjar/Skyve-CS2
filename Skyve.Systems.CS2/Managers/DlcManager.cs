@@ -8,26 +8,25 @@ using Skyve.Systems.CS2.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
 internal class DlcManager : IDlcManager
 {
 	private readonly DlcConfig _config;
 
-	public IEnumerable<IDlcInfo> Dlcs => SteamUtil.Dlcs;
+	public IEnumerable<IDlcInfo> Dlcs => [];
 
 	public event Action? DlcsLoaded;
 
-	public DlcManager()
+	public DlcManager(SaveHandler saveHandler)
 	{
-		_config = DlcConfig.Load();
-
-		SteamUtil.DLCsLoaded += DlcsLoaded;
+		_config = saveHandler.Load<DlcConfig>();
 	}
 
 	public bool IsAvailable(uint dlcId)
 	{
-		return SteamUtil.IsDlcInstalledLocally(dlcId);
+		return false;
 	}
 
 	public bool IsIncluded(IDlcInfo dlc)
@@ -59,5 +58,10 @@ internal class DlcManager : IDlcManager
 	public List<uint> GetExcludedDlcs()
 	{
 		return new(_config.RemovedDLCs);
+	}
+
+	public Task UpdateDLCs()
+	{
+		return Task.CompletedTask;		
 	}
 }

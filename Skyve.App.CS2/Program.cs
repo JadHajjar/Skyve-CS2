@@ -27,6 +27,8 @@ internal static class Program
 		SaveHandler.AppName = "Skyve";
 
 		ServiceCenter.Provider = BuildServices();
+
+		SystemExtensions.Initialize(ServiceCenter.Provider);
 	}
 
 	private static IServiceProvider BuildServices()

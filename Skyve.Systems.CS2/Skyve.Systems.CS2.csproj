@@ -15,12 +15,6 @@
 		<NeutralLanguage>en</NeutralLanguage>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Remove="Utilities\SteamItemProcessor.cs" />
-	</ItemGroup>
-	<ItemGroup>
-	  <None Include="Utilities\SteamItemProcessor.cs" />
-	</ItemGroup>
-	<ItemGroup>
 		<ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
 		<ProjectReference Include="..\..\SlickControls\SlickControls.csproj" />
 		<ProjectReference Include="..\Skyve.Domain.CS2\Skyve.Domain.CS2.csproj" />

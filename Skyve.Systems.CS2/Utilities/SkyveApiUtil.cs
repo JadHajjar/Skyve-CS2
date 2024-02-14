@@ -14,30 +14,32 @@ using System.Threading.Tasks;
 namespace Skyve.Systems.CS2.Utilities;
 public class SkyveApiUtil : ISkyveApiUtil
 {
+	private readonly ApiUtil _apiUtil;
 	private readonly IUserService _userService;
 
-	public SkyveApiUtil(IUserService userService)
+	public SkyveApiUtil(ApiUtil apiUtil, IUserService userService)
 	{
+		_apiUtil = apiUtil;
 		_userService = userService;
 	}
 
 	public async Task<T?> Get<T>(string url, params (string, object)[] queryParams)
 	{
-		return await ApiUtil.Get<T>(KEYS.API_URL + url
+		return await _apiUtil.Get<T>(KEYS.API_URL + url
 			, new[] { ("API_KEY", KEYS.API_KEY), ("USER_ID", Encryption.Encrypt(_userService.User.Id?.ToString() ?? string.Empty, KEYS.SALT)) }
 			, queryParams);
 	}
 
 	public async Task<T?> Delete<T>(string url, params (string, object)[] queryParams)
 	{
-		return await ApiUtil.Delete<T>(KEYS.API_URL + url
+		return await _apiUtil.Delete<T>(KEYS.API_URL + url
 			, new[] { ("API_KEY", KEYS.API_KEY), ("USER_ID", Encryption.Encrypt(_userService.User.Id?.ToString() ?? string.Empty, KEYS.SALT)) }
 			, queryParams);
 	}
 
 	public async Task<T?> Post<TBody, T>(string url, TBody body, params (string, object)[] queryParams)
 	{
-		return await ApiUtil.Post<TBody, T>(KEYS.API_URL + url
+		return await _apiUtil.Post<TBody, T>(KEYS.API_URL + url
 			, body
 			, new[] { ("API_KEY", KEYS.API_KEY), ("USER_ID", Encryption.Encrypt(_userService.User.Id?.ToString() ?? string.Empty, KEYS.SALT)) }
 			, queryParams);
