@@ -43,7 +43,7 @@ public class Playset : IPlayset
 	{
 		thumbnailUrl = ThumbnailUrl;
 
-		thumbnail = imageService.GetImage(ThumbnailUrl, true, $"{Id}_Playset_{Regex.Match(ThumbnailUrl, "cities_skylines_2/(.+?)/content").Groups[1].Value}{Path.GetExtension(ThumbnailUrl)}").Result;
+		thumbnail = string.IsNullOrEmpty(ThumbnailUrl) ? null : imageService.GetImage(ThumbnailUrl, true, $"{Id}_Playset_{Regex.Match(ThumbnailUrl, "cities_skylines_2/(.+?)/content").Groups[1].Value}{Path.GetExtension(ThumbnailUrl)}").Result;
 
 		return true;
 	}

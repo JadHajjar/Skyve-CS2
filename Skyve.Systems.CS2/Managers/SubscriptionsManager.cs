@@ -37,7 +37,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		Status = new SubscriptionStatus(
 			isActive: true,
 			modId: info.Id,
-			progress: (installProgress + downloadProgress) / 2f,
+			progress: (installProgress + downloadProgress * 3) / 4f,
 			processedBytes: info.ProcessedBytes,
 			totalSize: info.Size);
 
@@ -65,7 +65,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		Status = new SubscriptionStatus(
 			isActive: true,
 			modId: info.Id,
-			progress: (installProgress + downloadProgress) / 2f,
+			progress: (installProgress + downloadProgress * 3) / 4f,
 			processedBytes: 0,
 			totalSize: 0);
 
