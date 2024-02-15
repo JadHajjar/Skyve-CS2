@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
 	<Import Project="../../Skyve/Config.props" />
+	<Import Project="../../Skyve/CS2-Version.props" />
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<Description>Helps to manage your mods and assets</Description>
@@ -35,6 +36,14 @@
 		<Content Include="Resources\Skyve.ico" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(BuildType)' == 'Stable'">
+		<EmbeddedResource Include="Resources\Skyve_Background.png" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(BuildType)' != 'Stable'">
+		<EmbeddedResource Include="Resources\Skyve_Background_Beta.png" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Costura.Fody" Version="5.7.0">
 			<PrivateAssets>all</PrivateAssets>
@@ -44,5 +53,9 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="System.ServiceProcess" />
 	</ItemGroup>
 </Project>

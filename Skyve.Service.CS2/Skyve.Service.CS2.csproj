@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
-	<Import Project="../../Skyve/CS2-Version.props" />
 	<Import Project="../../Skyve/Config.props" />
+	<Import Project="../../Skyve/CS2-Version.props" />
 	<PropertyGroup>
 		<AssemblyName>Skyve.Service.CS2</AssemblyName>
 		<Title>Skyve Service</Title>
-		<TargetName>Skyve Service</TargetName>
+		<TargetName>Skyve.Service</TargetName>
 		<Description>Helps to manage your mods and assets</Description>
 	</PropertyGroup>
 	<PropertyGroup>

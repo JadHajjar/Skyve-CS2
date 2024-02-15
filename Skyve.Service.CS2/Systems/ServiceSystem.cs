@@ -1,6 +1,4 @@
-﻿using Extensions;
-
-using Skyve.Compatibility.Domain.Interfaces;
+﻿using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain.Systems;
 using Skyve.Systems;
 
@@ -38,28 +36,39 @@ internal class ServiceSystem
 		_logger = logger;
 	}
 
-	internal async void Start()
+	public async void Run()
 	{
-		await _workshopService.Initialize();
+		try
+		{
+			await _workshopService.Initialize();
 
-		await _workshopService.Login();
+			await _workshopService.Login();
 
-		new BackgroundAction(UpdateLoop).Run();
-	}
+			_logger.Info("Update Loop Started");
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to start Update Loop");
+		}
 
-	private async void UpdateLoop()
-	{
 		while (true)
 		{
-			await Task.Delay(TimeSpan.FromMinutes(15));
-
 			try
 			{
-				await _updateSystem.RunUpdate();
+				await Task.Delay(TimeSpan.FromMinutes(15));
+
+				try
+				{
+					await _updateSystem.RunUpdate();
+				}
+				catch (Exception ex)
+				{
+					_logger.Exception(ex, "Error during Update cycle");
+				}
 			}
 			catch (Exception ex)
 			{
-				_logger.Exception(ex, "Error during Update cycle");
+				_logger.Exception(ex, "Unexpected error during Update Loop");
 			}
 		}
 	}

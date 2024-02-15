@@ -18,10 +18,13 @@ internal static class Program
 	private static void Main()
 	{
 #if DEBUG
-		new SkyveService().TestRun();
+		if (System.Diagnostics.Debugger.IsAttached)
+		{
+			new SkyveService().TestRun();
 
-		while (true)
-			Thread.Sleep(1000);
+			while (true)
+				Thread.Sleep(1000);
+		}
 #endif
 		ServiceBase.Run([new SkyveService()]);
 	}

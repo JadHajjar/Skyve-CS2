@@ -17,7 +17,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public LocaleCS2() : base($"Skyve.Domain.CS2.Properties.LocaleCS2.json") { }
 
 	/// <summary>
-	/// You can't run Skyve from this folder. Either run the app from your Programs list, or run the Skyve Setup from the mod's folder.
+	/// You can't run Skyve from this folder.  Either run the app from your Programs list, or run the Skyve Setup from the mod's folder.
 	/// </summary>
 	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
 

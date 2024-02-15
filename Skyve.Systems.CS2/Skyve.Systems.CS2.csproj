@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
-	<Import Project="../../Skyve/CS2-Version.props" />
 	<Import Project="../../Skyve/Config.props" />
+	<Import Project="../../Skyve/CS2-Version.props" />
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<Description>Helps to manage your mods and assets</Description>

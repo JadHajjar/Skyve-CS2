@@ -9,9 +9,11 @@ using Skyve.Systems.CS2;
 using Skyve.Systems.CS2.Systems;
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceProcess;
+using System.Threading;
 
 namespace Skyve.Service.CS2;
 
@@ -21,6 +23,8 @@ public class SkyveService : ServiceBase
 	{
 		ServiceName = "SkyveService";
 	}
+
+	public List<ServiceProvider> Providers { get; } = [];
 
 	protected override void OnStart(string[] args)
 	{
@@ -43,12 +47,23 @@ public class SkyveService : ServiceBase
 
 			var provider = services.BuildServiceProvider();
 
-			provider.GetService<ServiceSystem>()?.Start();
+			Providers.Add(provider);
+
+			//new Thread(new ThreadStart(provider.GetService<ServiceSystem>()!.Run)) { IsBackground = true }.Start();
+		}
+
+		foreach (var provider in Providers)
+		{
+			provider.GetService<ILogger>()?.Info("Service Started");
 		}
 	}
 
 	protected override void OnStop()
 	{
+		foreach (var provider in Providers)
+		{
+			provider.GetService<ILogger>()?.Warning("Service Stopped");
+		}
 	}
 
 #if DEBUG

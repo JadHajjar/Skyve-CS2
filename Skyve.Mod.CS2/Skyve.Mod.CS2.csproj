@@ -19,8 +19,8 @@
 		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
 	</PropertyGroup>
 
-	<Import Project="../../Skyve/CS2-Version.props" />
 	<Import Project="../../Skyve/Config.props" />
+	<Import Project="../../Skyve/CS2-Version.props" />
 
 	<PropertyGroup>
 		<PublishConfigurationPath>Properties\$(BuildType)\PublishConfiguration.xml</PublishConfigurationPath>

@@ -60,7 +60,7 @@ internal static class Program
 					SetProcessDPIAware();
 				}
 
-				var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "SkyveSetup.exe");
+				var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "Skyve Setup.exe");
 
 				if (CrossIO.FileExists(setupFile))
 				{
@@ -73,6 +73,8 @@ internal static class Program
 				{
 					MessagePrompt.Show(LocaleCS2.CantRunAppFromHere, PromptButtons.OK, PromptIcons.Hand);
 				}
+
+				return;
 			}
 
 			if (CommandUtil.Parse(args))
