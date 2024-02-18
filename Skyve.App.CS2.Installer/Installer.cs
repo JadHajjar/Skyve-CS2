@@ -19,10 +19,7 @@ public class Installer
 
 	public static async Task Install()
 	{
-		var sw=Stopwatch.StartNew();
-
 		await KillRunningApps();
-
 
 		var targetFolder = new DirectoryInfo(@"C:\Program Files\Skyve CS-II");
 		var originalPath = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), ".App"));

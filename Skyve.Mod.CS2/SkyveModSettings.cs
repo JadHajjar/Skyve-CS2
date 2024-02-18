@@ -20,7 +20,7 @@ namespace Skyve.Mod.CS2
 		public const string GAMEPLAY_GROUP = nameof(GAMEPLAY_GROUP);
 
 		[SettingsUISection(GAMEPLAY_GROUP)]
-		public bool InstallApp { set => _mod.InstallApp(); }
+		public bool InstallApp { set => SkyveMod.InstallApp(); }
 
 		public SkyveModSettings(SkyveMod mod) : base(mod)
 		{

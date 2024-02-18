@@ -13,40 +13,38 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Skyve.Mod.CS2
 {
 	public class SkyveMod : IMod
 	{
-		public static ILog Log = LogManager.GetLogger(nameof(SkyveMod), false);
+		private static string ModPath;
+
+		public static ILog Log = LogManager.GetLogger(nameof(SkyveMod)).SetShowsErrorsInUI(false);
 
 		public SkyveModSettings Settings { get; private set; }
 
-		public void OnCreateWorld(UpdateSystem updateSystem)
-		{
-			Log.Info(nameof(OnCreateWorld));
-		}
-
-		public void OnDispose()
-		{
-			Log.Info(nameof(OnDispose));
-		}
-
-		public void OnLoad()
+		public void OnLoad(UpdateSystem updateSystem)
 		{
 			Log.Info(nameof(OnLoad));
 
-			Settings = new SkyveModSettings(this);
+			if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
+			{
+				ModPath = Path.GetDirectoryName(asset.path);
+			}
 
-			Settings.RegisterInOptionsUI();
+			updateSystem.UpdateAt<InstallSkyveUISystem>(SystemUpdatePhase.UIUpdate);
+
+			//Settings = new SkyveModSettings(this);
+
+			//Settings.RegisterInOptionsUI();
 
 			foreach (var item in Locale.GetAvailableSources())
 			{
 				GameManager.instance.localizationManager.AddSource(item.LocaleId, item);
 			}
 
-			AssetDatabase.global.LoadSettings(nameof(SkyveModSettings), Settings, new SkyveModSettings(this));
+			//AssetDatabase.global.LoadSettings(nameof(SkyveModSettings), Settings, new SkyveModSettings(this));
 
 			try
 			{
@@ -88,11 +86,16 @@ namespace Skyve.Mod.CS2
 			}
 		}
 
-		public void InstallApp()
+		public static void InstallApp()
 		{
 			Log.Info(nameof(InstallApp));
 
-			Process.Start(Path.Combine(EnvPath.kUserDataPath, "Mods", "Skyve Mod", "Skyve Setup.exe"));
+			Process.Start(Path.Combine(ModPath, "Skyve Setup.exe"));
+		}
+
+		public void OnDispose()
+		{
+			Log.Info(nameof(OnDispose));
 		}
 	}
 }

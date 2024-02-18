@@ -4,6 +4,7 @@ using PDX.SDK.Contracts;
 using PDX.SDK.Contracts.Configuration;
 using PDX.SDK.Contracts.Credential;
 using PDX.SDK.Contracts.Enums;
+using PDX.SDK.Contracts.Enums.Errors;
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
@@ -14,13 +15,11 @@ using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Managers;
-using Skyve.Systems.CS2.Systems;
 using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using PdxPlatform = PDX.SDK.Contracts.Enums.Platform;
@@ -376,7 +375,9 @@ internal class WorkshopService : IWorkshopService
 		}
 
 		if (IsLoggedIn)
-		await WaitUntilReady();
+		{
+			await WaitUntilReady();
+		}
 
 		var mods = ProcessResult(await Context.Mods.List());
 
@@ -649,7 +650,12 @@ internal class WorkshopService : IWorkshopService
 
 		try
 		{
-			ProcessResult(await Context.Mods.Sync());
+			if (ProcessResult(await Context.Mods.Sync()).Error == Mods.PromptNeeded)
+			{
+				var conflicts = await Context.Mods.GetSyncConflicts();
+
+				await Context.Mods.Sync(SyncDirection.Upstream);
+			}
 		}
 		catch (Exception ex)
 		{

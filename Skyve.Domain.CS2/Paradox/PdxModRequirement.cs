@@ -9,6 +9,11 @@ using System.Drawing;
 namespace Skyve.Domain.CS2.Paradox;
 public class PdxModRequirement : IPackageRequirement
 {
+    public PdxModRequirement()
+    {
+		Name = string.Empty;
+	}
+
 	public PdxModRequirement(ModDependency x)
 	{
 		if (x.Id.HasValue)
