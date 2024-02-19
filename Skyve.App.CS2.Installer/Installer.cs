@@ -16,12 +16,13 @@ namespace Skyve.App.CS2.Installer;
 public class Installer
 {
 	private const string REG_KEY = "SkyveAppCs2";
+	private const string INSTALL_PATH = @"C:\Program Files\Skyve CS-II";
 
 	public static async Task Install()
 	{
 		await KillRunningApps();
 
-		var targetFolder = new DirectoryInfo(@"C:\Program Files\Skyve CS-II");
+		var targetFolder = new DirectoryInfo(INSTALL_PATH);
 		var originalPath = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), ".App"));
 		var shortcutPath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Skyve CS-II.lnk";
 		var exePath = Path.Combine(targetFolder.FullName, "Skyve.exe");
@@ -57,7 +58,7 @@ public class Installer
 
 	public static async Task RegisterService(bool uninstall)
 	{
-		var servicePath = Path.Combine(@"C:\Program Files\Skyve CS-II", "Skyve.Service.exe");
+		var servicePath = Path.Combine(INSTALL_PATH, "Skyve.Service.exe");
 
 		var service = ServiceController.GetServices().FirstOrDefault(x => x.ServiceName == "Skyve.Service");
 
@@ -144,51 +145,105 @@ public class Installer
 
 	public static async Task UnInstall()
 	{
-		try
+		await KillRunningApps();
+
+		var shortcutPath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Skyve CS-II.lnk";
+
+		File.Delete(shortcutPath);
+
+		foreach (var item in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "*.lnk"))
 		{
-			await KillRunningApps();
-
-			var shortcutPath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Skyve CS-II.lnk";
-
-			File.Delete(shortcutPath);
-
-			foreach (var item in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "*.lnk"))
+			if (ExtensionClass.GetShortcutPath(item).PathEquals(Application.ExecutablePath))
 			{
-				if (ExtensionClass.GetShortcutPath(item).PathEquals(Application.ExecutablePath))
-				{
-					File.Delete(item);
-				}
+				File.Delete(item);
 			}
-
-			using var parent = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true);
-
-			parent?.DeleteSubKey(REG_KEY);
-
-			await RegisterService(true);
 		}
-		catch { }
+
+		using var parent = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true);
+
+		parent?.DeleteSubKey(REG_KEY);
+
+		await RegisterService(true);
+
+		Directory.Delete(INSTALL_PATH, true);
 
 		Process.Start(new ProcessStartInfo()
 		{
-			Arguments = $"/C choice /C Y /N /D Y /T 1 & rmdir /s /q \"{Path.GetDirectoryName(Application.ExecutablePath)}\" & exit",
+			Arguments = $"/C choice /C Y /N /D Y /T 2 & rmdir /s /q \"{Application.ExecutablePath}\" & exit",
 			WindowStyle = ProcessWindowStyle.Hidden,
 			CreateNoWindow = true,
-			WorkingDirectory = "C:\\Program Files",
+			WorkingDirectory = Path.GetTempPath(),
 			FileName = "cmd.exe"
 		});
 	}
 
 	private static async Task KillRunningApps()
 	{
-		while (Process.GetProcessesByName("Skyve").Length > 0)
+		var service = ServiceController.GetServices().FirstOrDefault(x => x.ServiceName == "Skyve.Service");
+
+		if (service != null && service.CanShutdown)
 		{
-			foreach (var item in Process.GetProcessesByName("Skyve"))
+			service.Stop();
+
+			while (service.Status != ServiceControllerStatus.Stopped)
 			{
-				item.Kill();
+				service.Refresh();
+
+				await Task.Delay(100);
+			}
+		}
+
+		if (!Directory.Exists(INSTALL_PATH))
+		{
+			return;
+		}
+
+		for (var i = 0; i < 15; i++)
+		{
+			foreach (var file in Directory.GetFiles(INSTALL_PATH, "*.exe"))
+			{
+				foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(file)))
+				{
+					process.Kill();
+				}
+			}
+
+			var areFilesLocked = new DirectoryInfo(INSTALL_PATH)
+				.GetFiles("*.*", SearchOption.AllDirectories)
+				.Any(IsFileLocked);
+
+			if (!areFilesLocked)
+			{
+				return;
 			}
 
 			await Task.Delay(500);
 		}
+	}
+
+	private static bool IsFileLocked(FileInfo file)
+	{
+		FileStream? stream = null;
+
+		try
+		{
+			stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+		}
+		catch (IOException)
+		{
+			//the file is unavailable because it is:
+			//still being written to
+			//or being processed by another thread
+			//or does not exist (has already been processed)
+			return true;
+		}
+		finally
+		{
+			stream?.Close();
+		}
+
+		//file is not locked
+		return false;
 	}
 
 	private static void CreateUninstallRegistry(string appPath, string uninstallPath)

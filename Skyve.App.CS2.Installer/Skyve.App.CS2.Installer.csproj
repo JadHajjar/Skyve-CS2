@@ -34,6 +34,7 @@
 
 	<ItemGroup>
 		<Content Include="Resources\Skyve.ico" />
+		<EmbeddedResource Include="Resources\Skyve_Uninstall.png" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(BuildType)' == 'Stable'">

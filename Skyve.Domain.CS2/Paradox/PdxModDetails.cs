@@ -35,6 +35,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		ShortDescription = mod.ShortDescription;
 		Description = mod.LongDescription;
 		ServerSize = (long)mod.Size;
+		PdxModsVersion = mod.Version;
 		Version = mod.UserModVersion;
 		Subscribers = mod.SubscriptionsTotal;
 		HasVoted = hasVoted;
@@ -59,6 +60,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public string? ShortDescription { get; set; }
 	public string? Description { get; set; }
 	public long ServerSize { get; set; }
+	public string PdxModsVersion { get; set; }
 	public string Version { get; set; }
 	public int Subscribers { get; set; }
 	public bool IsCollection { get; set; }
@@ -83,9 +85,9 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
-		thumbnailUrl = null;
+		thumbnailUrl = ThumbnailUrl;
 
-		thumbnail = imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailUrl)}").Result;
+		thumbnail = imageService.GetImage(ThumbnailUrl, true, $"{Id}_{PdxModsVersion}_{Path.GetExtension(ThumbnailUrl)}").Result;
 
 		return true;
 	}

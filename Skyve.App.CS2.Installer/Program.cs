@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.Installer;
@@ -18,10 +19,16 @@ internal static class Program
 	[STAThread]
 	private static void Main()
 	{
-		if (Path.GetFileNameWithoutExtension(Application.ExecutablePath).Equals("uninstall", StringComparison.CurrentCultureIgnoreCase))
+		var fileName = Path.GetFileNameWithoutExtension(Application.ExecutablePath).ToLower();
+		
+		if (fileName == "uninstall")
 		{
-			Installer.UnInstall().RunSynchronously();
-			
+			var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.exe");
+
+			File.Copy(Application.ExecutablePath, tempPath, true);
+
+			Process.Start(tempPath);
+
 			return;
 		}
 
@@ -33,7 +40,7 @@ internal static class Program
 			SetProcessDPIAware();
 		}
 
-		Application.Run(new InstallingForm());
+		Application.Run(new InstallingForm(Guid.TryParse(fileName, out _)));
 	}
 
 	[System.Runtime.InteropServices.DllImport("user32.dll")]

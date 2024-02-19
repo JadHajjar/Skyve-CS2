@@ -650,7 +650,9 @@ internal class WorkshopService : IWorkshopService
 
 		try
 		{
-			if (ProcessResult(await Context.Mods.Sync()).Error == Mods.PromptNeeded)
+			var result = ProcessResult(await Context.Mods.Sync());
+
+			if (result.Error is not null && result.Error == Mods.PromptNeeded)
 			{
 				var conflicts = await Context.Mods.GetSyncConflicts();
 

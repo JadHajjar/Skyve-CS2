@@ -55,5 +55,7 @@
   "FilterIncludedByDefault": "Enable 'Included' filter for local content by default",
   "FilterIncludedByDefault_Tip": "Only shows local content that are included in your active playset by default.",
   "RunSetupOrRunApp": "You can't run Skyve from this folder. If you've installed it already, run it from your Programs list.\r\n\r\nIf not, click on 'Ok' to run the setup.",
-  "CantRunAppFromHere": "You can't run Skyve from this folder.\r\n\r\nEither run the app from your Programs list, or run the Skyve Setup from the mod's folder."
+  "CantRunAppFromHere": "You can't run Skyve from this folder.\r\n\r\nEither run the app from your Programs list, or run the Skyve Setup from the mod's folder.",
+  "UpdateAvailable": "Update available",
+  "UpdateAvailableInfo": "Click here to update Skyve"
 }

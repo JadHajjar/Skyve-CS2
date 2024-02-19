@@ -20,6 +20,7 @@ public partial class MainForm : BasePanelForm
 	private bool? buttonStateRunning;
 	private readonly TroubleshootInfoControl _troubleshootInfoControl;
 	private readonly DownloadsInfoControl _downloadsInfoControl;
+	private readonly UpdateAvailableControl _updateAvailableControl;
 
 	private readonly IPlaysetManager _playsetManager;
 	private readonly IPackageManager _packageManager;
@@ -39,12 +40,15 @@ public partial class MainForm : BasePanelForm
 
 		_downloadsInfoControl = new() { Dock = DockStyle.Top };
 		_troubleshootInfoControl = new() { Dock = DockStyle.Top };
+		_updateAvailableControl = new() { Dock = DockStyle.Top };
 
 		TLP_SideBarTools.Controls.Add(_downloadsInfoControl, 0, 0);
-		TLP_SideBarTools.Controls.Add(_troubleshootInfoControl, 0, 2);
+		TLP_SideBarTools.Controls.Add(_troubleshootInfoControl, 0, 1);
+		TLP_SideBarTools.Controls.Add(_updateAvailableControl, 0, 2);
 
 		TLP_SideBarTools.SetColumnSpan(_downloadsInfoControl, 2);
 		TLP_SideBarTools.SetColumnSpan(_troubleshootInfoControl, 2);
+		TLP_SideBarTools.SetColumnSpan(_updateAvailableControl, 2);
 
 		base_PB_Icon.UserDraw = true;
 		base_PB_Icon.Paint += Base_PB_Icon_Paint;
@@ -253,9 +257,9 @@ public partial class MainForm : BasePanelForm
 
 			if (base_PB_Icon.Loading && !base_PB_Icon.HoverState.HasFlag(HoverState.Pressed))
 			{
-				var loops = 10;
-				var target = 256;
-				var perc = (-Math.Cos(base_PB_Icon.LoaderPercentage * loops * Math.PI / 200) * (target - minimum) / 2) + ((target + minimum) / 2);
+				const int loops = 2;
+				const int target = 256;
+				var perc = (-Math.Cos(base_PB_Icon.LoaderPercentage / 100D * Math.PI * loops) * (target - minimum) / 2) + ((target + minimum) / 2);
 				var alpha = (byte)perc;
 
 				if (alpha == 0)

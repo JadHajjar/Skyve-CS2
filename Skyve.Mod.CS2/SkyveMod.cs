@@ -90,7 +90,9 @@ namespace Skyve.Mod.CS2
 		{
 			Log.Info(nameof(InstallApp));
 
-			Process.Start(Path.Combine(ModPath, "Skyve Setup.exe"));
+			try
+			{ Process.Start(Path.Combine(ModPath, "Skyve Setup.exe")); }
+			catch { }
 		}
 
 		public void OnDispose()

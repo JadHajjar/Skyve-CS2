@@ -227,6 +227,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SubscribeToItem => _instance.GetText("SubscribeToItem");
 
 	/// <summary>
+	/// Update available
+	/// </summary>
+	public static Translation UpdateAvailable => _instance.GetText("UpdateAvailable");
+
+	/// <summary>
+	/// Click here to update Skyve
+	/// </summary>
+	public static Translation UpdateAvailableInfo => _instance.GetText("UpdateAvailableInfo");
+
+	/// <summary>
 	/// View on PDX Mods
 	/// </summary>
 	public static Translation ViewOnWorkshop => _instance.GetText("ViewOnWorkshop");

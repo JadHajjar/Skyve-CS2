@@ -36,7 +36,7 @@ public partial class PC_PackagePage : PanelContent
 
 		if (package.GetWorkshopInfo() is IWorkshopInfo workshopInfo)
 		{
-			if (workshopInfo.GetThumbnail(imageService, out var thumbnail, out var thumbnailUrl))
+			if (workshopInfo.GetThumbnail(imageService, out var thumbnail, out var thumbnailUrl) && thumbnail is not null)
 			{
 				PB_Icon.Image = new Bitmap(thumbnail);
 			}

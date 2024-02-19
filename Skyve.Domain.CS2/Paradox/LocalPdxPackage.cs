@@ -97,8 +97,8 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		thumbnailUrl = ThumbnailUrl;
 
 		thumbnail = !CrossIO.FileExists(ThumbnailPath)
-			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailUrl)}").Result
-			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailPath)}", isFilePath: true).Result;
+			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Version}_{Path.GetExtension(ThumbnailUrl)}").Result
+			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Version}_{Path.GetExtension(ThumbnailPath)}", isFilePath: true).Result;
 
 		return true;
 	}
