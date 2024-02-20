@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Internal.Platypatch.Models;
 
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
@@ -34,9 +35,11 @@ internal class ContentManager : IContentManager
 	private readonly INotifier _notifier;
 	private readonly ISettings _settings;
 	private readonly IModLogicManager _modLogicManager;
+	private readonly IUpdateManager _updateManager;
+	private readonly ISkyveDataManager _skyveDataManager;
 	private readonly WorkshopService _workshopService;
 
-	public ContentManager(IPackageManager packageManager, ILocationService locationManager, ICompatibilityManager compatibilityManager, ILogger logger, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IPackageUtil packageUtil, ISettings settings, IWorkshopService workshopService, IModLogicManager modLogicManager)
+	public ContentManager(IPackageManager packageManager, ILocationService locationManager, ICompatibilityManager compatibilityManager, ILogger logger, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IPackageUtil packageUtil, ISettings settings, IWorkshopService workshopService, IModLogicManager modLogicManager, IUpdateManager updateManager, ISkyveDataManager skyveDataManager)
 	{
 		_packageManager = packageManager;
 		_locationManager = locationManager;
@@ -48,6 +51,8 @@ internal class ContentManager : IContentManager
 		_notifier = notifier;
 		_settings = settings;
 		_modLogicManager = modLogicManager;
+		_updateManager = updateManager;
+		_skyveDataManager = skyveDataManager;
 		_workshopService = (WorkshopService)workshopService;
 
 		_notifier.WorkshopSyncEnded += _notifier_WorkshopSyncEnded;
@@ -203,6 +208,18 @@ internal class ContentManager : IContentManager
 			}
 		}
 
+
+		try
+		{
+
+			_logger.Info($"Analyzing packages..");
+
+			AnalyzePackages(packages);
+		
+			_logger.Info($"Finished analyzing packages..");
+		}
+		catch (Exception ex) { _logger.Exception(ex, "Failed to analyze packages"); }
+
 		return packages;
 	}
 
@@ -335,5 +352,60 @@ internal class ContentManager : IContentManager
 		//PackageWatcher.Create(_locationManager.ModsPath, false, false);
 
 		//PackageWatcher.Create(_locationManager.WorkshopContentPath, false, true);
+	}
+
+	private void AnalyzePackages(List<IPackage> packages)
+	{
+		var blackList = new List<IPackage>();
+		var firstTime = _updateManager.IsFirstTime();
+
+		_notifier.IsBulkUpdating = true;
+
+		foreach (var package in packages)
+		{
+			if (_skyveDataManager.IsBlacklisted(package))
+			{
+				blackList.Add(package);
+				continue;
+			}
+
+			if (package.IsCodeMod)
+			{
+				if (!_settings.UserSettings.AdvancedIncludeEnable)
+				{
+					if (!firstTime && !_modUtil.IsEnabled(package) && _modUtil.IsIncluded(package))
+					{
+						_modUtil.SetIncluded(package, false);
+					}
+				}
+
+				if (_settings.UserSettings.LinkModAssets && package.LocalData is not null)
+				{
+					_packageUtil.SetIncluded(package.LocalData.Assets, _modUtil.IsIncluded(package));
+				}
+
+				_modLogicManager.Analyze(package, _modUtil);
+
+				if (!firstTime && !_updateManager.IsPackageKnown(package.LocalData!))
+				{
+					_modUtil.SetEnabled(package, _modUtil.IsIncluded(package));
+				}
+			}
+		}
+
+		_notifier.IsBulkUpdating = false;
+		_modUtil.SaveChanges();
+		_assetUtil.SaveChanges();
+
+		packages.RemoveAll(x => blackList.Contains(x));
+
+		foreach (var item in blackList)
+		{
+			_packageManager.DeleteAll(item.LocalData!.Folder);
+		}
+
+		_logger.Info($"Applying analysis results..");
+
+		_modLogicManager.ApplyRequiredStates(_modUtil);
 	}
 }

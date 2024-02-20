@@ -8,6 +8,7 @@ internal class UpdateAvailableControl : SlickControl
 {
 	public UpdateAvailableControl()
 	{
+		Visible = false;
 		Cursor = Cursors.Hand;
 	}
 
@@ -25,7 +26,7 @@ internal class UpdateAvailableControl : SlickControl
 		e.Graphics.SetUp(BackColor);
 
 		using var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-		using var brush = Gradient(FormDesign.Design.ActiveColor);
+		using var brush = Gradient(HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveForeColor:  HoverState.HasFlag(HoverState.Hovered) ? Color.FromArgb(200, FormDesign.Design.ActiveColor) : FormDesign.Design.ActiveColor);
 		e.Graphics.FillRoundedRectangle(brush, ClientRectangle.Pad(1), Padding.Left);
 
 		{
@@ -35,10 +36,10 @@ internal class UpdateAvailableControl : SlickControl
 			textRect.Width -= textRect.Height * 3 / 4;
 			var text = LocaleCS2.UpdateAvailable.One.ToUpper();
 			using var font = UI.Font(9.25F, FontStyle.Bold).FitTo(text, textRect, e.Graphics);
-			using var textBrush = new SolidBrush(FormDesign.Design.ActiveForeColor);
+			using var textBrush = new SolidBrush(HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveColor : FormDesign.Design.ActiveForeColor);
 			e.Graphics.DrawString(text, font, textBrush, textRect, format);
 
-			using var icon = IconManager.GetIcon("I_OutOfDate", textRect.Height).Color(FormDesign.Design.ActiveForeColor);
+			using var icon = IconManager.GetIcon("I_OutOfDate", textRect.Height).Color(HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveColor : FormDesign.Design.ActiveForeColor);
 
 			textRect.Width = 0;
 			e.Graphics.DrawImage(icon, textRect.Align(icon.Size, ContentAlignment.MiddleRight));
@@ -50,7 +51,7 @@ internal class UpdateAvailableControl : SlickControl
 			textRect.Height = textRect.Height * 4 / 10;
 			var text = LocaleCS2.UpdateAvailableInfo;
 			using var font = UI.Font(7.75F).FitTo(text, textRect, e.Graphics);
-			using var textBrush = new SolidBrush(Color.FromArgb(200, FormDesign.Design.ActiveForeColor));
+			using var textBrush = new SolidBrush(Color.FromArgb(200, HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveColor : FormDesign.Design.ActiveForeColor));
 			e.Graphics.DrawString(text, font, textBrush, textRect, format);
 		}
 	}

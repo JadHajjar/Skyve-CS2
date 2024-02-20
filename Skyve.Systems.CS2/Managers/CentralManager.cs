@@ -114,14 +114,6 @@ internal class CentralManager : ICentralManager
 
 		_skyveDataManager.Start(content);
 
-		_logger.Info($"Analyzing packages..");
-
-		try
-		{ AnalyzePackages(content); }
-		catch (Exception ex) { _logger.Exception(ex, "Failed to analyze packages"); }
-
-		_logger.Info($"Finished analyzing packages..");
-
 		_notifier.OnContentLoaded();
 
 		if (_playsetManager.CurrentPlayset is not null && CommandUtil.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
@@ -200,69 +192,5 @@ internal class CentralManager : ICentralManager
 		_settings.SessionSettings.Save();
 
 		_logger.Info("Saved Session Settings");
-	}
-
-	private void AnalyzePackages(List<IPackage> content)
-	{
-		var blackList = new List<IPackage>();
-		var firstTime = _updateManager.IsFirstTime();
-
-		_notifier.IsBulkUpdating = true;
-
-		foreach (var package in content)
-		{
-			if (_skyveDataManager.IsBlacklisted(package))
-			{
-				blackList.Add(package);
-				continue;
-			}
-
-			if (package.IsCodeMod)
-			{
-				if (!_settings.UserSettings.AdvancedIncludeEnable)
-				{
-					if (!firstTime && !_modUtil.IsEnabled(package) && _modUtil.IsIncluded(package))
-					{
-						_modUtil.SetIncluded(package, false);
-					}
-				}
-
-				if (_settings.UserSettings.LinkModAssets && package.LocalData is not null)
-				{
-					_packageUtil.SetIncluded(package.LocalData.Assets, _modUtil.IsIncluded(package));
-				}
-
-				_modLogicManager.Analyze(package, _modUtil);
-
-				if (!firstTime && !_updateManager.IsPackageKnown(package.LocalData!))
-				{
-					_modUtil.SetEnabled(package, _modUtil.IsIncluded(package));
-				}
-			}
-		}
-
-		_notifier.IsBulkUpdating = false;
-		_modUtil.SaveChanges();
-		_assetUtil.SaveChanges();
-
-		content.RemoveAll(x => blackList.Contains(x));
-
-		//if (blackList.Count > 0)
-		//{
-		//	BlackListTransfer.SendList(blackList.Select(x => x.Id), false);
-		//}
-		//else if (CrossIO.FileExists(BlackListTransfer.FilePath))
-		//{
-		//	CrossIO.DeleteFile(BlackListTransfer.FilePath);
-		//}
-
-		foreach (var item in blackList)
-		{
-			_packageManager.DeleteAll(item.LocalData!.Folder);
-		}
-
-		_logger.Info($"Applying analysis results..");
-
-		_modLogicManager.ApplyRequiredStates(_modUtil);
 	}
 }

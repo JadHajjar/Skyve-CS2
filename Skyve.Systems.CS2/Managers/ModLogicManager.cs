@@ -9,11 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Skyve.Systems.CS2.Managers;
 internal class ModLogicManager : IModLogicManager
 {
-	private const string Skyve_ASSEMBLY = "SkyveMod.dll";
+	private const string Skyve_ASSEMBLY = "Skyve Mod.dll";
 
 	private readonly ModCollection _modCollection = new(GetGroupInfo());
 
@@ -26,10 +27,12 @@ internal class ModLogicManager : IModLogicManager
 	}
 
 	private readonly ISettings _settings;
+	private readonly INotifier _notifier;
 
-	public ModLogicManager(ISettings settings)
+	public ModLogicManager(ISettings settings, INotifier notifier)
 	{
 		_settings = settings;
+		_notifier = notifier;
 	}
 
 	public void Analyze(IPackage mod, IModUtil modUtil)
@@ -46,6 +49,11 @@ internal class ModLogicManager : IModLogicManager
 			modUtil.SetIncluded(mod, true);
 			modUtil.SetEnabled(mod, true);
 		}
+	}
+
+	public IEnumerable<IPackage> GetCollection(string key)
+	{
+		return _modCollection.GetCollection(key, out _) ?? [];
 	}
 
 	public bool IsRequired(ILocalPackageIdentity? mod, IModUtil modUtil)
@@ -97,6 +105,16 @@ internal class ModLogicManager : IModLogicManager
 
 	public void ApplyRequiredStates(IModUtil modUtil)
 	{
+		var skyveMods = _modCollection.GetCollection(Skyve_ASSEMBLY, out var collectionInfo);
+
+		foreach (var item in skyveMods ?? [])
+		{
+			if (File.GetLastWriteTimeUtc(item.LocalData?.FilePath) > File.GetLastWriteTimeUtc(Application.ExecutablePath))
+			{
+				_notifier.OnSkyveUpdateAvailable();
+			}
+		}
+
 		foreach (var item in _modCollection.Collections)
 		{
 			if (item.Any(mod => modUtil.IsIncluded(mod) && modUtil.IsEnabled(mod)))

@@ -6,6 +6,7 @@ using Skyve.App.UserInterface.Panels;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -49,6 +50,8 @@ public partial class MainForm : BasePanelForm
 		TLP_SideBarTools.SetColumnSpan(_downloadsInfoControl, 2);
 		TLP_SideBarTools.SetColumnSpan(_troubleshootInfoControl, 2);
 		TLP_SideBarTools.SetColumnSpan(_updateAvailableControl, 2);
+
+		_updateAvailableControl.MouseClick += _updateAvailableControl_MouseClick;
 
 		base_PB_Icon.UserDraw = true;
 		base_PB_Icon.Paint += Base_PB_Icon_Paint;
@@ -111,6 +114,7 @@ public partial class MainForm : BasePanelForm
 		_notifier.WorkshopInfoUpdated += RefreshUI;
 		_notifier.WorkshopUsersInfoLoaded += RefreshUI;
 		_notifier.ContentLoaded += _userService_UserInfoUpdated;
+		_notifier.SkyveUpdateAvailable += () => Invoke(_updateAvailableControl.Show);
 
 		ConnectionHandler.ConnectionChanged += ConnectionHandler_ConnectionChanged;
 
@@ -127,6 +131,28 @@ public partial class MainForm : BasePanelForm
 		PI_Compatibility.Loading = true;
 
 		_notifier.CompatibilityReportProcessed += _notifier_CompatibilityReportProcessed;
+	}
+
+	private void _updateAvailableControl_MouseClick(object sender, MouseEventArgs e)
+	{
+		var logicManager = ServiceCenter.Get<IModLogicManager>();
+		var skyveApps = logicManager.GetCollection("Skyve Mod.dll");
+		var mostRecent = skyveApps.Where(x => x.LocalData != null).OrderBy(x => File.GetLastWriteTimeUtc(x.LocalData?.FilePath)).LastOrDefault();
+
+		if (mostRecent != null)
+		{
+			try
+			{
+				Process.Start(Path.Combine(mostRecent.LocalData!.Folder, "Skyve Setup.exe"));
+
+				_updateAvailableControl.Hide();
+			}
+			catch { }
+		}
+		else
+		{
+			_updateAvailableControl.Hide();
+		}
 	}
 
 	private void _notifier_CompatibilityReportProcessed()
