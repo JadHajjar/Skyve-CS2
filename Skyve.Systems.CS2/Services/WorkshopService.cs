@@ -595,35 +595,13 @@ internal class WorkshopService : IWorkshopService
 			return false;
 		}
 
-		if (modKeys.Count == 1)
-		{
-			var result = enable
-				? await Context.Mods.Enable(modKeys[0], playset)
-				: await Context.Mods.Disable(modKeys[0], playset);
-			ProcessResult(result);
+		var result = enable
+				? await Context.Mods.EnableBulk(modKeys, playset)
+				: await Context.Mods.DisableBulk(modKeys, playset);
 
-			if (result.Success)
-			{
-				await Context.Mods.Sync();
-			}
+		ProcessResult(result);
 
-			return result.Success;
-		}
-		else
-		{
-			var result = enable
-					? await Context.Mods.EnableBulk(modKeys, playset)
-					: await Context.Mods.DisableBulk(modKeys, playset);
-
-			ProcessResult(result);
-
-			if (result.Success)
-			{
-				await Context.Mods.Sync();
-			}
-
-			return result.Success;
-		}
+		return result.Success;
 	}
 
 	internal async Task<IPlayset?> ClonePlayset(int id)
