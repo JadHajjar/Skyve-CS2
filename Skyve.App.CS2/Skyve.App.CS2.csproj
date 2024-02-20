@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
 	<Import Project="../../Skyve/Config.props" />
-	<Import Project="../../Skyve/CS2-Version.props" />
 	<PropertyGroup>
 		<AssemblyName>Skyve.App.CS2</AssemblyName>
 		<Title>Skyve</Title>

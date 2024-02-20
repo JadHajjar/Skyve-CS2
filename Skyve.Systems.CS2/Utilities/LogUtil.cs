@@ -51,6 +51,8 @@ internal class LogUtil : ILogUtil
 		_ => CrossIO.Combine(_settings.FolderSettings.GamePath, "Cities2_Data")
 	};
 
+	public string GameLogFolder => CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Logs");
+
 	public string CreateZipFile(string? folder = null)
 	{
 		var file = CrossIO.Combine(folder ?? Path.GetTempPath(), $"LogReport_{DateTime.Now:yy-MM-dd_HH-mm}.zip");
@@ -67,9 +69,9 @@ internal class LogUtil : ILogUtil
 	{
 		using var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Create, true);
 
-		AddMainFilesToZip(zipArchive);
+		AddMainFilesToZip(zipArchive, out var mainLogDate);
 
-		foreach (var filePath in GetFilesForZip())
+		foreach (var filePath in GetFilesForZip(mainLogDate))
 		{
 			if (CrossIO.FileExists(filePath))
 			{
@@ -86,28 +88,27 @@ internal class LogUtil : ILogUtil
 		}
 	}
 
-	private IEnumerable<string> GetFilesForZip()
+	private IEnumerable<string> GetFilesForZip(DateTime mainLogDate)
 	{
-		yield return GetLastCrashLog();
+		yield return GetLastCrashLog(mainLogDate);
 
-		if (!Directory.Exists(GameDataPath))
+		if (!Directory.Exists(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Logs")))
 		{
 			yield break;
 		}
 
 		var logFiles = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Logs")).GetFiles("*.log");
-		var maxDate = logFiles.Max(x => x.LastWriteTime);
 
 		foreach (var item in logFiles)
 		{
-			if (maxDate - item.LastWriteTime < TimeSpan.FromDays(1))
+			if (Math.Abs(mainLogDate.Ticks - item.LastWriteTime.Ticks) < TimeSpan.FromHours(1).Ticks)
 			{
 				yield return item.FullName;
 			}
 		}
 	}
 
-	private void AddMainFilesToZip(ZipArchive zipArchive)
+	private void AddMainFilesToZip(ZipArchive zipArchive, out DateTime mainLogDate)
 	{
 		if (CrossIO.FileExists(GameLogFile))
 		{
@@ -120,6 +121,12 @@ internal class LogUtil : ILogUtil
 			AddSimpleLog(zipArchive, simpleLogText);
 
 			AddErrors(zipArchive, logTrace);
+
+			mainLogDate = File.GetLastWriteTime(GameLogFile);
+		}
+		else
+		{
+			mainLogDate = DateTime.Now;
 		}
 
 		if (CrossIO.FileExists(_logger.LogFilePath))
@@ -192,7 +199,7 @@ internal class LogUtil : ILogUtil
 		writer.Write(simpleLogText);
 	}
 
-	private string GetLastCrashLog()
+	private string GetLastCrashLog(DateTime mainLogDate)
 	{
 		if (CrossIO.CurrentPlatform is not Platform.Windows)
 		{
@@ -201,16 +208,18 @@ internal class LogUtil : ILogUtil
 
 		try
 		{
-			var mainGameDir = new DirectoryInfo(GameDataPath).Parent;
-			var directories = mainGameDir.GetDirectories($"*-*-*");
-			var latest = directories
-				.Where(s => DateTime.Now - s.LastWriteTime < TimeSpan.FromDays(1))
-				.OrderByDescending(s => s.CreationTime)
-				.FirstOrDefault();
+			var mainGameDir = new DirectoryInfo(CrossIO.Combine(Path.GetTempPath(), "Colossal Order", "Cities Skylines II", "Crashes"));
 
-			if (latest != null)
+			if (mainGameDir.Exists)
 			{
-				return CrossIO.Combine(latest.FullName, "error.log");
+				var latest = mainGameDir.GetFiles("crash.dmp", SearchOption.AllDirectories)
+					.OrderByDescending(s => s.CreationTime)
+					.FirstOrDefault();
+
+				if (latest is not null && Math.Abs(mainLogDate.Ticks - latest.LastWriteTime.Ticks) < TimeSpan.FromHours(1).Ticks)
+				{
+					return latest.FullName;
+				}
 			}
 		}
 		catch (Exception ex)
@@ -229,28 +238,28 @@ internal class LogUtil : ILogUtil
 		for (var i = lines.Count - 1; i > 0; i--)
 		{
 			var current = lines[i];
-			if (current.IndexOf("DebugBindings.gen.cpp Line: 51") != -1 ||
-				current.StartsWith("Fallback handler") ||
-				current.Contains("[PlatformService, Native - public]") ||
-				current.Contains("m_SteamUGCRequestMap error") ||
-				current.IndexOf("(this message is harmless)") != -1 ||
-				current.IndexOf("PopsApi:") != -1 ||
-				current.IndexOf("GfxDevice") != -1 ||
-				current.StartsWith("Assembly ") ||
-				current.StartsWith("No source files found:") ||
-				current.StartsWith("d3d11: failed") ||
-				current.StartsWith("(Filename:  Line: ") ||
-				current.Contains("SteamHelper+DLC_BitMask") ||
-				current.EndsWith(" [Packer - public]") ||
-				current.EndsWith(" [Mods - public]"))
-			{
-				lines.RemoveAt(i);
+			//if (current.IndexOf("DebugBindings.gen.cpp Line: 51") != -1 ||
+			//	current.StartsWith("Fallback handler") ||
+			//	current.Contains("[PlatformService, Native - public]") ||
+			//	current.Contains("m_SteamUGCRequestMap error") ||
+			//	current.IndexOf("(this message is harmless)") != -1 ||
+			//	current.IndexOf("PopsApi:") != -1 ||
+			//	current.IndexOf("GfxDevice") != -1 ||
+			//	current.StartsWith("Assembly ") ||
+			//	current.StartsWith("No source files found:") ||
+			//	current.StartsWith("d3d11: failed") ||
+			//	current.StartsWith("(Filename:  Line: ") ||
+			//	current.Contains("SteamHelper+DLC_BitMask") ||
+			//	current.EndsWith(" [Packer - public]") ||
+			//	current.EndsWith(" [Mods - public]"))
+			//{
+			//	lines.RemoveAt(i);
 
-				if (i < lines.Count && string.IsNullOrWhiteSpace(lines[i]))
-				{
-					lines.RemoveAt(i);
-				}
-			}
+			//	if (i < lines.Count && string.IsNullOrWhiteSpace(lines[i]))
+			//	{
+			//		lines.RemoveAt(i);
+			//	}
+			//}
 		}
 
 		// clear excess blank lines
@@ -315,6 +324,41 @@ internal class LogUtil : ILogUtil
 		if (currentTrace is not null)
 		{
 			traces.Add(currentTrace);
+		}
+
+		return traces;
+	}
+
+	public List<ILogTrace> GetCurrentLogsTrace()
+	{
+		DateTime mainLogDate;
+		var traces = new List<ILogTrace>();
+
+		if (File.Exists(GameLogFile))
+		{
+			var tempName = Path.GetTempFileName();
+
+			File.Copy(GameLogFile, tempName, true);
+
+			traces.AddRange(SimplifyLog(tempName, out _));
+
+			mainLogDate = File.GetLastWriteTime(GameLogFile);
+		}
+		else
+		{
+			mainLogDate = DateTime.Now;
+		}
+
+		foreach (var filePath in GetFilesForZip(mainLogDate))
+		{
+			if (CrossIO.FileExists(filePath))
+			{
+				var tempName = Path.GetTempFileName();
+
+				File.Copy(filePath, tempName, true);
+
+				traces.AddRange(SimplifyLog(tempName, out _));
+			}
 		}
 
 		return traces;

@@ -107,9 +107,9 @@ internal class ModLogicManager : IModLogicManager
 	{
 		var skyveMods = _modCollection.GetCollection(Skyve_ASSEMBLY, out var collectionInfo);
 
-		foreach (var item in skyveMods ?? [])
+		foreach (var item in skyveMods?.Where(x => x.LocalData != null) ?? [])
 		{
-			if (File.GetLastWriteTimeUtc(item.LocalData?.FilePath) > File.GetLastWriteTimeUtc(Application.ExecutablePath))
+			if (File.GetLastWriteTimeUtc(CrossIO.Combine(item.LocalData!.Folder, ".App", "Skyve.exe")).Ticks > Math.Max(File.GetLastWriteTimeUtc(Application.ExecutablePath).Ticks, File.GetCreationTimeUtc(Application.ExecutablePath).Ticks))
 			{
 				_notifier.OnSkyveUpdateAvailable();
 			}
