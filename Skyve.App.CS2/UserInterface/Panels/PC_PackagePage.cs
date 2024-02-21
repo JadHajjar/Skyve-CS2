@@ -46,7 +46,7 @@ public partial class PC_PackagePage : PanelContent
 			}
 		}
 
-		P_Info.SetPackage(package);
+		//P_Info.SetPackage(package);
 
 		T_CR.LinkedControl = new PackageCompatibilityReportControl(package);
 
@@ -72,7 +72,7 @@ public partial class PC_PackagePage : PanelContent
 
 			LC_Items.AddRange(p.Assets);
 
-			P_List.Controls.Add(LC_Items);
+			//P_List.Controls.Add(LC_Items);
 		}
 		else if (crAvailable)
 		{
@@ -91,12 +91,12 @@ public partial class PC_PackagePage : PanelContent
 
 		if (crAvailable)
 		{
-			foreach (var item in crdata?.Links ?? [])
-			{
-				FLP_Links.Controls.Add(new LinkControl(item, true));
-			}
+			//foreach (var item in crdata?.Links ?? [])
+			//{
+			//	FLP_Links.Controls.Add(new LinkControl(item, true));
+			//}
 
-			label5.Visible = FLP_Links.Visible = FLP_Links.Controls.Count > 0;
+			//label5.Visible = FLP_Links.Visible = FLP_Links.Controls.Count > 0;
 
 			AddTags();
 		}
@@ -122,16 +122,16 @@ public partial class PC_PackagePage : PanelContent
 		var requirements = package.GetWorkshopInfo()?.Requirements.ToList() ?? [];
 		if (requirements.Count > 0)
 		{
-			foreach (var requirement in requirements)
-			{
-				var control = new MiniPackageControl(requirement.Id) { ReadOnly = true, Large = true };
-				FLP_Requirements.Controls.Add(control);
-				FLP_Requirements.SetFlowBreak(control, true);
-			}
+			//foreach (var requirement in requirements)
+			//{
+			//	var control = new MiniPackageControl(requirement.Id) { ReadOnly = true, Large = true };
+			//	FLP_Requirements.Controls.Add(control);
+			//	FLP_Requirements.SetFlowBreak(control, true);
+			//}
 		}
 		else
 		{
-			L_Requirements.Visible = false;
+			roundedTableLayoutPanel2.Visible = false;
 		}
 
 		var pc = new OtherPlaysetPackage(package)
@@ -233,40 +233,42 @@ public partial class PC_PackagePage : PanelContent
 
 	private void AddTags()
 	{
-		FLP_Tags.Controls.Clear(true);
+		//FLP_Tags.Controls.Clear(true);
 
-		foreach (var item in Package.GetTags())
-		{
-			var control = new TagControl { TagInfo = item, Display = true };
-			control.MouseClick += TagControl_Click;
-			FLP_Tags.Controls.Add(control);
-		}
+		//foreach (var item in Package.GetTags())
+		//{
+		//	var control = new TagControl { TagInfo = item, Display = true };
+		//	control.MouseClick += TagControl_Click;
+		//	FLP_Tags.Controls.Add(control);
+		//}
 
-		//if (Package.LocalPackage is not null)
-		{
-			addTagControl = new TagControl { ImageName = "I_Add" };
-			addTagControl.MouseClick += AddTagControl_MouseClick;
-			FLP_Tags.Controls.Add(addTagControl);
-		}
+		////if (Package.LocalPackage is not null)
+		//{
+		//	addTagControl = new TagControl { ImageName = "I_Add" };
+		//	addTagControl.MouseClick += AddTagControl_MouseClick;
+		//	FLP_Tags.Controls.Add(addTagControl);
+		//}
 	}
 
 	private void TagControl_Click(object sender, EventArgs e)
 	{
-		if (!(sender as TagControl)!.TagInfo!.IsCustom)
-		{
-			return;
-		}
+		//if (!(sender as TagControl)!.TagInfo!.IsCustom)
+		//{
+		//	return;
+		//}
 
-		(sender as TagControl)!.Dispose();
+		//(sender as TagControl)!.Dispose();
 
-		ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo!.IsCustom ? x.TagInfo.Value?.Replace(' ', '-') : null)!);
-		App.Program.MainForm?.TryInvoke(() => App.Program.MainForm.Invalidate(true));
+		//ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo!.IsCustom ? x.TagInfo.Value?.Replace(' ', '-') : null)!);
+		//App.Program.MainForm?.TryInvoke(() => App.Program.MainForm.Invalidate(true));
 	}
 
 	private void CentralManager_PackageInformationUpdated()
 	{
-		P_Info.Invalidate();
+		//P_Info.Invalidate();
 		LC_Items?.Invalidate();
+
+
 	}
 
 	protected override void LocaleChanged()
@@ -278,34 +280,41 @@ public partial class PC_PackagePage : PanelContent
 			return;
 		}
 
-		label1.Text = LocaleCR.Usage;
-		label2.Text = cr.Usage.GetValues().If(x => x.Count() == Enum.GetValues(typeof(PackageUsage)).Length, x => Locale.AnyUsage.One, x => x.ListStrings(x => LocaleCR.Get(x.ToString()), ", "));
-		label3.Text = LocaleCR.PackageType;
-		label4.Text = cr.Type == PackageType.GenericPackage ? (Package.GetPackage()?.IsCodeMod == true ? Locale.Mod : Locale.Asset) : LocaleCR.Get(cr.Type.ToString());
-		label5.Text = LocaleCR.Links;
-		label6.Text = LocaleSlickUI.Tags;
-		L_Requirements.Text = LocaleHelper.GetGlobalText("CRT_RequiredPackages");
+		label1.Text = Locale.Info.One.ToUpper();
+		label2.Text = Locale.Dependency.Plural.ToUpper();
+		label3.Text = LocaleSlickUI.Tags.One.ToUpper();
+		//label1.Text = LocaleCR.Usage;
+		//label2.Text = cr.Usage.GetValues().If(x => x.Count() == Enum.GetValues(typeof(PackageUsage)).Length, x => Locale.AnyUsage.One, x => x.ListStrings(x => LocaleCR.Get(x.ToString()), ", "));
+		//label3.Text = LocaleCR.PackageType;
+		//label4.Text = cr.Type == PackageType.GenericPackage ? (Package.GetPackage()?.IsCodeMod == true ? Locale.Mod : Locale.Asset) : LocaleCR.Get(cr.Type.ToString());
+		//label5.Text = LocaleCR.Links;
+		//label6.Text = LocaleSlickUI.Tags;
+		//L_Requirements.Text = LocaleHelper.GetGlobalText("CRT_RequiredPackages");
 	}
 
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
-		PB_Icon.Width = TLP_Top.Height = (int)(128 * UI.FontScale);
-		TLP_About.Padding = UI.Scale(new Padding(5), UI.FontScale);
-		label1.Margin = label3.Margin = label5.Margin = label6.Margin = L_Requirements.Margin = UI.Scale(new Padding(3, 4, 0, 0), UI.FontScale);
-		label2.Margin = label4.Margin = FLP_Links.Margin = FLP_Tags.Margin = FLP_Requirements.Margin = UI.Scale(new Padding(3, 3, 0, 7), UI.FontScale);
-		label1.Font = label3.Font = label5.Font = label6.Font = L_Requirements.Font = UI.Font(7.5F, FontStyle.Bold);
-		FLP_Requirements.Font = UI.Font(9F);
+		P_Side.Width = (int)(260 * UI.FontScale);
+		PB_Icon.Size = UI.Scale(new Size(64,64),UI.FontScale);
+		I_More.Size = UI.Scale(new Size(16, 24), UI.FontScale);
+		TLP_Side.Padding =UI.Scale(new Padding(8,0,0,0),UI.FontScale);
+		B_Incl.Margin = slickSpacer1 .Margin= UI.Scale(new Padding(10,5,10,5),UI.FontScale);
+		slickSpacer1.Height = (int)(UI.FontScale);
+		roundedTableLayoutPanel1.Padding = roundedTableLayoutPanel2.Padding = roundedTableLayoutPanel3.Padding =
+		roundedTableLayoutPanel1.Margin = roundedTableLayoutPanel2.Margin = roundedTableLayoutPanel3.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		label2.Margin = label2.Margin = label3.Margin = UI.Scale(new Padding(0, 0, 0, 6), UI.FontScale);
+		label1.Font = label2.Font = label3.Font = UI.Font(7F, FontStyle.Bold);
+		autoSizeLabel1.Font = UI.Font(9.75F, FontStyle.Bold);
 	}
 
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
 
-		BackColor = design.BackColor;
-		label1.ForeColor = label3.ForeColor = label5.ForeColor = label6.ForeColor = L_Requirements.ForeColor = design.InfoColor.MergeColor(design.ActiveColor);
-		panel1.BackColor = LC_Items is null ? design.AccentBackColor : design.BackColor.Tint(Lum: design.IsDarkTheme? 5: -5);
+		label1.ForeColor = label2.ForeColor = label3.ForeColor = design.LabelColor;
+		roundedTableLayoutPanel1.BackColor = roundedTableLayoutPanel2.BackColor = roundedTableLayoutPanel3.BackColor = design.AccentBackColor;
 	}
 
 	protected override void OnCreateControl()
