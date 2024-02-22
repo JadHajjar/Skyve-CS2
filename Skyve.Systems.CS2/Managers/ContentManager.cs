@@ -208,7 +208,6 @@ internal class ContentManager : IContentManager
 			}
 		}
 
-
 		try
 		{
 
@@ -359,6 +358,8 @@ internal class ContentManager : IContentManager
 		var blackList = new List<IPackage>();
 		var firstTime = _updateManager.IsFirstTime();
 
+		_modLogicManager.Clear();
+
 		_notifier.IsBulkUpdating = true;
 
 		foreach (var package in packages)
@@ -371,14 +372,6 @@ internal class ContentManager : IContentManager
 
 			if (package.IsCodeMod)
 			{
-				if (!_settings.UserSettings.AdvancedIncludeEnable)
-				{
-					if (!firstTime && !_modUtil.IsEnabled(package) && _modUtil.IsIncluded(package))
-					{
-						_modUtil.SetIncluded(package, false);
-					}
-				}
-
 				if (_settings.UserSettings.LinkModAssets && package.LocalData is not null)
 				{
 					_packageUtil.SetIncluded(package.LocalData.Assets, _modUtil.IsIncluded(package));

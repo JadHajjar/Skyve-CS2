@@ -1,9 +1,10 @@
-﻿using Skyve.App.UserInterface.CompatibilityReport;
+﻿using Skyve.App.CS2.UserInterface.Content;
+using Skyve.App.Interfaces;
+using Skyve.App.UserInterface.CompatibilityReport;
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Lists;
 using Skyve.App.UserInterface.Panels;
-using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
 
 using System.Drawing;
@@ -15,6 +16,7 @@ public partial class PC_PackagePage : PanelContent
 {
 	private readonly ItemListControl? LC_Items;
 	private readonly ContentList? LC_References;
+	private readonly IncludedButton B_Incl;
 	private TagControl? addTagControl;
 
 	private readonly INotifier _notifier;
@@ -45,6 +47,9 @@ public partial class PC_PackagePage : PanelContent
 				PB_Icon.LoadImage(thumbnailUrl, imageService.GetImage);
 			}
 		}
+
+		B_Incl = new(Package) { Dock = DockStyle.Top };
+		TLP_Side.Controls.Add(B_Incl, 0, 2);
 
 		//P_Info.SetPackage(package);
 
@@ -119,21 +124,6 @@ public partial class PC_PackagePage : PanelContent
 			tabs.Remove(T_References);
 		}
 
-		var requirements = package.GetWorkshopInfo()?.Requirements.ToList() ?? [];
-		if (requirements.Count > 0)
-		{
-			//foreach (var requirement in requirements)
-			//{
-			//	var control = new MiniPackageControl(requirement.Id) { ReadOnly = true, Large = true };
-			//	FLP_Requirements.Controls.Add(control);
-			//	FLP_Requirements.SetFlowBreak(control, true);
-			//}
-		}
-		else
-		{
-			roundedTableLayoutPanel2.Visible = false;
-		}
-
 		var pc = new OtherPlaysetPackage(package)
 		{
 			Dock = DockStyle.Fill
@@ -144,7 +134,47 @@ public partial class PC_PackagePage : PanelContent
 
 		slickTabControl1.Tabs = tabs.ToArray();
 
-		_notifier.PackageInformationUpdated += CentralManager_PackageInformationUpdated;
+		_notifier.WorkshopInfoUpdated += Notifier_WorkshopInfoUpdated;
+
+		Notifier_WorkshopInfoUpdated();
+	}
+
+	private void Notifier_WorkshopInfoUpdated()
+	{
+		this.TryInvoke(() =>
+	{
+		var workshopInfo = Package.GetWorkshopInfo();
+		var localData = Package.GetLocalPackage();
+
+		var date = (workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime);
+
+		//P_Info.Invalidate();
+		LC_Items?.Invalidate();
+		autoSizeLabel1.Text = Package.Name;
+
+		LI_Version.ValueText = localData?.Version ?? workshopInfo?.Version;
+		LI_UpdateTime.ValueText = _settings.UserSettings.ShowDatesRelatively ? date.ToRelatedString(true, false) : date.ToString("g");
+		LI_ModId.ValueText = Package.Id.ToString();
+		LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);
+		LI_Votes.ValueText = workshopInfo is not null ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
+		LI_Subscribers.ValueText = workshopInfo is not null ? Locale.SubscribersCount.FormatPlural(workshopInfo.Subscribers, workshopInfo.Subscribers.ToString("N0")) : null;
+
+		LI_Votes.ValueColor = workshopInfo?.HasVoted == true ? FormDesign.Design.GreenColor : null;
+
+		var requirements = workshopInfo?.Requirements.ToList() ?? [];
+		if (requirements.Count > 0)
+		{
+			foreach (var requirement in requirements)
+			{
+				var control = new MiniPackageControl(requirement.Id) { ReadOnly = true, Large = true, Dock = DockStyle.Top };
+				P_Requirements.Controls.Add(control);
+			}
+		}
+		else
+		{
+			TLP_ModRequirements.Visible = false;
+		}
+	});
 	}
 
 	protected async Task<IEnumerable<IPackageIdentity>> GetItems()
@@ -233,42 +263,35 @@ public partial class PC_PackagePage : PanelContent
 
 	private void AddTags()
 	{
-		//FLP_Tags.Controls.Clear(true);
+		FLP_Tags.Controls.Clear(true);
 
-		//foreach (var item in Package.GetTags())
-		//{
-		//	var control = new TagControl { TagInfo = item, Display = true };
-		//	control.MouseClick += TagControl_Click;
-		//	FLP_Tags.Controls.Add(control);
-		//}
+		foreach (var item in Package.GetTags())
+		{
+			var control = new TagControl { TagInfo = item, Display = true };
+			control.MouseClick += TagControl_Click;
+			FLP_Tags.Controls.Add(control);
+		}
 
-		////if (Package.LocalPackage is not null)
-		//{
-		//	addTagControl = new TagControl { ImageName = "I_Add" };
-		//	addTagControl.MouseClick += AddTagControl_MouseClick;
-		//	FLP_Tags.Controls.Add(addTagControl);
-		//}
+		//if (Package.LocalPackage is not null)
+		{
+			addTagControl = new TagControl { ImageName = "I_Add" };
+			addTagControl.MouseClick += AddTagControl_MouseClick;
+			FLP_Tags.Controls.Add(addTagControl);
+		}
 	}
 
 	private void TagControl_Click(object sender, EventArgs e)
 	{
-		//if (!(sender as TagControl)!.TagInfo!.IsCustom)
-		//{
-		//	return;
-		//}
+		if (!(sender as TagControl)!.TagInfo!.IsCustom)
+		{
+			return;
+		}
 
-		//(sender as TagControl)!.Dispose();
+		(sender as TagControl)!.Dispose();
 
-		//ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo!.IsCustom ? x.TagInfo.Value?.Replace(' ', '-') : null)!);
-		//App.Program.MainForm?.TryInvoke(() => App.Program.MainForm.Invalidate(true));
-	}
+		ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo!.IsCustom ? x.TagInfo.Value?.Replace(' ', '-') : null)!);
 
-	private void CentralManager_PackageInformationUpdated()
-	{
-		//P_Info.Invalidate();
-		LC_Items?.Invalidate();
-
-
+		_notifier.OnRefreshUI(true);
 	}
 
 	protected override void LocaleChanged()
@@ -280,9 +303,9 @@ public partial class PC_PackagePage : PanelContent
 			return;
 		}
 
-		label1.Text = Locale.Info.One.ToUpper();
-		label2.Text = Locale.Dependency.Plural.ToUpper();
-		label3.Text = LocaleSlickUI.Tags.One.ToUpper();
+		L_Info.Text = Locale.Info.One.ToUpper();
+		L_Requirements.Text = Locale.Dependency.Plural.ToUpper();
+		L_Tags.Text = LocaleSlickUI.Tags.One.ToUpper();
 		//label1.Text = LocaleCR.Usage;
 		//label2.Text = cr.Usage.GetValues().If(x => x.Count() == Enum.GetValues(typeof(PackageUsage)).Length, x => Locale.AnyUsage.One, x => x.ListStrings(x => LocaleCR.Get(x.ToString()), ", "));
 		//label3.Text = LocaleCR.PackageType;
@@ -297,15 +320,16 @@ public partial class PC_PackagePage : PanelContent
 		base.UIChanged();
 
 		P_Side.Width = (int)(260 * UI.FontScale);
-		PB_Icon.Size = UI.Scale(new Size(64,64),UI.FontScale);
-		I_More.Size = UI.Scale(new Size(16, 24), UI.FontScale);
-		TLP_Side.Padding =UI.Scale(new Padding(8,0,0,0),UI.FontScale);
-		B_Incl.Margin = slickSpacer1 .Margin= UI.Scale(new Padding(10,5,10,5),UI.FontScale);
+		PB_Icon.Size = UI.Scale(new Size(64, 64), UI.FontScale);
+		I_More.Size = UI.Scale(new Size(20, 28), UI.FontScale);
+		TLP_Side.Padding = UI.Scale(new Padding(8, 10, 0, 0), UI.FontScale);
+		tableLayoutPanel1.Margin = B_Incl.Margin = slickSpacer1.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer1.Height = (int)(UI.FontScale);
-		roundedTableLayoutPanel1.Padding = roundedTableLayoutPanel2.Padding = roundedTableLayoutPanel3.Padding =
-		roundedTableLayoutPanel1.Margin = roundedTableLayoutPanel2.Margin = roundedTableLayoutPanel3.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		label2.Margin = label2.Margin = label3.Margin = UI.Scale(new Padding(0, 0, 0, 6), UI.FontScale);
-		label1.Font = label2.Font = label3.Font = UI.Font(7F, FontStyle.Bold);
+		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding =
+		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		L_Requirements.Margin = L_Requirements.Margin = L_Tags.Margin = UI.Scale(new Padding(0, 0, 0, 6), UI.FontScale);
+		L_Info.Font = L_Requirements.Font = L_Tags.Font = UI.Font(7F, FontStyle.Bold);
+		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = UI.Scale(new Padding(3), UI.FontScale);
 		autoSizeLabel1.Font = UI.Font(9.75F, FontStyle.Bold);
 	}
 
@@ -313,8 +337,8 @@ public partial class PC_PackagePage : PanelContent
 	{
 		base.DesignChanged(design);
 
-		label1.ForeColor = label2.ForeColor = label3.ForeColor = design.LabelColor;
-		roundedTableLayoutPanel1.BackColor = roundedTableLayoutPanel2.BackColor = roundedTableLayoutPanel3.BackColor = design.AccentBackColor;
+		L_Info.ForeColor = L_Requirements.ForeColor = L_Tags.ForeColor = design.LabelColor;
+		TLP_ModInfo.BackColor = TLP_ModRequirements.BackColor = TLP_Tags.BackColor = design.BackColor.Tint(Lum: design.IsDarkTheme ? 6 : -5);
 	}
 
 	protected override void OnCreateControl()
@@ -322,6 +346,92 @@ public partial class PC_PackagePage : PanelContent
 		base.OnCreateControl();
 
 		if (Package.GetWorkshopInfo()?.Description is string description)
+		{
 			slickWebBrowser1.Body = Markdig.Markdown.ToHtml(description);
+		}
+	}
+
+	private void I_More_MouseClick(object sender, MouseEventArgs e)
+	{
+		if (sender == I_More || e.Button == MouseButtons.Right)
+		{
+			this.TryBeginInvoke(() =>
+				SlickToolStrip.Show(
+					App.Program.MainForm,
+					ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems([Package]))
+			);
+		}
+	}
+
+	private void B_BulkRequirements_Click(object sender, EventArgs e)
+	{
+		var items = Package.GetWorkshopInfo()?.Requirements ?? [];
+		var isFiltered = false;
+		var isSelected = false;
+		var anyIncluded = items.Any(x => _packageUtil.IsIncluded(x));
+		var anyExcluded = items.Any(x => !_packageUtil.IsIncluded(x));
+		var anyEnabled = items.Any(x => _packageUtil.IsIncluded(x) && _packageUtil.IsEnabled(x));
+		var anyDisabled = items.Any(x => _packageUtil.IsIncluded(x) && !_packageUtil.IsEnabled(x));
+		var allLocal = items.Any(x => !x.IsLocal());
+		var allWorkshop = items.Any(x => x.IsLocal());
+
+		var stripItems = new SlickStripItem?[]
+		{
+			  anyDisabled ? new (isSelected ? Locale.EnableAllSelected : isFiltered ? Locale.EnableAllFiltered : Locale.EnableAll, "I_Ok", async () => await EnableAll(items)) : null
+			, anyEnabled ? new (isSelected ? Locale.DisableAllSelected : isFiltered ? Locale.DisableAllFiltered : Locale.DisableAll, "I_Enabled",  async () => await DisableAll(items)) : null
+			, new ()
+			, anyExcluded ? new (isSelected ? Locale.IncludeAllSelected : isFiltered ? Locale.IncludeAllFiltered : Locale.IncludeAll, "I_Add",  async() => await IncludeAll(items)) : null
+			, anyIncluded ? new (isSelected ? Locale.ExcludeAllSelected : isFiltered ? Locale.ExcludeAllFiltered : Locale.ExcludeAll, "I_X",  async() => await ExcludeAll(items)) : null
+			, anyDisabled ? new (isSelected ? Locale.ExcludeAllDisabledSelected : isFiltered ? Locale.ExcludeAllDisabledFiltered : Locale.ExcludeAllDisabled, "I_Cancel",  async() => await ExcludeAllDisabled(items)) : null
+			, new (isSelected ? Locale.CopyAllIdsSelected : isFiltered ? Locale.CopyAllIdsFiltered : Locale.CopyAllIds, "I_Copy", () => Clipboard.SetText(items.ListStrings(x => x.IsLocal() ? $"Local: {x.Name}" : $"{x.Id}: {x.Name}", CrossIO.NewLine)))
+		};
+
+		this.TryBeginInvoke(() => SlickToolStrip.Show(App.Program.MainForm, B_BulkRequirements.PointToScreen(new Point(0, B_BulkRequirements.Height + 5)), stripItems));
+	}
+
+	private async Task DisableAll(IEnumerable<IPackageRequirement> items)
+	{
+		B_BulkRequirements.Loading = true;
+		await SetEnabled(items.ToList(), false);
+		P_Requirements.Invalidate(true);
+		B_BulkRequirements.Loading = false;
+	}
+
+	private async Task EnableAll(IEnumerable<IPackageRequirement> items)
+	{
+		B_BulkRequirements.Loading = true;
+		await SetEnabled(items.ToList(), true);
+		P_Requirements.Invalidate(true);
+		B_BulkRequirements.Loading = false;
+	}
+
+	private async Task ExcludeAll(IEnumerable<IPackageRequirement> item)
+	{
+		var items = item.ToList();
+
+		if (items.Count > 10 && MessagePrompt.Show(Locale.AreYouSure, PromptButtons.YesNo, PromptIcons.Question, App.Program.MainForm) != DialogResult.Yes)
+		{
+			return;
+		}
+
+		B_BulkRequirements.Loading = true;
+		await SetIncluded(items, false);
+		P_Requirements.Invalidate(true);
+		B_BulkRequirements.Loading = false;
+	}
+
+	private async Task ExcludeAllDisabled(IEnumerable<IPackageRequirement> items)
+	{
+		await SetIncluded(items.AllWhere(x => !_packageUtil.IsEnabled(x)), false);
+		P_Requirements.Invalidate(true);
+		B_BulkRequirements.Loading = false;
+	}
+
+	private async Task IncludeAll(IEnumerable<IPackageRequirement> items)
+	{
+		B_BulkRequirements.Loading = true;
+		await SetIncluded(items.ToList(), true);
+		P_Requirements.Invalidate(true);
+		B_BulkRequirements.Loading = false;
 	}
 }

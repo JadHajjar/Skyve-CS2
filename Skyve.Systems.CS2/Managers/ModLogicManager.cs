@@ -16,7 +16,7 @@ internal class ModLogicManager : IModLogicManager
 {
 	private const string Skyve_ASSEMBLY = "Skyve Mod.dll";
 
-	private readonly ModCollection _modCollection = new(GetGroupInfo());
+	private ModCollection _modCollection = new(GetGroupInfo());
 
 	private static Dictionary<string, CollectionInfo> GetGroupInfo()
 	{
@@ -77,7 +77,7 @@ internal class ModLogicManager : IModLogicManager
 
 		foreach (var modItem in list)
 		{
-			if (modItem != mod && modUtil.IsIncluded(modItem) && modUtil.IsEnabled(modItem))
+			if (modItem.LocalData != mod && modUtil.IsIncluded(modItem) && modUtil.IsEnabled(modItem))
 			{
 				return false;
 			}
@@ -115,16 +115,16 @@ internal class ModLogicManager : IModLogicManager
 			}
 		}
 
-		foreach (var item in _modCollection.Collections)
-		{
-			if (item.Any(mod => modUtil.IsIncluded(mod) && modUtil.IsEnabled(mod)))
-			{
-				continue;
-			}
+		//foreach (var item in _modCollection.Collections)
+		//{
+		//	if (item.Any(mod => modUtil.IsIncluded(mod) && modUtil.IsEnabled(mod)))
+		//	{
+		//		continue;
+		//	}
 
-			modUtil.SetIncluded(item[0], true);
-			modUtil.SetEnabled(item[0], true);
-		}
+		//	modUtil.SetIncluded(item[0], true);
+		//	modUtil.SetEnabled(item[0], true);
+		//}
 	}
 
 	public bool IsPseudoMod(IPackage package)
@@ -139,5 +139,10 @@ internal class ModLogicManager : IModLogicManager
 		//skyveInstances.AddRange(_modCollection.GetCollection(Skyve_ASSEMBLY, out _)?.ToList(x => x.GetLocalPackage()) ?? new());
 
 		return skyveInstances.Count > 1;
+	}
+
+	public void Clear()
+	{
+		_modCollection = new(GetGroupInfo());
 	}
 }

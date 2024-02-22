@@ -105,6 +105,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	string IPackage.Version => UserModVersion;
+	string IWorkshopInfo.Version => UserModVersion;
 	PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
 	public IEnumerable<IModChangelog> Changelog => [];
 
