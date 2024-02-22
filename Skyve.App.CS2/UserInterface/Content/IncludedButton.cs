@@ -156,7 +156,7 @@ internal class IncludedButton : SlickButton
 		else
 		{
 			var icon = new DynamicIcon(_subscriptionsManager.IsSubscribing(Package) ? "I_Wait" : isPartialIncluded ? "I_Slash" : isEnabled ? "I_Ok" : !isIncluded ? "I_Add" : "I_Enabled");
-			using var includedIcon = icon.Get(ClientRectangle.Height * 3 / 4).Color(iconColor);
+			using var includedIcon = icon.Get(Height * 3 / 4).Color(iconColor);
 
 			iconRect = new Rectangle(new Point((Height - includedIcon.Height) / 2, (Height - includedIcon.Height) / 2), includedIcon.Size);
 			e.Graphics.DrawImage(includedIcon, iconRect);
