@@ -11,6 +11,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
+using static System.Net.Mime.MediaTypeNames;
+
 using PdxIMod = PDX.SDK.Contracts.Service.Mods.Models.IMod;
 using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
@@ -51,6 +53,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
 		Tags = mod.Tags;
+		Images = mod.LocalData.ScreenshotsFilenames.ToList(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), Id, mod.Version, true));
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
@@ -83,14 +86,16 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public bool IsCollection { get; set; }
 	public bool IsInvalid { get; set; }
 	public string Guid { get; set; }
-	string? IWorkshopInfo.Version => UserModVersion;
+	string? IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
 	IUser? IWorkshopInfo.Author => new PdxUser(Author);
 	Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	public bool HasVoted { get; set; }
-	public IEnumerable<IPackageRequirement> Requirements => [];
-	public IEnumerable<IModChangelog> Changelog => [];
+	public IEnumerable<IThumbnailObject> Images { get; }
+	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
+	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
+	IEnumerable<ILink> IWorkshopInfo.Links => [];
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{

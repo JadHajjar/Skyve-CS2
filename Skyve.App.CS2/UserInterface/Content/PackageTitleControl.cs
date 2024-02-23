@@ -53,7 +53,7 @@ internal class PackageTitleControl : SlickControl
 
 	private void PaintText(PaintEventArgs e, string text, Rectangle textRect, out Font font)
 	{
-		font = UI.Font(12.5F, FontStyle.Bold).FitTo(text, textRect, e.Graphics);
+		font = UI.Font(12.5F, FontStyle.Bold).FitTo(text, textRect.Pad((int)(2 * UI.FontScale)), e.Graphics);
 
 		using var brush = new SolidBrush(ForeColor);
 

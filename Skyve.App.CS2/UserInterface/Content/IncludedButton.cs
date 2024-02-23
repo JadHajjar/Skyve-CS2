@@ -112,14 +112,14 @@ internal class IncludedButton : SlickButton
 		}
 		else if (activeColor == default && isHovered)
 		{
-			iconColor = isIncluded ? isEnabled ? FormDesign.Design.GreenColor : FormDesign.Design.RedColor : FormDesign.Design.ActiveColor;
-			activeColor = Color.FromArgb(40, iconColor);
+			iconColor = isIncluded ? isEnabled ? FormDesign.Design.GreenColor : FormDesign.Design.RedColor : FormDesign.Design.ActiveForeColor;
+			activeColor = isIncluded ? Color.FromArgb(40, iconColor) : Color.FromArgb(200, FormDesign.Design.ForeColor.MergeColor(FormDesign.Design.ActiveColor));
 		}
 		else
 		{
 			if (activeColor == default)
 			{
-				activeColor = Color.FromArgb(20, ForeColor);
+				activeColor = Color.FromArgb(200, FormDesign.Design.ForeColor);
 			}
 			else if (isHovered)
 			{

@@ -108,8 +108,6 @@ public partial class PC_PackagePage : PanelContent
 			//}
 
 			//label5.Visible = FLP_Links.Visible = FLP_Links.Controls.Count > 0;
-
-			AddTags();
 		}
 
 		if (GetItems().Result.Any())
@@ -139,6 +137,8 @@ public partial class PC_PackagePage : PanelContent
 		T_Playsets.LinkedControl = pc;
 
 		_notifier.WorkshopInfoUpdated += Notifier_WorkshopInfoUpdated;
+		_notifier.PackageInclusionUpdated += Notifier_WorkshopInfoUpdated;
+		_notifier.PackageInformationUpdated += Notifier_WorkshopInfoUpdated;
 
 		Notifier_WorkshopInfoUpdated();
 	}
@@ -146,44 +146,77 @@ public partial class PC_PackagePage : PanelContent
 	private void Notifier_WorkshopInfoUpdated()
 	{
 		this.TryInvoke(() =>
-	{
-		var workshopInfo = Package.GetWorkshopInfo();
-		var localData = Package.GetLocalPackage();
-
-		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
-
-		//P_Info.Invalidate();
-		LC_Items?.Invalidate();
-
-		LI_Version.ValueText = localData?.Version ?? workshopInfo?.Version;
-		LI_UpdateTime.ValueText = _settings.UserSettings.ShowDatesRelatively ? date.ToRelatedString(true, false) : date.ToString("g");
-		LI_ModId.ValueText = Package.Id.ToString();
-		LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);
-		LI_Votes.ValueText = workshopInfo is not null ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
-		LI_Subscribers.ValueText = workshopInfo is not null ? Locale.SubscribersCount.FormatPlural(workshopInfo.Subscribers, workshopInfo.Subscribers.ToString("N0")) : null;
-
-		LI_Votes.ValueColor = workshopInfo?.HasVoted == true ? FormDesign.Design.GreenColor : null;
-
-		L_Author.Visible = workshopInfo is not null;
-		L_Author.Text = workshopInfo?.Author?.Name;
-
-		var requirements = workshopInfo?.Requirements.ToList() ?? [];
-		
-		if (requirements.Count > 0)
 		{
-			P_Requirements.Controls.Clear(true);
+			var workshopInfo = Package.GetWorkshopInfo();
+			var localData = Package.GetLocalPackage();
 
-			foreach (var requirement in requirements)
+			var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
+
+			//P_Info.Invalidate();
+			LC_Items?.Invalidate();
+			B_Incl.Invalidate();
+
+			LI_Version.ValueText = localData?.Version ?? workshopInfo?.Version;
+			LI_UpdateTime.ValueText = _settings.UserSettings.ShowDatesRelatively ? date.ToRelatedString(true, false) : date.ToString("g");
+			LI_ModId.ValueText = Package.Id.ToString();
+			LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);
+			LI_Votes.ValueText = workshopInfo is not null ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
+			LI_Subscribers.ValueText = workshopInfo is not null ? Locale.SubscribersCount.FormatPlural(workshopInfo.Subscribers, workshopInfo.Subscribers.ToString("N0")) : null;
+
+			LI_Votes.ValueColor = workshopInfo?.HasVoted == true ? FormDesign.Design.GreenColor : null;
+
+			L_Author.Visible = workshopInfo is not null;
+			L_Author.Text = workshopInfo?.Author?.Name;
+
+			// Links
 			{
-				var control = new MiniPackageControl(requirement.Id) { ReadOnly = true, Large = true, ShowIncluded = true, Dock = DockStyle.Top };
-				P_Requirements.Controls.Add(control);
+				var links = new List<ILink>();
+
+				links.AddRange(workshopInfo?.Links ?? []);
+				links.AddRange(Package.GetPackageInfo()?.Links ?? []);
+				
+				foreach (var item in links)
+				{
+					FLP_Links.Controls.Add(new LinkControl(item, true));
+				}
+
+				TLP_Links.Visible = links.Count > 0;
 			}
-		}
-		else
-		{
-			TLP_ModRequirements.Visible = false;
-		}
-	});
+
+			// Images
+			{
+				var images = workshopInfo?.Images ?? [];
+
+				T_Gallery.Visible = images.Any();
+			}
+
+			// Requirements
+			{
+				var requirements = workshopInfo?.Requirements.ToList() ?? [];
+
+				if (requirements.Count > 0)
+				{
+					if (!requirements.ToList(x => x.Id).SequenceEqual(P_Requirements.Controls.OfType<MiniPackageControl>().Select(x => x.Id)))
+					{
+						P_Requirements.Controls.Clear(true);
+
+						foreach (var requirement in requirements)
+						{
+							var control = new MiniPackageControl(requirement.Id) { ReadOnly = true, Large = true, ShowIncluded = true, Dock = DockStyle.Top };
+							P_Requirements.Controls.Add(control);
+						}
+					}
+
+					TLP_ModRequirements.Visible = true;
+				}
+				else
+				{
+					TLP_ModRequirements.Visible = false;
+				}
+			}
+
+			AddTags();
+		});
 	}
 
 	protected async Task<IEnumerable<IPackageIdentity>> GetItems()
@@ -272,6 +305,7 @@ public partial class PC_PackagePage : PanelContent
 
 	private void AddTags()
 	{
+		FLP_Tags.SuspendDrawing();
 		FLP_Tags.Controls.Clear(true);
 
 		foreach (var item in Package.GetTags())
@@ -283,10 +317,12 @@ public partial class PC_PackagePage : PanelContent
 
 		//if (Package.LocalPackage is not null)
 		{
-			addTagControl = new TagControl { ImageName = "I_Add" };
+			addTagControl = new TagControl { ImageName = "I_Add", ColorStyle = ColorStyle.Green };
 			addTagControl.MouseClick += AddTagControl_MouseClick;
 			FLP_Tags.Controls.Add(addTagControl);
 		}
+
+		FLP_Tags.ResumeDrawing();
 	}
 
 	private void TagControl_Click(object sender, EventArgs e)
@@ -298,7 +334,7 @@ public partial class PC_PackagePage : PanelContent
 
 		(sender as TagControl)!.Dispose();
 
-		ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo!.IsCustom ? x.TagInfo.Value?.Replace(' ', '-') : null)!);
+		ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo?.IsCustom ==true? x.TagInfo.Value?.Replace(' ', '-') : null)!);
 
 		_notifier.OnRefreshUI(true);
 	}
@@ -308,6 +344,7 @@ public partial class PC_PackagePage : PanelContent
 		L_Info.Text = Locale.Info.One.ToUpper();
 		L_Requirements.Text = Locale.Dependency.Plural.ToUpper();
 		L_Tags.Text = LocaleSlickUI.Tags.One.ToUpper();
+		L_Links.Text= Locale.Links.One.ToUpper();
 
 		//var cr = Package.GetPackageInfo();
 
@@ -334,10 +371,9 @@ public partial class PC_PackagePage : PanelContent
 		TLP_Side.Padding = UI.Scale(new Padding(8, 0, 0, 0), UI.FontScale);
 		TLP_TopInfo.Margin = B_Incl.Margin = packageCompatibilityControl.Margin = slickSpacer1.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer1.Height = (int)UI.FontScale;
-		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding =
-		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		L_Requirements.Margin = L_Requirements.Margin = L_Tags.Margin = UI.Scale(new Padding(0, 0, 0, 6), UI.FontScale);
-		L_Info.Font = L_Requirements.Font = L_Tags.Font = UI.Font(7F, FontStyle.Bold);
+		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding =
+		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		L_Info.Font = L_Requirements.Font = L_Tags.Font = L_Links.Font = UI.Font(7F, FontStyle.Bold);
 		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = UI.Scale(new Padding(3), UI.FontScale);
 		L_Author.Margin = L_Title.Margin = UI.Scale(new Padding(5, 0, 0, 0), UI.FontScale);
 		slickTabControl.Padding = UI.Scale(new Padding(5, 5, 0, 0), UI.FontScale);
@@ -350,7 +386,7 @@ public partial class PC_PackagePage : PanelContent
 		base.DesignChanged(design);
 
 		L_Info.ForeColor = L_Requirements.ForeColor = L_Tags.ForeColor = design.LabelColor;
-		TLP_ModInfo.BackColor = TLP_ModRequirements.BackColor = TLP_Tags.BackColor = design.BackColor.Tint(Lum: design.IsDarkTheme ? 6 : -5);
+		TLP_ModInfo.BackColor = TLP_ModRequirements.BackColor = TLP_Tags.BackColor = TLP_Links.BackColor = design.BackColor.Tint(Lum: design.IsDarkTheme ? 6 : -5);
 	}
 
 	protected override void OnCreateControl()
@@ -457,7 +493,7 @@ public partial class PC_PackagePage : PanelContent
 		}
 	}
 
-	private void slickWebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+	private void SlickWebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)
 	{
 		if (e.Url.AbsoluteUri == "about:blank")
 		{

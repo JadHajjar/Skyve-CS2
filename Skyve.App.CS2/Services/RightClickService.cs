@@ -49,9 +49,9 @@ internal class RightClickService : IRightClickService
 			new(Locale.Manage, "I_Wrench", disabled: true)
 			{
 				SubItems = [
-					new(list.Count == 1 ? Locale.EnableItem  : Locale.EnableAllSelected, "I_Ok", async () => await packageUtil.SetEnabled(items, true), visible: anyDisabled && anyNotRequired),
+					new(list.Count == 1 ? Locale.EnableItem  : Locale.EnableAllSelected, "I_Ok", async () => await packageUtil.SetEnabled(items, true), visible: anyDisabled),
 					new(list.Count == 1 ? Locale.DisableItem : Locale.DisableAllSelected, "I_Enabled", async () => await packageUtil.SetEnabled(items, false), visible: anyEnabled && anyNotRequired),
-					new(list.Count == 1 ? Locale.IncludeItem : Locale.IncludeAllSelected, "I_Add", async () => await packageUtil.SetIncluded(items, true), visible: anyExcluded && anyNotRequired),
+					new(list.Count == 1 ? Locale.IncludeItem : Locale.IncludeAllSelected, "I_Add", async () => await packageUtil.SetIncluded(items, true), visible: anyExcluded),
 					new(list.Count == 1 ? Locale.ExcludeItem : Locale.ExcludeAllSelected, "I_X", async () => await packageUtil.SetIncluded(items, false), visible: anyIncluded && anyNotRequired),
 					SlickStripItem.Empty,
 					new(Locale.EditTags.FormatPlural(list.Count), "I_Tag", () => EditTags(list)),
@@ -59,7 +59,7 @@ internal class RightClickService : IRightClickService
 				]
 			},
 
-			new(Locale.OtherPlaysets, "I_Playsets", disabled: true, visible: anyNotRequired)
+			new(Locale.OtherPlaysets, "I_Playsets", disabled: true, visible: anyWorkshop)
 			{
 				SubItems = [
 					new(Locale.EnableThisItemInAllPlaysets.FormatPlural(list.Count), "I_Ok", async () => await ServiceCenter.Get<IPlaysetManager>().SetEnabledForAll(list, true)),

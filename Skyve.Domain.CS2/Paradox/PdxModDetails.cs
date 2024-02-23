@@ -22,6 +22,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		Name = string.Empty;
 		Guid = string.Empty;
 		Version = string.Empty;
+		PdxModsVersion = string.Empty;
 		Tags = [];
 	}
 
@@ -36,7 +37,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		Description = mod.LongDescription;
 		ServerSize = (long)mod.Size;
 		PdxModsVersion = mod.Version;
-		Version = mod.UserModVersion;
+		Version = mod.UserModVersion.IfEmpty(mod.Version);
 		Subscribers = mod.SubscriptionsTotal;
 		HasVoted = hasVoted;
 		VoteCount = mod.RatingsTotal;
@@ -47,6 +48,8 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		Requirements = mod.Dependencies?.ToArray(x => new PdxModRequirement(x)) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
 		ServerTime = mod.LatestUpdate ?? Changelog.Max(x => x.ReleasedDate) ?? default;
+		Images = mod.Screenshots.ToArray(x => new ParadoxScreenshot(x.Image, Id, mod.Version, false));
+		Links = mod.ExternalLinks.ToArray(x => new ParadoxLink(x));
 		Timestamp = DateTime.Now;
 	}
 
@@ -73,7 +76,8 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public PdxModRequirement[]? Requirements { get; set; }
 	public ModChangelog[]? Changelog { get; set; }
 	public Dictionary<string, string> Tags { get; set; }
-
+	public ParadoxScreenshot[]? Images { get; set; }
+	public ParadoxLink[]? Links { get; set; }
 	bool IPackage.IsLocal { get; }
 	ILocalPackageData? IPackage.LocalData { get; }
 	string? IPackageIdentity.Url => $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
@@ -82,6 +86,8 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	IUser? IWorkshopInfo.Author => string.IsNullOrWhiteSpace(AuthorId) ? null : new PdxUser(AuthorId!);
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => Requirements ?? [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => Changelog ?? [];
+	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => Images ?? [];
+	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
