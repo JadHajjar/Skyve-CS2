@@ -146,6 +146,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation LoginToParadox => _instance.GetText("LoginToParadox");
 
 	/// <summary>
+	/// Log Level
+	/// </summary>
+	public static Translation LogLevel => _instance.GetText("LogLevel");
+
+	/// <summary>
 	/// '{0}' failed to download
 	/// </summary>
 	public static Translation ModDownloadFailed => _instance.GetText("ModDownloadFailed");
@@ -227,6 +232,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SubscribeToItem => _instance.GetText("SubscribeToItem");
 
 	/// <summary>
+	/// Un-Like this mod
+	/// </summary>
+	public static Translation UnVoteMod => _instance.GetText("UnVoteMod");
+
+	/// <summary>
 	/// Update available
 	/// </summary>
 	public static Translation UpdateAvailable => _instance.GetText("UpdateAvailable");
@@ -240,4 +250,9 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// View on PDX Mods
 	/// </summary>
 	public static Translation ViewOnWorkshop => _instance.GetText("ViewOnWorkshop");
+
+	/// <summary>
+	/// Like this mod
+	/// </summary>
+	public static Translation VoteMod => _instance.GetText("VoteMod");
 }

@@ -45,7 +45,7 @@ public partial class PC_PlaysetAdd : PanelContent
 
 		await _playsetManager.ActivatePlayset(newPlayset);
 
-		var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel();
+		var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(newPlayset);
 
 		if (Form.SetPanel(null, panel))
 		{
@@ -68,7 +68,7 @@ public partial class PC_PlaysetAdd : PanelContent
 
 		await _playsetManager.ActivatePlayset(newPlayset);
 
-		var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel();
+		var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(newPlayset);
 
 		if (Form.SetPanel(null, panel))
 		{
@@ -83,20 +83,20 @@ public partial class PC_PlaysetAdd : PanelContent
 
 	private async void DAD_NewProfile_FileSelected(string obj)
 	{
-		var profile = _playsetManager.Playsets.FirstOrDefault(x => x.Name!.Equals(Path.GetFileNameWithoutExtension(obj), StringComparison.InvariantCultureIgnoreCase));
+		var newPlayset = _playsetManager.Playsets.FirstOrDefault(x => x.Name!.Equals(Path.GetFileNameWithoutExtension(obj), StringComparison.InvariantCultureIgnoreCase));
 
-		if (profile is null)
+		if (newPlayset is null)
 		{
-			profile = await _playsetManager.ImportPlayset(obj);
+			newPlayset = await _playsetManager.ImportPlayset(obj);
 		}
 
 		try
 		{
-			var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel();
+			var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(newPlayset);
 
 			if (Form.SetPanel(null, panel))
 			{
-				panel.LoadPlayset(profile!);
+				panel.LoadPlayset(newPlayset!);
 			}
 		}
 		catch (Exception ex) { ShowPrompt(ex, "Failed to import your playset"); }

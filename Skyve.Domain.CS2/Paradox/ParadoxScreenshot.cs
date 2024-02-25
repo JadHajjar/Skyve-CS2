@@ -35,10 +35,16 @@ public class ParadoxScreenshot : IThumbnailObject
 
     public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
-		thumbnailUrl = Url;
-		thumbnail = !CrossIO.FileExists(Path)
-			? imageService.GetImage(Url, true, $"{ModId}_{Version}_{System.IO.Path.GetFileName(Url)}").Result
-			: imageService.GetImage(Path, true, $"{ModId}_{Version}_{System.IO.Path.GetExtension(Path)}", isFilePath: true).Result;
+		if (CrossIO.FileExists(Path))
+		{
+			thumbnailUrl = Path;
+			thumbnail = imageService.GetImage(Path, true, $"{ModId}_{Version}_{System.IO.Path.GetFileName(Path)}", isFilePath: true).Result;
+		}
+		else
+		{
+			thumbnailUrl = Url;
+			thumbnail = imageService.GetImage(Url, true, $"{ModId}_{Version}_{System.IO.Path.GetFileName(Url)}").Result;
+		}
 
 		return true;
 	}

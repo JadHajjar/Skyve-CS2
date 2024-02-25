@@ -6,8 +6,6 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Content;
 internal class PackageCompatibilityControl : SlickControl
 {
-	public event Action? CompatibilityInfoClicked;
-
 	private readonly INotifier _notifier;
 	private readonly IPackageUtil _packageUtil;
 	private IPackageIdentity Package { get; }

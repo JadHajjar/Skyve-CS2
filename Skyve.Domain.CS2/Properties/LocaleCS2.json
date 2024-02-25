@@ -57,5 +57,8 @@
   "RunSetupOrRunApp": "You can't run Skyve from this folder. If you've installed it already, run it from your Programs list.\r\n\r\nIf not, click on 'Ok' to run the setup.",
   "CantRunAppFromHere": "You can't run Skyve from this folder.\r\n\r\nEither run the app from your Programs list, or run the Skyve Setup from the mod's folder.",
   "UpdateAvailable": "Update available",
-  "UpdateAvailableInfo": "Click here to update Skyve"
+  "UpdateAvailableInfo": "Click here to update Skyve",
+  "VoteMod": "Like this mod",
+  "UnVoteMod": "Un-Like this mod",
+  "LogLevel": "Log Level"
 }

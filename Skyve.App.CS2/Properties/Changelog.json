@@ -1,7 +1,11 @@
 {
+  "Changes": "Changes",
   "Changes 1": "Changes 1",
   "Changes 2": "Changes 2",
   "First Line": "First Line",
   "Second Line": "Second Line",
-  "This is a test for auto-changelog": "This is a test for auto-changelog"
+  "New Mod page": "New Mod page",
+  "WIP Playset settings page": "WIP Playset settings page",
+  "This is a test for auto-changelog": "This is a test for auto-changelog",
+  "Added missing playset list actions": "Added missing playset list actions"
 }

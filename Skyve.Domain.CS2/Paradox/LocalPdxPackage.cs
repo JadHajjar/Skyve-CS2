@@ -11,8 +11,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
-using static System.Net.Mime.MediaTypeNames;
-
 using PdxIMod = PDX.SDK.Contracts.Service.Mods.Models.IMod;
 using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
@@ -22,7 +20,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 {
 	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
 
-	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, isCodeMod, version, filePath)
+	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)), isCodeMod, version, filePath)
 	{
 		IsLocal = false;
 		Id = (ulong)mod.Id;
@@ -53,7 +51,6 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
 		Tags = mod.Tags;
-		Images = mod.LocalData.ScreenshotsFilenames.ToList(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), Id, mod.Version, true));
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
@@ -92,7 +89,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	public bool HasVoted { get; set; }
-	public IEnumerable<IThumbnailObject> Images { get; }
+	public IEnumerable<IThumbnailObject> Images => LocalData.Images;
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<ILink> IWorkshopInfo.Links => [];

@@ -258,6 +258,7 @@ internal class ContentManager : IContentManager
 
 			return new Package(folder,
 				assets,
+				[],
 				isCodeMod,
 				version?.GetString(),
 				modDll);

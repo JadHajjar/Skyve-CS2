@@ -154,6 +154,7 @@ namespace Skyve.App.CS2
 			// PI_CurrentPlayset
 			// 
 			this.PI_CurrentPlayset.Data = null;
+			this.PI_CurrentPlayset.Hidden = true;
 			this.PI_CurrentPlayset.Highlighted = false;
 			dynamicIcon23.Name = "I_ProfileSettings";
 			this.PI_CurrentPlayset.IconName = dynamicIcon23;

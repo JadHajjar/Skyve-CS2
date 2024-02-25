@@ -7,6 +7,7 @@ using Skyve.App.UserInterface.Lists;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
 using System.Text.RegularExpressions;
@@ -16,16 +17,16 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_PackagePage : PanelContent
 {
-	private readonly ItemListControl? LC_Items;
-	private readonly ContentList? LC_References;
+	private readonly ItemListControl LC_Items;
+	private readonly ContentList LC_References;
 	private readonly IncludedButton B_Incl;
-	private TagControl? addTagControl;
 	private readonly PackageTitleControl L_Title;
 	private readonly INotifier _notifier;
 	private readonly ICompatibilityManager _compatibilityManager;
 	private readonly IPackageUtil _packageUtil;
 	private readonly ISettings _settings;
-	private readonly PackageCompatibilityControl packageCompatibilityControl;
+	private readonly PackageCompatibilityControl _packageCompatibilityControl;
+	private TagControl? addTagControl;
 
 	public IPackageIdentity Package { get; }
 
@@ -35,106 +36,34 @@ public partial class PC_PackagePage : PanelContent
 
 		InitializeComponent();
 
-		Package = package;
+		PB_Icon.Package = Package = package;
 
-		PB_Icon.Package = package;
-
-		if (package.GetWorkshopInfo() is IWorkshopInfo workshopInfo)
-		{
-			if (workshopInfo.GetThumbnail(imageService, out var thumbnail, out var thumbnailUrl) && thumbnail is not null)
-			{
-				PB_Icon.Image = new Bitmap(thumbnail);
-			}
-			else
-			{
-				PB_Icon.LoadImage(thumbnailUrl, imageService.GetImage);
-			}
-		}
-
-		Controls.Add(packageCompatibilityControl = new(Package) { Dock = DockStyle.Top });
+		Controls.Add(_packageCompatibilityControl = new(Package) { Dock = DockStyle.Top });
 		TLP_Side.Controls.Add(B_Incl = new(Package) { Dock = DockStyle.Top }, 0, 2);
 		TLP_TopInfo.Controls.Add(L_Title = new(Package) { Dock = DockStyle.Fill });
-
 		L_Title.MouseClick += I_More_MouseClick;
-		packageCompatibilityControl.CompatibilityInfoClicked += () => T_Compatibility.Selected = true;
 
-		//P_Info.SetPackage(package);
-
-		T_Compatibility.LinkedControl = new PackageCompatibilityReportControl(package);
-
-		var crdata = Package.GetPackageInfo();
-		var crAvailable = crdata is not null;
-
-		//if (!crAvailable)
-		//{
-		//	TLP_Info.ColumnStyles[1].Width = 0;
-		//}
-
-		if (Package.GetLocalPackage() is ILocalPackageData p && p.Assets is not null && p.Assets.Length > 0)
+		if (_settings.UserSettings.ComplexListUI)
 		{
-			if (_settings.UserSettings.ComplexListUI)
-			{
-				LC_Items = new ItemListControl.Complex(SkyvePage.SinglePackage) { Dock = DockStyle.Fill, IsPackagePage = true };
-			}
-			else
-			{
-				LC_Items = new ItemListControl.Simple(SkyvePage.SinglePackage) { Dock = DockStyle.Fill, IsPackagePage = true };
-			}
-
-			LC_Items.AddRange(p.Assets);
-
-			//P_List.Controls.Add(LC_Items);
-		}
-		else if (crAvailable)
-		{
-			//TLP_Info.ColumnStyles[0].Width = 0;
+			LC_Items = new ItemListControl.Complex(SkyvePage.SinglePackage) { IsPackagePage = true };
 		}
 		else
 		{
-			slickTabControl.RemoveTab(T_Info);
-			T_Compatibility.PreSelected = true;
+			LC_Items = new ItemListControl.Simple(SkyvePage.SinglePackage) { IsPackagePage = true };
 		}
+
+		LC_References = new ContentList(SkyvePage.SinglePackage, true, GetItems, SetIncluded, SetEnabled, GetItemText, GetCountText);
+		LC_References.TB_Search.Placeholder = "SearchGenericPackages";
+
+		T_References.LinkedControl = LC_References;
+		T_Content.LinkedControl = LC_Items;
+		T_Compatibility.LinkedControl = new PackageCompatibilityReportControl(package);
+		T_Playsets.LinkedControl = new OtherPlaysetPackage(package);
 
 		if (compatibilityPage)
 		{
 			T_Compatibility.PreSelected = true;
 		}
-
-		if (crAvailable)
-		{
-			//foreach (var item in crdata?.Links ?? [])
-			//{
-			//	FLP_Links.Controls.Add(new LinkControl(item, true));
-			//}
-
-			//label5.Visible = FLP_Links.Visible = FLP_Links.Controls.Count > 0;
-		}
-
-		if (GetItems().Result.Any())
-		{
-			LC_References = new ContentList(SkyvePage.SinglePackage, true, GetItems, SetIncluded, SetEnabled, GetItemText, GetCountText)
-			{
-				Dock = DockStyle.Fill
-			};
-
-			LC_References.TB_Search.Placeholder = "SearchGenericPackages";
-
-			LC_References.RefreshItems();
-
-			T_References.LinkedControl = LC_References;
-		}
-		else
-		{
-			slickTabControl.RemoveTab(T_References);
-		}
-
-		var pc = new OtherPlaysetPackage(package)
-		{
-			Dock = DockStyle.Fill
-		};
-
-		T_Playsets.FillTab = true;
-		T_Playsets.LinkedControl = pc;
 
 		_notifier.WorkshopInfoUpdated += Notifier_WorkshopInfoUpdated;
 		_notifier.PackageInclusionUpdated += Notifier_WorkshopInfoUpdated;
@@ -152,21 +81,46 @@ public partial class PC_PackagePage : PanelContent
 
 			var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
-			//P_Info.Invalidate();
 			LC_Items?.Invalidate();
 			B_Incl.Invalidate();
 
 			LI_Version.ValueText = localData?.Version ?? workshopInfo?.Version;
 			LI_UpdateTime.ValueText = _settings.UserSettings.ShowDatesRelatively ? date.ToRelatedString(true, false) : date.ToString("g");
-			LI_ModId.ValueText = Package.Id.ToString();
+			LI_ModId.ValueText = Package.Id > 0 ? Package.Id.ToString() : null;
 			LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);
-			LI_Votes.ValueText = workshopInfo is not null ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
-			LI_Subscribers.ValueText = workshopInfo is not null ? Locale.SubscribersCount.FormatPlural(workshopInfo.Subscribers, workshopInfo.Subscribers.ToString("N0")) : null;
-
+			LI_Votes.ValueText = workshopInfo?.VoteCount >= 0 ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
+			LI_Subscribers.ValueText = workshopInfo?.Subscribers >= 0 ? Locale.SubscribersCount.FormatPlural(workshopInfo.Subscribers, workshopInfo.Subscribers.ToString("N0")) : null;
 			LI_Votes.ValueColor = workshopInfo?.HasVoted == true ? FormDesign.Design.GreenColor : null;
 
 			L_Author.Visible = workshopInfo is not null;
 			L_Author.Text = workshopInfo?.Author?.Name;
+
+			// Info
+			{
+				if (Package.GetWorkshopInfo()?.Description is string description && !string.IsNullOrWhiteSpace(description))
+				{
+					T_Info.Visible = true;
+
+					if (IsHandleCreated)
+					{
+						slickWebBrowser.Body = Markdig.Markdown.ToHtml(description);
+					}
+				}
+				else
+				{
+					T_Info.Visible = false;
+				}
+			}
+
+			// Changelog
+			{
+				T_Changelog.Visible = workshopInfo?.Changelog?.Any() ?? false;
+
+				if (T_Changelog.Visible)
+				{
+					packageChangelogControl1.SetChangelogs(workshopInfo!.Version ?? string.Empty, workshopInfo!.Changelog);
+				}
+			}
 
 			// Links
 			{
@@ -174,10 +128,11 @@ public partial class PC_PackagePage : PanelContent
 
 				links.AddRange(workshopInfo?.Links ?? []);
 				links.AddRange(Package.GetPackageInfo()?.Links ?? []);
-				
-				foreach (var item in links)
+
+				if (!links.ToList(x => x.Url).SequenceEqual(FLP_Links.Controls.OfType<LinkControl>().Select(x => x.Link.Url)))
 				{
-					FLP_Links.Controls.Add(new LinkControl(item, true));
+					FLP_Links.Controls.Clear(true);
+					FLP_Links.Controls.AddRange(links.ToArray(x => new LinkControl(x, true)));
 				}
 
 				TLP_Links.Visible = links.Count > 0;
@@ -185,9 +140,11 @@ public partial class PC_PackagePage : PanelContent
 
 			// Images
 			{
-				var images = workshopInfo?.Images ?? [];
+				var images = localData?.Images ?? workshopInfo?.Images ?? [];
 
 				T_Gallery.Visible = images.Any();
+
+				carouselControl.SetThumbnails(images);
 			}
 
 			// Requirements
@@ -199,12 +156,13 @@ public partial class PC_PackagePage : PanelContent
 					if (!requirements.ToList(x => x.Id).SequenceEqual(P_Requirements.Controls.OfType<MiniPackageControl>().Select(x => x.Id)))
 					{
 						P_Requirements.Controls.Clear(true);
-
-						foreach (var requirement in requirements)
+						P_Requirements.Controls.AddRange(requirements.ToArray(x => new MiniPackageControl(x.Id)
 						{
-							var control = new MiniPackageControl(requirement.Id) { ReadOnly = true, Large = true, ShowIncluded = true, Dock = DockStyle.Top };
-							P_Requirements.Controls.Add(control);
-						}
+							ReadOnly = true,
+							Large = true,
+							ShowIncluded = true,
+							Dock = DockStyle.Top
+						}));
 					}
 
 					TLP_ModRequirements.Visible = true;
@@ -215,7 +173,32 @@ public partial class PC_PackagePage : PanelContent
 				}
 			}
 
-			AddTags();
+			// Content
+			{
+				if (Package.GetLocalPackage() is ILocalPackageData p && p.Assets?.Length > 0)
+				{
+					LC_Items?.SetItems(p.Assets);
+
+					T_Content.Visible = true;
+				}
+				else
+				{
+					LC_Items?.Clear();
+
+					T_Content.Visible = false;
+				}
+			}
+
+			// References
+			{
+				T_References.Visible = _compatibilityManager.GetPackagesThatReference(Package, _settings.UserSettings.ShowAllReferencedPackages).Any();
+			}
+
+			// Tags
+			if (!Package.GetTags().SequenceEqual(FLP_Tags.Controls.OfType<TagControl>().SelectWhereNotNull(x => x.TagInfo)))
+			{
+				AddTags();
+			}
 		});
 	}
 
@@ -278,20 +261,7 @@ public partial class PC_PackagePage : PanelContent
 
 	private void AddTagControl_MouseClick(object sender, MouseEventArgs e)
 	{
-		var frm = EditTags(new[] { Package });
-
-		frm.FormClosed += (_, _) =>
-		{
-			if (frm.DialogResult == DialogResult.OK)
-			{
-				AddTags();
-			}
-		};
-	}
-
-	private static EditTagsForm EditTags(IEnumerable<IPackageIdentity> item)
-	{
-		var frm = new EditTagsForm(item);
+		var frm = new EditTagsForm([Package]);
 
 		App.Program.MainForm.OnNextIdle(() =>
 		{
@@ -300,7 +270,13 @@ public partial class PC_PackagePage : PanelContent
 			frm.ShowUp();
 		});
 
-		return frm;
+		frm.FormClosed += (_, _) =>
+		{
+			if (frm.DialogResult == DialogResult.OK)
+			{
+				AddTags();
+			}
+		};
 	}
 
 	private void AddTags()
@@ -334,7 +310,7 @@ public partial class PC_PackagePage : PanelContent
 
 		(sender as TagControl)!.Dispose();
 
-		ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo?.IsCustom ==true? x.TagInfo.Value?.Replace(' ', '-') : null)!);
+		ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo?.IsCustom == true ? x.TagInfo.Value?.Replace(' ', '-') : null)!);
 
 		_notifier.OnRefreshUI(true);
 	}
@@ -344,21 +320,7 @@ public partial class PC_PackagePage : PanelContent
 		L_Info.Text = Locale.Info.One.ToUpper();
 		L_Requirements.Text = Locale.Dependency.Plural.ToUpper();
 		L_Tags.Text = LocaleSlickUI.Tags.One.ToUpper();
-		L_Links.Text= Locale.Links.One.ToUpper();
-
-		//var cr = Package.GetPackageInfo();
-
-		//if (cr is null)
-		//{
-		//	return;
-		//}
-		//label1.Text = LocaleCR.Usage;
-		//label2.Text = cr.Usage.GetValues().If(x => x.Count() == Enum.GetValues(typeof(PackageUsage)).Length, x => Locale.AnyUsage.One, x => x.ListStrings(x => LocaleCR.Get(x.ToString()), ", "));
-		//label3.Text = LocaleCR.PackageType;
-		//label4.Text = cr.Type == PackageType.GenericPackage ? (Package.GetPackage()?.IsCodeMod == true ? Locale.Mod : Locale.Asset) : LocaleCR.Get(cr.Type.ToString());
-		//label5.Text = LocaleCR.Links;
-		//label6.Text = LocaleSlickUI.Tags;
-		//L_Requirements.Text = LocaleHelper.GetGlobalText("CRT_RequiredPackages");
+		L_Links.Text = Locale.Links.One.ToUpper();
 	}
 
 	protected override void UIChanged()
@@ -369,12 +331,12 @@ public partial class PC_PackagePage : PanelContent
 		PB_Icon.Size = UI.Scale(new Size(72, 72), UI.FontScale);
 		I_More.Size = UI.Scale(new Size(20, 28), UI.FontScale);
 		TLP_Side.Padding = UI.Scale(new Padding(8, 0, 0, 0), UI.FontScale);
-		TLP_TopInfo.Margin = B_Incl.Margin = packageCompatibilityControl.Margin = slickSpacer1.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		TLP_TopInfo.Margin = B_Incl.Margin = _packageCompatibilityControl.Margin = slickSpacer1.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer1.Height = (int)UI.FontScale;
 		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding =
 		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		L_Info.Font = L_Requirements.Font = L_Tags.Font = L_Links.Font = UI.Font(7F, FontStyle.Bold);
-		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = UI.Scale(new Padding(3), UI.FontScale);
+		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = L_Links.Margin = UI.Scale(new Padding(3), UI.FontScale);
 		L_Author.Margin = L_Title.Margin = UI.Scale(new Padding(5, 0, 0, 0), UI.FontScale);
 		slickTabControl.Padding = UI.Scale(new Padding(5, 5, 0, 0), UI.FontScale);
 
@@ -385,7 +347,7 @@ public partial class PC_PackagePage : PanelContent
 	{
 		base.DesignChanged(design);
 
-		L_Info.ForeColor = L_Requirements.ForeColor = L_Tags.ForeColor = design.LabelColor;
+		L_Info.ForeColor = L_Requirements.ForeColor = L_Tags.ForeColor = L_Links.ForeColor = design.LabelColor;
 		TLP_ModInfo.BackColor = TLP_ModRequirements.BackColor = TLP_Tags.BackColor = TLP_Links.BackColor = design.BackColor.Tint(Lum: design.IsDarkTheme ? 6 : -5);
 	}
 
@@ -393,9 +355,21 @@ public partial class PC_PackagePage : PanelContent
 	{
 		base.OnCreateControl();
 
-		if (Package.GetWorkshopInfo()?.Description is string description)
+		// Info
 		{
-			slickWebBrowser.Body = Markdig.Markdown.ToHtml(description);
+			if (Package.GetWorkshopInfo()?.Description is string description && !string.IsNullOrWhiteSpace(description))
+			{
+				T_Info.Visible = true;
+
+				if (IsHandleCreated)
+				{
+					slickWebBrowser.Body = Markdig.Markdown.ToHtml(description);
+				}
+			}
+			else
+			{
+				T_Info.Visible = false;
+			}
 		}
 	}
 
@@ -512,5 +486,27 @@ public partial class PC_PackagePage : PanelContent
 		{
 			PlatformUtil.OpenUrl(e.Url.AbsoluteUri);
 		}
+	}
+
+	private async void LI_Votes_ValueClicked(object sender, EventArgs e)
+	{
+		await ServiceCenter.Get<IWorkshopService>().ToggleVote(Package);
+
+		var workshopInfo = Package.GetWorkshopInfo();
+		LI_Votes.ValueText = workshopInfo?.VoteCount >= 0 ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
+		LI_Votes.ValueColor = workshopInfo?.HasVoted == true ? FormDesign.Design.GreenColor : null;
+		LI_Votes.Invalidate();
+	}
+
+	private void LI_Votes_HoverStateChanged(object sender, HoverState e)
+	{
+		var workshopInfo = Package.GetWorkshopInfo();
+		LI_Votes.LabelText = LI_Votes.HoverState.HasFlag(HoverState.Hovered) ? (workshopInfo?.HasVoted == true ? LocaleCS2.UnVoteMod : LocaleCS2.VoteMod) : "Votes";
+		LI_Votes.Invalidate();
+	}
+
+	private async void T_References_TabSelected(object sender, EventArgs e)
+	{
+		await LC_References.RefreshItems();
 	}
 }

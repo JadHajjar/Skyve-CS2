@@ -54,7 +54,10 @@ internal class D_Playsets : IDashboardItem
 
 	private void ViewPlaysetSettings()
 	{
-		App.Program.MainForm.PushPanel(ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel());
+		if (_playsetManager.CurrentPlayset is not null)
+		{
+			App.Program.MainForm.PushPanel(ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(_playsetManager.CurrentPlayset));
+		}
 	}
 
 	protected override DrawingDelegate GetDrawingMethod(int width)

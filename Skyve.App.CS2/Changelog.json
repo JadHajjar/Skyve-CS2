@@ -2,6 +2,22 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.1.6",
+    "Date": "2024-02-25",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "New Mod page",
+          "WIP Playset settings page",
+          "Added missing playset list actions"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.1.5",
     "Date": "2024-02-20",
     "Tagline": "This is a test for auto-changelog",

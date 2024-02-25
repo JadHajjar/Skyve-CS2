@@ -72,7 +72,7 @@ internal class InfoAndLabelControl : SlickControl
 			return;
 		}
 
-		var labelText = (HoverState.HasFlag(HoverState.Hovered) && clickRect.Contains(PointToClient(Cursor.Position)) ? LocaleSlickUI.Copy : LocaleHelper.GetGlobalText(LabelText)).One.ToUpper();
+		var labelText = (HoverState.HasFlag(HoverState.Hovered) && ValueClicked == null && clickRect.Contains(PointToClient(Cursor.Position)) ? LocaleSlickUI.Copy : LocaleHelper.GetGlobalText(LabelText)).One.ToUpper();
 		var valueText = ValueText;
 
 		using var fontLabel = UI.Font(6.5F, FontStyle.Bold).FitToWidth(labelText, ClientRectangle.Pad(Padding), e.Graphics);

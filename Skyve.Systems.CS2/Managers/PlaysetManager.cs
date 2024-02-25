@@ -262,6 +262,11 @@ internal class PlaysetManager : IPlaysetManager
 			return false;
 		}
 
+		if (playset is Playset playset_)
+		{
+			playset_.Name = text;
+		}
+
 		return await _workshopService.RenamePlayset(playset.Id, text);
 	}
 
@@ -427,5 +432,10 @@ internal class PlaysetManager : IPlaysetManager
 		{
 			_customPlaysets[customPlayset.Id] = customPlayset;
 		}
+	}
+
+	public Task<IEnumerable<IPackageIdentity>> GetPlaysetContents(IPlayset playset)
+	{
+		throw new NotImplementedException();
 	}
 }

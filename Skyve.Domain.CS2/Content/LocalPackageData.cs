@@ -18,16 +18,18 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject
 	public DateTime LocalTime { get; }
 	public string? Version { get; }
 	public IAsset[] Assets { get; set; }
+	public IThumbnailObject[] Images { get; set; }
 	public string Folder { get; }
 	public string FilePath { get; }
 
-	public LocalPackageData(IPackage package, IAsset[] assets, string folder, string? version, string filePath)
+	public LocalPackageData(IPackage package, IAsset[] assets, IThumbnailObject[] images, string folder, string? version, string filePath)
 	{
 		Package = package;
 		Version = version;
 		Assets = assets;
 		Folder = folder;
 		FilePath = filePath;
+		Images = images;
 
 		for (var i = 0; i < Assets.Length; i++)
 		{

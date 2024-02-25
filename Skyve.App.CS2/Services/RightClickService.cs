@@ -141,7 +141,6 @@ internal class RightClickService : IRightClickService
 					new(Locale.PlaysetDelete, "I_Disposable", () => DeletePlayset(playset))
 				]
 			},
-
 		];
 
 		//var items = new SlickStripItem[]

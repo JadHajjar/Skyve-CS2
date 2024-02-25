@@ -6,9 +6,9 @@ using Skyve.App.UserInterface.Panels;
 namespace Skyve.App.CS2.Services;
 internal class InterfaceService : IAppInterfaceService
 {
-	PlaysetSettingsPanel IAppInterfaceService.PlaysetSettingsPanel()
+	PlaysetSettingsPanel IAppInterfaceService.PlaysetSettingsPanel(IPlayset playset)
 	{
-		return new PC_PlaysetSettings();
+		return new PC_PlaysetSettings(playset);
 	}
 
 	PC_Changelog IAppInterfaceService.ChangelogPanel()

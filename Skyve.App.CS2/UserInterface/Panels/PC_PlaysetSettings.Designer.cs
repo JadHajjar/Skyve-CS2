@@ -32,144 +32,105 @@ partial class PC_PlaysetSettings
 	/// </summary>
 	private void InitializeComponent()
 	{
-			SlickControls.DynamicIcon dynamicIcon10 = new SlickControls.DynamicIcon();
-			SlickControls.DynamicIcon dynamicIcon11 = new SlickControls.DynamicIcon();
-			SlickControls.DynamicIcon dynamicIcon12 = new SlickControls.DynamicIcon();
-			SlickControls.DynamicIcon dynamicIcon1 = new SlickControls.DynamicIcon();
-			SlickControls.DynamicIcon dynamicIcon2 = new SlickControls.DynamicIcon();
-			SlickControls.DynamicIcon dynamicIcon3 = new SlickControls.DynamicIcon();
-			SlickControls.DynamicIcon dynamicIcon4 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon5 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon6 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon7 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon8 = new SlickControls.DynamicIcon();
-			SlickControls.DynamicIcon dynamicIcon9 = new SlickControls.DynamicIcon();
-			this.TLP_PlaysetName = new SlickControls.RoundedTableLayoutPanel();
-			this.I_PlaysetIcon = new SlickControls.SlickIcon();
+			SlickControls.DynamicIcon dynamicIcon1 = new SlickControls.DynamicIcon();
+			SlickControls.DynamicIcon dynamicIcon2 = new SlickControls.DynamicIcon();
+			SlickControls.DynamicIcon dynamicIcon3 = new SlickControls.DynamicIcon();
+			SlickControls.DynamicIcon dynamicIcon4 = new SlickControls.DynamicIcon();
+			this.I_Favorite = new SlickControls.SlickIcon();
 			this.L_CurrentPlayset = new System.Windows.Forms.Label();
 			this.TB_Name = new SlickControls.SlickTextBox();
-			this.B_Save = new SlickControls.SlickIcon();
-			this.I_Favorite = new SlickControls.SlickIcon();
 			this.B_EditName = new SlickControls.SlickIcon();
-			this.TLP_Main = new System.Windows.Forms.TableLayoutPanel();
-			this.B_AddPlayset = new SlickControls.RoundedTableLayoutPanel();
-			this.slickIcon2 = new SlickControls.SlickIcon();
-			this.B_TempPlayset = new SlickControls.RoundedTableLayoutPanel();
-			this.slickIcon1 = new SlickControls.SlickIcon();
-			this.I_TempPlayset = new SlickControls.SlickIcon();
-			this.L_TempPlayset = new System.Windows.Forms.Label();
-			this.P_Options = new SlickControls.RoundedPanel();
 			this.P_ScrollPanel = new System.Windows.Forms.Panel();
 			this.slickScroll = new SlickControls.SlickScroll();
 			this.TLP_Options = new System.Windows.Forms.TableLayoutPanel();
-			this.TLP_GeneralSettings = new SlickControls.RoundedGroupTableLayoutPanel();
-			this.CB_AutoSave = new SlickControls.SlickCheckbox();
-			this.DD_PlaysetUsage = new Skyve.App.UserInterface.Dropdowns.PackageUsageSingleDropDown();
 			this.TLP_LaunchSettings = new SlickControls.RoundedGroupTableLayoutPanel();
+			this.CB_NoMods = new SlickControls.SlickCheckbox();
 			this.DD_NewMap = new Skyve.App.UserInterface.Generic.DragAndDropControl();
-			this.CB_LHT = new SlickControls.SlickCheckbox();
+			this.CB_NoAssets = new SlickControls.SlickCheckbox();
 			this.DD_SaveFile = new Skyve.App.UserInterface.Generic.DragAndDropControl();
-			this.CB_NoWorkshop = new SlickControls.SlickCheckbox();
 			this.slickSpacer1 = new SlickControls.SlickSpacer();
 			this.CB_LoadSave = new SlickControls.SlickCheckbox();
 			this.CB_StartNewGame = new SlickControls.SlickCheckbox();
-			this.CB_NewAsset = new SlickControls.SlickCheckbox();
-			this.CB_LoadAsset = new SlickControls.SlickCheckbox();
-			this.TLP_LSM = new SlickControls.RoundedGroupTableLayoutPanel();
-			this.CB_LoadEnabled = new SlickControls.SlickCheckbox();
-			this.CB_LoadUsed = new SlickControls.SlickCheckbox();
-			this.DD_SkipFile = new Skyve.App.UserInterface.Generic.DragAndDropControl();
-			this.CB_SkipFile = new SlickControls.SlickCheckbox();
+			this.slickCheckbox2 = new SlickControls.SlickCheckbox();
 			this.TLP_AdvancedDev = new SlickControls.RoundedGroupTableLayoutPanel();
-			this.CB_NoMods = new SlickControls.SlickCheckbox();
-			this.CB_NoAssets = new SlickControls.SlickCheckbox();
-			this.CB_UseCitiesExe = new SlickControls.SlickCheckbox();
+			this.slickCheckbox1 = new SlickControls.SlickCheckbox();
 			this.TB_CustomArgs = new SlickControls.SlickTextBox();
 			this.CB_DevUI = new SlickControls.SlickCheckbox();
-			this.CB_RefreshWorkshop = new SlickControls.SlickCheckbox();
-			this.CB_UnityProfiler = new SlickControls.SlickCheckbox();
-			this.CB_DebugMono = new SlickControls.SlickCheckbox();
-			this.I_Info = new SlickControls.SlickIcon();
-			this.L_Info = new System.Windows.Forms.Label();
-			this.B_ViewPlaysets = new SlickControls.SlickButton();
-			this.TLP_PlaysetName.SuspendLayout();
-			this.TLP_Main.SuspendLayout();
-			this.B_AddPlayset.SuspendLayout();
-			this.B_TempPlayset.SuspendLayout();
-			this.P_Options.SuspendLayout();
+			this.CB_UseCitiesExe = new SlickControls.SlickCheckbox();
+			this.logLevelDropdown1 = new Skyve.App.CS2.UserInterface.Content.LogLevelDropdown();
+			this.DD_PlaysetUsage = new Skyve.App.UserInterface.Dropdowns.PackageUsageSingleDropDown();
+			this.P_Side = new System.Windows.Forms.Panel();
+			this.roundedPanel1 = new SlickControls.RoundedPanel();
+			this.slickScroll1 = new SlickControls.SlickScroll();
+			this.TLP_Side = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.I_More = new SlickControls.SlickIcon();
+			this.PB_Icon = new Skyve.App.UserInterface.Content.PlaysetIcon();
+			this.LI_ModCount = new Skyve.App.CS2.UserInterface.Content.InfoAndLabelControl();
+			this.LI_ModSize = new Skyve.App.CS2.UserInterface.Content.InfoAndLabelControl();
+			this.slickSpacer2 = new SlickControls.SlickSpacer();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.B_Activate = new SlickControls.SlickButton();
+			this.B_EditColor = new SlickControls.SlickButton();
+			this.B_EditThumbnail = new SlickControls.SlickButton();
 			this.P_ScrollPanel.SuspendLayout();
 			this.TLP_Options.SuspendLayout();
-			this.TLP_GeneralSettings.SuspendLayout();
 			this.TLP_LaunchSettings.SuspendLayout();
-			this.TLP_LSM.SuspendLayout();
 			this.TLP_AdvancedDev.SuspendLayout();
+			this.P_Side.SuspendLayout();
+			this.roundedPanel1.SuspendLayout();
+			this.TLP_Side.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// TLP_ProfileName
+			// base_Text
 			// 
-			this.TLP_PlaysetName.AutoSize = true;
-			this.TLP_PlaysetName.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.TLP_PlaysetName.ColumnCount = 6;
-			this.TLP_Main.SetColumnSpan(this.TLP_PlaysetName, 3);
-			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_PlaysetName.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_PlaysetName.Controls.Add(this.I_PlaysetIcon, 1, 0);
-			this.TLP_PlaysetName.Controls.Add(this.L_CurrentPlayset, 3, 0);
-			this.TLP_PlaysetName.Controls.Add(this.TB_Name, 4, 0);
-			this.TLP_PlaysetName.Controls.Add(this.B_Save, 5, 0);
-			this.TLP_PlaysetName.Controls.Add(this.I_Favorite, 0, 0);
-			this.TLP_PlaysetName.Controls.Add(this.B_EditName, 2, 0);
-			this.TLP_PlaysetName.Location = new System.Drawing.Point(10, 10);
-			this.TLP_PlaysetName.Margin = new System.Windows.Forms.Padding(10);
-			this.TLP_PlaysetName.Name = "TLP_ProfileName";
-			this.TLP_PlaysetName.Padding = new System.Windows.Forms.Padding(5);
-			this.TLP_PlaysetName.RowCount = 1;
-			this.TLP_PlaysetName.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_PlaysetName.Size = new System.Drawing.Size(455, 42);
-			this.TLP_PlaysetName.TabIndex = 3;
+			this.base_Text.Size = new System.Drawing.Size(150, 41);
 			// 
-			// I_ProfileIcon
+			// I_Favorite
 			// 
-			this.I_PlaysetIcon.ActiveColor = null;
-			this.I_PlaysetIcon.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.I_PlaysetIcon.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.I_PlaysetIcon.Location = new System.Drawing.Point(37, 5);
-			this.I_PlaysetIcon.Margin = new System.Windows.Forms.Padding(0);
-			this.I_PlaysetIcon.Name = "I_ProfileIcon";
-			this.I_PlaysetIcon.Padding = new System.Windows.Forms.Padding(5);
-			this.I_PlaysetIcon.Size = new System.Drawing.Size(32, 32);
-			this.I_PlaysetIcon.TabIndex = 0;
-			this.I_PlaysetIcon.TabStop = false;
-			this.I_PlaysetIcon.Click += new System.EventHandler(this.I_PlaysetIcon_Click);
+			this.I_Favorite.ActiveColor = null;
+			this.I_Favorite.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.I_Favorite.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.I_Favorite.Location = new System.Drawing.Point(0, 14);
+			this.I_Favorite.Margin = new System.Windows.Forms.Padding(0);
+			this.I_Favorite.Name = "I_Favorite";
+			this.I_Favorite.Padding = new System.Windows.Forms.Padding(5);
+			this.tableLayoutPanel1.SetRowSpan(this.I_Favorite, 2);
+			this.I_Favorite.Size = new System.Drawing.Size(20, 32);
+			this.I_Favorite.TabIndex = 0;
+			this.I_Favorite.TabStop = false;
+			this.I_Favorite.Click += new System.EventHandler(this.I_Favorite_Click);
 			// 
-			// L_CurrentProfile
+			// L_CurrentPlayset
 			// 
 			this.L_CurrentPlayset.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.L_CurrentPlayset.AutoSize = true;
-			this.L_CurrentPlayset.Location = new System.Drawing.Point(104, 9);
-			this.L_CurrentPlayset.Name = "L_CurrentProfile";
-			this.L_CurrentPlayset.Size = new System.Drawing.Size(55, 23);
+			this.L_CurrentPlayset.Location = new System.Drawing.Point(23, 6);
+			this.L_CurrentPlayset.Name = "L_CurrentPlayset";
+			this.L_CurrentPlayset.Size = new System.Drawing.Size(45, 19);
 			this.L_CurrentPlayset.TabIndex = 1;
 			this.L_CurrentPlayset.Text = "label1";
 			// 
 			// TB_Name
 			// 
-			this.TB_Name.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.TB_Name.EnterTriggersClick = false;
-			dynamicIcon10.Name = "I_Ok";
-			this.TB_Name.ImageName = dynamicIcon10;
+			this.tableLayoutPanel1.SetColumnSpan(this.TB_Name, 2);
+			this.TB_Name.Dock = System.Windows.Forms.DockStyle.Top;
+			dynamicIcon5.Name = "I_Ok";
+			this.TB_Name.ImageName = dynamicIcon5;
 			this.TB_Name.LabelText = "PlaysetName";
-			this.TB_Name.Location = new System.Drawing.Point(165, 9);
+			this.TB_Name.Location = new System.Drawing.Point(23, 35);
 			this.TB_Name.Name = "TB_Name";
 			this.TB_Name.Placeholder = "RenamePlayset";
 			this.TB_Name.SelectedText = "";
 			this.TB_Name.SelectionLength = 0;
 			this.TB_Name.SelectionStart = 0;
-			this.TB_Name.Size = new System.Drawing.Size(250, 23);
+			this.TB_Name.Size = new System.Drawing.Size(224, 23);
 			this.TB_Name.TabIndex = 2;
 			this.TB_Name.Visible = false;
 			this.TB_Name.IconClicked += new System.EventHandler(this.TB_Name_IconClicked);
@@ -177,44 +138,14 @@ partial class PC_PlaysetSettings
 			this.TB_Name.Leave += new System.EventHandler(this.TB_Name_Leave);
 			this.TB_Name.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.TB_Name_PreviewKeyDown);
 			// 
-			// B_Save
-			// 
-			this.B_Save.ActiveColor = null;
-			this.B_Save.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.B_Save.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon11.Name = "I_Save";
-			this.B_Save.ImageName = dynamicIcon11;
-			this.B_Save.Location = new System.Drawing.Point(418, 5);
-			this.B_Save.Margin = new System.Windows.Forms.Padding(0);
-			this.B_Save.Name = "B_Save";
-			this.B_Save.Padding = new System.Windows.Forms.Padding(5);
-			this.B_Save.Size = new System.Drawing.Size(32, 32);
-			this.B_Save.TabIndex = 4;
-			this.B_Save.TabStop = false;
-			this.B_Save.Click += new System.EventHandler(this.B_Save_Click);
-			// 
-			// I_Favorite
-			// 
-			this.I_Favorite.ActiveColor = null;
-			this.I_Favorite.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.I_Favorite.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.I_Favorite.Location = new System.Drawing.Point(5, 5);
-			this.I_Favorite.Margin = new System.Windows.Forms.Padding(0);
-			this.I_Favorite.Name = "I_Favorite";
-			this.I_Favorite.Padding = new System.Windows.Forms.Padding(5);
-			this.I_Favorite.Size = new System.Drawing.Size(32, 32);
-			this.I_Favorite.TabIndex = 0;
-			this.I_Favorite.TabStop = false;
-			this.I_Favorite.Click += new System.EventHandler(this.I_Favorite_Click);
-			// 
 			// B_EditName
 			// 
 			this.B_EditName.ActiveColor = null;
 			this.B_EditName.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.B_EditName.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon12.Name = "I_Edit";
-			this.B_EditName.ImageName = dynamicIcon12;
-			this.B_EditName.Location = new System.Drawing.Point(69, 5);
+			dynamicIcon6.Name = "I_Edit";
+			this.B_EditName.ImageName = dynamicIcon6;
+			this.B_EditName.Location = new System.Drawing.Point(218, 0);
 			this.B_EditName.Margin = new System.Windows.Forms.Padding(0);
 			this.B_EditName.Name = "B_EditName";
 			this.B_EditName.Padding = new System.Windows.Forms.Padding(5);
@@ -223,152 +154,24 @@ partial class PC_PlaysetSettings
 			this.B_EditName.TabStop = false;
 			this.B_EditName.Click += new System.EventHandler(this.B_EditName_Click);
 			// 
-			// TLP_Main
-			// 
-			this.TLP_Main.ColumnCount = 6;
-			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_Main.Controls.Add(this.B_AddPlayset, 4, 0);
-			this.TLP_Main.Controls.Add(this.B_TempPlayset, 3, 0);
-			this.TLP_Main.Controls.Add(this.I_TempPlayset, 0, 1);
-			this.TLP_Main.Controls.Add(this.L_TempPlayset, 1, 1);
-			this.TLP_Main.Controls.Add(this.TLP_PlaysetName, 0, 0);
-			this.TLP_Main.Controls.Add(this.P_Options, 0, 3);
-			this.TLP_Main.Controls.Add(this.I_Info, 0, 2);
-			this.TLP_Main.Controls.Add(this.L_Info, 1, 2);
-			this.TLP_Main.Controls.Add(this.B_ViewPlaysets, 5, 0);
-			this.TLP_Main.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TLP_Main.Location = new System.Drawing.Point(0, 30);
-			this.TLP_Main.Name = "TLP_Main";
-			this.TLP_Main.RowCount = 4;
-			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_Main.Size = new System.Drawing.Size(1182, 789);
-			this.TLP_Main.TabIndex = 0;
-			// 
-			// B_AddProfile
-			// 
-			this.B_AddPlayset.AutoSize = true;
-			this.B_AddPlayset.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.B_AddPlayset.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.B_AddPlayset.Controls.Add(this.slickIcon2, 0, 0);
-			this.B_AddPlayset.Location = new System.Drawing.Point(549, 10);
-			this.B_AddPlayset.Margin = new System.Windows.Forms.Padding(10);
-			this.B_AddPlayset.Name = "B_AddProfile";
-			this.B_AddPlayset.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.B_AddPlayset.Size = new System.Drawing.Size(44, 31);
-			this.B_AddPlayset.TabIndex = 8;
-			// 
-			// slickIcon2
-			// 
-			this.slickIcon2.ActiveColor = null;
-			this.slickIcon2.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon1.Name = "I_Add";
-			this.slickIcon2.ImageName = dynamicIcon1;
-			this.slickIcon2.Location = new System.Drawing.Point(0, 0);
-			this.slickIcon2.Margin = new System.Windows.Forms.Padding(0);
-			this.slickIcon2.Name = "slickIcon2";
-			this.slickIcon2.Padding = new System.Windows.Forms.Padding(5);
-			this.slickIcon2.Size = new System.Drawing.Size(44, 31);
-			this.slickIcon2.TabIndex = 4;
-			this.slickIcon2.TabStop = false;
-			this.slickIcon2.Click += new System.EventHandler(this.B_NewProfile_Click);
-			// 
-			// B_TempProfile
-			// 
-			this.B_TempPlayset.AutoSize = true;
-			this.B_TempPlayset.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.B_TempPlayset.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.B_TempPlayset.Controls.Add(this.slickIcon1, 0, 0);
-			this.B_TempPlayset.Location = new System.Drawing.Point(485, 10);
-			this.B_TempPlayset.Margin = new System.Windows.Forms.Padding(10);
-			this.B_TempPlayset.Name = "B_TempProfile";
-			this.B_TempPlayset.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.B_TempPlayset.Size = new System.Drawing.Size(44, 31);
-			this.B_TempPlayset.TabIndex = 7;
-			// 
-			// slickIcon1
-			// 
-			this.slickIcon1.ActiveColor = null;
-			this.slickIcon1.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon2.Name = "I_TempProfile";
-			this.slickIcon1.ImageName = dynamicIcon2;
-			this.slickIcon1.Location = new System.Drawing.Point(0, 0);
-			this.slickIcon1.Margin = new System.Windows.Forms.Padding(0);
-			this.slickIcon1.Name = "slickIcon1";
-			this.slickIcon1.Padding = new System.Windows.Forms.Padding(5);
-			this.slickIcon1.Size = new System.Drawing.Size(44, 31);
-			this.slickIcon1.TabIndex = 4;
-			this.slickIcon1.TabStop = false;
-			this.slickIcon1.Click += new System.EventHandler(this.B_TempProfile_Click);
-			// 
-			// I_TempProfile
-			// 
-			this.I_TempPlayset.ActiveColor = null;
-			this.I_TempPlayset.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.I_TempPlayset.ColorStyle = Extensions.ColorStyle.Yellow;
-			this.I_TempPlayset.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.I_TempPlayset.Enabled = false;
-			dynamicIcon3.Name = "I_Warning";
-			this.I_TempPlayset.ImageName = dynamicIcon3;
-			this.I_TempPlayset.Location = new System.Drawing.Point(18, 81);
-			this.I_TempPlayset.Margin = new System.Windows.Forms.Padding(18, 3, 3, 3);
-			this.I_TempPlayset.Name = "I_TempProfile";
-			this.I_TempPlayset.Padding = new System.Windows.Forms.Padding(5);
-			this.I_TempPlayset.Selected = true;
-			this.I_TempPlayset.Size = new System.Drawing.Size(32, 32);
-			this.I_TempPlayset.TabIndex = 2;
-			this.I_TempPlayset.TabStop = false;
-			// 
-			// L_TempProfile
-			// 
-			this.L_TempPlayset.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.L_TempPlayset.AutoSize = true;
-			this.TLP_Main.SetColumnSpan(this.L_TempPlayset, 5);
-			this.L_TempPlayset.Location = new System.Drawing.Point(56, 86);
-			this.L_TempPlayset.Margin = new System.Windows.Forms.Padding(3, 10, 10, 10);
-			this.L_TempPlayset.Name = "L_TempProfile";
-			this.L_TempPlayset.Size = new System.Drawing.Size(55, 23);
-			this.L_TempPlayset.TabIndex = 15;
-			this.L_TempPlayset.Text = "label1";
-			this.L_TempPlayset.UseMnemonic = false;
-			// 
-			// P_Options
-			// 
-			this.TLP_Main.SetColumnSpan(this.P_Options, 6);
-			this.P_Options.Controls.Add(this.P_ScrollPanel);
-			this.P_Options.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.P_Options.Location = new System.Drawing.Point(3, 165);
-			this.P_Options.Name = "P_Options";
-			this.P_Options.Size = new System.Drawing.Size(1176, 621);
-			this.P_Options.TabIndex = 4;
-			// 
 			// P_ScrollPanel
 			// 
 			this.P_ScrollPanel.Controls.Add(this.slickScroll);
 			this.P_ScrollPanel.Controls.Add(this.TLP_Options);
 			this.P_ScrollPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.P_ScrollPanel.Location = new System.Drawing.Point(0, 0);
+			this.P_ScrollPanel.Location = new System.Drawing.Point(0, 30);
 			this.P_ScrollPanel.Margin = new System.Windows.Forms.Padding(5);
 			this.P_ScrollPanel.Name = "P_ScrollPanel";
-			this.P_ScrollPanel.Size = new System.Drawing.Size(1176, 621);
+			this.P_ScrollPanel.Size = new System.Drawing.Size(883, 930);
 			this.P_ScrollPanel.TabIndex = 0;
 			// 
 			// slickScroll
 			// 
 			this.slickScroll.Dock = System.Windows.Forms.DockStyle.Right;
 			this.slickScroll.LinkedControl = this.TLP_Options;
-			this.slickScroll.Location = new System.Drawing.Point(1167, 0);
+			this.slickScroll.Location = new System.Drawing.Point(873, 0);
 			this.slickScroll.Name = "slickScroll";
-			this.slickScroll.Size = new System.Drawing.Size(9, 621);
+			this.slickScroll.Size = new System.Drawing.Size(10, 930);
 			this.slickScroll.Style = SlickControls.StyleType.Vertical;
 			this.slickScroll.TabIndex = 16;
 			this.slickScroll.TabStop = false;
@@ -378,76 +181,21 @@ partial class PC_PlaysetSettings
 			// 
 			this.TLP_Options.AutoSize = true;
 			this.TLP_Options.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.TLP_Options.ColumnCount = 2;
-			this.TLP_Options.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.TLP_Options.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.TLP_Options.Controls.Add(this.TLP_GeneralSettings, 0, 0);
-			this.TLP_Options.Controls.Add(this.TLP_LaunchSettings, 1, 0);
-			this.TLP_Options.Controls.Add(this.TLP_LSM, 0, 1);
-			this.TLP_Options.Controls.Add(this.TLP_AdvancedDev, 1, 2);
+			this.TLP_Options.ColumnCount = 1;
+			this.TLP_Options.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TLP_Options.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TLP_Options.Controls.Add(this.TLP_LaunchSettings, 0, 0);
+			this.TLP_Options.Controls.Add(this.TLP_AdvancedDev, 0, 2);
 			this.TLP_Options.Location = new System.Drawing.Point(0, 0);
-			this.TLP_Options.MaximumSize = new System.Drawing.Size(1176, 0);
-			this.TLP_Options.MinimumSize = new System.Drawing.Size(1176, 0);
+			this.TLP_Options.MaximumSize = new System.Drawing.Size(876, 0);
+			this.TLP_Options.MinimumSize = new System.Drawing.Size(876, 0);
 			this.TLP_Options.Name = "TLP_Options";
 			this.TLP_Options.RowCount = 1;
 			this.TLP_Options.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Options.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Options.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Options.Size = new System.Drawing.Size(1176, 610);
+			this.TLP_Options.Size = new System.Drawing.Size(876, 658);
 			this.TLP_Options.TabIndex = 0;
-			// 
-			// TLP_GeneralSettings
-			// 
-			this.TLP_GeneralSettings.AddOutline = true;
-			this.TLP_GeneralSettings.AutoSize = true;
-			this.TLP_GeneralSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.TLP_GeneralSettings.ColumnCount = 1;
-			this.TLP_GeneralSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.TLP_GeneralSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_GeneralSettings.Controls.Add(this.CB_AutoSave, 0, 2);
-			this.TLP_GeneralSettings.Controls.Add(this.DD_PlaysetUsage, 0, 0);
-			this.TLP_GeneralSettings.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon4.Name = "I_Cog";
-			this.TLP_GeneralSettings.ImageName = dynamicIcon4;
-			this.TLP_GeneralSettings.Location = new System.Drawing.Point(3, 3);
-			this.TLP_GeneralSettings.Name = "TLP_GeneralSettings";
-			this.TLP_GeneralSettings.Padding = new System.Windows.Forms.Padding(7, 43, 7, 7);
-			this.TLP_GeneralSettings.RowCount = 3;
-			this.TLP_GeneralSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_GeneralSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_GeneralSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_GeneralSettings.Size = new System.Drawing.Size(582, 143);
-			this.TLP_GeneralSettings.TabIndex = 0;
-			this.TLP_GeneralSettings.Text = "Settings";
-			// 
-			// CB_AutoSave
-			// 
-			this.CB_AutoSave.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.CB_AutoSave.AutoSize = true;
-			this.CB_AutoSave.Checked = false;
-			this.CB_AutoSave.CheckedText = null;
-			this.CB_AutoSave.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_AutoSave.DefaultValue = false;
-			this.CB_AutoSave.EnterTriggersClick = false;
-			this.CB_AutoSave.Location = new System.Drawing.Point(10, 103);
-			this.CB_AutoSave.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
-			this.CB_AutoSave.Name = "CB_AutoSave";
-			this.CB_AutoSave.Size = new System.Drawing.Size(105, 30);
-			this.CB_AutoSave.SpaceTriggersClick = true;
-			this.CB_AutoSave.TabIndex = 1;
-			this.CB_AutoSave.Text = "AutoSave";
-			this.CB_AutoSave.UncheckedText = null;
-			this.CB_AutoSave.CheckChanged += new System.EventHandler(this.ValueChanged);
-			// 
-			// DD_ProfileUsage
-			// 
-			this.DD_PlaysetUsage.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.DD_PlaysetUsage.Location = new System.Drawing.Point(10, 46);
-			this.DD_PlaysetUsage.Name = "DD_ProfileUsage";
-			this.DD_PlaysetUsage.Size = new System.Drawing.Size(310, 51);
-			this.DD_PlaysetUsage.TabIndex = 2;
-			this.DD_PlaysetUsage.Text = "Usage";
-			this.DD_PlaysetUsage.SelectedItemChanged += new System.EventHandler(this.T_PlaysetUsage_SelectedValueChanged);
 			// 
 			// TLP_LaunchSettings
 			// 
@@ -457,22 +205,21 @@ partial class PC_PlaysetSettings
 			this.TLP_LaunchSettings.ColumnCount = 2;
 			this.TLP_LaunchSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.TLP_LaunchSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.TLP_LaunchSettings.Controls.Add(this.DD_NewMap, 0, 3);
-			this.TLP_LaunchSettings.Controls.Add(this.CB_LHT, 0, 0);
-			this.TLP_LaunchSettings.Controls.Add(this.DD_SaveFile, 0, 5);
-			this.TLP_LaunchSettings.Controls.Add(this.CB_NoWorkshop, 1, 0);
-			this.TLP_LaunchSettings.Controls.Add(this.slickSpacer1, 0, 1);
-			this.TLP_LaunchSettings.Controls.Add(this.CB_LoadSave, 0, 4);
-			this.TLP_LaunchSettings.Controls.Add(this.CB_StartNewGame, 0, 2);
-			this.TLP_LaunchSettings.Controls.Add(this.CB_NewAsset, 0, 6);
-			this.TLP_LaunchSettings.Controls.Add(this.CB_LoadAsset, 1, 6);
+			this.TLP_LaunchSettings.Controls.Add(this.CB_NoMods, 0, 1);
+			this.TLP_LaunchSettings.Controls.Add(this.DD_NewMap, 0, 4);
+			this.TLP_LaunchSettings.Controls.Add(this.CB_NoAssets, 1, 1);
+			this.TLP_LaunchSettings.Controls.Add(this.DD_SaveFile, 0, 6);
+			this.TLP_LaunchSettings.Controls.Add(this.slickSpacer1, 0, 2);
+			this.TLP_LaunchSettings.Controls.Add(this.CB_LoadSave, 0, 5);
+			this.TLP_LaunchSettings.Controls.Add(this.CB_StartNewGame, 0, 3);
+			this.TLP_LaunchSettings.Controls.Add(this.slickCheckbox2, 0, 0);
 			this.TLP_LaunchSettings.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon5.Name = "I_Launch";
-			this.TLP_LaunchSettings.ImageName = dynamicIcon5;
-			this.TLP_LaunchSettings.Location = new System.Drawing.Point(591, 3);
+			dynamicIcon7.Name = "I_Launch";
+			this.TLP_LaunchSettings.ImageName = dynamicIcon7;
+			this.TLP_LaunchSettings.Location = new System.Drawing.Point(3, 3);
 			this.TLP_LaunchSettings.Name = "TLP_LaunchSettings";
-			this.TLP_LaunchSettings.Padding = new System.Windows.Forms.Padding(7, 43, 7, 7);
-			this.TLP_LaunchSettings.RowCount = 7;
+			this.TLP_LaunchSettings.Padding = new System.Windows.Forms.Padding(9, 53, 9, 9);
+			this.TLP_LaunchSettings.RowCount = 8;
 			this.TLP_Options.SetRowSpan(this.TLP_LaunchSettings, 2);
 			this.TLP_LaunchSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_LaunchSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -481,9 +228,30 @@ partial class PC_PlaysetSettings
 			this.TLP_LaunchSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_LaunchSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_LaunchSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_LaunchSettings.Size = new System.Drawing.Size(582, 368);
+			this.TLP_LaunchSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_LaunchSettings.Size = new System.Drawing.Size(870, 451);
 			this.TLP_LaunchSettings.TabIndex = 1;
 			this.TLP_LaunchSettings.Text = "LaunchSettings";
+			// 
+			// CB_NoMods
+			// 
+			this.CB_NoMods.AutoSize = true;
+			this.CB_NoMods.Checked = false;
+			this.CB_NoMods.CheckedText = null;
+			this.CB_NoMods.ColorShade = null;
+			this.CB_NoMods.ColorStyle = Extensions.ColorStyle.Yellow;
+			this.CB_NoMods.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.CB_NoMods.DefaultValue = false;
+			this.CB_NoMods.EnterTriggersClick = false;
+			this.CB_NoMods.Location = new System.Drawing.Point(12, 122);
+			this.CB_NoMods.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+			this.CB_NoMods.Name = "CB_NoMods";
+			this.CB_NoMods.Size = new System.Drawing.Size(118, 46);
+			this.CB_NoMods.SpaceTriggersClick = true;
+			this.CB_NoMods.TabIndex = 0;
+			this.CB_NoMods.Text = "NoMods";
+			this.CB_NoMods.UncheckedText = null;
+			this.CB_NoMods.CheckChanged += new System.EventHandler(this.ValueChanged);
 			// 
 			// DD_NewMap
 			// 
@@ -491,32 +259,35 @@ partial class PC_PlaysetSettings
 			this.TLP_LaunchSettings.SetColumnSpan(this.DD_NewMap, 2);
 			this.DD_NewMap.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.DD_NewMap.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DD_NewMap.Location = new System.Drawing.Point(10, 154);
+			this.DD_NewMap.Location = new System.Drawing.Point(12, 255);
 			this.DD_NewMap.Name = "DD_NewMap";
-			this.DD_NewMap.Size = new System.Drawing.Size(562, 63);
+			this.DD_NewMap.Size = new System.Drawing.Size(846, 63);
 			this.DD_NewMap.TabIndex = 3;
 			this.DD_NewMap.Text = "MapFileInfo";
 			this.DD_NewMap.ValidExtensions = new string[] {
         ".crp"};
+			this.DD_NewMap.Visible = false;
 			this.DD_NewMap.FileSelected += new System.Action<string>(this.DD_NewMap_FileSelected);
 			// 
-			// CB_LHT
+			// CB_NoAssets
 			// 
-			this.CB_LHT.AutoSize = true;
-			this.CB_LHT.Checked = false;
-			this.CB_LHT.CheckedText = null;
-			this.CB_LHT.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_LHT.DefaultValue = false;
-			this.CB_LHT.EnterTriggersClick = false;
-			this.CB_LHT.Location = new System.Drawing.Point(10, 53);
-			this.CB_LHT.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-			this.CB_LHT.Name = "CB_LHT";
-			this.CB_LHT.Size = new System.Drawing.Size(62, 30);
-			this.CB_LHT.SpaceTriggersClick = true;
-			this.CB_LHT.TabIndex = 0;
-			this.CB_LHT.Text = "LHT";
-			this.CB_LHT.UncheckedText = null;
-			this.CB_LHT.CheckChanged += new System.EventHandler(this.ValueChanged);
+			this.CB_NoAssets.AutoSize = true;
+			this.CB_NoAssets.Checked = false;
+			this.CB_NoAssets.CheckedText = null;
+			this.CB_NoAssets.ColorShade = null;
+			this.CB_NoAssets.ColorStyle = Extensions.ColorStyle.Yellow;
+			this.CB_NoAssets.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.CB_NoAssets.DefaultValue = false;
+			this.CB_NoAssets.EnterTriggersClick = false;
+			this.CB_NoAssets.Location = new System.Drawing.Point(438, 122);
+			this.CB_NoAssets.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+			this.CB_NoAssets.Name = "CB_NoAssets";
+			this.CB_NoAssets.Size = new System.Drawing.Size(122, 46);
+			this.CB_NoAssets.SpaceTriggersClick = true;
+			this.CB_NoAssets.TabIndex = 1;
+			this.CB_NoAssets.Text = "NoAssets";
+			this.CB_NoAssets.UncheckedText = null;
+			this.CB_NoAssets.CheckChanged += new System.EventHandler(this.ValueChanged);
 			// 
 			// DD_SaveFile
 			// 
@@ -524,40 +295,23 @@ partial class PC_PlaysetSettings
 			this.TLP_LaunchSettings.SetColumnSpan(this.DD_SaveFile, 2);
 			this.DD_SaveFile.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.DD_SaveFile.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DD_SaveFile.Location = new System.Drawing.Point(10, 259);
+			this.DD_SaveFile.Location = new System.Drawing.Point(12, 376);
 			this.DD_SaveFile.Name = "DD_SaveFile";
-			this.DD_SaveFile.Size = new System.Drawing.Size(562, 63);
+			this.DD_SaveFile.Size = new System.Drawing.Size(846, 63);
 			this.DD_SaveFile.TabIndex = 5;
 			this.DD_SaveFile.Text = "SaveFileInfo";
 			this.DD_SaveFile.ValidExtensions = new string[] {
         ".crp"};
+			this.DD_SaveFile.Visible = false;
 			this.DD_SaveFile.FileSelected += new System.Action<string>(this.DD_SaveFile_FileSelected);
-			// 
-			// CB_NoWorkshop
-			// 
-			this.CB_NoWorkshop.AutoSize = true;
-			this.CB_NoWorkshop.Checked = false;
-			this.CB_NoWorkshop.CheckedText = null;
-			this.CB_NoWorkshop.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_NoWorkshop.DefaultValue = false;
-			this.CB_NoWorkshop.EnterTriggersClick = false;
-			this.CB_NoWorkshop.Location = new System.Drawing.Point(294, 53);
-			this.CB_NoWorkshop.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-			this.CB_NoWorkshop.Name = "CB_NoWorkshop";
-			this.CB_NoWorkshop.Size = new System.Drawing.Size(135, 30);
-			this.CB_NoWorkshop.SpaceTriggersClick = true;
-			this.CB_NoWorkshop.TabIndex = 1;
-			this.CB_NoWorkshop.Text = "NoWorkshop";
-			this.CB_NoWorkshop.UncheckedText = null;
-			this.CB_NoWorkshop.CheckChanged += new System.EventHandler(this.ValueChanged);
 			// 
 			// slickSpacer1
 			// 
 			this.TLP_LaunchSettings.SetColumnSpan(this.slickSpacer1, 2);
 			this.slickSpacer1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.slickSpacer1.Location = new System.Drawing.Point(10, 89);
+			this.slickSpacer1.Location = new System.Drawing.Point(12, 174);
 			this.slickSpacer1.Name = "slickSpacer1";
-			this.slickSpacer1.Size = new System.Drawing.Size(562, 23);
+			this.slickSpacer1.Size = new System.Drawing.Size(846, 23);
 			this.slickSpacer1.TabIndex = 10;
 			this.slickSpacer1.TabStop = false;
 			this.slickSpacer1.Text = "slickSpacer1";
@@ -568,13 +322,14 @@ partial class PC_PlaysetSettings
 			this.CB_LoadSave.AutoSize = true;
 			this.CB_LoadSave.Checked = false;
 			this.CB_LoadSave.CheckedText = null;
+			this.CB_LoadSave.ColorShade = null;
 			this.TLP_LaunchSettings.SetColumnSpan(this.CB_LoadSave, 2);
 			this.CB_LoadSave.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_LoadSave.DefaultValue = false;
 			this.CB_LoadSave.EnterTriggersClick = false;
-			this.CB_LoadSave.Location = new System.Drawing.Point(10, 223);
+			this.CB_LoadSave.Location = new System.Drawing.Point(12, 324);
 			this.CB_LoadSave.Name = "CB_LoadSave";
-			this.CB_LoadSave.Size = new System.Drawing.Size(151, 30);
+			this.CB_LoadSave.Size = new System.Drawing.Size(261, 46);
 			this.CB_LoadSave.SpaceTriggersClick = true;
 			this.CB_LoadSave.TabIndex = 4;
 			this.CB_LoadSave.Text = "LoadSaveGame";
@@ -586,149 +341,40 @@ partial class PC_PlaysetSettings
 			this.CB_StartNewGame.AutoSize = true;
 			this.CB_StartNewGame.Checked = false;
 			this.CB_StartNewGame.CheckedText = null;
+			this.CB_StartNewGame.ColorShade = null;
 			this.TLP_LaunchSettings.SetColumnSpan(this.CB_StartNewGame, 2);
 			this.CB_StartNewGame.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_StartNewGame.DefaultValue = false;
 			this.CB_StartNewGame.EnterTriggersClick = false;
-			this.CB_StartNewGame.Location = new System.Drawing.Point(10, 118);
+			this.CB_StartNewGame.Location = new System.Drawing.Point(12, 203);
 			this.CB_StartNewGame.Name = "CB_StartNewGame";
-			this.CB_StartNewGame.Size = new System.Drawing.Size(112, 30);
+			this.CB_StartNewGame.Size = new System.Drawing.Size(173, 46);
 			this.CB_StartNewGame.SpaceTriggersClick = true;
 			this.CB_StartNewGame.TabIndex = 2;
 			this.CB_StartNewGame.Text = "NewGame";
 			this.CB_StartNewGame.UncheckedText = null;
+			this.CB_StartNewGame.Visible = false;
 			this.CB_StartNewGame.CheckChanged += new System.EventHandler(this.ValueChanged);
 			// 
-			// CB_NewAsset
+			// slickCheckbox2
 			// 
-			this.CB_NewAsset.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.CB_NewAsset.AutoSize = true;
-			this.CB_NewAsset.Checked = false;
-			this.CB_NewAsset.CheckedText = null;
-			this.CB_NewAsset.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_NewAsset.DefaultValue = false;
-			this.CB_NewAsset.EnterTriggersClick = false;
-			this.CB_NewAsset.Location = new System.Drawing.Point(10, 328);
-			this.CB_NewAsset.Name = "CB_NewAsset";
-			this.CB_NewAsset.Size = new System.Drawing.Size(146, 30);
-			this.CB_NewAsset.SpaceTriggersClick = true;
-			this.CB_NewAsset.TabIndex = 6;
-			this.CB_NewAsset.Text = "LoadNewAsset";
-			this.CB_NewAsset.UncheckedText = null;
-			this.CB_NewAsset.CheckChanged += new System.EventHandler(this.ValueChanged);
-			// 
-			// CB_LoadAsset
-			// 
-			this.CB_LoadAsset.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.CB_LoadAsset.AutoSize = true;
-			this.CB_LoadAsset.Checked = false;
-			this.CB_LoadAsset.CheckedText = null;
-			this.CB_LoadAsset.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_LoadAsset.DefaultValue = false;
-			this.CB_LoadAsset.EnterTriggersClick = false;
-			this.CB_LoadAsset.Location = new System.Drawing.Point(294, 328);
-			this.CB_LoadAsset.Name = "CB_LoadAsset";
-			this.CB_LoadAsset.Size = new System.Drawing.Size(149, 30);
-			this.CB_LoadAsset.SpaceTriggersClick = true;
-			this.CB_LoadAsset.TabIndex = 7;
-			this.CB_LoadAsset.Text = "LoadLoadAsset";
-			this.CB_LoadAsset.UncheckedText = null;
-			this.CB_LoadAsset.CheckChanged += new System.EventHandler(this.ValueChanged);
-			// 
-			// TLP_LSM
-			// 
-			this.TLP_LSM.AddOutline = true;
-			this.TLP_LSM.AutoSize = true;
-			this.TLP_LSM.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.TLP_LSM.ColumnCount = 1;
-			this.TLP_LSM.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.TLP_LSM.Controls.Add(this.CB_LoadEnabled, 0, 0);
-			this.TLP_LSM.Controls.Add(this.CB_LoadUsed, 0, 1);
-			this.TLP_LSM.Controls.Add(this.DD_SkipFile, 0, 3);
-			this.TLP_LSM.Controls.Add(this.CB_SkipFile, 0, 2);
-			this.TLP_LSM.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon6.Name = "I_LSM";
-			this.TLP_LSM.ImageName = dynamicIcon6;
-			this.TLP_LSM.Location = new System.Drawing.Point(3, 152);
-			this.TLP_LSM.Name = "TLP_LSM";
-			this.TLP_LSM.Padding = new System.Windows.Forms.Padding(7, 43, 7, 7);
-			this.TLP_LSM.RowCount = 4;
-			this.TLP_Options.SetRowSpan(this.TLP_LSM, 2);
-			this.TLP_LSM.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_LSM.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_LSM.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_LSM.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_LSM.Size = new System.Drawing.Size(582, 231);
-			this.TLP_LSM.TabIndex = 2;
-			this.TLP_LSM.Text = "LoadingScreenMod";
-			// 
-			// CB_LoadEnabled
-			// 
-			this.CB_LoadEnabled.AutoSize = true;
-			this.CB_LoadEnabled.Checked = false;
-			this.CB_LoadEnabled.CheckedText = null;
-			this.CB_LoadEnabled.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_LoadEnabled.DefaultValue = false;
-			this.CB_LoadEnabled.EnterTriggersClick = false;
-			this.CB_LoadEnabled.Location = new System.Drawing.Point(10, 53);
-			this.CB_LoadEnabled.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-			this.CB_LoadEnabled.Name = "CB_LoadEnabled";
-			this.CB_LoadEnabled.Size = new System.Drawing.Size(132, 30);
-			this.CB_LoadEnabled.SpaceTriggersClick = true;
-			this.CB_LoadEnabled.TabIndex = 0;
-			this.CB_LoadEnabled.Text = "LoadEnabled";
-			this.CB_LoadEnabled.UncheckedText = null;
-			this.CB_LoadEnabled.CheckChanged += new System.EventHandler(this.LsmSettingsChanged);
-			// 
-			// CB_LoadUsed
-			// 
-			this.CB_LoadUsed.AutoSize = true;
-			this.CB_LoadUsed.Checked = false;
-			this.CB_LoadUsed.CheckedText = null;
-			this.CB_LoadUsed.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_LoadUsed.DefaultValue = false;
-			this.CB_LoadUsed.EnterTriggersClick = false;
-			this.CB_LoadUsed.Location = new System.Drawing.Point(10, 86);
-			this.CB_LoadUsed.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.CB_LoadUsed.Name = "CB_LoadUsed";
-			this.CB_LoadUsed.Size = new System.Drawing.Size(109, 30);
-			this.CB_LoadUsed.SpaceTriggersClick = true;
-			this.CB_LoadUsed.TabIndex = 1;
-			this.CB_LoadUsed.Text = "LoadUsed";
-			this.CB_LoadUsed.UncheckedText = null;
-			this.CB_LoadUsed.CheckChanged += new System.EventHandler(this.LsmSettingsChanged);
-			// 
-			// DD_SkipFile
-			// 
-			this.DD_SkipFile.AllowDrop = true;
-			this.DD_SkipFile.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.DD_SkipFile.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DD_SkipFile.Location = new System.Drawing.Point(10, 158);
-			this.DD_SkipFile.Name = "DD_SkipFile";
-			this.DD_SkipFile.Size = new System.Drawing.Size(562, 63);
-			this.DD_SkipFile.TabIndex = 3;
-			this.DD_SkipFile.Text = "SkipFileInfo";
-			this.DD_SkipFile.ValidExtensions = new string[] {
-        ".txt"};
-			this.DD_SkipFile.FileSelected += new System.Action<string>(this.DD_SkipFile_FileSelected);
-			// 
-			// CB_SkipFile
-			// 
-			this.CB_SkipFile.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.CB_SkipFile.AutoSize = true;
-			this.CB_SkipFile.Checked = false;
-			this.CB_SkipFile.CheckedText = null;
-			this.CB_SkipFile.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_SkipFile.DefaultValue = false;
-			this.CB_SkipFile.EnterTriggersClick = false;
-			this.CB_SkipFile.Location = new System.Drawing.Point(10, 122);
-			this.CB_SkipFile.Name = "CB_SkipFile";
-			this.CB_SkipFile.Size = new System.Drawing.Size(120, 30);
-			this.CB_SkipFile.SpaceTriggersClick = true;
-			this.CB_SkipFile.TabIndex = 2;
-			this.CB_SkipFile.Text = "UseSkipFile";
-			this.CB_SkipFile.UncheckedText = null;
-			this.CB_SkipFile.CheckChanged += new System.EventHandler(this.LsmSettingsChanged);
+			this.slickCheckbox2.AutoSize = true;
+			this.slickCheckbox2.Checked = false;
+			this.slickCheckbox2.CheckedText = null;
+			this.slickCheckbox2.ColorShade = null;
+			this.slickCheckbox2.ColorStyle = Extensions.ColorStyle.Yellow;
+			this.slickCheckbox2.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.slickCheckbox2.DefaultValue = false;
+			this.slickCheckbox2.EnterTriggersClick = false;
+			this.slickCheckbox2.Location = new System.Drawing.Point(12, 63);
+			this.slickCheckbox2.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+			this.slickCheckbox2.Name = "slickCheckbox2";
+			this.slickCheckbox2.Size = new System.Drawing.Size(167, 46);
+			this.slickCheckbox2.SpaceTriggersClick = true;
+			this.slickCheckbox2.TabIndex = 0;
+			this.slickCheckbox2.Text = "HideUserSection";
+			this.slickCheckbox2.UncheckedText = null;
+			this.slickCheckbox2.CheckChanged += new System.EventHandler(this.ValueChanged);
 			// 
 			// TLP_AdvancedDev
 			// 
@@ -739,99 +385,59 @@ partial class PC_PlaysetSettings
 			this.TLP_AdvancedDev.ColumnCount = 2;
 			this.TLP_AdvancedDev.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.TLP_AdvancedDev.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.TLP_AdvancedDev.Controls.Add(this.CB_NoMods, 0, 0);
-			this.TLP_AdvancedDev.Controls.Add(this.CB_NoAssets, 1, 0);
-			this.TLP_AdvancedDev.Controls.Add(this.CB_UseCitiesExe, 0, 2);
+			this.TLP_AdvancedDev.Controls.Add(this.slickCheckbox1, 1, 0);
 			this.TLP_AdvancedDev.Controls.Add(this.TB_CustomArgs, 0, 4);
-			this.TLP_AdvancedDev.Controls.Add(this.CB_DevUI, 0, 1);
-			this.TLP_AdvancedDev.Controls.Add(this.CB_RefreshWorkshop, 1, 1);
-			this.TLP_AdvancedDev.Controls.Add(this.CB_UnityProfiler, 0, 3);
-			this.TLP_AdvancedDev.Controls.Add(this.CB_DebugMono, 1, 2);
+			this.TLP_AdvancedDev.Controls.Add(this.CB_DevUI, 0, 0);
+			this.TLP_AdvancedDev.Controls.Add(this.CB_UseCitiesExe, 0, 1);
+			this.TLP_AdvancedDev.Controls.Add(this.logLevelDropdown1, 1, 1);
 			this.TLP_AdvancedDev.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon7.Name = "I_Author";
-			this.TLP_AdvancedDev.ImageName = dynamicIcon7;
-			this.TLP_AdvancedDev.Location = new System.Drawing.Point(591, 377);
+			dynamicIcon8.Name = "I_Author";
+			this.TLP_AdvancedDev.ImageName = dynamicIcon8;
+			this.TLP_AdvancedDev.Location = new System.Drawing.Point(3, 460);
 			this.TLP_AdvancedDev.Name = "TLP_AdvancedDev";
-			this.TLP_AdvancedDev.Padding = new System.Windows.Forms.Padding(7, 43, 7, 7);
+			this.TLP_AdvancedDev.Padding = new System.Windows.Forms.Padding(9, 53, 9, 9);
 			this.TLP_AdvancedDev.RowCount = 5;
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_AdvancedDev.Size = new System.Drawing.Size(582, 230);
+			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TLP_AdvancedDev.Size = new System.Drawing.Size(870, 195);
 			this.TLP_AdvancedDev.TabIndex = 3;
 			this.TLP_AdvancedDev.Text = "DevOptions";
 			// 
-			// CB_NoMods
+			// slickCheckbox1
 			// 
-			this.CB_NoMods.AutoSize = true;
-			this.CB_NoMods.Checked = false;
-			this.CB_NoMods.CheckedText = null;
-			this.CB_NoMods.ColorStyle = Extensions.ColorStyle.Yellow;
-			this.CB_NoMods.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_NoMods.DefaultValue = false;
-			this.CB_NoMods.EnterTriggersClick = false;
-			this.CB_NoMods.Location = new System.Drawing.Point(10, 53);
-			this.CB_NoMods.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-			this.CB_NoMods.Name = "CB_NoMods";
-			this.CB_NoMods.Size = new System.Drawing.Size(99, 30);
-			this.CB_NoMods.SpaceTriggersClick = true;
-			this.CB_NoMods.TabIndex = 0;
-			this.CB_NoMods.Text = "NoMods";
-			this.CB_NoMods.UncheckedText = null;
-			this.CB_NoMods.CheckChanged += new System.EventHandler(this.ValueChanged);
-			// 
-			// CB_NoAssets
-			// 
-			this.CB_NoAssets.AutoSize = true;
-			this.CB_NoAssets.Checked = false;
-			this.CB_NoAssets.CheckedText = null;
-			this.CB_NoAssets.ColorStyle = Extensions.ColorStyle.Yellow;
-			this.CB_NoAssets.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_NoAssets.DefaultValue = false;
-			this.CB_NoAssets.EnterTriggersClick = false;
-			this.CB_NoAssets.Location = new System.Drawing.Point(294, 53);
-			this.CB_NoAssets.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-			this.CB_NoAssets.Name = "CB_NoAssets";
-			this.CB_NoAssets.Size = new System.Drawing.Size(104, 30);
-			this.CB_NoAssets.SpaceTriggersClick = true;
-			this.CB_NoAssets.TabIndex = 1;
-			this.CB_NoAssets.Text = "NoAssets";
-			this.CB_NoAssets.UncheckedText = null;
-			this.CB_NoAssets.CheckChanged += new System.EventHandler(this.ValueChanged);
-			// 
-			// CB_UseCitiesExe
-			// 
-			this.CB_UseCitiesExe.AutoSize = true;
-			this.CB_UseCitiesExe.Checked = false;
-			this.CB_UseCitiesExe.CheckedText = null;
-			this.CB_UseCitiesExe.ColorStyle = Extensions.ColorStyle.Red;
-			this.CB_UseCitiesExe.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_UseCitiesExe.DefaultValue = false;
-			this.CB_UseCitiesExe.EnterTriggersClick = false;
-			this.CB_UseCitiesExe.Location = new System.Drawing.Point(10, 125);
-			this.CB_UseCitiesExe.Name = "CB_UseCitiesExe";
-			this.CB_UseCitiesExe.Size = new System.Drawing.Size(195, 30);
-			this.CB_UseCitiesExe.SpaceTriggersClick = true;
-			this.CB_UseCitiesExe.TabIndex = 4;
-			this.CB_UseCitiesExe.Text = "LaunchThroughCities";
-			this.CB_UseCitiesExe.UncheckedText = null;
-			this.CB_UseCitiesExe.CheckChanged += new System.EventHandler(this.ValueChanged);
+			this.slickCheckbox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.slickCheckbox1.AutoSize = true;
+			this.slickCheckbox1.Checked = false;
+			this.slickCheckbox1.CheckedText = null;
+			this.slickCheckbox1.ColorShade = null;
+			this.slickCheckbox1.ColorStyle = Extensions.ColorStyle.Red;
+			this.slickCheckbox1.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.slickCheckbox1.DefaultValue = false;
+			this.slickCheckbox1.EnterTriggersClick = false;
+			this.slickCheckbox1.Location = new System.Drawing.Point(438, 56);
+			this.slickCheckbox1.Name = "slickCheckbox1";
+			this.slickCheckbox1.Size = new System.Drawing.Size(151, 46);
+			this.slickCheckbox1.SpaceTriggersClick = true;
+			this.slickCheckbox1.TabIndex = 5;
+			this.slickCheckbox1.Text = "EnableDevUi";
+			this.slickCheckbox1.UncheckedText = null;
 			// 
 			// TB_CustomArgs
 			// 
 			this.TB_CustomArgs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
 			this.TLP_AdvancedDev.SetColumnSpan(this.TB_CustomArgs, 2);
-			this.TB_CustomArgs.EnterTriggersClick = false;
 			this.TB_CustomArgs.LabelText = "CustomLaunchArguments";
-			this.TB_CustomArgs.Location = new System.Drawing.Point(10, 197);
+			this.TB_CustomArgs.Location = new System.Drawing.Point(12, 160);
 			this.TB_CustomArgs.Name = "TB_CustomArgs";
 			this.TB_CustomArgs.Placeholder = "LaunchArgsInfo";
 			this.TB_CustomArgs.SelectedText = "";
 			this.TB_CustomArgs.SelectionLength = 0;
 			this.TB_CustomArgs.SelectionStart = 0;
-			this.TB_CustomArgs.Size = new System.Drawing.Size(562, 23);
+			this.TB_CustomArgs.Size = new System.Drawing.Size(846, 23);
 			this.TB_CustomArgs.TabIndex = 2;
 			this.TB_CustomArgs.TextChanged += new System.EventHandler(this.ValueChanged);
 			// 
@@ -841,205 +447,361 @@ partial class PC_PlaysetSettings
 			this.CB_DevUI.AutoSize = true;
 			this.CB_DevUI.Checked = false;
 			this.CB_DevUI.CheckedText = null;
+			this.CB_DevUI.ColorShade = null;
 			this.CB_DevUI.ColorStyle = Extensions.ColorStyle.Red;
 			this.CB_DevUI.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_DevUI.DefaultValue = false;
 			this.CB_DevUI.EnterTriggersClick = false;
-			this.CB_DevUI.Location = new System.Drawing.Point(10, 89);
+			this.CB_DevUI.Location = new System.Drawing.Point(12, 56);
 			this.CB_DevUI.Name = "CB_DevUI";
-			this.CB_DevUI.Size = new System.Drawing.Size(130, 30);
+			this.CB_DevUI.Size = new System.Drawing.Size(151, 46);
 			this.CB_DevUI.SpaceTriggersClick = true;
 			this.CB_DevUI.TabIndex = 2;
 			this.CB_DevUI.Text = "EnableDevUi";
 			this.CB_DevUI.UncheckedText = null;
 			this.CB_DevUI.CheckChanged += new System.EventHandler(this.ValueChanged);
 			// 
-			// CB_RefreshWorkshop
+			// CB_UseCitiesExe
 			// 
-			this.CB_RefreshWorkshop.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.CB_RefreshWorkshop.AutoSize = true;
-			this.CB_RefreshWorkshop.Checked = false;
-			this.CB_RefreshWorkshop.CheckedText = null;
-			this.CB_RefreshWorkshop.ColorStyle = Extensions.ColorStyle.Red;
-			this.CB_RefreshWorkshop.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_RefreshWorkshop.DefaultValue = false;
-			this.CB_RefreshWorkshop.EnterTriggersClick = false;
-			this.CB_RefreshWorkshop.Location = new System.Drawing.Point(294, 89);
-			this.CB_RefreshWorkshop.Name = "CB_RefreshWorkshop";
-			this.CB_RefreshWorkshop.Size = new System.Drawing.Size(169, 30);
-			this.CB_RefreshWorkshop.SpaceTriggersClick = true;
-			this.CB_RefreshWorkshop.TabIndex = 3;
-			this.CB_RefreshWorkshop.Text = "RefreshWorkshop";
-			this.CB_RefreshWorkshop.UncheckedText = null;
+			this.CB_UseCitiesExe.AutoSize = true;
+			this.CB_UseCitiesExe.Checked = false;
+			this.CB_UseCitiesExe.CheckedText = null;
+			this.CB_UseCitiesExe.ColorShade = null;
+			this.CB_UseCitiesExe.ColorStyle = Extensions.ColorStyle.Red;
+			this.CB_UseCitiesExe.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.CB_UseCitiesExe.DefaultValue = false;
+			this.CB_UseCitiesExe.EnterTriggersClick = false;
+			this.CB_UseCitiesExe.Location = new System.Drawing.Point(12, 108);
+			this.CB_UseCitiesExe.Name = "CB_UseCitiesExe";
+			this.CB_UseCitiesExe.Size = new System.Drawing.Size(195, 46);
+			this.CB_UseCitiesExe.SpaceTriggersClick = true;
+			this.CB_UseCitiesExe.TabIndex = 4;
+			this.CB_UseCitiesExe.Text = "LaunchThroughCities";
+			this.CB_UseCitiesExe.UncheckedText = null;
+			this.CB_UseCitiesExe.CheckChanged += new System.EventHandler(this.ValueChanged);
 			// 
-			// CB_UnityProfiler
+			// logLevelDropdown1
 			// 
-			this.CB_UnityProfiler.AutoSize = true;
-			this.CB_UnityProfiler.Checked = false;
-			this.CB_UnityProfiler.CheckedText = null;
-			this.CB_UnityProfiler.ColorStyle = Extensions.ColorStyle.Red;
-			this.CB_UnityProfiler.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_UnityProfiler.DefaultValue = false;
-			this.CB_UnityProfiler.EnterTriggersClick = false;
-			this.CB_UnityProfiler.Location = new System.Drawing.Point(10, 161);
-			this.CB_UnityProfiler.Name = "CB_UnityProfiler";
-			this.CB_UnityProfiler.Size = new System.Drawing.Size(174, 30);
-			this.CB_UnityProfiler.SpaceTriggersClick = true;
-			this.CB_UnityProfiler.TabIndex = 5;
-			this.CB_UnityProfiler.Text = "UnityProfilerMode";
-			this.CB_UnityProfiler.UncheckedText = null;
-			this.CB_UnityProfiler.Visible = false;
-			this.CB_UnityProfiler.CheckChanged += new System.EventHandler(this.ValueChanged);
+			this.logLevelDropdown1.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.logLevelDropdown1.Items = new string[] {
+        "DEFAULT",
+        "DISABLED",
+        "EMERGENCY",
+        "FATAL",
+        "CRITICAL",
+        "ERROR",
+        "WARN",
+        "INFO",
+        "DEBUG",
+        "TRACE",
+        "VERBOSE",
+        "ALL"};
+			this.logLevelDropdown1.Location = new System.Drawing.Point(438, 108);
+			this.logLevelDropdown1.Name = "logLevelDropdown1";
+			this.logLevelDropdown1.Size = new System.Drawing.Size(266, 46);
+			this.logLevelDropdown1.TabIndex = 6;
+			this.logLevelDropdown1.Text = "LogLevel";
 			// 
-			// CB_DebugMono
+			// DD_PlaysetUsage
 			// 
-			this.CB_DebugMono.AutoSize = true;
-			this.CB_DebugMono.Checked = false;
-			this.CB_DebugMono.CheckedText = null;
-			this.CB_DebugMono.ColorStyle = Extensions.ColorStyle.Red;
-			this.CB_DebugMono.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_DebugMono.DefaultValue = false;
-			this.CB_DebugMono.EnterTriggersClick = false;
-			this.CB_DebugMono.Location = new System.Drawing.Point(294, 125);
-			this.CB_DebugMono.Name = "CB_DebugMono";
-			this.CB_DebugMono.Size = new System.Drawing.Size(159, 30);
-			this.CB_DebugMono.SpaceTriggersClick = true;
-			this.CB_DebugMono.TabIndex = 6;
-			this.CB_DebugMono.Text = "UseDebugMono";
-			this.CB_DebugMono.UncheckedText = null;
-			this.CB_DebugMono.CheckChanged += new System.EventHandler(this.ValueChanged);
+			this.TLP_Side.SetColumnSpan(this.DD_PlaysetUsage, 3);
+			this.DD_PlaysetUsage.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.DD_PlaysetUsage.Location = new System.Drawing.Point(3, 301);
+			this.DD_PlaysetUsage.Name = "DD_PlaysetUsage";
+			this.DD_PlaysetUsage.Size = new System.Drawing.Size(244, 51);
+			this.DD_PlaysetUsage.TabIndex = 2;
+			this.DD_PlaysetUsage.Text = "Usage";
+			this.DD_PlaysetUsage.Visible = false;
+			this.DD_PlaysetUsage.SelectedItemChanged += new System.EventHandler(this.T_PlaysetUsage_SelectedValueChanged);
 			// 
-			// I_Info
+			// P_Side
 			// 
-			this.I_Info.ActiveColor = null;
-			this.I_Info.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.I_Info.ColorStyle = Extensions.ColorStyle.Icon;
-			this.I_Info.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.I_Info.Enabled = false;
-			dynamicIcon8.Name = "I_Info";
-			this.I_Info.ImageName = dynamicIcon8;
-			this.I_Info.Location = new System.Drawing.Point(18, 124);
-			this.I_Info.Margin = new System.Windows.Forms.Padding(18, 3, 3, 3);
-			this.I_Info.Name = "I_Info";
-			this.I_Info.Padding = new System.Windows.Forms.Padding(5);
-			this.I_Info.Selected = true;
-			this.I_Info.Size = new System.Drawing.Size(32, 32);
-			this.I_Info.TabIndex = 2;
-			this.I_Info.TabStop = false;
+			this.P_Side.Controls.Add(this.roundedPanel1);
+			this.P_Side.Dock = System.Windows.Forms.DockStyle.Right;
+			this.P_Side.Location = new System.Drawing.Point(883, 30);
+			this.P_Side.Name = "P_Side";
+			this.P_Side.Size = new System.Drawing.Size(294, 930);
+			this.P_Side.TabIndex = 15;
 			// 
-			// L_Info
+			// roundedPanel1
 			// 
-			this.L_Info.Anchor = System.Windows.Forms.AnchorStyles.Left;
-			this.L_Info.AutoSize = true;
-			this.TLP_Main.SetColumnSpan(this.L_Info, 5);
-			this.L_Info.Location = new System.Drawing.Point(56, 129);
-			this.L_Info.Margin = new System.Windows.Forms.Padding(3, 10, 10, 10);
-			this.L_Info.Name = "L_Info";
-			this.L_Info.Size = new System.Drawing.Size(55, 23);
-			this.L_Info.TabIndex = 15;
-			this.L_Info.Text = "label1";
-			this.L_Info.UseMnemonic = false;
+			this.roundedPanel1.AutoSize = true;
+			this.roundedPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.roundedPanel1.Controls.Add(this.slickScroll1);
+			this.roundedPanel1.Controls.Add(this.TLP_Side);
+			this.roundedPanel1.Location = new System.Drawing.Point(3, 3);
+			this.roundedPanel1.MinimumSize = new System.Drawing.Size(250, 0);
+			this.roundedPanel1.Name = "roundedPanel1";
+			this.roundedPanel1.Size = new System.Drawing.Size(250, 395);
+			this.roundedPanel1.TabIndex = 0;
 			// 
-			// B_ViewProfiles
+			// slickScroll1
 			// 
-			this.B_ViewPlaysets.AutoSize = true;
-			this.B_ViewPlaysets.ColorShade = null;
-			this.B_ViewPlaysets.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.B_ViewPlaysets.Dock = System.Windows.Forms.DockStyle.Right;
-			dynamicIcon9.Name = "I_Pages";
-			this.B_ViewPlaysets.ImageName = dynamicIcon9;
-			this.B_ViewPlaysets.LargeImage = true;
-			this.B_ViewPlaysets.Location = new System.Drawing.Point(1022, 10);
-			this.B_ViewPlaysets.Margin = new System.Windows.Forms.Padding(10);
-			this.B_ViewPlaysets.Name = "B_ViewProfiles";
-			this.B_ViewPlaysets.Size = new System.Drawing.Size(150, 56);
-			this.B_ViewPlaysets.SpaceTriggersClick = true;
-			this.B_ViewPlaysets.TabIndex = 0;
-			this.B_ViewPlaysets.Text = "ViewPlaysets";
-			this.B_ViewPlaysets.Click += new System.EventHandler(this.B_LoadProfiles_Click);
+			this.slickScroll1.Dock = System.Windows.Forms.DockStyle.Right;
+			this.slickScroll1.LinkedControl = this.roundedPanel1;
+			this.slickScroll1.Location = new System.Drawing.Point(240, 395);
+			this.slickScroll1.Name = "slickScroll1";
+			this.slickScroll1.Size = new System.Drawing.Size(10, 0);
+			this.slickScroll1.Style = SlickControls.StyleType.Vertical;
+			this.slickScroll1.TabIndex = 3;
+			this.slickScroll1.TabStop = false;
+			this.slickScroll1.Text = "slickScroll1";
 			// 
-			// PC_Profile
+			// TLP_Side
+			// 
+			this.TLP_Side.AutoSize = true;
+			this.TLP_Side.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.TLP_Side.ColumnCount = 2;
+			this.TLP_Side.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.TLP_Side.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.TLP_Side.Controls.Add(this.tableLayoutPanel2, 0, 0);
+			this.TLP_Side.Controls.Add(this.DD_PlaysetUsage, 0, 5);
+			this.TLP_Side.Controls.Add(this.LI_ModCount, 0, 4);
+			this.TLP_Side.Controls.Add(this.LI_ModSize, 1, 4);
+			this.TLP_Side.Controls.Add(this.slickSpacer2, 0, 2);
+			this.TLP_Side.Controls.Add(this.tableLayoutPanel1, 0, 1);
+			this.TLP_Side.Controls.Add(this.B_Activate, 0, 3);
+			this.TLP_Side.Controls.Add(this.B_EditColor, 0, 6);
+			this.TLP_Side.Controls.Add(this.B_EditThumbnail, 1, 6);
+			this.TLP_Side.Dock = System.Windows.Forms.DockStyle.Top;
+			this.TLP_Side.Location = new System.Drawing.Point(0, 0);
+			this.TLP_Side.Name = "TLP_Side";
+			this.TLP_Side.RowCount = 7;
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TLP_Side.Size = new System.Drawing.Size(250, 395);
+			this.TLP_Side.TabIndex = 1;
+			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.AutoSize = true;
+			this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.tableLayoutPanel2.ColumnCount = 2;
+			this.TLP_Side.SetColumnSpan(this.tableLayoutPanel2, 2);
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel2.Controls.Add(this.I_More, 1, 0);
+			this.tableLayoutPanel2.Controls.Add(this.PB_Icon, 0, 0);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 1;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(244, 100);
+			this.tableLayoutPanel2.TabIndex = 27;
+			this.tableLayoutPanel2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PB_Icon_MouseClick);
+			// 
+			// I_More
+			// 
+			this.I_More.ActiveColor = null;
+			this.I_More.Cursor = System.Windows.Forms.Cursors.Hand;
+			dynamicIcon1.Name = "I_VertialMore";
+			this.I_More.ImageName = dynamicIcon1;
+			this.I_More.Location = new System.Drawing.Point(230, 0);
+			this.I_More.Margin = new System.Windows.Forms.Padding(0);
+			this.I_More.Name = "I_More";
+			this.I_More.Size = new System.Drawing.Size(14, 28);
+			this.I_More.TabIndex = 3;
+			this.I_More.Click += new System.EventHandler(this.I_More_Click);
+			// 
+			// PB_Icon
+			// 
+			this.PB_Icon.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.PB_Icon.Location = new System.Drawing.Point(65, 0);
+			this.PB_Icon.Margin = new System.Windows.Forms.Padding(0);
+			this.PB_Icon.Name = "PB_Icon";
+			this.PB_Icon.Size = new System.Drawing.Size(100, 100);
+			this.PB_Icon.TabIndex = 21;
+			this.PB_Icon.TabStop = false;
+			this.PB_Icon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PB_Icon_MouseClick);
+			// 
+			// LI_ModCount
+			// 
+			this.LI_ModCount.Dock = System.Windows.Forms.DockStyle.Top;
+			this.LI_ModCount.LabelText = "ModCount";
+			this.LI_ModCount.Location = new System.Drawing.Point(3, 230);
+			this.LI_ModCount.Name = "LI_ModCount";
+			this.LI_ModCount.Padding = new System.Windows.Forms.Padding(5);
+			this.LI_ModCount.Size = new System.Drawing.Size(119, 14);
+			this.LI_ModCount.TabIndex = 24;
+			// 
+			// LI_ModSize
+			// 
+			this.LI_ModSize.Dock = System.Windows.Forms.DockStyle.Top;
+			this.LI_ModSize.LabelText = "ModSizes";
+			this.LI_ModSize.Location = new System.Drawing.Point(128, 230);
+			this.LI_ModSize.Name = "LI_ModSize";
+			this.LI_ModSize.Padding = new System.Windows.Forms.Padding(5);
+			this.LI_ModSize.Size = new System.Drawing.Size(119, 65);
+			this.LI_ModSize.TabIndex = 23;
+			this.LI_ModSize.ValueText = "";
+			// 
+			// slickSpacer2
+			// 
+			this.TLP_Side.SetColumnSpan(this.slickSpacer2, 2);
+			this.slickSpacer2.Dock = System.Windows.Forms.DockStyle.Top;
+			this.slickSpacer2.Location = new System.Drawing.Point(3, 170);
+			this.slickSpacer2.Name = "slickSpacer2";
+			this.slickSpacer2.Size = new System.Drawing.Size(244, 14);
+			this.slickSpacer2.TabIndex = 1;
+			this.slickSpacer2.TabStop = false;
+			this.slickSpacer2.Text = "slickSpacer2";
+			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.AutoSize = true;
+			this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.tableLayoutPanel1.ColumnCount = 3;
+			this.TLP_Side.SetColumnSpan(this.tableLayoutPanel1, 2);
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel1.Controls.Add(this.L_CurrentPlayset, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.TB_Name, 1, 1);
+			this.tableLayoutPanel1.Controls.Add(this.I_Favorite, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.B_EditName, 2, 0);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 106);
+			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 2;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(250, 61);
+			this.tableLayoutPanel1.TabIndex = 22;
+			// 
+			// B_Activate
+			// 
+			this.B_Activate.AutoSize = true;
+			this.B_Activate.ColorShade = null;
+			this.B_Activate.ColorStyle = Extensions.ColorStyle.Green;
+			this.TLP_Side.SetColumnSpan(this.B_Activate, 2);
+			this.B_Activate.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.B_Activate.Dock = System.Windows.Forms.DockStyle.Top;
+			dynamicIcon2.Name = "I_Check";
+			this.B_Activate.ImageName = dynamicIcon2;
+			this.B_Activate.Location = new System.Drawing.Point(3, 190);
+			this.B_Activate.MatchBackgroundColor = true;
+			this.B_Activate.Name = "B_Activate";
+			this.B_Activate.Size = new System.Drawing.Size(244, 34);
+			this.B_Activate.SpaceTriggersClick = true;
+			this.B_Activate.TabIndex = 25;
+			this.B_Activate.Text = "ActivatePlayset";
+			this.B_Activate.Click += new System.EventHandler(this.B_Activate_Click);
+			// 
+			// B_EditColor
+			// 
+			this.B_EditColor.AutoSize = true;
+			this.B_EditColor.ColorShade = null;
+			this.B_EditColor.ColorStyle = Extensions.ColorStyle.Green;
+			this.B_EditColor.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.B_EditColor.Dock = System.Windows.Forms.DockStyle.Top;
+			dynamicIcon3.Name = "I_Paint";
+			this.B_EditColor.ImageName = dynamicIcon3;
+			this.B_EditColor.Location = new System.Drawing.Point(3, 358);
+			this.B_EditColor.MatchBackgroundColor = true;
+			this.B_EditColor.Name = "B_EditColor";
+			this.B_EditColor.Size = new System.Drawing.Size(119, 34);
+			this.B_EditColor.SpaceTriggersClick = true;
+			this.B_EditColor.TabIndex = 26;
+			this.B_EditColor.Text = "ChangePlaysetColor";
+			this.B_EditColor.Click += new System.EventHandler(this.B_EditColor_Click);
+			// 
+			// B_EditThumbnail
+			// 
+			this.B_EditThumbnail.AutoSize = true;
+			this.B_EditThumbnail.ColorShade = null;
+			this.B_EditThumbnail.ColorStyle = Extensions.ColorStyle.Green;
+			this.B_EditThumbnail.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.B_EditThumbnail.Dock = System.Windows.Forms.DockStyle.Top;
+			dynamicIcon4.Name = "I_EditImage";
+			this.B_EditThumbnail.ImageName = dynamicIcon4;
+			this.B_EditThumbnail.Location = new System.Drawing.Point(128, 358);
+			this.B_EditThumbnail.MatchBackgroundColor = true;
+			this.B_EditThumbnail.Name = "B_EditThumbnail";
+			this.B_EditThumbnail.Size = new System.Drawing.Size(119, 34);
+			this.B_EditThumbnail.SpaceTriggersClick = true;
+			this.B_EditThumbnail.TabIndex = 26;
+			this.B_EditThumbnail.Text = "EditPlaysetThumbnail";
+			this.B_EditThumbnail.Click += new System.EventHandler(this.B_EditThumbnail_Click);
+			// 
+			// PC_PlaysetSettings
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.Controls.Add(this.TLP_Main);
+			this.Controls.Add(this.P_ScrollPanel);
+			this.Controls.Add(this.P_Side);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
-			this.Name = "PC_Profile";
-			this.Padding = new System.Windows.Forms.Padding(0, 30, 0, 0);
-			this.Size = new System.Drawing.Size(1182, 819);
-			this.Controls.SetChildIndex(this.TLP_Main, 0);
+			this.Name = "PC_PlaysetSettings";
+			this.Padding = new System.Windows.Forms.Padding(0, 30, 5, 0);
+			this.Size = new System.Drawing.Size(1182, 960);
 			this.Controls.SetChildIndex(this.base_Text, 0);
-			this.TLP_PlaysetName.ResumeLayout(false);
-			this.TLP_PlaysetName.PerformLayout();
-			this.TLP_Main.ResumeLayout(false);
-			this.TLP_Main.PerformLayout();
-			this.B_AddPlayset.ResumeLayout(false);
-			this.B_TempPlayset.ResumeLayout(false);
-			this.P_Options.ResumeLayout(false);
+			this.Controls.SetChildIndex(this.P_Side, 0);
+			this.Controls.SetChildIndex(this.P_ScrollPanel, 0);
 			this.P_ScrollPanel.ResumeLayout(false);
 			this.P_ScrollPanel.PerformLayout();
 			this.TLP_Options.ResumeLayout(false);
 			this.TLP_Options.PerformLayout();
-			this.TLP_GeneralSettings.ResumeLayout(false);
-			this.TLP_GeneralSettings.PerformLayout();
 			this.TLP_LaunchSettings.ResumeLayout(false);
 			this.TLP_LaunchSettings.PerformLayout();
-			this.TLP_LSM.ResumeLayout(false);
-			this.TLP_LSM.PerformLayout();
 			this.TLP_AdvancedDev.ResumeLayout(false);
 			this.TLP_AdvancedDev.PerformLayout();
+			this.P_Side.ResumeLayout(false);
+			this.P_Side.PerformLayout();
+			this.roundedPanel1.ResumeLayout(false);
+			this.roundedPanel1.PerformLayout();
+			this.TLP_Side.ResumeLayout(false);
+			this.TLP_Side.PerformLayout();
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
 	}
 
 	#endregion
-
-	private SlickControls.RoundedTableLayoutPanel TLP_PlaysetName;
 	private System.Windows.Forms.Label L_CurrentPlayset;
 	private SlickControls.SlickIcon B_EditName;
-	private SlickControls.SlickIcon I_PlaysetIcon;
-	private System.Windows.Forms.TableLayoutPanel TLP_Main;
-	private System.Windows.Forms.Label L_TempPlayset;
-	private SlickControls.RoundedPanel P_Options;
 	private SlickControls.SlickScroll slickScroll;
-	private SlickControls.RoundedGroupTableLayoutPanel TLP_LaunchSettings;
-	private SlickControls.SlickCheckbox CB_LHT;
-	private SlickControls.SlickCheckbox CB_NoWorkshop;
-	private SlickControls.SlickIcon I_TempPlayset;
-	private SlickControls.RoundedGroupTableLayoutPanel TLP_GeneralSettings;
-	private SlickControls.SlickCheckbox CB_AutoSave;
 	private System.Windows.Forms.TableLayoutPanel TLP_Options;
 	private System.Windows.Forms.Panel P_ScrollPanel;
 	private SlickControls.SlickTextBox TB_Name;
-	private SlickControls.RoundedGroupTableLayoutPanel TLP_LSM;
-	private SlickControls.SlickCheckbox CB_LoadEnabled;
-	private SlickControls.SlickCheckbox CB_LoadUsed;
-	private SlickControls.SlickIcon B_Save;
-	private SlickControls.SlickIcon I_Info;
-	private System.Windows.Forms.Label L_Info;
-	private SlickControls.SlickCheckbox CB_LoadSave;
-	private SlickControls.SlickCheckbox CB_SkipFile;
-	private SlickControls.SlickCheckbox CB_DebugMono;
-	private DragAndDropControl DD_SaveFile;
-	private DragAndDropControl DD_SkipFile;
 	private SlickControls.RoundedGroupTableLayoutPanel TLP_AdvancedDev;
-	private SlickControls.SlickCheckbox CB_StartNewGame;
-	private SlickControls.SlickCheckbox CB_NoMods;
-	private SlickControls.SlickCheckbox CB_NoAssets;
-	private SlickControls.SlickCheckbox CB_UnityProfiler;
 	private SlickControls.SlickCheckbox CB_UseCitiesExe;
 	private SlickControls.SlickCheckbox CB_DevUI;
-	private SlickControls.SlickCheckbox CB_RefreshWorkshop;
-	private SlickControls.SlickSpacer slickSpacer1;
-	private DragAndDropControl DD_NewMap;
 	private SlickControls.SlickIcon I_Favorite;
 	private SlickControls.SlickTextBox TB_CustomArgs;
-	private SlickControls.SlickCheckbox CB_NewAsset;
-	private SlickControls.SlickCheckbox CB_LoadAsset;
 	private PackageUsageSingleDropDown DD_PlaysetUsage;
-	private SlickControls.SlickButton B_ViewPlaysets;
-	private SlickControls.RoundedTableLayoutPanel B_TempPlayset;
-	private SlickControls.SlickIcon slickIcon1;
-	private SlickControls.RoundedTableLayoutPanel B_AddPlayset;
-	private SlickControls.SlickIcon slickIcon2;
+	private RoundedGroupTableLayoutPanel TLP_LaunchSettings;
+	private SlickCheckbox CB_NoMods;
+	private DragAndDropControl DD_NewMap;
+	private SlickCheckbox CB_NoAssets;
+	private DragAndDropControl DD_SaveFile;
+	private SlickSpacer slickSpacer1;
+	private SlickCheckbox CB_LoadSave;
+	private SlickCheckbox CB_StartNewGame;
+	private SlickCheckbox slickCheckbox1;
+	private Content.LogLevelDropdown logLevelDropdown1;
+	private SlickCheckbox slickCheckbox2;
+	private System.Windows.Forms.Panel P_Side;
+	private System.Windows.Forms.TableLayoutPanel TLP_Side;
+	private SlickSpacer slickSpacer2;
+	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+	private RoundedPanel roundedPanel1;
+	private Content.InfoAndLabelControl LI_ModCount;
+	private Content.InfoAndLabelControl LI_ModSize;
+	private SlickScroll slickScroll1;
+	private SlickButton B_Activate;
+	private SlickButton B_EditColor;
+	private SlickButton B_EditThumbnail;
+	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+	private SlickIcon I_More;
+	private App.UserInterface.Content.PlaysetIcon PB_Icon;
 }

@@ -446,7 +446,7 @@ internal class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId));
+		var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, includeOnline: includeOnline));
 
 		return result.Mods?.ToList(x => new PdxPlaysetPackage(x)) ?? [];
 	}

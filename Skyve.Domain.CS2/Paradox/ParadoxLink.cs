@@ -2,12 +2,6 @@
 
 using Skyve.Domain.Enums;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Skyve.Domain.CS2.Paradox;
 public class ParadoxLink : ILink
 {
@@ -16,17 +10,24 @@ public class ParadoxLink : ILink
 	public string? Title { get; set; }
 
 	public ParadoxLink(ExternalLink externalLink)
-    {
+	{
 		Url = externalLink.URL;
-		Title = externalLink.Type;
-
-		Enum.TryParse(externalLink.Type, out LinkType type);
-
-		Type = type;
+		Type = externalLink.Type switch
+		{
+			"discord" => LinkType.Discord,
+			"github" => LinkType.Github,
+			"youtube" => LinkType.YouTube,
+			"twitch" => LinkType.Twitch,
+			"x" => LinkType.X,
+			"paypal" => LinkType.Paypal,
+			"patreon" => LinkType.Patreon,
+			_ => LinkType.Website
+		};
+		Title = Type.ToString();
 	}
 
-    public ParadoxLink()
-    {
-        
-    }
+	public ParadoxLink()
+	{
+
+	}
 }

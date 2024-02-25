@@ -46,6 +46,18 @@ public class ExtendedPlayset : ICustomPlayset
 	[JsonIgnore]
 	public IOnlinePlayset? OnlineInfo { get; set; }
 
+	public void SetThumbnail(Image? image)
+	{
+		if (image == null)
+		{
+			BannerBytes = null;
+		}
+		else
+		{
+			BannerBytes = (byte[])new ImageConverter().ConvertTo(image, typeof(byte[]));
+		}
+	}
+
 	bool IThumbnailObject.GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnail = null;

@@ -98,22 +98,22 @@ public partial class MainForm : BasePanelForm
 		timer.Start();
 
 		var citiesManager = ServiceCenter.Get<ICitiesManager>();
-		var playsetManager = ServiceCenter.Get<IPlaysetManager>();
 
 		citiesManager.MonitorTick += CitiesManager_MonitorTick;
 
 		isGameRunning = citiesManager.IsRunning();
 
 #if CS1
-		playsetManager.PromptMissingItems += PromptMissingItemsEvent;
+		_playsetManager.PromptMissingItems += PromptMissingItemsEvent;
 #endif
 
 		_startTimeoutTimer.Elapsed += StartTimeoutTimer_Elapsed;
-
+		_notifier.PlaysetChanged += PlaysetChanged;
 		_notifier.RefreshUI += RefreshUI;
 		_notifier.WorkshopInfoUpdated += RefreshUI;
 		_notifier.WorkshopUsersInfoLoaded += RefreshUI;
 		_notifier.ContentLoaded += _userService_UserInfoUpdated;
+		_notifier.CompatibilityReportProcessed += _notifier_CompatibilityReportProcessed;
 		_notifier.SkyveUpdateAvailable += () => Invoke(_updateAvailableControl.Show);
 
 		ConnectionHandler.ConnectionChanged += ConnectionHandler_ConnectionChanged;
@@ -130,7 +130,11 @@ public partial class MainForm : BasePanelForm
 		base_PB_Icon.Loading = true;
 		PI_Compatibility.Loading = true;
 
-		_notifier.CompatibilityReportProcessed += _notifier_CompatibilityReportProcessed;
+	}
+
+	private void PlaysetChanged()
+	{
+		PI_CurrentPlayset.Hidden = _playsetManager.CurrentPlayset is null;
 	}
 
 	private void _updateAvailableControl_MouseClick(object sender, MouseEventArgs e)
@@ -496,7 +500,8 @@ public partial class MainForm : BasePanelForm
 
 	private void PI_CurrentPlayset_OnClick(object sender, MouseEventArgs e)
 	{
-		PushPanel(PI_CurrentPlayset, ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel());
+		if (_playsetManager.CurrentPlayset is not null)
+		PushPanel(PI_CurrentPlayset, ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(_playsetManager.CurrentPlayset));
 	}
 
 	private async void PI_ManageYourPackages_OnClick(object sender, MouseEventArgs e)
