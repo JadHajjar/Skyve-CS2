@@ -82,7 +82,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 		I_More.Size = I_Favorite.Size = UI.Scale(new Size(28, 28), UI.FontScale);
 		L_CurrentPlayset.Font = UI.Font(11.5F, FontStyle.Bold);
-		P_Name.Height = I_Favorite.Height;
+		P_Name.Height = (int)(32*UI.FontScale);
 		TLP_AdvancedDev.Margin = TLP_LaunchSettings.Margin = UI.Scale(new Padding(10), UI.UIScale);
 
 		P_Side.Width = (int)(260 * UI.FontScale);

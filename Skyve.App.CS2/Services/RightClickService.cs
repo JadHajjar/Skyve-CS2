@@ -142,35 +142,13 @@ internal class RightClickService : IRightClickService
 					new(Locale.ChangePlaysetColor, "I_Paint", () => ChangeColor(playset)),
 					new(Locale.EditPlaysetThumbnail, "I_EditImage", () => ChangeThumbnail(playset)),
 					SlickStripItem.Empty,
-					new(Locale.ResetPlaysetImage, "I_Select", () => ResetColor(playset), visible: customPlayset.Color.HasValue),
+					new(Locale.ResetPlaysetColor, "I_Select", () => ResetColor(playset), visible: customPlayset.Color.HasValue),
 					new(Locale.ResetPlaysetImage, "I_RemoveImage", () => ResetThumbnail(playset), visible: customPlayset.IsCustomThumbnailSet),
 				]
 			},
 			SlickStripItem.Empty,
 			new(Locale.PlaysetDelete, "I_Disposable", () => DeletePlayset(playset))
 		];
-
-		//var items = new SlickStripItem[]
-		//{
-		//	  new (Locale.DownloadPlayset, "I_Install", !local, action: () => DownloadProfile(item))
-		//	, new (Locale.ViewThisPlaysetsPackages, "I_ViewFile", action: () => ShowProfileContents(item))
-		////	, new (item.IsFavorite ? Locale.UnFavoriteThisPlayset : Locale.FavoriteThisPlayset, "I_Star", local, action: () => { item.IsFavorite = !item.IsFavorite; _profileManager.Save(item); })
-		//	, new (Locale.ChangePlaysetColor, "I_Paint", local, action: () => this.TryBeginInvoke(() => ChangeColor(item)))
-		//	, new (Locale.CreateShortcutPlayset, "I_Link", local && CrossIO.CurrentPlatform is Platform.Windows, action: () => _profileManager.CreateShortcut(item!))
-		//	, new (Locale.OpenPlaysetFolder, "I_Folder", local, action: () => PlatformUtil.OpenFolder(_profileManager.GetFileName(item!)))
-		//	, new (string.Empty, show: local)
-		//	, new (Locale.SharePlayset, "I_Share", local && item.ProfileId == 0 && _userService.User.Id is not null && downloading != item, action: async () => await ShareProfile(item))
-		//	, new (item.Public ? Locale.MakePrivate : Locale.MakePublic, item.Public ? "I_UserSecure" : "I_People", local && item.ProfileId != 0 && _userService.User.Equals(item.Author), action: async () => await ServiceCenter.Get<IOnlinePlaysetUtil>().SetVisibility((item as IPlayset)!, !item.Public))
-		//	, new (Locale.UpdatePlayset, "I_Share", local && item.ProfileId != 0 && _userService.User.Equals(item.Author), action: async () => await ShareProfile(item))
-		//	, new (Locale.DownloadPlayset, "I_Refresh", local && item.ProfileId != 0 && item.Author != _userService.User.Id, action: () => DownloadProfile(item))
-		//	, new (Locale.CopyPlaysetLink, "I_LinkChain", local && item.ProfileId != 0, action: () => Clipboard.SetText(IdHasher.HashToShortString(item.ProfileId)))
-		//	, new (string.Empty, show: local)
-		//	, new (Locale.ActivatePlayset, "I_Install", local, action: () => LoadProfile?.Invoke(item!))
-		//	, new (Locale.PlaysetMerge, "I_Merge", local, action: () => MergeProfile?.Invoke(item!))
-		//	, new (Locale.PlaysetExclude, "I_Exclude", local, action: () => ExcludeProfile?.Invoke(item!))
-		//	, new (string.Empty)
-		//	, new (Locale.PlaysetDelete, "I_Disposable", local || _userService.User.Equals(item.Author), action: async () => { if(local) { DisposeProfile?.Invoke(item!); } else if(await ServiceCenter.Get<IOnlinePlaysetUtil>().DeleteOnlinePlayset((item as IOnlinePlayset)!)) { base.Remove(item); } })
-		//};
 	}
 
 	private async void ActivatePlayset(IPlayset playset)

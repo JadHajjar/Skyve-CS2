@@ -135,6 +135,7 @@ public partial class MainForm : BasePanelForm
 	private void PlaysetChanged()
 	{
 		PI_CurrentPlayset.Hidden = _playsetManager.CurrentPlayset is null;
+		base_P_Tabs.FilterChanged();
 	}
 
 	private void _updateAvailableControl_MouseClick(object sender, MouseEventArgs e)
