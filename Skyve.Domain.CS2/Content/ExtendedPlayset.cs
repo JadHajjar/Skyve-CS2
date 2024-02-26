@@ -46,6 +46,8 @@ public class ExtendedPlayset : ICustomPlayset
 	[JsonIgnore]
 	public IOnlinePlayset? OnlineInfo { get; set; }
 
+	bool ICustomPlayset.IsCustomThumbnailSet => _bannerBytes is not null;
+
 	public void SetThumbnail(Image? image)
 	{
 		if (image == null)

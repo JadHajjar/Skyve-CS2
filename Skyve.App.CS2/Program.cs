@@ -9,6 +9,7 @@ using Skyve.Systems.CS2.Utilities;
 
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 using static System.Environment;
@@ -90,7 +91,12 @@ internal static class Program
 				{
 					File.WriteAllText(Path.Combine(CurrentDirectory, "Wake"), "It's time to wake up");
 
-					return;
+					Thread.Sleep(2500);
+
+					if (!CrossIO.FileExists(CrossIO.Combine(CurrentDirectory, "Wake")))
+					{
+						return;
+					}
 				}
 
 				CrossIO.DeleteFile(CrossIO.Combine(CurrentDirectory, "Wake"));

@@ -37,7 +37,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 
 		PB_Icon.Playset = playset;
 
-		SlickTip.SetTo(B_EditName, "EditPlaysetName");
+		SlickTip.SetTo(L_CurrentPlayset, "EditPlaysetName");
 
 		foreach (var item in this.GetControls<SlickCheckbox>())
 		{
@@ -80,17 +80,16 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 	{
 		base.UIChanged();
 
-		I_More.Size = UI.Scale(new Size(20, 28), UI.FontScale);
-		I_More.Parent.Padding = new Padding(I_More.Width, 0, 0, 0);
-		B_EditName.Size = I_Favorite.Size = UI.Scale(new Size(24, 24), UI.FontScale) + new Size(8, 8);
+		I_More.Size = I_Favorite.Size = UI.Scale(new Size(28, 28), UI.FontScale);
 		L_CurrentPlayset.Font = UI.Font(11.5F, FontStyle.Bold);
+		P_Name.Height = I_Favorite.Height;
 		TLP_AdvancedDev.Margin = TLP_LaunchSettings.Margin = UI.Scale(new Padding(10), UI.UIScale);
 
 		P_Side.Width = (int)(260 * UI.FontScale);
 		roundedPanel1.Padding = UI.Scale(new Padding(10), UI.FontScale);
-		PB_Icon.Size = UI.Scale(new Size(180, 180), UI.FontScale);
+		PB_Icon.Size = UI.Scale(new Size(160, 160), UI.FontScale);
 		PB_Icon.Margin = UI.Scale(new Padding(0, 0, 0, 10), UI.FontScale);
-		slickSpacer1.Margin = slickSpacer2.Margin = B_Activate.Margin = B_EditThumbnail.Margin = B_EditColor.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		slickSpacer1.Margin = slickSpacer2.Margin = B_Activate.Margin = B_EditThumbnail.Margin = B_EditColor.Margin = L_CurrentPlayset.Padding = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer1.Height = slickSpacer2.Height = (int)UI.FontScale;
 	}
 
@@ -128,7 +127,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 	internal void Ctrl_LoadPlayset(IPlayset obj)
 	{
 		L_CurrentPlayset.Text = obj.Name;
-		TLP_Options.Enabled = B_EditName.Visible = false;
+		TLP_Options.Enabled = false;
 		_playsetManager.ActivatePlayset(obj);
 	}
 
@@ -224,7 +223,6 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 	internal void B_EditName_Click(object sender, EventArgs e)
 	{
 		TB_Name.Visible = true;
-		B_EditName.Visible = false;
 		L_CurrentPlayset.Visible = false;
 		TB_Name.Text = L_CurrentPlayset.Text;
 
@@ -275,7 +273,6 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		}
 
 		TB_Name.Visible = false;
-		B_EditName.Visible = true;
 		L_CurrentPlayset.Visible = true;
 
 		var text = TB_Name.Text.Trim();
@@ -434,6 +431,19 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		if (e.Button == MouseButtons.Right)
 		{
 			I_More_Click(sender, e);
+		}
+	}
+
+	private void L_CurrentPlayset_Paint(object sender, PaintEventArgs e)
+	{
+		if (L_CurrentPlayset.HoverState.HasFlag(HoverState.Hovered))
+		{
+			using var brush = new SolidBrush(Color.FromArgb(200, L_CurrentPlayset.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? 10 : -8)));
+			using var icon = IconManager.GetIcon("I_Edit", L_CurrentPlayset.Height * 3 / 4).Color(L_CurrentPlayset.ForeColor);
+
+			e.Graphics.FillRoundedRectangle(brush, L_CurrentPlayset.ClientRectangle.Pad(1), L_CurrentPlayset.Padding.Left);
+
+			e.Graphics.DrawImage(icon, L_CurrentPlayset.ClientRectangle.Pad(L_CurrentPlayset.Padding).Align(icon.Size, ContentAlignment.MiddleRight));
 		}
 	}
 }

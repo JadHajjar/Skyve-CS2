@@ -3,10 +3,8 @@ using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
-using Skyve.Domain;
-using Skyve.Domain.Systems;
 
-using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.Services;
@@ -49,7 +47,7 @@ internal class RightClickService : IRightClickService
 			new(Locale.Manage, "I_Wrench", disabled: true)
 			{
 				SubItems = [
-					new(list.Count == 1 ? Locale.EnableItem  : Locale.EnableAllSelected, "I_Ok", async () => await packageUtil.SetEnabled(items, true), visible: anyDisabled),
+					new(list.Count == 1 ? Locale.EnableItem : Locale.EnableAllSelected, "I_Ok", async () => await packageUtil.SetEnabled(items, true), visible: anyDisabled),
 					new(list.Count == 1 ? Locale.DisableItem : Locale.DisableAllSelected, "I_Enabled", async () => await packageUtil.SetEnabled(items, false), visible: anyEnabled && anyNotRequired),
 					new(list.Count == 1 ? Locale.IncludeItem : Locale.IncludeAllSelected, "I_Add", async () => await packageUtil.SetIncluded(items, true), visible: anyExcluded),
 					new(list.Count == 1 ? Locale.ExcludeItem : Locale.ExcludeAllSelected, "I_X", async () => await packageUtil.SetIncluded(items, false), visible: anyIncluded && anyNotRequired),
@@ -127,20 +125,29 @@ internal class RightClickService : IRightClickService
 
 		return [
 			new(Locale.ViewThisPlaysetsPackages, "I_ViewFile", () => OpenPlaysetPage(playset)),
-			new(Locale.ActivatePlayset, "I_Check", action: () => ActivatePlayset(playset), visible: isLocal),
+			new(Locale.ChangePlaysetSettings, "I_PlaysetSettings", action: () => OpenPlaysetSettings(playset), visible: isLocal),
+			new(Locale.ActivatePlayset, "I_Check", action: () => ActivatePlayset(playset), visible: isLocal && !isCurrent),
 			SlickStripItem.Empty,
+			new(Locale.BulkActions, "I_Actions", visible: isLocal && !isCurrent, disabled: true)
+			{
+				SubItems = [
+					new(Locale.PlaysetMerge, "I_Merge", action: () => MergePlayset(playset)),
+					new(Locale.PlaysetExclude, "I_Exclude", action: () => ExcludePlayset(playset)),
+				]
+			},
 			new(Locale.Manage, "I_Wrench", visible: isLocal, disabled: true)
 			{
 				SubItems = [
 					new(customPlayset.IsFavorite ? Locale.UnFavoriteThisPlayset : Locale.FavoriteThisPlayset, "I_Star", () => TogglePlaysetFavorite(playset)),
 					new(Locale.ChangePlaysetColor, "I_Paint", () => ChangeColor(playset)),
+					new(Locale.EditPlaysetThumbnail, "I_EditImage", () => ChangeThumbnail(playset)),
 					SlickStripItem.Empty,
-					new(Locale.PlaysetMerge, "I_Merge", action: () => MergePlayset(playset), visible: !isCurrent),
-					new(Locale.PlaysetExclude, "I_Exclude", action: () => ExcludePlayset(playset), visible: !isCurrent),
-					SlickStripItem.Empty,
-					new(Locale.PlaysetDelete, "I_Disposable", () => DeletePlayset(playset))
+					new(Locale.ResetPlaysetImage, "I_Select", () => ResetColor(playset), visible: customPlayset.Color.HasValue),
+					new(Locale.ResetPlaysetImage, "I_RemoveImage", () => ResetThumbnail(playset), visible: customPlayset.IsCustomThumbnailSet),
 				]
 			},
+			SlickStripItem.Empty,
+			new(Locale.PlaysetDelete, "I_Disposable", () => DeletePlayset(playset))
 		];
 
 		//var items = new SlickStripItem[]
@@ -206,17 +213,81 @@ internal class RightClickService : IRightClickService
 		});
 	}
 
+	private void ChangeThumbnail(IPlayset playset)
+	{
+		App.Program.MainForm.TryBeginInvoke(() =>
+		{
+			var imagePrompt = new IOSelectionDialog
+			{
+				ValidExtensions = IO.ImageExtensions
+			};
+
+			if (imagePrompt.PromptFile(App.Program.MainForm) == DialogResult.OK)
+			{
+				try
+				{
+					var customPlayset = playset.GetCustomPlayset();
+
+					customPlayset.SetThumbnail(Image.FromFile(imagePrompt.SelectedPath));
+
+					ServiceCenter.Get<IPlaysetManager>().Save(customPlayset);
+					ServiceCenter.Get<INotifier>().OnRefreshUI(true);
+				}
+				catch { }
+			}
+		});
+	}
+
+	private void ResetColor(IPlayset playset)
+	{
+		var customPlayset = playset.GetCustomPlayset();
+
+		customPlayset.Color = null;
+
+		ServiceCenter.Get<IPlaysetManager>().Save(customPlayset);
+		ServiceCenter.Get<INotifier>().OnRefreshUI(true);
+	}
+
+	private void ResetThumbnail(IPlayset playset)
+	{
+		var customPlayset = playset.GetCustomPlayset();
+
+		customPlayset.SetThumbnail(null);
+
+		ServiceCenter.Get<IPlaysetManager>().Save(customPlayset);
+		ServiceCenter.Get<INotifier>().OnRefreshUI(true);
+	}
+
 	private void TogglePlaysetFavorite(IPlayset playset)
 	{
 		var customPlayset = playset.GetCustomPlayset();
 
 		customPlayset.IsFavorite = !customPlayset.IsFavorite;
-		
+
 		ServiceCenter.Get<IPlaysetManager>().Save(customPlayset);
 	}
 
 	private void OpenPlaysetPage(IPlayset playset)
 	{
-		throw new NotImplementedException();
+		try
+		{
+			App.Program.MainForm.PushPanel(new PC_PlaysetContents(playset));
+		}
+		catch (Exception ex)
+		{
+			App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDownloadPlayset, form: App.Program.MainForm));
+		}
+	}
+
+	private void OpenPlaysetSettings(IPlayset playset)
+	{
+		try
+		{
+			App.Program.MainForm.PushPanel(ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(playset));
+		}
+		catch (Exception ex)
+		{
+			App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDownloadPlayset, form: App.Program.MainForm));
+		}
 	}
 }

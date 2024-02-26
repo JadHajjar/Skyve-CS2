@@ -434,8 +434,8 @@ internal class PlaysetManager : IPlaysetManager
 		}
 	}
 
-	public Task<IEnumerable<IPackageIdentity>> GetPlaysetContents(IPlayset playset)
+	public async Task<IEnumerable<IPackageIdentity>> GetPlaysetContents(IPlayset playset)
 	{
-		throw new NotImplementedException();
+		return await _workshopService.GetModsInPlayset(playset.Id, true);
 	}
 }

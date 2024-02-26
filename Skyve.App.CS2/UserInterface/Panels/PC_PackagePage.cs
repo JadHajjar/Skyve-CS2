@@ -60,6 +60,8 @@ public partial class PC_PackagePage : PanelContent
 		T_Compatibility.LinkedControl = new PackageCompatibilityReportControl(package);
 		T_Playsets.LinkedControl = new OtherPlaysetPackage(package);
 
+		T_Playsets.Visible = !package.IsLocal();
+
 		if (compatibilityPage)
 		{
 			T_Compatibility.PreSelected = true;
