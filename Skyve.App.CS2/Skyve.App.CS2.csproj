@@ -67,10 +67,11 @@
 		<Compile Update="UserInterface\Dashboard\D_Playsets.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="UserInterface\Panels\PC_CompatibilityManagement.cs">
+		<Compile Update="UserInterface\Panels\_PC_CompatibilityManagement.cs" />
+		<Compile Update="UserInterface\Panels\PC_Options.cs" />
+		<Compile Update="UserInterface\Panels\PC_PackagePageBase.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="UserInterface\Panels\PC_Options.cs" />
 		<Compile Update="UserInterface\Panels\PC_PackagePage.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>

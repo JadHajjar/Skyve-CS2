@@ -5,13 +5,13 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Content;
-internal class IncludedButton : SlickButton
+public class IncludedButton : SlickButton
 {
 	private readonly IModLogicManager _modLogicManager;
 	private readonly IModUtil _modUtil;
 	private readonly ISubscriptionsManager _subscriptionsManager;
 
-	private IPackageIdentity Package { get; set; }
+	public IPackageIdentity Package { get; set; }
 
 	public IncludedButton(IPackageIdentity package)
 	{
@@ -119,7 +119,7 @@ internal class IncludedButton : SlickButton
 		{
 			if (activeColor == default)
 			{
-				activeColor = Color.FromArgb(200, FormDesign.Design.ForeColor);
+				activeColor = Color.FromArgb(isIncluded ?20:  200, FormDesign.Design.ForeColor);
 			}
 			else if (isHovered)
 			{

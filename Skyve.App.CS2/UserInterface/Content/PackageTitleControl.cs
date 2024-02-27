@@ -2,9 +2,9 @@
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Content;
-internal class PackageTitleControl : SlickControl
+public class PackageTitleControl : SlickControl
 {
-	private IPackageIdentity Package { get; set; }
+	public IPackageIdentity Package { get; set; }
 
 	public PackageTitleControl(IPackageIdentity package)
 	{

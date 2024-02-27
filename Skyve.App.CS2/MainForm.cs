@@ -520,7 +520,7 @@ public partial class MainForm : BasePanelForm
 
 			if (results != null)
 			{
-				Invoke(() => PushPanel(PI_ManageYourPackages, new PC_CompatibilityManagement(results.Select(x => x.Id))));
+				Invoke(() => PushPanel(PI_ManageYourPackages, new PC_CompatibilityManagement(results)));
 			}
 		}
 		catch (Exception ex)
@@ -543,7 +543,7 @@ public partial class MainForm : BasePanelForm
 
 	private void Form_PackageSelected(IEnumerable<ulong> packages)
 	{
-		PushPanel(PI_ManageSinglePackage, new PC_CompatibilityManagement(packages));
+		PushPanel(PI_ManageSinglePackage, new PC_CompatibilityManagement(packages.Select(x=> (IPackageIdentity) new GenericPackageIdentity(x))));
 	}
 
 	private async void PI_ReviewRequests_OnClick(object sender, MouseEventArgs e)
