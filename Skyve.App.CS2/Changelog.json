@@ -18,15 +18,16 @@
   {
     "Stable": false,
     "Beta": true,
-    "Version": "0.1.5",
-    "Date": "2024-02-20",
+    "Version": "0.1.7",
+    "Date": "2024-02-28",
     "Tagline": "This is a test for auto-changelog",
     "ChangeGroups": [
       {
         "Name": "Changes 1",
         "Changes": [
           "First Line",
-          "Second Line"
+          "Second Line",
+          "Third Line"
         ]
       },
       {

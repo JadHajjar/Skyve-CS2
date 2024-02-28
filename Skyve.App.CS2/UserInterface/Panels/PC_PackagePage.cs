@@ -4,8 +4,10 @@ using Skyve.App.UserInterface.CompatibilityReport;
 using Skyve.App.UserInterface.Lists;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
+using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
 
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -234,5 +236,22 @@ public partial class PC_PackagePage : PC_PackagePageBase
 	private async void T_References_TabSelected(object sender, EventArgs e)
 	{
 		await LC_References.RefreshItems();
+	}
+
+	private void T_Compatibility_Paint(object sender, PaintEventArgs e)
+	{
+		var compatibility = Package.GetCompatibilityInfo()?.GetNotification();
+
+		if (compatibility > NotificationType.Info)
+		{
+			using var brush = new SolidBrush(compatibility.Value.GetColor());
+
+			var rect = T_Compatibility.ClientRectangle.CenterR(UI.Scale(new Size(8, 8), UI.FontScale));
+
+			rect.X += (int)(6 * UI.FontScale);
+			rect.Y -= (int)(14 * UI.FontScale);
+
+			e.Graphics.FillEllipse(brush, rect);
+		}
 	}
 }

@@ -81,7 +81,7 @@ partial class PC_PackagePage
 			this.T_Info.Location = new System.Drawing.Point(0, 5);
 			this.T_Info.Name = "T_Info";
 			this.T_Info.Selected = true;
-			this.T_Info.Size = new System.Drawing.Size(113, 25);
+			this.T_Info.Size = new System.Drawing.Size(113, 90);
 			this.T_Info.TabIndex = 0;
 			this.T_Info.TabStop = false;
 			this.T_Info.Text = "Info";
@@ -95,7 +95,7 @@ partial class PC_PackagePage
 			this.slickWebBrowser.Location = new System.Drawing.Point(0, 0);
 			this.slickWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
 			this.slickWebBrowser.Name = "slickWebBrowser";
-			this.slickWebBrowser.Size = new System.Drawing.Size(796, 593);
+			this.slickWebBrowser.Size = new System.Drawing.Size(796, 528);
 			this.slickWebBrowser.TabIndex = 17;
 			this.slickWebBrowser.WebBrowserShortcutsEnabled = false;
 			this.slickWebBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.SlickWebBrowser_Navigating);
@@ -111,7 +111,7 @@ partial class PC_PackagePage
 			this.T_Gallery.Location = new System.Drawing.Point(113, 5);
 			this.T_Gallery.Name = "T_Gallery";
 			this.T_Gallery.Selected = false;
-			this.T_Gallery.Size = new System.Drawing.Size(113, 25);
+			this.T_Gallery.Size = new System.Drawing.Size(113, 90);
 			this.T_Gallery.TabIndex = 0;
 			this.T_Gallery.TabStop = false;
 			this.T_Gallery.Text = "Gallery";
@@ -134,7 +134,7 @@ partial class PC_PackagePage
 			this.T_Content.Location = new System.Drawing.Point(226, 5);
 			this.T_Content.Name = "T_Content";
 			this.T_Content.Selected = false;
-			this.T_Content.Size = new System.Drawing.Size(113, 25);
+			this.T_Content.Size = new System.Drawing.Size(113, 90);
 			this.T_Content.TabIndex = 2;
 			this.T_Content.TabStop = false;
 			this.T_Content.Text = "Content";
@@ -150,10 +150,11 @@ partial class PC_PackagePage
 			this.T_Compatibility.Location = new System.Drawing.Point(339, 5);
 			this.T_Compatibility.Name = "T_Compatibility";
 			this.T_Compatibility.Selected = false;
-			this.T_Compatibility.Size = new System.Drawing.Size(113, 25);
+			this.T_Compatibility.Size = new System.Drawing.Size(113, 90);
 			this.T_Compatibility.TabIndex = 0;
 			this.T_Compatibility.TabStop = false;
 			this.T_Compatibility.Text = "Compatibility";
+			this.T_Compatibility.Paint += new System.Windows.Forms.PaintEventHandler(this.T_Compatibility_Paint);
 			// 
 			// T_References
 			// 
@@ -166,7 +167,7 @@ partial class PC_PackagePage
 			this.T_References.Location = new System.Drawing.Point(452, 5);
 			this.T_References.Name = "T_References";
 			this.T_References.Selected = false;
-			this.T_References.Size = new System.Drawing.Size(113, 25);
+			this.T_References.Size = new System.Drawing.Size(113, 90);
 			this.T_References.TabIndex = 1;
 			this.T_References.TabStop = false;
 			this.T_References.Text = "References";
@@ -184,7 +185,7 @@ partial class PC_PackagePage
 			this.T_Playsets.Location = new System.Drawing.Point(565, 5);
 			this.T_Playsets.Name = "T_Playsets";
 			this.T_Playsets.Selected = false;
-			this.T_Playsets.Size = new System.Drawing.Size(113, 25);
+			this.T_Playsets.Size = new System.Drawing.Size(113, 90);
 			this.T_Playsets.TabIndex = 0;
 			this.T_Playsets.TabStop = false;
 			this.T_Playsets.Text = "Playsets";
@@ -200,7 +201,7 @@ partial class PC_PackagePage
 			this.T_Changelog.Location = new System.Drawing.Point(678, 5);
 			this.T_Changelog.Name = "T_Changelog";
 			this.T_Changelog.Selected = false;
-			this.T_Changelog.Size = new System.Drawing.Size(113, 25);
+			this.T_Changelog.Size = new System.Drawing.Size(113, 90);
 			this.T_Changelog.TabIndex = 0;
 			this.T_Changelog.TabStop = false;
 			this.T_Changelog.Text = "Changelog";
@@ -216,6 +217,7 @@ partial class PC_PackagePage
 			// 
 			this.Controls.Add(this.slickTabControl);
 			this.Name = "PC_PackagePage";
+			this.Controls.SetChildIndex(this.P_SideContainer, 0);
 			this.Controls.SetChildIndex(this.base_Text, 0);
 			this.Controls.SetChildIndex(this.slickTabControl, 0);
 			this.ResumeLayout(false);
