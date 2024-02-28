@@ -81,12 +81,12 @@ internal class InfoAndLabelControl : SlickControl
 		using var brushLabel = new SolidBrush(Color.FromArgb(125, FormDesign.Design.ForeColor.MergeColor(FormDesign.Design.InfoColor)));
 		using var brushValue = new SolidBrush(ValueColor ?? FormDesign.Design.ForeColor);
 
-		var valueRect = new Rectangle(new(Padding.Left, Padding.Top),e.Graphics.Measure(valueText, fontValue).ToSize());
+		var valueRect = new Rectangle(new(Padding.Left, Padding.Top), e.Graphics.Measure(valueText, fontValue).ToSize());
 		var labelRect = new Rectangle(new(valueRect.X, valueRect.Bottom), e.Graphics.Measure(labelText, fontLabel).ToSize());
-		
+
 		clickRect = Rectangle.Intersect(ClientRectangle, Rectangle.Union(valueRect, labelRect).InvertPad(Padding));
 
-		if (HoverState.HasFlag(HoverState.Hovered)&& clickRect.Contains(PointToClient(Cursor.Position)))
+		if (HoverState.HasFlag(HoverState.Hovered) && clickRect.Contains(PointToClient(Cursor.Position)))
 		{
 			using var brush = new SolidBrush(Color.FromArgb(100, ValueColor ?? FormDesign.Design.ActiveColor));
 

@@ -69,8 +69,11 @@ partial class PC_CompatibilityManagement
 			this.base_TLP_Side = new SlickControls.RoundedTableLayoutPanel();
 			this.packageCrList = new Skyve.App.UserInterface.Lists.PackageCrList();
 			this.TB_Search = new SlickControls.SlickTextBox();
-			this.I_Up = new SlickControls.SlickIcon();
-			this.I_Down = new SlickControls.SlickIcon();
+			this.B_Previous = new SlickControls.SlickIcon();
+			this.B_Skip = new SlickControls.SlickIcon();
+			this.slickSpacer3 = new SlickControls.SlickSpacer();
+			this.L_Page = new System.Windows.Forms.Label();
+			this.PB_Loading = new SlickControls.SlickPictureBox();
 			this.TLP_MainInfo.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.P_Links.SuspendLayout();
@@ -80,6 +83,7 @@ partial class PC_CompatibilityManagement
 			this.TLP_Bottom.SuspendLayout();
 			this.base_P_Side.SuspendLayout();
 			this.base_TLP_Side.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.PB_Loading)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// P_SideContainer
@@ -89,7 +93,6 @@ partial class PC_CompatibilityManagement
 			// 
 			// base_Text
 			// 
-			this.base_Text.ButtonType = SlickControls.ButtonType.Normal;
 			this.base_Text.Location = new System.Drawing.Point(3, -27);
 			// 
 			// slickTabControl
@@ -98,7 +101,7 @@ partial class PC_CompatibilityManagement
 			this.slickTabControl.Location = new System.Drawing.Point(165, 0);
 			this.slickTabControl.Margin = new System.Windows.Forms.Padding(0);
 			this.slickTabControl.Name = "slickTabControl";
-			this.slickTabControl.Size = new System.Drawing.Size(631, 584);
+			this.slickTabControl.Size = new System.Drawing.Size(631, 594);
 			this.slickTabControl.TabIndex = 15;
 			this.slickTabControl.Tabs = new SlickControls.SlickTabControl.Tab[] {
         this.T_Info,
@@ -115,7 +118,7 @@ partial class PC_CompatibilityManagement
 			this.T_Info.Location = new System.Drawing.Point(0, 5);
 			this.T_Info.Name = "T_Info";
 			this.T_Info.Selected = true;
-			this.T_Info.Size = new System.Drawing.Size(187, 90);
+			this.T_Info.Size = new System.Drawing.Size(125, 60);
 			this.T_Info.TabIndex = 2;
 			this.T_Info.TabStop = false;
 			this.T_Info.Text = "Info";
@@ -144,7 +147,7 @@ partial class PC_CompatibilityManagement
 			this.TLP_MainInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_MainInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_MainInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_MainInfo.Size = new System.Drawing.Size(762, 383);
+			this.TLP_MainInfo.Size = new System.Drawing.Size(637, 310);
 			this.TLP_MainInfo.TabIndex = 18;
 			// 
 			// TB_Note
@@ -152,7 +155,7 @@ partial class PC_CompatibilityManagement
 			this.TLP_MainInfo.SetColumnSpan(this.TB_Note, 2);
 			this.TB_Note.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.TB_Note.LabelText = "Note";
-			this.TB_Note.Location = new System.Drawing.Point(3, 229);
+			this.TB_Note.Location = new System.Drawing.Point(3, 156);
 			this.TB_Note.MultiLine = true;
 			this.TB_Note.Name = "TB_Note";
 			this.TB_Note.Placeholder = "NoteInfo";
@@ -171,13 +174,13 @@ partial class PC_CompatibilityManagement
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.Controls.Add(this.P_Links, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.P_Tags, 0, 0);
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(655, 125);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(559, 126);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 2;
 			this.TLP_MainInfo.SetRowSpan(this.tableLayoutPanel1, 3);
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(104, 255);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(75, 181);
 			this.tableLayoutPanel1.TabIndex = 17;
 			// 
 			// P_Links
@@ -189,10 +192,10 @@ partial class PC_CompatibilityManagement
 			this.P_Links.Controls.Add(this.T_NewLink);
 			dynamicIcon2.Name = "I_Link";
 			this.P_Links.ImageName = dynamicIcon2;
-			this.P_Links.Location = new System.Drawing.Point(3, 147);
+			this.P_Links.Location = new System.Drawing.Point(3, 104);
 			this.P_Links.Name = "P_Links";
-			this.P_Links.Padding = new System.Windows.Forms.Padding(9, 53, 9, 9);
-			this.P_Links.Size = new System.Drawing.Size(98, 105);
+			this.P_Links.Padding = new System.Windows.Forms.Padding(6, 36, 6, 6);
+			this.P_Links.Size = new System.Drawing.Size(69, 74);
 			this.P_Links.TabIndex = 20;
 			this.P_Links.Text = "Links";
 			// 
@@ -201,9 +204,9 @@ partial class PC_CompatibilityManagement
 			this.T_NewLink.AutoSize = true;
 			this.T_NewLink.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_NewLink.Display = false;
-			this.T_NewLink.Location = new System.Drawing.Point(12, 56);
+			this.T_NewLink.Location = new System.Drawing.Point(9, 39);
 			this.T_NewLink.Name = "T_NewLink";
-			this.T_NewLink.Size = new System.Drawing.Size(74, 37);
+			this.T_NewLink.Size = new System.Drawing.Size(51, 26);
 			this.T_NewLink.SpaceTriggersClick = true;
 			this.T_NewLink.TabIndex = 0;
 			this.T_NewLink.TagInfo = null;
@@ -221,8 +224,8 @@ partial class PC_CompatibilityManagement
 			this.P_Tags.Info = "";
 			this.P_Tags.Location = new System.Drawing.Point(3, 3);
 			this.P_Tags.Name = "P_Tags";
-			this.P_Tags.Padding = new System.Windows.Forms.Padding(9, 86, 9, 9);
-			this.P_Tags.Size = new System.Drawing.Size(98, 138);
+			this.P_Tags.Padding = new System.Windows.Forms.Padding(6, 57, 6, 6);
+			this.P_Tags.Size = new System.Drawing.Size(69, 95);
 			this.P_Tags.TabIndex = 19;
 			this.P_Tags.Text = "GlobalTags";
 			// 
@@ -231,9 +234,9 @@ partial class PC_CompatibilityManagement
 			this.T_NewTag.AutoSize = true;
 			this.T_NewTag.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_NewTag.Display = false;
-			this.T_NewTag.Location = new System.Drawing.Point(12, 89);
+			this.T_NewTag.Location = new System.Drawing.Point(9, 60);
 			this.T_NewTag.Name = "T_NewTag";
-			this.T_NewTag.Size = new System.Drawing.Size(74, 37);
+			this.T_NewTag.Size = new System.Drawing.Size(51, 26);
 			this.T_NewTag.SpaceTriggersClick = true;
 			this.T_NewTag.TabIndex = 0;
 			this.T_NewTag.TagInfo = null;
@@ -245,7 +248,7 @@ partial class PC_CompatibilityManagement
 			this.DD_Stability.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.DD_Stability.Location = new System.Drawing.Point(3, 3);
 			this.DD_Stability.Name = "DD_Stability";
-			this.DD_Stability.Size = new System.Drawing.Size(375, 56);
+			this.DD_Stability.Size = new System.Drawing.Size(250, 30);
 			this.DD_Stability.TabIndex = 0;
 			this.DD_Stability.Text = "Stability";
 			// 
@@ -253,9 +256,9 @@ partial class PC_CompatibilityManagement
 			// 
 			this.TLP_MainInfo.SetColumnSpan(this.DD_DLCs, 2);
 			this.DD_DLCs.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.DD_DLCs.Location = new System.Drawing.Point(3, 65);
+			this.DD_DLCs.Location = new System.Drawing.Point(3, 39);
 			this.DD_DLCs.Name = "DD_DLCs";
-			this.DD_DLCs.Size = new System.Drawing.Size(375, 54);
+			this.DD_DLCs.Size = new System.Drawing.Size(250, 35);
 			this.DD_DLCs.TabIndex = 17;
 			this.DD_DLCs.Text = "RequiredDLCs";
 			// 
@@ -263,9 +266,9 @@ partial class PC_CompatibilityManagement
 			// 
 			this.DD_Usage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.DD_Usage.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.DD_Usage.Location = new System.Drawing.Point(384, 3);
+			this.DD_Usage.Location = new System.Drawing.Point(405, 3);
 			this.DD_Usage.Name = "DD_Usage";
-			this.DD_Usage.Size = new System.Drawing.Size(375, 54);
+			this.DD_Usage.Size = new System.Drawing.Size(229, 30);
 			this.DD_Usage.TabIndex = 17;
 			this.DD_Usage.Text = "Usage";
 			// 
@@ -277,9 +280,9 @@ partial class PC_CompatibilityManagement
 			this.CB_BlackListId.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_BlackListId.DefaultValue = false;
 			this.CB_BlackListId.EnterTriggersClick = false;
-			this.CB_BlackListId.Location = new System.Drawing.Point(3, 125);
+			this.CB_BlackListId.Location = new System.Drawing.Point(3, 80);
 			this.CB_BlackListId.Name = "CB_BlackListId";
-			this.CB_BlackListId.Size = new System.Drawing.Size(199, 46);
+			this.CB_BlackListId.Size = new System.Drawing.Size(151, 32);
 			this.CB_BlackListId.SpaceTriggersClick = true;
 			this.CB_BlackListId.TabIndex = 17;
 			this.CB_BlackListId.Text = "BlackListId";
@@ -293,9 +296,9 @@ partial class PC_CompatibilityManagement
 			this.CB_BlackListName.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_BlackListName.DefaultValue = false;
 			this.CB_BlackListName.EnterTriggersClick = false;
-			this.CB_BlackListName.Location = new System.Drawing.Point(3, 177);
+			this.CB_BlackListName.Location = new System.Drawing.Point(3, 118);
 			this.CB_BlackListName.Name = "CB_BlackListName";
-			this.CB_BlackListName.Size = new System.Drawing.Size(178, 46);
+			this.CB_BlackListName.Size = new System.Drawing.Size(134, 32);
 			this.CB_BlackListName.SpaceTriggersClick = true;
 			this.CB_BlackListName.TabIndex = 17;
 			this.CB_BlackListName.Text = "BlackListName";
@@ -305,9 +308,9 @@ partial class PC_CompatibilityManagement
 			// 
 			this.DD_PackageType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.DD_PackageType.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.DD_PackageType.Location = new System.Drawing.Point(384, 65);
+			this.DD_PackageType.Location = new System.Drawing.Point(384, 39);
 			this.DD_PackageType.Name = "DD_PackageType";
-			this.DD_PackageType.Size = new System.Drawing.Size(375, 54);
+			this.DD_PackageType.Size = new System.Drawing.Size(250, 35);
 			this.DD_PackageType.TabIndex = 17;
 			this.DD_PackageType.Text = "PackageType";
 			// 
@@ -318,10 +321,10 @@ partial class PC_CompatibilityManagement
 			dynamicIcon4.Name = "I_Statuses";
 			this.T_Statuses.IconName = dynamicIcon4;
 			this.T_Statuses.LinkedControl = this.FLP_Statuses;
-			this.T_Statuses.Location = new System.Drawing.Point(187, 5);
+			this.T_Statuses.Location = new System.Drawing.Point(125, 5);
 			this.T_Statuses.Name = "T_Statuses";
 			this.T_Statuses.Selected = false;
-			this.T_Statuses.Size = new System.Drawing.Size(187, 90);
+			this.T_Statuses.Size = new System.Drawing.Size(125, 60);
 			this.T_Statuses.TabIndex = 0;
 			this.T_Statuses.TabStop = false;
 			this.T_Statuses.Text = "Statuses";
@@ -335,6 +338,7 @@ partial class PC_CompatibilityManagement
 			this.FLP_Statuses.Name = "FLP_Statuses";
 			this.FLP_Statuses.Size = new System.Drawing.Size(119, 36);
 			this.FLP_Statuses.TabIndex = 18;
+			this.FLP_Statuses.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.FLP_Statuses_ControlAdded);
 			// 
 			// B_AddStatus
 			// 
@@ -344,11 +348,12 @@ partial class PC_CompatibilityManagement
 			this.B_AddStatus.LargeImage = true;
 			this.B_AddStatus.Location = new System.Drawing.Point(3, 3);
 			this.B_AddStatus.Name = "B_AddStatus";
-			this.B_AddStatus.Padding = new System.Windows.Forms.Padding(9);
+			this.B_AddStatus.Padding = new System.Windows.Forms.Padding(6);
 			this.B_AddStatus.Size = new System.Drawing.Size(113, 30);
 			this.B_AddStatus.SpaceTriggersClick = true;
 			this.B_AddStatus.TabIndex = 0;
 			this.B_AddStatus.Text = "AddStatus";
+			this.B_AddStatus.Click += new System.EventHandler(this.B_AddStatus_Click);
 			// 
 			// T_Interactions
 			// 
@@ -357,10 +362,10 @@ partial class PC_CompatibilityManagement
 			dynamicIcon6.Name = "I_Switch";
 			this.T_Interactions.IconName = dynamicIcon6;
 			this.T_Interactions.LinkedControl = this.FLP_Interactions;
-			this.T_Interactions.Location = new System.Drawing.Point(374, 5);
+			this.T_Interactions.Location = new System.Drawing.Point(250, 5);
 			this.T_Interactions.Name = "T_Interactions";
 			this.T_Interactions.Selected = false;
-			this.T_Interactions.Size = new System.Drawing.Size(187, 90);
+			this.T_Interactions.Size = new System.Drawing.Size(125, 60);
 			this.T_Interactions.TabIndex = 1;
 			this.T_Interactions.TabStop = false;
 			this.T_Interactions.Text = "Interactions";
@@ -372,7 +377,7 @@ partial class PC_CompatibilityManagement
 			this.FLP_Interactions.Controls.Add(this.B_AddInteraction);
 			this.FLP_Interactions.Location = new System.Drawing.Point(0, 0);
 			this.FLP_Interactions.Name = "FLP_Interactions";
-			this.FLP_Interactions.Size = new System.Drawing.Size(151, 40);
+			this.FLP_Interactions.Size = new System.Drawing.Size(144, 36);
 			this.FLP_Interactions.TabIndex = 19;
 			// 
 			// B_AddInteraction
@@ -383,11 +388,12 @@ partial class PC_CompatibilityManagement
 			this.B_AddInteraction.LargeImage = true;
 			this.B_AddInteraction.Location = new System.Drawing.Point(3, 3);
 			this.B_AddInteraction.Name = "B_AddInteraction";
-			this.B_AddInteraction.Padding = new System.Windows.Forms.Padding(9);
+			this.B_AddInteraction.Padding = new System.Windows.Forms.Padding(6);
 			this.B_AddInteraction.Size = new System.Drawing.Size(138, 30);
 			this.B_AddInteraction.SpaceTriggersClick = true;
 			this.B_AddInteraction.TabIndex = 1;
 			this.B_AddInteraction.Text = "AddInteraction";
+			this.B_AddInteraction.Click += new System.EventHandler(this.B_AddInteraction_Click);
 			// 
 			// TLP_Bottom
 			// 
@@ -401,12 +407,12 @@ partial class PC_CompatibilityManagement
 			this.TLP_Bottom.Controls.Add(this.B_Apply, 2, 1);
 			this.TLP_Bottom.Controls.Add(this.B_ReuseData, 1, 1);
 			this.TLP_Bottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.TLP_Bottom.Location = new System.Drawing.Point(165, 584);
+			this.TLP_Bottom.Location = new System.Drawing.Point(165, 594);
 			this.TLP_Bottom.Name = "TLP_Bottom";
 			this.TLP_Bottom.RowCount = 2;
 			this.TLP_Bottom.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Bottom.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Bottom.Size = new System.Drawing.Size(631, 69);
+			this.TLP_Bottom.Size = new System.Drawing.Size(631, 59);
 			this.TLP_Bottom.TabIndex = 16;
 			// 
 			// slickSpacer2
@@ -428,12 +434,13 @@ partial class PC_CompatibilityManagement
 			this.B_Apply.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon8.Name = "I_Ok";
 			this.B_Apply.ImageName = dynamicIcon8;
-			this.B_Apply.Location = new System.Drawing.Point(468, 32);
+			this.B_Apply.Location = new System.Drawing.Point(503, 32);
 			this.B_Apply.Name = "B_Apply";
-			this.B_Apply.Size = new System.Drawing.Size(160, 34);
+			this.B_Apply.Size = new System.Drawing.Size(125, 24);
 			this.B_Apply.SpaceTriggersClick = true;
 			this.B_Apply.TabIndex = 18;
 			this.B_Apply.Text = "ApplyContinue";
+			this.B_Apply.Click += new System.EventHandler(this.B_Apply_Click);
 			// 
 			// B_ReuseData
 			// 
@@ -442,13 +449,14 @@ partial class PC_CompatibilityManagement
 			this.B_ReuseData.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon9.Name = "I_Refresh";
 			this.B_ReuseData.ImageName = dynamicIcon9;
-			this.B_ReuseData.Location = new System.Drawing.Point(280, 32);
+			this.B_ReuseData.Location = new System.Drawing.Point(356, 32);
 			this.B_ReuseData.Name = "B_ReuseData";
-			this.B_ReuseData.Size = new System.Drawing.Size(181, 34);
+			this.B_ReuseData.Size = new System.Drawing.Size(141, 24);
 			this.B_ReuseData.SpaceTriggersClick = true;
 			this.B_ReuseData.TabIndex = 19;
 			this.B_ReuseData.Text = "ReuseData";
 			this.B_ReuseData.Visible = false;
+			this.B_ReuseData.Click += new System.EventHandler(this.B_ReuseData_Click);
 			// 
 			// base_P_Side
 			// 
@@ -462,19 +470,23 @@ partial class PC_CompatibilityManagement
 			// base_TLP_Side
 			// 
 			this.base_TLP_Side.BotLeft = true;
-			this.base_TLP_Side.ColumnCount = 2;
+			this.base_TLP_Side.ColumnCount = 3;
 			this.base_TLP_Side.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.base_TLP_Side.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.base_TLP_Side.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.base_TLP_Side.Controls.Add(this.packageCrList, 0, 1);
 			this.base_TLP_Side.Controls.Add(this.TB_Search, 0, 0);
-			this.base_TLP_Side.Controls.Add(this.I_Up, 0, 2);
-			this.base_TLP_Side.Controls.Add(this.I_Down, 1, 2);
+			this.base_TLP_Side.Controls.Add(this.B_Previous, 0, 3);
+			this.base_TLP_Side.Controls.Add(this.B_Skip, 2, 3);
+			this.base_TLP_Side.Controls.Add(this.slickSpacer3, 0, 2);
+			this.base_TLP_Side.Controls.Add(this.L_Page, 1, 3);
 			this.base_TLP_Side.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.base_TLP_Side.Location = new System.Drawing.Point(0, 0);
 			this.base_TLP_Side.Name = "base_TLP_Side";
-			this.base_TLP_Side.RowCount = 3;
+			this.base_TLP_Side.RowCount = 4;
 			this.base_TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.base_TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.base_TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.base_TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.base_TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.base_TLP_Side.Size = new System.Drawing.Size(165, 653);
@@ -485,59 +497,97 @@ partial class PC_CompatibilityManagement
 			// 
 			this.packageCrList.AutoInvalidate = false;
 			this.packageCrList.AutoScroll = true;
-			this.base_TLP_Side.SetColumnSpan(this.packageCrList, 2);
+			this.base_TLP_Side.SetColumnSpan(this.packageCrList, 3);
 			this.packageCrList.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.packageCrList.HighlightOnHover = true;
 			this.packageCrList.ItemHeight = 32;
-			this.packageCrList.Location = new System.Drawing.Point(3, 72);
+			this.packageCrList.Location = new System.Drawing.Point(3, 48);
 			this.packageCrList.Name = "packageCrList";
 			this.packageCrList.SeparateWithLines = true;
-			this.packageCrList.Size = new System.Drawing.Size(159, 422);
+			this.packageCrList.Size = new System.Drawing.Size(159, 545);
 			this.packageCrList.TabIndex = 2;
+			this.packageCrList.ItemMouseClick += new System.EventHandler<System.Windows.Forms.MouseEventArgs>(this.packageCrList_ItemMouseClick);
 			// 
 			// TB_Search
 			// 
-			this.base_TLP_Side.SetColumnSpan(this.TB_Search, 2);
+			this.base_TLP_Side.SetColumnSpan(this.TB_Search, 3);
 			this.TB_Search.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon10.Name = "I_Search";
 			this.TB_Search.ImageName = dynamicIcon10;
 			this.TB_Search.Location = new System.Drawing.Point(3, 3);
 			this.TB_Search.Name = "TB_Search";
-			this.TB_Search.Padding = new System.Windows.Forms.Padding(0, 24, 0, 24);
+			this.TB_Search.Padding = new System.Windows.Forms.Padding(0, 13, 0, 13);
 			this.TB_Search.Placeholder = "SearchGenericPackages";
 			this.TB_Search.SelectedText = "";
 			this.TB_Search.SelectionLength = 0;
 			this.TB_Search.SelectionStart = 0;
 			this.TB_Search.ShowLabel = false;
-			this.TB_Search.Size = new System.Drawing.Size(159, 63);
+			this.TB_Search.Size = new System.Drawing.Size(159, 39);
 			this.TB_Search.TabIndex = 3;
+			this.TB_Search.TextChanged += new System.EventHandler(this.TB_Search_TextChanged);
+			this.TB_Search.IconClicked += new System.EventHandler(this.TB_Search_IconClicked);
 			// 
-			// I_Up
+			// B_Previous
 			// 
-			this.I_Up.ActiveColor = null;
-			this.I_Up.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.I_Up.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.B_Previous.ActiveColor = null;
+			this.B_Previous.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.B_Previous.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon11.Name = "I_ArrowUp";
-			this.I_Up.ImageName = dynamicIcon11;
-			this.I_Up.Location = new System.Drawing.Point(3, 500);
-			this.I_Up.Name = "I_Up";
-			this.I_Up.Size = new System.Drawing.Size(76, 150);
-			this.I_Up.TabIndex = 4;
+			this.B_Previous.ImageName = dynamicIcon11;
+			this.B_Previous.Location = new System.Drawing.Point(3, 616);
+			this.B_Previous.Margin = new System.Windows.Forms.Padding(0);
+			this.B_Previous.Name = "B_Previous";
+			this.B_Previous.Size = new System.Drawing.Size(76, 37);
+			this.B_Previous.TabIndex = 4;
+			this.B_Previous.Click += new System.EventHandler(this.B_Previous_Click);
 			// 
-			// I_Down
+			// B_Skip
 			// 
-			this.I_Down.ActiveColor = null;
-			this.I_Down.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.B_Skip.ActiveColor = null;
+			this.B_Skip.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon12.Name = "I_ArrowDown";
-			this.I_Down.ImageName = dynamicIcon12;
-			this.I_Down.Location = new System.Drawing.Point(85, 500);
-			this.I_Down.Name = "I_Down";
-			this.I_Down.Size = new System.Drawing.Size(77, 150);
-			this.I_Down.TabIndex = 5;
+			this.B_Skip.ImageName = dynamicIcon12;
+			this.B_Skip.Location = new System.Drawing.Point(85, 616);
+			this.B_Skip.Margin = new System.Windows.Forms.Padding(0);
+			this.B_Skip.Name = "B_Skip";
+			this.B_Skip.Size = new System.Drawing.Size(77, 37);
+			this.B_Skip.TabIndex = 5;
+			this.B_Skip.Click += new System.EventHandler(this.B_Skip_Click);
+			// 
+			// slickSpacer3
+			// 
+			this.base_TLP_Side.SetColumnSpan(this.slickSpacer3, 3);
+			this.slickSpacer3.Dock = System.Windows.Forms.DockStyle.Top;
+			this.slickSpacer3.Location = new System.Drawing.Point(3, 599);
+			this.slickSpacer3.Name = "slickSpacer3";
+			this.slickSpacer3.Size = new System.Drawing.Size(159, 14);
+			this.slickSpacer3.TabIndex = 6;
+			this.slickSpacer3.TabStop = false;
+			this.slickSpacer3.Text = "slickSpacer3";
+			// 
+			// L_Page
+			// 
+			this.L_Page.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this.L_Page.AutoSize = true;
+			this.L_Page.Location = new System.Drawing.Point(82, 628);
+			this.L_Page.Name = "L_Page";
+			this.L_Page.Size = new System.Drawing.Size(0, 13);
+			this.L_Page.TabIndex = 7;
+			// 
+			// PB_Loading
+			// 
+			this.PB_Loading.LoaderSpeed = 1D;
+			this.PB_Loading.Location = new System.Drawing.Point(484, 3);
+			this.PB_Loading.Name = "PB_Loading";
+			this.PB_Loading.Size = new System.Drawing.Size(74, 44);
+			this.PB_Loading.TabIndex = 18;
+			this.PB_Loading.TabStop = false;
+			this.PB_Loading.Visible = false;
 			// 
 			// PC_CompatibilityManagement
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			this.Controls.Add(this.PB_Loading);
 			this.Controls.Add(this.slickTabControl);
 			this.Controls.Add(this.TLP_Bottom);
 			this.Controls.Add(this.base_P_Side);
@@ -548,6 +598,7 @@ partial class PC_CompatibilityManagement
 			this.Controls.SetChildIndex(this.TLP_Bottom, 0);
 			this.Controls.SetChildIndex(this.base_Text, 0);
 			this.Controls.SetChildIndex(this.slickTabControl, 0);
+			this.Controls.SetChildIndex(this.PB_Loading, 0);
 			this.TLP_MainInfo.ResumeLayout(false);
 			this.TLP_MainInfo.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
@@ -562,6 +613,8 @@ partial class PC_CompatibilityManagement
 			this.TLP_Bottom.PerformLayout();
 			this.base_P_Side.ResumeLayout(false);
 			this.base_TLP_Side.ResumeLayout(false);
+			this.base_TLP_Side.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.PB_Loading)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -585,8 +638,8 @@ partial class PC_CompatibilityManagement
 	internal RoundedTableLayoutPanel base_TLP_Side;
 	private App.UserInterface.Lists.PackageCrList packageCrList;
 	private SlickTextBox TB_Search;
-	private SlickIcon I_Up;
-	private SlickIcon I_Down;
+	private SlickIcon B_Previous;
+	private SlickIcon B_Skip;
 	private System.Windows.Forms.TableLayoutPanel TLP_MainInfo;
 	private SlickTextBox TB_Note;
 	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
@@ -600,4 +653,7 @@ partial class PC_CompatibilityManagement
 	private SlickCheckbox CB_BlackListId;
 	private SlickCheckbox CB_BlackListName;
 	private App.UserInterface.Dropdowns.PackageTypeDropDown DD_PackageType;
+	private SlickSpacer slickSpacer3;
+	private System.Windows.Forms.Label L_Page;
+	private SlickPictureBox PB_Loading;
 }

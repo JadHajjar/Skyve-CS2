@@ -502,7 +502,7 @@ public partial class MainForm : BasePanelForm
 	private void PI_CurrentPlayset_OnClick(object sender, MouseEventArgs e)
 	{
 		if (_playsetManager.CurrentPlayset is not null)
-		PushPanel(PI_CurrentPlayset, ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(_playsetManager.CurrentPlayset));
+			PushPanel(PI_CurrentPlayset, ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(_playsetManager.CurrentPlayset));
 	}
 
 	private async void PI_ManageYourPackages_OnClick(object sender, MouseEventArgs e)
@@ -543,7 +543,7 @@ public partial class MainForm : BasePanelForm
 
 	private void Form_PackageSelected(IEnumerable<ulong> packages)
 	{
-		PushPanel(PI_ManageSinglePackage, new PC_CompatibilityManagement(packages.Select(x=> (IPackageIdentity) new GenericPackageIdentity(x))));
+		PushPanel(PI_ManageSinglePackage, new PC_CompatibilityManagement(packages.Select(x => (IPackageIdentity)new GenericPackageIdentity(x))));
 	}
 
 	private async void PI_ReviewRequests_OnClick(object sender, MouseEventArgs e)

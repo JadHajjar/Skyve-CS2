@@ -1,18 +1,11 @@
 ﻿using Skyve.App.CS2.UserInterface.Content;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.CompatibilityReport;
-using Skyve.App.UserInterface.Content;
-using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Lists;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain.Interfaces;
-using Skyve.Domain;
-using Skyve.Domain.CS2.Utilities;
 
-using SlickControls;
-
-using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;

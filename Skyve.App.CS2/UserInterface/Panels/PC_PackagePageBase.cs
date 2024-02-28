@@ -1,12 +1,9 @@
 ﻿using Skyve.App.CS2.UserInterface.Content;
 using Skyve.App.Interfaces;
-using Skyve.App.UserInterface.CompatibilityReport;
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
-using Skyve.App.UserInterface.Lists;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
-using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
@@ -28,7 +25,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 #nullable disable
 	[Obsolete("DESIGNER ONLY", true)]
-    public PC_PackagePageBase()
+	public PC_PackagePageBase()
 	{
 		InitializeComponent();
 	}

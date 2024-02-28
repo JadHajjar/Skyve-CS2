@@ -21,8 +21,8 @@ public partial class PC_PlaysetAdd : PanelContent
 
 		B_Cancel.Visible = Form.PanelHistory.Any();
 
-		if(_playsetManager.CurrentPlayset is null)
-		newProfileOptionControl2.Parent =null;
+		if (_playsetManager.CurrentPlayset is null)
+			newProfileOptionControl2.Parent = null;
 	}
 
 	protected override void UIChanged()

@@ -67,6 +67,13 @@
 		<Compile Update="UserInterface\Dashboard\D_Playsets.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
+		<Compile Update="UserInterface\Panels\PC_SendReviewRequest.cs" />
+		<Compile Update="UserInterface\Panels\PC_ReviewRequests.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="UserInterface\Panels\PC_ViewReviewRequest.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 		<Compile Update="UserInterface\Panels\_PC_CompatibilityManagement.cs" />
 		<Compile Update="UserInterface\Panels\PC_Options.cs" />
 		<Compile Update="UserInterface\Panels\PC_PackagePageBase.cs">

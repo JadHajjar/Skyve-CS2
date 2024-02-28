@@ -119,7 +119,7 @@ public class IncludedButton : SlickButton
 		{
 			if (activeColor == default)
 			{
-				activeColor = Color.FromArgb(isIncluded ?20:  200, FormDesign.Design.ForeColor);
+				activeColor = Color.FromArgb(isIncluded ? 20 : 200, FormDesign.Design.ForeColor);
 			}
 			else if (isHovered)
 			{

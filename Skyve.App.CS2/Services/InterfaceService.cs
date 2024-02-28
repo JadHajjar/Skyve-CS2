@@ -50,4 +50,9 @@ internal class InterfaceService : IAppInterfaceService
 	{
 		App.Program.MainForm.PushPanel(new PC_PackagePage(package, openCompatibilityPage));
 	}
+
+	PanelContent IAppInterfaceService.RequestReviewPanel(IPackageIdentity package)
+	{
+		return new PC_SendReviewRequest(package);
+	}
 }

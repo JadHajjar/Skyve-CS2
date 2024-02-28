@@ -49,7 +49,7 @@ public partial class _PC_CompatibilityManagement : PanelContent
 		T_Statuses.Text = LocaleCR.StatusesCount.Format(0);
 		T_Interactions.Text = LocaleCR.InteractionCount.Format(0);
 
-		packageCrList.CanDrawItem += PackageCrList_CanDrawItem;
+		//packageCrList.CanDrawItem += PackageCrList_CanDrawItem;
 
 		DD_Stability.Enabled = _userService.User.Manager;
 		TB_Note.Enabled = _userService.User.Manager;
@@ -67,7 +67,7 @@ public partial class _PC_CompatibilityManagement : PanelContent
 			_packages[package] = _workshopService.GetPackage(new GenericPackageIdentity(package));
 		}
 
-		packageCrList.SetItems(_packages.Keys);
+		//packageCrList.SetItems(_packages.Keys);
 
 		SetPackage(0);
 
@@ -82,7 +82,7 @@ public partial class _PC_CompatibilityManagement : PanelContent
 		_request = request;
 	}
 
-	private List<ulong> PackageList => packageCrList.SafeGetItems().ToList(x => x.Item);
+	private List<ulong> PackageList => [];//packageCrList.SafeGetItems().ToList(x => x.Item);
 
 	protected override void UIChanged()
 	{
@@ -146,7 +146,7 @@ public partial class _PC_CompatibilityManagement : PanelContent
 		PB_Loading.Loading = true;
 
 		var mods = _userService.User.Manager ?
-			await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: new[] { "Mod" }, all: true) :
+			await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: ["Code Mod"], all: true) :
 			await _workshopService.GetWorkshopItemsByUserAsync(_userService.User.Id ?? 0);
 
 		foreach (var mod in mods)
@@ -154,8 +154,7 @@ public partial class _PC_CompatibilityManagement : PanelContent
 			_packages.Add(mod.Id, _workshopService.GetPackage(mod));
 		}
 
-		packageCrList.SetItems(_packages.Keys);
-
+		//packageCrList.SetItems(_packages.Keys);
 
 		return true;
 	}
@@ -224,7 +223,7 @@ public partial class _PC_CompatibilityManagement : PanelContent
 
 			if (!_userService.User.Manager && !_userService.User.Equals(CurrentPackage.GetWorkshopInfo()?.Author))
 			{
-				packageCrList.Remove(CurrentPackage.Id);
+				//packageCrList.Remove(CurrentPackage.Id);
 				SetPackage(page);
 				return;
 			}

@@ -26,7 +26,7 @@ internal class UpdateAvailableControl : SlickControl
 		e.Graphics.SetUp(BackColor);
 
 		using var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-		using var brush = Gradient(HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveForeColor:  HoverState.HasFlag(HoverState.Hovered) ? Color.FromArgb(200, FormDesign.Design.ActiveColor) : FormDesign.Design.ActiveColor);
+		using var brush = Gradient(HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveForeColor : HoverState.HasFlag(HoverState.Hovered) ? Color.FromArgb(200, FormDesign.Design.ActiveColor) : FormDesign.Design.ActiveColor);
 		e.Graphics.FillRoundedRectangle(brush, ClientRectangle.Pad(1), Padding.Left);
 
 		{
