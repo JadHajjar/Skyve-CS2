@@ -19,7 +19,7 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_CompatibilityManagement : PC_PackagePageBase
 {
-	private int currentPage;
+	private readonly int currentPage;
 	private PostPackage? postPackage;
 	private PostPackage? lastPackageData;
 	private bool valuesChanged;
@@ -45,6 +45,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		{
 			packageCrList.SetItems(this.packages);
 		}
+
+		SetPackage(Package);
 	}
 
 	public PC_CompatibilityManagement() : this(new GenericPackageIdentity())
@@ -60,8 +62,6 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		packages = [];
 
-		SetPackage(Package);
-
 		SlickTip.SetTo(B_Skip, "Skip");
 		SlickTip.SetTo(B_Previous, "Previous");
 		SlickTip.SetTo(P_Tags, "GlobalTagsInfo");
@@ -74,8 +74,6 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		DD_Stability.Enabled = _userService.User.Manager;
 		TB_Note.Enabled = _userService.User.Manager;
-
-		SetPackage(Package);
 	}
 
 	protected override void OnCreateControl()
@@ -177,7 +175,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		return true;
 	}
 
-	private async void SetPackage(int page)
+	protected override async void SetPackage(IPackageIdentity package)
 	{
 		if (valuesChanged)
 		{
@@ -195,32 +193,41 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			}
 		}
 
+		if (package.Id <= 0)
+		{
+			return;
+		}
 
-		if (packages.Length == 0)
+		base.SetPackage(package);
+
+		if (packages.Length > 0)
+		{
+			var page = Array.IndexOf(packages, package);
+
+			if (page < 0 || page >= packages.Length)
+			{
+				PushBack();
+				return;
+			}
+
+			L_Page.Text = $"{page + 1} / {packages.Length}";
+		}
+		else
 		{
 			L_Page.Text = $"0 / 0";
-			return;
 		}
 
-		if (page < 0 || page >= packages.Length)
-		{
-			PushBack();
-			return;
-		}
-
-		L_Page.Text = $"{page + 1} / {packages.Length}";
+		packageCrList.CurrentPackage = package;
+		packageCrList.Invalidate();
 
 		PB_Loading.BringToFront();
 		PB_Loading.Loading = true;
-
-		SetPackage(packages[currentPage = page]);
 
 		try
 		{
 			if (!_userService.User.Manager && !_userService.User.Equals(Package.GetWorkshopInfo()?.Author))
 			{
 				packageCrList.Remove(Package);
-				SetPackage(page);
 				return;
 			}
 
@@ -243,7 +250,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 					postPackage.Stability = PackageStability.Broken;
 				}
 
-				foreach (var item in automatedPackage.Statuses ?? new())
+				foreach (var item in automatedPackage.Statuses ?? [])
 				{
 					if (!postPackage.Statuses.Any(x => x.Type == item.Type))
 					{
@@ -300,7 +307,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		FLP_Statuses.Controls.Clear(true, x => x is IPackageStatusControl<StatusType, PackageStatus>);
 		FLP_Interactions.Controls.Clear(true, x => x is IPackageStatusControl<InteractionType, PackageInteraction>);
 
-		foreach (var item in postPackage.Tags ?? new())
+		foreach (var item in postPackage.Tags ?? [])
 		{
 			var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(item) };
 			control.Click += TagControl_Click;
@@ -308,10 +315,10 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			T_NewTag.SendToBack();
 		}
 
-		SetLinks(postPackage.Links ?? new());
+		SetLinks(postPackage.Links ?? []);
 
-		postPackage.Statuses ??= new();
-		postPackage.Interactions ??= new();
+		postPackage.Statuses ??= [];
+		postPackage.Interactions ??= [];
 
 		if (_request?.IsInteraction ?? false)
 		{
@@ -364,12 +371,12 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	private void B_Skip_Click(object sender, EventArgs e)
 	{
-		SetPackage(ModifierKeys.HasFlag(Keys.Shift) ? (packages.Length - 1) : (currentPage + 1));
+		SetPackage(packages.Next(Package));
 	}
 
 	private void B_Previous_Click(object sender, EventArgs e)
 	{
-		SetPackage(ModifierKeys.HasFlag(Keys.Shift) ? 0 : (currentPage - 1));
+		SetPackage(packages.Previous(Package));
 	}
 
 	private void T_NewTag_Click(object sender, EventArgs e)
@@ -453,7 +460,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		if (await Apply())
 		{
-			SetPackage(currentPage + 1);
+			SetPackage(packages.Next(Package));
 		}
 	}
 
@@ -554,7 +561,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		if (e.Button == MouseButtons.Left)
 		{
-			SetPackage(Array.IndexOf(packages, (IPackageIdentity)sender));
+			SetPackage((IPackageIdentity)sender);
 		}
 
 		if (e.Button == MouseButtons.Right)
