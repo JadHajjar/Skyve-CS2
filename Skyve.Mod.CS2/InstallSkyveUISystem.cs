@@ -2,7 +2,6 @@
 
 using Game.UI;
 
-using System;
 using System.IO;
 
 namespace Skyve.Mod.CS2

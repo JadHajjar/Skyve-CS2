@@ -5,11 +5,9 @@ using Skyve.App.UserInterface.Forms;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Systems.CS2.Domain.Api;
 using Skyve.Systems.CS2.Managers;
 using Skyve.Systems.CS2.Utilities;
-
-using SkyveApi.Domain.CS2;
-using SkyveApi.Domain.Generic;
 
 using System.Drawing;
 using System.IO;
@@ -20,8 +18,8 @@ namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_CompatibilityManagement : PC_PackagePageBase
 {
 	private readonly int currentPage;
-	private PostPackage? postPackage;
-	private PostPackage? lastPackageData;
+	private CompatibilityPostPackage? postPackage;
+	private CompatibilityPostPackage? lastPackageData;
 	private bool valuesChanged;
 	private readonly ReviewRequest? _request;
 	private IPackageIdentity[] packages;
@@ -120,7 +118,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding = TLP_Bottom.Padding = B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer2.Height = (int)(2 * UI.FontScale);
-		slickSpacer3.Height = (int)(UI.FontScale);
+		slickSpacer3.Height = (int)UI.FontScale;
 		B_AddInteraction.Size = B_AddStatus.Size = UI.Scale(new Size(105, 70), UI.FontScale);
 		B_AddInteraction.Margin = B_AddStatus.Margin = UI.Scale(new Padding(15), UI.FontScale);
 		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32), UI.FontScale);
@@ -193,6 +191,13 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			}
 		}
 
+		if (package is null)
+		{
+			PushBack();
+
+			return;
+		}
+
 		if (package.Id <= 0)
 		{
 			return;
@@ -231,19 +236,19 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 				return;
 			}
 
-			var skyveApiUtil = ServiceCenter.Get<ISkyveApiUtil, SkyveApiUtil>();
+			var skyveApiUtil = ServiceCenter.Get<SkyveApiUtil>();
 			var skyveDataManager = ServiceCenter.Get<ISkyveDataManager, SkyveDataManager>();
-			var catalogue = await skyveApiUtil.Catalogue(Package!.Id);
+			var catalogue = await skyveApiUtil.GetPackageData(Package.Id);
 
-			postPackage = catalogue?.Packages.FirstOrDefault()?.CloneTo<CompatibilityPackageData, PostPackage>();
+			postPackage = catalogue?.CloneTo<PackageData, CompatibilityPostPackage>();
 
 			if (postPackage is null)
 			{
-				postPackage = (skyveDataManager).GetAutomatedReport(Package).CloneTo<CompatibilityPackageData, PostPackage>();
+				postPackage = skyveDataManager.GetAutomatedReport(Package).CloneTo<PackageData, CompatibilityPostPackage>();
 			}
 			else
 			{
-				var automatedPackage = (skyveDataManager).GetAutomatedReport(Package).CloneTo<CompatibilityPackageData, PostPackage>();
+				var automatedPackage = skyveDataManager.GetAutomatedReport(Package).CloneTo<PackageData, CompatibilityPostPackage>();
 
 				if (automatedPackage.Stability is PackageStability.Broken)
 				{
@@ -259,8 +264,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 				}
 			}
 
-			postPackage.BlackListId = catalogue?.BlackListedIds?.Contains(postPackage.Id) ?? false;
-			postPackage.BlackListName = catalogue?.BlackListedNames?.Contains(postPackage.Name ?? string.Empty) ?? false;
+			postPackage.IsBlackListedById = skyveDataManager.CompatibilityData.BlackListedIds?.Contains(postPackage.Id) ?? false;
+			postPackage.IsBlackListedByName = skyveDataManager.CompatibilityData.BlackListedNames?.Contains(postPackage.Name ?? string.Empty) ?? false;
 
 			SetData(postPackage);
 
@@ -273,18 +278,21 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			packageCrList.Invalidate();
 			valuesChanged = false;
 		}
-		catch { OnLoadFail(); }
+		catch
+		{
+			OnLoadFail();
+		}
 	}
 
-	private void SetData(PostPackage postPackage)
+	private void SetData(CompatibilityPostPackage postPackage)
 	{
 		if (!IsHandleCreated)
 		{
 			CreateHandle();
 		}
 
-		CB_BlackListName.Checked = postPackage.BlackListName;
-		CB_BlackListId.Checked = postPackage.BlackListId;
+		CB_BlackListId.Checked = postPackage.IsBlackListedById;
+		CB_BlackListName.Checked = postPackage.IsBlackListedByName;
 
 		if (_request is not null && !_request.IsStatus && !_request.IsInteraction)
 		{
@@ -466,7 +474,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	private async Task<bool> Apply()
 	{
-		if (B_Apply.Loading)
+		if (B_Apply.Loading || postPackage is null)
 		{
 			return false;
 		}
@@ -477,19 +485,13 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			return false;
 		}
 
-		postPackage!.Id = Package.Id;
+		postPackage.Id = Package.Id;
 		postPackage.FileName = Path.GetFileName(Package.GetLocalPackageIdentity()?.FilePath ?? string.Empty).IfEmpty(postPackage.FileName);
 		postPackage.Name = Package.Name;
 		postPackage.ReviewDate = DateTime.UtcNow;
 		postPackage.AuthorId = Package.GetWorkshopInfo()?.Author?.Id?.ToString();
-		postPackage.Author = new Author
-		{
-			Id = postPackage.AuthorId,
-			Name = Package.GetWorkshopInfo()?.Author?.Name,
-		};
-
-		postPackage.BlackListId = CB_BlackListId.Checked;
-		postPackage.BlackListName = CB_BlackListName.Checked;
+		postPackage.IsBlackListedById = CB_BlackListId.Checked;
+		postPackage.IsBlackListedByName = CB_BlackListName.Checked;
 		postPackage.Stability = DD_Stability.SelectedItem;
 		postPackage.Type = DD_PackageType.SelectedItem;
 		postPackage.Usage = DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next);
@@ -520,7 +522,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		B_Apply.Loading = true;
 
-		var response = await ServiceCenter.Get<ISkyveApiUtil, SkyveApiUtil>().SaveEntry(postPackage);
+		var response = await ServiceCenter.Get<SkyveApiUtil>().UpdatePackageData(postPackage);
 
 		B_Apply.Loading = false;
 

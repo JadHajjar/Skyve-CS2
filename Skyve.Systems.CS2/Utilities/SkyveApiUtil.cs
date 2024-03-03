@@ -1,8 +1,11 @@
 ﻿using Extensions;
 
+using Skyve.Compatibility.Domain;
 using Skyve.Domain;
 using Skyve.Domain.Systems;
-using Skyve.Systems.CS2.Domain;
+using Skyve.Systems.CS2.Domain.Api;
+using Skyve.Systems.CS2.Domain.Api.DTO;
+using Skyve.Systems.CS2.Domain.DTO;
 
 using SkyveApi.Domain.CS2;
 using SkyveApi.Domain.Generic;
@@ -12,7 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
-public class SkyveApiUtil : ISkyveApiUtil
+public class SkyveApiUtil
 {
 	private readonly ApiUtil _apiUtil;
 	private readonly IUserService _userService;
@@ -26,14 +29,14 @@ public class SkyveApiUtil : ISkyveApiUtil
 	public async Task<T?> Get<T>(string url, params (string, object)[] queryParams)
 	{
 		return await _apiUtil.Get<T>(KEYS.API_URL + url
-			, new[] { ("API_KEY", KEYS.API_KEY), ("USER_ID", Encryption.Encrypt(_userService.User.Id?.ToString() ?? string.Empty, KEYS.SALT)) }
+			, [("API_KEY", KEYS.API_KEY), ("USER_ID", Encryption.Encrypt(_userService.User.Id?.ToString() ?? string.Empty, KEYS.SALT))]
 			, queryParams);
 	}
 
 	public async Task<T?> Delete<T>(string url, params (string, object)[] queryParams)
 	{
 		return await _apiUtil.Delete<T>(KEYS.API_URL + url
-			, new[] { ("API_KEY", KEYS.API_KEY), ("USER_ID", Encryption.Encrypt(_userService.User.Id?.ToString() ?? string.Empty, KEYS.SALT)) }
+			, [("API_KEY", KEYS.API_KEY), ("USER_ID", Encryption.Encrypt(_userService.User.Id?.ToString() ?? string.Empty, KEYS.SALT))]
 			, queryParams);
 	}
 
@@ -41,53 +44,13 @@ public class SkyveApiUtil : ISkyveApiUtil
 	{
 		return await _apiUtil.Post<TBody, T>(KEYS.API_URL + url
 			, body
-			, new[] { ("API_KEY", KEYS.API_KEY), ("USER_ID", Encryption.Encrypt(_userService.User.Id?.ToString() ?? string.Empty, KEYS.SALT)) }
+			, [("API_KEY", KEYS.API_KEY), ("USER_ID", Encryption.Encrypt(_userService.User.Id?.ToString() ?? string.Empty, KEYS.SALT))]
 			, queryParams);
-	}
-
-	public async Task<bool> IsCommunityManager()
-	{
-		return await Get<bool>("/IsCommunityManager");
-	}
-
-	public async Task<CompatibilityData?> Catalogue()
-	{
-		return await Get<CompatibilityData>("/Catalogue");
-	}
-
-	public async Task<CompatibilityData?> Catalogue(object steamId)
-	{
-		return await Get<CompatibilityData>("/Package", ("steamId", steamId));
-	}
-
-	public async Task<ApiResponse> SaveEntry(PostPackage package)
-	{
-		return await Post<PostPackage, ApiResponse>("/SaveEntry", package);
 	}
 
 	public async Task<Dictionary<string, string>?> Translations()
 	{
 		return await Get<Dictionary<string, string>>("/Translations");
-	}
-
-	public async Task<ApiResponse> SendReviewRequest(ReviewRequest request)
-	{
-		return await Post<ReviewRequest, ApiResponse>("/RequestReview", request);
-	}
-
-	public async Task<ApiResponse> ProcessReviewRequest(ReviewRequest request)
-	{
-		return await Post<ReviewRequest, ApiResponse>("/ProcessReviewRequest", request);
-	}
-
-	public async Task<ReviewRequest[]?> GetReviewRequests()
-	{
-		return await Get<ReviewRequest[]>("/GetReviewRequests");
-	}
-
-	public async Task<ReviewRequest?> GetReviewRequest(ulong userId, ulong packageId)
-	{
-		return await Get<ReviewRequest>("/GetReviewRequest", (nameof(userId), userId), (nameof(packageId), packageId));
 	}
 
 	public async Task<IOnlinePlayset[]?> GetUserPlaysets(IUser userId)
@@ -134,5 +97,62 @@ public class SkyveApiUtil : ISkyveApiUtil
 	public async Task<ApiResponse> GetUserGuid()
 	{
 		return await Get<ApiResponse>("/GetUserGuid");
+	}
+
+	public async Task<IKnownUser[]> GetUsers()
+	{
+		return ConvertDto<UserData, User, UserDto>(await Get<UserData[]>("/Users"));
+	}
+
+	public async Task<PackageData[]> GetPackageData()
+	{
+		return ConvertDto<CompatibilityPackageData, PackageData, PackageDataDto>(await Get<CompatibilityPackageData[]>("/CompatibilityData"));
+	}
+
+	public async Task<PackageData?> GetPackageData(ulong packageId)
+	{
+		return ConvertDto<CompatibilityPackageData, PackageData, PackageDataDto>(await Get<CompatibilityPackageData>("/CompatibilityData/" + packageId));
+	}
+
+	public async Task<Blacklist> GetBlacklist()
+	{
+		return await Get<Blacklist>("/Blacklist") ?? new();
+	}
+
+	public async Task<ApiResponse> UpdatePackageData(CompatibilityPostPackage postPackage)
+	{
+		return await Post<PostPackage, ApiResponse>("/UpdatePackageData", ConvertDto<CompatibilityPostPackage, PostPackage, PostPackageDto>(postPackage)!);
+	}
+
+	public async Task<ApiResponse> SendReviewRequest(ReviewRequest request)
+	{
+		return await Post<ReviewRequestData, ApiResponse>("/RequestReview", ConvertDto<ReviewRequest, ReviewRequestData, ReviewRequestDto>(request)!);
+	}
+
+	public async Task<ApiResponse> ProcessReviewRequest(ReviewRequest request)
+	{
+		return await Post<ReviewRequestData, ApiResponse>("/ProcessReviewRequest", ConvertDto<ReviewRequest, ReviewRequestData, ReviewRequestDto>(request)!);
+	}
+
+	public async Task<ReviewRequest[]?> GetReviewRequests()
+	{
+		return ConvertDto<ReviewRequestData, ReviewRequest, ReviewRequestDto>(await Get<ReviewRequestData[]>("/GetReviewRequests"));
+	}
+
+	public async Task<ReviewRequest?> GetReviewRequest(string userId, ulong packageId)
+	{
+		return ConvertDto<ReviewRequestData, ReviewRequest, ReviewRequestDto>(await Get<ReviewRequestData>("/GetReviewRequest", (nameof(userId), userId), (nameof(packageId), packageId)));
+	}
+
+	private TObj? ConvertDto<TData, TObj, TDto>(TData? data) where TDto : IDTO<TData, TObj>, new()
+	{
+		return data is null ? default : new TDto().Convert(data);
+	}
+
+	private TObj[] ConvertDto<TData, TObj, TDto>(IEnumerable<TData>? data) where TDto : IDTO<TData, TObj>, new()
+	{
+		var dto = new TDto();
+
+		return data?.ToArray(dto.Convert) ?? [];
 	}
 }

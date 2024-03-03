@@ -8,8 +8,6 @@ using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems;
 
-using SkyveApi.Domain.CS2;
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;

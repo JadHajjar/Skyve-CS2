@@ -502,7 +502,9 @@ public partial class MainForm : BasePanelForm
 	private void PI_CurrentPlayset_OnClick(object sender, MouseEventArgs e)
 	{
 		if (_playsetManager.CurrentPlayset is not null)
+		{
 			PushPanel(PI_CurrentPlayset, ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(_playsetManager.CurrentPlayset));
+		}
 	}
 
 	private async void PI_ManageYourPackages_OnClick(object sender, MouseEventArgs e)

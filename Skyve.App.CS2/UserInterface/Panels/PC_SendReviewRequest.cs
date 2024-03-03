@@ -1,8 +1,7 @@
 ﻿using Skyve.App.UserInterface.CompatibilityReport;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
-
-using SkyveApi.Domain.Generic;
+using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
 using System.IO;
@@ -159,7 +158,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 			return stream.ToArray();
 		});
 
-		var response = await ServiceCenter.Get<ISkyveApiUtil>().SendReviewRequest(postPackage);
+		var response = await ServiceCenter.Get<SkyveApiUtil>().SendReviewRequest(postPackage);
 
 		if (response.Success)
 		{

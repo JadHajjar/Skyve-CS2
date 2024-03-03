@@ -418,7 +418,7 @@ public partial class _PC_CompatibilityManagement : PanelContent
 		form.LinksReturned += SetLinks;
 	}
 
-	private void SetLinks(IEnumerable<PackageLink> links)
+	private void SetLinks(IEnumerable<Compatibility.Domain.PackageLink> links)
 	{
 		P_Links.Controls.Clear(true, x => x is LinkControl);
 

@@ -9,10 +9,9 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net4.7.2</TargetFramework>
 		<Deterministic>true</Deterministic>
 		<Nullable>enable</Nullable>
-		<UseWindowsForms >true</UseWindowsForms>
+		<UseWindowsForms>true</UseWindowsForms>
 		<StartupObject>Skyve.Service.CS2.Program</StartupObject>
 		<ApplicationIcon>ServiceIcon.ico</ApplicationIcon>
 		<SignAssembly>True</SignAssembly>
@@ -22,7 +21,7 @@
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(BuildType)' == 'Debug'">
-		<UseWindowsForms >true</UseWindowsForms>
+		<UseWindowsForms>true</UseWindowsForms>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -39,9 +38,7 @@
 		<EmbeddedResource Update="ProjectInstaller.resx">
 			<DependentUpon>ProjectInstaller.cs</DependentUpon>
 		</EmbeddedResource>
-		<Compile Update="ProjectInstaller.cs">
-			<SubType>Component</SubType>
-		</Compile>
+		<Compile Update="ProjectInstaller.cs" />
 		<Compile Update="ProjectInstaller.Designer.cs">
 			<DependentUpon>ProjectInstaller.cs</DependentUpon>
 		</Compile>

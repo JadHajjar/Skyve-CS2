@@ -15,6 +15,7 @@ using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Managers;
+using Skyve.Systems.CS2.Systems;
 using Skyve.Systems.CS2.Utilities;
 
 using System;
@@ -28,6 +29,9 @@ using Platform = Extensions.Platform;
 namespace Skyve.Systems.CS2.Services;
 internal class WorkshopService : IWorkshopService
 {
+	public event Action? OnLogin;
+	public event Action? OnLogout;
+
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
 	private readonly INotifier _notifier;
@@ -35,6 +39,7 @@ internal class WorkshopService : IWorkshopService
 	private readonly INotificationsService _notificationsService;
 	private readonly IInterfaceService _interfaceService;
 	private readonly IServiceProvider _serviceProvider;
+	private readonly UserService _userService;
 	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
 	private readonly Locker _locker = new();
@@ -58,7 +63,7 @@ internal class WorkshopService : IWorkshopService
 		}
 	}
 
-	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler)
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler)
 	{
 		_logger = logger;
 		_settings = settings;
@@ -68,6 +73,7 @@ internal class WorkshopService : IWorkshopService
 		_interfaceService = interfaceService;
 		_serviceProvider = serviceProvider;
 		_pdxLogUtil = pdxLogUtil;
+		_userService = (UserService)userService;
 		_modProcessor = new PdxModProcessor(this, saveHandler, _notifier);
 	}
 
@@ -174,6 +180,8 @@ internal class WorkshopService : IWorkshopService
 		}
 
 		IsLoggedIn = true;
+
+		_userService.SetLoggedInUser((await Context.Profile.Get()).Social?.DisplayName);
 
 		_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 		_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();

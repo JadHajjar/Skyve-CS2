@@ -4,6 +4,7 @@ using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
 using Skyve.Domain.Enums;
+using Skyve.Systems.CS2.Domain.Api;
 
 using SkyveApi.Domain.CS2;
 
@@ -15,14 +16,14 @@ namespace Skyve.Systems.CS2.Domain;
 
 public class IndexedPackage : IIndexedPackageCompatibilityInfo
 {
-	public CompatibilityPackageData Package { get; }
+	public PackageData Package { get; }
 	public Dictionary<ulong, IIndexedPackageCompatibilityInfo> Group { get; }
 	public Dictionary<ulong, IIndexedPackageCompatibilityInfo> RequirementAlternatives { get; }
 	public Dictionary<StatusType, IList<IIndexedPackageStatus<StatusType>>> IndexedStatuses { get; }
 	public Dictionary<InteractionType, IList<IIndexedPackageStatus<InteractionType>>> IndexedInteractions { get; }
 	public IIndexedPackageStatus<InteractionType>? SucceededBy { get; private set; }
 
-	public IndexedPackage(CompatibilityPackageData package)
+	public IndexedPackage(PackageData package)
 	{
 		Package = package;
 		IndexedStatuses = [];

@@ -1,6 +1,5 @@
 ﻿using Skyve.App.Interfaces;
-
-using SkyveApi.Domain.Generic;
+using Skyve.Systems.CS2.Utilities;
 
 using System.Windows.Forms;
 
@@ -30,7 +29,7 @@ public partial class PC_ReviewRequests : PanelContent
 	{
 		base.OnShown();
 
-		_reviewRequests = (await ServiceCenter.Get<ISkyveApiUtil>().GetReviewRequests())?.ToList() ?? _reviewRequests;
+		_reviewRequests = (await ServiceCenter.Get<SkyveApiUtil>().GetReviewRequests())?.ToList() ?? _reviewRequests;
 
 		//packageCrList.SetItems(_reviewRequests.Select(x => x.PackageId).Distinct());
 
@@ -113,7 +112,7 @@ public partial class PC_ReviewRequests : PanelContent
 
 		foreach (var request in _reviewRequests.Where(x => x.PackageId == CurrentPackage))
 		{
-			await ServiceCenter.Get<ISkyveApiUtil>().ProcessReviewRequest(request);
+			await ServiceCenter.Get<SkyveApiUtil>().ProcessReviewRequest(request);
 		}
 
 		OnShown();

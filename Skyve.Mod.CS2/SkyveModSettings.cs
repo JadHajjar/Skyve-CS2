@@ -1,12 +1,7 @@
 ﻿using Colossal.IO.AssetDatabase;
+
 using Game.Modding;
 using Game.Settings;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Skyve.Mod.CS2
 {

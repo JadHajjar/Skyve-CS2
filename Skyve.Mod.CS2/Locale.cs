@@ -1,6 +1,4 @@
-﻿using Extensions;
-
-using Skyve.Mod.CS2.Shared;
+﻿using Skyve.Mod.CS2.Shared;
 
 using System.Collections.Generic;
 
@@ -10,7 +8,10 @@ namespace Skyve.Mod.CS2
 	{
 		private static readonly Locale _instance = new Locale();
 
-		public static IEnumerable<DictionarySource> GetAvailableSources() => _instance.GetAvailableLanguages();
+		public static IEnumerable<DictionarySource> GetAvailableSources()
+		{
+			return _instance.GetAvailableLanguages();
+		}
 
 		public Locale() : base($"Skyve.Mod.CS2.Properties.LocaleModCS2.json") { }
 	}

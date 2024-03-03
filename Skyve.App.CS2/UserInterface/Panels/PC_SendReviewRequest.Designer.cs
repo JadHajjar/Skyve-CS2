@@ -47,7 +47,6 @@ partial class PC_SendReviewRequest
 			this.DD_PackageType = new Skyve.App.UserInterface.Dropdowns.PackageTypeDropDown();
 			this.L_English = new System.Windows.Forms.Label();
 			this.TB_Note = new SlickControls.SlickTextBox();
-			this.PB_Icon = new Skyve.App.UserInterface.Content.PackageIcon();
 			this.TLP_Button = new System.Windows.Forms.TableLayoutPanel();
 			this.B_Apply = new SlickControls.SlickButton();
 			this.L_Disclaimer = new System.Windows.Forms.Label();
@@ -228,13 +227,6 @@ partial class PC_SendReviewRequest
 			// 
 			// PB_Icon
 			// 
-			this.PB_Icon.Dock = System.Windows.Forms.DockStyle.Left;
-			this.PB_Icon.Location = new System.Drawing.Point(0, 0);
-			this.PB_Icon.Margin = new System.Windows.Forms.Padding(0);
-			this.PB_Icon.Name = "PB_Icon";
-			this.PB_Icon.Size = new System.Drawing.Size(100, 100);
-			this.PB_Icon.TabIndex = 0;
-			this.PB_Icon.TabStop = false;
 			// 
 			// TLP_Button
 			// 

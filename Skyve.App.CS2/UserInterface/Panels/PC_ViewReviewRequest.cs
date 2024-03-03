@@ -4,8 +4,7 @@ using Skyve.App.UserInterface.Generic;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
-
-using SkyveApi.Domain.Generic;
+using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
 using System.IO;
@@ -20,7 +19,7 @@ public partial class PC_ViewReviewRequest : PanelContent
 
 	private readonly IWorkshopService _workshopService;
 	private readonly IDlcManager _dlcManager;
-	private readonly ISkyveApiUtil _skyveApiUtil;
+	private readonly SkyveApiUtil _skyveApiUtil;
 
 	public PC_ViewReviewRequest(ReviewRequest request) : base(true)
 	{
@@ -31,7 +30,7 @@ public partial class PC_ViewReviewRequest : PanelContent
 		_request = request;
 
 		TLP_Info.Controls.Add(new MiniPackageControl(request.PackageId) { Dock = DockStyle.Top, ReadOnly = true }, 0, 0);
-		TLP_Info.Controls.Add(new SteamUserControl(request.UserId) { InfoText = "Requested by", Dock = DockStyle.Top, Margin = UI.Scale(new Padding(5), UI.FontScale) }, 0, 1);
+		//TLP_Info.Controls.Add(new SteamUserControl(request.UserId) { InfoText = "Requested by", Dock = DockStyle.Top, Margin = UI.Scale(new Padding(5), UI.FontScale) }, 0, 1);
 
 		logControl = new SlickControl
 		{

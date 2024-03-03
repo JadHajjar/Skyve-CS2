@@ -9,7 +9,6 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net4.7.2</TargetFramework>
 		<Deterministic>true</Deterministic>
 		<Nullable>enable</Nullable>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -25,6 +24,15 @@
 		<None Remove="Properties\*\*.json" />
 		<EmbeddedResource Include="Properties\*.json" />
 		<EmbeddedResource Include="Properties\*\*.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="UserInterface\Panels\_PC_CompatibilityManagement.cs" />
+	  <Compile Remove="UserInterface\Panels\_PC_CompatibilityManagement.Designer.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Remove="UserInterface\Panels\_PC_CompatibilityManagement.resx" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -74,7 +82,6 @@
 		<Compile Update="UserInterface\Panels\PC_ViewReviewRequest.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="UserInterface\Panels\_PC_CompatibilityManagement.cs" />
 		<Compile Update="UserInterface\Panels\PC_Options.cs" />
 		<Compile Update="UserInterface\Panels\PC_PackagePageBase.cs">
 		  <SubType>UserControl</SubType>
@@ -93,6 +100,9 @@
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<Content Include="Resources\Skyve.ico" />
+		<Content Include="UserInterface\Panels\_PC_CompatibilityManagement.cs" />
+		<Content Include="UserInterface\Panels\_PC_CompatibilityManagement.Designer.cs" />
+		<Content Include="UserInterface\Panels\_PC_CompatibilityManagement.resx" />
 		<EmbeddedResource Include="Changelog.json" />
 	</ItemGroup>
 

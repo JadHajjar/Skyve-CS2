@@ -39,7 +39,9 @@ public class IncludedButton : SlickButton
 				var enable = !Package.IsEnabled();
 
 				if (enable || !_modLogicManager.IsRequired(Package.GetLocalPackageIdentity(), _modUtil))
+				{
 					await _modUtil.SetEnabled(Package, enable);
+				}
 			}
 
 			Loading = false;
@@ -67,29 +69,45 @@ public class IncludedButton : SlickButton
 		}
 
 		var required = _modLogicManager.IsRequired(localIdentity, _modUtil);
-		var isHovered = Loading || (HoverState.HasFlag(HoverState.Hovered));
+		var isHovered = Loading || HoverState.HasFlag(HoverState.Hovered);
 
 		if (isHovered)
 		{
 			if (!isIncluded)
+			{
 				text = LocaleCS2.IncludeItem;
+			}
 			else if (required)
+			{
 				text = Locale.ThisModIsRequiredYouCantDisableIt;
+			}
 			else if (isEnabled)
+			{
 				text = Locale.DisableItem;
+			}
 			else
+			{
 				text = Locale.EnableItem;
+			}
 		}
 		else
 		{
 			if (isPartialIncluded)
+			{
 				text = Locale.PartiallyIncluded;
+			}
 			else if (!isIncluded)
+			{
 				text = LocaleCS2.IncludeItem;
+			}
 			else if (isEnabled)
+			{
 				text = Locale.Enabled;
+			}
 			else
+			{
 				text = Locale.Disabled;
+			}
 		}
 
 		if (!required && isIncluded && isHovered)
@@ -136,7 +154,7 @@ public class IncludedButton : SlickButton
 
 		if (Loading)
 		{
-			iconRect = new Rectangle((Height - ClientRectangle.Height * 3 / 5) / 2, (Height - ClientRectangle.Height * 3 / 5) / 2, ClientRectangle.Height * 3 / 5, ClientRectangle.Height * 3 / 5);
+			iconRect = new Rectangle((Height - (ClientRectangle.Height * 3 / 5)) / 2, (Height - (ClientRectangle.Height * 3 / 5)) / 2, ClientRectangle.Height * 3 / 5, ClientRectangle.Height * 3 / 5);
 
 			if (_subscriptionsManager.Status.ModId != Package.Id || _subscriptionsManager.Status.Progress == 0 || !_subscriptionsManager.Status.IsActive)
 			{
@@ -162,7 +180,7 @@ public class IncludedButton : SlickButton
 			e.Graphics.DrawImage(includedIcon, iconRect);
 		}
 
-		var textRect = new Rectangle(iconRect.Right + iconRect.X, 0, Width - iconRect.Right - iconRect.X * 2, Height);
+		var textRect = new Rectangle(iconRect.Right + iconRect.X, 0, Width - iconRect.Right - (iconRect.X * 2), Height);
 		using var font = UI.Font(9F).FitToWidth(text, textRect, e.Graphics);
 		using var textBrush = new SolidBrush(iconColor);
 		using var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };

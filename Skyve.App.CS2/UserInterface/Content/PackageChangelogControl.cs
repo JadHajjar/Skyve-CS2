@@ -44,7 +44,7 @@ public partial class PackageChangelogControl : SlickControl
 	}}
 
 	.version .header {{
-		font-size: {(16 * UI.FontScale):0.00}pt;
+		font-size: {16 * UI.FontScale:0.00}pt;
 		font-weight: 900;
 		padding-bottom: {10 * UI.FontScale:0}px;
 		color: {SlickWebBrowser.RGB(FormDesign.Design.ForeColor)};
@@ -52,7 +52,7 @@ public partial class PackageChangelogControl : SlickControl
 
 	.version .date {{
 		margin-left: {6 * UI.FontScale:0}px;
-		font-size: {(7.5 * UI.FontScale):0.00}pt;
+		font-size: {7.5 * UI.FontScale:0.00}pt;
 		color: {SlickWebBrowser.RGB(FormDesign.Design.InfoColor)};
 	}}
 

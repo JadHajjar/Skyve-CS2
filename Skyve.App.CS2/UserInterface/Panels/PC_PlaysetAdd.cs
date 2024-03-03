@@ -22,7 +22,9 @@ public partial class PC_PlaysetAdd : PanelContent
 		B_Cancel.Visible = Form.PanelHistory.Any();
 
 		if (_playsetManager.CurrentPlayset is null)
+		{
 			newProfileOptionControl2.Parent = null;
+		}
 	}
 
 	protected override void UIChanged()
@@ -56,7 +58,9 @@ public partial class PC_PlaysetAdd : PanelContent
 	private async void CopyProfile_Click(object sender, EventArgs e)
 	{
 		if (_playsetManager.CurrentPlayset is null)
+		{
 			return;
+		}
 
 		var newPlayset = await _playsetManager.ClonePlayset(_playsetManager.CurrentPlayset);
 
@@ -85,10 +89,7 @@ public partial class PC_PlaysetAdd : PanelContent
 	{
 		var newPlayset = _playsetManager.Playsets.FirstOrDefault(x => x.Name!.Equals(Path.GetFileNameWithoutExtension(obj), StringComparison.InvariantCultureIgnoreCase));
 
-		if (newPlayset is null)
-		{
-			newPlayset = await _playsetManager.ImportPlayset(obj);
-		}
+		newPlayset ??= await _playsetManager.ImportPlayset(obj);
 
 		try
 		{
@@ -99,7 +100,10 @@ public partial class PC_PlaysetAdd : PanelContent
 				panel.LoadPlayset(newPlayset!);
 			}
 		}
-		catch (Exception ex) { ShowPrompt(ex, "Failed to import your playset"); }
+		catch (Exception ex)
+		{
+			ShowPrompt(ex, "Failed to import your playset");
+		}
 	}
 
 	private async void B_ImportLink_Click(object sender, EventArgs e)
@@ -115,6 +119,9 @@ public partial class PC_PlaysetAdd : PanelContent
 		{
 			await ServiceCenter.Get<IOnlinePlaysetUtil>().DownloadPlayset(result.Input);
 		}
-		catch (Exception ex) { App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDownloadPlayset, form: App.Program.MainForm)); }
+		catch (Exception ex)
+		{
+			App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDownloadPlayset, form: App.Program.MainForm));
+		}
 	}
 }

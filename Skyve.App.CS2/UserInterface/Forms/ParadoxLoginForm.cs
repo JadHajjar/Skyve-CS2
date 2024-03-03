@@ -77,7 +77,9 @@ public partial class ParadoxLoginForm : SlickForm
 	private async void B_Login_Click(object sender, EventArgs e)
 	{
 		if (!this.CheckValidation())
+		{
 			return;
+		}
 
 		TB_Email.ReadOnly = TB_Password.ReadOnly = true;
 		B_Login.Loading = true;

@@ -129,7 +129,7 @@ internal class ModLogicManager : IModLogicManager
 
 	public bool IsPseudoMod(IPackage package)
 	{
-		return package.GetPackageInfo()?.Type is not null and not PackageType.GenericPackage and not PackageType.MusicPack and not PackageType.CSM and not PackageType.ContentPackage;
+		return package.GetPackageInfo()?.Type is not null and not PackageType.GenericPackage and not PackageType.MusicPack and not PackageType.ContentPackage;
 	}
 
 	public bool AreMultipleSkyvesPresent(out List<IPackageIdentity> skyveInstances)

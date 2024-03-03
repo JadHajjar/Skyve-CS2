@@ -1,12 +1,10 @@
 ﻿using Colossal.IO.AssetDatabase;
 using Colossal.Json;
 using Colossal.Logging;
-using Colossal.PSI.Environment;
 
 using Game;
 using Game.Modding;
 using Game.SceneFlow;
-using Game.Settings;
 
 using System;
 using System.Collections.Generic;
@@ -75,9 +73,13 @@ namespace Skyve.Mod.CS2
 				var name = item.GetType().Name;
 
 				if (dic.ContainsKey(name))
+				{
 					dic[name]++;
+				}
 				else
+				{
 					dic[name] = 1;
+				}
 			}
 
 			foreach (var item in dic)
@@ -91,7 +93,9 @@ namespace Skyve.Mod.CS2
 			Log.Info(nameof(InstallApp));
 
 			try
-			{ Process.Start(Path.Combine(ModPath, "Skyve Setup.exe")); }
+			{
+				Process.Start(Path.Combine(ModPath, "Skyve Setup.exe"));
+			}
 			catch { }
 		}
 

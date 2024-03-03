@@ -33,7 +33,7 @@ public static class Startup
 		services.AddSingleton<ITagsService, TagsService>();
 		services.AddSingleton<ITroubleshootSystem, TroubleshootSystem>();
 		services.AddSingleton<INotificationsService, NotificationsService>();
-		services.AddSingleton<ISkyveApiUtil, SkyveApiUtil>();
+		services.AddSingleton<SkyveApiUtil>();
 		services.AddSingleton<ISkyveDataManager, SkyveDataManager>();
 		services.AddSingleton<PdxLogUtil>();
 
