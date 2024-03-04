@@ -8,7 +8,6 @@ using Skyve.Systems.CS2.Domain.Api.DTO;
 using Skyve.Systems.CS2.Domain.DTO;
 
 using SkyveApi.Domain.CS2;
-using SkyveApi.Domain.Generic;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -48,55 +47,21 @@ public class SkyveApiUtil
 			, queryParams);
 	}
 
+	private TObj? ConvertDto<TData, TObj, TDto>(TData? data) where TDto : IDTO<TData, TObj>, new()
+	{
+		return data is null ? default : new TDto().Convert(data);
+	}
+
+	private TObj[] ConvertDto<TData, TObj, TDto>(IEnumerable<TData>? data) where TDto : IDTO<TData, TObj>, new()
+	{
+		var dto = new TDto();
+
+		return data?.ToArray(dto.Convert) ?? [];
+	}
+
 	public async Task<Dictionary<string, string>?> Translations()
 	{
 		return await Get<Dictionary<string, string>>("/Translations");
-	}
-
-	public async Task<IOnlinePlayset[]?> GetUserPlaysets(IUser userId)
-	{
-		return await Task.FromResult(new IOnlinePlayset[0]);
-		//return (await Get<UserProfile[]>("/GetUserProfiles", (nameof(userId), userId)))?.ToArray(x => new OnlinePlayset(x));
-	}
-
-	//public async Task<IOnlinePlayset?> GetUserProfileContents(int profileId)
-	//{
-	//	var profile =  await Get<UserProfile>("/GetUserProfileContents", (nameof(profileId), profileId));
-
-	//	return profile is null ? null : new OnlinePlayset(profile);
-	//}
-
-	//public async Task<IOnlinePlayset?> GetUserProfileByLink(string link)
-	//{
-	//	var profile = await Get<UserProfile>("/GetUserProfileByLink", (nameof(link), link));
-
-	//	return profile is null ? null : new OnlinePlayset(profile);
-	//}
-
-	public async Task<ApiResponse> DeleteUserProfile(int profileId)
-	{
-		return await Delete<ApiResponse>("/DeleteUserProfile", (nameof(profileId), profileId));
-	}
-
-	public async Task<ApiResponse> SaveUserProfile(UserProfile profile)
-	{
-		return await Post<UserProfile, ApiResponse>("/SaveUserProfile", profile);
-	}
-
-	public async Task<IOnlinePlayset[]?> GetPublicPlaysets()
-	{
-		return await Task.FromResult(new IOnlinePlayset[0]);
-		//return (await Get<UserProfile[]>("/GetPublicProfiles"))?.ToArray(x => new OnlinePlayset(x));
-	}
-
-	public async Task<ApiResponse> SetProfileVisibility(int profileId, bool @public)
-	{
-		return await Post<bool, ApiResponse>("/SetProfileVisibility", @public, (nameof(profileId), profileId));
-	}
-
-	public async Task<ApiResponse> GetUserGuid()
-	{
-		return await Get<ApiResponse>("/GetUserGuid");
 	}
 
 	public async Task<IKnownUser[]> GetUsers()
@@ -142,17 +107,5 @@ public class SkyveApiUtil
 	public async Task<ReviewRequest?> GetReviewRequest(string userId, ulong packageId)
 	{
 		return ConvertDto<ReviewRequestData, ReviewRequest, ReviewRequestDto>(await Get<ReviewRequestData>("/GetReviewRequest", (nameof(userId), userId), (nameof(packageId), packageId)));
-	}
-
-	private TObj? ConvertDto<TData, TObj, TDto>(TData? data) where TDto : IDTO<TData, TObj>, new()
-	{
-		return data is null ? default : new TDto().Convert(data);
-	}
-
-	private TObj[] ConvertDto<TData, TObj, TDto>(IEnumerable<TData>? data) where TDto : IDTO<TData, TObj>, new()
-	{
-		var dto = new TDto();
-
-		return data?.ToArray(dto.Convert) ?? [];
 	}
 }
