@@ -47,12 +47,12 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		SetPackage(Package);
 	}
 
-	public PC_CompatibilityManagement() : this(new GenericPackageIdentity())
+	public PC_CompatibilityManagement() : this(new GenericPackageIdentity(), true)
 	{
 		packages = [];
 	}
 
-	public PC_CompatibilityManagement(IPackageIdentity package) : base(package)
+	public PC_CompatibilityManagement(IPackageIdentity package, bool load = false) : base(package, load)
 	{
 		ServiceCenter.Get(out _workshopService, out _compatibilityManager, out _userService, out _tagsService, out _skyveDataManager);
 
@@ -123,6 +123,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		B_AddInteraction.Margin = B_AddStatus.Margin = UI.Scale(new Padding(15), UI.FontScale);
 		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32), UI.FontScale);
 		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
+		TB_Note.MinimumSize = new Size(0, (int)(200 * UI.FontScale));
 	}
 
 	protected override void DesignChanged(FormDesign design)

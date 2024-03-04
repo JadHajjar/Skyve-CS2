@@ -1,4 +1,5 @@
 ﻿using Skyve.App.Interfaces;
+using Skyve.App.UserInterface.Lists;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Windows.Forms;
@@ -8,7 +9,7 @@ public partial class PC_ReviewRequests : PanelContent
 {
 	private List<ReviewRequest> _reviewRequests;
 
-	public ulong CurrentPackage;
+	public IPackageIdentity? CurrentPackage;
 
 	private readonly IWorkshopService _workshopService = ServiceCenter.Get<IWorkshopService>();
 
@@ -16,26 +17,16 @@ public partial class PC_ReviewRequests : PanelContent
 	{
 		InitializeComponent();
 
-		_reviewRequests = reviewRequests.ToList();
+		_reviewRequests = [.. reviewRequests];
 
-		//packageCrList.SetItems(reviewRequests.Select(x => x.PackageId).Distinct());
-		//packageCrList.CanDrawItem += PackageCrList_CanDrawItem;
+		packageCrList.SetItems(reviewRequests.Distinct(x => x.PackageId));
+		packageCrList.CanDrawItem += PackageCrList_CanDrawItem;
 
 		TB_Search.Placeholder = $"{LocaleSlickUI.Search}..";
+
 		Text = LocaleCR.ReviewRequests.Format($"({reviewRequests?.Length})");
-	}
 
-	protected override async void OnShown()
-	{
-		base.OnShown();
-
-		_reviewRequests = (await ServiceCenter.Get<SkyveApiUtil>().GetReviewRequests())?.ToList() ?? _reviewRequests;
-
-		//packageCrList.SetItems(_reviewRequests.Select(x => x.PackageId).Distinct());
-
-		Text = LocaleCR.ReviewRequests.Format($"({_reviewRequests.Count})");
-
-		SetPackage(_reviewRequests.Any(x => x.PackageId == CurrentPackage) ? CurrentPackage : 0);
+		SetPackage(packageCrList.Items.FirstOrDefault());
 	}
 
 	protected override void UIChanged()
@@ -55,7 +46,7 @@ public partial class PC_ReviewRequests : PanelContent
 	{
 		if (e.Button == MouseButtons.Left)
 		{
-			SetPackage((ulong)sender);
+			SetPackage((IPackageIdentity)sender);
 		}
 
 		if (e.Button == MouseButtons.Right)
@@ -64,20 +55,21 @@ public partial class PC_ReviewRequests : PanelContent
 		}
 	}
 
-	private void SetPackage(ulong sender)
+	private void SetPackage(IPackageIdentity? package)
 	{
-		CurrentPackage = sender;
+		CurrentPackage = package;
 
+		packageCrList.CurrentPackage = package;
 		packageCrList.Invalidate();
-		reviewRequestList1.SetItems(_reviewRequests.Where(x => x.PackageId == sender));
+		reviewRequestList1.SetItems(_reviewRequests.Where(x => x.PackageId == package?.Id));
 
 		B_DeleteRequests.Text = LocaleCR.DeleteRequests.FormatPlural(reviewRequestList1.ItemCount);
-		B_DeleteRequests.Visible = sender != 0;
+		B_DeleteRequests.Visible = package != null;
 	}
 
-	private void PackageCrList_CanDrawItem(object sender, CanDrawItemEventArgs<ulong> e)
+	private void PackageCrList_CanDrawItem(object sender, CanDrawItemEventArgs<IPackageIdentity> e)
 	{
-		var package = _workshopService.GetInfo(new GenericPackageIdentity(e.Item));
+		var package = _workshopService.GetInfo(e.Item);
 
 		if (package is null)
 		{
@@ -110,7 +102,7 @@ public partial class PC_ReviewRequests : PanelContent
 	{
 		B_DeleteRequests.Loading = true;
 
-		foreach (var request in _reviewRequests.Where(x => x.PackageId == CurrentPackage))
+		foreach (var request in _reviewRequests.Where(x => x.PackageId == CurrentPackage?.Id))
 		{
 			await ServiceCenter.Get<SkyveApiUtil>().ProcessReviewRequest(request);
 		}

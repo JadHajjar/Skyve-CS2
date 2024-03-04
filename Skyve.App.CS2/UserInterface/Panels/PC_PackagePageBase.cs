@@ -31,7 +31,7 @@ public partial class PC_PackagePageBase : PanelContent
 	}
 #nullable enable
 
-	public PC_PackagePageBase(IPackageIdentity package)
+	public PC_PackagePageBase(IPackageIdentity package, bool load = false) : base(load)
 	{
 		ServiceCenter.Get(out _notifier, out _packageUtil, out _settings, out IImageService imageService);
 
@@ -109,7 +109,7 @@ public partial class PC_PackagePageBase : PanelContent
 					P_Requirements.Controls.AddRange(requirements.ToArray(x => new MiniPackageControl(x.Id)
 					{
 						ReadOnly = true,
-						Large = true,
+						Large = requirements.Count < 6,
 						ShowIncluded = true,
 						Dock = DockStyle.Top
 					}));

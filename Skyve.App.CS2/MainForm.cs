@@ -531,7 +531,6 @@ public partial class MainForm : BasePanelForm
 		}
 
 		PI_ManageYourPackages.Loading = false;
-
 	}
 
 	private void PI_ManageSinglePackage_OnClick(object sender, MouseEventArgs e)

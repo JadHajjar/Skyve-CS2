@@ -2,7 +2,21 @@
   {
     "Stable": false,
     "Beta": true,
-    "Version": "0.1.6",
+    "Version": "0.1.8",
+    "Date": "2024-03-04",
+    "ChangeGroups": [
+      {
+        "Name": "Compatibility Update",
+        "Changes": [
+          "Online compatibility data is now available"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.1.7",
     "Date": "2024-02-25",
     "ChangeGroups": [
       {
@@ -18,7 +32,7 @@
   {
     "Stable": false,
     "Beta": true,
-    "Version": "0.1.7",
+    "Version": "0.1.6",
     "Date": "2024-02-28",
     "Tagline": "This is a test for auto-changelog",
     "ChangeGroups": [
