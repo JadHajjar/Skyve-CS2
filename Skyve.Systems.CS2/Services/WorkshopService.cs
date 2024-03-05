@@ -51,6 +51,7 @@ internal class WorkshopService : IWorkshopService
 
 	private IContext? Context { get; set; }
 	public bool IsLoggedIn { get; private set; }
+	public bool IsLoginPending { get; private set; } = true;
 	public bool IsAvailable => Context is not null;
 	public bool IsReady => Context is not null && IsLoggedIn && !_locker.Locked && !Context.Mods.SyncOngoing();
 
@@ -136,6 +137,8 @@ internal class WorkshopService : IWorkshopService
 
 		var startupResult = ProcessResult(await Context.Account.Startup());
 
+		IsLoginPending = false;
+
 		if (!startupResult.IsLoggedIn)
 		{
 			if (!ConnectionHandler.IsConnected)
@@ -213,6 +216,10 @@ internal class WorkshopService : IWorkshopService
 		{
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+
+			IsLoggedIn = true;
+
+			_userService.SetLoggedInUser((await Context.Profile.Get()).Social?.DisplayName);
 		}
 
 		return loginResult.Success;

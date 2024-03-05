@@ -1,6 +1,7 @@
 ﻿using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Forms;
@@ -23,8 +24,8 @@ public partial class ParadoxLoginForm : SlickForm
 		B_Login.Font = UI.Font(9F, FontStyle.Bold);
 		TB_Email.Margin = TB_Password.Margin = B_Login.Margin = CB_RememberMe.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		L_Title.MaximumSize = L_LoginFailed.MaximumSize = L_RememberMeInfo.MaximumSize = L_Disclaimer.MaximumSize = new Size((int)(UI.FontScale * 230), 9999);
-		TB_Email.MaximumSize = TB_Password.MaximumSize = new Size((int)(UI.FontScale * 230), L_Title.Font.Height * 5 / 3);
-		TB_Email.MinimumSize = TB_Password.MinimumSize = new Size((int)(UI.FontScale * 230), L_Title.Font.Height * 5 / 3);
+		TB_Email.MaximumSize = TB_Password.MaximumSize = new Size((int)(UI.FontScale * 230), L_Title.Font.Height * 4 / 3);
+		TB_Email.MinimumSize = TB_Password.MinimumSize = new Size((int)(UI.FontScale * 230), L_Title.Font.Height * 4 / 3);
 		I_Close.Size = UI.Scale(new Size(24, 24), UI.FontScale);
 	}
 
@@ -92,7 +93,10 @@ public partial class ParadoxLoginForm : SlickForm
 
 			if (await workshopService.Login(TB_Email.Text, TB_Password.Text, CB_RememberMe.Checked))
 			{
+				Hide();
 				Close();
+
+				await Task.Delay(50);
 
 				await workshopService.RunSync();
 			}

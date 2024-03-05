@@ -60,5 +60,8 @@
   "UpdateAvailableInfo": "Click here to update Skyve",
   "VoteMod": "Like this mod",
   "UnVoteMod": "Un-Like this mod",
-  "LogLevel": "Log Level"
+  "LogLevel": "Log Level",
+  "ParadoxAccount": "Paradox Account",
+  "LoggingIn": "Logging in...",
+  "NotLoggedInCheckNotification": "You're not logged in to Paradox, check your notifications for more information."
 }

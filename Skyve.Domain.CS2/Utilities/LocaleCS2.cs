@@ -131,6 +131,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation LaunchThroughCities => _instance.GetText("LaunchThroughCities");
 
 	/// <summary>
+	/// Logging in...
+	/// </summary>
+	public static Translation LoggingIn => _instance.GetText("LoggingIn");
+
+	/// <summary>
 	/// The login process is securely handled through Paradox services and no data is shared with Skyve.
 	/// </summary>
 	public static Translation LoginDisclaimer => _instance.GetText("LoginDisclaimer");
@@ -156,6 +161,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ModDownloadFailed => _instance.GetText("ModDownloadFailed");
 
 	/// <summary>
+	/// You're not logged in to Paradox, check your notifications for more information.
+	/// </summary>
+	public static Translation NotLoggedInCheckNotification => _instance.GetText("NotLoggedInCheckNotification");
+
+	/// <summary>
 	/// Disable workshop packages
 	/// </summary>
 	public static Translation NoWorkshop => _instance.GetText("NoWorkshop");
@@ -179,6 +189,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// The information from PDX Mods hasn't loaded for '{0}' yet
 	/// </summary>
 	public static Translation PackageIsUnknown => _instance.GetText("PackageIsUnknown");
+
+	/// <summary>
+	/// Paradox Account
+	/// </summary>
+	public static Translation ParadoxAccount => _instance.GetText("ParadoxAccount");
 
 	/// <summary>
 	/// Your saved username/password failed to log in. Click here to update your information.

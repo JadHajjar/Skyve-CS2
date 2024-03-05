@@ -8,17 +8,12 @@ namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 {
 	private bool loadingPlayset;
-	private readonly SlickCheckbox[] _launchOptions;
 	private readonly IOSelectionDialog imagePrompt;
 
 	private readonly IPlaysetManager _playsetManager;
-	private readonly ILocationService _locationManager;
-	private readonly IPackageManager _packageManager;
 	private readonly ISettings _settings;
 	private readonly IPackageUtil _packageUtil;
-	private readonly IIOUtil _iOUtil;
 	private readonly INotifier _notifier;
-	private readonly ITagsService _tagsService;
 
 	public IPlayset Playset { get; }
 
@@ -26,7 +21,7 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 	{
 		Playset = playset;
 
-		ServiceCenter.Get(out _packageUtil, out _iOUtil, out _locationManager, out _playsetManager, out _packageManager, out _notifier, out _settings, out _tagsService);
+		ServiceCenter.Get(out _packageUtil, out _playsetManager, out _notifier, out _settings);
 
 		InitializeComponent();
 
@@ -170,19 +165,6 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 		if (loadingPlayset || !Live)
 		{
 			return;
-		}
-
-		if (_launchOptions.Contains(sender) && (sender as SlickCheckbox)!.Checked)
-		{
-			foreach (var item in _launchOptions)
-			{
-				if (item == sender)
-				{
-					continue;
-				}
-
-				item.Checked = false;
-			}
 		}
 
 		var playset = (Playset as Playset)!;
@@ -356,11 +338,13 @@ public partial class PC_PlaysetSettings : PlaysetSettingsPanel
 			return;
 		}
 
-		_playsetManager.CurrentCustomPlayset.IsFavorite = !_playsetManager.CurrentCustomPlayset.IsFavorite;
-		//_playsetManager.Save(Playset);
+		var customPlayset = Playset.GetCustomPlayset();
 
-		I_Favorite.ImageName = _playsetManager.CurrentCustomPlayset.IsFavorite ? "I_StarFilled" : "I_Star";
-		SlickTip.SetTo(I_Favorite, _playsetManager.CurrentCustomPlayset.IsFavorite ? "UnFavoriteThisPlayset" : "FavoriteThisPlayset");
+		customPlayset.IsFavorite = !customPlayset.IsFavorite;
+		_playsetManager.Save(customPlayset);
+
+		I_Favorite.ImageName = customPlayset.IsFavorite ? "I_StarFilled" : "I_Star";
+		SlickTip.SetTo(I_Favorite, customPlayset.IsFavorite ? "UnFavoriteThisPlayset" : "FavoriteThisPlayset");
 	}
 
 	public override void LoadPlayset(IPlayset customPlayset)

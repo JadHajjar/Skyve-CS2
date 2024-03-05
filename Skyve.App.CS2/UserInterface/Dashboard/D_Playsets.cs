@@ -69,6 +69,8 @@ internal class D_Playsets : IDashboardItem
 	{
 		DrawSection(e, applyDrawing, e.ClipRectangle.ClipTo(mainSectionHeight), _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentCustomPlayset?.GetIcon() ?? "I_Playsets", out var fore, ref preferredHeight, _playsetManager.CurrentCustomPlayset?.Color ?? FormDesign.Design.MenuColor, Locale.ActivePlayset);
 
+		preferredHeight -= Padding.Top *3/ 4;
+
 		//var cs2Playset = (Playset)_playsetManager.CurrentPlayset;
 
 		//if (cs2Playset.LaunchSettings.StartNewGame)

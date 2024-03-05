@@ -23,7 +23,7 @@ internal class UserService : IUserService
 
 	public IKnownUser TryGetAuthor(string? id)
 	{
-		return id is null or "" ? new User { Id = id } : knownUsers.TryGetValue(id, out var author) ? author : new User { Id = id };
+		return id is null or "" ? new User { Id = id, Name = id ?? string.Empty } : knownUsers.TryGetValue(id, out var author) ? author : new User { Id = id, Name = id ?? string.Empty };
 	}
 
 	public bool IsUserVerified(IUser author)

@@ -1,0 +1,63 @@
+﻿using Skyve.App.UserInterface.Dashboard;
+using Skyve.Domain.CS2.Utilities;
+
+using System.Windows.Forms;
+
+namespace Skyve.App.CS2.UserInterface.Dashboard;
+internal class D_PdxUser : IDashboardItem
+{
+	private readonly IUserService _userService;
+	private readonly IWorkshopService _workshopService;
+
+	public D_PdxUser()
+	{
+		ServiceCenter.Get(out _userService, out _workshopService);
+
+		_userService.UserInfoUpdated += Invalidate;
+	}
+
+	protected override void Dispose(bool disposing)
+	{
+		if (disposing)
+		{
+			_userService.UserInfoUpdated -= Invalidate;
+		}
+
+		base.Dispose(disposing);
+	}
+
+	protected override DrawingDelegate GetDrawingMethod(int width)
+	{
+		return Draw;
+	}
+
+	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
+	{
+		DrawSection(e, applyDrawing, e.ClipRectangle, LocaleCS2.ParadoxAccount, "I_Paradox", out var fore, ref preferredHeight);
+
+		Loading = string.IsNullOrEmpty(_userService.User.Id?.ToString()) && _workshopService.IsLoginPending;
+
+		var textRect = e.ClipRectangle.Pad(Margin);
+
+		if (Loading)
+		{
+			DrawLoader(e.Graphics, textRect.Align(UI.Scale(new System.Drawing.Size(20, 20), UI.FontScale), System.Drawing.ContentAlignment.MiddleLeft));
+
+			e.Graphics.DrawStringItem(LocaleCS2.LoggingIn
+				, Font
+				, fore
+				, textRect
+				, ref preferredHeight
+				, applyDrawing);
+
+			return;
+		}
+
+		e.Graphics.DrawStringItem(string.IsNullOrWhiteSpace(_userService.User.Name) ? LocaleCS2.NotLoggedInCheckNotification : Locale.LoggedInUser.Format(_userService.User.Name)
+			, Font
+			, fore
+			, textRect
+			, ref preferredHeight
+			, applyDrawing);
+	}
+}

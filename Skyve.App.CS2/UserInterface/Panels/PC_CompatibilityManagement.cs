@@ -174,6 +174,11 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		return true;
 	}
 
+	protected override void OnDataLoad()
+	{
+		SetPackage(packages.FirstOrDefault());
+	}
+
 	protected override async void SetPackage(IPackageIdentity package)
 	{
 		if (valuesChanged)
