@@ -12,13 +12,10 @@ using Skyve.Systems.CS2.Domain.Api;
 using Skyve.Systems.CS2.Systems;
 using Skyve.Systems.CS2.Utilities;
 
-using SkyveApi.Domain.CS2;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -51,7 +48,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 
 		try
 		{
-			saveHandler.Delete< CompatibilityData>();
+			saveHandler.Delete<CompatibilityData>();
 		}
 		catch (Exception ex)
 		{
@@ -69,7 +66,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 			var packages = await _skyveApiUtil.GetPackageData();
 			var users = await _skyveApiUtil.GetUsers();
 
-			if (packages .Length > 0)
+			if (packages.Length > 0)
 			{
 				saveHandler.Save(new CompatibilityData
 				{
@@ -103,7 +100,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 			_logger.Exception(ex, "Failed to get compatibility data");
 		}
 
-		CompatibilityData ??= new IndexedCompatibilityData([], new());
+		CompatibilityData ??= new IndexedCompatibilityData([], []);
 	}
 
 	public bool IsBlacklisted(IPackageIdentity package)
@@ -141,7 +138,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 	{
 		var info = new PackageData
 		{
-			Stability = (package.GetPackage()?.IsCodeMod == true ? PackageStability.NotReviewed : PackageStability.AssetNotReviewed),
+			Stability = package.GetPackage()?.IsCodeMod == true ? PackageStability.NotReviewed : PackageStability.AssetNotReviewed,
 			Id = package.Id,
 			Name = package.Name,
 			FileName = package.GetLocalPackageIdentity()?.FilePath,

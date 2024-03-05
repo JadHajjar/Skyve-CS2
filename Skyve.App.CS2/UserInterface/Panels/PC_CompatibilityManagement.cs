@@ -17,12 +17,11 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_CompatibilityManagement : PC_PackagePageBase
 {
-	private readonly int currentPage;
+	private int currentPage;
 	private CompatibilityPostPackage? postPackage;
 	private CompatibilityPostPackage? lastPackageData;
 	private bool valuesChanged;
 	private readonly ReviewRequest? _request;
-	private IPackageIdentity[] packages;
 
 	private readonly ICompatibilityManager _compatibilityManager;
 	private readonly ISkyveDataManager _skyveDataManager;
@@ -30,35 +29,28 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	private readonly IUserService _userService;
 	private readonly ITagsService _tagsService;
 
-	public PC_CompatibilityManagement(IEnumerable<IPackageIdentity> packages) : this(packages.FirstOrDefault())
+	public PC_CompatibilityManagement(IEnumerable<IPackageIdentity> packages) : this(false)
 	{
-		this.packages = packages.ToArray();
+		packageCrList.SetItems(packages.Distinct(x => x.Id));
 
-		if (this.packages.Length == 1)
+		if (packageCrList.ItemCount == 1)
 		{
 			Padding = new Padding(5, 0, 0, 0);
 			base_P_Side.Visible = false;
 		}
-		else
-		{
-			packageCrList.SetItems(this.packages);
-		}
 
-		SetPackage(Package);
+		SetPackage(packageCrList.SortedItems.FirstOrDefault());
 	}
 
-	public PC_CompatibilityManagement() : this(new GenericPackageIdentity(), true)
+	public PC_CompatibilityManagement() : this(true)
 	{
-		packages = [];
 	}
 
-	public PC_CompatibilityManagement(IPackageIdentity package, bool load = false) : base(package, load)
+	public PC_CompatibilityManagement(bool load) : base(new GenericPackageIdentity(), load)
 	{
 		ServiceCenter.Get(out _workshopService, out _compatibilityManager, out _userService, out _tagsService, out _skyveDataManager);
 
 		InitializeComponent();
-
-		packages = [];
 
 		SlickTip.SetTo(B_Skip, "Skip");
 		SlickTip.SetTo(B_Previous, "Previous");
@@ -78,6 +70,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		base.OnCreateControl();
 
+		PB_Loading.Location = ClientRectangle.Center(PB_Loading.Size);
 		PB_Icon.Cursor = L_Title.Cursor = Cursors.Hand;
 		PB_Icon.MouseClick += PB_Icon_MouseClick;
 		L_Title.MouseClick += PB_Icon_MouseClick;
@@ -96,6 +89,14 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		TLP_Bottom.SendToBack();
 		base_P_Side.SendToBack();
+
+		if (!DataLoaded)
+		{
+			foreach (Control item in Controls)
+			{
+				item.Visible = item == base_Text || item == PB_Loading;
+			}
+		}
 	}
 
 	private void PB_Icon_MouseClick(object sender, MouseEventArgs e)
@@ -124,6 +125,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32), UI.FontScale);
 		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
 		TB_Note.MinimumSize = new Size(0, (int)(200 * UI.FontScale));
+		PB_Loading.Size = UI.Scale(new Size(32, 32), UI.FontScale);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -135,15 +137,29 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		L_Page.ForeColor = design.LabelColor;
 	}
 
+	protected override void OnSizeChanged(EventArgs e)
+	{
+		base.OnSizeChanged(e);
+
+		if (Live)
+		{
+			PB_Loading.Location = ClientRectangle.Center(PB_Loading.Size);
+		}
+	}
+
 	public override bool CanExit(bool toBeDisposed)
 	{
 		var canExit = !toBeDisposed
 			|| currentPage <= 0
-			|| currentPage >= packages.Length - 1
+			|| currentPage >= packageCrList.ItemCount - 1
 			|| ShowPrompt(LocaleCR.ConfirmEndSession, PromptButtons.YesNo, PromptIcons.Question) == DialogResult.Yes;
 
 		if (toBeDisposed && canExit)
 		{
+			Form.base_TLP_Side.TopRight = false;
+			Form.base_TLP_Side.BotRight = false;
+			Form.base_TLP_Side.Invalidate();
+
 			RefreshData();
 		}
 
@@ -167,16 +183,19 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: ["Code Mod"], all: true) :
 			await _workshopService.GetWorkshopItemsByUserAsync(_userService.User.Id ?? 0);
 
-		packages = mods.ToArray();
-
-		packageCrList.SetItems(packages);
+		packageCrList.SetItems(mods);
 
 		return true;
 	}
 
 	protected override void OnDataLoad()
 	{
-		SetPackage(packages.FirstOrDefault());
+		SetPackage(packageCrList.SortedItems.FirstOrDefault());
+
+		foreach (Control item in Controls)
+		{
+			item.Visible = item != PB_Loading;
+		}
 	}
 
 	protected override async void SetPackage(IPackageIdentity package)
@@ -211,17 +230,17 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		base.SetPackage(package);
 
-		if (packages.Length > 0)
+		if (packageCrList.ItemCount > 0)
 		{
-			var page = Array.IndexOf(packages, package);
+			currentPage = packageCrList.SortedItems.IndexOf(package);
 
-			if (page < 0 || page >= packages.Length)
+			if (currentPage < 0 || currentPage >= packageCrList.ItemCount)
 			{
 				PushBack();
 				return;
 			}
 
-			L_Page.Text = $"{page + 1} / {packages.Length}";
+			L_Page.Text = $"{currentPage + 1} / {packageCrList.ItemCount}";
 		}
 		else
 		{
@@ -233,6 +252,13 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		PB_Loading.BringToFront();
 		PB_Loading.Loading = true;
+		foreach (Control item in Controls)
+		{
+			if (item != base_P_Side)
+			{
+				item.Visible = item == base_Text || item == PB_Loading || item == P_SideContainer;
+			}
+		}
 
 		try
 		{
@@ -276,10 +302,17 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			SetData(postPackage);
 
 			B_Previous.Enabled = currentPage > 0;
-			B_Skip.Enabled = currentPage != packages.Length - 1;
+			B_Skip.Enabled = currentPage != packageCrList.ItemCount - 1;
 
 			PB_Loading.SendToBack();
 			PB_Loading.Loading = false;
+			foreach (Control item in Controls)
+			{
+				if (item != base_P_Side)
+				{
+					item.Visible = item != PB_Loading;
+				}
+			}
 
 			packageCrList.Invalidate();
 			valuesChanged = false;
@@ -385,12 +418,18 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	private void B_Skip_Click(object sender, EventArgs e)
 	{
-		SetPackage(packages.Next(Package));
+		if (B_Skip.Enabled)
+		{
+			SetPackage(ModifierKeys.HasFlag(Keys.Control) ? packageCrList.SortedItems.LastOrDefault() : packageCrList.SortedItems.Next(Package, true));
+		}
 	}
 
 	private void B_Previous_Click(object sender, EventArgs e)
 	{
-		SetPackage(packages.Previous(Package));
+		if (B_Previous.Enabled)
+		{
+			SetPackage(ModifierKeys.HasFlag(Keys.Control) ? packageCrList.SortedItems.FirstOrDefault() : packageCrList.SortedItems.Previous(Package, true));
+		}
 	}
 
 	private void T_NewTag_Click(object sender, EventArgs e)
@@ -474,7 +513,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		if (await Apply())
 		{
-			SetPackage(packages.Next(Package));
+			SetPackage(packageCrList.SortedItems.Next(Package));
 		}
 	}
 

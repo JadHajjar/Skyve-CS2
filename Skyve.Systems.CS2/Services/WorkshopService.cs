@@ -130,64 +130,69 @@ internal class WorkshopService : IWorkshopService
 
 	public async Task Login()
 	{
-		if (Context is null || IsLoggedIn)
+		try
 		{
-			return;
-		}
-
-		var startupResult = ProcessResult(await Context.Account.Startup());
-
-		IsLoginPending = false;
-
-		if (!startupResult.IsLoggedIn)
-		{
-			if (!ConnectionHandler.IsConnected)
+			if (Context is null || IsLoggedIn)
 			{
-				if (loginWaitingConnection)
+				return;
+			}
+
+			var startupResult = ProcessResult(await Context.Account.Startup());
+
+			if (!startupResult.IsLoggedIn)
+			{
+				if (!ConnectionHandler.IsConnected)
 				{
+					if (loginWaitingConnection)
+					{
+						return;
+					}
+
+					loginWaitingConnection = true;
+
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+					_notificationsService.SendNotification(new ParadoxLoginWaitingConnectionNotification(this));
+
+					await ConnectionHandler.WhenConnected(Login);
+
 					return;
 				}
 
-				loginWaitingConnection = true;
+				loginWaitingConnection = false;
 
-				_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
-				_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
-				_notificationsService.SendNotification(new ParadoxLoginWaitingConnectionNotification(this));
+				if (!_settings.UserSettings.ParadoxLogin.IsValid(KEYS.SALT))
+				{
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+					_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false, _interfaceService));
 
-				await ConnectionHandler.WhenConnected(Login);
+					return;
+				}
 
-				return;
+				var loginResult = ProcessResult(await Context.Account.Login(GetCredentials()));
+
+				if (!loginResult.Success)
+				{
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+					_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(true, _interfaceService));
+
+					return;
+				}
 			}
 
-			loginWaitingConnection = false;
+			IsLoggedIn = true;
 
-			if (!_settings.UserSettings.ParadoxLogin.IsValid(KEYS.SALT))
-			{
-				_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
-				_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
-				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false, _interfaceService));
+			_userService.SetLoggedInUser((await Context.Profile.Get()).Social?.DisplayName);
 
-				return;
-			}
-
-			var loginResult = ProcessResult(await Context.Account.Login(GetCredentials()));
-
-			if (!loginResult.Success)
-			{
-				_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
-				_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
-				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(true, _interfaceService));
-
-				return;
-			}
+			_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 		}
-
-		IsLoggedIn = true;
-
-		_userService.SetLoggedInUser((await Context.Profile.Get()).Social?.DisplayName);
-
-		_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
-		_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+		finally
+		{
+			IsLoginPending = false;
+		}
 
 		await RunSync();
 	}

@@ -1,6 +1,7 @@
 ﻿using Skyve.App.UserInterface.Dashboard;
 using Skyve.Domain.CS2.Utilities;
 
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
@@ -41,12 +42,12 @@ internal class D_PdxUser : IDashboardItem
 
 		if (Loading)
 		{
-			DrawLoader(e.Graphics, textRect.Align(UI.Scale(new System.Drawing.Size(20, 20), UI.FontScale), System.Drawing.ContentAlignment.MiddleLeft));
+			DrawLoader(e.Graphics, new Rectangle(textRect.X, preferredHeight, 0, 0).Align(UI.Scale(new Size(18, 18), UI.FontScale), ContentAlignment.TopLeft));
 
 			e.Graphics.DrawStringItem(LocaleCS2.LoggingIn
 				, Font
 				, fore
-				, textRect
+				, textRect.Pad((int)(22 * UI.FontScale), 0, 0, 0)
 				, ref preferredHeight
 				, applyDrawing);
 

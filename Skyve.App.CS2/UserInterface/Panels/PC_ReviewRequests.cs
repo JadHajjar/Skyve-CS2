@@ -2,6 +2,9 @@
 using Skyve.App.UserInterface.Lists;
 using Skyve.Systems.CS2.Utilities;
 
+using SlickControls;
+
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
@@ -17,6 +20,8 @@ public partial class PC_ReviewRequests : PanelContent
 	{
 		InitializeComponent();
 
+		tableLayoutPanel1.Controls.Add(reviewRequestList1 = new ReviewRequestList { Dock = DockStyle.Fill },0,0);
+
 		_reviewRequests = [.. reviewRequests];
 
 		packageCrList.SetItems(reviewRequests.Distinct(x => x.PackageId));
@@ -29,17 +34,55 @@ public partial class PC_ReviewRequests : PanelContent
 		SetPackage(packageCrList.Items.FirstOrDefault());
 	}
 
+	protected override void OnCreateControl()
+	{
+		base.OnCreateControl();
+
+		if (Form != null)
+		{
+			if (base_P_Side.Visible)
+			{
+				Form.base_TLP_Side.TopRight = true;
+				Form.base_TLP_Side.BotRight = true;
+				Form.base_TLP_Side.Invalidate();
+			}
+		}
+
+		base_P_Side.SendToBack();
+	}
+
 	protected override void UIChanged()
 	{
+		base_P_Side.Width = (int)(175 * UI.FontScale);
+		base_TLP_Side.Padding = UI.Scale(new Padding(5), UI.FontScale);
+		base_P_Side.Padding = UI.Scale(new Padding(0, 5, 5, 5), UI.FontScale);
+		tableLayoutPanel1.Padding = new Padding(0, (int)(30 * UI.FontScale), 0, 0);
+		CustomTitleBounds = new Point(tableLayoutPanel1.Left, 0);
+
 		base.UIChanged();
 
-		TLP_List.Padding = UI.Scale(new Padding(5), UI.FontScale);
-		TLP_List.Width = (int)(210 * UI.FontScale);
+		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding = UI.Scale(new Padding(5), UI.FontScale);
+		slickSpacer3.Height = (int)UI.FontScale;
+		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32), UI.FontScale);
+		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
 	}
 
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
+
+		base_TLP_Side.BackColor = design.MenuColor;
+		base_TLP_Side.ForeColor = design.MenuForeColor;
+		L_Page.ForeColor = design.LabelColor;
+	}
+
+	public override bool CanExit(bool toBeDisposed)
+	{
+		Form.base_TLP_Side.TopRight = false;
+		Form.base_TLP_Side.BotRight = false;
+		Form.base_TLP_Side.Invalidate();
+
+		return base.CanExit(toBeDisposed);
 	}
 
 	private void packageCrList_ItemMouseClick(object sender, MouseEventArgs e)
