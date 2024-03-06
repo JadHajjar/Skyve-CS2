@@ -36,7 +36,13 @@ internal class D_PdxUser : IDashboardItem
 	{
 		DrawSection(e, applyDrawing, e.ClipRectangle, LocaleCS2.ParadoxAccount, "I_Paradox", out var fore, ref preferredHeight);
 
+		var loading = Loading;
 		Loading = string.IsNullOrEmpty(_userService.User.Id?.ToString()) && _workshopService.IsLoginPending;
+
+		if (loading != Loading)
+		{
+			OnResizeRequested();
+		}
 
 		var textRect = e.ClipRectangle.Pad(Margin);
 
@@ -51,6 +57,8 @@ internal class D_PdxUser : IDashboardItem
 				, ref preferredHeight
 				, applyDrawing);
 
+			preferredHeight += Padding.Top / 2;
+
 			return;
 		}
 
@@ -60,5 +68,7 @@ internal class D_PdxUser : IDashboardItem
 			, textRect
 			, ref preferredHeight
 			, applyDrawing);
+
+		preferredHeight += Padding.Top / 2;
 	}
 }

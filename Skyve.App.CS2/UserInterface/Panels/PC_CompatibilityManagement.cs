@@ -17,6 +17,7 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_CompatibilityManagement : PC_PackagePageBase
 {
+	private bool singlePackage;
 	private int currentPage;
 	private CompatibilityPostPackage? postPackage;
 	private CompatibilityPostPackage? lastPackageData;
@@ -33,7 +34,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		packageCrList.SetItems(packages.Distinct(x => x.Id));
 
-		if (packageCrList.ItemCount == 1)
+		if (singlePackage = packageCrList.ItemCount == 1)
 		{
 			Padding = new Padding(5, 0, 0, 0);
 			base_P_Side.Visible = false;
@@ -94,7 +95,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		{
 			foreach (Control item in Controls)
 			{
-				item.Visible = item == base_Text || item == PB_Loading;
+				item.Visible = item == PB_Loading;
 			}
 		}
 	}
@@ -113,7 +114,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		base_TLP_Side.Padding = UI.Scale(new Padding(5), UI.FontScale);
 		base_P_Side.Padding = UI.Scale(new Padding(0, 5, 5, 5), UI.FontScale);
 		slickTabControl.Padding = P_SideContainer.Padding = new Padding(0, (int)(30 * UI.FontScale), 0, 0);
-		CustomTitleBounds = new Point(slickTabControl.Left, 0);
+		CustomTitleBounds = new Point(singlePackage ? 0 : (int)(175 * UI.FontScale), 0);
 
 		base.UIChanged();
 
@@ -168,9 +169,9 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	private async void RefreshData()
 	{
-		await Task.Run(() =>
+		await Task.Run(async () =>
 		{
-			_skyveDataManager.DownloadData();
+			await _skyveDataManager.DownloadData();
 			_compatibilityManager.CacheReport();
 		});
 	}
@@ -190,12 +191,12 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	protected override void OnDataLoad()
 	{
-		SetPackage(packageCrList.SortedItems.FirstOrDefault());
-
 		foreach (Control item in Controls)
 		{
-			item.Visible = item != PB_Loading;
+			item.Visible = true;
 		}
+
+		SetPackage(packageCrList.SortedItems.FirstOrDefault());
 	}
 
 	protected override async void SetPackage(IPackageIdentity package)
@@ -252,13 +253,9 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		PB_Loading.BringToFront();
 		PB_Loading.Loading = true;
-		foreach (Control item in Controls)
-		{
-			if (item != base_P_Side)
-			{
-				item.Visible = item == base_Text || item == PB_Loading || item == P_SideContainer;
-			}
-		}
+		PB_Loading.Visible = true;
+		slickTabControl.Visible = false;
+		TLP_Bottom.Visible = false;
 
 		try
 		{
@@ -304,15 +301,12 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			B_Previous.Enabled = currentPage > 0;
 			B_Skip.Enabled = currentPage != packageCrList.ItemCount - 1;
 
-			PB_Loading.SendToBack();
 			PB_Loading.Loading = false;
-			foreach (Control item in Controls)
-			{
-				if (item != base_P_Side)
-				{
-					item.Visible = item != PB_Loading;
-				}
-			}
+			PB_Loading.Visible = false;
+			slickTabControl.Visible = true;
+			TLP_Bottom.Visible = true;
+
+			T_Info.Selected = true;
 
 			packageCrList.Invalidate();
 			valuesChanged = false;

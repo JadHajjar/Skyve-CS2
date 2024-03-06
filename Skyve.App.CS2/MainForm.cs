@@ -169,9 +169,9 @@ public partial class MainForm : BasePanelForm
 
 	private void _userService_UserInfoUpdated()
 	{
-		var hasPackages = _userService.User.Id is not null && _packageManager.Packages.Any(x => _userService.User.Equals(x.GetWorkshopInfo()?.Author));
+		var hasPackages = _userService.User.Id is not null && _packageManager.Packages.Any(x => _userService.User.Id.Equals(x.GetWorkshopInfo()?.Author?.Id));
 		PI_CompatibilityManagement.Hidden = !((hasPackages || _userService.User.Manager) && !_userService.User.Malicious);
-		PI_ManageAllCompatibility.Hidden = PI_ReviewRequests.Hidden = PI_ManageSinglePackage.Hidden = !(_userService.User.Manager && !_userService.User.Malicious);
+		PI_ManageAllCompatibility.Hidden = PI_ReviewRequests.Hidden = !(_userService.User.Manager && !_userService.User.Malicious);
 		PI_ManageYourPackages.Hidden = !(hasPackages && !_userService.User.Malicious);
 
 		base_P_Tabs.FilterChanged();
@@ -518,7 +518,7 @@ public partial class MainForm : BasePanelForm
 
 		try
 		{
-			var results = await ServiceCenter.Get<IWorkshopService>().GetWorkshopItemsByUserAsync(_userService.User.Id ?? 0);
+			var results = await ServiceCenter.Get<IWorkshopService>().GetWorkshopItemsByUserAsync(_userService.User.Id ?? string.Empty);
 
 			if (results != null)
 			{
@@ -531,20 +531,6 @@ public partial class MainForm : BasePanelForm
 		}
 
 		PI_ManageYourPackages.Loading = false;
-	}
-
-	private void PI_ManageSinglePackage_OnClick(object sender, MouseEventArgs e)
-	{
-		var panel = new PC_SelectPackage() { Text = LocaleHelper.GetGlobalText("Select a package") };
-
-		panel.PackageSelected += Form_PackageSelected;
-
-		PushPanel(PI_ManageSinglePackage, panel);
-	}
-
-	private void Form_PackageSelected(IEnumerable<ulong> packages)
-	{
-		PushPanel(PI_ManageSinglePackage, new PC_CompatibilityManagement(packages.Select(x => (IPackageIdentity)new GenericPackageIdentity(x))));
 	}
 
 	private async void PI_ReviewRequests_OnClick(object sender, MouseEventArgs e)
