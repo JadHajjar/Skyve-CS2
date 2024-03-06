@@ -39,7 +39,6 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 		State = mod.State;
 		LatestUpdate = mod.LatestUpdate;
 		InstalledDate = mod.InstalledDate;
-		Name = mod.DisplayName;
 		Description = mod.ShortDescription;
 		ServerTime = mod.LatestUpdate ?? default;
 		ServerSize = (long)mod.Size;
@@ -106,6 +105,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	string IPackage.Version => UserModVersion.IfEmpty(Version);
 	string IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
+	string? IWorkshopInfo.SuggestedGameVersion => RequiredGameVersion;
 	LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => [];

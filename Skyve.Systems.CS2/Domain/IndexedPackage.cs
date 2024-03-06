@@ -193,7 +193,7 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 	public PackageStability Stability => (Package).Stability;
 	public PackageUsage Usage => (Package).Usage;
 	public PackageType Type => (Package).Type;
-	public uint[]? RequiredDLCs => (Package).RequiredDLCs;
+	public List<uint>? RequiredDLCs => (Package).RequiredDLCs;
 	public List<string>? Tags => (Package).Tags;
 	public List<ILink>? Links => (Package).Links.ToList(x => (ILink)x);
 	List<IPackageStatus<InteractionType>> IPackageCompatibilityInfo.Interactions => (Package).Interactions.ToList(x => (IPackageStatus<InteractionType>)x);

@@ -20,7 +20,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 {
 	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
 
-	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)), isCodeMod, version, filePath)
+	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)), isCodeMod, version, filePath, mod.RequiredGameVersion)
 	{
 		IsLocal = false;
 		Id = (ulong)mod.Id;
@@ -39,9 +39,9 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		State = mod.State;
 		LatestUpdate = mod.LatestUpdate;
 		InstalledDate = mod.InstalledDate;
+		SuggestedGameVersion = mod.RequiredGameVersion;
 		PdxLocalData = mod.LocalData;
 		ThumbnailPath = CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
-		Name = mod.DisplayName;
 		ServerTime = mod.LatestUpdate ?? default;
 		ServerSize = (long)mod.Size;
 		IsCollection = false;
@@ -62,6 +62,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public string RequiredGameVersion { get; set; }
 	public string UserModVersion { get; set; }
 	public string LatestVersion { get; set; }
+	public string? SuggestedGameVersion { get; }
 	public string ThumbnailPath { get; set; }
 	public ulong Size { get; set; }
 	public List<PDX.SDK.Contracts.Service.Mods.Models.ModTag> Tags { get; set; }

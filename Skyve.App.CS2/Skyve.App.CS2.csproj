@@ -60,12 +60,8 @@
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
 		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs" />
-		<Compile Update="UserInterface\Dashboard\D_LaunchGame.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="UserInterface\Dashboard\D_Playsets.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="UserInterface\Dashboard\D_LaunchGame.cs" />
+		<Compile Update="UserInterface\Dashboard\D_Playsets.cs" />
 		<Compile Update="UserInterface\Panels\PC_SendReviewRequest.cs" />
 		<Compile Update="UserInterface\Panels\PC_ReviewRequests.cs">
 		  <SubType>UserControl</SubType>

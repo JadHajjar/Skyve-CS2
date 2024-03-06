@@ -106,8 +106,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 	public bool IsBlacklisted(IPackageIdentity package)
 	{
 		return CompatibilityData.BlackListedIds.Contains(package.Id)
-			|| CompatibilityData.BlackListedNames.Contains(package.Name ?? string.Empty)
-			|| (package.GetWorkshopInfo()?.IsIncompatible ?? false);
+			|| CompatibilityData.BlackListedNames.Contains(package.Name ?? string.Empty);
 	}
 
 	public ulong GetIdFromModName(string fileName)
@@ -136,28 +135,36 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 
 	public PackageData GetAutomatedReport(IPackageIdentity package)
 	{
+		var workshopInfo = package.GetWorkshopInfo();
 		var info = new PackageData
 		{
-			Stability = package.GetPackage()?.IsCodeMod == true ? PackageStability.NotReviewed : PackageStability.AssetNotReviewed,
+			Stability = package.IsCodeMod() ? PackageStability.NotReviewed : PackageStability.AssetNotReviewed,
 			Id = package.Id,
 			Name = package.Name,
+			AuthorId = workshopInfo?.Author?.Id?.ToString() ?? string.Empty,
 			FileName = package.GetLocalPackageIdentity()?.FilePath,
-			Links = [],
-			Interactions = [],
-			Statuses = [],
+			Links = workshopInfo?.Links.ToList(x => new PackageLink { Type = x.Type, Title = x.Title, Url = x.Url}) ?? [],
+			Tags = workshopInfo?.Tags.Values.ToList() ?? []
 		};
-
-		var workshopInfo = package.GetWorkshopInfo();
 
 		if (workshopInfo?.Requirements.Any() ?? false)
 		{
-			info.Interactions.AddRange(workshopInfo.Requirements.GroupBy(x => x.IsOptional).Select(o =>
-				new PackageInteraction
+			foreach (var grp in workshopInfo.Requirements.GroupBy(x => (x.IsDlc, x.IsOptional)))
+			{
+				if (grp.Key.IsDlc)
 				{
-					Type = o.Key ? InteractionType.OptionalPackages : InteractionType.RequiredPackages,
-					Action = StatusAction.SubscribeToPackages,
-					Packages = o.ToArray(x => x.Id)
-				}));
+					info.RequiredDLCs.AddRange(grp.Select(x => (uint)x.Id));
+				}
+				else
+				{
+					info.Interactions.Add(new PackageInteraction
+					{
+						Type = grp.Key.IsOptional ? InteractionType.OptionalPackages : InteractionType.RequiredPackages,
+						Action = StatusAction.SubscribeToPackages,
+						Packages = grp.ToArray(x => x.Id)
+					});
+				}
+			}
 		}
 
 		var tagMatches = _bracketsRegex.Matches(workshopInfo?.Name ?? string.Empty);
@@ -198,7 +205,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 					_ => LinkType.Other
 				};
 
-				if (type is not LinkType.Other)
+				if (type is not LinkType.Other && !(workshopInfo?.Links.Any(x => x.Url?.Equals(match.Value, StringComparison.InvariantCultureIgnoreCase) ?? false) ?? false))
 				{
 					info.Links.Add(new PackageLink
 					{

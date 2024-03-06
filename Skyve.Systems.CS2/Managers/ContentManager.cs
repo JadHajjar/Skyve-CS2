@@ -261,7 +261,8 @@ internal class ContentManager : IContentManager
 				[],
 				isCodeMod,
 				version?.GetString(),
-				modDll);
+				modDll,
+				null);
 		}
 		catch (Exception ex)
 		{
@@ -330,7 +331,8 @@ internal class ContentManager : IContentManager
 			assets,
 			isCodeMod,
 			version.GetString(),
-			modDll);
+			modDll,
+			localPackage.LocalData?.SuggestedGameVersion);
 
 		if (package.IsLocal && !package.IsCodeMod)
 		{

@@ -5,6 +5,7 @@ using Skyve.App.UserInterface.Forms;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Systems.CS2.Domain;
 using Skyve.Systems.CS2.Domain.Api;
 using Skyve.Systems.CS2.Managers;
 using Skyve.Systems.CS2.Utilities;
@@ -25,7 +26,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	private readonly ReviewRequest? _request;
 
 	private readonly ICompatibilityManager _compatibilityManager;
-	private readonly ISkyveDataManager _skyveDataManager;
+	private readonly SkyveDataManager _skyveDataManager;
 	private readonly IWorkshopService _workshopService;
 	private readonly IUserService _userService;
 	private readonly ITagsService _tagsService;
@@ -49,7 +50,9 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	public PC_CompatibilityManagement(bool load) : base(new GenericPackageIdentity(), load)
 	{
-		ServiceCenter.Get(out _workshopService, out _compatibilityManager, out _userService, out _tagsService, out _skyveDataManager);
+		ServiceCenter.Get(out _workshopService, out _compatibilityManager, out _userService, out _tagsService, out ISkyveDataManager skyveDataManager);
+
+		_skyveDataManager = (SkyveDataManager)skyveDataManager;
 
 		InitializeComponent();
 
@@ -127,6 +130,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
 		TB_Note.MinimumSize = new Size(0, (int)(200 * UI.FontScale));
 		PB_Loading.Size = UI.Scale(new Size(32, 32), UI.FontScale);
+		CB_BlackListId.Font = CB_BlackListName.Font = UI.Font(7.5F);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -534,7 +538,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		postPackage.Stability = DD_Stability.SelectedItem;
 		postPackage.Type = DD_PackageType.SelectedItem;
 		postPackage.Usage = DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next);
-		postPackage.RequiredDLCs = DD_DLCs.SelectedItems.Select(x => x.Id).ToArray();
+		postPackage.RequiredDLCs = DD_DLCs.SelectedItems.Select(x => x.Id).ToList();
 		postPackage.Note = TB_Note.Text;
 		postPackage.Tags = P_Tags.Controls.OfType<TagControl>().Where(x => !string.IsNullOrEmpty(x.TagInfo?.Value)).ToList(x => x.TagInfo!.Value);
 		postPackage.Links = P_Links.Controls.OfType<LinkControl>().ToList(x => (PackageLink)x.Link);
@@ -575,6 +579,15 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		B_ReuseData.Visible = true;
 
 		valuesChanged = false;
+
+		if (Package.GetPackageInfo() is IndexedPackage indexedPackage)
+		{
+			indexedPackage.Package.ReviewDate = DateTime.Now;
+			indexedPackage.Package.Stability = postPackage.Stability;
+
+			_skyveDataManager.CompatibilityData.Packages[indexedPackage.Id] = indexedPackage;
+			packageCrList.Invalidate();
+		}
 
 		return true;
 	}

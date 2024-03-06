@@ -38,6 +38,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		ServerSize = (long)mod.Size;
 		PdxModsVersion = mod.Version;
 		Version = mod.UserModVersion.IfEmpty(mod.Version);
+		SuggestedGameVersion = mod.RequiredGameVersion;
 		Subscribers = mod.SubscriptionsTotal;
 		HasVoted = hasVoted;
 		VoteCount = mod.RatingsTotal;
@@ -78,6 +79,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public Dictionary<string, string> Tags { get; set; }
 	public ParadoxScreenshot[]? Images { get; set; }
 	public ParadoxLink[]? Links { get; set; }
+	public string? SuggestedGameVersion { get; }
 	bool IPackage.IsLocal { get; }
 	ILocalPackageData? IPackage.LocalData { get; }
 	string? IPackageIdentity.Url => $"https://mods.paradoxplaza.com/mods/{Id}/Windows";

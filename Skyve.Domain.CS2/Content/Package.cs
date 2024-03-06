@@ -19,19 +19,19 @@ public class Package : IPackage, IEquatable<Package?>
 	ILocalPackageData? IPackage.LocalData => LocalData;
 	string? IPackage.Version => LocalData.Version;
 
-	public Package(string folder, IAsset[] assets, IThumbnailObject[] images, bool isCodeMod, string? version, string? filePath)
+	public Package(string folder, IAsset[] assets, IThumbnailObject[] images, bool isCodeMod, string? version, string? filePath, string? suggestedGameVersion)
 	{
 		Name = Path.GetFileName(folder);
 		IsCodeMod = isCodeMod;
 		IsLocal = true;
-		LocalData = new LocalPackageData(this, assets, images, folder, version, filePath ?? folder);
+		LocalData = new LocalPackageData(this, assets, images, folder, version, filePath ?? folder, suggestedGameVersion);
 	}
 
-	public void RefreshData(IAsset[] assets, bool isCodeMod, string version, string? filePath)
+	public void RefreshData(IAsset[] assets, bool isCodeMod, string version, string? filePath, string? suggestedGameVersion)
 	{
 		IsCodeMod = isCodeMod;
 		IsLocal = true;
-		LocalData = new LocalPackageData(this, assets, LocalData.Images, LocalData.Folder, version, filePath ?? LocalData.Folder);
+		LocalData = new LocalPackageData(this, assets, LocalData.Images, LocalData.Folder, version, filePath ?? LocalData.Folder, suggestedGameVersion);
 	}
 
 	#region EqualityOverrides

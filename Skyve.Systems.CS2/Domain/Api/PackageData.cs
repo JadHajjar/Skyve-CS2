@@ -17,7 +17,7 @@ public class PackageData
 	public PackageStability Stability { get; set; }
 	public PackageUsage Usage { get; set; } = (PackageUsage)(-1);
 	public PackageType Type { get; set; }
-	public uint[]? RequiredDLCs { get; set; }
+	public List<uint> RequiredDLCs { get; set; }
 	public List<string> Tags { get; set; }
 	public List<PackageLink> Links { get; set; }
 	public List<PackageStatus> Statuses { get; set; }
@@ -29,5 +29,6 @@ public class PackageData
 		Links = [];
 		Statuses = [];
 		Interactions = [];
-    }
+		RequiredDLCs = [];
+	}
 }
