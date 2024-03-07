@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
 using System;
@@ -94,8 +95,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-
-		thumbnail = imageService.GetImage(ThumbnailUrl, true, $"{Id}_{PdxModsVersion}_{Path.GetExtension(ThumbnailUrl)}").Result;
+		thumbnail = DomainUtils.GetThumbnail(imageService, null	, ThumbnailUrl, Id, PdxModsVersion	);
 
 		return true;
 	}

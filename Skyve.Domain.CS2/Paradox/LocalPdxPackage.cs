@@ -3,6 +3,7 @@
 using PDX.SDK.Contracts.Service.Mods.Enums;
 
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
 using System;
@@ -98,10 +99,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-
-		thumbnail = !CrossIO.FileExists(ThumbnailPath)
-			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Version}_{Path.GetExtension(ThumbnailUrl)}").Result
-			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Version}_{Path.GetExtension(ThumbnailPath)}", isFilePath: true).Result;
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version);
 
 		return true;
 	}

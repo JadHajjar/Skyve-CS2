@@ -110,6 +110,8 @@ internal class PlaysetManager : IPlaysetManager
 
 			_notifier.OnPlaysetUpdated();
 
+			await _workshopService.RunSync();
+
 			return true;
 		}
 
