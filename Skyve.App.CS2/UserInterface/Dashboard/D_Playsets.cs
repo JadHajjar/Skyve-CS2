@@ -31,15 +31,18 @@ internal class D_Playsets : IDashboardItem
 
 	private void _notifier_PlaysetUpdated()
 	{
+		Loading = !_notifier.IsPlaysetsLoaded;
+
 		this.TryInvoke(OnResizeRequested);
 	}
 
 	private void _notifier_PlaysetChanged()
 	{
+		Loading = !_notifier.IsPlaysetsLoaded;
+
 		this.TryInvoke(() =>
 		{
 			Enabled = true;
-			Loading = false;
 			OnResizeRequested();
 		});
 	}
@@ -69,7 +72,11 @@ internal class D_Playsets : IDashboardItem
 	{
 		DrawSection(e, applyDrawing, e.ClipRectangle.ClipTo(mainSectionHeight), _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentCustomPlayset?.GetIcon() ?? "I_Playsets", out var fore, ref preferredHeight, _playsetManager.CurrentCustomPlayset?.Color ?? FormDesign.Design.MenuColor, Locale.ActivePlayset);
 
-		preferredHeight -= Padding.Top *3/ 4;
+		if (_playsetManager.CurrentCustomPlayset?.Color != null)
+		{
+			using var colorBrush = new SolidBrush(_playsetManager.CurrentCustomPlayset.Color.Value);
+		e.Graphics.FillRoundedRectangle(colorBrush, new Rectangle(e.ClipRectangle.X+Margin.Left, preferredHeight - Margin.Top/2, e.ClipRectangle.Width-Margin.Horizontal, Margin.Top), Margin.Top / 2);
+		}
 
 		//var cs2Playset = (Playset)_playsetManager.CurrentPlayset;
 

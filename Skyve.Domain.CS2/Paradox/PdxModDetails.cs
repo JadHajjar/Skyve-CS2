@@ -80,7 +80,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public Dictionary<string, string> Tags { get; set; }
 	public ParadoxScreenshot[]? Images { get; set; }
 	public ParadoxLink[]? Links { get; set; }
-	public string? SuggestedGameVersion { get; }
+	public string? SuggestedGameVersion { get; set; }
 	bool IPackage.IsLocal { get; }
 	ILocalPackageData? IPackage.LocalData { get; }
 	string? IPackageIdentity.Url => $"https://mods.paradoxplaza.com/mods/{Id}/Windows";

@@ -434,6 +434,8 @@ internal class PlaysetManager : IPlaysetManager
 		{
 			_customPlaysets[customPlayset.Id] = customPlayset;
 		}
+			
+		CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
 	}
 
 	public async Task<IEnumerable<IPackageIdentity>> GetPlaysetContents(IPlayset playset)

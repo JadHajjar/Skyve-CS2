@@ -8,6 +8,7 @@ using Skyve.Domain.Systems;
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -50,7 +51,7 @@ internal class CitiesManager : ICitiesManager
 		}
 		else
 		{
-			GameVersion = "1.0";
+			GameVersion = string.Empty;
 		}
 	}
 
