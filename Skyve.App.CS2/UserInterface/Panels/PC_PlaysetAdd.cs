@@ -37,22 +37,20 @@ public partial class PC_PlaysetAdd : PanelContent
 
 	private async void NewProfile_Click(object sender, EventArgs e)
 	{
+		newProfileOptionControl1.Loading = true;
 		var newPlayset = await _playsetManager.CreateNewPlayset("New Playset");
 
 		if (newPlayset is null)
 		{
+			newProfileOptionControl1.Loading = false;
 			ShowPrompt(Locale.CouldNotCreatePlayset, icon: PromptIcons.Error);
 			return;
 		}
 
 		await _playsetManager.ActivatePlayset(newPlayset);
 
-		var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(newPlayset);
-
-		if (Form.SetPanel(null, panel))
-		{
-			panel.EditName();
-		}
+		Dispose();
+		ServiceCenter.Get<IAppInterfaceService>().OpenPlaysetPage(newPlayset);
 	}
 
 	private async void CopyProfile_Click(object sender, EventArgs e)
@@ -62,22 +60,20 @@ public partial class PC_PlaysetAdd : PanelContent
 			return;
 		}
 
+		newProfileOptionControl2.Loading = true;
 		var newPlayset = await _playsetManager.ClonePlayset(_playsetManager.CurrentPlayset);
 
 		if (newPlayset is null)
 		{
+			newProfileOptionControl2.Loading = false;
 			ShowPrompt(Locale.CouldNotCreatePlayset, icon: PromptIcons.Error);
 			return;
 		}
 
 		await _playsetManager.ActivatePlayset(newPlayset);
 
-		var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(newPlayset);
-
-		if (Form.SetPanel(null, panel))
-		{
-			panel.EditName();
-		}
+		Dispose();
+		ServiceCenter.Get<IAppInterfaceService>().OpenPlaysetPage(newPlayset);
 	}
 
 	private void B_Cancel_Click(object sender, EventArgs e)
@@ -93,11 +89,10 @@ public partial class PC_PlaysetAdd : PanelContent
 
 		try
 		{
-			var panel = ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(newPlayset);
-
-			if (Form.SetPanel(null, panel))
+			if (newPlayset is not null)
 			{
-				panel.LoadPlayset(newPlayset!);
+				Dispose();
+				ServiceCenter.Get<IAppInterfaceService>().OpenPlaysetPage(newPlayset);
 			}
 		}
 		catch (Exception ex)

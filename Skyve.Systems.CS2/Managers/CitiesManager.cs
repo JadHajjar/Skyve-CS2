@@ -1,14 +1,16 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using Skyve.Domain;
+using Skyve.Domain.CS2.Content;
 using Skyve.Domain.Systems;
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,6 +24,7 @@ internal class CitiesManager : ICitiesManager
 	private readonly ILogger _logger;
 	private readonly ILocationService _locationManager;
 	private readonly IIOUtil _iOUtil;
+	private readonly IServiceProvider _serviceProvider;
 
 	public event MonitorTickDelegate? MonitorTick;
 
@@ -29,11 +32,12 @@ internal class CitiesManager : ICitiesManager
 
 	public string GameVersion { get; }
 
-	public CitiesManager(ILogger logger, ILocationService locationManager, ISettings settings, IIOUtil iOUtil)
+	public CitiesManager(ILogger logger, ILocationService locationManager, ISettings settings, IIOUtil iOUtil, IServiceProvider serviceProvider)
 	{
 		_logger = logger;
 		_locationManager = locationManager;
 		_iOUtil = iOUtil;
+		_serviceProvider = serviceProvider;
 
 		var citiesMonitorTimer = new Timer(1000);
 
@@ -47,11 +51,20 @@ internal class CitiesManager : ICitiesManager
 
 		if (CrossIO.FileExists(launcherSettings))
 		{
-			GameVersion = (JsonConvert.DeserializeObject(File.ReadAllText(launcherSettings)) as JObject)?.Value<string>("version") ?? "1.0";
+			try
+			{
+				GameVersion = (JsonConvert.DeserializeObject(File.ReadAllText(launcherSettings)) as JObject)?.Value<string>("version") ?? string.Empty;
+			}
+			catch
+			{
+				GameVersion = string.Empty;
+			}
 		}
 		else
 		{
-			GameVersion = string.Empty;
+			{
+				GameVersion = string.Empty;
+			}
 		}
 	}
 
@@ -62,108 +75,75 @@ internal class CitiesManager : ICitiesManager
 
 	public bool IsAvailable()
 	{
-		var file =/* (_profileManager.CurrentPlayset as Playset)!.LaunchSettings.UseCitiesExe
+		var _playsetManager = _serviceProvider.GetService<IPlaysetManager>();
+		var file = (_playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings.UseCitiesExe == true
 			? _locationManager.CitiesPathWithExe
-			:*/ _locationManager.SteamPathWithExe;
+			: _locationManager.SteamPathWithExe;
 
 		return CrossIO.FileExists(file);
 	}
 
 	public void Launch()
 	{
-		var args = GetCommandArgs();
-		var file = /*(_profileManager.CurrentPlayset as Playset)!.LaunchSettings.UseCitiesExe
+		var _playsetManager = _serviceProvider.GetService<IPlaysetManager>();
+		var args = GetCommandArgs(_playsetManager);
+		var file = (_playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings.UseCitiesExe == true
 			? _locationManager.CitiesPathWithExe
-			:*/ _locationManager.SteamPathWithExe;
+			: _locationManager.SteamPathWithExe;
 
 		_iOUtil.Execute(file, string.Join(" ", args));
 	}
 
-	private string[] GetCommandArgs()
+	private IEnumerable<string> GetCommandArgs(IPlaysetManager? _playsetManager)
 	{
-		var args = new List<string>();
+		var launchOptions = (_playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings;
 
-		//var launchSettings = (_profileManager.CurrentPlayset as Playset)!.LaunchSettings;
-
-		//if (!launchSettings.UseCitiesExe)
+		if (!(launchOptions?.UseCitiesExe == true))
 		{
-			args.Add("-applaunch 949230");
+			yield return "-applaunch 949230";
 		}
 
-		//if (launchSettings.NoWorkshop)
-		//{
-		//	args.Add("-noWorkshop");
-		//}
+		if (launchOptions is null)
+		{
+			yield break;
+		}
 
-		//if (launchSettings.ResetAssets)
-		//{
-		//	args.Add("-reset-assets");
-		//}
+		var launchSettings = launchOptions.Value;
 
-		//if (launchSettings.NoAssets)
-		//{
-		//	args.Add("-noAssets");
-		//}
+		if (launchSettings.HideUserSection)
+		{
+			yield return "--disableUserSection";
+		}
 
-		//if (launchSettings.NoMods)
-		//{
-		//	args.Add("-disableMods");
-		//}
+		if (launchSettings.NoAssets)
+		{
+			yield return "--disableAssets";
+		}
 
-		//if (launchSettings.LHT)
-		//{
-		//	args.Add("-LHT");
-		//}
+		if (launchSettings.NoMods)
+		{
+			yield return "--disableCodeModding";
+		}
 
-		//if (launchSettings.DevUi)
-		//{
-		//	args.Add("-enable-dev-ui");
-		//}
+		if (launchSettings.DeveloperMode)
+		{
+			yield return "--developerMode";
+		}
 
-		//if (launchSettings.RefreshWorkshop)
-		//{
-		//	args.Add("-refreshWorkshop");
-		//}
+		if (!string.IsNullOrEmpty(launchSettings.LogLevel) && !launchSettings.LogLevel.Equals("default", StringComparison.InvariantCultureIgnoreCase))
+		{
+			yield return "--logsEffectiveness=" + launchSettings.LogLevel;
+		}
 
-		//if (launchSettings.NewAsset)
-		//{
-		//	args.Add("-newAsset");
-		//}
+		if (launchSettings.LogsToPlayerLog)
+		{
+			yield return "--duplicateLogToDefault";
+		}
 
-		//if (launchSettings.LoadAsset)
-		//{
-		//	args.Add("-loadAsset");
-		//}
-
-		//if (launchSettings.LoadSaveGame)
-		//{
-		//	if (CrossIO.FileExists(launchSettings.SaveToLoad))
-		//	{
-		//		args.Add("--loadSave=" + quote(launchSettings.SaveToLoad!));
-		//	}
-		//	else
-		//	{
-		//		args.Add("-continuelastsave");
-		//	}
-		//}
-		//else if (launchSettings.StartNewGame)
-		//{
-		//	if (CrossIO.FileExists(launchSettings.MapToLoad))
-		//	{
-		//		args.Add("--newGame=" + quote(launchSettings.MapToLoad!));
-		//	}
-		//	else
-		//	{
-		//		args.Add("-newGame");
-		//	}
-		//}
-
-		//if (!string.IsNullOrWhiteSpace(launchSettings.CustomArgs))
-		//{
-		//	args.Add(launchSettings.CustomArgs!);
-		//}
-
-		return args.ToArray();
+		if (!string.IsNullOrWhiteSpace(launchSettings.CustomArgs))
+		{
+			yield return launchSettings.CustomArgs!;
+		}
 	}
 
 	public void RunStub()
@@ -181,7 +161,10 @@ internal class CitiesManager : ICitiesManager
 		{
 			return CrossIO.CurrentPlatform is Platform.Windows && Process.GetProcessesByName("Cities2").Length > 0;
 		}
-		catch { return false; }
+		catch
+		{
+			return false;
+		}
 	}
 
 	public void Kill()
@@ -193,7 +176,10 @@ internal class CitiesManager : ICitiesManager
 				KillProcessAndChildren(proc);
 			}
 		}
-		catch (Exception ex) { _logger.Exception(ex, "Failed to kill C:S"); }
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to kill C:S");
+		}
 	}
 
 	private void KillProcessAndChildren(Process proc)

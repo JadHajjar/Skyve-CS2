@@ -59,13 +59,13 @@ public class D_LaunchGame : IDashboardItem
 	{
 		DrawSquareButton(e, applyDrawing, ref preferredHeight, (App.Program.MainForm as MainForm)!.LaunchStopCities, new ButtonDrawArgs
 		{
-			Rectangle = e.ClipRectangle,
+			Rectangle = e.ClipRectangle.Pad(-Margin.Left, 0, -Margin.Right, 0),
 			Icon = isRunning ? "I_Stop" : "I_CS",
 			Enabled = Enabled,
 			Control = this
 		});
 
-		preferredHeight = e.ClipRectangle.Width;
+		preferredHeight = e.ClipRectangle.Width + Margin.Top;
 	}
 
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
@@ -73,12 +73,12 @@ public class D_LaunchGame : IDashboardItem
 		DrawButton(e, applyDrawing, ref preferredHeight, (App.Program.MainForm as MainForm)!.LaunchStopCities, new ButtonDrawArgs
 		{
 			Text = LocaleHelper.GetGlobalText(isRunning ? "StopCities" : "StartCities"),
-			Rectangle = e.ClipRectangle,
+			Rectangle = e.ClipRectangle.Pad(-Margin.Left, 0, -Margin.Right, 0),
 			Icon = isRunning ? "I_Stop" : "I_CS",
 			Enabled = Enabled,
 			Control = this
 		});
 
-		preferredHeight -= Margin.Bottom;
+		preferredHeight -= Margin.Bottom / 2;
 	}
 }

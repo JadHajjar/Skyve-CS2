@@ -84,8 +84,8 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	bool IPackage.IsLocal { get; }
 	ILocalPackageData? IPackage.LocalData { get; }
 	string? IPackageIdentity.Url => $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
-	bool IPackage.IsCodeMod => Tags.Any(x => x.Key == "Mod");
-	bool IWorkshopInfo.IsCodeMod => Tags.Any(x => x.Key == "Mod");
+	bool IPackage.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
+	bool IWorkshopInfo.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
 	IUser? IWorkshopInfo.Author => string.IsNullOrWhiteSpace(AuthorId) ? null : new PdxUser(AuthorId!);
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => Requirements ?? [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => Changelog ?? [];

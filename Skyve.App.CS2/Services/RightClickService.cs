@@ -261,7 +261,7 @@ internal class RightClickService : IRightClickService
 	{
 		try
 		{
-			App.Program.MainForm.PushPanel(ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(playset));
+			ServiceCenter.Get<IAppInterfaceService>().OpenPlaysetPage(playset);
 		}
 		catch (Exception ex)
 		{

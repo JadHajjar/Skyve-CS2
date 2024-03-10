@@ -14,11 +14,14 @@ Skyve is your all-in-one mod manager for Cities: Skylines II PDX Mods.
   <Screenshot Value="Properties/Release/Screenshot_01.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="" />
-  <ModVersion Value="0.1.8" />
+  <ModVersion Value="0.1.10" />
   <GameVersion Value="1.0.*" />
   <ChangeLog>
-# v0.1.8
-## Compatibility Update
-* Online compatibility data is now available
+# v0.1.10
+## Changes
+* Playset design update
+* Playset page now includes its content as well as its settings and launch settings
+* Playset launch settings have been added
+* Updated Help &amp; Logs page with a new design and live-updating log feed that groups log files together
 </ChangeLog>
 </Publish>

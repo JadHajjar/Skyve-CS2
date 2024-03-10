@@ -7,8 +7,14 @@
   "Second Line": "Second Line",
   "New Mod page": "New Mod page",
   "Compatibility Update": "Compatibility Update",
+  "Playset design update": "Playset design update",
+  "Updated dashboard design": "Updated dashboard design",
   "WIP Playset settings page": "WIP Playset settings page",
+  "Compatibility with 1.0.21f1": "Compatibility with 1.0.21f1",
   "This is a test for auto-changelog": "This is a test for auto-changelog",
   "Added missing playset list actions": "Added missing playset list actions",
-  "Online compatibility data is now available": "Online compatibility data is now available"
+  "Playset launch settings have been added": "Playset launch settings have been added",
+  "Online compatibility data is now available": "Online compatibility data is now available",
+  "Playset page now includes its content as well as its settings and launch settings": "Playset page now includes its content as well as its settings and launch settings",
+  "Updated Help & Logs page with a new design and live-updating log feed that groups log files together": "Updated Help & Logs page with a new design and live-updating log feed that groups log files together"
 }

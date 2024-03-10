@@ -503,7 +503,7 @@ public partial class MainForm : BasePanelForm
 	{
 		if (_playsetManager.CurrentPlayset is not null)
 		{
-			PushPanel(PI_CurrentPlayset, ServiceCenter.Get<IAppInterfaceService>().PlaysetSettingsPanel(_playsetManager.CurrentPlayset));
+			PushPanel(PI_CurrentPlayset, new PC_PlaysetPage(_playsetManager.CurrentPlayset, false));
 		}
 	}
 

@@ -50,7 +50,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 			LC_Items = new ItemListControl.Simple(SkyvePage.SinglePackage) { IsPackagePage = true };
 		}
 
-		LC_References = new ContentList(SkyvePage.SinglePackage, true, GetItems, SetIncluded, SetEnabled, GetItemText, GetCountText);
+		LC_References = new ContentList(SkyvePage.SinglePackage, true, GetItems, GetItemText, GetCountText);
 		LC_References.TB_Search.Placeholder = "SearchGenericPackages";
 
 		T_References.LinkedControl = LC_References;

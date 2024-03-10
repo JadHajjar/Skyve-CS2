@@ -79,7 +79,7 @@
 		<Compile Update="UserInterface\Panels\PC_PlaysetAdd.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="UserInterface\Panels\PC_PlaysetSettings.cs" />
+		<Compile Update="UserInterface\Panels\PC_PlaysetPage.cs" />
 		<Compile Update="UserInterface\Panels\PC_SkyveChangeLog.cs" />
 		<Compile Update="UserInterface\Panels\PC_Utilities.cs" />
 		<EmbeddedResource Update="Properties\Resources.resx">

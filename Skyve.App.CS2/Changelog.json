@@ -2,6 +2,38 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.1.10",
+    "Date": "2024-03-10",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Playset design update",
+          "Playset page now includes its content as well as its settings and launch settings",
+          "Playset launch settings have been added",
+          "Updated Help & Logs page with a new design and live-updating log feed that groups log files together"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.1.9",
+    "Date": "2024-03-08",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Updated dashboard design",
+          "Compatibility with 1.0.21f1"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.1.8",
     "Date": "2024-03-04",
     "ChangeGroups": [

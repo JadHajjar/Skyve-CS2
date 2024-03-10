@@ -34,6 +34,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation CopyWorkshopLink => _instance.GetText("CopyWorkshopLink");
 
 	/// <summary>
+	/// Enable Developer Mode
+	/// </summary>
+	public static Translation DeveloperMode => _instance.GetText("DeveloperMode");
+
+	/// <summary>
 	/// Download completed
 	/// </summary>
 	public static Translation DownloadComplete => _instance.GetText("DownloadComplete");
@@ -100,6 +105,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation FilterIncludedByDefaultTip => _instance.GetText("FilterIncludedByDefault_Tip");
 
 	/// <summary>
+	/// Hide your profile in the main menu
+	/// </summary>
+	public static Translation HideUserSection => _instance.GetText("HideUserSection");
+
+	/// <summary>
 	/// Add all items to your active playset
 	/// </summary>
 	public static Translation IncludeAll => _instance.GetText("IncludeAll");
@@ -154,6 +164,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Log Level
 	/// </summary>
 	public static Translation LogLevel => _instance.GetText("LogLevel");
+
+	/// <summary>
+	/// Copy logs to Player.log
+	/// </summary>
+	public static Translation LogsToPlayerLog => _instance.GetText("LogsToPlayerLog");
 
 	/// <summary>
 	/// '{0}' failed to download
@@ -245,6 +260,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// <para>Plural: Add these to your active playset</para>
 	/// </summary>
 	public static Translation SubscribeToItem => _instance.GetText("SubscribeToItem");
+
+	/// <summary>
+	/// Enable UI Developer Mode
+	/// </summary>
+	public static Translation UIDeveloperMode => _instance.GetText("UIDeveloperMode");
 
 	/// <summary>
 	/// Un-Like this mod

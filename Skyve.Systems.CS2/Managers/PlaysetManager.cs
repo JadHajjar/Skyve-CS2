@@ -274,7 +274,12 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<IPlayset?> CreateNewPlayset(string playsetName)
 	{
-		return await _workshopService.CreatePlayset(playsetName);
+		var playset = await _workshopService.CreatePlayset(playsetName);
+
+		if (playset is not null)
+			_playsets[playset.Id] = playset;
+
+		return playset;
 	}
 
 	public List<IPackage> GetInvalidPackages(PackageUsage usage)

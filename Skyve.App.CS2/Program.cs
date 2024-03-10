@@ -99,7 +99,7 @@ internal static class Program
 					}
 				}
 
-				CrossIO.DeleteFile(CrossIO.Combine(CurrentDirectory, "Wake"));
+				CrossIO.DeleteFile(CrossIO.Combine(CurrentDirectory, "Wake"), true);
 			}
 			catch { }
 

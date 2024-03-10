@@ -88,6 +88,8 @@ public partial class PC_PackagePageBase : PanelContent
 			links.AddRange(workshopInfo?.Links ?? []);
 			links.AddRange(Package.GetPackageInfo()?.Links ?? []);
 
+			links = links.DistinctList(x => x.Url);
+
 			if (!links.ToList(x => x.Url).SequenceEqual(FLP_Links.Controls.OfType<LinkControl>().Select(x => x.Link.Url)))
 			{
 				FLP_Links.Controls.Clear(true);

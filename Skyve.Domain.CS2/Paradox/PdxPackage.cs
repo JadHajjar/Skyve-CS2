@@ -45,7 +45,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 		ServerSize = (long)mod.Size;
 		IsLocal = false;
 		IsCollection = false;
-		IsCodeMod = mod.Tags.Any(x => x.Id == "Mod");
+		IsCodeMod = mod.Tags.Any(x => x.Id == "Code Mod");
 		VoteCount = mod.RatingsTotal;
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;

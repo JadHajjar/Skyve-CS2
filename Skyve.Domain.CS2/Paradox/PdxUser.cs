@@ -8,7 +8,7 @@ namespace Skyve.Domain.CS2.Paradox;
 public class PdxUser(string authorId) : IUser, IEquatable<PdxUser?>
 {
 	public string Name { get; } = authorId;
-	public string? ProfileUrl { get; }
+	public string? ProfileUrl => $"https://mods.paradoxplaza.com/authors/{Id}";
 	public string? AvatarUrl { get; }
 	public object? Id { get; } = authorId;
 

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 
+using Skyve.Domain.CS2.Game;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
@@ -30,7 +31,9 @@ public class ExtendedPlayset : ICustomPlayset
 	public PackageUsage Usage { get; set; }
 	public Color? Color { get; set; }
 	public bool IsFavorite { get; set; }
-	public byte[]? BannerBytes
+	public bool NoBanner { get; set; }
+    public GameLaunchOptions LaunchSettings { get; set; }
+    public byte[]? BannerBytes
 	{
 		get => _bannerBytes;
 		set
@@ -64,6 +67,11 @@ public class ExtendedPlayset : ICustomPlayset
 	{
 		thumbnail = null;
 		thumbnailUrl = null;
+
+		if (NoBanner)
+		{
+			return true;
+		}
 
 		if (_banner is not null)
 		{

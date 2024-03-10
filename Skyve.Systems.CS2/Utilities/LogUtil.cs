@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Skyve.Systems.CS2.Utilities;
 internal class LogUtil : ILogUtil
@@ -116,13 +117,12 @@ internal class LogUtil : ILogUtil
 			CrossIO.CopyFile(GameLogFile, tempLogFile, true);
 			zipArchive.CreateEntryFromFile(tempLogFile, "log.txt");
 
-			var logTrace = SimplifyLog(tempLogFile, out var simpleLogText);
-
-			AddSimpleLog(zipArchive, simpleLogText);
+			var logTrace = ExtractTrace(GameLogFile, tempLogFile);
 
 			AddErrors(zipArchive, logTrace);
 
 			mainLogDate = File.GetLastWriteTime(GameLogFile);
+			CrossIO.DeleteFile(tempLogFile, true);
 		}
 		else
 		{
@@ -134,6 +134,7 @@ internal class LogUtil : ILogUtil
 			var tempSkyveLogFile = Path.GetTempFileName();
 			CrossIO.CopyFile(_logger.LogFilePath, tempSkyveLogFile, true);
 			zipArchive.CreateEntryFromFile(tempSkyveLogFile, "Skyve\\SkyveLog.log");
+			CrossIO.DeleteFile(tempSkyveLogFile, true);
 		}
 
 		if (CrossIO.FileExists(_logger.PreviousLogFilePath))
@@ -141,6 +142,7 @@ internal class LogUtil : ILogUtil
 			var tempPrevSkyveLogFile = Path.GetTempFileName();
 			CrossIO.CopyFile(_logger.PreviousLogFilePath, tempPrevSkyveLogFile, true);
 			zipArchive.CreateEntryFromFile(tempPrevSkyveLogFile, "Skyve\\SkyveLog_Previous.log");
+			CrossIO.DeleteFile(tempPrevSkyveLogFile, true);
 		}
 
 		AddCompatibilityReport(zipArchive);
@@ -230,103 +232,80 @@ internal class LogUtil : ILogUtil
 		return string.Empty;
 	}
 
-	public List<ILogTrace> SimplifyLog(string log, out string simpleLog)
+	public List<ILogTrace> ExtractTrace(string originalFile, string log)
 	{
-		var lines = File.ReadAllLines(log).ToList();
+		var lines = File.ReadAllLines(log);
+		var traces = new List<ILogTrace>();
+		LogTrace? currentTrace = null;
 
-		// decruft the log file
-		for (var i = lines.Count - 1; i > 0; i--)
+		if (!originalFile.EndsWith("Player.log"))
 		{
-			var current = lines[i];
-			//if (current.IndexOf("DebugBindings.gen.cpp Line: 51") != -1 ||
-			//	current.StartsWith("Fallback handler") ||
-			//	current.Contains("[PlatformService, Native - public]") ||
-			//	current.Contains("m_SteamUGCRequestMap error") ||
-			//	current.IndexOf("(this message is harmless)") != -1 ||
-			//	current.IndexOf("PopsApi:") != -1 ||
-			//	current.IndexOf("GfxDevice") != -1 ||
-			//	current.StartsWith("Assembly ") ||
-			//	current.StartsWith("No source files found:") ||
-			//	current.StartsWith("d3d11: failed") ||
-			//	current.StartsWith("(Filename:  Line: ") ||
-			//	current.Contains("SteamHelper+DLC_BitMask") ||
-			//	current.EndsWith(" [Packer - public]") ||
-			//	current.EndsWith(" [Mods - public]"))
-			//{
-			//	lines.RemoveAt(i);
-
-			//	if (i < lines.Count && string.IsNullOrWhiteSpace(lines[i]))
-			//	{
-			//		lines.RemoveAt(i);
-			//	}
-			//}
-		}
-
-		// clear excess blank lines
-
-		var blank = false;
-
-		for (var i = lines.Count - 1; i > 0; i--)
-		{
-			if (blank)
+			for (var i = 0; i < lines.Length; i++)
 			{
-				if (string.IsNullOrWhiteSpace(lines[i]))
+				if (ParseLine(lines[i], out var date, out var type, out var title))
 				{
-					lines.RemoveAt(i);
+					currentTrace = new LogTrace(type!, title!, date, originalFile);
+
+					traces.Add(currentTrace);
 				}
 				else
 				{
-					blank = false;
+					currentTrace?.AddTrace(lines[i]);
 				}
 			}
-			else
-			{
-				blank = string.IsNullOrWhiteSpace(lines[i]);
-			}
 		}
-
-		simpleLog = string.Join("\r\n", lines);
-
-		// now split out errors
-
-		LogTrace? currentTrace = null;
-		var traces = new List<ILogTrace>();
-
-		for (var i = 0; i < lines.Count; i++)
+		else
 		{
-			var current = lines[i];
+			var stamp = File.GetLastWriteTime(originalFile);
 
-			if (!current.StartsWith("Crash!!!") && !current.TrimStart().StartsWith("at ") && !(current.TrimStart().StartsWith("--") && currentTrace is not null))
+			for (var i = 0; i < lines.Length; i++)
 			{
-				if (currentTrace is not null)
+				var current = lines[i];
+
+				if (current.TrimStart().StartsWith("at "))
 				{
-					if (!currentTrace.Title.Contains("System.Environment.get_StackTrace()"))
+					if (currentTrace is null)
 					{
-						traces.Add(currentTrace);
+						traces.Add(currentTrace = new LogTrace(lines[i - 1].Contains("Crash") ? "CRASH" : "EXCEPTION", lines[i - 1], stamp, originalFile));
 					}
 
+					currentTrace.AddTrace(current);
+				}
+				else
+				{
 					currentTrace = null;
 				}
-
-				if (current.Contains("[Warning]") || current.Contains("[Error]"))
-				{
-					traces.Add(new LogTrace(lines, i + 1, false));
-				}
-
-				continue;
 			}
-
-			currentTrace ??= new(lines, i, current.StartsWith("Crash!!!"));
-
-			currentTrace.AddTrace(current);
-		}
-
-		if (currentTrace is not null)
-		{
-			traces.Add(currentTrace);
 		}
 
 		return traces;
+	}
+
+	private bool ParseLine(string line, out DateTime date, out string? info, out string? title)
+	{
+		var pattern = @"^\[(.+?)\] \[(.+?)\] +(.+)";
+		var match = Regex.Match(line, pattern);
+
+		if (match.Success)
+		{
+			title = match.Groups[3].Value;
+			info = match.Groups[2].Value;
+			var dateString = match.Groups[1].Value;
+
+			if (DateTime.TryParseExact(dateString, "yyyy-MM-dd HH:mm:ss,fff", null, System.Globalization.DateTimeStyles.None, out date))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		title = null;
+		info = null;
+		date = default;
+		return false;
 	}
 
 	public List<ILogTrace> GetCurrentLogsTrace()
@@ -340,9 +319,11 @@ internal class LogUtil : ILogUtil
 
 			File.Copy(GameLogFile, tempName, true);
 
-			traces.AddRange(SimplifyLog(tempName, out _));
+			traces.AddRange(ExtractTrace(GameLogFile, tempName));
 
 			mainLogDate = File.GetLastWriteTime(GameLogFile);
+
+			CrossIO.DeleteFile(tempName, true);
 		}
 		else
 		{
@@ -357,7 +338,9 @@ internal class LogUtil : ILogUtil
 
 				File.Copy(filePath, tempName, true);
 
-				traces.AddRange(SimplifyLog(tempName, out _));
+				traces.AddRange(ExtractTrace(filePath, tempName));
+
+				CrossIO.DeleteFile(tempName, true);
 			}
 		}
 
