@@ -2,6 +2,21 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.1.11",
+    "Date": "2024-03-12",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Massive performance improvements while viewing lists of content",
+          "Fixed not being able to manage your mods' compatibility"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.1.10",
     "Date": "2024-03-10",
     "ChangeGroups": [

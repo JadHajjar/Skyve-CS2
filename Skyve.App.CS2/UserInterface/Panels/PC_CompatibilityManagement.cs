@@ -68,6 +68,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		DD_Stability.Enabled = _userService.User.Manager;
 		TB_Note.Enabled = _userService.User.Manager;
+		CB_BlackListId.Visible= _userService.User.Manager;
+		CB_BlackListName.Visible = _userService.User.Manager;
 	}
 
 	protected override void OnCreateControl()

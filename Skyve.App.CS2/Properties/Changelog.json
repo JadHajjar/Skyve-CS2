@@ -15,6 +15,8 @@
   "Added missing playset list actions": "Added missing playset list actions",
   "Playset launch settings have been added": "Playset launch settings have been added",
   "Online compatibility data is now available": "Online compatibility data is now available",
+  "Fixed not being able to manage your mods' compatibility": "Fixed not being able to manage your mods' compatibility",
+  "Massive performance improvements while viewing lists of content": "Massive performance improvements while viewing lists of content",
   "Playset page now includes its content as well as its settings and launch settings": "Playset page now includes its content as well as its settings and launch settings",
   "Updated Help & Logs page with a new design and live-updating log feed that groups log files together": "Updated Help & Logs page with a new design and live-updating log feed that groups log files together"
 }

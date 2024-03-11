@@ -33,6 +33,7 @@
 		<ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Domain\Skyve.Domain.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Systems\Skyve.Systems.csproj" />
+		<ProjectReference Include="..\..\SlickControls\SlickControls.csproj" />
 		<Reference Include="PDX.SDK">
 			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.dll</HintPath>
 		</Reference>

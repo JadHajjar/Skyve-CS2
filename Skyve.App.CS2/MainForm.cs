@@ -29,11 +29,12 @@ public partial class MainForm : BasePanelForm
 	private readonly ISettings _settings;
 	private readonly INotifier _notifier;
 	private readonly IUserService _userService;
+	private readonly IImageService _imageService;
 	private readonly SkyveApiUtil _skyveApiUtil;
 
 	public MainForm()
 	{
-		ServiceCenter.Get(out _skyveApiUtil, out _packageManager, out _playsetManager, out _citiesManager, out _settings, out _notifier, out _userService);
+		ServiceCenter.Get(out _skyveApiUtil, out _packageManager, out _playsetManager, out _citiesManager, out _settings, out _notifier, out _userService, out _imageService);
 
 		InitializeComponent();
 
@@ -327,6 +328,8 @@ public partial class MainForm : BasePanelForm
 		base.UIChanged();
 
 		MinimumSize = UI.Scale(new Size(600, 350), UI.FontScale);
+
+		_imageService.ClearCache(false);
 	}
 
 	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
