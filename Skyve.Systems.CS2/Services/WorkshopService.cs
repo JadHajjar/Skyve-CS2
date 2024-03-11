@@ -7,6 +7,7 @@ using PDX.SDK.Contracts.Enums;
 using PDX.SDK.Contracts.Enums.Errors;
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
+using PDX.SDK.Contracts.Service.Mods.Result;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
@@ -20,6 +21,7 @@ using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -674,5 +676,98 @@ internal class WorkshopService : IWorkshopService
 		}
 
 		ProcessResult(await Context.Mods.DeactivateActivePlayset());
+	}
+
+	public async Task CreateCollection(List<IPackageIdentity> list)
+	{
+		if (Context is null)
+		{
+			return;
+		}
+
+		var config = new BaseOptionSet
+		{
+			DisplayName = "My Collection 2",
+			ShortDescription = "Testing",
+			LongDescription = "This is a collection test",
+			Dependencies = list.ToDictionary(x => (int)x.Id, x => new ModDependency
+			{
+				Id = (int)x.Id,
+				DisplayName = x.Name,
+				Type = DependencyType.Mod
+			}),
+			Tags = ["Code Mod"],
+			ModVersion = "1",
+			GameVersion = "*.*.*",
+			Thumbnail = @"C:\Users\Jad\Desktop\Untitled.png",
+		};
+
+		var wipInfo = await Context.Mods.RegisterWIP(config.DisplayName, config.ShortDescription, config.LongDescription, 100UL);
+		PrepareContent(config, wipInfo);
+		var updateWipData = new UpdateWipData
+		{
+			guid = wipInfo.Guid,
+			contentFileOrFolderName = "Content",
+			displayName = config.DisplayName,
+			shortDescription = config.ShortDescription,
+			longDescription = config.LongDescription,
+			thumbnailFilename = Path.GetFileName(config.Thumbnail),
+			screenshotsFilenames = config.Screenshots.Select((string s) => Path.GetFileName(s)).ToList<string>()
+		};
+		var updateWipData2 = updateWipData;
+		var result = await Context.Mods.UpdateWIP(updateWipData2);
+
+		var publishWipData = new PublishWipData
+		{
+			wipGuid = wipInfo.Guid,
+			os = ModPlatform.Any,
+			recommendedGameVersion = config.GameVersion,
+			userModVersion = config.ModVersion,
+			forumLink = config.ForumLink,
+			dependencies = config.Dependencies.Values.ToList<ModDependency>(),
+			tags = config.Tags.ToList<string>()
+		};
+		var publishResult = await Context.Mods.PublishWIP(publishWipData);
+	}
+
+	private static void PrepareContent(BaseOptionSet config, RegisterResult wipInfo)
+	{
+		var text = Path.Combine(wipInfo.Path, "Content");
+		if (Directory.Exists(text))
+		{
+			Directory.Delete(text, true);
+		}
+		Directory.CreateDirectory(text);
+		File.WriteAllLines(Path.Combine(text, "ModList.txt"), config.Dependencies.ToArray(x => $"{x.Key} - {x.Value.DisplayName}"));
+		var text2 = Path.Combine(wipInfo.Path, ".metadata");
+		var text3 = Path.Combine(text2, Path.GetFileName(config.Thumbnail));
+		if (!string.IsNullOrEmpty(config.Thumbnail) && File.Exists(config.Thumbnail))
+		{
+			File.Copy(config.Thumbnail, text3, true);
+		}
+		else
+		{
+		}
+		if (config.Screenshots.Count > 0)
+		{
+			foreach (var text4 in config.Screenshots)
+			{
+				File.Copy(text4, Path.Combine(text2, Path.GetFileName(text4)), true);
+			}
+		}
+	}
+
+	public class BaseOptionSet
+	{
+		public string DisplayName { get; set; }
+		public string ShortDescription { get; set; }
+		public string LongDescription { get; set; }
+		public string Thumbnail { get; set; }
+		public string ForumLink { get; set; }
+		public string ModVersion { get; set; }
+		public string GameVersion { get; set; }
+		public HashSet<string> Tags { get; set; }
+		public HashSet<string> Screenshots { get; set; } = [];
+		public Dictionary<int, ModDependency> Dependencies { get; set; } = [];
 	}
 }
