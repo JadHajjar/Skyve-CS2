@@ -2,15 +2,13 @@
 using Skyve.App.UserInterface.Lists;
 using Skyve.Systems.CS2.Utilities;
 
-using SlickControls;
-
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_ReviewRequests : PanelContent
 {
-	private List<ReviewRequest> _reviewRequests;
+	private readonly List<ReviewRequest> _reviewRequests;
 
 	public IPackageIdentity? CurrentPackage;
 
@@ -20,7 +18,9 @@ public partial class PC_ReviewRequests : PanelContent
 	{
 		InitializeComponent();
 
-		tableLayoutPanel1.Controls.Add(reviewRequestList1 = new ReviewRequestList { Dock = DockStyle.Fill },0,0);
+		tableLayoutPanel1.Controls.Add(reviewRequestList = new ReviewRequestList { Dock = DockStyle.Fill }, 0, 0);
+
+		reviewRequestList.ItemMouseClick += ReviewRequestList_ItemMouseClick;
 
 		_reviewRequests = [.. reviewRequests];
 
@@ -31,7 +31,7 @@ public partial class PC_ReviewRequests : PanelContent
 
 		Text = LocaleCR.ReviewRequests.Format($"({reviewRequests?.Length})");
 
-		SetPackage(packageCrList.Items.FirstOrDefault());
+		SetPackage(packageCrList.SortedItems.FirstOrDefault());
 	}
 
 	protected override void OnCreateControl()
@@ -61,7 +61,7 @@ public partial class PC_ReviewRequests : PanelContent
 
 		base.UIChanged();
 
-		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding = UI.Scale(new Padding(5), UI.FontScale);
+		B_DeleteRequests.Margin = slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer3.Height = (int)UI.FontScale;
 		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32), UI.FontScale);
 		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
@@ -104,10 +104,31 @@ public partial class PC_ReviewRequests : PanelContent
 
 		packageCrList.CurrentPackage = package;
 		packageCrList.Invalidate();
-		reviewRequestList1.SetItems(_reviewRequests.Where(x => x.PackageId == package?.Id));
+		reviewRequestList.SetItems(_reviewRequests.Where(x => x.PackageId == package?.Id));
 
-		B_DeleteRequests.Text = LocaleCR.DeleteRequests.FormatPlural(reviewRequestList1.ItemCount);
+		B_DeleteRequests.Text = LocaleCR.DeleteRequests.FormatPlural(reviewRequestList.ItemCount);
 		B_DeleteRequests.Visible = package != null;
+
+		var currentPage = -1;
+
+		if (packageCrList.ItemCount > 0)
+		{
+			currentPage = packageCrList.SortedItems.IndexOf(package);
+
+			if (currentPage < 0 || currentPage >= packageCrList.ItemCount)
+			{
+				return;
+			}
+
+			L_Page.Text = $"{currentPage + 1} / {packageCrList.ItemCount}";
+		}
+		else
+		{
+			L_Page.Text = $"0 / 0";
+		}
+
+		B_Previous.Enabled = currentPage > 0;
+		B_Skip.Enabled = currentPage != packageCrList.ItemCount - 1;
 	}
 
 	private void PackageCrList_CanDrawItem(object sender, CanDrawItemEventArgs<IPackageIdentity> e)
@@ -124,7 +145,7 @@ public partial class PC_ReviewRequests : PanelContent
 			|| package.Id.ToString().IndexOf(TB_Search.Text, StringComparison.OrdinalIgnoreCase) != -1);
 	}
 
-	private void reviewRequestList1_ItemMouseClick(object sender, MouseEventArgs e)
+	private void ReviewRequestList_ItemMouseClick(object sender, MouseEventArgs e)
 	{
 		Form.Invoke(() => Form.PushPanel(new PC_ViewReviewRequest((ReviewRequest)sender)));
 	}
@@ -145,13 +166,44 @@ public partial class PC_ReviewRequests : PanelContent
 	{
 		B_DeleteRequests.Loading = true;
 
-		foreach (var request in _reviewRequests.Where(x => x.PackageId == CurrentPackage?.Id))
+		foreach (var request in _reviewRequests.AllWhere(x => x.PackageId == CurrentPackage?.Id))
 		{
 			await ServiceCenter.Get<SkyveApiUtil>().ProcessReviewRequest(request);
+
+			Remove(request);
 		}
 
-		OnShown();
-
 		B_DeleteRequests.Loading = false;
+	}
+
+	private void B_Skip_Click(object sender, EventArgs e)
+	{
+		if (B_Skip.Enabled)
+		{
+			SetPackage(ModifierKeys.HasFlag(Keys.Control) ? packageCrList.SortedItems.LastOrDefault() : packageCrList.SortedItems.Next(CurrentPackage, true));
+		}
+	}
+
+	private void B_Previous_Click(object sender, EventArgs e)
+	{
+		if (B_Previous.Enabled)
+		{
+			SetPackage(ModifierKeys.HasFlag(Keys.Control) ? packageCrList.SortedItems.FirstOrDefault() : packageCrList.SortedItems.Previous(CurrentPackage, true));
+		}
+	}
+
+	public void Remove(ReviewRequest request)
+	{
+		_reviewRequests.Remove(request);
+		packageCrList.Remove(request);
+
+		if (packageCrList.Items.FirstOrAny(x => x.Id == request.PackageId) is IPackageIdentity package)
+		{
+			SetPackage(package);
+		}
+		else
+		{
+			PushBack();
+		}
 	}
 }

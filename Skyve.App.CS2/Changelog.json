@@ -2,6 +2,22 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.1.12",
+    "Date": "2024-03-13",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Finalizing CR management",
+          "Added fail-safe in case appdata folder is not detected",
+          "Fixes to first-time usage related bugs"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.1.11",
     "Date": "2024-03-12",
     "ChangeGroups": [

@@ -51,10 +51,14 @@ namespace Skyve.Mod.CS2
 					var folderSettings = JSON.MakeInto<FolderSettings>(JSON.Load(File.ReadAllText(FolderSettings.FolderSettingsPath)));
 
 					folderSettings.Save();
+
+					Log.Info("Folder settings updated");
 				}
 				else
 				{
 					new FolderSettings().Save();
+
+					Log.Info("Folder settings created");
 				}
 			}
 			catch (Exception ex)
@@ -62,30 +66,30 @@ namespace Skyve.Mod.CS2
 				Log.Error(ex);
 			}
 
-			var assets = AssetDatabase.global.GetAssets<AssetData>();
+			//var assets = AssetDatabase.global.GetAssets<AssetData>();
 
-			Log.Info("ASSETS " + assets.Count());
+			//Log.Info("ASSETS " + assets.Count());
 
-			var dic = new Dictionary<string, int>();
+			//var dic = new Dictionary<string, int>();
 
-			foreach (var item in assets)
-			{
-				var name = item.GetType().Name;
+			//foreach (var item in assets)
+			//{
+			//	var name = item.GetType().Name;
 
-				if (dic.ContainsKey(name))
-				{
-					dic[name]++;
-				}
-				else
-				{
-					dic[name] = 1;
-				}
-			}
+			//	if (dic.ContainsKey(name))
+			//	{
+			//		dic[name]++;
+			//	}
+			//	else
+			//	{
+			//		dic[name] = 1;
+			//	}
+			//}
 
-			foreach (var item in dic)
-			{
-				Log.Info("  " + item.Key + "  " + item.Value);
-			}
+			//foreach (var item in dic)
+			//{
+			//	Log.Info("  " + item.Key + "  " + item.Value);
+			//}
 		}
 
 		public static void InstallApp()

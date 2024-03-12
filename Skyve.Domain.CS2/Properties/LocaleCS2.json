@@ -67,5 +67,8 @@
   "HideUserSection": "Hide your profile in the main menu",
   "DeveloperMode": "Enable Developer Mode",
   "UIDeveloperMode": "Enable UI Developer Mode",
-  "LogsToPlayerLog": "Copy logs to Player.log"
+  "LogsToPlayerLog": "Copy logs to Player.log",
+  "InvalidFolderSettings": "Invalid setup detected",
+  "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
+  "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data."
 }

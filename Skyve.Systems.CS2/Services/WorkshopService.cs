@@ -82,6 +82,9 @@ internal class WorkshopService : IWorkshopService
 
 	public async Task Initialize()
 	{
+		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
+			throw new Exception("FolderSettings AppData folder does not exist");
+
 		var pdxSdkPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk");
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
 		var ecoSystem = _settings.FolderSettings.GamingPlatform switch { GamingPlatform.Epic => Ecosystem.Epic, GamingPlatform.Microsoft => Ecosystem.Microsoft_Store, _ => Ecosystem.Steam };

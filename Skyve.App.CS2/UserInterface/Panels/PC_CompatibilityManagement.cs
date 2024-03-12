@@ -18,7 +18,7 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_CompatibilityManagement : PC_PackagePageBase
 {
-	private bool singlePackage;
+	private readonly bool singlePackage;
 	private int currentPage;
 	private CompatibilityPostPackage? postPackage;
 	private CompatibilityPostPackage? lastPackageData;
@@ -68,8 +68,13 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		DD_Stability.Enabled = _userService.User.Manager;
 		TB_Note.Enabled = _userService.User.Manager;
-		CB_BlackListId.Visible= _userService.User.Manager;
+		CB_BlackListId.Visible = _userService.User.Manager;
 		CB_BlackListName.Visible = _userService.User.Manager;
+	}
+
+	public PC_CompatibilityManagement(ReviewRequest reviewRequest) : this([reviewRequest])
+	{
+		_request = reviewRequest;
 	}
 
 	protected override void OnCreateControl()
@@ -123,7 +128,10 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		base.UIChanged();
 
-		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding = TLP_Bottom.Padding = B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding
+			= TLP_Bottom.Padding = P_Tags.Padding = P_Tags.Margin = P_Links.Padding = P_Links.Margin
+			= DD_DLCs.Margin = DD_PackageType.Margin = DD_Stability.Margin = DD_Usage.Margin
+			= B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer2.Height = (int)(2 * UI.FontScale);
 		slickSpacer3.Height = slickSpacer4.Height = slickSpacer5.Height = (int)UI.FontScale;
 		B_AddInteraction.Size = B_AddStatus.Size = UI.Scale(new Size(105, 70), UI.FontScale);
@@ -131,6 +139,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		L_NoLinks.Margin = L_NoTags.Margin = UI.Scale(new Padding(10), UI.FontScale);
 		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32), UI.FontScale);
 		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
+		TB_Note.Margin = UI.Scale(new Padding(5, 20, 5, 5), UI.FontScale);
 		TB_Note.MinimumSize = new Size(0, (int)(200 * UI.FontScale));
 		PB_Loading.Size = UI.Scale(new Size(32, 32), UI.FontScale);
 		CB_BlackListId.Font = CB_BlackListName.Font = UI.Font(7.5F);
@@ -323,7 +332,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			TLP_Bottom.Visible = true;
 
 			T_Info.Selected = true;
-
+			TLP_MainInfo.Width = 0;
 			packageCrList.Invalidate();
 			valuesChanged = false;
 		}

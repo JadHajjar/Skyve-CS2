@@ -72,12 +72,14 @@ partial class PC_ReviewRequests
 			// 
 			this.B_DeleteRequests.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.B_DeleteRequests.AutoSize = true;
+			this.B_DeleteRequests.ButtonType = SlickControls.ButtonType.Active;
+			this.B_DeleteRequests.ColorStyle = Extensions.ColorStyle.Red;
 			this.B_DeleteRequests.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon1.Name = "I_Disposable";
 			this.B_DeleteRequests.ImageName = dynamicIcon1;
-			this.B_DeleteRequests.Location = new System.Drawing.Point(432, 401);
+			this.B_DeleteRequests.Location = new System.Drawing.Point(436, 403);
 			this.B_DeleteRequests.Name = "B_DeleteRequests";
-			this.B_DeleteRequests.Size = new System.Drawing.Size(183, 34);
+			this.B_DeleteRequests.Size = new System.Drawing.Size(179, 32);
 			this.B_DeleteRequests.SpaceTriggersClick = true;
 			this.B_DeleteRequests.TabIndex = 21;
 			this.B_DeleteRequests.Text = "Delete these requests";
@@ -128,10 +130,11 @@ partial class PC_ReviewRequests
 			this.packageCrList.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.packageCrList.HighlightOnHover = true;
 			this.packageCrList.ItemHeight = 32;
-			this.packageCrList.Location = new System.Drawing.Point(3, 61);
+			this.packageCrList.Location = new System.Drawing.Point(3, 53);
 			this.packageCrList.Name = "packageCrList";
 			this.packageCrList.SeparateWithLines = true;
-			this.packageCrList.Size = new System.Drawing.Size(159, 317);
+			this.packageCrList.ShowCompleted = false;
+			this.packageCrList.Size = new System.Drawing.Size(159, 325);
 			this.packageCrList.TabIndex = 2;
 			this.packageCrList.ItemMouseClick += new System.EventHandler<System.Windows.Forms.MouseEventArgs>(this.packageCrList_ItemMouseClick);
 			// 
@@ -143,13 +146,13 @@ partial class PC_ReviewRequests
 			this.TB_Search.ImageName = dynamicIcon2;
 			this.TB_Search.Location = new System.Drawing.Point(3, 3);
 			this.TB_Search.Name = "TB_Search";
-			this.TB_Search.Padding = new System.Windows.Forms.Padding(7, 7, 46, 7);
+			this.TB_Search.Padding = new System.Windows.Forms.Padding(6, 6, 36, 6);
 			this.TB_Search.Placeholder = "SearchGenericPackages";
 			this.TB_Search.SelectedText = "";
 			this.TB_Search.SelectionLength = 0;
 			this.TB_Search.SelectionStart = 0;
 			this.TB_Search.ShowLabel = false;
-			this.TB_Search.Size = new System.Drawing.Size(159, 52);
+			this.TB_Search.Size = new System.Drawing.Size(159, 44);
 			this.TB_Search.TabIndex = 3;
 			this.TB_Search.TextChanged += new System.EventHandler(this.TB_Search_TextChanged);
 			// 
@@ -165,6 +168,7 @@ partial class PC_ReviewRequests
 			this.B_Previous.Name = "B_Previous";
 			this.B_Previous.Size = new System.Drawing.Size(76, 37);
 			this.B_Previous.TabIndex = 4;
+			this.B_Previous.Click += new System.EventHandler(this.B_Previous_Click);
 			// 
 			// B_Skip
 			// 
@@ -177,6 +181,7 @@ partial class PC_ReviewRequests
 			this.B_Skip.Name = "B_Skip";
 			this.B_Skip.Size = new System.Drawing.Size(77, 37);
 			this.B_Skip.TabIndex = 5;
+			this.B_Skip.Click += new System.EventHandler(this.B_Skip_Click);
 			// 
 			// slickSpacer3
 			// 
@@ -204,7 +209,7 @@ partial class PC_ReviewRequests
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.base_P_Side);
 			this.Name = "PC_ReviewRequests";
-			this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
+			this.Padding = new System.Windows.Forms.Padding(0);
 			this.Controls.SetChildIndex(this.base_Text, 0);
 			this.Controls.SetChildIndex(this.base_P_Side, 0);
 			this.Controls.SetChildIndex(this.tableLayoutPanel1, 0);
@@ -219,7 +224,7 @@ partial class PC_ReviewRequests
 	}
 
 	#endregion
-	private ReviewRequestList reviewRequestList1;
+	private ReviewRequestList reviewRequestList;
 	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 	private SlickControls.SlickButton B_DeleteRequests;
 	private System.Windows.Forms.Panel base_P_Side;

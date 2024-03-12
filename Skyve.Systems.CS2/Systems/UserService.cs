@@ -21,20 +21,20 @@ internal class UserService : IUserService
 		User = new User();
 	}
 
-	public IKnownUser TryGetAuthor(string? id)
+	public IKnownUser TryGetUser(string? id)
 	{
 		return id is null or "" ? new User { Id = id, Name = id ?? string.Empty } : knownUsers.TryGetValue(id, out var author) ? author : new User { Id = id, Name = id ?? string.Empty };
 	}
 
 	public bool IsUserVerified(IUser author)
 	{
-		return TryGetAuthor(User.Id?.ToString())?.Verified ?? false;
+		return TryGetUser(User.Id?.ToString())?.Verified ?? false;
 	}
 
 	internal void SetKnownUsers(IKnownUser[] users)
 	{
 		knownUsers = users.ToDictionary(x => x.Id!.ToString());
-		User = TryGetAuthor(loggedInUser);
+		User = TryGetUser(loggedInUser);
 
 		UserInfoUpdated?.Invoke();
 	}
@@ -42,7 +42,7 @@ internal class UserService : IUserService
 	internal void SetLoggedInUser(string? displayName)
 	{
 		loggedInUser = displayName;
-		User = TryGetAuthor(loggedInUser);
+		User = TryGetUser(loggedInUser);
 
 		UserInfoUpdated?.Invoke();
 	}

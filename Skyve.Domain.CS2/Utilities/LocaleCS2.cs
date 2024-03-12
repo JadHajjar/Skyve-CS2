@@ -136,6 +136,21 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation IncludeThisItemInAllPlaysets => _instance.GetText("IncludeThisItemInAllPlaysets");
 
 	/// <summary>
+	/// Invalid setup detected
+	/// </summary>
+	public static Translation InvalidFolderSettings => _instance.GetText("InvalidFolderSettings");
+
+	/// <summary>
+	/// The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.
+	/// </summary>
+	public static Translation InvalidFolderSettingsFail => _instance.GetText("InvalidFolderSettingsFail");
+
+	/// <summary>
+	/// Skyve was not able to properly detect Cities: Skylines II's data folder.  Click here to manually select the data folder.
+	/// </summary>
+	public static Translation InvalidFolderSettingsInfo => _instance.GetText("InvalidFolderSettingsInfo");
+
+	/// <summary>
 	/// Launch through Cities2.exe
 	/// </summary>
 	public static Translation LaunchThroughCities => _instance.GetText("LaunchThroughCities");

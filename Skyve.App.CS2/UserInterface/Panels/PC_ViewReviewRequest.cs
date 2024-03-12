@@ -1,6 +1,5 @@
 ﻿using Skyve.App.UserInterface.CompatibilityReport;
 using Skyve.App.UserInterface.Content;
-using Skyve.App.UserInterface.Generic;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
@@ -23,21 +22,19 @@ public partial class PC_ViewReviewRequest : PanelContent
 
 	public PC_ViewReviewRequest(ReviewRequest request) : base(true)
 	{
-		ServiceCenter.Get(out _dlcManager, out _skyveApiUtil, out _workshopService);
-
+		ServiceCenter.Get(out _dlcManager, out _skyveApiUtil, out _workshopService, out IUserService userService);
 		InitializeComponent();
-
 		_request = request;
 
-		TLP_Info.Controls.Add(new MiniPackageControl(request.PackageId) { Dock = DockStyle.Top, ReadOnly = true }, 0, 0);
+		TLP_Info.Controls.Add(new MiniPackageControl(request.PackageId) { Dock = DockStyle.Top, ReadOnly = true, Large = true }, 0, 0);
 		//TLP_Info.Controls.Add(new SteamUserControl(request.UserId) { InfoText = "Requested by", Dock = DockStyle.Top, Margin = UI.Scale(new Padding(5), UI.FontScale) }, 0, 1);
 
 		logControl = new SlickControl
 		{
 			Cursor = Cursors.Hand,
-			Text = $"RequestBy_{_workshopService.GetUser(_request.UserId)?.Name}_{DateTime.Now:yy-MM-dd_HH-mm}",
+			Text = $"RequestBy_{userService.TryGetUser(_request.UserId)?.Name}_{DateTime.Now:yy-MM-dd_HH-mm}",
 			Dock = DockStyle.Top,
-			Height = (int)(60 * UI.UIScale),
+			Height = (int)(75 * UI.UIScale),
 			Margin = UI.Scale(new Padding(5), UI.FontScale)
 		};
 
@@ -46,7 +43,7 @@ public partial class PC_ViewReviewRequest : PanelContent
 
 		TLP_Info.Controls.Add(logControl, 0, 2);
 
-		label2.Text = request.PackageNote.IfEmpty("No description given");
+		L_Note.Text = request.PackageNote.IfEmpty("No description given");
 
 		if (request.IsInteraction)
 		{
@@ -57,7 +54,7 @@ public partial class PC_ViewReviewRequest : PanelContent
 				Note = request.StatusNote,
 				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ulong.Parse).ToArray(),
 			})
-			{ BackColor = FormDesign.Design.AccentBackColor }, 0, 4);
+			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 4);
 		}
 		else if (request.IsStatus)
 		{
@@ -68,7 +65,7 @@ public partial class PC_ViewReviewRequest : PanelContent
 				Note = request.StatusNote,
 				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ulong.Parse).ToArray(),
 			})
-			{ BackColor = FormDesign.Design.AccentBackColor }, 0, 4);
+			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 4);
 		}
 		else
 		{
@@ -125,11 +122,12 @@ public partial class PC_ViewReviewRequest : PanelContent
 	{
 		base.UIChanged();
 
-		tableLayoutPanel2.Width = (int)(200 * UI.FontScale);
-		label3.Font = label1.Font = UI.Font(7.5F, FontStyle.Bold);
+		tableLayoutPanel2.Width = (int)(250 * UI.FontScale);
+		L_ProposedChanges.Font = L_Desc.Font = UI.Font(7.5F, FontStyle.Bold);
+		L_Note.Font = UI.Font(9.5F);
 		tableLayoutPanel1.Padding = UI.Scale(new Padding(5), UI.FontScale);
-		slickIcon1.Size = UI.Scale(new Size(24, 24), UI.FontScale);
-		slickIcon1.Padding = UI.Scale(new Padding(5), UI.FontScale);
+		I_Copy.Size = UI.Scale(new Size(32, 32), UI.FontScale);
+		I_Copy.Padding = UI.Scale(new Padding(4), UI.FontScale);
 
 		foreach (Control item in roundedGroupTableLayoutPanel1.Controls)
 		{
@@ -145,8 +143,6 @@ public partial class PC_ViewReviewRequest : PanelContent
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
-
-		tableLayoutPanel1.BackColor = design.AccentBackColor;
 	}
 
 	private void PC_ReviewSingleRequest_Paint(object sender, PaintEventArgs e)
@@ -174,16 +170,16 @@ public partial class PC_ViewReviewRequest : PanelContent
 		e.Graphics.DrawString(ctrl.Text, new Font(Font, FontStyle.Bold), new SolidBrush(FormDesign.Design.MenuForeColor), fileContentRect, new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Far });
 	}
 
-	private void B_ManagePackage_Click(object sender, EventArgs e)
+	private async void B_ManagePackage_Click(object sender, EventArgs e)
 	{
-		throw new NotImplementedException();
-		//Form.PushPanel(new PC_CompatibilityManagement(new[] { _request.PackageId }));
+		Form.PushPanel(new PC_CompatibilityManagement([_request]));
+		await _skyveApiUtil.ProcessReviewRequest(_request);
 	}
 
-	private void B_ApplyChanges_Click(object sender, EventArgs e)
+	private async void B_ApplyChanges_Click(object sender, EventArgs e)
 	{
-		throw new NotImplementedException();
-		//Form.PushPanel(new PC_CompatibilityManagement(_request));
+		Form.PushPanel(new PC_CompatibilityManagement(_request));
+		await _skyveApiUtil.ProcessReviewRequest(_request);
 	}
 
 	private async void B_DeleteRequest_Click(object sender, EventArgs e)
@@ -195,6 +191,11 @@ public partial class PC_ViewReviewRequest : PanelContent
 		if (response.Success)
 		{
 			PushBack();
+
+			if (Form.CurrentPanel is PC_ReviewRequests reviewRequests)
+			{
+				reviewRequests.Remove(_request);
+			}
 		}
 		else
 		{
@@ -206,6 +207,6 @@ public partial class PC_ViewReviewRequest : PanelContent
 
 	private void slickIcon1_Click(object sender, EventArgs e)
 	{
-		Clipboard.SetText(label2.Text);
+		Clipboard.SetText(L_Note.Text);
 	}
 }

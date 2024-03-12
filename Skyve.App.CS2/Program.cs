@@ -23,7 +23,15 @@ internal static class Program
 		App.Program.IsRunning = true;
 		App.Program.CurrentDirectory = Application.StartupPath;
 		App.Program.ExecutablePath = Application.ExecutablePath;
-		App.Program.AppDataPath = Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II");
+
+		if (File.Exists(Path.Combine(GetFolderPath(SpecialFolder.LocalApplicationData), "SkyveDataPathHelper.txt")))
+		{
+			App.Program.AppDataPath = File.ReadAllText(Path.Combine(GetFolderPath(SpecialFolder.LocalApplicationData), "SkyveDataPathHelper.txt"));
+		}
+		else
+		{
+			App.Program.AppDataPath = Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II");
+		}
 
 		SaveHandler.AppName = "Skyve";
 
