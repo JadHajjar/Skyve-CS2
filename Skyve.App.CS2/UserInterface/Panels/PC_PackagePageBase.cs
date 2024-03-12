@@ -31,7 +31,7 @@ public partial class PC_PackagePageBase : PanelContent
 	}
 #nullable enable
 
-	public PC_PackagePageBase(IPackageIdentity package, bool load = false) : base(load)
+	public PC_PackagePageBase(IPackageIdentity package, bool load = false, bool autoRefresh = true) : base(load)
 	{
 		ServiceCenter.Get(out _notifier, out _packageUtil, out _settings, out IImageService imageService);
 
@@ -43,9 +43,12 @@ public partial class PC_PackagePageBase : PanelContent
 		TLP_TopInfo.Controls.Add(L_Title = new(package) { Dock = DockStyle.Fill });
 		L_Title.MouseClick += I_More_MouseClick;
 
-		_notifier.WorkshopInfoUpdated += Notifier_WorkshopInfoUpdated;
-		_notifier.PackageInclusionUpdated += Notifier_WorkshopInfoUpdated;
-		_notifier.PackageInformationUpdated += Notifier_WorkshopInfoUpdated;
+		if (autoRefresh)
+		{
+			_notifier.WorkshopInfoUpdated += Notifier_WorkshopInfoUpdated;
+			_notifier.PackageInclusionUpdated += Notifier_WorkshopInfoUpdated;
+			_notifier.PackageInformationUpdated += Notifier_WorkshopInfoUpdated;
+		}
 	}
 
 	private void Notifier_WorkshopInfoUpdated()
@@ -90,10 +93,12 @@ public partial class PC_PackagePageBase : PanelContent
 
 			links = links.DistinctList(x => x.Url);
 
-			if (!links.ToList(x => x.Url).SequenceEqual(FLP_Links.Controls.OfType<LinkControl>().Select(x => x.Link.Url)))
+			if (!links.ToList(x => x.Url).SequenceEqual(FLP_Package_Links.Controls.OfType<LinkControl>().Select(x => x.Link.Url)))
 			{
-				FLP_Links.Controls.Clear(true);
-				FLP_Links.Controls.AddRange(links.ToArray(x => new LinkControl(x, true)));
+				FLP_Package_Links.SuspendDrawing();
+				FLP_Package_Links.Controls.Clear(true);
+				FLP_Package_Links.Controls.AddRange(links.ToArray(x => new LinkControl(x, true)));
+				FLP_Package_Links.ResumeDrawing();
 			}
 
 			TLP_Links.Visible = links.Count > 0;
@@ -107,6 +112,7 @@ public partial class PC_PackagePageBase : PanelContent
 			{
 				if (!requirements.ToList(x => x.Id).SequenceEqual(P_Requirements.Controls.OfType<MiniPackageControl>().Select(x => x.Id)))
 				{
+					P_Requirements.SuspendDrawing();
 					P_Requirements.Controls.Clear(true);
 					P_Requirements.Controls.AddRange(requirements.ToArray(x => new MiniPackageControl(x.Id)
 					{
@@ -115,6 +121,7 @@ public partial class PC_PackagePageBase : PanelContent
 						ShowIncluded = true,
 						Dock = DockStyle.Top
 					}));
+					P_Requirements.ResumeDrawing();
 				}
 
 				TLP_ModRequirements.Visible = true;
@@ -126,7 +133,7 @@ public partial class PC_PackagePageBase : PanelContent
 		}
 
 		// Tags
-		if (!Package.GetTags().SequenceEqual(FLP_Tags.Controls.OfType<TagControl>().SelectWhereNotNull(x => x.TagInfo)))
+		if (!Package.GetTags().SequenceEqual(FLP_Package_Tags.Controls.OfType<TagControl>().SelectWhereNotNull(x => x.TagInfo)))
 		{
 			AddTags();
 		}
@@ -154,24 +161,24 @@ public partial class PC_PackagePageBase : PanelContent
 
 	private void AddTags()
 	{
-		FLP_Tags.SuspendDrawing();
-		FLP_Tags.Controls.Clear(true);
+		FLP_Package_Tags.SuspendDrawing();
+		FLP_Package_Tags.Controls.Clear(true);
 
 		foreach (var item in Package.GetTags())
 		{
 			var control = new TagControl { TagInfo = item, Display = true };
 			control.MouseClick += TagControl_Click;
-			FLP_Tags.Controls.Add(control);
+			FLP_Package_Tags.Controls.Add(control);
 		}
 
 		//if (Package.LocalPackage is not null)
 		{
 			addTagControl = new TagControl { ImageName = "I_Add", ColorStyle = ColorStyle.Green };
 			addTagControl.MouseClick += AddTagControl_MouseClick;
-			FLP_Tags.Controls.Add(addTagControl);
+			FLP_Package_Tags.Controls.Add(addTagControl);
 		}
 
-		FLP_Tags.ResumeDrawing();
+		FLP_Package_Tags.ResumeDrawing();
 	}
 
 	private void TagControl_Click(object sender, EventArgs e)
@@ -183,7 +190,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 		(sender as TagControl)!.Dispose();
 
-		ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo?.IsCustom == true ? x.TagInfo.Value?.Replace(' ', '-') : null)!);
+		ServiceCenter.Get<ITagsService>().SetTags(Package, FLP_Package_Tags.Controls.OfType<TagControl>().Select(x => x.TagInfo?.IsCustom == true ? x.TagInfo.Value?.Replace(' ', '-') : null)!);
 
 		_notifier.OnRefreshUI(true);
 	}

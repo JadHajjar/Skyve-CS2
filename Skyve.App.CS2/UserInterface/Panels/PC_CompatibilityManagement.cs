@@ -48,7 +48,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 	}
 
-	public PC_CompatibilityManagement(bool load) : base(new GenericPackageIdentity(), load)
+	public PC_CompatibilityManagement(bool load) : base(new GenericPackageIdentity(), load, false)
 	{
 		ServiceCenter.Get(out _workshopService, out _compatibilityManager, out _userService, out _tagsService, out ISkyveDataManager skyveDataManager);
 
@@ -125,9 +125,10 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding = TLP_Bottom.Padding = B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer2.Height = (int)(2 * UI.FontScale);
-		slickSpacer3.Height = (int)UI.FontScale;
+		slickSpacer3.Height = slickSpacer4.Height = slickSpacer5.Height = (int)UI.FontScale;
 		B_AddInteraction.Size = B_AddStatus.Size = UI.Scale(new Size(105, 70), UI.FontScale);
 		B_AddInteraction.Margin = B_AddStatus.Margin = UI.Scale(new Padding(15), UI.FontScale);
+		L_NoLinks.Margin = L_NoTags.Margin = UI.Scale(new Padding(10), UI.FontScale);
 		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32), UI.FontScale);
 		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
 		TB_Note.MinimumSize = new Size(0, (int)(200 * UI.FontScale));
@@ -139,9 +140,18 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		base.DesignChanged(design);
 
+		P_Tags.BackColor = P_Links.BackColor = design.AccentBackColor;
 		base_TLP_Side.BackColor = design.MenuColor;
 		base_TLP_Side.ForeColor = design.MenuForeColor;
 		L_Page.ForeColor = design.LabelColor;
+	}
+
+	protected override void LocaleChanged()
+	{
+		base.LocaleChanged();
+
+		L_NoTags.Text = LocaleCR.NoTags;
+		L_NoLinks.Text = LocaleCR.NoLinks;
 	}
 
 	protected override void OnSizeChanged(EventArgs e)
@@ -350,7 +360,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		TB_Note.Text = postPackage.Note;
 
-		P_Tags.Controls.Clear(true, x => !string.IsNullOrEmpty(x.Text));
+		FLP_Tags.Controls.Clear(true);
 		FLP_Statuses.Controls.Clear(true, x => x is IPackageStatusControl<StatusType, PackageStatus>);
 		FLP_Interactions.Controls.Clear(true, x => x is IPackageStatusControl<InteractionType, PackageInteraction>);
 
@@ -358,9 +368,10 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		{
 			var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(item) };
 			control.Click += TagControl_Click;
-			P_Tags.Controls.Add(control);
-			T_NewTag.SendToBack();
+			FLP_Tags.Controls.Add(control);
 		}
+
+		L_NoTags.Visible = FLP_Tags.Controls.Count == 0;
 
 		SetLinks(postPackage.Links ?? []);
 
@@ -434,22 +445,29 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	private void T_NewTag_Click(object sender, EventArgs e)
 	{
-		var prompt = ShowInputPrompt(LocaleCR.AddGlobalTag);
+		var frm = new EditTagsForm([Package], FLP_Tags.Controls.Cast<TagControl>().Select(x => x.TagInfo!));
 
-		if (prompt.DialogResult != DialogResult.OK)
+		App.Program.MainForm.OnNextIdle(() =>
 		{
-			return;
-		}
+			frm.Show(App.Program.MainForm);
 
-		if (string.IsNullOrWhiteSpace(prompt.Input) || P_Tags.Controls.Any(x => x.Text.Equals(prompt.Input, StringComparison.CurrentCultureIgnoreCase)))
+			frm.ShowUp();
+		});
+
+		frm.ApplyTags += (tags) =>
 		{
-			return;
-		}
+			FLP_Tags.Controls.Clear(true);
 
-		var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(prompt.Input) };
-		control.Click += TagControl_Click;
-		P_Tags.Controls.Add(control);
-		T_NewTag.SendToBack();
+			foreach (var item in tags)
+			{
+				var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(item) };
+				control.Click += TagControl_Click;
+				FLP_Tags.Controls.Add(control);
+			}
+
+			L_NoTags.Visible = FLP_Tags.Controls.Count == 0;
+		};
+
 		ControlValueChanged(sender, e);
 	}
 
@@ -462,7 +480,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	private void T_NewLink_Click(object sender, EventArgs e)
 	{
-		var form = new AddLinkForm(P_Links.Controls.OfType<LinkControl>().ToList(x => x.Link));
+		var form = new AddLinkForm(FLP_Links.Controls.OfType<LinkControl>().ToList(x => x.Link));
 
 		form.Show(Form);
 
@@ -471,16 +489,16 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	private void SetLinks(IEnumerable<PackageLink> links)
 	{
-		P_Links.Controls.Clear(true, x => x is LinkControl);
+		FLP_Links.Controls.Clear(true);
 
 		foreach (var item in links.OrderBy(x => x.Type))
 		{
 			var control = new LinkControl(item, false);
 			control.Click += T_NewLink_Click;
-			P_Links.Controls.Add(control);
+			FLP_Links.Controls.Add(control);
 		}
 
-		T_NewLink.SendToBack();
+		L_NoLinks.Visible = FLP_Links.Controls.Count == 0;
 
 		ControlValueChanged(this, EventArgs.Empty);
 	}
@@ -542,8 +560,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		postPackage.Usage = DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next);
 		postPackage.RequiredDLCs = DD_DLCs.SelectedItems.Select(x => x.Id).ToList();
 		postPackage.Note = TB_Note.Text;
-		postPackage.Tags = P_Tags.Controls.OfType<TagControl>().Where(x => !string.IsNullOrEmpty(x.TagInfo?.Value)).ToList(x => x.TagInfo!.Value);
-		postPackage.Links = P_Links.Controls.OfType<LinkControl>().ToList(x => (PackageLink)x.Link);
+		postPackage.Tags = FLP_Tags.Controls.OfType<TagControl>().Where(x => !string.IsNullOrEmpty(x.TagInfo?.Value)).ToList(x => x.TagInfo!.Value);
+		postPackage.Links = FLP_Links.Controls.OfType<LinkControl>().ToList(x => (PackageLink)x.Link);
 		postPackage.Statuses = FLP_Statuses.Controls.OfType<IPackageStatusControl<StatusType, PackageStatus>>().ToList(x => x.PackageStatus);
 		postPackage.Interactions = FLP_Interactions.Controls.OfType<IPackageStatusControl<InteractionType, PackageInteraction>>().ToList(x => x.PackageStatus);
 

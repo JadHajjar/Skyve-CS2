@@ -43,7 +43,7 @@ partial class PC_PackagePageBase
 			this.TLP_Side = new System.Windows.Forms.TableLayoutPanel();
 			this.TLP_Links = new SlickControls.RoundedTableLayoutPanel();
 			this.L_Links = new System.Windows.Forms.Label();
-			this.FLP_Links = new SlickControls.SmartFlowPanel();
+			this.FLP_Package_Links = new SlickControls.SmartFlowPanel();
 			this.TLP_ModInfo = new SlickControls.RoundedTableLayoutPanel();
 			this.LI_Size = new Skyve.App.CS2.UserInterface.Content.InfoAndLabelControl();
 			this.LI_ModId = new Skyve.App.CS2.UserInterface.Content.InfoAndLabelControl();
@@ -63,7 +63,7 @@ partial class PC_PackagePageBase
 			this.P_Requirements = new System.Windows.Forms.Panel();
 			this.TLP_Tags = new SlickControls.RoundedTableLayoutPanel();
 			this.L_Tags = new System.Windows.Forms.Label();
-			this.FLP_Tags = new SlickControls.SmartFlowPanel();
+			this.FLP_Package_Tags = new SlickControls.SmartFlowPanel();
 			this.carouselControl = new Skyve.App.UserInterface.Generic.CarouselControl();
 			this.packageChangelogControl1 = new Skyve.App.CS2.UserInterface.Content.PackageChangelogControl();
 			this.P_SideContainer = new System.Windows.Forms.Panel();
@@ -138,7 +138,7 @@ partial class PC_PackagePageBase
 			this.TLP_Links.ColumnCount = 1;
 			this.TLP_Links.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.TLP_Links.Controls.Add(this.L_Links, 0, 0);
-			this.TLP_Links.Controls.Add(this.FLP_Links, 0, 1);
+			this.TLP_Links.Controls.Add(this.FLP_Package_Links, 0, 1);
 			this.TLP_Links.Dock = System.Windows.Forms.DockStyle.Top;
 			this.TLP_Links.Location = new System.Drawing.Point(0, 464);
 			this.TLP_Links.Margin = new System.Windows.Forms.Padding(0);
@@ -161,11 +161,11 @@ partial class PC_PackagePageBase
 			// 
 			// FLP_Links
 			// 
-			this.FLP_Links.Dock = System.Windows.Forms.DockStyle.Top;
-			this.FLP_Links.Location = new System.Drawing.Point(3, 22);
-			this.FLP_Links.Name = "FLP_Links";
-			this.FLP_Links.Size = new System.Drawing.Size(384, 0);
-			this.FLP_Links.TabIndex = 1;
+			this.FLP_Package_Links.Dock = System.Windows.Forms.DockStyle.Top;
+			this.FLP_Package_Links.Location = new System.Drawing.Point(3, 22);
+			this.FLP_Package_Links.Name = "FLP_Links";
+			this.FLP_Package_Links.Size = new System.Drawing.Size(384, 0);
+			this.FLP_Package_Links.TabIndex = 1;
 			// 
 			// TLP_ModInfo
 			// 
@@ -400,7 +400,7 @@ partial class PC_PackagePageBase
 			this.TLP_Tags.ColumnCount = 1;
 			this.TLP_Tags.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.TLP_Tags.Controls.Add(this.L_Tags, 0, 0);
-			this.TLP_Tags.Controls.Add(this.FLP_Tags, 0, 1);
+			this.TLP_Tags.Controls.Add(this.FLP_Package_Tags, 0, 1);
 			this.TLP_Tags.Dock = System.Windows.Forms.DockStyle.Top;
 			this.TLP_Tags.Location = new System.Drawing.Point(0, 439);
 			this.TLP_Tags.Margin = new System.Windows.Forms.Padding(0);
@@ -423,11 +423,11 @@ partial class PC_PackagePageBase
 			// 
 			// FLP_Tags
 			// 
-			this.FLP_Tags.Dock = System.Windows.Forms.DockStyle.Top;
-			this.FLP_Tags.Location = new System.Drawing.Point(3, 22);
-			this.FLP_Tags.Name = "FLP_Tags";
-			this.FLP_Tags.Size = new System.Drawing.Size(384, 0);
-			this.FLP_Tags.TabIndex = 1;
+			this.FLP_Package_Tags.Dock = System.Windows.Forms.DockStyle.Top;
+			this.FLP_Package_Tags.Location = new System.Drawing.Point(3, 22);
+			this.FLP_Package_Tags.Name = "FLP_Tags";
+			this.FLP_Package_Tags.Size = new System.Drawing.Size(384, 0);
+			this.FLP_Package_Tags.TabIndex = 1;
 			// 
 			// carouselControl
 			// 
@@ -500,13 +500,13 @@ partial class PC_PackagePageBase
 	private Content.InfoAndLabelControl LI_Version;
 	private Content.InfoAndLabelControl LI_Size;
 	private Content.InfoAndLabelControl LI_ModId;
-	private SlickControls.SmartFlowPanel FLP_Tags;
+	private SlickControls.SmartFlowPanel FLP_Package_Tags;
 	private SlickButton B_BulkRequirements;
 	private System.Windows.Forms.Panel P_Requirements;
 	private SlickLabel L_Author;
 	private RoundedTableLayoutPanel TLP_Links;
 	private System.Windows.Forms.Label L_Links;
-	private SmartFlowPanel FLP_Links;
+	private SmartFlowPanel FLP_Package_Links;
 	private App.UserInterface.Generic.CarouselControl carouselControl;
 	private Content.PackageChangelogControl packageChangelogControl1;
 	protected System.Windows.Forms.Panel P_SideContainer;
