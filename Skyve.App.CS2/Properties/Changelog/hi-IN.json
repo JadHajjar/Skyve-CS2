@@ -1,9 +1,3 @@
 {
-  "Changes": "Changes",
-  "A full rework! -behind the scenes": "A full rework! -behind the scenes",
-  "'Profiles' are now, appropriately, called 'Playsets'.": "'Profiles' are now, appropriately, called 'Playsets'.",
-  "The core systems of Skyve have been changed, organised, and optimised.": "Fixes an error caused by including/excluding mods that have contain assets.",
-  "Improved the author info gathering, which will fix the issue of authors not loading.": "Improved the author info gathering, which will fix the issue of authors not loading.",
-  "Excluded mods no longer use the '.excluded' file, they instead use a new ModConfig file.": "Fixed the action button on the right of the Compatibility Report list not being clickable.",
-  "The Load Order of mods has been re-integrated, and is completely automated based on mods' requirements as well as other Compatibility-Report factors.": "Fixed some packages not showing their successor properly."
+  "Changes": "Changes"
 }
