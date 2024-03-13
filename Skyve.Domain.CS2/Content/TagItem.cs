@@ -19,11 +19,11 @@ public struct TagItem(TagSource source, string key, string value) : ITag
 	public override readonly bool Equals(object? obj)
 	{
 		return obj is TagItem item &&
-			   Value == item.Value;
+			   Value.Equals(item.Value, System.StringComparison.InvariantCultureIgnoreCase);
 	}
 
 	public override readonly int GetHashCode()
 	{
-		return -1937169414 + EqualityComparer<string>.Default.GetHashCode(Value);
+		return -1937169414 + EqualityComparer<string>.Default.GetHashCode(Value.ToLower());
 	}
 }

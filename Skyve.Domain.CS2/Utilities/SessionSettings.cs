@@ -3,26 +3,9 @@
 using System.Drawing;
 
 namespace Skyve.Domain.CS2.Utilities;
+[SaveName(nameof(SessionSettings) + ".json")]
 public class SessionSettings : ConfigFile, ISessionSettings
 {
-	#region Implementation
-	private const string FILE_NAME = nameof(SessionSettings) + ".json";
-
-	public SessionSettings() : base(FILE_NAME)
-	{ }
-
-	public static SessionSettings Load(string appDataPath)
-	{
-		var path = CrossIO.Combine(appDataPath, FILE_NAME);
-
-		var settings = Load<SessionSettings>(path) ?? new();
-
-		settings.FilePath = path;
-
-		return settings;
-	}
-	#endregion
-
 	public bool FirstTimeSetupCompleted { get; set; }
 	public string? CurrentPlayset { get; set; }
 	public Rectangle? LastWindowsBounds { get; set; }
@@ -33,4 +16,9 @@ public class SessionSettings : ConfigFile, ISessionSettings
 	public string? LastVersionNotification { get; set; }
 	public int LastVersioningNumber { get; set; }
 	public bool DashboardFirstTimeShown { get; set; }
+
+	public void Save()
+	{
+		Handler?.Save(this);
+	}
 }

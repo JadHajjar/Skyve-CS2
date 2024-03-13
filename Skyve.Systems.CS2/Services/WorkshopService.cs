@@ -4,8 +4,10 @@ using PDX.SDK.Contracts;
 using PDX.SDK.Contracts.Configuration;
 using PDX.SDK.Contracts.Credential;
 using PDX.SDK.Contracts.Enums;
+using PDX.SDK.Contracts.Enums.Errors;
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
+using PDX.SDK.Contracts.Service.Mods.Result;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
@@ -19,6 +21,7 @@ using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,32 +31,60 @@ using Platform = Extensions.Platform;
 namespace Skyve.Systems.CS2.Services;
 internal class WorkshopService : IWorkshopService
 {
+	public event Action? OnLogin;
+	public event Action? OnLogout;
+
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
 	private readonly INotifier _notifier;
 	private readonly ICitiesManager _citiesManager;
 	private readonly INotificationsService _notificationsService;
+	private readonly IInterfaceService _interfaceService;
+	private readonly IServiceProvider _serviceProvider;
+	private readonly UserService _userService;
+	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
+	private readonly Locker _locker = new();
 
 	private bool loginWaitingConnection;
 	private List<ITag>? cachedTags;
+	private ulong currentTicket;
+	private ulong processedTicket;
 
 	private IContext? Context { get; set; }
+	public bool IsLoggedIn { get; private set; }
+	public bool IsLoginPending { get; private set; } = true;
 	public bool IsAvailable => Context is not null;
-	public bool IsReady => Context is not null && !Context.Mods.SyncOngoing();
+	public bool IsReady => Context is not null && IsLoggedIn && !_locker.Locked && !Context.Mods.SyncOngoing();
 
-	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, ICitiesManager citiesManager, INotificationsService notificationsService)
+	public IDisposable Lock
+	{
+		get
+		{
+			_locker.Locked = true;
+			return _locker;
+		}
+	}
+
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler)
 	{
 		_logger = logger;
 		_settings = settings;
 		_notifier = notifier;
 		_citiesManager = citiesManager;
 		_notificationsService = notificationsService;
-		_modProcessor = new PdxModProcessor(this);
+		_interfaceService = interfaceService;
+		_serviceProvider = serviceProvider;
+		_pdxLogUtil = pdxLogUtil;
+		_userService = (UserService)userService;
+		_modProcessor = new PdxModProcessor(this, saveHandler, _notifier);
 	}
 
 	public async Task Initialize()
 	{
+		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
+			throw new Exception("FolderSettings AppData folder does not exist");
+
 		var pdxSdkPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk");
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
 		var ecoSystem = _settings.FolderSettings.GamingPlatform switch { GamingPlatform.Epic => Ecosystem.Epic, GamingPlatform.Microsoft => Ecosystem.Microsoft_Store, _ => Ecosystem.Steam };
@@ -67,7 +98,7 @@ internal class WorkshopService : IWorkshopService
 		{
 			Language = Language.en,
 			GameVersion = _citiesManager.GameVersion,
-			Logger = _logger as CS2LoggerSystem,
+			Logger = _pdxLogUtil,
 			DiskIORoot = pdxSdkPath,
 			Environment = BackendEnvironment.Live,
 			TelemetryDebugEnabled = false,
@@ -94,7 +125,7 @@ internal class WorkshopService : IWorkshopService
 				@namespace: "cities_skylines_2",
 				config: config);
 
-			new WorkshopEventsManager(this).RegisterModsCallbacks(Context);
+			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
 		}
 		catch (Exception ex)
 		{
@@ -104,45 +135,69 @@ internal class WorkshopService : IWorkshopService
 
 	public async Task Login()
 	{
-		if (Context is null)
+		try
 		{
-			return;
+			if (Context is null || IsLoggedIn)
+			{
+				return;
+			}
+
+			var startupResult = ProcessResult(await Context.Account.Startup());
+
+			if (!startupResult.IsLoggedIn)
+			{
+				if (!ConnectionHandler.IsConnected)
+				{
+					if (loginWaitingConnection)
+					{
+						return;
+					}
+
+					loginWaitingConnection = true;
+
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+					_notificationsService.SendNotification(new ParadoxLoginWaitingConnectionNotification(this));
+
+					await ConnectionHandler.WhenConnected(Login);
+
+					return;
+				}
+
+				loginWaitingConnection = false;
+
+				if (!_settings.UserSettings.ParadoxLogin.IsValid(KEYS.SALT))
+				{
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+					_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false, _interfaceService));
+
+					return;
+				}
+
+				var loginResult = ProcessResult(await Context.Account.Login(GetCredentials()));
+
+				if (!loginResult.Success)
+				{
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+					_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(true, _interfaceService));
+
+					return;
+				}
+			}
+
+			IsLoggedIn = true;
+
+			_userService.SetLoggedInUser((await Context.Profile.Get()).Social?.DisplayName);
+
+			_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
+			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 		}
-
-		var startupResult = ProcessResult(await Context.Account.Startup());
-
-		if (!startupResult.IsLoggedIn)
+		finally
 		{
-			if (!ConnectionHandler.IsConnected)
-			{
-				loginWaitingConnection = true;
-
-				_notificationsService.SendNotification(new ParadoxLoginWaitingConnectionNotification());
-
-				await ConnectionHandler.WhenConnected(Login);
-
-				return;
-			}
-
-			if (!_settings.UserSettings.ParadoxLogin.IsValid(KEYS.SALT))
-			{
-				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false));
-
-				return;
-			}
-
-			var loginResult = ProcessResult(await Context.Account.Login(GetCredentials()));
-
-			if (!loginResult.Success)
-			{
-				_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(true));
-
-				return;
-			}
+			IsLoginPending = false;
 		}
-
-		_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
-		_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 
 		await RunSync();
 	}
@@ -171,6 +226,10 @@ internal class WorkshopService : IWorkshopService
 		{
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+
+			IsLoggedIn = true;
+
+			_userService.SetLoggedInUser((await Context.Profile.Get()).Social?.DisplayName);
 		}
 
 		return loginResult.Success;
@@ -198,12 +257,12 @@ internal class WorkshopService : IWorkshopService
 
 	public IWorkshopInfo? GetInfo(IPackageIdentity identity)
 	{
-		return identity.Id <= 0 ? null : (IWorkshopInfo)_modProcessor.Get((int)identity.Id).Result;
+		return identity.Id <= 0 ? null : _modProcessor.Get((int)identity.Id).Result;
 	}
 
 	public async Task<IWorkshopInfo?> GetInfoAsync(IPackageIdentity identity)
 	{
-		return identity.Id <= 0 ? null : (IWorkshopInfo)await _modProcessor.Get((int)identity.Id, true);
+		return identity.Id <= 0 ? null : await _modProcessor.Get((int)identity.Id, true);
 	}
 
 	internal async Task<PdxModDetails?> GetInfoAsync(int id)
@@ -255,7 +314,12 @@ internal class WorkshopService : IWorkshopService
 
 	public IUser? GetUser(object authorId)
 	{
-		return new PdxUser(authorId.ToString());
+		if (string.IsNullOrWhiteSpace(authorId?.ToString()))
+		{
+			return null;
+		}
+
+		return new PdxUser(authorId!.ToString());
 	}
 
 	public async Task<IEnumerable<IWorkshopInfo>> GetWorkshopItemsByUserAsync(object userId)
@@ -335,14 +399,17 @@ internal class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		await WaitUntilReady();
+		if (IsLoggedIn)
+		{
+			await WaitUntilReady();
+		}
 
 		var mods = ProcessResult(await Context.Mods.List());
 
 		return !mods.Success || mods.Mods is null ? (List<Mod>)([]) : mods.Mods;
 	}
 
-	public async Task<List<ICustomPlayset>> GetPlaysets(bool localOnly)
+	public async Task<List<IPlayset>> GetPlaysets(bool localOnly)
 	{
 		if (Context is null)
 		{
@@ -351,7 +418,7 @@ internal class WorkshopService : IWorkshopService
 
 		var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(!localOnly));
 
-		return !playsets.Success ? (List<ICustomPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (ICustomPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
+		return !playsets.Success ? (List<IPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (IPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
 	}
 
 	public async Task<bool> ToggleVote(IPackageIdentity packageIdentity)
@@ -404,16 +471,36 @@ internal class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId));
+		var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, includeOnline: includeOnline));
 
 		return result.Mods?.ToList(x => new PdxPlaysetPackage(x)) ?? [];
 	}
 
 	public async Task WaitUntilReady()
 	{
-		while (!IsReady)
+		ulong ticket;
+
+		lock (this)
 		{
+			ticket = ++currentTicket;
+		}
+
+		while (true)
+		{
+			lock (this)
+			{
+				if (ticket == processedTicket + 1 && IsReady)
+				{
+					break;
+				}
+			}
+
 			await Task.Delay(50);
+		}
+
+		lock (this)
+		{
+			processedTicket++;
 		}
 	}
 
@@ -463,6 +550,8 @@ internal class WorkshopService : IWorkshopService
 			playset,
 			enable);
 
+		_notifier.OnWorkshopSyncEnded();
+
 		return ProcessResult(result).Success;
 	}
 
@@ -482,6 +571,8 @@ internal class WorkshopService : IWorkshopService
 			results.Add(ProcessResult(result));
 		}
 
+		_notifier.OnWorkshopSyncEnded();
+
 		return results.All(x => x.Success);
 	}
 
@@ -500,7 +591,7 @@ internal class WorkshopService : IWorkshopService
 		return Context is not null && ProcessResult(await Context.Mods.RenamePlayset(playset, name)).Success;
 	}
 
-	internal async Task<ICustomPlayset?> CreatePlayset(string playsetName)
+	internal async Task<IPlayset?> CreatePlayset(string playsetName)
 	{
 		if (Context is null)
 		{
@@ -509,7 +600,7 @@ internal class WorkshopService : IWorkshopService
 
 		var result = ProcessResult(await Context.Mods.CreatePlayset(playsetName));
 
-		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) : (IPlayset?)null;
 	}
 
 	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, int playset)
@@ -535,15 +626,10 @@ internal class WorkshopService : IWorkshopService
 
 		ProcessResult(result);
 
-		if (result.Success)
-		{
-			await Context.Mods.Sync();
-		}
-
 		return result.Success;
 	}
 
-	internal async Task<ICustomPlayset?> ClonePlayset(int id)
+	internal async Task<IPlayset?> ClonePlayset(int id)
 	{
 		if (Context is null)
 		{
@@ -552,7 +638,7 @@ internal class WorkshopService : IWorkshopService
 
 		var result = ProcessResult(await Context.Mods.ClonePlayset(id));
 
-		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) { LastEditDate = DateTime.Now } : (ICustomPlayset?)null;
+		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) : (IPlayset?)null;
 	}
 
 	public async Task RunSync()
@@ -567,7 +653,14 @@ internal class WorkshopService : IWorkshopService
 
 		try
 		{
-			ProcessResult(await Context.Mods.Sync());
+			var result = ProcessResult(await Context.Mods.Sync());
+
+			if (result.Error is not null && result.Error == Mods.PromptNeeded)
+			{
+				var conflicts = await Context.Mods.GetSyncConflicts();
+
+				await Context.Mods.Sync(SyncDirection.Upstream);
+			}
 		}
 		catch (Exception ex)
 		{
@@ -576,5 +669,108 @@ internal class WorkshopService : IWorkshopService
 
 		_notifier.IsWorkshopSyncInProgress = false;
 		_notifier.OnWorkshopSyncEnded();
+	}
+
+	public async Task DeactivateActivePlayset()
+	{
+		if (Context is null)
+		{
+			return;
+		}
+
+		ProcessResult(await Context.Mods.DeactivateActivePlayset());
+	}
+
+	public async Task CreateCollection(List<IPackageIdentity> list)
+	{
+		if (Context is null)
+		{
+			return;
+		}
+
+		var config = new BaseOptionSet
+		{
+			DisplayName = "My Collection 2",
+			ShortDescription = "Testing",
+			LongDescription = "This is a collection test",
+			Dependencies = list.ToDictionary(x => (int)x.Id, x => new ModDependency
+			{
+				Id = (int)x.Id,
+				DisplayName = x.Name,
+				Type = DependencyType.Mod
+			}),
+			Tags = ["Code Mod"],
+			ModVersion = "1",
+			GameVersion = "*.*.*",
+			Thumbnail = @"C:\Users\Jad\Desktop\Untitled.png",
+		};
+
+		var wipInfo = await Context.Mods.RegisterWIP(config.DisplayName, config.ShortDescription, config.LongDescription, 100UL);
+		PrepareContent(config, wipInfo);
+		var updateWipData = new UpdateWipData
+		{
+			guid = wipInfo.Guid,
+			contentFileOrFolderName = "Content",
+			displayName = config.DisplayName,
+			shortDescription = config.ShortDescription,
+			longDescription = config.LongDescription,
+			thumbnailFilename = Path.GetFileName(config.Thumbnail),
+			screenshotsFilenames = config.Screenshots.Select((string s) => Path.GetFileName(s)).ToList<string>()
+		};
+		var updateWipData2 = updateWipData;
+		var result = await Context.Mods.UpdateWIP(updateWipData2);
+
+		var publishWipData = new PublishWipData
+		{
+			wipGuid = wipInfo.Guid,
+			os = ModPlatform.Any,
+			recommendedGameVersion = config.GameVersion,
+			userModVersion = config.ModVersion,
+			forumLink = config.ForumLink,
+			dependencies = config.Dependencies.Values.ToList<ModDependency>(),
+			tags = config.Tags.ToList<string>()
+		};
+		var publishResult = await Context.Mods.PublishWIP(publishWipData);
+	}
+
+	private static void PrepareContent(BaseOptionSet config, RegisterResult wipInfo)
+	{
+		var text = Path.Combine(wipInfo.Path, "Content");
+		if (Directory.Exists(text))
+		{
+			Directory.Delete(text, true);
+		}
+		Directory.CreateDirectory(text);
+		File.WriteAllLines(Path.Combine(text, "ModList.txt"), config.Dependencies.ToArray(x => $"{x.Key} - {x.Value.DisplayName}"));
+		var text2 = Path.Combine(wipInfo.Path, ".metadata");
+		var text3 = Path.Combine(text2, Path.GetFileName(config.Thumbnail));
+		if (!string.IsNullOrEmpty(config.Thumbnail) && File.Exists(config.Thumbnail))
+		{
+			File.Copy(config.Thumbnail, text3, true);
+		}
+		else
+		{
+		}
+		if (config.Screenshots.Count > 0)
+		{
+			foreach (var text4 in config.Screenshots)
+			{
+				File.Copy(text4, Path.Combine(text2, Path.GetFileName(text4)), true);
+			}
+		}
+	}
+
+	public class BaseOptionSet
+	{
+		public string DisplayName { get; set; }
+		public string ShortDescription { get; set; }
+		public string LongDescription { get; set; }
+		public string Thumbnail { get; set; }
+		public string ForumLink { get; set; }
+		public string ModVersion { get; set; }
+		public string GameVersion { get; set; }
+		public HashSet<string> Tags { get; set; }
+		public HashSet<string> Screenshots { get; set; } = [];
+		public Dictionary<int, ModDependency> Dependencies { get; set; } = [];
 	}
 }

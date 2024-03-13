@@ -1,17 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
-	<Import Project="../../Skyve/CS2-Version.props" />
 	<Import Project="../../Skyve/Config.props" />
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<Description>Helps to manage your mods and assets</Description>
-		<DebugType>embedded</DebugType>
-		<DebugSymbols>true</DebugSymbols>
 		<Nullable>enable</Nullable>
 		<DefineConstants>$(DefineConstants);SkyveApp</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup>
 		<Deterministic>true</Deterministic>
-		<TargetFramework>net4.7.2</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<SignAssembly>True</SignAssembly>
 		<NeutralLanguage>en</NeutralLanguage>
@@ -25,10 +21,19 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <Compile Remove="Content\_Playset.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Include="Content\_Playset.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<Reference Include="System.Windows.Forms" />
 		<ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Domain\Skyve.Domain.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Systems\Skyve.Systems.csproj" />
+		<ProjectReference Include="..\..\SlickControls\SlickControls.csproj" />
 		<Reference Include="PDX.SDK">
 			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.dll</HintPath>
 		</Reference>

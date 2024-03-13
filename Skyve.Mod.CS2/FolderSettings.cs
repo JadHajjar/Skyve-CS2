@@ -7,11 +7,9 @@ using Extensions;
 using Skyve.Domain;
 using Skyve.Domain.Enums;
 
-using System;
 using System.IO;
 
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace Skyve.Mod.CS2
 {
@@ -28,7 +26,7 @@ namespace Skyve.Mod.CS2
 		public GamingPlatform GamingPlatform { get; set; }
 		public string UserIdentifier { get; set; }
 
-        static FolderSettings()
+		static FolderSettings()
 		{
 			ContentFolder = Path.Combine(EnvPath.kUserDataPath, "ModsData", nameof(Skyve));
 
@@ -47,8 +45,8 @@ namespace Skyve.Mod.CS2
 			UserIdentifier = PlatformManager.instance.userSpecificPath;
 			Platform = GetPlatform();
 
-			Mod.Log.Info(FolderSettingsPath);
-			Mod.Log.Info(JSON.Dump(this));
+			SkyveMod.Log.Info(FolderSettingsPath);
+			SkyveMod.Log.Info(JSON.Dump(this));
 
 			File.WriteAllText(FolderSettingsPath, JSON.Dump(this));
 		}

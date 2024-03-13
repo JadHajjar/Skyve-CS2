@@ -16,11 +16,14 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 	public const string CACHE_FILE = "PdxModsCache.json";
 
 	private readonly WorkshopService _workshopService;
+	private readonly SaveHandler _saveHandler;
+	private readonly INotifier _notifier;
 
-	public PdxModProcessor(WorkshopService workshopService) : base(1, 30000, GetCachedInfo())
+	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(1, 5000, GetCachedInfo(saveHandler))
 	{
 		_workshopService = workshopService;
-
+		_saveHandler = saveHandler;
+		_notifier = notifier;
 		MaxCacheTime = TimeSpan.FromHours(1);
 	}
 
@@ -52,7 +55,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 		}
 		finally
 		{
-			ServiceCenter.Get<INotifier>().OnWorkshopInfoUpdated();
+			_notifier.OnWorkshopInfoUpdated();
 		}
 	}
 
@@ -60,23 +63,23 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 	{
 		try
 		{
-			ISave.Save(results, CACHE_FILE);
+			_saveHandler.Save(results, CACHE_FILE);
 		}
 		catch { }
 	}
 
-	private static Dictionary<int, PdxModDetails>? GetCachedInfo()
+	private static Dictionary<int, PdxModDetails>? GetCachedInfo(SaveHandler saveHandler)
 	{
 		try
 		{
-			var path = ISave.GetPath(CACHE_FILE);
+			var path = saveHandler.GetPath(CACHE_FILE);
 
 			if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(7) && ConnectionHandler.IsConnected)
 			{
 				return null;
 			}
 
-			ISave.Load(out Dictionary<int, PdxModDetails>? dic, CACHE_FILE);
+			saveHandler.Load(out Dictionary<int, PdxModDetails>? dic, CACHE_FILE);
 
 			return dic;
 		}

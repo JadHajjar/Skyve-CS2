@@ -10,8 +10,6 @@ public class DownloadsInfoControl : SlickControl
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly INotifier _notifier;
 
-	private IWorkshopInfo? workshopInfo;
-
 	public DownloadsInfoControl()
 	{
 		_subscriptionsManager = ServiceCenter.Get<ISubscriptionsManager>();
@@ -26,11 +24,6 @@ public class DownloadsInfoControl : SlickControl
 
 	private async void SubscriptionsManager_UpdateDisplayNotification()
 	{
-		if (_subscriptionsManager.Status.ModId == 0)
-		{
-			workshopInfo = null;
-		}
-
 		Invalidate();
 
 		if (_subscriptionsManager.Status.IsActive)
@@ -42,7 +35,7 @@ public class DownloadsInfoControl : SlickControl
 		}
 		else
 		{
-			await Task.Delay(1000);
+			await Task.Delay(1500);
 
 			if (!_subscriptionsManager.Status.IsActive)
 			{
@@ -79,7 +72,7 @@ public class DownloadsInfoControl : SlickControl
 		var thumbnail = workshopInfo?.GetThumbnail();
 		var thumbRect = new Rectangle(new Point(Padding.Left, Padding.Top), UI.Scale(new Size(34, 34), UI.FontScale));
 
-		SlickTip.SetTo(this, workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), _subscriptionsManager.Status.TotalSize > 0 ? (_subscriptionsManager.Status.ProcessedBytes.SizeString(0) + "/" + _subscriptionsManager.Status.TotalSize.SizeString(0)) : null);
+		SlickTip.SetTo(this, workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), _subscriptionsManager.Status.TotalSize > 0 ? (_subscriptionsManager.Status.ProcessedBytes.SizeString(1) + "/" + _subscriptionsManager.Status.TotalSize.SizeString(1)) : null);
 
 		if (thumbnail is null)
 		{

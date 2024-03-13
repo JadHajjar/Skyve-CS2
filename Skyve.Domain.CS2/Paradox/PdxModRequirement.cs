@@ -9,6 +9,11 @@ using System.Drawing;
 namespace Skyve.Domain.CS2.Paradox;
 public class PdxModRequirement : IPackageRequirement
 {
+    public PdxModRequirement()
+    {
+		Name = string.Empty;
+	}
+
 	public PdxModRequirement(ModDependency x)
 	{
 		if (x.Id.HasValue)
@@ -22,9 +27,9 @@ public class PdxModRequirement : IPackageRequirement
 		IsOptional = x.Type is DependencyType.Unknown;
 	}
 
-	public bool IsDlc { get; }
-	public bool IsOptional { get; }
-	public ulong Id { get; }
-	public string Name { get; }
-	public string? Url { get; }
+	public bool IsDlc { get; set; }
+	public bool IsOptional { get; set; }
+	public ulong Id { get; set; }
+	public string Name { get; set; }
+	public string? Url { get; set; }
 }

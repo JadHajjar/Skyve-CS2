@@ -23,7 +23,7 @@ public class PackageWatcher
 		AllowSelf = allowSelf;
 		Workshop = workshop;
 
-		ServiceCenter.Get(out _contentManager, out _logger);
+		//ServiceCenter.Get(out _contentManager, out _logger);
 
 		CreateWatcher();
 	}

@@ -13,7 +13,6 @@ public static class Startup
 {
 	public static IServiceCollection AddCs2SkyveSystems(this IServiceCollection services)
 	{
-		services.AddSingleton<ILogger, CS2LoggerSystem>();
 		services.AddSingleton<ICitiesManager, CitiesManager>();
 		services.AddSingleton<ILocationService, LocationService>();
 		services.AddSingleton<IModLogicManager, ModLogicManager>();
@@ -34,8 +33,9 @@ public static class Startup
 		services.AddSingleton<ITagsService, TagsService>();
 		services.AddSingleton<ITroubleshootSystem, TroubleshootSystem>();
 		services.AddSingleton<INotificationsService, NotificationsService>();
-		services.AddSingleton<ISkyveApiUtil, SkyveApiUtil>();
+		services.AddSingleton<SkyveApiUtil>();
 		services.AddSingleton<ISkyveDataManager, SkyveDataManager>();
+		services.AddSingleton<PdxLogUtil>();
 
 		services.AddTransient<IVersionUpdateService, VersionUpdateService>();
 		services.AddTransient<ILogUtil, LogUtil>();

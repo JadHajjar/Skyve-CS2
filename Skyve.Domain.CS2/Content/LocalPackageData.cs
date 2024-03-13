@@ -16,18 +16,27 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject
 	public IPackage Package { get; }
 	public long FileSize { get; }
 	public DateTime LocalTime { get; }
-	public string Version { get; }
+	public string? Version { get; }
 	public IAsset[] Assets { get; set; }
+	public IThumbnailObject[] Images { get; set; }
 	public string Folder { get; }
 	public string FilePath { get; }
+	public string? SuggestedGameVersion { get; }
 
-	public LocalPackageData(IPackage package, IAsset[] assets, string folder, string version, string filePath)
+	public LocalPackageData(IPackage package, IAsset[] assets, IThumbnailObject[] images, string folder, string? version, string filePath, string? suggestedGameVersion)
 	{
 		Package = package;
 		Version = version;
 		Assets = assets;
 		Folder = folder;
 		FilePath = filePath;
+		Images = images;
+		SuggestedGameVersion = suggestedGameVersion;
+
+		for (var i = 0; i < Assets.Length; i++)
+		{
+			Assets[i].Package = Package;
+		}
 
 		try
 		{

@@ -4,6 +4,7 @@ using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
 using Skyve.Domain.Enums;
+using Skyve.Systems.CS2.Domain.Api;
 
 using SkyveApi.Domain.CS2;
 
@@ -15,14 +16,14 @@ namespace Skyve.Systems.CS2.Domain;
 
 public class IndexedPackage : IIndexedPackageCompatibilityInfo
 {
-	public CompatibilityPackageData Package { get; }
+	public PackageData Package { get; }
 	public Dictionary<ulong, IIndexedPackageCompatibilityInfo> Group { get; }
 	public Dictionary<ulong, IIndexedPackageCompatibilityInfo> RequirementAlternatives { get; }
 	public Dictionary<StatusType, IList<IIndexedPackageStatus<StatusType>>> IndexedStatuses { get; }
 	public Dictionary<InteractionType, IList<IIndexedPackageStatus<InteractionType>>> IndexedInteractions { get; }
 	public IIndexedPackageStatus<InteractionType>? SucceededBy { get; private set; }
 
-	public IndexedPackage(CompatibilityPackageData package)
+	public IndexedPackage(PackageData package)
 	{
 		Package = package;
 		IndexedStatuses = [];
@@ -192,7 +193,7 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 	public PackageStability Stability => (Package).Stability;
 	public PackageUsage Usage => (Package).Usage;
 	public PackageType Type => (Package).Type;
-	public uint[]? RequiredDLCs => (Package).RequiredDLCs;
+	public List<uint>? RequiredDLCs => (Package).RequiredDLCs;
 	public List<string>? Tags => (Package).Tags;
 	public List<ILink>? Links => (Package).Links.ToList(x => (ILink)x);
 	List<IPackageStatus<InteractionType>> IPackageCompatibilityInfo.Interactions => (Package).Interactions.ToList(x => (IPackageStatus<InteractionType>)x);

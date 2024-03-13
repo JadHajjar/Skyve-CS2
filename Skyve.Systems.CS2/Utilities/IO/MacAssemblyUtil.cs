@@ -17,12 +17,13 @@ internal class MacAssemblyUtil
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
 
-	public MacAssemblyUtil(ILocationService locationManager, IModDllManager contentUtil, ILogger logger, IIOUtil iOUtil)
+	public MacAssemblyUtil(ILocationService locationManager, IModDllManager contentUtil, ILogger logger, IIOUtil iOUtil, ISettings settings)
 	{
 		_locationManager = locationManager;
 		_contentUtil = contentUtil;
 		_logger = logger;
 		_iOUtil = iOUtil;
+		_settings = settings;
 	}
 
 	public bool FindImplementation(string[] dllPaths, out string? dllPath, out Version? version)

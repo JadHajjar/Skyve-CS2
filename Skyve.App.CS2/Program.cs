@@ -4,10 +4,12 @@ using Skyve.App.CS2.Services;
 using Skyve.App.Interfaces;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Systems.CS2;
+using Skyve.Systems.CS2.Systems;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 using static System.Environment;
@@ -21,12 +23,21 @@ internal static class Program
 		App.Program.IsRunning = true;
 		App.Program.CurrentDirectory = Application.StartupPath;
 		App.Program.ExecutablePath = Application.ExecutablePath;
-		App.Program.AppDataPath = Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II");
 
-		ISave.CustomSaveDirectory = Path.Combine(App.Program.AppDataPath, "ModsData");
-		ISave.AppName = "Skyve";
+		if (File.Exists(Path.Combine(GetFolderPath(SpecialFolder.LocalApplicationData), "SkyveDataPathHelper.txt")))
+		{
+			App.Program.AppDataPath = File.ReadAllText(Path.Combine(GetFolderPath(SpecialFolder.LocalApplicationData), "SkyveDataPathHelper.txt"));
+		}
+		else
+		{
+			App.Program.AppDataPath = Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II");
+		}
+
+		SaveHandler.AppName = "Skyve";
 
 		ServiceCenter.Provider = BuildServices();
+
+		SystemExtensions.Initialize(ServiceCenter.Provider);
 	}
 
 	private static IServiceProvider BuildServices()
@@ -37,9 +48,11 @@ internal static class Program
 
 		services.AddCs2SkyveSystems();
 
+		services.AddSingleton(new SaveHandler(Path.Combine(App.Program.AppDataPath, "ModsData")));
+		services.AddSingleton<ILogger, AppLoggerSystem>();
 		services.AddSingleton<IInterfaceService, InterfaceService>();
 		services.AddSingleton<IAppInterfaceService, InterfaceService>();
-		services.AddSingleton<ICustomPackageService, CustomPackageService>();
+		services.AddSingleton<IRightClickService, RightClickService>();
 
 		return services.BuildServiceProvider();
 	}
@@ -49,6 +62,30 @@ internal static class Program
 	{
 		try
 		{
+			if (App.Program.CurrentDirectory.PathContains(App.Program.AppDataPath))
+			{
+				if (OSVersion.Version.Major >= 6)
+				{
+					SetProcessDPIAware();
+				}
+
+				var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "Skyve Setup.exe");
+
+				if (CrossIO.FileExists(setupFile))
+				{
+					if (MessagePrompt.Show(LocaleCS2.RunSetupOrRunApp, PromptButtons.OKCancel, PromptIcons.Hand) == DialogResult.OK)
+					{
+						Process.Start(setupFile);
+					}
+				}
+				else
+				{
+					MessagePrompt.Show(LocaleCS2.CantRunAppFromHere, PromptButtons.OK, PromptIcons.Hand);
+				}
+
+				return;
+			}
+
 			if (CommandUtil.Parse(args))
 			{
 				return;
@@ -62,10 +99,15 @@ internal static class Program
 				{
 					File.WriteAllText(Path.Combine(CurrentDirectory, "Wake"), "It's time to wake up");
 
-					return;
+					Thread.Sleep(2500);
+
+					if (!CrossIO.FileExists(CrossIO.Combine(CurrentDirectory, "Wake")))
+					{
+						return;
+					}
 				}
 
-				CrossIO.DeleteFile(CrossIO.Combine(CurrentDirectory, "Wake"));
+				CrossIO.DeleteFile(CrossIO.Combine(CurrentDirectory, "Wake"), true);
 			}
 			catch { }
 
@@ -84,7 +126,7 @@ internal static class Program
 #if DEBUG
 				throw ex;
 #else
-				ServiceCenter.Get<ILogger>().Exception(ex, "Localization Failed to Initialize");
+				ServiceCenter.Get<ILogger>().Exception(ex, "Localization failed to Initialize");
 #endif
 			}
 
@@ -108,8 +150,12 @@ internal static class Program
 		}
 		catch (Exception ex)
 		{
-			MessagePrompt.GetError(ex, "App failed to start", out var message, out var details);
-			MessageBox.Show(details, message);
+			if (OSVersion.Version.Major >= 6)
+			{
+				SetProcessDPIAware();
+			}
+
+			MessagePrompt.Show(ex, "App failed to start");
 		}
 	}
 

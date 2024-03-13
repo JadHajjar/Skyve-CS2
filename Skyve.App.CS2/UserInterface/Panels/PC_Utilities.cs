@@ -1,5 +1,4 @@
-﻿using Skyve.App.UserInterface.Content;
-using Skyve.App.UserInterface.Panels;
+﻿using Skyve.App.UserInterface.Panels;
 using Skyve.Compatibility.Domain.Interfaces;
 
 using System.Drawing;
@@ -47,9 +46,9 @@ public partial class PC_Utilities : PanelContent
 	{
 		base.UIChanged();
 
-		B_Troubleshoot.Margin = P_BOB.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin =  UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
+		B_Troubleshoot.Margin = P_BOB.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
 		B_ImportClipboard.Margin = UI.Scale(new Padding(10), UI.FontScale);
-		L_Troubleshoot.Font =  UI.Font(9F);
+		L_Troubleshoot.Font = UI.Font(9F);
 		L_Troubleshoot.Margin = UI.Scale(new Padding(3), UI.FontScale);
 
 		foreach (Control item in P_Reset.Controls)
@@ -189,7 +188,7 @@ public partial class PC_Utilities : PanelContent
 		if (!B_ResetImageCache.Loading)
 		{
 			B_ResetImageCache.Loading = true;
-			await Task.Run(ServiceCenter.Get<IImageService>().ClearCache);
+			await Task.Run(() => ServiceCenter.Get<IImageService>().ClearCache(true));
 			B_ResetImageCache.Loading = false;
 			var img = B_ResetImageCache.ImageName;
 			B_ResetImageCache.ImageName = "I_Check";

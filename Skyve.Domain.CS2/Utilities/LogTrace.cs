@@ -1,50 +1,37 @@
 ﻿using Extensions;
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Skyve.Domain.CS2.Utilities;
 public class LogTrace : ILogTrace
 {
-	public LogTrace(List<string> lines, int index, bool crash)
+	public LogTrace(string type, string title, DateTime timestamp, string sourceFile)
 	{
+		Type = type;
+		Title = title;
+		Timestamp = timestamp;
+		SourceFile = sourceFile;
 		Trace = [];
-		Crash = crash;
-
-		for (var i = 1; i <= 3; i++)
-		{
-			var timestampRegex = Regex.Match(lines[index - i].Trim(), @"^([\d,\.]+ms) \| ");
-
-			if (timestampRegex.Success)
-			{
-				Timestamp = "@" + timestampRegex.Groups[1].Value;
-				Title = lines[index - i].Trim().Substring(timestampRegex.Value.Length);
-
-				while (i > 1)
-				{
-					Trace.Insert(0, lines[index - --i].Trim());
-				}
-
-				break;
-			}
-		}
-
-		Title ??= lines[index - 1].Trim();
-		Timestamp ??= "N/A";
 	}
 
 	public string Title { get; }
-	public string Timestamp { get; }
-	public bool Crash { get; }
+	public DateTime Timestamp { get; }
 	public List<string> Trace { get; }
+	public string SourceFile { get; }
+	public string Type { get; }
 
 	public void AddTrace(string trace)
 	{
-		Trace.Add(trace.RegexRemove(@"\[0x00.+\>\:0").Trim());
+		Trace.Add(trace.RegexReplace(@" \[0x\w+\] in", " in").RegexRemove(@" in \<\w+\>:\d+"));
 	}
 
 	public override string ToString()
 	{
-		return $"{(Crash ? "Crash" : "Error")} @{Timestamp}\t-\t{Title}\r\n\r\n{Trace.ListStrings(x => $"\t{x}", "\r\n")}";
+		return $"[{Type}] - [{Timestamp:HH:mm:ss,fff}] - ({Path.GetFileName(SourceFile)})\r\n" +
+			$"{Title}\r\n" +
+			$"{Trace.ListStrings(x => $"\t{x}", "\r\n")}";
 	}
 }

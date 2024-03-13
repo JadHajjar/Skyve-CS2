@@ -2,47 +2,52 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<TargetFramework>net472</TargetFramework>
 		<TargetName>Skyve Mod</TargetName>
-
-		<!--The folder where Cities2.exe is located. Set it only if the game is not installed in the default location, otherwise keep it empty-->
-		<CustomInstallationPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II</CustomInstallationPath>
-		
-		<!--Path to the text file where PDX account data is stored which is required to publish the mod-->
-		<!--Keep it outside of project in order to not commit it or share accidentally-->
-		<!--The file should contain 2 lines:-->
-		<!--Your.PDX@Account.login-->
-		<!--Your-PDX-Account-Pa$$word-->
-		<PDXAccountDataPath>$(USERPROFILE)\Documents\pdx_account.txt</PDXAccountDataPath>
-		
-		<!--The file where mod information which is required for publishing mod on PDX mods are stored-->
-		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
 	</PropertyGroup>
 
-	<Import Project="../../Skyve/CS2-Version.props" />
 	<Import Project="../../Skyve/Config.props" />
 
-	<PropertyGroup>
-		<PublishConfigurationPath>Properties\$(BuildType)\PublishConfiguration.xml</PublishConfigurationPath>
-	</PropertyGroup>
-
-	<Target Name="CopyFiles" BeforeTargets="PreBuildEvent">
-		<ItemGroup>
-			<AppFiles Include="..\Skyve.App.CS2\bin\$(BuildType)\**\*.*" />
-			<SetupFiles Include="..\Skyve.App.CS2.Installer\bin\$(BuildType)\Skyve Setup.*" />
-		</ItemGroup>
-
-		<Copy SourceFiles="@(AppFiles)" DestinationFiles="@(AppFiles->'$(OutputPath)\.App\%(RecursiveDir)%(Filename)%(Extension)')" />
-		<Copy SourceFiles="@(SetupFiles)" DestinationFolder="$(OutputPath)" />
-	</Target>
-	
 	<!--Imports must be after PropertyGroup block-->
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
+
+	<PropertyGroup>
+		<CustomInstallationPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II</CustomInstallationPath>
+		<PDXAccountDataPath>$(USERPROFILE)\Documents\pdx_account.txt</PDXAccountDataPath>
+		<PublishConfigurationPath>Properties\$(BuildType)\PublishConfiguration.xml</PublishConfigurationPath>
+	</PropertyGroup>
+
+	<Target Name="BuildUI" AfterTargets="AfterBuild">
+		<Exec Command="npm run build --prefix UI" />
+	</Target>
+
+	<Target Name="CopyFiles" AfterTargets="DeployWIP">
+		<ItemGroup>
+			<AppFiles Include="..\Skyve.Service.CS2\bin\$(BuildType)\**\*.*" />
+			<AppFiles Include="..\Skyve.App.CS2\bin\$(BuildType)\**\*.*" />
+			<SetupFiles Include="..\Skyve.App.CS2.Installer\bin\$(BuildType)\Skyve Setup.*" />
+			<UIFiles Include="bin\UI\**\*.*" />
+		</ItemGroup>
+		
+		<Copy SourceFiles="@(AppFiles)" DestinationFiles="@(AppFiles->'$(DeployDir)\.App\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(SetupFiles)" DestinationFolder="$(DeployDir)" />
+		<Copy SourceFiles="@(UIFiles)" DestinationFiles="@(UIFiles->'$(DeployDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+	</Target>
+
+	<Target Name="UpdatePublishConfiguration" BeforeTargets="Publish">
+		<PropertyGroup>
+			<PdxPublishConfiguration>$([System.IO.Path]::GetFullPath('..\PdxPublishConfiguration\PdxPublishConfiguration.exe'))</PdxPublishConfiguration>
+			<ChangelogJsonFile>"$([System.IO.Path]::GetFullPath('..\Skyve.App.CS2\Changelog.json'))"</ChangelogJsonFile>
+			<PublishConfigurationFile>"$([System.IO.Path]::GetFullPath('..\Skyve.Mod.CS2\$(PublishConfigurationPath)'))"</PublishConfigurationFile>
+		</PropertyGroup>
+
+		<Exec Command="$(PdxPublishConfiguration) $(PublishConfigurationFile) $(Version) $(BuildType) $(ChangelogJsonFile)" />
+	</Target>
+	
 	<ItemGroup>
-	  <Compile Include="..\..\Extensions\Extensions\Enums\Platform.cs" Link="Shared\Platform.cs" />
-	  <Compile Include="..\..\Skyve\Skyve.Domain\Enums\GamingPlatform.cs" Link="Shared\GamingPlatform.cs" />
-	  <Compile Include="..\..\Skyve\Skyve.Domain\IFolderSettings.cs" Link="Shared\IFolderSettings.cs" />
+		<Compile Include="..\..\Extensions\Extensions\Enums\Platform.cs" Link="Shared\Platform.cs" />
+		<Compile Include="..\..\Skyve\Skyve.Domain\Enums\GamingPlatform.cs" Link="Shared\GamingPlatform.cs" />
+		<Compile Include="..\..\Skyve\Skyve.Domain\IFolderSettings.cs" Link="Shared\IFolderSettings.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,10 +63,16 @@
 		<Reference Include="Colossal.PSI.Common">
 			<Private>false</Private>
 		</Reference>
+		<Reference Include="Colossal.Localization">
+			<Private>false</Private>
+		</Reference>
 		<Reference Include="Colossal.IO.AssetDatabase">
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Colossal.AssetPipeline">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Colossal.UI.Binding">
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="UnityEngine.CoreModule">
@@ -99,7 +110,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Shared\" />
+		<EmbeddedResource Include="Properties\*.json" />
+		<EmbeddedResource Include="Properties\*\*.json" />
+		<None Remove="Properties\*.json" />
+		<None Remove="Properties\*\*.json" />
+		<None Include="UI\**">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

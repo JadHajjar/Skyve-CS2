@@ -10,12 +10,15 @@ namespace Skyve.Domain.CS2.Notifications;
 
 public class ParadoxLoginWaitingConnectionNotification : INotificationInfo
 {
-	public ParadoxLoginWaitingConnectionNotification()
+	private readonly IWorkshopService _workshopService;
+
+	public ParadoxLoginWaitingConnectionNotification(IWorkshopService workshopService)
 	{
 		Time = DateTime.MaxValue;
 		Title = LocaleCS2.ParadoxLoginFailedTitle;
 		Description = LocaleCS2.ParadoxLoginFailedNoConnection;
 		Icon = "I_Paradox";
+		_workshopService = workshopService;
 	}
 
 	public DateTime Time { get; }
@@ -27,7 +30,7 @@ public class ParadoxLoginWaitingConnectionNotification : INotificationInfo
 
 	public void OnClick()
 	{
-		ServiceCenter.Get<IWorkshopService>().Login();
+		_workshopService.Login();
 	}
 
 	public void OnRightClick()

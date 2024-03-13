@@ -5,27 +5,15 @@ using Skyve.Domain.Enums;
 using System.Collections.Generic;
 
 namespace Skyve.Domain.CS2.Utilities;
+[SaveName(nameof(UserSettings) + ".json")]
 public class UserSettings : ConfigFile, IUserSettings
 {
-	#region Implementation
-	private const string FILE_NAME = nameof(UserSettings) + ".json";
+    public UserSettings()
+    {
+        AutoRefresh = true;
+    }
 
-	public UserSettings() : base(FILE_NAME)
-	{ }
-
-	public static UserSettings Load(string appDataPath)
-	{
-		var path = CrossIO.Combine(appDataPath, FILE_NAME);
-
-		var settings = Load<UserSettings>(path) ?? new();
-
-		settings.FilePath = path;
-
-		return settings;
-	}
-	#endregion
-
-	bool IUserSettings.AdvancedIncludeEnable { get; set; }
+    bool IUserSettings.AdvancedIncludeEnable { get; set; }
 	bool IUserSettings.OpenLinksInBrowser { get; set; }
 	bool IUserSettings.ForceDownloadAndDeleteAsSoonAsRequested { get; set; }
 	bool IUserSettings.DisablePackageCleanup { get; set; }
@@ -52,4 +40,10 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool AssumeInternetConnectivity { get; set; }
 	public bool SnapDashToGrid { get; set; }
 	public bool ComplexListUI { get; set; }
+	public bool FilterIncludedByDefault { get; set; } = true;
+
+	public void Save()
+	{
+		Handler?.Save(this);
+	}
 }

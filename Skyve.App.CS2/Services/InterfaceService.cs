@@ -6,11 +6,6 @@ using Skyve.App.UserInterface.Panels;
 namespace Skyve.App.CS2.Services;
 internal class InterfaceService : IAppInterfaceService
 {
-	PlaysetSettingsPanel IAppInterfaceService.PlaysetSettingsPanel()
-	{
-		return new PC_PlaysetSettings();
-	}
-
 	PC_Changelog IAppInterfaceService.ChangelogPanel()
 	{
 		return new PC_SkyveChangeLog();
@@ -39,5 +34,25 @@ internal class InterfaceService : IAppInterfaceService
 	void IInterfaceService.OpenParadoxLogin()
 	{
 		new ParadoxLoginForm().ShowDialog(App.Program.MainForm);
+	}
+
+	PanelContent IAppInterfaceService.NewPlaysetPanel()
+	{
+		return new PC_PlaysetAdd();
+	}
+
+	void IInterfaceService.OpenPackagePage(IPackageIdentity package, bool openCompatibilityPage)
+	{
+		App.Program.MainForm.PushPanel(new PC_PackagePage(package, openCompatibilityPage));
+	}
+
+	PanelContent IAppInterfaceService.RequestReviewPanel(IPackageIdentity package)
+	{
+		return new PC_SendReviewRequest(package);
+	}
+
+	void IInterfaceService.OpenPlaysetPage(IPlayset playset, bool settingsTab)
+	{
+		App.Program.MainForm.PushPanel(new PC_PlaysetPage(playset, settingsTab));
 	}
 }

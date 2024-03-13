@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+	<Import Project="../../Skyve/Config.props" />
+	<PropertyGroup>
+		<AssemblyName>Skyve.Service.CS2</AssemblyName>
+		<Title>Skyve Service</Title>
+		<TargetName>Skyve.Service</TargetName>
+		<Description>Helps to manage your mods and assets</Description>
+	</PropertyGroup>
+	<PropertyGroup>
+		<LangVersion>latest</LangVersion>
+		<OutputType>WinExe</OutputType>
+		<Deterministic>true</Deterministic>
+		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<StartupObject>Skyve.Service.CS2.Program</StartupObject>
+		<ApplicationIcon>ServiceIcon.ico</ApplicationIcon>
+		<SignAssembly>True</SignAssembly>
+		<NeutralLanguage>en</NeutralLanguage>
+		<Description>Helps to manage your mods and assets</Description>
+		<DefineConstants>$(DefineConstants);SkyveService</DefineConstants>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(BuildType)' == 'Debug'">
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="System.ServiceProcess" />
+		<Reference Include="System.Configuration.Install" />
+		<ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
+		<ProjectReference Include="..\..\Skyve\Skyve.Domain\Skyve.Domain.csproj" />
+		<ProjectReference Include="..\..\Skyve\Skyve.Systems\Skyve.Systems.csproj" />
+		<ProjectReference Include="..\Skyve.Domain.CS2\Skyve.Domain.CS2.csproj" />
+		<ProjectReference Include="..\Skyve.Systems.CS2\Skyve.Systems.CS2.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<EmbeddedResource Update="ProjectInstaller.resx">
+			<DependentUpon>ProjectInstaller.cs</DependentUpon>
+		</EmbeddedResource>
+		<Compile Update="ProjectInstaller.cs" />
+		<Compile Update="ProjectInstaller.Designer.cs">
+			<DependentUpon>ProjectInstaller.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+</Project>

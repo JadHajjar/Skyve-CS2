@@ -8,10 +8,9 @@ using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.Compatibility.Domain;
 using Skyve.Systems.CS2.Domain;
+using Skyve.Systems.CS2.Domain.Api;
 using Skyve.Systems.CS2.Systems;
 using Skyve.Systems.CS2.Utilities;
-
-using SkyveApi.Domain.CS2;
 
 using System;
 using System.Collections.Generic;
@@ -21,27 +20,26 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
-public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUtil _skyveApiUtil, ICompatibilityUtil _compatibilityUtil) : ISkyveDataManager
+public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService _userService, SkyveApiUtil _skyveApiUtil, ICompatibilityUtil _compatibilityUtil, SaveHandler saveHandler) : ISkyveDataManager
 {
-	private const string DATA_CACHE_FILE = "CompatibilityDataCache.json";
-
 	private readonly Dictionary<IPackageIdentity, CompatibilityInfo> _cache = new(new IPackageEqualityComparer());
 	private readonly Regex _bracketsRegex = new(@"[\[\(](.+?)[\]\)]", RegexOptions.Compiled);
 	private readonly Regex _urlRegex = new(@"(https?|ftp)://(?:www\.)?([\w-]+(?:\.[\w-]+)*)(?:/[^?\s]*)?(?:\?[^#\s]*)?(?:#.*)?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-	public IndexedCompatibilityData CompatibilityData { get; private set; } = new(null);
+	public IndexedCompatibilityData CompatibilityData { get; private set; } = new();
 
 	public void Start(List<IPackage> packages)
 	{
 		try
 		{
-			var path = ISave.GetPath(DATA_CACHE_FILE);
+			var data = saveHandler.Load<CompatibilityData>();
 
-			ISave.Load(out CompatibilityData? data, DATA_CACHE_FILE);
-
-			CompatibilityData = new IndexedCompatibilityData(data);
+			CompatibilityData = new IndexedCompatibilityData(data.Packages, data.BlackListedIds, data.BlackListedNames);
 		}
-		catch { }
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to load compatibility data cache");
+		}
 	}
 
 	public void ResetCache()
@@ -50,11 +48,11 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUti
 
 		try
 		{
-			CrossIO.DeleteFile(ISave.GetPath(DATA_CACHE_FILE));
+			saveHandler.Delete<CompatibilityData>();
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to clear CR cache");
+			_logger.Exception(ex, "Failed to clear compatibility data cache");
 		}
 
 		_notifier.OnContentLoaded();
@@ -64,43 +62,51 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUti
 	{
 		try
 		{
-			var data = await ((SkyveApiUtil)_skyveApiUtil).Catalogue();
+			var blackList = await _skyveApiUtil.GetBlacklist();
+			var packages = await _skyveApiUtil.GetPackageData();
+			var users = await _skyveApiUtil.GetUsers();
 
-			if (data is not null)
+			if (packages.Length > 0)
 			{
-				ISave.Save(data, DATA_CACHE_FILE);
+				saveHandler.Save(new CompatibilityData
+				{
+					Packages = packages,
+					BlackListedIds = blackList.BlackListedIds,
+					BlackListedNames = blackList.BlackListedNames,
+				});
+			}
 
-				CompatibilityData = new IndexedCompatibilityData(data);
+			((UserService)_userService).SetKnownUsers(users);
 
-				_notifier.OnCompatibilityDataLoaded();
+			CompatibilityData = new IndexedCompatibilityData(packages, blackList.BlackListedIds, blackList.BlackListedNames);
+
+			_notifier.OnCompatibilityDataLoaded();
 
 #if DEBUG
-				if (System.Diagnostics.Debugger.IsAttached)
-				{
-					var dic = await _skyveApiUtil.Translations();
+			if (System.Diagnostics.Debugger.IsAttached)
+			{
+				var dic = await _skyveApiUtil.Translations();
 
-					if (dic is not null)
-					{
-						File.WriteAllText("../../../../SkyveApp.Systems/Properties/CompatibilityNotes.json", Newtonsoft.Json.JsonConvert.SerializeObject(dic, Newtonsoft.Json.Formatting.Indented));
-					}
+				if (dic is not null)
+				{
+					File.WriteAllText("../../../../SkyveApp.Systems/Properties/CompatibilityNotes.json", Newtonsoft.Json.JsonConvert.SerializeObject(dic, Newtonsoft.Json.Formatting.Indented));
 				}
-#endif
-				return;
 			}
+#endif
+			return;
 		}
 		catch (Exception ex)
 		{
 			_logger.Exception(ex, "Failed to get compatibility data");
 		}
 
-		CompatibilityData ??= new IndexedCompatibilityData(new());
+		CompatibilityData ??= new IndexedCompatibilityData([], []);
 	}
 
 	public bool IsBlacklisted(IPackageIdentity package)
 	{
 		return CompatibilityData.BlackListedIds.Contains(package.Id)
-			|| CompatibilityData.BlackListedNames.Contains(package.Name ?? string.Empty)
-			|| (package.GetWorkshopInfo()?.IsIncompatible ?? false);
+			|| CompatibilityData.BlackListedNames.Contains(package.Name ?? string.Empty);
 	}
 
 	public ulong GetIdFromModName(string fileName)
@@ -127,30 +133,38 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUti
 		return null;
 	}
 
-	public CompatibilityPackageData GetAutomatedReport(IPackageIdentity package)
+	public PackageData GetAutomatedReport(IPackageIdentity package)
 	{
-		var info = new CompatibilityPackageData
+		var workshopInfo = package.GetWorkshopInfo();
+		var info = new PackageData
 		{
-			Stability = package.GetPackage()?.IsCodeMod == true ? PackageStability.NotReviewed : PackageStability.AssetNotReviewed,
+			Stability = package.IsCodeMod() ? PackageStability.NotReviewed : PackageStability.AssetNotReviewed,
 			Id = package.Id,
 			Name = package.Name,
+			AuthorId = workshopInfo?.Author?.Id?.ToString() ?? string.Empty,
 			FileName = package.GetLocalPackageIdentity()?.FilePath,
-			Links = [],
-			Interactions = [],
-			Statuses = [],
+			Links = workshopInfo?.Links.ToList(x => new PackageLink { Type = x.Type, Title = x.Title, Url = x.Url}) ?? [],
+			Tags = workshopInfo?.Tags.Values.ToList() ?? []
 		};
-
-		var workshopInfo = package.GetWorkshopInfo();
 
 		if (workshopInfo?.Requirements.Any() ?? false)
 		{
-			info.Interactions.AddRange(workshopInfo.Requirements.GroupBy(x => x.IsOptional).Select(o =>
-				new PackageInteraction
+			foreach (var grp in workshopInfo.Requirements.GroupBy(x => (x.IsDlc, x.IsOptional)))
+			{
+				if (grp.Key.IsDlc)
 				{
-					Type = o.Key ? InteractionType.OptionalPackages : InteractionType.RequiredPackages,
-					Action = StatusAction.SubscribeToPackages,
-					Packages = o.ToArray(x => x.Id)
-				}));
+					info.RequiredDLCs.AddRange(grp.Select(x => (uint)x.Id));
+				}
+				else
+				{
+					info.Interactions.Add(new PackageInteraction
+					{
+						Type = grp.Key.IsOptional ? InteractionType.OptionalPackages : InteractionType.RequiredPackages,
+						Action = StatusAction.SubscribeToPackages,
+						Packages = grp.ToArray(x => x.Id)
+					});
+				}
+			}
 		}
 
 		var tagMatches = _bracketsRegex.Matches(workshopInfo?.Name ?? string.Empty);
@@ -191,7 +205,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUti
 					_ => LinkType.Other
 				};
 
-				if (type is not LinkType.Other)
+				if (type is not LinkType.Other && !(workshopInfo?.Links.Any(x => x.Url?.Equals(match.Value, StringComparison.InvariantCultureIgnoreCase) ?? false) ?? false))
 				{
 					info.Links.Add(new PackageLink
 					{
@@ -203,11 +217,6 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, ISkyveApiUti
 		}
 
 		return info;
-	}
-
-	public IKnownUser TryGetAuthor(string? id)
-	{
-		return id is null or "" ? new() : CompatibilityData.Authors.TryGetValue(id, out var author) ? author : new();
 	}
 
 	public IIndexedPackageCompatibilityInfo TryGetPackageInfo(ulong id)

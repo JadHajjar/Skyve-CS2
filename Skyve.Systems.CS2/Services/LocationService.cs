@@ -3,6 +3,7 @@
 using Microsoft.Win32;
 
 using Skyve.Domain;
+using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 
 using System;
@@ -64,6 +65,11 @@ internal class LocationService : ILocationService
 				$"GamePath: {_settings.FolderSettings.GamePath}\r\n" +
 				$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
 				$"SteamPath: {_settings.FolderSettings.SteamPath}");
+		}
+
+		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
+		{
+			notificationsService.SendNotification(new InvalidFolderSettingsNotification());
 		}
 	}
 

@@ -4,6 +4,7 @@ using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain.CS2.Paradox;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
 using System;
@@ -19,7 +20,7 @@ namespace Skyve.Domain.CS2.Content;
 
 public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 {
-	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
+	private LocalData PdxLocalData;
 
 	public PdxPackage(PdxMod mod)
 	{
@@ -39,13 +40,12 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 		State = mod.State;
 		LatestUpdate = mod.LatestUpdate;
 		InstalledDate = mod.InstalledDate;
-		Name = mod.DisplayName;
 		Description = mod.ShortDescription;
 		ServerTime = mod.LatestUpdate ?? default;
 		ServerSize = (long)mod.Size;
 		IsLocal = false;
 		IsCollection = false;
-		IsCodeMod = mod.Tags.Any(x => x.Id == "Mod");
+		IsCodeMod = mod.Tags.Any(x => x.Id == "Code Mod");
 		VoteCount = mod.RatingsTotal;
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
@@ -74,7 +74,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	public string LatestVersion { get; set; }
 	public string ThumbnailPath { get; set; }
 	public ulong Size { get; set; }
-	public List<PDX.SDK.Contracts.Service.Mods.Models.ModTag> Tags { get; set; }
+	public List<ModTag> Tags { get; set; }
 	public int Rating { get; set; }
 	public int RatingsTotal { get; set; }
 	public ModState State { get; set; }
@@ -104,18 +104,19 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	public string? Url { get; }
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
-	string IPackage.Version => UserModVersion;
-	PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
-	public IEnumerable<IModChangelog> Changelog => [];
+	string IPackage.Version => UserModVersion.IfEmpty(Version);
+	string IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
+	string? IWorkshopInfo.SuggestedGameVersion => RequiredGameVersion;
+	LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
+	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
+	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => [];
+	IEnumerable<ILink> IWorkshopInfo.Links => [];
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version);
 
-		thumbnail = !CrossIO.FileExists(ThumbnailPath)
-			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailUrl)}").Result
-			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailPath)}", isFilePath: true).Result;
-
-		return thumbnail is not null;
+		return true;
 	}
 }

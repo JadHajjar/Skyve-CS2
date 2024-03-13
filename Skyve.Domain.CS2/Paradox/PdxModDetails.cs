@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
 using System;
@@ -22,6 +23,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		Name = string.Empty;
 		Guid = string.Empty;
 		Version = string.Empty;
+		PdxModsVersion = string.Empty;
 		Tags = [];
 	}
 
@@ -35,7 +37,9 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		ShortDescription = mod.ShortDescription;
 		Description = mod.LongDescription;
 		ServerSize = (long)mod.Size;
-		Version = mod.UserModVersion;
+		PdxModsVersion = mod.Version;
+		Version = mod.UserModVersion.IfEmpty(mod.Version);
+		SuggestedGameVersion = mod.RequiredGameVersion;
 		Subscribers = mod.SubscriptionsTotal;
 		HasVoted = hasVoted;
 		VoteCount = mod.RatingsTotal;
@@ -46,6 +50,8 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		Requirements = mod.Dependencies?.ToArray(x => new PdxModRequirement(x)) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
 		ServerTime = mod.LatestUpdate ?? Changelog.Max(x => x.ReleasedDate) ?? default;
+		Images = mod.Screenshots.ToArray(x => new ParadoxScreenshot(x.Image, Id, mod.Version, false));
+		Links = mod.ExternalLinks.ToArray(x => new ParadoxLink(x));
 		Timestamp = DateTime.Now;
 	}
 
@@ -59,6 +65,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public string? ShortDescription { get; set; }
 	public string? Description { get; set; }
 	public long ServerSize { get; set; }
+	public string PdxModsVersion { get; set; }
 	public string Version { get; set; }
 	public int Subscribers { get; set; }
 	public bool IsCollection { get; set; }
@@ -71,21 +78,24 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public PdxModRequirement[]? Requirements { get; set; }
 	public ModChangelog[]? Changelog { get; set; }
 	public Dictionary<string, string> Tags { get; set; }
-
+	public ParadoxScreenshot[]? Images { get; set; }
+	public ParadoxLink[]? Links { get; set; }
+	public string? SuggestedGameVersion { get; set; }
 	bool IPackage.IsLocal { get; }
 	ILocalPackageData? IPackage.LocalData { get; }
 	string? IPackageIdentity.Url => $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
-	bool IPackage.IsCodeMod => Tags.Any(x => x.Key == "Mod");
-	bool IWorkshopInfo.IsCodeMod => Tags.Any(x => x.Key == "Mod");
+	bool IPackage.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
+	bool IWorkshopInfo.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
 	IUser? IWorkshopInfo.Author => string.IsNullOrWhiteSpace(AuthorId) ? null : new PdxUser(AuthorId!);
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => Requirements ?? [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => Changelog ?? [];
+	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => Images ?? [];
+	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
-		thumbnailUrl = null;
-
-		thumbnail = imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailUrl)}").Result;
+		thumbnailUrl = ThumbnailUrl;
+		thumbnail = DomainUtils.GetThumbnail(imageService, null	, ThumbnailUrl, Id, PdxModsVersion	);
 
 		return true;
 	}

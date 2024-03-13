@@ -1,4 +1,6 @@
-﻿using Skyve.Domain;
+﻿using Extensions;
+
+using Skyve.Domain;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
@@ -35,7 +37,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		Status = new SubscriptionStatus(
 			isActive: true,
 			modId: info.Id,
-			progress: (installProgress + downloadProgress) / 2f,
+			progress: (installProgress + downloadProgress * 3) / 4f,
 			processedBytes: info.ProcessedBytes,
 			totalSize: info.Size);
 
@@ -63,7 +65,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		Status = new SubscriptionStatus(
 			isActive: true,
 			modId: info.Id,
-			progress: (installProgress + downloadProgress) / 2f,
+			progress: (installProgress + downloadProgress * 3) / 4f,
 			processedBytes: 0,
 			totalSize: 0);
 
@@ -103,10 +105,14 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		await _workshopService.WaitUntilReady();
 
-		var result = await _workshopService.SubscribeBulk(
-			ids.Select(x => new KeyValuePair<int, string?>((int)x.Id, null)).Where(x => x.Key > 0),
-			currentPlayset,
-			!_settings.UserSettings.DisableNewModsByDefault);
+		bool result;
+		using (_workshopService.Lock)
+		{
+			result = await _workshopService.SubscribeBulk(
+				ids.Distinct(x => x.Id).Select(x => new KeyValuePair<int, string?>((int)x.Id, null)),
+				currentPlayset,
+				!_settings.UserSettings.DisableNewModsByDefault);
+		}
 
 		foreach (var item in ids)
 		{
@@ -139,7 +145,11 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 		await _workshopService.WaitUntilReady();
 
-		var result = await _workshopService.UnsubscribeBulk(ids.Select(x => (int)x.Id), currentPlayset);
+		bool result;
+		using (_workshopService.Lock)
+		{
+			result = await _workshopService.UnsubscribeBulk(ids.Distinct(x => x.Id).Select(x => (int)x.Id), currentPlayset);
+		}
 
 		foreach (var item in ids)
 		{

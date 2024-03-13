@@ -1,114 +1,49 @@
-﻿using Extensions;
-
-using Skyve.Compatibility.Domain.Interfaces;
-using Skyve.Domain;
+﻿using Skyve.Domain;
 using Skyve.Domain.Systems;
-using Skyve.Systems.Compatibility;
-using Skyve.Systems.CS2.Utilities;
+using Skyve.Systems.CS2.Domain.Api;
 
 using System;
-using System.Drawing;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Skyve.Systems.CS2.Systems;
 internal class UserService : IUserService
 {
-	private KnownUser _user;
+	private string? loggedInUser;
+	private Dictionary<string, IKnownUser> knownUsers = [];
 
-	public IKnownUser User => _user;
+	public IKnownUser User { get; private set; }
 
 	public event Action? UserInfoUpdated;
 
 	public UserService()
 	{
-		_user = new() { Manager = true };
+		User = new User();
+	}
 
-		//new BackgroundAction(RefreshUserState).RunEvery(60000, true);
+	public IKnownUser TryGetUser(string? id)
+	{
+		return id is null or "" ? new User { Id = id, Name = id ?? string.Empty } : knownUsers.TryGetValue(id, out var author) ? author : new User { Id = id, Name = id ?? string.Empty };
 	}
 
 	public bool IsUserVerified(IUser author)
 	{
-#if CS2
-		return false;
-#else
-		return CompatibilityData.Authors.TryGet(ulong.Parse(author.Id?.ToString()))?.Verified ?? false;
-#endif
+		return TryGetUser(User.Id?.ToString())?.Verified ?? false;
 	}
 
-	private async Task RefreshUserState()
+	internal void SetKnownUsers(IKnownUser[] users)
 	{
-		var steamId = SteamUtil.GetLoggedInSteamId();
-
-		if (_user.Id?.Equals(steamId) ?? false)
-		{
-			return;
-		}
-
-		if (steamId == 0)
-		{
-			_user = new();
-		}
-		else
-		{
-			_user = new() { Id = steamId };
-
-			var steamUser = SteamUtil.GetUser(steamId);
-
-			if (steamUser != null)
-			{
-				_user.Name = steamUser.Name;
-				_user.ProfileUrl = steamUser.ProfileUrl;
-				_user.AvatarUrl = steamUser.AvatarUrl;
-			}
-		}
-
-		var skyveUser = ServiceCenter.Get<ISkyveDataManager>().TryGetAuthor(steamId.ToString());
-
-		if (skyveUser is not null)
-		{
-			_user.Name ??= skyveUser.Name ?? string.Empty;
-			_user.Verified = skyveUser.Verified;
-			_user.Retired = skyveUser.Retired;
-		}
-
-		try
-		{
-			_user.Manager = await ServiceCenter.Get<SkyveApiUtil>().IsCommunityManager();
-		}
-		catch
-		{
-			_user.Manager = false;
-		}
+		knownUsers = users.ToDictionary(x => x.Id!.ToString());
+		User = TryGetUser(loggedInUser);
 
 		UserInfoUpdated?.Invoke();
 	}
 
-	private class KnownUser : IKnownUser
+	internal void SetLoggedInUser(string? displayName)
 	{
-		public bool Retired { get; set; }
-		public bool Verified { get; set; }
-		public bool Malicious { get; set; }
-		public bool Manager { get; set; }
-		public string Name { get; set; } = "";
-		public string ProfileUrl { get; set; } = "";
-		public string AvatarUrl { get; set; } = "";
-		public object? Id { get; set; }
+		loggedInUser = displayName;
+		User = TryGetUser(loggedInUser);
 
-		public override bool Equals(object? obj)
-		{
-			return obj is IUser user && (Id?.Equals(user.Id) ?? false);
-		}
-
-		public override int GetHashCode()
-		{
-			return 2139390487 + Id?.GetHashCode() ?? 0;
-		}
-
-		public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
-		{
-			thumbnail = null;
-			thumbnailUrl = null;
-			return false;
-		}
+		UserInfoUpdated?.Invoke();
 	}
 }

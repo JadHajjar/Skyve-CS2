@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
-	<Import Project="../../Skyve/CS2-Version.props" />
 	<Import Project="../../Skyve/Config.props" />
 	<PropertyGroup>
 		<AssemblyName>Skyve.App.CS2</AssemblyName>
@@ -10,7 +9,6 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net4.7.2</TargetFramework>
 		<Deterministic>true</Deterministic>
 		<Nullable>enable</Nullable>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -29,6 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Markdig" Version="0.34.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Mono.Cecil" Version="0.11.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
@@ -61,11 +60,26 @@
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
 		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs" />
-		<Compile Update="UserInterface\Panels\PC_CompatibilityManagement.cs">
+		<Compile Update="UserInterface\Dashboard\D_LaunchGame.cs" />
+		<Compile Update="UserInterface\Dashboard\D_Playsets.cs" />
+		<Compile Update="UserInterface\Panels\PC_SendReviewRequest.cs" />
+		<Compile Update="UserInterface\Panels\PC_ReviewRequests.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="UserInterface\Panels\PC_ViewReviewRequest.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>
 		<Compile Update="UserInterface\Panels\PC_Options.cs" />
-		<Compile Update="UserInterface\Panels\PC_PlaysetSettings.cs" />
+		<Compile Update="UserInterface\Panels\PC_PackagePageBase.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="UserInterface\Panels\PC_PackagePage.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="UserInterface\Panels\PC_PlaysetAdd.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="UserInterface\Panels\PC_PlaysetPage.cs" />
 		<Compile Update="UserInterface\Panels\PC_SkyveChangeLog.cs" />
 		<Compile Update="UserInterface\Panels\PC_Utilities.cs" />
 		<EmbeddedResource Update="Properties\Resources.resx">

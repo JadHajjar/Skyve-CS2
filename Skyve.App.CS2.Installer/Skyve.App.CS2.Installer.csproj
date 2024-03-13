@@ -11,7 +11,6 @@
 	<PropertyGroup>
 		<Deterministic>true</Deterministic>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net4.7.2</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<StartupObject>Skyve.App.CS2.Installer.Program</StartupObject>
@@ -33,6 +32,15 @@
 
 	<ItemGroup>
 		<Content Include="Resources\Skyve.ico" />
+		<EmbeddedResource Include="Resources\Skyve_Uninstall.png" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(BuildType)' == 'Stable'">
+		<EmbeddedResource Include="Resources\Skyve_Background.png" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(BuildType)' != 'Stable'">
+		<EmbeddedResource Include="Resources\Skyve_Background_Beta.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -44,5 +52,9 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="System.ServiceProcess" />
 	</ItemGroup>
 </Project>

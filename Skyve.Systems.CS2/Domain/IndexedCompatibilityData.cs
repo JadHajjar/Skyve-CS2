@@ -2,7 +2,8 @@
 
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
-using Skyve.Domain;
+using Skyve.Systems.CS2.Domain.Api;
+using Skyve.Systems.CS2.Domain.DTO;
 
 using SkyveApi.Domain.CS2;
 
@@ -14,13 +15,12 @@ namespace Skyve.Systems.CS2.Domain;
 
 public class IndexedCompatibilityData
 {
-	public IndexedCompatibilityData(CompatibilityData? data)
+	public IndexedCompatibilityData(PackageData[]? packages = null, List<ulong>? blackListIds = null, List<string>? blackListNames = null)
 	{
-		Packages = data?.Packages?.ToDictionary(x => x.Id, x => GenerateIndexedPackage(x, data.Packages)) ?? [];
+		Packages = packages?.ToDictionary(x => x.Id, x => GenerateIndexedPackage(x, packages)) ?? [];
 		PackageNames = new(StringComparer.InvariantCultureIgnoreCase);
-		Authors = data?.Authors?.ToDictionary(x => x.Id, x => new User(x)) ?? [];
-		BlackListedIds = new(data?.BlackListedIds ?? []);
-		BlackListedNames = new(data?.BlackListedNames ?? []);
+		BlackListedIds = new(blackListIds ?? []);
+		BlackListedNames = new(blackListNames ?? []);
 
 		foreach (var item in Packages.Values)
 		{
@@ -38,7 +38,7 @@ public class IndexedCompatibilityData
 		}
 	}
 
-	private static IndexedPackage GenerateIndexedPackage(CompatibilityPackageData package, List<CompatibilityPackageData> packages)
+	private static IndexedPackage GenerateIndexedPackage(PackageData package, PackageData[] packages)
 	{
 		var nonTest = package.Statuses?.FirstOrDefault(x => x.Type == StatusType.TestVersion && (x.Packages?.Any() ?? false));
 
@@ -67,7 +67,6 @@ public class IndexedCompatibilityData
 
 	public Dictionary<string, ulong> PackageNames { get; }
 	public Dictionary<ulong, IndexedPackage> Packages { get; }
-	public Dictionary<string, User> Authors { get; }
 	public HashSet<ulong> BlackListedIds { get; }
 	public HashSet<string> BlackListedNames { get; }
 }

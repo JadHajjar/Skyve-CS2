@@ -9,13 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Skyve.Systems.CS2.Managers;
 internal class ModLogicManager : IModLogicManager
 {
-	private const string Skyve_ASSEMBLY = "SkyveMod.dll";
+	private const string Skyve_ASSEMBLY = "Skyve Mod.dll";
 
-	private readonly ModCollection _modCollection = new(GetGroupInfo());
+	private ModCollection _modCollection = new(GetGroupInfo());
 
 	private static Dictionary<string, CollectionInfo> GetGroupInfo()
 	{
@@ -26,10 +27,12 @@ internal class ModLogicManager : IModLogicManager
 	}
 
 	private readonly ISettings _settings;
+	private readonly INotifier _notifier;
 
-	public ModLogicManager(ISettings settings)
+	public ModLogicManager(ISettings settings, INotifier notifier)
 	{
 		_settings = settings;
+		_notifier = notifier;
 	}
 
 	public void Analyze(IPackage mod, IModUtil modUtil)
@@ -46,6 +49,11 @@ internal class ModLogicManager : IModLogicManager
 			modUtil.SetIncluded(mod, true);
 			modUtil.SetEnabled(mod, true);
 		}
+	}
+
+	public IEnumerable<IPackage> GetCollection(string key)
+	{
+		return _modCollection.GetCollection(key, out _) ?? [];
 	}
 
 	public bool IsRequired(ILocalPackageIdentity? mod, IModUtil modUtil)
@@ -69,7 +77,7 @@ internal class ModLogicManager : IModLogicManager
 
 		foreach (var modItem in list)
 		{
-			if (modItem != mod && modUtil.IsIncluded(modItem) && modUtil.IsEnabled(modItem))
+			if (modItem.LocalData != mod && modUtil.IsIncluded(modItem) && modUtil.IsEnabled(modItem))
 			{
 				return false;
 			}
@@ -97,21 +105,31 @@ internal class ModLogicManager : IModLogicManager
 
 	public void ApplyRequiredStates(IModUtil modUtil)
 	{
-		foreach (var item in _modCollection.Collections)
-		{
-			if (item.Any(mod => modUtil.IsIncluded(mod) && modUtil.IsEnabled(mod)))
-			{
-				continue;
-			}
+		var skyveMods = _modCollection.GetCollection(Skyve_ASSEMBLY, out var collectionInfo);
 
-			modUtil.SetIncluded(item[0], true);
-			modUtil.SetEnabled(item[0], true);
+		foreach (var item in skyveMods?.Where(x => x.LocalData != null) ?? [])
+		{
+			if (File.GetLastWriteTimeUtc(CrossIO.Combine(item.LocalData!.Folder, ".App", "Skyve.exe")).Ticks > Math.Max(File.GetLastWriteTimeUtc(Application.ExecutablePath).Ticks, File.GetCreationTimeUtc(Application.ExecutablePath).Ticks))
+			{
+				_notifier.OnSkyveUpdateAvailable();
+			}
 		}
+
+		//foreach (var item in _modCollection.Collections)
+		//{
+		//	if (item.Any(mod => modUtil.IsIncluded(mod) && modUtil.IsEnabled(mod)))
+		//	{
+		//		continue;
+		//	}
+
+		//	modUtil.SetIncluded(item[0], true);
+		//	modUtil.SetEnabled(item[0], true);
+		//}
 	}
 
 	public bool IsPseudoMod(IPackage package)
 	{
-		return package.GetPackageInfo()?.Type is not null and not PackageType.GenericPackage and not PackageType.MusicPack and not PackageType.CSM and not PackageType.ContentPackage;
+		return package.GetPackageInfo()?.Type is not null and not PackageType.GenericPackage and not PackageType.MusicPack and not PackageType.ContentPackage;
 	}
 
 	public bool AreMultipleSkyvesPresent(out List<IPackageIdentity> skyveInstances)
@@ -121,5 +139,10 @@ internal class ModLogicManager : IModLogicManager
 		//skyveInstances.AddRange(_modCollection.GetCollection(Skyve_ASSEMBLY, out _)?.ToList(x => x.GetLocalPackage()) ?? new());
 
 		return skyveInstances.Count > 1;
+	}
+
+	public void Clear()
+	{
+		_modCollection = new(GetGroupInfo());
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Internal.Platypatch.Models;
 
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
@@ -33,9 +34,12 @@ internal class ContentManager : IContentManager
 	private readonly ILogger _logger;
 	private readonly INotifier _notifier;
 	private readonly ISettings _settings;
+	private readonly IModLogicManager _modLogicManager;
+	private readonly IUpdateManager _updateManager;
+	private readonly ISkyveDataManager _skyveDataManager;
 	private readonly WorkshopService _workshopService;
 
-	public ContentManager(IPackageManager packageManager, ILocationService locationManager, ICompatibilityManager compatibilityManager, ILogger logger, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IPackageUtil packageUtil, ISettings settings, IWorkshopService workshopService)
+	public ContentManager(IPackageManager packageManager, ILocationService locationManager, ICompatibilityManager compatibilityManager, ILogger logger, INotifier notifier, IModUtil modUtil, IAssetUtil assetUtil, IPackageUtil packageUtil, ISettings settings, IWorkshopService workshopService, IModLogicManager modLogicManager, IUpdateManager updateManager, ISkyveDataManager skyveDataManager)
 	{
 		_packageManager = packageManager;
 		_locationManager = locationManager;
@@ -46,6 +50,9 @@ internal class ContentManager : IContentManager
 		_logger = logger;
 		_notifier = notifier;
 		_settings = settings;
+		_modLogicManager = modLogicManager;
+		_updateManager = updateManager;
+		_skyveDataManager = skyveDataManager;
 		_workshopService = (WorkshopService)workshopService;
 
 		_notifier.WorkshopSyncEnded += _notifier_WorkshopSyncEnded;
@@ -147,6 +154,8 @@ internal class ContentManager : IContentManager
 	{
 		var packages = new List<IPackage>();
 		var gameModsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods");
+		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves");
+		var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps");
 
 		if (Directory.Exists(gameModsPath))
 		{
@@ -167,13 +176,26 @@ internal class ContentManager : IContentManager
 			_logger.Warning($"Folder not found: '{gameModsPath}'");
 		}
 
+		var savedPackage = GetPackage(gameSavesPath, true, null);
+		var mapsPackage = GetPackage(gameMapsPath, true, null);
+
+		if (savedPackage is not null)
+		{
+			packages.Add(savedPackage);
+		}
+
+		if (mapsPackage is not null)
+		{
+			packages.Add(mapsPackage);
+		}
+
 		var subscribedItems = await _workshopService.GetLocalPackages();
 
-		foreach (var mod in subscribedItems)
+		foreach (var mod in subscribedItems.OrderBy(x => x.LocalData is null).Distinct(x => x.Id))
 		{
 			if (mod.LocalData is null)
 			{
-				packages.Add(new PdxPackage(mod));
+				//packages.Add(new PdxPackage(mod));
 			}
 			else if (mod.LocalData.LocalType == LocalType.Subscribed)
 			{
@@ -185,6 +207,17 @@ internal class ContentManager : IContentManager
 				}
 			}
 		}
+
+		try
+		{
+
+			_logger.Info($"Analyzing packages..");
+
+			AnalyzePackages(packages);
+		
+			_logger.Info($"Finished analyzing packages..");
+		}
+		catch (Exception ex) { _logger.Exception(ex, "Failed to analyze packages"); }
 
 		return packages;
 	}
@@ -214,17 +247,22 @@ internal class ContentManager : IContentManager
 			var isCodeMod = _modUtil.GetModInfo(folder, out var modDll, out var version);
 			var assets = _assetUtil.GetAssets(folder, withSubDirectories).ToArray();
 
-			return pdxMod is null
-				? new Package(folder,
-				assets,
-				isCodeMod,
-				version.GetString(),
-				modDll)
-				: new LocalPdxPackage(pdxMod,
+			if (pdxMod is not null)
+			{
+				return new LocalPdxPackage(pdxMod,
 					assets,
 					isCodeMod,
 					version?.GetString(),
 					modDll);
+			}
+
+			return new Package(folder,
+				assets,
+				[],
+				isCodeMod,
+				version?.GetString(),
+				modDll,
+				null);
 		}
 		catch (Exception ex)
 		{
@@ -265,7 +303,7 @@ internal class ContentManager : IContentManager
 
 				if (newPackage.IsCodeMod)
 				{
-					ServiceCenter.Get<IModLogicManager>().Analyze(newPackage, _modUtil);
+					_modLogicManager.Analyze(newPackage, _modUtil);
 				}
 
 				_packageManager.AddPackage(newPackage);
@@ -293,7 +331,8 @@ internal class ContentManager : IContentManager
 			assets,
 			isCodeMod,
 			version.GetString(),
-			modDll);
+			modDll,
+			localPackage.LocalData?.SuggestedGameVersion);
 
 		if (package.IsLocal && !package.IsCodeMod)
 		{
@@ -315,5 +354,54 @@ internal class ContentManager : IContentManager
 		//PackageWatcher.Create(_locationManager.ModsPath, false, false);
 
 		//PackageWatcher.Create(_locationManager.WorkshopContentPath, false, true);
+	}
+
+	private void AnalyzePackages(List<IPackage> packages)
+	{
+		var blackList = new List<IPackage>();
+		var firstTime = _updateManager.IsFirstTime();
+
+		_modLogicManager.Clear();
+
+		_notifier.IsBulkUpdating = true;
+
+		foreach (var package in packages)
+		{
+			if (_skyveDataManager.IsBlacklisted(package))
+			{
+				blackList.Add(package);
+				continue;
+			}
+
+			if (package.IsCodeMod)
+			{
+				if (_settings.UserSettings.LinkModAssets && package.LocalData is not null)
+				{
+					_packageUtil.SetIncluded(package.LocalData.Assets, _modUtil.IsIncluded(package));
+				}
+
+				_modLogicManager.Analyze(package, _modUtil);
+
+				if (!firstTime && !_updateManager.IsPackageKnown(package.LocalData!))
+				{
+					_modUtil.SetEnabled(package, _modUtil.IsIncluded(package));
+				}
+			}
+		}
+
+		_notifier.IsBulkUpdating = false;
+		_modUtil.SaveChanges();
+		_assetUtil.SaveChanges();
+
+		packages.RemoveAll(x => blackList.Contains(x));
+
+		foreach (var item in blackList)
+		{
+			_packageManager.DeleteAll(item.LocalData!.Folder);
+		}
+
+		_logger.Info($"Applying analysis results..");
+
+		_modLogicManager.ApplyRequiredStates(_modUtil);
 	}
 }

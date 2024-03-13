@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -12,59 +13,77 @@ public static class CommandUtil
 
 	public static bool Parse(string[] args)
 	{
-		args = string.Join(" ", args).Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-
 		var exit = false;
 
-		foreach (var arg in args)
+		for (var i = 0; i < args.Length; i++)
 		{
-			exit |= Parse(arg);
+			if (args[i][0] != '-')
+			{
+				continue;
+			}
+
+			var command = args[i].Substring(1);
+			var arguments = new List<string>();
+
+			for (var j = i + 1; j < args.Length; j++)
+			{
+				if (args[j][0] == '-')
+				{
+					break;
+				}
+
+				i++;
+
+				arguments.Add(args[j]);
+			}
+
+			exit |= RunCommand(command, arguments);
 		}
 
 		return exit;
 	}
 
-	private static bool Parse(string arg)
+	private static bool RunCommand(string command, List<string> arguments)
 	{
-		if (isCommand("stub", out _))
+		if (isCommand("stub"))
 		{
 			Process.Start(Application.ExecutablePath);
 
 			return true;
 		}
 
-		if (isCommand("playset", out var playsetName))
+		if (isCommand("createJunction"))
 		{
-			PreSelectedPlayset = playsetName;
+			JunctionHelper.CreateJunction(arguments[0], arguments[1]);
 		}
 
-		if (isCommand("launch", out _))
+		if (isCommand("deleteJunction"))
+		{
+			JunctionHelper.DeleteJunction(arguments[0]);
+		}
+
+		if (isCommand("playset"))
+		{
+			PreSelectedPlayset = arguments[0];
+		}
+
+		if (isCommand("launch"))
 		{
 			LaunchOnLoad = true;
 		}
 
-		if (isCommand("closeWhenFinished", out _))
+		if (isCommand("closeWhenFinished"))
 		{
 			CloseWhenFinished = true;
 		}
 
-		if (isCommand("noWindow", out _))
+		if (isCommand("noWindow"))
 		{
 			NoWindow = true;
 		}
 
 		return false;
 
-		bool isCommand(string command, out string value)
-		{
-			if (arg.IndexOf(command, StringComparison.CurrentCultureIgnoreCase) == 0)
-			{
-				value = arg.Substring(command.Length).Trim();
-				return true;
-			}
-
-			value = string.Empty;
-			return false;
-		}
+		bool isCommand(string cmd) => command.Equals(cmd, StringComparison.InvariantCultureIgnoreCase);
 	}
 }

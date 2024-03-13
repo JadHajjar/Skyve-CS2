@@ -117,4 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="L_JunctionDescription.Text" xml:space="preserve">
+    <value>Change the location where the game stores its content. This includes any mods, assets, and settings.
+
+Skyve will create a link between your desired location and the default app data folder in this process.</value>
+  </data>
 </root>

@@ -2,6 +2,7 @@
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Utilities;
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
@@ -12,9 +13,9 @@ using System.Linq;
 namespace Skyve.Systems.CS2.Managers;
 internal class PackageManager : IPackageManager
 {
-	private readonly Dictionary<ulong, IPackage> indexedPackages = new();
-	private readonly Dictionary<string, List<IPackage>> indexedMods = new();
-	private readonly List<IPackage> packages = new();
+	private readonly Dictionary<ulong, IPackage> indexedPackages = [];
+	private readonly Dictionary<string, List<IPackage>> indexedMods = [];
+	private readonly List<IPackage> packages = [];
 
 	private readonly IModLogicManager _modLogicManager;
 	private readonly ISettings _settings;
@@ -35,14 +36,16 @@ internal class PackageManager : IPackageManager
 	{
 		get
 		{
-			var currentPackages = packages is null ? new() : new List<IPackage>(packages);
+			var currentPackages = packages is null ? [] : new List<IPackage>(packages);
 
 			if (_settings.UserSettings.HidePseudoMods)
 			{
 				foreach (var package in currentPackages)
 				{
 					if (_modLogicManager.IsPseudoMod(package))
+					{
 						continue;
+					}
 
 					yield return package;
 				}
@@ -61,18 +64,23 @@ internal class PackageManager : IPackageManager
 	{
 		get
 		{
-			var currentPackages = packages is null ? new() : new List<IPackage>(packages);
+			var currentPackages = packages is null ? [] : new List<IPackage>(packages);
 
 			if (_settings.UserSettings.HidePseudoMods)
 			{
 				foreach (var package in currentPackages)
 				{
 					if (package.LocalData is null || _modLogicManager.IsPseudoMod(package))
+					{
 						continue;
+					}
 
 					foreach (var item in package.LocalData.Assets)
 					{
-						yield return item;
+						if (item.AssetType is not AssetType.SaveGame)
+						{
+							yield return item;
+						}
 					}
 				}
 
@@ -82,10 +90,37 @@ internal class PackageManager : IPackageManager
 			foreach (var package in currentPackages)
 			{
 				if (package.LocalData is not null)
+				{
 					foreach (var item in package.LocalData.Assets)
 					{
-						yield return item;
+						if (item.AssetType is not AssetType.SaveGame)
+						{
+							yield return item;
+						}
 					}
+				}
+			}
+		}
+	}
+
+	public IEnumerable<IAsset> SaveGames
+	{
+		get
+		{
+			var currentPackages = packages is null ? [] : new List<IPackage>(packages);
+
+			foreach (var package in currentPackages)
+			{
+				if (package.LocalData is not null)
+				{
+					foreach (var item in package.LocalData.Assets)
+					{
+						if (item.AssetType is AssetType.SaveGame)
+						{
+							yield return item;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -127,7 +162,9 @@ internal class PackageManager : IPackageManager
 		_notifier.OnWorkshopInfoUpdated();
 
 		if (package.LocalData is not null)
+		{
 			DeleteAll(package.LocalData.Folder);
+		}
 	}
 
 	public IPackage? GetPackageById(IPackageIdentity identity)
@@ -138,7 +175,9 @@ internal class PackageManager : IPackageManager
 			var matchedPackage = Packages.FirstOrDefault(x => x.LocalData?.Folder == folder);
 
 			if (matchedPackage is not null)
+			{
 				return matchedPackage;
+			}
 		}
 
 		if (indexedPackages?.TryGetValue(identity.Id, out var package) ?? false)
@@ -193,8 +232,14 @@ internal class PackageManager : IPackageManager
 
 		PackageWatcher.Pause();
 		try
-		{ CrossIO.DeleteFolder(folder); }
-		catch (Exception ex) { _logger.Exception(ex, $"Failed to delete the folder '{folder}'"); }
+		{
+			CrossIO.DeleteFolder(folder);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, $"Failed to delete the folder '{folder}'");
+		}
+
 		PackageWatcher.Resume();
 	}
 
@@ -233,6 +278,6 @@ internal class PackageManager : IPackageManager
 			return mods;
 		}
 
-		return new();
+		return [];
 	}
 }

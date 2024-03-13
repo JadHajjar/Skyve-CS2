@@ -136,6 +136,27 @@
   <data name="I_AppIcon_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\I_AppIcon_64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="I_CS_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_CS_128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_CS_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_CS_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_CS_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_CS_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_CS_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_CS_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_CS_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_CS_48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_CS_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_CS_64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_CS_96" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_CS_96.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="I_GlowAppIcon_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\I_GlowAppIcon_128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

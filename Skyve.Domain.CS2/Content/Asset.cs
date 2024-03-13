@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using Skyve.Domain.CS2.Game;
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
@@ -10,21 +12,25 @@ using System.IO;
 namespace Skyve.Domain.CS2.Content;
 public class Asset : IAsset, IThumbnailObject
 {
+	public AssetType AssetType { get; }
 	public string Folder { get; }
 	public string FilePath { get; }
-	public ulong Id { get; }
+	public ulong Id => Package?.Id ?? 0;
 	public string Name { get; }
-	public string? Url { get; }
-	public IPackage Package { get; }
+	public string? Url => Package?.Url;
+	public IPackage? Package { get; set; }
 	public long FileSize { get; }
 	public DateTime LocalTime { get; }
 	public string[] Tags { get; }
 
-	public Asset(IPackage package, string filePath)
+	public SaveGameMetaData? SaveGameMetaData { get; set; }
+	public MapMetaData? MapMetaData { get; set; }
+
+	public Asset(AssetType assetType, string folder, string filePath)
 	{
 		FilePath = filePath;
-		Package = package;
-		Folder = package.LocalData!.Folder;
+		AssetType = assetType;
+		Folder = folder;
 		FileSize = new FileInfo(FilePath).Length;
 		LocalTime = File.GetLastWriteTimeUtc(FilePath);
 		Name = Path.GetFileNameWithoutExtension(FilePath).FormatWords();

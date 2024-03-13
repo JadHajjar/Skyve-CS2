@@ -17,6 +17,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public LocaleCS2() : base($"Skyve.Domain.CS2.Properties.LocaleCS2.json") { }
 
 	/// <summary>
+	/// You can't run Skyve from this folder.  Either run the app from your Programs list, or run the Skyve Setup from the mod's folder.
+	/// </summary>
+	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
+
+	/// <summary>
+	/// Change Location
+	/// </summary>
+	public static Translation ChangeLocation => _instance.GetText("ChangeLocation");
+
+	/// <summary>
 	/// <para>Copy PDX Mods ID</para>
 	/// <para>Plural: Copy the selected packages' PDX Mods IDs</para>
 	/// </summary>
@@ -29,6 +39,21 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation CopyWorkshopLink => _instance.GetText("CopyWorkshopLink");
 
 	/// <summary>
+	/// Current Status:
+	/// </summary>
+	public static Translation CurrentStatus => _instance.GetText("CurrentStatus");
+
+	/// <summary>
+	/// Default Location
+	/// </summary>
+	public static Translation DefaultLocation => _instance.GetText("DefaultLocation");
+
+	/// <summary>
+	/// Enable Developer Mode
+	/// </summary>
+	public static Translation DeveloperMode => _instance.GetText("DeveloperMode");
+
+	/// <summary>
 	/// Download completed
 	/// </summary>
 	public static Translation DownloadComplete => _instance.GetText("DownloadComplete");
@@ -37,6 +62,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Downloading...
 	/// </summary>
 	public static Translation Downloading => _instance.GetText("Downloading");
+
+	/// <summary>
+	/// Drop or select a playset's file here to import it
+	/// </summary>
+	public static Translation DropNewPlayset => _instance.GetText("DropNewPlayset");
 
 	/// <summary>
 	/// Remove all items from your active playset
@@ -80,6 +110,21 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ExcludeThisItemInAllPlaysets => _instance.GetText("ExcludeThisItemInAllPlaysets");
 
 	/// <summary>
+	/// Enable 'Included' filter for local content by default
+	/// </summary>
+	public static Translation FilterIncludedByDefault => _instance.GetText("FilterIncludedByDefault");
+
+	/// <summary>
+	/// Only shows local content that are included in your active playset by default.
+	/// </summary>
+	public static Translation FilterIncludedByDefaultTip => _instance.GetText("FilterIncludedByDefault_Tip");
+
+	/// <summary>
+	/// Hide your profile in the main menu
+	/// </summary>
+	public static Translation HideUserSection => _instance.GetText("HideUserSection");
+
+	/// <summary>
 	/// Add all items to your active playset
 	/// </summary>
 	public static Translation IncludeAll => _instance.GetText("IncludeAll");
@@ -106,9 +151,44 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation IncludeThisItemInAllPlaysets => _instance.GetText("IncludeThisItemInAllPlaysets");
 
 	/// <summary>
+	/// Invalid setup detected
+	/// </summary>
+	public static Translation InvalidFolderSettings => _instance.GetText("InvalidFolderSettings");
+
+	/// <summary>
+	/// The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.
+	/// </summary>
+	public static Translation InvalidFolderSettingsFail => _instance.GetText("InvalidFolderSettingsFail");
+
+	/// <summary>
+	/// Skyve was not able to properly detect Cities: Skylines II's data folder.  Click here to manually select the data folder.
+	/// </summary>
+	public static Translation InvalidFolderSettingsInfo => _instance.GetText("InvalidFolderSettingsInfo");
+
+	/// <summary>
+	/// Change the location where the game stores its content. This includes any mods, assets, and settings.  Skyve will create a link between your desired location and the default app data folder in this process.
+	/// </summary>
+	public static Translation JunctionDescription => _instance.GetText("JunctionDescription");
+
+	/// <summary>
+	/// Skyve and Cities: Skylines II will close during this process.  Skyve will restart automatically once finished.
+	/// </summary>
+	public static Translation JunctionRestart => _instance.GetText("JunctionRestart");
+
+	/// <summary>
+	/// Custom Content Location
+	/// </summary>
+	public static Translation JunctionTitle => _instance.GetText("JunctionTitle");
+
+	/// <summary>
 	/// Launch through Cities2.exe
 	/// </summary>
 	public static Translation LaunchThroughCities => _instance.GetText("LaunchThroughCities");
+
+	/// <summary>
+	/// Logging in...
+	/// </summary>
+	public static Translation LoggingIn => _instance.GetText("LoggingIn");
 
 	/// <summary>
 	/// The login process is securely handled through Paradox services and no data is shared with Skyve.
@@ -126,9 +206,24 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation LoginToParadox => _instance.GetText("LoginToParadox");
 
 	/// <summary>
+	/// Log Level
+	/// </summary>
+	public static Translation LogLevel => _instance.GetText("LogLevel");
+
+	/// <summary>
+	/// Copy logs to Player.log
+	/// </summary>
+	public static Translation LogsToPlayerLog => _instance.GetText("LogsToPlayerLog");
+
+	/// <summary>
 	/// '{0}' failed to download
 	/// </summary>
 	public static Translation ModDownloadFailed => _instance.GetText("ModDownloadFailed");
+
+	/// <summary>
+	/// You're not logged in to Paradox, check your notifications for more information.
+	/// </summary>
+	public static Translation NotLoggedInCheckNotification => _instance.GetText("NotLoggedInCheckNotification");
 
 	/// <summary>
 	/// Disable workshop packages
@@ -156,6 +251,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation PackageIsUnknown => _instance.GetText("PackageIsUnknown");
 
 	/// <summary>
+	/// Paradox Account
+	/// </summary>
+	public static Translation ParadoxAccount => _instance.GetText("ParadoxAccount");
+
+	/// <summary>
 	/// Your saved username/password failed to log in. Click here to update your information.
 	/// </summary>
 	public static Translation ParadoxLoginFailedBadCredentials => _instance.GetText("ParadoxLoginFailedBadCredentials");
@@ -181,9 +281,19 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation RememberMeInfo => _instance.GetText("RememberMeInfo");
 
 	/// <summary>
+	/// Reset Location
+	/// </summary>
+	public static Translation ResetLocation => _instance.GetText("ResetLocation");
+
+	/// <summary>
 	/// Clear PDX Mods cache
 	/// </summary>
 	public static Translation ResetSteamCache => _instance.GetText("ResetSteamCache");
+
+	/// <summary>
+	/// You can't run Skyve from this folder. If you've installed it already, run it from your Programs list.  If not, click on 'Ok' to run the setup.
+	/// </summary>
+	public static Translation RunSetupOrRunApp => _instance.GetText("RunSetupOrRunApp");
 
 	/// <summary>
 	/// Launch Cities: Skylines II
@@ -202,7 +312,32 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SubscribeToItem => _instance.GetText("SubscribeToItem");
 
 	/// <summary>
+	/// Enable UI Developer Mode
+	/// </summary>
+	public static Translation UIDeveloperMode => _instance.GetText("UIDeveloperMode");
+
+	/// <summary>
+	/// Un-Like this mod
+	/// </summary>
+	public static Translation UnVoteMod => _instance.GetText("UnVoteMod");
+
+	/// <summary>
+	/// Update available
+	/// </summary>
+	public static Translation UpdateAvailable => _instance.GetText("UpdateAvailable");
+
+	/// <summary>
+	/// Click here to update Skyve
+	/// </summary>
+	public static Translation UpdateAvailableInfo => _instance.GetText("UpdateAvailableInfo");
+
+	/// <summary>
 	/// View on PDX Mods
 	/// </summary>
 	public static Translation ViewOnWorkshop => _instance.GetText("ViewOnWorkshop");
+
+	/// <summary>
+	/// Like this mod
+	/// </summary>
+	public static Translation VoteMod => _instance.GetText("VoteMod");
 }

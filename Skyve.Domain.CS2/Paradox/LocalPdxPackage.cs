@@ -3,6 +3,7 @@
 using PDX.SDK.Contracts.Service.Mods.Enums;
 
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
 using System;
@@ -20,7 +21,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 {
 	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
 
-	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, isCodeMod, version, filePath)
+	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)), isCodeMod, version, filePath, mod.RequiredGameVersion)
 	{
 		IsLocal = false;
 		Id = (ulong)mod.Id;
@@ -39,13 +40,14 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		State = mod.State;
 		LatestUpdate = mod.LatestUpdate;
 		InstalledDate = mod.InstalledDate;
+		SuggestedGameVersion = mod.RequiredGameVersion;
 		PdxLocalData = mod.LocalData;
 		ThumbnailPath = CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
-		Name = mod.DisplayName;
 		ServerTime = mod.LatestUpdate ?? default;
 		ServerSize = (long)mod.Size;
 		IsCollection = false;
-		VoteCount = mod.RatingsTotal;
+		VoteCount = -1;// mod.RatingsTotal;
+		Subscribers = -1;
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
@@ -61,6 +63,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public string RequiredGameVersion { get; set; }
 	public string UserModVersion { get; set; }
 	public string LatestVersion { get; set; }
+	public string? SuggestedGameVersion { get; }
 	public string ThumbnailPath { get; set; }
 	public ulong Size { get; set; }
 	public List<PDX.SDK.Contracts.Service.Mods.Models.ModTag> Tags { get; set; }
@@ -82,23 +85,22 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public bool IsCollection { get; set; }
 	public bool IsInvalid { get; set; }
 	public string Guid { get; set; }
-	string? IWorkshopInfo.Version => UserModVersion;
+	string? IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
 	IUser? IWorkshopInfo.Author => new PdxUser(Author);
 	Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	public bool HasVoted { get; set; }
-	public IEnumerable<IPackageRequirement> Requirements => [];
-	public IEnumerable<IModChangelog> Changelog => [];
+	public IEnumerable<IThumbnailObject> Images => LocalData.Images;
+	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
+	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
+	IEnumerable<ILink> IWorkshopInfo.Links => [];
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version);
 
-		thumbnail = !CrossIO.FileExists(ThumbnailPath)
-			? imageService.GetImage(ThumbnailUrl, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailUrl)}").Result
-			: imageService.GetImage(ThumbnailPath, true, $"{Id}_{Guid}_{Path.GetExtension(ThumbnailPath)}", isFilePath: true).Result;
-
-		return thumbnail is not null;
+		return true;
 	}
 }

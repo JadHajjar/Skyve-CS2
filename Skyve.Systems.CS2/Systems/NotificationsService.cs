@@ -1,15 +1,13 @@
 ﻿using Skyve.Domain;
 using Skyve.Domain.Systems;
 
-using SlickControls;
-
 using System;
 using System.Collections.Generic;
 
 namespace Skyve.Systems.CS2.Systems;
 internal class NotificationsService : INotificationsService
 {
-	private readonly List<INotificationInfo> _notifications = new();
+	private readonly List<INotificationInfo> _notifications = [];
 
 	public event Action? OnNewNotification;
 
@@ -25,6 +23,24 @@ internal class NotificationsService : INotificationsService
 		foreach (var item in notifications)
 		{
 			yield return item;
+		}
+	}
+
+	public IEnumerable<TNotificationInfo> GetNotifications<TNotificationInfo>() where TNotificationInfo : INotificationInfo
+	{
+		List<INotificationInfo> notifications;
+
+		lock (this)
+		{
+			notifications = new(_notifications);
+		}
+
+		foreach (var item in notifications)
+		{
+			if (item is TNotificationInfo tnotif)
+			{
+				yield return tnotif;
+			}
 		}
 	}
 
