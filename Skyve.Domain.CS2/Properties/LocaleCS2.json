@@ -70,5 +70,12 @@
   "LogsToPlayerLog": "Copy logs to Player.log",
   "InvalidFolderSettings": "Invalid setup detected",
   "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
-  "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data."
+  "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
+  "DefaultLocation": "Default Location",
+  "JunctionTitle": "Custom Content Location",
+  "JunctionDescription": "Change the location where the game stores its content. This includes any mods, assets, and settings.\r\n\r\nSkyve will create a link between your desired location and the default app data folder in this process.",
+  "CurrentStatus": "Current Status:",
+  "ChangeLocation": "Change Location",
+  "ResetLocation": "Reset Location",
+  "JunctionRestart": "Skyve and Cities: Skylines II will close during this process"
 }

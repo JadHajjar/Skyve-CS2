@@ -22,6 +22,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
 
 	/// <summary>
+	/// Change Location
+	/// </summary>
+	public static Translation ChangeLocation => _instance.GetText("ChangeLocation");
+
+	/// <summary>
 	/// <para>Copy PDX Mods ID</para>
 	/// <para>Plural: Copy the selected packages' PDX Mods IDs</para>
 	/// </summary>
@@ -32,6 +37,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// <para>Plural: Copy the selected packages' PDX Mods links</para>
 	/// </summary>
 	public static Translation CopyWorkshopLink => _instance.GetText("CopyWorkshopLink");
+
+	/// <summary>
+	/// Current Status:
+	/// </summary>
+	public static Translation CurrentStatus => _instance.GetText("CurrentStatus");
+
+	/// <summary>
+	/// Default Location
+	/// </summary>
+	public static Translation DefaultLocation => _instance.GetText("DefaultLocation");
 
 	/// <summary>
 	/// Enable Developer Mode
@@ -151,6 +166,21 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation InvalidFolderSettingsInfo => _instance.GetText("InvalidFolderSettingsInfo");
 
 	/// <summary>
+	/// Change the location where the game stores its content. This includes any mods, assets, and settings.  Skyve will create a link between your desired location and the default app data folder in this process.
+	/// </summary>
+	public static Translation JunctionDescription => _instance.GetText("JunctionDescription");
+
+	/// <summary>
+	/// Skyve and Cities: Skylines II will close during this process
+	/// </summary>
+	public static Translation JunctionRestart => _instance.GetText("JunctionRestart");
+
+	/// <summary>
+	/// Custom Content Location
+	/// </summary>
+	public static Translation JunctionTitle => _instance.GetText("JunctionTitle");
+
+	/// <summary>
 	/// Launch through Cities2.exe
 	/// </summary>
 	public static Translation LaunchThroughCities => _instance.GetText("LaunchThroughCities");
@@ -249,6 +279,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// * Your credentials will be encrypted and saved to your computer.
 	/// </summary>
 	public static Translation RememberMeInfo => _instance.GetText("RememberMeInfo");
+
+	/// <summary>
+	/// Reset Location
+	/// </summary>
+	public static Translation ResetLocation => _instance.GetText("ResetLocation");
 
 	/// <summary>
 	/// Clear PDX Mods cache

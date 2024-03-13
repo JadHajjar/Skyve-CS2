@@ -469,7 +469,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 			foreach (var item in tags)
 			{
-				var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(item) };
+				var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(item), Enabled = false };
 				control.Click += TagControl_Click;
 				FLP_Tags.Controls.Add(control);
 			}
@@ -502,7 +502,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		foreach (var item in links.OrderBy(x => x.Type))
 		{
-			var control = new LinkControl(item, false);
+			var control = new LinkControl(item, true);
 			control.Click += T_NewLink_Click;
 			FLP_Links.Controls.Add(control);
 		}

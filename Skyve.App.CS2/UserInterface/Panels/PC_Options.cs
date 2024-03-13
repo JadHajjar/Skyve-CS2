@@ -1,7 +1,10 @@
 ﻿using Skyve.App.Interfaces;
 using Skyve.App.Utilities;
+using Skyve.Domain.CS2.Utilities;
+using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,6 +33,18 @@ public partial class PC_Options : PanelContent
 		DD_Language.Items = LocaleHelper.GetAvailableLanguages().Distinct().ToArray();
 		DD_Language.SelectedItem = DD_Language.Items.FirstOrDefault(x => x == LocaleHelper.CurrentCulture.IetfLanguageTag) ?? DD_Language.Items[0];
 		DD_Language.SelectedItemChanged += DD_Language_SelectedItemChanged;
+
+		var junctionLocation = CommandUtil.GetJunctionState(_settings.FolderSettings.AppDataPath);
+
+		if (string.IsNullOrEmpty(junctionLocation))
+		{
+			L_JunctionStatus.Text = LocaleCS2.DefaultLocation;
+			B_DeleteJunction.Visible = false;
+		}
+		else
+		{
+			L_JunctionStatus.Text = junctionLocation;
+		}
 	}
 
 	public override Color GetTopBarColor()
@@ -60,6 +75,9 @@ public partial class PC_Options : PanelContent
 	protected override void LocaleChanged()
 	{
 		Text = LocaleSlickUI.Options;
+		L_JunctionTitle.Text = LocaleCS2.JunctionTitle;
+		L_JunctionDescription.Text = LocaleCS2.JunctionDescription;
+		L_JunctionStatusLabel.Text = LocaleCS2.CurrentStatus;
 	}
 
 	protected override void UIChanged()
@@ -72,8 +90,18 @@ public partial class PC_Options : PanelContent
 			 B_Discord.Margin = B_Guide.Margin = B_Reset.Margin = B_ChangeLog.Margin = B_CreateShortcut.Margin =
 			TLP_Preferences.Margin = UI.Scale(new Padding(10), UI.UIScale);
 		DD_Language.Margin = UI.Scale(new Padding(10, 7, 10, 5), UI.UIScale);
-		slickSpacer1.Height = slickSpacer2.Height = (int)(1.5 * UI.FontScale);
-		slickSpacer1.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.UIScale);
+		slickSpacer5.Height = slickSpacer4.Height = slickSpacer1.Height = slickSpacer2.Height = (int)(1.5 * UI.FontScale);
+		slickSpacer1.Margin = slickSpacer4.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.UIScale);
+
+		slickSpacer5.Margin = UI.Scale(new Padding(5, 10, 5, 10), UI.UIScale);
+		B_CreateJunction.Margin = B_DeleteJunction.Margin = UI.Scale(new Padding(5, 10, 5, 5), UI.UIScale);
+		L_JunctionTitle.Margin = L_JunctionStatusLabel.Margin = L_JunctionStatus.Margin = UI.Scale(new Padding(3), UI.FontScale);
+		L_JunctionDescription.Margin = UI.Scale(new Padding(7, 3, 3, 3), UI.FontScale);
+
+		L_JunctionTitle.Font = UI.Font(9.5F, FontStyle.Bold);
+		L_JunctionDescription.Font = UI.Font(7.75F);
+		L_JunctionStatusLabel.Font = UI.Font(8.25F, FontStyle.Bold);
+		L_JunctionStatus.Font = UI.Font("Consolas", 7F);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -81,6 +109,7 @@ public partial class PC_Options : PanelContent
 		base.DesignChanged(design);
 
 		BackColor = design.AccentBackColor;
+		ForeColor = design.ForeColor.MergeColor(design.BackColor, 80);
 
 		foreach (Control item in TLP_Main.Controls)
 		{
@@ -193,5 +222,33 @@ public partial class PC_Options : PanelContent
 		await Task.Delay(3000);
 
 		B_CreateShortcut.ImageName = "I_Link";
+	}
+
+	private void B_CreateJunction_Click(object sender, EventArgs e)
+	{
+		var dialog = new IOSelectionDialog();
+
+		if (dialog.PromptFolder(Form) == DialogResult.OK)
+		{
+			if (Directory.Exists(dialog.SelectedPath))
+			{
+				ShowPrompt(LocaleCS2.JunctionRestart, icon: PromptIcons.Info);
+
+				var junctionLocation = CommandUtil.GetJunctionState(_settings.FolderSettings.AppDataPath);
+				ServiceCenter.Get<ICitiesManager>().Kill();
+				Application.Exit();
+				ServiceCenter.Get<IIOUtil>().Execute(App.Program.ExecutablePath, (string.IsNullOrEmpty(junctionLocation) ? string.Empty : $"-deleteJunction \"{_settings.FolderSettings.AppDataPath}\" ")
+					+ $"-createJunction \"{_settings.FolderSettings.AppDataPath}\" \"{dialog.SelectedPath}\" -stub");
+			}
+		}
+	}
+
+	private void B_DeleteJunction_Click(object sender, EventArgs e)
+	{
+		ShowPrompt(LocaleCS2.JunctionRestart, icon: PromptIcons.Info);
+
+		ServiceCenter.Get<ICitiesManager>().Kill();
+		Application.Exit();
+		ServiceCenter.Get<IIOUtil>().Execute(App.Program.ExecutablePath, $"-deleteJunction \"{_settings.FolderSettings.AppDataPath}\" -stub");
 	}
 }

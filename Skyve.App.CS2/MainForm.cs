@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2;
@@ -130,7 +131,6 @@ public partial class MainForm : BasePanelForm
 
 		base_PB_Icon.Loading = true;
 		PI_Compatibility.Loading = true;
-
 	}
 
 	private void PlaysetChanged()
