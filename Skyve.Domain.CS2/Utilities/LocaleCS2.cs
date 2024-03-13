@@ -171,7 +171,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation JunctionDescription => _instance.GetText("JunctionDescription");
 
 	/// <summary>
-	/// Skyve and Cities: Skylines II will close during this process
+	/// Skyve and Cities: Skylines II will close during this process.  Skyve will restart automatically once finished.
 	/// </summary>
 	public static Translation JunctionRestart => _instance.GetText("JunctionRestart");
 

@@ -2,8 +2,22 @@
   {
     "Stable": false,
     "Beta": true,
-    "Version": "0.1.12",
+    "Version": "0.1.13",
     "Date": "2024-03-13",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added the option to change the content location of CSII"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.1.12",
+    "Date": "2024-03-12",
     "ChangeGroups": [
       {
         "Name": "Changes",
@@ -19,7 +33,7 @@
     "Stable": false,
     "Beta": true,
     "Version": "0.1.11",
-    "Date": "2024-03-12",
+    "Date": "2024-03-11",
     "ChangeGroups": [
       {
         "Name": "Changes",

@@ -14,13 +14,11 @@ Skyve is your all-in-one mod manager for Cities: Skylines II PDX Mods.
   <Screenshot Value="Properties/Release/Screenshot_01.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="" />
-  <ModVersion Value="0.1.12" />
+  <ModVersion Value="0.1.13" />
   <GameVersion Value="1.0.*" />
   <ChangeLog>
-# v0.1.12
+# v0.1.13
 ## Changes
-* Finalizing CR management
-* Added fail-safe in case appdata folder is not detected
-* Fixes to first-time usage related bugs
+* Added the option to change the content location of CSII
 </ChangeLog>
 </Publish>
