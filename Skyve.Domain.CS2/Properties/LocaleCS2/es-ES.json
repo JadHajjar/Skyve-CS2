@@ -40,12 +40,15 @@
   "PackageIsIncomplete": "El tamaño local de '{0}' ({1}) es diferente de {2} en PDX Mods",
   "OpenCitiesAppData": "Abrir carpeta 'AppData' de C:S II",
   "ResetSteamCache": "Limpiar caché de PDX Mods",
-  "ParadoxLoginFailedTitle": "Fallo en ParadoxLogin",
-  "ParadoxLoginFailedNoConnectionTitle": "ParadoxLoginFailedNoConnectionTitle",
-  "ParadoxLoginFailedNoConnection": "ParadoxLoginFailedNoConnection",
-  "ParadoxLoginFailedBadCredentials": "Error al iniciar sesión",
-  "ParadoxLoginFailedEmpty": "ParadoxLoginFailedEmpty",
+  "ParadoxLoginFailedTitle": "No se pudo iniciar sesión en PDX Mods",
+  "ParadoxLoginFailedNoConnection": "No estás conectado a Internet. Comprueba tu conexión y haz clic aquí para intentarlo de nuevo.",
+  "ParadoxLoginFailedBadCredentials": "No se pudo iniciar sesión con tu nombre de usuario/contraseña guardados. Haz clic aquí para actualizar tu información.",
+  "ParadoxLoginFailedEmpty": "Es probable que tu sesión haya expirado. Intenta iniciar el juego para iniciar sesión de nuevo, o haz clic aquí para iniciar sesión a través de Skyve.",
   "DownloadComplete": "Descarga finalizada",
   "Downloading": "Descargando...",
-  "ModDownloadFailed": "'{0}' falló al descargar"
+  "ModDownloadFailed": "'{0}' falló al descargar",
+  "LoginToParadox": "Iniciar sesión en Paradox",
+  "LoginFailed": "Error al iniciar sesión, asegúrese de que su correo electrónico y contraseña son correctos. O inténtelo de nuevo más tarde.",
+  "RememberMeInfo": "* Sus credenciales serán cifradas y guardadas en su computadora.",
+  "LoginDisclaimer": "El proceso de inicio de sesión se gestiona de forma segura a través de servicios de Paradox y no se comparte ningún dato con Skyve."
 }

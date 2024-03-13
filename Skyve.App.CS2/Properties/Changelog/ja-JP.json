@@ -1,9 +1,3 @@
 {
-  "Changes": "変更",
-  "A full rework! -behind the scenes": "完全な作り直し！ -舞台裏では",
-  "'Profiles' are now, appropriately, called 'Playsets'.": "今後は「プロファイル」では無く、「プレイセット」と呼ぶように変更",
-  "The core systems of Skyve have been changed, organised, and optimised.": "Skyveのコアシステムは変更されて再構成＆最適化",
-  "Improved the author info gathering, which will fix the issue of authors not loading.": "作者の情報収集を改善して、情報がロードされない問題を修正",
-  "Excluded mods no longer use the '.excluded' file, they instead use a new ModConfig file.": "除外したMODで「.excluded」ファイルを使用せずに、代わりに新しい「ModConfig」ファイルを使用するように変更",
-  "The Load Order of mods has been re-integrated, and is completely automated based on mods' requirements as well as other Compatibility-Report factors.": "MODのロード順が再統合されて、MODの要件やその他の互換性レポートの情報に基づいて完全に自動化"
+  "Changes": "変更"
 }

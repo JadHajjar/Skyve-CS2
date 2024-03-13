@@ -40,12 +40,15 @@
   "PackageIsIncomplete": "A(z) „{0}” ({1}) helyi mérete eltér a PDX modok méretétől. {2}",
   "OpenCitiesAppData": "Nyissa meg a C:S II AppData mappáját",
   "ResetSteamCache": "PDX Mods gyorsítótár törlése",
-  "ParadoxLoginFailedTitle": "ParadoxSikertelenBejelentkezés",
-  "ParadoxLoginFailedNoConnectionTitle": "ParadoxSikertelenBejelentkezésNincsKapcsolat",
-  "ParadoxLoginFailedNoConnection": "ParadoxSikertelenBejelentkezésNincsKapcsolat",
-  "ParadoxLoginFailedBadCredentials": "SikertelenParadoxBejelentkezésRosszHitelesítőAdatok",
-  "ParadoxLoginFailedEmpty": "ParadoxSikertelenBejelentkezésNincsOk",
+  "ParadoxLoginFailedTitle": "Could not log you in to PDX Mods",
+  "ParadoxLoginFailedNoConnection": "You're not connected to the internet, please check your connection and click here to try again.",
+  "ParadoxLoginFailedBadCredentials": "Your saved username/password failed to log in. Click here to update your information.",
+  "ParadoxLoginFailedEmpty": "Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.",
   "DownloadComplete": "A letöltés befejeződött",
   "Downloading": "Letöltés...",
-  "ModDownloadFailed": "A(z) „{0}” letöltése nem sikerült"
+  "ModDownloadFailed": "A(z) „{0}” letöltése nem sikerült",
+  "LoginToParadox": "Log in to Paradox",
+  "LoginFailed": "Login failed, make sure your e-mail and password are correct. Or try again later.",
+  "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
+  "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve."
 }

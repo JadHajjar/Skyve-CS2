@@ -1,9 +1,3 @@
 {
-  "Changes": "改动",
-  "A full rework! -behind the scenes": "完全重制！—— 幕后工作",
-  "'Profiles' are now, appropriately, called 'Playsets'.": "更新：“配置文件”的英文名由 'Profile' 改为 'Playset'，更加恰当了。",
-  "The core systems of Skyve have been changed, organised, and optimised.": "Skyve 的核心系统已经进行了更换、整理和优化。",
-  "Improved the author info gathering, which will fix the issue of authors not loading.": "更新：改进了作者信息收集功能，将解决作者信息不加载的问题。",
-  "Excluded mods no longer use the '.excluded' file, they instead use a new ModConfig file.": "更新：被卸下的模组不再使用“.excluded”文件，而是使用新的 ModConfig 文件。",
-  "The Load Order of mods has been re-integrated, and is completely automated based on mods' requirements as well as other Compatibility-Report factors.": "新增：自动调整模组加载顺序的功能（之前只会自动将 Harmony 固定在加载顺序首位）。自动排序基于各模组本身对加载顺序的要求，以及相关的兼容性报告。"
+  "Changes": "改动"
 }
