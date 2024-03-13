@@ -1,5 +1,4 @@
 ﻿using Skyve.App.UserInterface.CompatibilityReport;
-using Skyve.App.UserInterface.Content;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
-public partial class PC_ViewReviewRequest : PanelContent
+public partial class PC_ViewReviewRequest : PC_PackagePageBase
 {
 	private ReviewRequest _request;
 	private readonly SlickControl logControl;
@@ -20,52 +19,50 @@ public partial class PC_ViewReviewRequest : PanelContent
 	private readonly IDlcManager _dlcManager;
 	private readonly SkyveApiUtil _skyveApiUtil;
 
-	public PC_ViewReviewRequest(ReviewRequest request) : base(true)
+	public PC_ViewReviewRequest(ReviewRequest request) : base(request)
 	{
 		ServiceCenter.Get(out _dlcManager, out _skyveApiUtil, out _workshopService, out IUserService userService);
 		InitializeComponent();
 		_request = request;
 
-		TLP_Info.Controls.Add(new MiniPackageControl(request.PackageId) { Dock = DockStyle.Top, ReadOnly = true, Large = true }, 0, 0);
 		//TLP_Info.Controls.Add(new SteamUserControl(request.UserId) { InfoText = "Requested by", Dock = DockStyle.Top, Margin = UI.Scale(new Padding(5), UI.FontScale) }, 0, 1);
 
 		logControl = new SlickControl
 		{
 			Cursor = Cursors.Hand,
 			Text = $"RequestBy_{userService.TryGetUser(_request.UserId)?.Name}_{DateTime.Now:yy-MM-dd_HH-mm}",
-			Dock = DockStyle.Top,
-			Height = (int)(75 * UI.UIScale),
+			Size = UI.Scale(new Size(150, 75), UI.UIScale),
 			Margin = UI.Scale(new Padding(5), UI.FontScale)
 		};
 
 		logControl.Paint += PC_ReviewSingleRequest_Paint;
 		logControl.Click += LogControl_Click;
 
-		TLP_Info.Controls.Add(logControl, 0, 2);
+		TLP_Main.Controls.Add(logControl, 0, 3);
 
 		L_Note.Text = request.PackageNote.IfEmpty("No description given");
 
 		if (request.IsInteraction)
 		{
-			tableLayoutPanel1.Controls.Add(new IPackageStatusControl<InteractionType, PackageInteraction>(_workshopService.GetPackage(new GenericPackageIdentity(request.PackageId)), new PackageInteraction
+			TLP_Main.Controls.Add(new IPackageStatusControl<InteractionType, PackageInteraction>(_workshopService.GetPackage(new GenericPackageIdentity(request.PackageId)), new PackageInteraction
 			{
 				Action = (StatusAction)request.StatusAction,
 				IntType = request.StatusType,
 				Note = request.StatusNote,
 				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ulong.Parse).ToArray(),
 			})
-			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 4);
+			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 6);
 		}
 		else if (request.IsStatus)
 		{
-			tableLayoutPanel1.Controls.Add(new IPackageStatusControl<StatusType, PackageStatus>(_workshopService.GetPackage(new GenericPackageIdentity(request.PackageId)), new PackageStatus
+			TLP_Main.Controls.Add(new IPackageStatusControl<StatusType, PackageStatus>(_workshopService.GetPackage(new GenericPackageIdentity(request.PackageId)), new PackageStatus
 			{
 				Action = (StatusAction)request.StatusAction,
 				IntType = request.StatusType,
 				Note = request.StatusNote,
 				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ulong.Parse).ToArray(),
 			})
-			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 4);
+			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 6);
 		}
 		else
 		{
@@ -76,6 +73,8 @@ public partial class PC_ViewReviewRequest : PanelContent
 
 			tableLayoutPanel3.Visible = true;
 		}
+
+		SetPackage(Package);
 	}
 
 	private void LogControl_Click(object sender, EventArgs e)
@@ -96,9 +95,9 @@ public partial class PC_ViewReviewRequest : PanelContent
 	{
 		logControl.Loading = true;
 
-		var request = await _skyveApiUtil.GetReviewRequest(_request.UserId, _request.PackageId);
+		var request = await _skyveApiUtil.GetReviewRequest(_request.UserId ?? string.Empty, _request.PackageId);
 
-		if (request != null)
+		if (request is not null)
 		{
 			_request = request;
 
@@ -122,21 +121,19 @@ public partial class PC_ViewReviewRequest : PanelContent
 	{
 		base.UIChanged();
 
-		tableLayoutPanel2.Width = (int)(250 * UI.FontScale);
-		L_ProposedChanges.Font = L_Desc.Font = UI.Font(7.5F, FontStyle.Bold);
-		L_Note.Font = UI.Font(9.5F);
-		tableLayoutPanel1.Padding = UI.Scale(new Padding(5), UI.FontScale);
+		L_ProposedChanges.Font = L_Desc.Font = L_LogReport.Font = UI.Font(9.75F, FontStyle.Bold);
+		L_Note.Font = UI.Font(9.25F);
+		L_LogReport.Margin = slickSpacer3.Margin = UI.Scale(new Padding(3, 15, 3, 3), UI.FontScale);
+		L_ProposedChanges.Margin = UI.Scale(new Padding(3, 15, 3, 7), UI.FontScale);
+		TLP_Main.Padding = UI.Scale(new Padding(10, 5, 10, 0), UI.FontScale);
 		I_Copy.Size = UI.Scale(new Size(32, 32), UI.FontScale);
 		I_Copy.Padding = UI.Scale(new Padding(4), UI.FontScale);
-
-		foreach (Control item in roundedGroupTableLayoutPanel1.Controls)
-		{
-			item.Margin = UI.Scale(new Padding(3, 7, 3, 3), UI.FontScale);
-		}
+		slickSpacer3.Height = slickSpacer2.Height = (int)UI.FontScale;
+		L_Desc.Margin = L_Note.Margin = UI.Scale(new Padding(3), UI.FontScale);
 
 		foreach (Control item in tableLayoutPanel1.Controls)
 		{
-			item.Margin = UI.Scale(new Padding(5), UI.FontScale);
+			item.Margin = UI.Scale(new Padding(7), UI.FontScale);
 		}
 	}
 

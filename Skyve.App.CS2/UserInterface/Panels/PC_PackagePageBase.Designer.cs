@@ -39,7 +39,7 @@ partial class PC_PackagePageBase
 			SlickControls.DynamicIcon dynamicIcon2 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon3 = new SlickControls.DynamicIcon();
 			this.P_Side = new System.Windows.Forms.Panel();
-			this.slickScroll1 = new SlickControls.SlickScroll();
+			this.base_slickScroll = new SlickControls.SlickScroll();
 			this.TLP_Side = new System.Windows.Forms.TableLayoutPanel();
 			this.TLP_Links = new SlickControls.RoundedTableLayoutPanel();
 			this.L_Links = new System.Windows.Forms.Label();
@@ -56,7 +56,7 @@ partial class PC_PackagePageBase
 			this.PB_Icon = new Skyve.App.UserInterface.Content.PackageIcon();
 			this.I_More = new SlickControls.SlickIcon();
 			this.L_Author = new SlickControls.SlickLabel();
-			this.slickSpacer1 = new SlickControls.SlickSpacer();
+			this.base_slickSpacer = new SlickControls.SlickSpacer();
 			this.TLP_ModRequirements = new SlickControls.RoundedTableLayoutPanel();
 			this.L_Requirements = new System.Windows.Forms.Label();
 			this.B_BulkRequirements = new SlickControls.SlickButton();
@@ -85,7 +85,7 @@ partial class PC_PackagePageBase
 			// 
 			// P_Side
 			// 
-			this.P_Side.Controls.Add(this.slickScroll1);
+			this.P_Side.Controls.Add(this.base_slickScroll);
 			this.P_Side.Controls.Add(this.TLP_Side);
 			this.P_Side.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.P_Side.Location = new System.Drawing.Point(0, 0);
@@ -95,15 +95,15 @@ partial class PC_PackagePageBase
 			// 
 			// slickScroll1
 			// 
-			this.slickScroll1.Dock = System.Windows.Forms.DockStyle.Right;
-			this.slickScroll1.LinkedControl = this.TLP_Side;
-			this.slickScroll1.Location = new System.Drawing.Point(190, 0);
-			this.slickScroll1.Name = "slickScroll1";
-			this.slickScroll1.Size = new System.Drawing.Size(10, 623);
-			this.slickScroll1.Style = SlickControls.StyleType.Vertical;
-			this.slickScroll1.TabIndex = 2;
-			this.slickScroll1.TabStop = false;
-			this.slickScroll1.Text = "slickScroll1";
+			this.base_slickScroll.Dock = System.Windows.Forms.DockStyle.Right;
+			this.base_slickScroll.LinkedControl = this.TLP_Side;
+			this.base_slickScroll.Location = new System.Drawing.Point(190, 0);
+			this.base_slickScroll.Name = "slickScroll1";
+			this.base_slickScroll.Size = new System.Drawing.Size(10, 623);
+			this.base_slickScroll.Style = SlickControls.StyleType.Vertical;
+			this.base_slickScroll.TabIndex = 2;
+			this.base_slickScroll.TabStop = false;
+			this.base_slickScroll.Text = "slickScroll1";
 			// 
 			// TLP_Side
 			// 
@@ -114,7 +114,7 @@ partial class PC_PackagePageBase
 			this.TLP_Side.Controls.Add(this.TLP_Links, 0, 7);
 			this.TLP_Side.Controls.Add(this.TLP_ModInfo, 0, 4);
 			this.TLP_Side.Controls.Add(this.TLP_TopInfo, 0, 0);
-			this.TLP_Side.Controls.Add(this.slickSpacer1, 0, 1);
+			this.TLP_Side.Controls.Add(this.base_slickSpacer, 0, 1);
 			this.TLP_Side.Controls.Add(this.TLP_ModRequirements, 0, 5);
 			this.TLP_Side.Controls.Add(this.TLP_Tags, 0, 6);
 			this.TLP_Side.Location = new System.Drawing.Point(0, 0);
@@ -329,13 +329,13 @@ partial class PC_PackagePageBase
 			// 
 			// slickSpacer1
 			// 
-			this.slickSpacer1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.slickSpacer1.Location = new System.Drawing.Point(3, 105);
-			this.slickSpacer1.Name = "slickSpacer1";
-			this.slickSpacer1.Size = new System.Drawing.Size(384, 14);
-			this.slickSpacer1.TabIndex = 1;
-			this.slickSpacer1.TabStop = false;
-			this.slickSpacer1.Text = "slickSpacer1";
+			this.base_slickSpacer.Dock = System.Windows.Forms.DockStyle.Top;
+			this.base_slickSpacer.Location = new System.Drawing.Point(3, 105);
+			this.base_slickSpacer.Name = "slickSpacer1";
+			this.base_slickSpacer.Size = new System.Drawing.Size(384, 14);
+			this.base_slickSpacer.TabIndex = 1;
+			this.base_slickSpacer.TabStop = false;
+			this.base_slickSpacer.Text = "slickSpacer1";
 			// 
 			// TLP_ModRequirements
 			// 
@@ -487,9 +487,9 @@ partial class PC_PackagePageBase
 	private SlickIcon I_More;
 	private RoundedTableLayoutPanel TLP_ModInfo;
 	private System.Windows.Forms.Label L_Info;
-	private SlickScroll slickScroll1;
+	private SlickScroll base_slickScroll;
 	private System.Windows.Forms.TableLayoutPanel TLP_Side;
-	private SlickSpacer slickSpacer1;
+	private SlickSpacer base_slickSpacer;
 	private RoundedTableLayoutPanel TLP_ModRequirements;
 	private System.Windows.Forms.Label L_Requirements;
 	private RoundedTableLayoutPanel TLP_Tags;

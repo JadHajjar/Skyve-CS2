@@ -1,1 +1,27 @@
-{}
+{
+  "Changes": "Changes",
+  "Changes 1": "Changes 1",
+  "Changes 2": "Changes 2",
+  "First Line": "First Line",
+  "Third Line": "Third Line",
+  "Second Line": "Second Line",
+  "New Mod page": "New Mod page",
+  "Compatibility Update": "Compatibility Update",
+  "Playset design update": "Playset design update",
+  "Finalizing CR management": "Finalizing CR management",
+  "Updated dashboard design": "Updated dashboard design",
+  "WIP Playset settings page": "WIP Playset settings page",
+  "Compatibility with 1.0.21f1": "Compatibility with 1.0.21f1",
+  "This is a test for auto-changelog": "This is a test for auto-changelog",
+  "Added missing playset list actions": "Added missing playset list actions",
+  "Fixes to first-time usage related bugs": "Fixes to first-time usage related bugs",
+  "Playset launch settings have been added": "Playset launch settings have been added",
+  "Final updates to compatibility center UI": "Final updates to compatibility center UI",
+  "Online compatibility data is now available": "Online compatibility data is now available",
+  "Added fail-safe in case appdata folder is not detected": "Added fail-safe in case appdata folder is not detected",
+  "Added the option to change the content location of CSII": "Added the option to change the content location of CSII",
+  "Fixed not being able to manage your mods' compatibility": "Fixed not being able to manage your mods' compatibility",
+  "Massive performance improvements while viewing lists of content": "Massive performance improvements while viewing lists of content",
+  "Playset page now includes its content as well as its settings and launch settings": "Playset page now includes its content as well as its settings and launch settings",
+  "Updated Help & Logs page with a new design and live-updating log feed that groups log files together": "Updated Help & Logs page with a new design and live-updating log feed that groups log files together"
+}

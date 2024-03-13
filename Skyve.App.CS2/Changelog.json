@@ -2,6 +2,20 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.1.14",
+    "Date": "2024-03-13",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Final updates to compatibility center UI"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.1.13",
     "Date": "2024-03-13",
     "ChangeGroups": [

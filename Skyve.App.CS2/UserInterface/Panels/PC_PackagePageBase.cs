@@ -211,8 +211,8 @@ public partial class PC_PackagePageBase : PanelContent
 		PB_Icon.Size = UI.Scale(new Size(72, 72), UI.FontScale);
 		I_More.Size = UI.Scale(new Size(20, 28), UI.FontScale);
 		TLP_Side.Padding = UI.Scale(new Padding(8, 0, 0, 0), UI.FontScale);
-		TLP_TopInfo.Margin = B_Incl.Margin = slickSpacer1.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		slickSpacer1.Height = (int)UI.FontScale;
+		TLP_TopInfo.Margin = B_Incl.Margin = base_slickSpacer.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		base_slickSpacer.Height = (int)UI.FontScale;
 		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding =
 		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		L_Info.Font = L_Requirements.Font = L_Tags.Font = L_Links.Font = UI.Font(7F, FontStyle.Bold);
