@@ -175,7 +175,16 @@
   <data name="I_GlowAppIcon_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\I_GlowAppIcon_64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="I_PdxMods" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\I_PdxMods.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="I_PDXMods_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_PDXMods_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_PDXMods_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_PDXMods_24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_PDXMods_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_PDXMods_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_PDXMods_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_PDXMods_48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

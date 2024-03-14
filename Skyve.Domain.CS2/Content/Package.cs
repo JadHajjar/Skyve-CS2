@@ -21,7 +21,7 @@ public class Package : IPackage, IEquatable<Package?>
 
 	public Package(string folder, IAsset[] assets, IThumbnailObject[] images, bool isCodeMod, string? version, string? filePath, string? suggestedGameVersion)
 	{
-		Name = Path.GetFileName(folder);
+		Name = Path.GetFileName(folder).TrimStart('.');
 		IsCodeMod = isCodeMod;
 		IsLocal = true;
 		LocalData = new LocalPackageData(this, assets, images, folder, version, filePath ?? folder, suggestedGameVersion);

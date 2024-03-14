@@ -33,6 +33,7 @@ internal class WorkshopService : IWorkshopService
 {
 	public event Action? OnLogin;
 	public event Action? OnLogout;
+	public event Action? ContextAvailable;
 
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
@@ -126,6 +127,8 @@ internal class WorkshopService : IWorkshopService
 				config: config);
 
 			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
+
+			ContextAvailable?.Invoke();
 		}
 		catch (Exception ex)
 		{
@@ -347,7 +350,7 @@ internal class WorkshopService : IWorkshopService
 		return [];
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, bool all = false)
+	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null)
 	{
 		if (Context is null)
 		{
@@ -360,7 +363,7 @@ internal class WorkshopService : IWorkshopService
 			searchQuery = query,
 			tags = requiredTags?.ToList(),
 			orderBy = GetPdxOrder(sorting),
-			pageSize = 100
+			pageSize = limit ?? 100
 		});
 
 		ProcessResult(result);
@@ -597,6 +600,8 @@ internal class WorkshopService : IWorkshopService
 		{
 			return null;
 		}
+
+		await WaitUntilReady();
 
 		var result = ProcessResult(await Context.Mods.CreatePlayset(playsetName));
 

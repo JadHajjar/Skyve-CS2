@@ -2,6 +2,21 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.1.15",
+    "Date": "2024-03-13",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Local mods can now be enabled/disabled while the game is not running",
+          "Implemented importing a playset file"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.1.14",
     "Date": "2024-03-13",
     "ChangeGroups": [

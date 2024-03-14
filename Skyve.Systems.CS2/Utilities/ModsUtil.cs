@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain;
+using Skyve.Domain.CS2.Content;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 using Skyve.Systems.CS2.Utilities.IO;
@@ -31,9 +32,10 @@ internal class ModsUtil : IModUtil
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly INotifier _notifier;
 	private readonly ISettings _settings;
+	private readonly ILogger _logger;
 	private readonly IServiceProvider _serviceProvider;
 
-	public ModsUtil(IWorkshopService workshopService, ISubscriptionsManager subscriptionsManager, IModLogicManager modLogicManager, INotifier notifier, AssemblyUtil assemblyUtil, MacAssemblyUtil macAssemblyUtil, ISettings settings, IServiceProvider serviceProvider)
+	public ModsUtil(IWorkshopService workshopService, ISubscriptionsManager subscriptionsManager, IModLogicManager modLogicManager, INotifier notifier, AssemblyUtil assemblyUtil, MacAssemblyUtil macAssemblyUtil, ISettings settings, IServiceProvider serviceProvider, ILogger logger)
 	{
 		_assemblyUtil = assemblyUtil;
 		_workshopService = (WorkshopService)workshopService;
@@ -42,6 +44,7 @@ internal class ModsUtil : IModUtil
 		_subscriptionsManager = subscriptionsManager;
 		_notifier = notifier;
 		_settings = settings;
+		_logger = logger;
 		_serviceProvider = serviceProvider;
 		_notifier.CompatibilityDataLoaded += BuildLoadOrder;
 		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
@@ -95,7 +98,9 @@ internal class ModsUtil : IModUtil
 		var playset = await _workshopService.GetActivePlaysetId();
 
 		if (mods is null)
+		{
 			return;
+		}
 
 		foreach (var mod in mods)
 		{
@@ -131,7 +136,14 @@ internal class ModsUtil : IModUtil
 
 	public bool IsEnabled(IPackageIdentity mod, int? playsetId = null)
 	{
-		return mod.Id <= 0 || (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetId ?? currentPlayset].TryGet(mod.Id));
+		if (mod.Id <= 0)
+		{
+			var folder = mod.GetLocalPackageIdentity()?.Folder;
+
+			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
+		}
+
+		return modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetId ?? currentPlayset].TryGet(mod.Id);
 	}
 
 	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null)
@@ -230,7 +242,14 @@ internal class ModsUtil : IModUtil
 
 		SaveHistory();
 
+		SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), value);
+
 		mods = mods.AllWhere(x => x.Id > 0 && IsEnabled(x, playset) != value);
+
+		if (mods.Count() == 0)
+		{
+			return;
+		}
 
 		_enabling.AddRange(mods.Select(x => x.Id).Where(x => x > 0));
 
@@ -275,6 +294,34 @@ internal class ModsUtil : IModUtil
 
 		_notifier.OnInclusionUpdated();
 		_notifier.OnRefreshUI(true);
+	}
+
+	private void SetLocalModEnabled(List<IPackageIdentity> mods, bool value)
+	{
+		if (mods.Count == 0)
+		{
+			return;
+		}
+
+		foreach (var item in mods)
+		{
+			var localIdentity = item.GetLocalPackageIdentity();
+
+			if (localIdentity is null)
+			{
+				continue;
+			}
+
+			try
+			{
+				var newFolder = CrossIO.Combine(Path.GetDirectoryName(localIdentity.Folder), value ? Path.GetFileName(localIdentity.Folder).TrimStart('.') : ('.' + Path.GetFileName(localIdentity.Folder).TrimStart('.')));
+
+				Directory.Move(localIdentity.Folder, newFolder);
+
+				(localIdentity as LocalPackageData)!.Folder = newFolder;
+			}
+			catch (Exception ex) { _logger.Exception(ex, $"Failed to {(value ? "enable" : "disable")} the local mod {item.Name}"); }
+		}
 	}
 
 	public int GetLoadOrder(IPackage package)

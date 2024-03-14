@@ -84,14 +84,13 @@ internal class D_Playsets : IDashboardItem
 
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight, bool horizontal)
 	{
-		Color fore;
 		if (Loading)
 		{
-			DrawLoadingSection(e, applyDrawing, e.ClipRectangle, Locale.Playset.Plural, out fore, ref preferredHeight);
+			DrawLoadingSection(e, applyDrawing, ref preferredHeight, Locale.Playset.Plural);
 		}
 		else
 		{
-			DrawSection(e, applyDrawing, e.ClipRectangle, _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentCustomPlayset?.GetIcon() ?? "I_Playsets", out fore, ref preferredHeight, _playsetManager.CurrentCustomPlayset?.Color ?? FormDesign.Design.MenuColor, _playsetManager.CurrentPlayset is null ? null : Locale.ActivePlayset);
+			DrawSection(e, applyDrawing, ref preferredHeight, _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentCustomPlayset?.GetIcon() ?? "I_Playsets", _playsetManager.CurrentPlayset is null ? null : Locale.ActivePlayset);
 		}
 
 		_buttonRightClickActions[_sections[0].rectangle.ClipTo(_sections[0].height)] = () => RightClick(_playsetManager.CurrentPlayset);
@@ -119,12 +118,12 @@ internal class D_Playsets : IDashboardItem
 
 		using var fontSmall = UI.Font(6.75F);
 
-		e.Graphics.DrawStringItem(Locale.FavoritePlaysets, fontSmall, Color.FromArgb(150, fore), e.ClipRectangle.Pad(Margin).Pad((int)(2 * UI.FontScale), 0, 0, 0), ref preferredHeight, applyDrawing);
+		e.Graphics.DrawStringItem(Locale.FavoritePlaysets, fontSmall, Color.FromArgb(150, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad((int)(2 * UI.FontScale), 0, 0, 0), ref preferredHeight, applyDrawing);
 
 		preferredHeight -= Margin.Top;
 
-		var preferredSize = horizontal ? 200 : 100;
-		var columns = (int)Math.Floor((e.ClipRectangle.Width - Margin.Left) / (100 * UI.FontScale));
+		var preferredSize = horizontal ? 115 : 100;
+		var columns = (int)Math.Max(1, Math.Floor((e.ClipRectangle.Width - Margin.Left) / (preferredSize * UI.FontScale)));
 		var columnWidth = (e.ClipRectangle.Width - Margin.Left) / columns;
 		var height = (horizontal ? 0 : columnWidth) + (int)(35 * UI.FontScale);
 

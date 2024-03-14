@@ -1,5 +1,7 @@
 ﻿using Skyve.Domain.CS2.Utilities;
 
+using SlickControls;
+
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -76,13 +78,17 @@ public class DownloadsInfoControl : SlickControl
 
 		if (thumbnail is null)
 		{
-			using var generic = Properties.Resources.I_PdxMods;
+			using var backBrush = new SolidBrush(Color.FromArgb(40, FormDesign.Design.ForeColor));
 
-			e.Graphics.DrawRoundedImage(generic, thumbRect, (int)(5 * UI.FontScale), FormDesign.Design.MenuColor.MergeColor(FormDesign.Design.BackColor, 90));
+			e.Graphics.FillRoundedRectangle(backBrush, thumbRect, Margin.Left / 2);
+
+			using var icon = IconManager.GetIcon("I_Paradox", thumbRect.Width * 3 / 4).Color(FormDesign.Design.ForeColor);
+
+			e.Graphics.DrawImage(icon, thumbRect.CenterR(icon.Size));
 		}
 		else
 		{
-			e.Graphics.DrawRoundedImage(thumbnail, thumbRect, (int)(5 * UI.FontScale), FormDesign.Design.MenuColor.MergeColor(FormDesign.Design.BackColor, 90));
+			e.Graphics.DrawRoundedImage(thumbnail, thumbRect, (int)(5 * UI.FontScale));
 		}
 
 		using var font = UI.Font(8.25F, FontStyle.Bold);

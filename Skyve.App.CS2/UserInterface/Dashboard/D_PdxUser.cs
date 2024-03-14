@@ -36,7 +36,7 @@ internal class D_PdxUser : IDashboardItem
 
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, e.ClipRectangle, LocaleCS2.ParadoxAccount, "I_Paradox", out var fore, ref preferredHeight);
+		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.ParadoxAccount, "I_Paradox");
 
 		var loading = Loading;
 		Loading = string.IsNullOrEmpty(_userService.User.Id?.ToString()) && _workshopService.IsLoginPending;
@@ -54,7 +54,7 @@ internal class D_PdxUser : IDashboardItem
 
 			e.Graphics.DrawStringItem(LocaleCS2.LoggingIn
 				, Font
-				, fore
+				, FormDesign.Design.ForeColor
 				, textRect.Pad((int)(22 * UI.FontScale), 0, 0, 0)
 				, ref preferredHeight
 				, applyDrawing);
@@ -69,7 +69,7 @@ internal class D_PdxUser : IDashboardItem
 
 		e.Graphics.DrawStringItem(string.IsNullOrWhiteSpace(_userService.User.Name) ? LocaleCS2.NotLoggedInCheckNotification : Locale.LoggedInUser.Format(_userService.User.Name)
 			, Font
-			, fore
+			, FormDesign.Design.ForeColor
 			, textRect.Pad((int)(16 * UI.FontScale), 0, 0, 0)
 			, ref preferredHeight
 			, applyDrawing);

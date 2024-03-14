@@ -39,6 +39,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation CopyWorkshopLink => _instance.GetText("CopyWorkshopLink");
 
 	/// <summary>
+	/// Could not retrieve the mods' data
+	/// </summary>
+	public static Translation CouldNotRetrieveMods => _instance.GetText("CouldNotRetrieveMods");
+
+	/// <summary>
 	/// Current Status:
 	/// </summary>
 	public static Translation CurrentStatus => _instance.GetText("CurrentStatus");
@@ -274,6 +279,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Could not log you in to PDX Mods
 	/// </summary>
 	public static Translation ParadoxLoginFailedTitle => _instance.GetText("ParadoxLoginFailedTitle");
+
+	/// <summary>
+	/// PDX Mods Showcase
+	/// </summary>
+	public static Translation PDXModsShowcase => _instance.GetText("PDXModsShowcase");
+
+	/// <summary>
+	/// This playset is already present in your list of playsets.
+	/// </summary>
+	public static Translation PlaysetAlreadyImported => _instance.GetText("PlaysetAlreadyImported");
 
 	/// <summary>
 	/// * Your credentials will be encrypted and saved to your computer.

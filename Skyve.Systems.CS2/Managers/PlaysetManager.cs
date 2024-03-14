@@ -1,8 +1,12 @@
 ﻿using Extensions;
 
+using Newtonsoft.Json;
+
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Paradox;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
@@ -11,8 +15,8 @@ using SlickControls;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -277,7 +281,9 @@ internal class PlaysetManager : IPlaysetManager
 		var playset = await _workshopService.CreatePlayset(playsetName);
 
 		if (playset is not null)
+		{
 			_playsets[playset.Id] = playset;
+		}
 
 		return playset;
 	}
@@ -326,9 +332,31 @@ internal class PlaysetManager : IPlaysetManager
 		return newPlayset;
 	}
 
-	public Task<IPlayset?> ImportPlayset(string obj)
+	public async Task<IPlayset?> ImportPlayset(string fileName)
 	{
-		throw new NotImplementedException();
+		var playset = JsonConvert.DeserializeObject<PdxPlaysetImport>(File.ReadAllText(fileName));
+
+		if (_playsets.ContainsKey(playset.GeneralData?.Id ?? 0))
+		{
+			throw new Exception(LocaleCS2.PlaysetAlreadyImported);
+		}
+
+		var newPlayset = await CreateNewPlayset(playset.GeneralData?.Name ?? "New Playset");
+
+		if (newPlayset is null)
+		{
+			throw new Exception(Locale.CouldNotCreatePlayset);
+		}
+
+		if (playset.SubscribedMods is not null)
+		{
+			await _packageUtil.SetIncluded(playset.SubscribedMods.Values, true, newPlayset.Id);
+
+			await _packageUtil.SetEnabled(playset.SubscribedMods.Values.Where(x => x.IsEnabled), true, newPlayset.Id);
+			await _packageUtil.SetEnabled(playset.SubscribedMods.Values.Where(x => !x.IsEnabled), false, newPlayset.Id);
+		}
+
+		return newPlayset;
 	}
 
 	public async Task SetIncludedForAll(IPackageIdentity package, bool value)
@@ -439,7 +467,7 @@ internal class PlaysetManager : IPlaysetManager
 		{
 			_customPlaysets[customPlayset.Id] = customPlayset;
 		}
-			
+
 		CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
 	}
 
