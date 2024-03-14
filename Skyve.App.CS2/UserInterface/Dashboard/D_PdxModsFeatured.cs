@@ -1,10 +1,10 @@
 ﻿using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Dashboard;
 using Skyve.App.UserInterface.Lists;
+using Skyve.App.UserInterface.Panels;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
@@ -14,7 +14,8 @@ internal class D_PdxModsFeatured : IDashboardItem
 	private readonly IModLogicManager _modLogicManager;
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly IModUtil _modUtil;
-	private List<IWorkshopInfo> mods = [];
+	private List<IWorkshopInfo> recentlyUpdatedMods = [];
+	private List<IWorkshopInfo> newMods = [];
 
 	public D_PdxModsFeatured()
 	{
@@ -38,7 +39,11 @@ internal class D_PdxModsFeatured : IDashboardItem
 		{
 			try
 			{
-				mods = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, limit: 8)).ToList();
+				newMods = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, limit: 8)).ToList();
+				recentlyUpdatedMods = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, limit: 16))
+					.Where(x => !newMods.Any(y => y.Id == x.Id))
+					.Take(8)
+					.ToList();
 			}
 			catch { }
 
@@ -60,7 +65,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 			return DrawLoading;
 		}
 
-		if (mods.Count == 0)
+		if (recentlyUpdatedMods.Count == 0)
 		{
 			return DrawNone;
 		}
@@ -107,16 +112,17 @@ internal class D_PdxModsFeatured : IDashboardItem
 		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsShowcase, "PDXMods");
 
 		using var fontSmall = UI.Font(6.75F);
-		e.Graphics.DrawStringItem(Locale.RecentlyUpdated, fontSmall, Color.FromArgb(150, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad((int)(2 * UI.FontScale), 0, 0, 0), ref preferredHeight, applyDrawing);
-
-		preferredHeight -= Margin.Top;
 
 		var preferredSize = horizontal ? 350 : 100;
 		var columns = (int)Math.Max(1, Math.Floor((e.ClipRectangle.Width - Margin.Left) / (preferredSize * UI.FontScale)));
 		var columnWidth = (e.ClipRectangle.Width - Margin.Left) / columns;
-		var height = horizontal ? (int)(35 * UI.FontScale):( columnWidth *2) ;
+		var height = horizontal ? (int)(32 * UI.FontScale) : (columnWidth * 5 / 3);
 
-		for (var i = 0; i < mods.Count; i++)
+		e.Graphics.DrawStringItem(Locale.NewUploads, fontSmall, Color.FromArgb(180, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad((int)(2 * UI.FontScale), 0, 0, 0), ref preferredHeight, applyDrawing);
+
+		preferredHeight -= Margin.Top / 2;
+
+		for (var i = 0; i < Math.Min(newMods.Count, horizontal ? 6 : (columns < 5 ? (columns * 2) : columns)); i++)
 		{
 			if (i > 0 && (i % columns) == 0)
 			{
@@ -127,24 +133,50 @@ internal class D_PdxModsFeatured : IDashboardItem
 
 			if (applyDrawing)
 			{
-				DrawMod(e, mods[i], rect.Pad(Margin.Left / 2), horizontal);
+				DrawMod(e, newMods[i], rect, horizontal);
 			}
 		}
 
 		preferredHeight += Margin.Top + height;
+
+		if (!horizontal)
+		{
+			preferredHeight += Margin.Top;
+		}
+
+		e.Graphics.DrawStringItem(Locale.RecentlyUpdated, fontSmall, Color.FromArgb(180, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad((int)(2 * UI.FontScale), 0, 0, 0), ref preferredHeight, applyDrawing);
+
+		preferredHeight -= Margin.Top / 2;
+
+		for (var i = 0; i < Math.Min(recentlyUpdatedMods.Count, horizontal ? 6 : (columns < 5 ? (columns * 2) : columns)); i++)
+		{
+			if (i > 0 && (i % columns) == 0)
+			{
+				preferredHeight += height;
+			}
+
+			var rect = new Rectangle(e.ClipRectangle.X + (Margin.Left / 2) + (i % columns * columnWidth), preferredHeight, columnWidth, height);
+
+			if (applyDrawing)
+			{
+				DrawMod(e, recentlyUpdatedMods[i], rect, horizontal);
+			}
+		}
+
+		preferredHeight += Margin.Top + height;
+
+		if (!horizontal)
+		{
+			preferredHeight += Margin.Top;
+		}
 	}
 
 	private void DrawMod(PaintEventArgs e, IWorkshopInfo workshopInfo, Rectangle rect, bool horizontal)
 	{
-		_buttonActions[rect] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
-		_buttonRightClickActions[rect] = () => RightClick(workshopInfo);
-
 		if (horizontal)
 		{
 			var banner = workshopInfo.GetThumbnail();
-			var bannerRect = horizontal
-				? rect.Pad(Margin.Left / 4).Align(new Size(rect.Height - (Margin.Top / 2), rect.Height - (Margin.Top / 2)), ContentAlignment.MiddleLeft)
-				: rect.Pad(Margin.Left / 2).ClipTo(rect.Width - Margin.Left);
+			var bannerRect = rect.Pad(Margin.Left / 2, 0, 0, 0).Align(new Size(rect.Height - (Margin.Left / 2), rect.Height - (Margin.Left / 2)), ContentAlignment.MiddleLeft);
 
 			if (banner is null)
 			{
@@ -165,19 +197,36 @@ internal class D_PdxModsFeatured : IDashboardItem
 			{
 				using var brush = new SolidBrush(Color.FromArgb(40, FormDesign.Design.ForeColor));
 
-				e.Graphics.FillRoundedRectangle(brush, bannerRect, Margin.Left / 2);
+				e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, 0), Margin.Left / 2);
 			}
 
-			var textRect = horizontal ? rect.Pad(Margin.Left + bannerRect.Width, Margin.Left / 2, Margin.Left / 2, Margin.Left / 2) : rect.Pad(Margin.Left / 2, bannerRect.Height + Margin.Top, Margin.Left / 2, Margin.Left / 2);
+			var text = workshopInfo.CleanName(out var tags) ?? Locale.UnknownPackage;
+			var textRect = rect.Pad(Margin.Left + bannerRect.Width, Margin.Left / 4, Margin.Left / 2, Margin.Left / 4);
 			using var textBrush = new SolidBrush(FormDesign.Design.ForeColor);
-			using var textFont = UI.Font(horizontal ? 8.5F : 8.75F, FontStyle.Bold).FitTo(workshopInfo.Name, textRect, e.Graphics);
-			using var centerFormat = new StringFormat { LineAlignment = StringAlignment.Center };
+			using var fadedBrush = new SolidBrush(Color.FromArgb(180, FormDesign.Design.ForeColor));
+			using var textFont = UI.Font(8.5F, FontStyle.Bold).FitTo(text, textRect, e.Graphics);
+			using var smallFont = UI.Font(7F);
+			using var format = new StringFormat { LineAlignment = StringAlignment.Far };
 
-			e.Graphics.DrawString(workshopInfo.Name, textFont, textBrush, textRect, horizontal ? centerFormat : null);
+			e.Graphics.DrawString(text, textFont, textBrush, textRect);
+			e.Graphics.DrawString(workshopInfo.Author?.Name ?? string.Empty, smallFont, fadedBrush, textRect, format);
+
+			var tagRect = new Rectangle(textRect.X + (int)e.Graphics.Measure(text, Font).Width + (Margin.Left / 2), textRect.Y + (Margin.Top / 4), 0, textRect.Height);
+
+			if (tags is not null)
+			{
+				foreach (var item in tags)
+				{
+					tagRect.X += (Margin.Left / 2) + e.Graphics.DrawLabel(item.Text, null, item.Color, tagRect, ContentAlignment.TopLeft, smaller: true).Width;
+				}
+			}
+
+			_buttonActions[rect] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
+			_buttonRightClickActions[rect] = () => RightClick(workshopInfo);
 		}
 		else
 		{
-			var pe = new ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles>(new DrawableItem<IPackageIdentity, ItemListControl.Rectangles>(workshopInfo) { Rectangles = GenerateGridRectangles(workshopInfo, rect) }, e.Graphics, [e.ClipRectangle], rect, HoverState, false);
+			var pe = new ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles>(new DrawableItem<IPackageIdentity, ItemListControl.Rectangles>(workshopInfo) { Rectangles = GenerateGridRectangles(workshopInfo, rect.Pad(Margin.Left / 2)) }, e.Graphics, [e.ClipRectangle], rect.Pad(Margin.Left / 2), HoverState, false);
 			var package = workshopInfo.GetPackage();
 			var localIdentity = workshopInfo.GetLocalPackageIdentity();
 			var isIncluded = workshopInfo.IsIncluded(out var partialIncluded) || partialIncluded;
@@ -187,8 +236,12 @@ internal class D_PdxModsFeatured : IDashboardItem
 			DrawTitleAndTags(pe);
 			DrawAuthor(pe, workshopInfo);
 			DrawVersionAndTags(pe, package, localIdentity, workshopInfo);
-			DrawIncludedButton(pe, isIncluded, partialIncluded, isEnabled, package?.LocalData, out var activeColor);
 			DrawDots(pe);
+
+			_buttonActions[pe.Rects.IconRect] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
+			_buttonActions[pe.Rects.DotsRect] = () => RightClick(workshopInfo);
+			_buttonActions[pe.Rects.AuthorRect] = () => App.Program.MainForm.PushPanel(null, new PC_UserPage(workshopInfo.Author!));
+			_buttonRightClickActions[rect] = () => RightClick(workshopInfo);
 		}
 	}
 
@@ -197,14 +250,12 @@ internal class D_PdxModsFeatured : IDashboardItem
 		var rects = new ItemListControl.Rectangles(item)
 		{
 			IconRect = rectangle.Align(new Size(rectangle.Width, rectangle.Width), ContentAlignment.TopCenter),
-			IncludedRect = new Rectangle(new Point(rectangle.X, rectangle.Y + rectangle.Width + Padding.Top), UI.Scale(new Size(32, 32), UI.FontScale))
+			DotsRect = new Rectangle(rectangle.X, rectangle.Y + rectangle.Width + (Margin.Top / 2), rectangle.Width, 0).Align(UI.Scale(new Size(16, 24), UI.FontScale), ContentAlignment.TopRight)
 		};
 
-		rects.DotsRect = new Rectangle(rectangle.X, rects.IncludedRect.Y, rectangle.Width, rects.IncludedRect.Height).Align(UI.Scale(new Size(16, 24), UI.FontScale), ContentAlignment.MiddleRight);
-
-		using var titleFont = UI.Font( 10.5F, FontStyle.Bold);
-		rects.TextRect = new Rectangle(rectangle.X + rects.IncludedRect.Width + Padding.Left, rectangle.Y + rectangle.Width + Padding.Top, rectangle.Width - rects.IncludedRect.Width - Padding.Horizontal - rects.DotsRect.Width, 0).AlignToFontSize(titleFont, ContentAlignment.TopLeft);
-		rects.CenterRect = rects.TextRect.Pad(0, -Padding.Vertical, 0, 0);
+		using var titleFont = UI.Font(10.5F, FontStyle.Bold);
+		rects.TextRect = new Rectangle(rectangle.X, rectangle.Y + rectangle.Width + (Margin.Top / 2), rectangle.Width - Margin.Left - rects.DotsRect.Width, 0).AlignToFontSize(titleFont, ContentAlignment.TopLeft);
+		rects.CenterRect = rects.TextRect.Pad(0, -Margin.Vertical, 0, 0);
 
 		return rects;
 	}
@@ -247,11 +298,10 @@ internal class D_PdxModsFeatured : IDashboardItem
 	}
 	private void DrawTitleAndTags(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e)
 	{
-		var padding = Padding;
 		var text = e.Item.CleanName(out var tags);
 		using var stringFormat = new StringFormat { Trimming = StringTrimming.EllipsisCharacter, LineAlignment = StringAlignment.Near };
 
-		using var font = UI.Font(9F, FontStyle.Bold);
+		using var font = UI.Font(8.25F, FontStyle.Bold);
 		var textRect = new Rectangle(e.Rects.TextRect.X, e.Rects.TextRect.Y, e.Rects.TextRect.Width, Height);
 
 		var textSize = e.Graphics.Measure(text, font, textRect.Width);
@@ -259,8 +309,8 @@ internal class D_PdxModsFeatured : IDashboardItem
 		var oneLine = textSize.Height == oneLineSize.Height;
 		var tagRect = new Rectangle(e.Rects.TextRect.X + (oneLine ? (int)textSize.Width : 0), textRect.Y + (oneLine ? 0 : (int)textSize.Height), 0, (int)oneLineSize.Height);
 
-		e.Rects.TextRect.Height = (int)textSize.Height + (padding.Top / 3);
-		e.Rects.CenterRect = e.Rects.TextRect.Pad(0, -padding.Top, 0, 0);
+		e.Rects.TextRect.Height = (int)textSize.Height + (Margin.Top / 3);
+		e.Rects.CenterRect = e.Rects.TextRect.Pad(0, -Margin.Top, 0, 0);
 		e.DrawableItem.CachedHeight = e.Rects.TextRect.Bottom;
 
 		using var brushTitle = new SolidBrush(e.Rects.CenterRect.Contains(CursorLocation) && e.HoverState == HoverState.Hovered ? FormDesign.Design.ActiveColor : e.BackColor.GetTextColor());
@@ -280,14 +330,13 @@ internal class D_PdxModsFeatured : IDashboardItem
 
 			var rect = e.Graphics.DrawLabel(tags[i].Text, null, tags[i].Color, tagRect, ContentAlignment.MiddleLeft, smaller: true);
 
-			tagRect.X += padding.Left + rect.Width;
+			tagRect.X += Margin.Left + rect.Width;
 		}
 
 		if (!oneLine && tags.Count > 0)
 		{
 			e.DrawableItem.CachedHeight += tagRect.Height;
 		}
-
 	}
 	private void DrawAuthor(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e, IWorkshopInfo? workshopInfo)
 	{
@@ -295,8 +344,8 @@ internal class D_PdxModsFeatured : IDashboardItem
 
 		if (author?.Name is not null and not "")
 		{
-			using var authorFont = UI.Font(7.5F, FontStyle.Regular);
-			using var authorFontUnderline = UI.Font(7.5F, FontStyle.Underline);
+			using var authorFont = UI.Font(6.75F, FontStyle.Regular);
+			using var authorFontUnderline = UI.Font(6.75F, FontStyle.Underline);
 			using var stringFormat = new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center };
 
 			var rect = new Rectangle(e.Rects.TextRect.X, e.DrawableItem.CachedHeight, e.Rects.TextRect.Width, 0);
@@ -305,7 +354,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 			using var authorIcon = IconManager.GetIcon("Author", size.Height);
 
 			e.Rects.AuthorRect = rect.Align(size + new Size(authorIcon.Width, 0), ContentAlignment.TopLeft);
-			e.DrawableItem.CachedHeight = e.Rects.AuthorRect.Bottom + (Padding.Top / 3);
+			e.DrawableItem.CachedHeight = e.Rects.AuthorRect.Bottom + (Margin.Top / 3);
 
 			var isHovered = e.Rects.AuthorRect.Contains(CursorLocation);
 			using var brush = new SolidBrush(isHovered ? FormDesign.Design.ActiveColor : Color.FromArgb(200, ForeColor));
@@ -344,99 +393,19 @@ internal class D_PdxModsFeatured : IDashboardItem
 		{
 			using var fadedBrush = new SolidBrush(Color.FromArgb(150, e.BackColor.GetTextColor()));
 
-			var rect = new Rectangle(e.Rects.TextRect.X, e.DrawableItem.CachedHeight, e.Rects.TextRect.Width, Height);
+			var rect = new Rectangle(e.Rects.IconRect.X, e.DrawableItem.CachedHeight, e.Rects.IconRect.Width, Height);
 
-			using var versionFont = UI.Font(7.5F);
+			using var versionFont = UI.Font(6.75F);
 
 			e.Graphics.DrawString(versionText, versionFont, fadedBrush, rect);
 
 			e.DrawableItem.CachedHeight += (int)e.Graphics.Measure(versionText, versionFont, rect.Width).Height;
 		}
 	}
-	private void DrawIncludedButton(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e, bool isIncluded, bool isPartialIncluded, bool isEnabled, ILocalPackageIdentity? localIdentity, out Color activeColor)
-	{
-		activeColor = default;
-
-		if (localIdentity is null && e.Item.IsLocal())
-		{
-			return; // missing local item
-		}
-
-		var required = _modLogicManager.IsRequired(localIdentity, _modUtil);
-		var isHovered = e.DrawableItem.Loading || (e.HoverState.HasFlag(HoverState.Hovered) && e.Rects.IncludedRect.Contains(CursorLocation));
-
-		if (!required && isIncluded && isHovered)
-		{
-			isPartialIncluded = false;
-			isEnabled = !isEnabled;
-		}
-
-		if (isEnabled)
-		{
-			activeColor = isPartialIncluded ? FormDesign.Design.YellowColor : FormDesign.Design.GreenColor;
-		}
-
-		Color iconColor;
-
-		if (required && activeColor != default)
-		{
-			iconColor = !FormDesign.Design.IsDarkTheme ? activeColor.MergeColor(ForeColor, 75) : activeColor;
-			activeColor = activeColor.MergeColor(BackColor, !FormDesign.Design.IsDarkTheme ? 35 : 20);
-		}
-		else if (activeColor == default && isHovered)
-		{
-			iconColor = isIncluded ? isEnabled ? FormDesign.Design.GreenColor : FormDesign.Design.RedColor : FormDesign.Design.ActiveColor;
-			activeColor = Color.FromArgb(40, iconColor);
-		}
-		else
-		{
-			if (activeColor == default)
-			{
-				activeColor = Color.FromArgb(20, ForeColor);
-			}
-			else if (isHovered)
-			{
-				activeColor = activeColor.MergeColor(ForeColor, 75);
-			}
-
-			iconColor = activeColor.GetTextColor();
-		}
-
-		using var brush = e.Rects.IncludedRect.Gradient(activeColor);
-		e.Graphics.FillRoundedRectangle(brush, e.Rects.IncludedRect, (int)(4 * UI.FontScale));
-
-		if (e.DrawableItem.Loading)
-		{
-			var rectangle = e.Rects.IncludedRect.CenterR(e.Rects.IncludedRect.Height * 3 / 5, e.Rects.IncludedRect.Height * 3 / 5);
-#if CS2
-			if (_subscriptionsManager.Status.ModId != e.Item.Id || _subscriptionsManager.Status.Progress == 0 || !_subscriptionsManager.Status.IsActive)
-			{
-				DrawLoader(e.Graphics, rectangle, iconColor);
-				return;
-			}
-
-			var width = Math.Min(Math.Min(rectangle.Width, rectangle.Height), (int)(32 * UI.UIScale));
-			var size = (float)Math.Max(2, width / (8D - (Math.Abs(100 - LoaderPercentage) / 50)));
-			var drawSize = new SizeF(width - size, width - size);
-			var rect = new RectangleF(new PointF(rectangle.X + ((rectangle.Width - drawSize.Width) / 2), rectangle.Y + ((rectangle.Height - drawSize.Height) / 2)), drawSize).Pad(size / 2);
-			using var pen = new Pen(iconColor, size) { StartCap = LineCap.Round, EndCap = LineCap.Round };
-
-			e.Graphics.DrawArc(pen, rect, -90, 360 * _subscriptionsManager.Status.Progress);
-#else
-			DrawLoader(e.Graphics, rectangle, iconColor);
-#endif
-			return;
-		}
-
-		var icon = new DynamicIcon(_subscriptionsManager.IsSubscribing(e.Item) ? "Wait" : isPartialIncluded ? "Slash" : isEnabled ? "Ok" : !isIncluded ? "Add" : "Enabled");
-		using var includedIcon = icon.Get(e.Rects.IncludedRect.Height * 3 / 4).Color(iconColor);
-
-		e.Graphics.DrawImage(includedIcon, e.Rects.IncludedRect.CenterR(includedIcon.Size));
-	}
 	private void DrawDots(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e)
 	{
 		var isHovered = e.Rects.DotsRect.Contains(CursorLocation);
-		using var img = IconManager.GetIcon("VertialMore", e.Rects.IncludedRect.Height * 3 / 4).Color(isHovered ? FormDesign.Design.ActiveColor : FormDesign.Design.IconColor);
+		using var img = IconManager.GetIcon("VertialMore", e.Rects.DotsRect.Height * 3 / 4).Color(isHovered ? FormDesign.Design.ActiveColor : FormDesign.Design.IconColor);
 
 		e.Graphics.DrawImage(img, e.Rects.DotsRect.CenterR(img.Size));
 	}
