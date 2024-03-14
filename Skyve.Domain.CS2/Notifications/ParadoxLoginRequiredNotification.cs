@@ -17,7 +17,7 @@ public class ParadoxLoginRequiredNotification : INotificationInfo
 		Time = DateTime.MaxValue;
 		Title = LocaleCS2.ParadoxLoginFailedTitle;
 		Description = badLogin ? LocaleCS2.ParadoxLoginFailedBadCredentials : LocaleCS2.ParadoxLoginFailedEmpty;
-		Icon = "I_Paradox";
+		Icon = "Paradox";
 		HasAction = true;
 	}
 

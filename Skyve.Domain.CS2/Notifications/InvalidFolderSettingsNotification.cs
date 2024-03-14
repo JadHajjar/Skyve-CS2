@@ -20,7 +20,7 @@ public class InvalidFolderSettingsNotification : INotificationInfo
 		Time = DateTime.Now;
 		Title = LocaleCS2.InvalidFolderSettings;
 		Description = LocaleCS2.InvalidFolderSettingsInfo;
-		Icon = "I_Hazard";
+		Icon = "Hazard";
 		HasAction = true;
 	}
 

@@ -12,7 +12,7 @@ public class PdxModDownloadFailed(int modId) : INotificationInfo
 	public DateTime Time { get; } = DateTime.Now;
 	public string Title => LocaleCS2.ModDownloadFailed.Format(new GenericPackageIdentity(_modId).GetWorkshopInfo()?.CleanName() ?? _modId.ToString());
 	public string? Description { get; }
-	public string Icon { get; } = "I_ReDownload";
+	public string Icon { get; } = "ReDownload";
 	public Color? Color { get; }
 	public bool HasAction { get; }
 

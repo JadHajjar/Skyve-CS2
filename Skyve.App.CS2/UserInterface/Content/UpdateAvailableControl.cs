@@ -39,7 +39,7 @@ internal class UpdateAvailableControl : SlickControl
 			using var textBrush = new SolidBrush(HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveColor : FormDesign.Design.ActiveForeColor);
 			e.Graphics.DrawString(text, font, textBrush, textRect, format);
 
-			using var icon = IconManager.GetIcon("I_OutOfDate", textRect.Height).Color(HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveColor : FormDesign.Design.ActiveForeColor);
+			using var icon = IconManager.GetIcon("OutOfDate", textRect.Height).Color(HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveColor : FormDesign.Design.ActiveForeColor);
 
 			textRect.Width = 0;
 			e.Graphics.DrawImage(icon, textRect.Align(icon.Size, ContentAlignment.MiddleRight));

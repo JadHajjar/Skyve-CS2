@@ -241,7 +241,7 @@ partial class PC_PlaysetPage
 			this.TLP_AdvancedDev.Controls.Add(this.CB_LogsToPlayerLog, 0, 1);
 			this.TLP_AdvancedDev.Controls.Add(this.DD_LogLevel, 0, 2);
 			this.TLP_AdvancedDev.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon7.Name = "I_Author";
+			dynamicIcon7.Name = "Author";
 			this.TLP_AdvancedDev.ImageName = dynamicIcon7;
 			this.TLP_AdvancedDev.Location = new System.Drawing.Point(3, 384);
 			this.TLP_AdvancedDev.Name = "TLP_AdvancedDev";
@@ -425,7 +425,7 @@ partial class PC_PlaysetPage
 			this.T_Content.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Content.Dock = System.Windows.Forms.DockStyle.Left;
 			this.T_Content.FillTab = true;
-			dynamicIcon8.Name = "I_Assets";
+			dynamicIcon8.Name = "Assets";
 			this.T_Content.IconName = dynamicIcon8;
 			this.T_Content.LinkedControl = null;
 			this.T_Content.Location = new System.Drawing.Point(0, 5);
@@ -439,7 +439,7 @@ partial class PC_PlaysetPage
 			// 
 			this.T_Settings.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Settings.Dock = System.Windows.Forms.DockStyle.Left;
-			dynamicIcon4.Name = "I_PlaysetSettings";
+			dynamicIcon4.Name = "PlaysetSettings";
 			this.T_Settings.IconName = dynamicIcon4;
 			this.T_Settings.LinkedControl = this.TLP_Side;
 			this.T_Settings.Location = new System.Drawing.Point(162, 5);
@@ -492,7 +492,7 @@ partial class PC_PlaysetPage
 			this.B_EditColor.AutoSize = true;
 			this.B_EditColor.ColorStyle = Extensions.ColorStyle.Green;
 			this.B_EditColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon5.Name = "I_Paint";
+			dynamicIcon5.Name = "Paint";
 			this.B_EditColor.ImageName = dynamicIcon5;
 			this.B_EditColor.Location = new System.Drawing.Point(3, 60);
 			this.B_EditColor.MatchBackgroundColor = true;
@@ -508,7 +508,7 @@ partial class PC_PlaysetPage
 			this.B_EditThumbnail.AutoSize = true;
 			this.B_EditThumbnail.ColorStyle = Extensions.ColorStyle.Green;
 			this.B_EditThumbnail.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon9.Name = "I_EditImage";
+			dynamicIcon9.Name = "EditImage";
 			this.B_EditThumbnail.ImageName = dynamicIcon9;
 			this.B_EditThumbnail.Location = new System.Drawing.Point(3, 96);
 			this.B_EditThumbnail.MatchBackgroundColor = true;
@@ -523,7 +523,7 @@ partial class PC_PlaysetPage
 			// 
 			this.T_LaunchSettings.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_LaunchSettings.Dock = System.Windows.Forms.DockStyle.Left;
-			dynamicIcon10.Name = "I_Launch";
+			dynamicIcon10.Name = "Launch";
 			this.T_LaunchSettings.IconName = dynamicIcon10;
 			this.T_LaunchSettings.LinkedControl = this.TLP_Options;
 			this.T_LaunchSettings.Location = new System.Drawing.Point(324, 5);

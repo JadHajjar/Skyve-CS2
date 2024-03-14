@@ -124,7 +124,7 @@ partial class PC_CompatibilityManagement
 			// 
 			this.T_Info.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Info.Dock = System.Windows.Forms.DockStyle.Left;
-			dynamicIcon1.Name = "I_Content";
+			dynamicIcon1.Name = "Content";
 			this.T_Info.IconName = dynamicIcon1;
 			this.T_Info.LinkedControl = this.TLP_MainInfo;
 			this.T_Info.Location = new System.Drawing.Point(0, 5);
@@ -207,7 +207,7 @@ partial class PC_CompatibilityManagement
 			this.P_Links.Controls.Add(this.L_NoLinks, 0, 2);
 			this.P_Links.Controls.Add(this.FLP_Links, 0, 3);
 			this.P_Links.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon3.Name = "I_Link";
+			dynamicIcon3.Name = "Link";
 			this.P_Links.ImageName = dynamicIcon3;
 			this.P_Links.Location = new System.Drawing.Point(3, 117);
 			this.P_Links.Name = "P_Links";
@@ -228,7 +228,7 @@ partial class PC_CompatibilityManagement
 			this.B_NewLink.AutoSize = true;
 			this.B_NewLink.ColorStyle = Extensions.ColorStyle.Green;
 			this.B_NewLink.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon2.Name = "I_Edit";
+			dynamicIcon2.Name = "Edit";
 			this.B_NewLink.ImageName = dynamicIcon2;
 			this.B_NewLink.Location = new System.Drawing.Point(244, 11);
 			this.B_NewLink.MatchBackgroundColor = true;
@@ -277,7 +277,7 @@ partial class PC_CompatibilityManagement
 			this.P_Tags.Controls.Add(this.FLP_Tags, 0, 3);
 			this.P_Tags.Controls.Add(this.L_NoTags, 0, 2);
 			this.P_Tags.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon5.Name = "I_Tag";
+			dynamicIcon5.Name = "Tag";
 			this.P_Tags.ImageName = dynamicIcon5;
 			this.P_Tags.Info = "";
 			this.P_Tags.Location = new System.Drawing.Point(3, 3);
@@ -299,7 +299,7 @@ partial class PC_CompatibilityManagement
 			this.B_NewTag.AutoSize = true;
 			this.B_NewTag.ColorStyle = Extensions.ColorStyle.Green;
 			this.B_NewTag.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon4.Name = "I_Edit";
+			dynamicIcon4.Name = "Edit";
 			this.B_NewTag.ImageName = dynamicIcon4;
 			this.B_NewTag.Location = new System.Drawing.Point(246, 11);
 			this.B_NewTag.MatchBackgroundColor = true;
@@ -416,7 +416,7 @@ partial class PC_CompatibilityManagement
 			// 
 			this.T_Statuses.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Statuses.Dock = System.Windows.Forms.DockStyle.Left;
-			dynamicIcon6.Name = "I_Statuses";
+			dynamicIcon6.Name = "Statuses";
 			this.T_Statuses.IconName = dynamicIcon6;
 			this.T_Statuses.LinkedControl = this.FLP_Statuses;
 			this.T_Statuses.Location = new System.Drawing.Point(162, 5);
@@ -441,7 +441,7 @@ partial class PC_CompatibilityManagement
 			// B_AddStatus
 			// 
 			this.B_AddStatus.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon7.Name = "I_Add";
+			dynamicIcon7.Name = "Add";
 			this.B_AddStatus.ImageName = dynamicIcon7;
 			this.B_AddStatus.LargeImage = true;
 			this.B_AddStatus.Location = new System.Drawing.Point(3, 3);
@@ -457,7 +457,7 @@ partial class PC_CompatibilityManagement
 			// 
 			this.T_Interactions.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Interactions.Dock = System.Windows.Forms.DockStyle.Left;
-			dynamicIcon8.Name = "I_Switch";
+			dynamicIcon8.Name = "Switch";
 			this.T_Interactions.IconName = dynamicIcon8;
 			this.T_Interactions.LinkedControl = this.FLP_Interactions;
 			this.T_Interactions.Location = new System.Drawing.Point(324, 5);
@@ -482,7 +482,7 @@ partial class PC_CompatibilityManagement
 			// B_AddInteraction
 			// 
 			this.B_AddInteraction.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon9.Name = "I_Add";
+			dynamicIcon9.Name = "Add";
 			this.B_AddInteraction.ImageName = dynamicIcon9;
 			this.B_AddInteraction.LargeImage = true;
 			this.B_AddInteraction.Location = new System.Drawing.Point(3, 3);
@@ -532,7 +532,7 @@ partial class PC_CompatibilityManagement
 			this.B_Apply.AutoSize = true;
 			this.B_Apply.ButtonType = SlickControls.ButtonType.Active;
 			this.B_Apply.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon10.Name = "I_Ok";
+			dynamicIcon10.Name = "Ok";
 			this.B_Apply.ImageName = dynamicIcon10;
 			this.B_Apply.Location = new System.Drawing.Point(833, 44);
 			this.B_Apply.Name = "B_Apply";
@@ -547,7 +547,7 @@ partial class PC_CompatibilityManagement
 			this.B_ReuseData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.B_ReuseData.AutoSize = true;
 			this.B_ReuseData.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon11.Name = "I_Refresh";
+			dynamicIcon11.Name = "Refresh";
 			this.B_ReuseData.ImageName = dynamicIcon11;
 			this.B_ReuseData.Location = new System.Drawing.Point(650, 44);
 			this.B_ReuseData.Name = "B_ReuseData";
@@ -614,7 +614,7 @@ partial class PC_CompatibilityManagement
 			// 
 			this.base_TLP_Side.SetColumnSpan(this.TB_Search, 3);
 			this.TB_Search.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon12.Name = "I_Search";
+			dynamicIcon12.Name = "Search";
 			this.TB_Search.ImageName = dynamicIcon12;
 			this.TB_Search.Location = new System.Drawing.Point(3, 3);
 			this.TB_Search.Name = "TB_Search";
@@ -634,7 +634,7 @@ partial class PC_CompatibilityManagement
 			this.B_Previous.ActiveColor = null;
 			this.B_Previous.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.B_Previous.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon13.Name = "I_ArrowUp";
+			dynamicIcon13.Name = "ArrowUp";
 			this.B_Previous.ImageName = dynamicIcon13;
 			this.B_Previous.Location = new System.Drawing.Point(3, 707);
 			this.B_Previous.Margin = new System.Windows.Forms.Padding(0);
@@ -647,7 +647,7 @@ partial class PC_CompatibilityManagement
 			// 
 			this.B_Skip.ActiveColor = null;
 			this.B_Skip.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon14.Name = "I_ArrowDown";
+			dynamicIcon14.Name = "ArrowDown";
 			this.B_Skip.ImageName = dynamicIcon14;
 			this.B_Skip.Location = new System.Drawing.Point(85, 707);
 			this.B_Skip.Margin = new System.Windows.Forms.Padding(0);

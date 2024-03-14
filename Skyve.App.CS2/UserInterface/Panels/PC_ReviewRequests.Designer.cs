@@ -75,7 +75,7 @@ partial class PC_ReviewRequests
 			this.B_DeleteRequests.ButtonType = SlickControls.ButtonType.Active;
 			this.B_DeleteRequests.ColorStyle = Extensions.ColorStyle.Red;
 			this.B_DeleteRequests.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon1.Name = "I_Trash";
+			dynamicIcon1.Name = "Trash";
 			this.B_DeleteRequests.ImageName = dynamicIcon1;
 			this.B_DeleteRequests.Location = new System.Drawing.Point(436, 403);
 			this.B_DeleteRequests.Name = "B_DeleteRequests";
@@ -142,7 +142,7 @@ partial class PC_ReviewRequests
 			// 
 			this.base_TLP_Side.SetColumnSpan(this.TB_Search, 3);
 			this.TB_Search.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon2.Name = "I_Search";
+			dynamicIcon2.Name = "Search";
 			this.TB_Search.ImageName = dynamicIcon2;
 			this.TB_Search.Location = new System.Drawing.Point(3, 3);
 			this.TB_Search.Name = "TB_Search";
@@ -161,7 +161,7 @@ partial class PC_ReviewRequests
 			this.B_Previous.ActiveColor = null;
 			this.B_Previous.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.B_Previous.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon3.Name = "I_ArrowUp";
+			dynamicIcon3.Name = "ArrowUp";
 			this.B_Previous.ImageName = dynamicIcon3;
 			this.B_Previous.Location = new System.Drawing.Point(3, 401);
 			this.B_Previous.Margin = new System.Windows.Forms.Padding(0);
@@ -174,7 +174,7 @@ partial class PC_ReviewRequests
 			// 
 			this.B_Skip.ActiveColor = null;
 			this.B_Skip.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon4.Name = "I_ArrowDown";
+			dynamicIcon4.Name = "ArrowDown";
 			this.B_Skip.ImageName = dynamicIcon4;
 			this.B_Skip.Location = new System.Drawing.Point(85, 401);
 			this.B_Skip.Margin = new System.Windows.Forms.Padding(0);

@@ -17,7 +17,7 @@ public class ParadoxLoginWaitingConnectionNotification : INotificationInfo
 		Time = DateTime.MaxValue;
 		Title = LocaleCS2.ParadoxLoginFailedTitle;
 		Description = LocaleCS2.ParadoxLoginFailedNoConnection;
-		Icon = "I_Paradox";
+		Icon = "Paradox";
 		_workshopService = workshopService;
 	}
 

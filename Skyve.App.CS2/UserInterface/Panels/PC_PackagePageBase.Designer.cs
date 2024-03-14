@@ -304,11 +304,11 @@ partial class PC_PackagePageBase
 			// 
 			this.I_More.ActiveColor = null;
 			this.I_More.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon1.Name = "I_VertialMore";
+			dynamicIcon1.Name = "VertialMore";
 			this.I_More.ImageName = dynamicIcon1;
 			this.I_More.Location = new System.Drawing.Point(376, 0);
 			this.I_More.Margin = new System.Windows.Forms.Padding(0);
-			this.I_More.Name = "I_More";
+			this.I_More.Name = "More";
 			this.I_More.Size = new System.Drawing.Size(14, 28);
 			this.I_More.TabIndex = 2;
 			this.I_More.MouseClick += new System.Windows.Forms.MouseEventHandler(this.I_More_MouseClick);
@@ -317,7 +317,7 @@ partial class PC_PackagePageBase
 			// 
 			this.L_Author.AutoSize = true;
 			this.L_Author.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon2.Name = "I_Author";
+			dynamicIcon2.Name = "Author";
 			this.L_Author.ImageName = dynamicIcon2;
 			this.L_Author.Location = new System.Drawing.Point(93, 69);
 			this.L_Author.Name = "L_Author";
@@ -372,7 +372,7 @@ partial class PC_PackagePageBase
 			this.B_BulkRequirements.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.B_BulkRequirements.AutoSize = true;
 			this.B_BulkRequirements.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon3.Name = "I_Actions";
+			dynamicIcon3.Name = "Actions";
 			this.B_BulkRequirements.ImageName = dynamicIcon3;
 			this.B_BulkRequirements.Location = new System.Drawing.Point(132, 28);
 			this.B_BulkRequirements.MatchBackgroundColor = true;

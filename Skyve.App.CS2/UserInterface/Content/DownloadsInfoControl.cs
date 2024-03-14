@@ -82,7 +82,7 @@ public class DownloadsInfoControl : SlickControl
 
 			e.Graphics.FillRoundedRectangle(backBrush, thumbRect, Margin.Left / 2);
 
-			using var icon = IconManager.GetIcon("I_Paradox", thumbRect.Width * 3 / 4).Color(FormDesign.Design.ForeColor);
+			using var icon = IconManager.GetIcon("Paradox", thumbRect.Width * 3 / 4).Color(FormDesign.Design.ForeColor);
 
 			e.Graphics.DrawImage(icon, thumbRect.CenterR(icon.Size));
 		}

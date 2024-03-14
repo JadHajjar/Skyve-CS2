@@ -50,7 +50,7 @@ internal class PackageCompatibilityControl : SlickControl
 		if (notificationType > NotificationType.Info)
 		{
 			using var brush = new SolidBrush(notificationType.Value.GetColor().MergeColor(BackColor, 85));
-			using var icon = IconManager.GetIcon("I_CompatibilityReport", height * 3 / 4).Color(brush.Color.GetTextColor());
+			using var icon = IconManager.GetIcon("CompatibilityReport", height * 3 / 4).Color(brush.Color.GetTextColor());
 			using var icon2 = notificationType.Value.GetIcon(true).Get(height * 3 / 4).Color(brush.Color.GetTextColor());
 			var iconRect = new Rectangle(new Point((height - icon.Height) / 2, (height - icon.Height) / 2), icon.Size);
 			var icon2Rect = new Rectangle(new Point(Width - icon.Width - ((height - icon.Height) / 2), (height - icon.Height) / 2), icon.Size);
@@ -76,22 +76,22 @@ internal class PackageCompatibilityControl : SlickControl
 			{
 				case DownloadStatus.Unknown:
 					text = Locale.StatusUnknown.One.ToUpper();
-					iconName = "I_Question";
+					iconName = "Question";
 					color = FormDesign.Design.YellowColor;
 					break;
 				case DownloadStatus.OutOfDate:
 					text = Locale.OutOfDate.One.ToUpper();
-					iconName = "I_OutOfDate";
+					iconName = "OutOfDate";
 					color = FormDesign.Design.YellowColor;
 					break;
 				case DownloadStatus.PartiallyDownloaded:
 					text = Locale.PartiallyDownloaded.One.ToUpper();
-					iconName = "I_Broken";
+					iconName = "Broken";
 					color = FormDesign.Design.RedColor;
 					break;
 				case DownloadStatus.Removed:
 					text = Locale.RemovedByAuthor.One.ToUpper();
-					iconName = "I_ContentRemoved";
+					iconName = "ContentRemoved";
 					color = FormDesign.Design.RedColor;
 					break;
 			}

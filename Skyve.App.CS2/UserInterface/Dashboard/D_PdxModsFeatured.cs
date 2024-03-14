@@ -75,7 +75,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 
 	private void DrawNone(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsShowcase, "I_PDXMods");
+		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsShowcase, "PDXMods");
 
 		e.Graphics.DrawStringItem(LocaleCS2.CouldNotRetrieveMods
 			, Font
@@ -104,7 +104,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight, bool horizontal)
 	{
-		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsShowcase, "I_PDXMods");
+		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsShowcase, "PDXMods");
 
 		using var fontSmall = UI.Font(6.75F);
 		e.Graphics.DrawStringItem(Locale.RecentlyUpdated, fontSmall, Color.FromArgb(150, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad((int)(2 * UI.FontScale), 0, 0, 0), ref preferredHeight, applyDrawing);
@@ -152,7 +152,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 
 				e.Graphics.FillRoundedRectangle(brush, bannerRect, Margin.Left / 2);
 
-				using var icon = IconManager.GetIcon("I_Paradox", bannerRect.Width * 3 / 4).Color(FormDesign.Design.ForeColor);
+				using var icon = IconManager.GetIcon("Paradox", bannerRect.Width * 3 / 4).Color(FormDesign.Design.ForeColor);
 
 				e.Graphics.DrawImage(icon, bannerRect.CenterR(icon.Size));
 			}
@@ -220,7 +220,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 
 		if (thumbnail is null)
 		{
-			using var generic = IconManager.GetIcon("I_Paradox", e.Rects.IconRect.Height).Color(e.BackColor);
+			using var generic = IconManager.GetIcon("Paradox", e.Rects.IconRect.Height).Color(e.BackColor);
 			using var brush = new SolidBrush(FormDesign.Design.IconColor);
 
 			e.Graphics.FillRoundedRectangle(brush, e.Rects.IconRect, (int)(5 * UI.FontScale));
@@ -302,7 +302,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 			var rect = new Rectangle(e.Rects.TextRect.X, e.DrawableItem.CachedHeight, e.Rects.TextRect.Width, 0);
 			var size = e.Graphics.Measure(author.Name, authorFont).ToSize();
 
-			using var authorIcon = IconManager.GetIcon("I_Author", size.Height);
+			using var authorIcon = IconManager.GetIcon("Author", size.Height);
 
 			e.Rects.AuthorRect = rect.Align(size + new Size(authorIcon.Width, 0), ContentAlignment.TopLeft);
 			e.DrawableItem.CachedHeight = e.Rects.AuthorRect.Bottom + (Padding.Top / 3);
@@ -428,7 +428,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 			return;
 		}
 
-		var icon = new DynamicIcon(_subscriptionsManager.IsSubscribing(e.Item) ? "I_Wait" : isPartialIncluded ? "I_Slash" : isEnabled ? "I_Ok" : !isIncluded ? "I_Add" : "I_Enabled");
+		var icon = new DynamicIcon(_subscriptionsManager.IsSubscribing(e.Item) ? "Wait" : isPartialIncluded ? "Slash" : isEnabled ? "Ok" : !isIncluded ? "Add" : "Enabled");
 		using var includedIcon = icon.Get(e.Rects.IncludedRect.Height * 3 / 4).Color(iconColor);
 
 		e.Graphics.DrawImage(includedIcon, e.Rects.IncludedRect.CenterR(includedIcon.Size));
@@ -436,7 +436,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 	private void DrawDots(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e)
 	{
 		var isHovered = e.Rects.DotsRect.Contains(CursorLocation);
-		using var img = IconManager.GetIcon("I_VertialMore", e.Rects.IncludedRect.Height * 3 / 4).Color(isHovered ? FormDesign.Design.ActiveColor : FormDesign.Design.IconColor);
+		using var img = IconManager.GetIcon("VertialMore", e.Rects.IncludedRect.Height * 3 / 4).Color(isHovered ? FormDesign.Design.ActiveColor : FormDesign.Design.IconColor);
 
 		e.Graphics.DrawImage(img, e.Rects.DotsRect.CenterR(img.Size));
 	}

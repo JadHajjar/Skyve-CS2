@@ -36,7 +36,7 @@ internal class D_PdxUser : IDashboardItem
 
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.ParadoxAccount, "I_Paradox");
+		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.ParadoxAccount, "Paradox");
 
 		var loading = Loading;
 		Loading = string.IsNullOrEmpty(_userService.User.Id?.ToString()) && _workshopService.IsLoginPending;
@@ -87,7 +87,7 @@ internal class D_PdxUser : IDashboardItem
 
 			DrawButton(e, applyDrawing, ref preferredHeight, notification.OnClick, new ButtonDrawArgs
 			{
-				Icon = "I_User",
+				Icon = "User",
 				Font = font,
 				Size = new Size(0, (int)(20 * UI.FontScale)),
 				Text = LocaleCS2.LoginToParadox,

@@ -113,10 +113,10 @@ partial class ParadoxLoginForm
 			this.TLP.SetColumnSpan(this.I_Paradox, 2);
 			this.I_Paradox.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.I_Paradox.Enabled = false;
-			dynamicIcon1.Name = "I_Paradox";
+			dynamicIcon1.Name = "Paradox";
 			this.I_Paradox.ImageName = dynamicIcon1;
 			this.I_Paradox.Location = new System.Drawing.Point(126, 85);
-			this.I_Paradox.Name = "I_Paradox";
+			this.I_Paradox.Name = "Paradox";
 			this.I_Paradox.Size = new System.Drawing.Size(99, 85);
 			this.I_Paradox.TabIndex = 0;
 			this.I_Paradox.TabStop = false;
@@ -143,7 +143,7 @@ partial class ParadoxLoginForm
 			// TB_Password
 			// 
 			this.TLP.SetColumnSpan(this.TB_Password, 2);
-			dynamicIcon2.Name = "I_PasswordShow";
+			dynamicIcon2.Name = "PasswordShow";
 			this.TB_Password.ImageName = dynamicIcon2;
 			this.TB_Password.LabelText = "";
 			this.TB_Password.Location = new System.Drawing.Point(61, 234);
@@ -182,7 +182,7 @@ partial class ParadoxLoginForm
 			this.I_Close.LoaderSpeed = 1D;
 			this.I_Close.Location = new System.Drawing.Point(300, 0);
 			this.I_Close.Margin = new System.Windows.Forms.Padding(0);
-			this.I_Close.Name = "I_Close";
+			this.I_Close.Name = "Close";
 			this.TLP.SetRowSpan(this.I_Close, 2);
 			this.I_Close.Size = new System.Drawing.Size(52, 50);
 			this.I_Close.TabIndex = 4;

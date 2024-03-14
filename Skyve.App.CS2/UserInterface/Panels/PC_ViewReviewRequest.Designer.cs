@@ -96,10 +96,10 @@ partial class PC_ViewReviewRequest
 			// 
 			this.I_Copy.ActiveColor = null;
 			this.I_Copy.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon5.Name = "I_Copy";
+			dynamicIcon5.Name = "Copy";
 			this.I_Copy.ImageName = dynamicIcon5;
 			this.I_Copy.Location = new System.Drawing.Point(770, 3);
-			this.I_Copy.Name = "I_Copy";
+			this.I_Copy.Name = "Copy";
 			this.TLP_Main.SetRowSpan(this.I_Copy, 2);
 			this.I_Copy.Size = new System.Drawing.Size(23, 26);
 			this.I_Copy.TabIndex = 4;
@@ -232,7 +232,7 @@ partial class PC_ViewReviewRequest
 			this.B_ManagePackage.AutoSize = true;
 			this.B_ManagePackage.ButtonType = SlickControls.ButtonType.Active;
 			this.B_ManagePackage.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon6.Name = "I_Link";
+			dynamicIcon6.Name = "Link";
 			this.B_ManagePackage.ImageName = dynamicIcon6;
 			this.B_ManagePackage.Location = new System.Drawing.Point(642, 3);
 			this.B_ManagePackage.Name = "B_ManagePackage";
@@ -246,7 +246,7 @@ partial class PC_ViewReviewRequest
 			// 
 			this.B_ApplyChanges.AutoSize = true;
 			this.B_ApplyChanges.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon7.Name = "I_Link";
+			dynamicIcon7.Name = "Link";
 			this.B_ApplyChanges.ImageName = dynamicIcon7;
 			this.B_ApplyChanges.Location = new System.Drawing.Point(428, 3);
 			this.B_ApplyChanges.Name = "B_ApplyChanges";
@@ -262,7 +262,7 @@ partial class PC_ViewReviewRequest
 			this.B_DeleteRequest.ButtonType = SlickControls.ButtonType.Hidden;
 			this.B_DeleteRequest.ColorStyle = Extensions.ColorStyle.Red;
 			this.B_DeleteRequest.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon8.Name = "I_Trash";
+			dynamicIcon8.Name = "Trash";
 			this.B_DeleteRequest.ImageName = dynamicIcon8;
 			this.B_DeleteRequest.Location = new System.Drawing.Point(3, 3);
 			this.B_DeleteRequest.Name = "B_DeleteRequest";

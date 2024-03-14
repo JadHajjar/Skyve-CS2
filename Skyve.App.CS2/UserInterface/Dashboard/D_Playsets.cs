@@ -90,7 +90,7 @@ internal class D_Playsets : IDashboardItem
 		}
 		else
 		{
-			DrawSection(e, applyDrawing, ref preferredHeight, _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentCustomPlayset?.GetIcon() ?? "I_Playsets", _playsetManager.CurrentPlayset is null ? null : Locale.ActivePlayset);
+			DrawSection(e, applyDrawing, ref preferredHeight, _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentCustomPlayset?.GetIcon() ?? "Playsets", _playsetManager.CurrentPlayset is null ? null : Locale.ActivePlayset);
 		}
 
 		_buttonRightClickActions[_sections[0].rectangle.ClipTo(_sections[0].height)] = () => RightClick(_playsetManager.CurrentPlayset);

@@ -223,11 +223,11 @@ public partial class PC_Options : PanelContent
 	{
 		ServiceCenter.Get<ILocationService>().CreateShortcut();
 
-		B_CreateShortcut.ImageName = "I_Check";
+		B_CreateShortcut.ImageName = "Check";
 
 		await Task.Delay(3000);
 
-		B_CreateShortcut.ImageName = "I_Link";
+		B_CreateShortcut.ImageName = "Link";
 	}
 
 	private void B_CreateJunction_Click(object sender, EventArgs e)

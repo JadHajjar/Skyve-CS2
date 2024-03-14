@@ -106,7 +106,7 @@ namespace Skyve.App.CS2
 			// PI_Dashboard
 			// 
 			this.PI_Dashboard.Group = "";
-			dynamicIcon1.Name = "I_Dashboard";
+			dynamicIcon1.Name = "Dashboard";
 			this.PI_Dashboard.IconName = dynamicIcon1;
 			this.PI_Dashboard.SubItems = new SlickControls.PanelItem[0];
 			this.PI_Dashboard.Text = "Dashboard";
@@ -115,7 +115,7 @@ namespace Skyve.App.CS2
 			// PI_Mods
 			// 
 			this.PI_Mods.Group = "Content";
-			dynamicIcon2.Name = "I_Mods";
+			dynamicIcon2.Name = "Mods";
 			this.PI_Mods.IconName = dynamicIcon2;
 			this.PI_Mods.SubItems = new SlickControls.PanelItem[0];
 			this.PI_Mods.Text = "Mods";
@@ -124,7 +124,7 @@ namespace Skyve.App.CS2
 			// PI_Assets
 			// 
 			this.PI_Assets.Group = "Content";
-			dynamicIcon3.Name = "I_Assets";
+			dynamicIcon3.Name = "Assets";
 			this.PI_Assets.IconName = dynamicIcon3;
 			this.PI_Assets.SubItems = new SlickControls.PanelItem[0];
 			this.PI_Assets.Text = "Assets";
@@ -133,7 +133,7 @@ namespace Skyve.App.CS2
 			// PI_Playsets
 			// 
 			this.PI_Playsets.Group = "";
-			dynamicIcon4.Name = "I_Playsets";
+			dynamicIcon4.Name = "Playsets";
 			this.PI_Playsets.IconName = dynamicIcon4;
 			this.PI_Playsets.SubItems = new SlickControls.PanelItem[] {
         this.PI_CurrentPlayset,
@@ -144,7 +144,7 @@ namespace Skyve.App.CS2
 			// PI_CurrentPlayset
 			// 
 			this.PI_CurrentPlayset.Hidden = true;
-			dynamicIcon5.Name = "I_PlaysetSettings";
+			dynamicIcon5.Name = "PlaysetSettings";
 			this.PI_CurrentPlayset.IconName = dynamicIcon5;
 			this.PI_CurrentPlayset.SubItems = new SlickControls.PanelItem[0];
 			this.PI_CurrentPlayset.Text = "ActivePlayset";
@@ -152,7 +152,7 @@ namespace Skyve.App.CS2
 			// 
 			// PI_AddPlayset
 			// 
-			dynamicIcon6.Name = "I_Add";
+			dynamicIcon6.Name = "Add";
 			this.PI_AddPlayset.IconName = dynamicIcon6;
 			this.PI_AddPlayset.SubItems = new SlickControls.PanelItem[0];
 			this.PI_AddPlayset.Text = "AddPlayset";
@@ -161,7 +161,7 @@ namespace Skyve.App.CS2
 			// PI_Options
 			// 
 			this.PI_Options.Group = "Other";
-			dynamicIcon7.Name = "I_UserOptions";
+			dynamicIcon7.Name = "UserOptions";
 			this.PI_Options.IconName = dynamicIcon7;
 			this.PI_Options.SubItems = new SlickControls.PanelItem[0];
 			this.PI_Options.Text = "Options";
@@ -170,7 +170,7 @@ namespace Skyve.App.CS2
 			// PI_Compatibility
 			// 
 			this.PI_Compatibility.Group = "Maintenance";
-			dynamicIcon8.Name = "I_CompatibilityReport";
+			dynamicIcon8.Name = "CompatibilityReport";
 			this.PI_Compatibility.IconName = dynamicIcon8;
 			this.PI_CompatibilityManagement.SubItems = new SlickControls.PanelItem[] {
 		this.PI_ManageYourPackages,
@@ -182,7 +182,7 @@ namespace Skyve.App.CS2
 			// PI_ModUtilities
 			// 
 			this.PI_ModUtilities.Group = "Maintenance";
-			dynamicIcon9.Name = "I_Wrench";
+			dynamicIcon9.Name = "Wrench";
 			this.PI_ModUtilities.IconName = dynamicIcon9;
 			this.PI_ModUtilities.SubItems = new SlickControls.PanelItem[0];
 			this.PI_ModUtilities.Text = "Utilities";
@@ -191,7 +191,7 @@ namespace Skyve.App.CS2
 			// PI_Troubleshoot
 			// 
 			this.PI_Troubleshoot.Group = "Maintenance";
-			dynamicIcon10.Name = "I_AskHelp";
+			dynamicIcon10.Name = "AskHelp";
 			this.PI_Troubleshoot.IconName = dynamicIcon10;
 			this.PI_Troubleshoot.SubItems = new SlickControls.PanelItem[0];
 			this.PI_Troubleshoot.Text = "HelpLogs";
@@ -200,7 +200,7 @@ namespace Skyve.App.CS2
 			// PI_Packages
 			// 
 			this.PI_Packages.Group = "Content";
-			dynamicIcon11.Name = "I_Package";
+			dynamicIcon11.Name = "Package";
 			this.PI_Packages.IconName = dynamicIcon11;
 			this.PI_Packages.SubItems = new SlickControls.PanelItem[0];
 			this.PI_Packages.Text = "Packages";
@@ -254,7 +254,7 @@ namespace Skyve.App.CS2
 			// 
 			this.PI_DLCs.Group = "Content";
 			this.PI_DLCs.Hidden = true;
-			dynamicIcon12.Name = "I_Dlc";
+			dynamicIcon12.Name = "Dlc";
 			this.PI_DLCs.IconName = dynamicIcon12;
 			this.PI_DLCs.SubItems = new SlickControls.PanelItem[0];
 			this.PI_DLCs.Text = "DLCs";
@@ -264,14 +264,14 @@ namespace Skyve.App.CS2
 			// 
 			this.PI_CompatibilityManagement.Group = "Other";
 			this.PI_CompatibilityManagement.Hidden = true;
-			dynamicIcon13.Name = "I_Cog";
+			dynamicIcon13.Name = "Cog";
 			this.PI_CompatibilityManagement.IconName = dynamicIcon13;
 			this.PI_CompatibilityManagement.Text = "CompatibilityCenter";
 			// 
 			// PI_ManageYourPackages
 			// 
 			this.PI_ManageYourPackages.Hidden = true;
-			dynamicIcon14.Name = "I_User";
+			dynamicIcon14.Name = "User";
 			this.PI_ManageYourPackages.IconName = dynamicIcon14;
 			this.PI_ManageYourPackages.SubItems = new SlickControls.PanelItem[0];
 			this.PI_ManageYourPackages.Text = "YourPackages";
@@ -280,7 +280,7 @@ namespace Skyve.App.CS2
 			// PI_ReviewRequests
 			// 
 			this.PI_ReviewRequests.Hidden = true;
-			dynamicIcon15.Name = "I_RequestReview";
+			dynamicIcon15.Name = "RequestReview";
 			this.PI_ReviewRequests.IconName = dynamicIcon15;
 			this.PI_ReviewRequests.SubItems = new SlickControls.PanelItem[0];
 			this.PI_ReviewRequests.Text = "ReviewRequests";
@@ -289,7 +289,7 @@ namespace Skyve.App.CS2
 			// PI_ManageAllCompatibility
 			// 
 			this.PI_ManageAllCompatibility.Hidden = true;
-			dynamicIcon16.Name = "I_Cog";
+			dynamicIcon16.Name = "Cog";
 			this.PI_ManageAllCompatibility.IconName = dynamicIcon16;
 			this.PI_ManageAllCompatibility.SubItems = new SlickControls.PanelItem[0];
 			this.PI_ManageAllCompatibility.Text = "ManageCompatibilityData";
@@ -298,7 +298,7 @@ namespace Skyve.App.CS2
 			// PI_PdxMods
 			// 
 			this.PI_PdxMods.Group = "";
-			dynamicIcon17.Name = "I_Paradox";
+			dynamicIcon17.Name = "Paradox";
 			this.PI_PdxMods.IconName = dynamicIcon17;
 			this.PI_PdxMods.SubItems = new SlickControls.PanelItem[0];
 			this.PI_PdxMods.Text = "PDX Mods";
