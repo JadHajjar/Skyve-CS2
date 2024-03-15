@@ -227,15 +227,12 @@ internal class D_PdxModsFeatured : IDashboardItem
 		else
 		{
 			var pe = new ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles>(new DrawableItem<IPackageIdentity, ItemListControl.Rectangles>(workshopInfo) { Rectangles = GenerateGridRectangles(workshopInfo, rect.Pad(Margin.Left / 2)) }, e.Graphics, [e.ClipRectangle], rect.Pad(Margin.Left / 2), HoverState, false);
-			var package = workshopInfo.GetPackage();
-			var localIdentity = workshopInfo.GetLocalPackageIdentity();
-			var isIncluded = workshopInfo.IsIncluded(out var partialIncluded) || partialIncluded;
 			var isEnabled = workshopInfo.IsEnabled();
 
 			DrawThumbnail(pe);
 			DrawTitleAndTags(pe);
 			DrawAuthor(pe, workshopInfo);
-			DrawVersionAndTags(pe, package, localIdentity, workshopInfo);
+			DrawVersionAndTags(pe, workshopInfo);
 			DrawDots(pe);
 
 			_buttonActions[pe.Rects.IconRect] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
@@ -363,14 +360,14 @@ internal class D_PdxModsFeatured : IDashboardItem
 			e.Graphics.DrawString(author.Name, isHovered ? authorFontUnderline : authorFont, brush, e.Rects.AuthorRect, stringFormat);
 		}
 	}
-	private void DrawVersionAndTags(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e, IPackage? package, ILocalPackageIdentity? localPackageIdentity, IWorkshopInfo? workshopInfo)
+	private void DrawVersionAndTags(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e, IWorkshopInfo? workshopInfo)
 	{
 #if CS1
 			var isVersion = localParentPackage?.Mod is not null && !e.Item.IsBuiltIn && !IsPackagePage;
 			var text = isVersion ? "v" + localParentPackage!.Mod!.Version.GetString() : e.Item.IsBuiltIn ? Locale.Vanilla : e.Item is ILocalPackageData lp ? lp.LocalSize.SizeString() : workshopInfo?.ServerSize.SizeString();
 #else
-		var isVersion = (package?.IsCodeMod ?? workshopInfo?.IsCodeMod ?? false) && !string.IsNullOrEmpty(package?.Version);
-		var versionText = isVersion ? "v" + package!.Version : localPackageIdentity != null ? localPackageIdentity.FileSize.SizeString(0) : workshopInfo?.ServerSize.SizeString(0);
+		var isVersion = (workshopInfo?.IsCodeMod ?? false);
+		var versionText = isVersion ? "v" + workshopInfo!.Version : workshopInfo?.ServerSize.SizeString(0);
 #endif
 
 		var packageTags = e.Item.GetTags(false).ToList();

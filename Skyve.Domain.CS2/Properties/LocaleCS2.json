@@ -46,7 +46,10 @@
   "ParadoxLoginFailedEmpty": "Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.",
   "DownloadComplete": "Download completed",
   "Downloading": "Downloading...",
-  "ModDownloadFailed": "'{0}' failed to download",
+  "ModsDownloadFailed": {
+    "One": "A mod failed to download",
+    "Plural": "Some mods failed to download"
+  },
   "LoginToParadox": "Log in to Paradox",
   "LoginFailed": "Login failed, make sure your e-mail and password are correct. Or try again later.",
   "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
@@ -80,5 +83,7 @@
   "JunctionRestart": "Skyve and Cities: Skylines II will close during this process.\r\n\r\nSkyve will restart automatically once finished.",
   "PlaysetAlreadyImported": "This playset is already present in your list of playsets.",
   "PDXModsShowcase": "PDX Mods Showcase",
-  "CouldNotRetrieveMods": "Could not retrieve the mods' data"
+  "CouldNotRetrieveMods": "Could not retrieve the mods' data",
+  "NewGameUpdate": "New Cities: Skylines II Update",
+  "NewGameUpdateInfo": "Patch {0} is now available. Be sure to check your compatibility report before starting your game."
 }

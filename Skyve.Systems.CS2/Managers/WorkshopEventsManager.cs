@@ -45,7 +45,13 @@ internal class WorkshopEventsManager
 
 	private void OnModDownloadFailed(IModDownloadFailed failed)
 	{
-		_notificationsService.SendNotification(new PdxModDownloadFailed(failed.ModId));
+		var notification = _notificationsService.GetNotifications<PdxModDownloadFailed>().FirstOrDefault() ?? new PdxModDownloadFailed();
+
+		notification.Time = DateTime.Now;
+		notification.Mods.Add((ulong)failed.ModId);
+
+		_notificationsService.RemoveNotificationsOfType<PdxModDownloadFailed>();
+		_notificationsService.SendNotification(notification);
 	}
 
 	private void OnInstallProgress(IInstallProgressEvent @event)
