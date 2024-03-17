@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Skyve.Domain.CS2.Notifications;
-internal class GamePatchNotification(DateTime time, string version) : INotificationInfo
+public class GamePatchNotification(DateTime time, string version) : INotificationInfo
 {
 	public DateTime Time { get; } = time;
 	public string Title => LocaleCS2.NewGameUpdate;

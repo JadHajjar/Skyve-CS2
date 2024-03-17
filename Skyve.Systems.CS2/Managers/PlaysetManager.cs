@@ -288,7 +288,7 @@ internal class PlaysetManager : IPlaysetManager
 		return playset;
 	}
 
-	public List<IPackage> GetInvalidPackages(PackageUsage usage)
+	public List<IPackage> GetInvalidPackages(IPlayset playset, PackageUsage usage)
 	{
 		if ((int)usage == -1)
 		{
@@ -309,7 +309,7 @@ internal class PlaysetManager : IPlaysetManager
 				return false;
 			}
 
-			return _packageUtil.IsIncluded(x, out var partial) || partial;
+			return _packageUtil.IsIncluded(x, playset.Id);
 		});
 	}
 

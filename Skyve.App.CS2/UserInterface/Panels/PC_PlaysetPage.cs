@@ -1,4 +1,5 @@
-﻿using Skyve.App.Interfaces;
+﻿using Skyve.App.CS2.UserInterface.Generic;
+using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Generic;
 using Skyve.App.UserInterface.Panels;
 using Skyve.Domain.CS2.Content;
@@ -47,15 +48,30 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 			}
 		}
 
+		var customPlayset = playset.GetCustomPlayset();
+
+		FLP_Usage.Controls.Add(new PlaysetUsageSelection((PackageUsage)(-1)) { Selected = customPlayset.Usage <= 0 });
+		foreach (PackageUsage item in Enum.GetValues(typeof(PackageUsage)))
+		{
+			FLP_Usage.Controls.Add(new PlaysetUsageSelection(item) { Selected = customPlayset.Usage == item });
+		}
+
+		foreach (PlaysetUsageSelection item in FLP_Usage.Controls)
+		{
+			item.SelectedChanged += PlaysetUsage_SelectedValueChanged;
+		}
+
 		T_LaunchSettings.PreSelected = settingsTab;
 
 		TLP_AdvancedDev.Visible = _settings.UserSettings.AdvancedLaunchOptions;
 
-		var customPlayset = playset.GetCustomPlayset();
-
 		TLP_Options.Enabled = true;
-		DD_PlaysetUsage.SelectedItem = customPlayset.Usage > 0 ? customPlayset.Usage : (PackageUsage)(-1);
-		CB_NoBanner.Checked =customPlayset.NoBanner  ;
+		CB_NoBanner.Checked = customPlayset.NoBanner;
+
+		I_Color.Visible = B_ClearColor.Visible = customPlayset.Color.HasValue;
+		L_ColorInfo.Text = customPlayset.Color.HasValue ? Locale.PlaysetColorSet : Locale.PlaysetColorNotSet;
+		I_Thumbnail.Visible = B_ClearThumbnail.Visible = customPlayset.IsCustomThumbnailSet;
+		L_ThumbnailInfo.Text = customPlayset.IsCustomThumbnailSet ? Locale.PlaysetThumbnailSet : Locale.PlaysetThumbnailNotSet;
 
 		if (customPlayset is ExtendedPlayset extendedPlayset)
 		{
@@ -71,7 +87,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 			CB_DeveloperMode.Checked = extendedPlayset.LaunchSettings.UIDeveloperMode;
 			CB_UIDeveloperMode.Checked = extendedPlayset.LaunchSettings.DeveloperMode;
 			CB_UseCitiesExe.Checked = extendedPlayset.LaunchSettings.UseCitiesExe;
-			DD_LogLevel.SelectedItem = extendedPlayset.LaunchSettings.LogLevel;
+			DD_LogLevel.SelectedItem = extendedPlayset.LaunchSettings.LogLevel.IfEmpty("DEFAULT");
 			TB_CustomArgs.Text = extendedPlayset.LaunchSettings.CustomArgs;
 		}
 	}
@@ -127,20 +143,32 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 	protected override void LocaleChanged()
 	{
-		DD_PlaysetUsage.Text = Locale.PlaysetUsage;
+		L_Usage.Text = Locale.PlaysetUsage;
+		L_UsageInfo.Text = Locale.PlaysetUsageInfo;
+		L_Color.Text = Locale.CustomColor;
+		L_Thumbnail.Text = Locale.CustomThumbnail;
 	}
 
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
-		TLP_Options.Padding = TLP_Side.Padding= UI.Scale(new Padding(10, 0, 10, 10), UI.UIScale);
+		TLP_Options.Padding = TLP_Side.Padding = UI.Scale(new Padding(10, 0, 10, 10), UI.UIScale);
 		TLP_AdvancedDev.Margin = UI.Scale(new Padding(0, 15, 0, 0), UI.UIScale);
 
 		P_Side.Width = (int)(250 * UI.FontScale);
 		P_Side.Padding = UI.Scale(new Padding(15, 0, 15, 15), UI.FontScale);
-		slickSpacer1.Margin = B_EditThumbnail.Margin = B_EditColor.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		slickSpacer1.Margin = B_EditThumbnail.Margin = B_EditColor.Margin = B_ClearThumbnail.Margin = B_ClearColor.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer1.Height = (int)UI.FontScale;
+
+		I_Color.Size = I_Thumbnail.Size = UI.Scale(new Size(24, 24), UI.FontScale);
+		I_Color.Padding = I_Thumbnail.Padding = UI.Scale(new Padding(4), UI.FontScale);
+		I_Color.Margin = I_Thumbnail.Margin = UI.Scale(new Padding(3), UI.FontScale);
+
+		L_Usage.Font = L_Thumbnail.Font = L_Color.Font = UI.Font(9F, FontStyle.Bold);
+		L_Usage.Margin = L_Thumbnail.Margin = L_Color.Margin = UI.Scale(new Padding(3, 20, 3, 3), UI.FontScale);
+		L_UsageInfo.Font = L_ThumbnailInfo.Font = L_ColorInfo.Font = UI.Font(8F);
+		L_UsageInfo.Margin = L_ThumbnailInfo.Margin = L_ColorInfo.Margin = UI.Scale(new Padding(3, 3, 3, 3), UI.FontScale);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -148,6 +176,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		base.DesignChanged(design);
 
 		TLP_AdvancedDev.BackColor = design.BackColor.MergeColor(design.RedColor, 95);
+		I_Thumbnail.ForeColor = I_Color.ForeColor = L_UsageInfo.ForeColor = L_ThumbnailInfo.ForeColor = L_ColorInfo.ForeColor = design.InfoColor;
 	}
 
 	internal void Ctrl_LoadPlayset(IPlayset obj)
@@ -165,7 +194,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 		var customPlayset = Playset.GetCustomPlayset();
 
-		customPlayset.Usage = DD_PlaysetUsage.SelectedItem;
+		customPlayset.Usage = FLP_Usage.Controls.OfType<PlaysetUsageSelection>().FirstOrAny(x => x.Selected).Usage;
 		customPlayset.NoBanner = CB_NoBanner.Checked;
 
 		if (customPlayset is ExtendedPlayset extendedPlayset)
@@ -190,6 +219,8 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		}
 
 		_playsetManager.Save(customPlayset);
+
+		SideControl.Invalidate();
 	}
 
 	public override void EditName()
@@ -197,25 +228,30 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		SideControl.EditName();
 	}
 
-	private void T_PlaysetUsage_SelectedValueChanged(object sender, EventArgs e)
+	private async void PlaysetUsage_SelectedValueChanged(object sender, EventArgs e)
 	{
 		if (loadingPlayset)
 		{
 			return;
 		}
 
-		var invalidPackages = _playsetManager.GetInvalidPackages(DD_PlaysetUsage.SelectedItem);
+		var usage = FLP_Usage.Controls.OfType<PlaysetUsageSelection>().FirstOrAny(x => x.Selected).Usage;
+		var invalidPackages = _playsetManager.GetInvalidPackages(Playset, usage);
 
 		if (invalidPackages.Any())
 		{
-			if (ShowPrompt($"{Locale.SomePackagesWillBeDisabled}\r\n{Locale.AffectedPackagesAre}\r\n• {invalidPackages.ListStrings("\r\n• ")}", PromptButtons.OKCancel, PromptIcons.Warning) == DialogResult.Cancel)
+			if (ShowPrompt($"{Locale.SomePackagesWillBeDisabled}\r\n\r\n{Locale.AffectedPackagesAre}\r\n• {invalidPackages.Take(8).ListStrings("\r\n• ")}", PromptButtons.OKCancel, PromptIcons.Warning) == DialogResult.Cancel)
 			{
-				DD_PlaysetUsage.SelectedItem = (PackageUsage)(-1);
-
-				return;
+				FLP_Usage.Controls.OfType<PlaysetUsageSelection>().Foreach(x =>
+				{
+					x.Selected = x.Usage == (PackageUsage)(-1);
+					x.Invalidate();
+				});
 			}
-
-			_packageUtil.SetIncluded(invalidPackages.Select(x => x.LocalData)!, false);
+			else
+			{
+				await _packageUtil.SetIncluded(invalidPackages, false);
+			}
 		}
 
 		ValueChanged(sender, e);
@@ -249,9 +285,11 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		customPlayset.Color = colorDialog.Color;
 
 		_playsetManager.Save(customPlayset);
-		_notifier.OnRefreshUI(true);
 
-		DesignChanged(FormDesign.Design);
+		I_Color.Visible = B_ClearColor.Visible = customPlayset.Color.HasValue;
+		L_ColorInfo.Text = customPlayset.Color.HasValue ? Locale.PlaysetColorSet : Locale.PlaysetColorNotSet;
+
+		SideControl.Invalidate();
 	}
 
 	private void B_EditThumbnail_Click(object sender, EventArgs e)
@@ -266,9 +304,39 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 				_playsetManager.Save(customPlayset);
 
+				I_Thumbnail.Visible = B_ClearThumbnail.Visible = customPlayset.IsCustomThumbnailSet;
+				L_ThumbnailInfo.Text = customPlayset.IsCustomThumbnailSet ? Locale.PlaysetThumbnailSet : Locale.PlaysetThumbnailNotSet;
+
 				SideControl.Invalidate();
 			}
 			catch { }
 		}
+	}
+
+	private void B_ClearThumbnail_Click(object sender, EventArgs e)
+	{
+		var customPlayset = Playset.GetCustomPlayset();
+
+		customPlayset.SetThumbnail(null);
+
+		_playsetManager.Save(customPlayset);
+
+		I_Thumbnail.Visible = B_ClearThumbnail.Visible = customPlayset.IsCustomThumbnailSet;
+		L_ThumbnailInfo.Text = customPlayset.IsCustomThumbnailSet ? Locale.PlaysetThumbnailSet : Locale.PlaysetThumbnailNotSet;
+
+		SideControl.Invalidate();
+	}
+
+	private void B_ClearColor_Click(object sender, EventArgs e)
+	{
+		var customPlayset = Playset.GetCustomPlayset();
+		customPlayset.Color = null;
+
+		_playsetManager.Save(customPlayset);
+
+		I_Color.Visible = B_ClearColor.Visible = customPlayset.Color.HasValue;
+		L_ColorInfo.Text = customPlayset.Color.HasValue ? Locale.PlaysetColorSet : Locale.PlaysetColorNotSet;
+
+		SideControl.Invalidate();
 	}
 }

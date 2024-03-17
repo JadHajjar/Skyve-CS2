@@ -124,9 +124,8 @@ internal class RightClickService : IRightClickService
 		var customPlayset = playset.GetCustomPlayset();
 
 		return [
-			new(Locale.ViewThisPlaysetsPackages, "ViewFile", () => OpenPlaysetPage(playset)),
-			new(Locale.ChangePlaysetSettings, "PlaysetSettings", action: () => OpenPlaysetSettings(playset), visible: isLocal),
 			new(Locale.ActivatePlayset, "Check", action: () => ActivatePlayset(playset), visible: isLocal && !isCurrent),
+			new(Locale.OpenPlaysetPage, "PlaysetSettings", () => OpenPlaysetPage(playset), visible: isLocal),
 			SlickStripItem.Empty,
 			new(Locale.BulkActions, "Actions", visible: isLocal && !isCurrent, disabled: true)
 			{
@@ -147,7 +146,7 @@ internal class RightClickService : IRightClickService
 				]
 			},
 			SlickStripItem.Empty,
-			new(Locale.PlaysetDelete, "Disposable", () => DeletePlayset(playset))
+			new(Locale.PlaysetDelete, "Trash", () => DeletePlayset(playset))
 		];
 	}
 
@@ -246,18 +245,6 @@ internal class RightClickService : IRightClickService
 	}
 
 	private void OpenPlaysetPage(IPlayset playset)
-	{
-		try
-		{
-			App.Program.MainForm.PushPanel(new PC_PlaysetContents(playset));
-		}
-		catch (Exception ex)
-		{
-			App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDownloadPlayset, form: App.Program.MainForm));
-		}
-	}
-
-	private void OpenPlaysetSettings(IPlayset playset)
 	{
 		try
 		{

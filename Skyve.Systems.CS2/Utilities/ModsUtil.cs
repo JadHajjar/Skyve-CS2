@@ -176,7 +176,12 @@ internal class ModsUtil : IModUtil
 			modConfig[playset] = [];
 		}
 
-		mods = mods.Where(x => x.Id > 0 && IsIncluded(x, playset) != value);
+		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) != value);
+
+		if (!mods.Any())
+		{
+			return;
+		}
 
 		var tempConfig = new Dictionary<ulong, bool>(modConfig[playset]);
 		var result = value
@@ -246,7 +251,7 @@ internal class ModsUtil : IModUtil
 
 		mods = mods.AllWhere(x => x.Id > 0 && IsEnabled(x, playset) != value);
 
-		if (mods.Count() == 0)
+		if (!mods.Any())
 		{
 			return;
 		}
@@ -318,9 +323,15 @@ internal class ModsUtil : IModUtil
 
 				Directory.Move(localIdentity.Folder, newFolder);
 
-				(localIdentity as LocalPackageData)!.Folder = newFolder;
+				if (localIdentity.GetLocalPackage() is LocalPackageData packageData)
+				{
+					packageData.Folder = newFolder;
+				}
 			}
-			catch (Exception ex) { _logger.Exception(ex, $"Failed to {(value ? "enable" : "disable")} the local mod {item.Name}"); }
+			catch (Exception ex)
+			{
+				_logger.Exception(ex, $"Failed to {(value ? "enable" : "disable")} the local mod {item.Name}");
+			}
 		}
 	}
 

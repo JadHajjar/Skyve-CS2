@@ -6,6 +6,7 @@ using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Domain.Systems;
 
 using System.Drawing;
 using System.Text.RegularExpressions;

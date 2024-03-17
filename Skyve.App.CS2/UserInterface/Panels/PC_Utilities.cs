@@ -71,7 +71,7 @@ public partial class PC_Utilities : PanelContent
 
 	private void DD_BOB_FileSelected(string obj)
 	{
-		var matches = Regex.Matches(File.ReadAllText(obj), "[\\>\"](\\d{8,20})\\.(.+?)[\\<\"]");
+		var matches = Regex.Matches(File.ReadAllText(obj), "[\\>\"](\\d{5,6})\\.(.+?)[\\<\"]");
 		var assets = new List<IPackageIdentity>();
 
 		foreach (Match item in matches)
@@ -97,7 +97,7 @@ public partial class PC_Utilities : PanelContent
 
 	private void DD_TextImport_FileSelected(string obj)
 	{
-		var matches = Regex.Matches(File.ReadAllText(obj), "(\\d{8,20})");
+		var matches = Regex.Matches(File.ReadAllText(obj), "(\\d{5,6})");
 		var assets = new List<IPackageIdentity>();
 
 		foreach (Match item in matches)
@@ -118,7 +118,7 @@ public partial class PC_Utilities : PanelContent
 			return;
 		}
 
-		var matches = Regex.Matches(Clipboard.GetText(), "(\\d{8,20})");
+		var matches = Regex.Matches(Clipboard.GetText(), "(\\d{5,6})");
 		var assets = new List<IPackageIdentity>();
 
 		foreach (Match item in matches)

@@ -97,7 +97,7 @@ partial class PC_PackagePage
 			this.slickWebBrowser.Name = "slickWebBrowser";
 			this.slickWebBrowser.Size = new System.Drawing.Size(796, 546);
 			this.slickWebBrowser.TabIndex = 17;
-			this.slickWebBrowser.WebBrowserShortcutsEnabled = false;
+			this.slickWebBrowser.WebBrowserShortcutsEnabled = true;
 			this.slickWebBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.SlickWebBrowser_Navigating);
 			// 
 			// T_Gallery

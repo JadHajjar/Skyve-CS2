@@ -3,7 +3,7 @@ using PDX.SDK.Contracts.Internal;
 using PDX.SDK.Contracts.Logging;
 
 namespace Skyve.Systems.CS2.Utilities;
-internal class PdxLogUtil(Skyve.Domain.Systems.ILogger logger) : ILogger
+public class PdxLogUtil(Skyve.Domain.Systems.ILogger logger) : ILogger
 {
 	public void Log(string msg, LogLevel logLevel = LogLevel.L1_Debug, FlowData? flowData = null)
 	{

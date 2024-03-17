@@ -16,16 +16,21 @@ internal class PackageCompatibilityControl : SlickControl
 
 		ServiceCenter.Get(out _notifier, out _packageUtil);
 
-		_notifier.CompatibilityReportProcessed += UIChanged;
-		_notifier.SnoozeChanged += UIChanged;
+		_notifier.CompatibilityReportProcessed += Notifier_CompatibilityReportProcessed;
+		_notifier.SnoozeChanged += Notifier_CompatibilityReportProcessed;
 	}
 
 	protected override void Dispose(bool disposing)
 	{
-		_notifier.CompatibilityReportProcessed -= UIChanged;
-		_notifier.SnoozeChanged -= UIChanged;
+		_notifier.CompatibilityReportProcessed -= Notifier_CompatibilityReportProcessed;
+		_notifier.SnoozeChanged -= Notifier_CompatibilityReportProcessed;
 
 		base.Dispose(disposing);
+	}
+
+	private void Notifier_CompatibilityReportProcessed()
+	{
+		this.TryInvoke(UIChanged);
 	}
 
 	protected override void UIChanged()

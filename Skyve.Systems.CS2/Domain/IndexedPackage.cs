@@ -6,8 +6,6 @@ using Skyve.Domain;
 using Skyve.Domain.Enums;
 using Skyve.Systems.CS2.Domain.Api;
 
-using SkyveApi.Domain.CS2;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -184,19 +182,20 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 	}
 
 	#region IPackageCompatibilityInfo
-	public ulong Id => (Package).Id;
-	public string? Name => (Package).Name;
-	public string? FileName => (Package).FileName;
-	public string? AuthorId => (Package).AuthorId;
-	public string? Note => (Package).Note;
-	public DateTime ReviewDate => (Package).ReviewDate;
-	public PackageStability Stability => (Package).Stability;
-	public PackageUsage Usage => (Package).Usage;
-	public PackageType Type => (Package).Type;
-	public List<uint>? RequiredDLCs => (Package).RequiredDLCs;
-	public List<string>? Tags => (Package).Tags;
-	public List<ILink>? Links => (Package).Links.ToList(x => (ILink)x);
-	List<IPackageStatus<InteractionType>> IPackageCompatibilityInfo.Interactions => (Package).Interactions.ToList(x => (IPackageStatus<InteractionType>)x);
-	List<IPackageStatus<StatusType>> IPackageCompatibilityInfo.Statuses => (Package).Statuses.ToList(x => (IPackageStatus<StatusType>)x);
+	public ulong Id => Package.Id;
+	public string? Name => Package.Name;
+	public string? FileName => Package.FileName;
+	public string? AuthorId => Package.AuthorId;
+	public string? Note => Package.Note;
+	public DateTime ReviewDate => Package.ReviewDate;
+	public string? ReviewedGameVersion => Package.ReviewedGameVersion;
+	public PackageStability Stability => Package.Stability;
+	public PackageUsage Usage => Package.Usage;
+	public PackageType Type => Package.Type;
+	public List<uint>? RequiredDLCs => Package.RequiredDLCs;
+	public List<string>? Tags => Package.Tags;
+	public List<ILink>? Links => Package.Links.ToList(x => (ILink)x);
+	List<IPackageStatus<InteractionType>> IPackageCompatibilityInfo.Interactions => Package.Interactions.ToList(x => (IPackageStatus<InteractionType>)x);
+	List<IPackageStatus<StatusType>> IPackageCompatibilityInfo.Statuses => Package.Statuses.ToList(x => (IPackageStatus<StatusType>)x);
 	#endregion
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
+using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain.Systems;
 using Skyve.Systems.Compatibility.Domain;
 using Skyve.Systems.CS2.Managers;
@@ -33,6 +34,7 @@ public static class Startup
 		services.AddSingleton<ITagsService, TagsService>();
 		services.AddSingleton<ITroubleshootSystem, TroubleshootSystem>();
 		services.AddSingleton<INotificationsService, NotificationsService>();
+		services.AddSingleton<ICompatibilityActionsHelper, CompatibilityActionsUtil>();
 		services.AddSingleton<SkyveApiUtil>();
 		services.AddSingleton<ISkyveDataManager, SkyveDataManager>();
 		services.AddSingleton<PdxLogUtil>();

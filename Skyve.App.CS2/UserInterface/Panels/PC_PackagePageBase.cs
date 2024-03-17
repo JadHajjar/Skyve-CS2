@@ -123,6 +123,10 @@ public partial class PC_PackagePageBase : PanelContent
 					}));
 					P_Requirements.ResumeDrawing();
 				}
+				else
+				{
+					TLP_ModRequirements.Invalidate(true);
+				}
 
 				TLP_ModRequirements.Visible = true;
 			}

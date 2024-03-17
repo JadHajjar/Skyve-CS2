@@ -11,7 +11,7 @@ namespace Skyve.Domain.CS2.Notifications;
 public class PdxModDownloadFailed : INotificationInfo
 {
 	public DateTime Time { get; set; }
-	public string Title => LocaleCS2.ModDownloadFailed.FormatPlural(Mods.Count);
+	public string Title => LocaleCS2.ModsDownloadFailed.FormatPlural(Mods.Count);
 	public string? Description => Mods.ListStrings(x => new GenericPackageIdentity(x).GetWorkshopInfo()?.CleanName() ?? x.ToString(), ", ");
 	public string Icon { get; } = "ReDownload";
 	public Color? Color => FormDesign.Design.OrangeColor;

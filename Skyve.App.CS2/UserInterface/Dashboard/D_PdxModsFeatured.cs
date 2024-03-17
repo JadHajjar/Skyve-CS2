@@ -204,7 +204,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 			var textRect = rect.Pad(Margin.Left + bannerRect.Width, Margin.Left / 4, Margin.Left / 2, Margin.Left / 4);
 			using var textBrush = new SolidBrush(FormDesign.Design.ForeColor);
 			using var fadedBrush = new SolidBrush(Color.FromArgb(180, FormDesign.Design.ForeColor));
-			using var textFont = UI.Font(8.5F, FontStyle.Bold).FitTo(text, textRect, e.Graphics);
+			using var textFont = UI.Font(8.5F, FontStyle.Bold).FitToWidth(text, textRect, e.Graphics);
 			using var smallFont = UI.Font(7F);
 			using var format = new StringFormat { LineAlignment = StringAlignment.Far };
 
@@ -296,7 +296,6 @@ internal class D_PdxModsFeatured : IDashboardItem
 	private void DrawTitleAndTags(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e)
 	{
 		var text = e.Item.CleanName(out var tags);
-		using var stringFormat = new StringFormat { Trimming = StringTrimming.EllipsisCharacter, LineAlignment = StringAlignment.Near };
 
 		using var font = UI.Font(8.25F, FontStyle.Bold);
 		var textRect = new Rectangle(e.Rects.TextRect.X, e.Rects.TextRect.Y, e.Rects.TextRect.Width, Height);
@@ -312,7 +311,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 
 		using var brushTitle = new SolidBrush(e.Rects.CenterRect.Contains(CursorLocation) && e.HoverState == HoverState.Hovered ? FormDesign.Design.ActiveColor : e.BackColor.GetTextColor());
 
-		e.Graphics.DrawString(text, font, brushTitle, textRect, stringFormat);
+		e.Graphics.DrawString(text, font, brushTitle, textRect);
 
 		for (var i = 0; i < tags.Count; i++)
 		{

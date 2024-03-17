@@ -28,7 +28,7 @@ internal class UserService : IUserService
 
 	public bool IsUserVerified(IUser author)
 	{
-		return TryGetUser(User.Id?.ToString())?.Verified ?? false;
+		return TryGetUser(author.Id?.ToString())?.Verified ?? false;
 	}
 
 	internal void SetKnownUsers(IKnownUser[] users)

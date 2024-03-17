@@ -3,6 +3,8 @@ using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Panels;
+using Skyve.App.Utilities;
+using Skyve.Systems.CS2.Services;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Configuration;
@@ -174,7 +176,7 @@ public partial class MainForm : BasePanelForm
 		PI_CompatibilityManagement.Hidden = !((hasPackages || _userService.User.Manager) && !_userService.User.Malicious);
 		PI_ManageAllCompatibility.Hidden = PI_ReviewRequests.Hidden = !(_userService.User.Manager && !_userService.User.Malicious);
 		PI_ManageYourPackages.Hidden = !(hasPackages && !_userService.User.Malicious);
-
+		panelItem1.Hidden = !_userService.User.Verified;
 		base_P_Tabs.FilterChanged();
 	}
 
@@ -575,5 +577,28 @@ public partial class MainForm : BasePanelForm
 	private void PI_Playsets_OnClick(object sender, MouseEventArgs e)
 	{
 		SetPanel<PC_PlaysetList>(PI_Playsets);
+	}
+
+	private async void panelItem1_OnClick(object sender, MouseEventArgs e)
+	{
+		var io=new IOSelectionDialog();
+		io.PromptFolder(this);
+
+		if (!Directory.Exists(io.SelectedPath))
+			return;
+		var folder = io.SelectedPath;
+
+		io.PromptFile(this);
+		var thumb = io.SelectedPath;
+
+var res = (await		ServiceCenter.Get<IWorkshopService, WorkshopService>().CreateCollection(folder,
+			MessagePrompt.ShowInput("Name of the asset").Input,
+			MessagePrompt.ShowInput("Description of the asset").Input,
+			thumb));
+
+		if (res != 0)
+		{
+			PlatformUtil.OpenUrl($"https://mods.paradoxplaza.com/mods/{res}/Windows");
+		}
 	}
 }

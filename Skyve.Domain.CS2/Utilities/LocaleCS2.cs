@@ -221,9 +221,20 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation LogsToPlayerLog => _instance.GetText("LogsToPlayerLog");
 
 	/// <summary>
-	/// '{0}' failed to download
+	/// <para>A mod failed to download</para>
+	/// <para>Plural: Some mods failed to download</para>
 	/// </summary>
-	public static Translation ModDownloadFailed => _instance.GetText("ModDownloadFailed");
+	public static Translation ModsDownloadFailed => _instance.GetText("ModsDownloadFailed");
+
+	/// <summary>
+	/// New Cities: Skylines II Update
+	/// </summary>
+	public static Translation NewGameUpdate => _instance.GetText("NewGameUpdate");
+
+	/// <summary>
+	/// Patch {0} is now available. Be sure to check your compatibility report before starting your game.
+	/// </summary>
+	public static Translation NewGameUpdateInfo => _instance.GetText("NewGameUpdateInfo");
 
 	/// <summary>
 	/// You're not logged in to Paradox, check your notifications for more information.

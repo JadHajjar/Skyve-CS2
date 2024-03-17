@@ -31,6 +31,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	private readonly IWorkshopService _workshopService;
 	private readonly IUserService _userService;
 	private readonly ITagsService _tagsService;
+	private readonly ICitiesManager _cityManager;
 
 	public PC_CompatibilityManagement(IEnumerable<IPackageIdentity> packages) : this(false)
 	{
@@ -52,7 +53,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	public PC_CompatibilityManagement(bool load) : base(new GenericPackageIdentity(), load, false)
 	{
-		ServiceCenter.Get(out _workshopService, out _compatibilityManager, out _userService, out _tagsService, out ISkyveDataManager skyveDataManager);
+		ServiceCenter.Get(out _workshopService, out _compatibilityManager, out _userService, out _tagsService, out _cityManager, out ISkyveDataManager skyveDataManager);
 
 		_skyveDataManager = (SkyveDataManager)skyveDataManager;
 
@@ -570,6 +571,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		postPackage.FileName = Path.GetFileName(Package.GetLocalPackageIdentity()?.FilePath ?? string.Empty).IfEmpty(postPackage.FileName);
 		postPackage.Name = Package.Name;
 		postPackage.ReviewDate = DateTime.UtcNow;
+		postPackage.ReviewedGameVersion = _cityManager.GameVersion.IfEmpty(postPackage.ReviewedGameVersion);
 		postPackage.AuthorId = Package.GetWorkshopInfo()?.Author?.Id?.ToString();
 		postPackage.IsBlackListedById = CB_BlackListId.Checked;
 		postPackage.IsBlackListedByName = CB_BlackListName.Checked;

@@ -29,7 +29,7 @@ using PdxPlatform = PDX.SDK.Contracts.Enums.Platform;
 using Platform = Extensions.Platform;
 
 namespace Skyve.Systems.CS2.Services;
-internal class WorkshopService : IWorkshopService
+public class WorkshopService : IWorkshopService
 {
 	public event Action? OnLogin;
 	public event Action? OnLogout;
@@ -474,7 +474,7 @@ internal class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, includeOnline: includeOnline));
+		var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, includeOnline: includeOnline));
 
 		return result.Mods?.ToList(x => new PdxPlaysetPackage(x)) ?? [];
 	}
@@ -686,32 +686,32 @@ internal class WorkshopService : IWorkshopService
 		ProcessResult(await Context.Mods.DeactivateActivePlayset());
 	}
 
-	public async Task CreateCollection(List<IPackageIdentity> list)
+	public async Task<int> CreateCollection(string folder, string name, string desc, string thumbnail, List<IPackageIdentity> list = null)
 	{
 		if (Context is null)
 		{
-			return;
+			return 0;
 		}
 
 		var config = new BaseOptionSet
 		{
-			DisplayName = "My Collection 2",
-			ShortDescription = "Testing",
-			LongDescription = "This is a collection test",
-			Dependencies = list.ToDictionary(x => (int)x.Id, x => new ModDependency
+			DisplayName = name,
+			ShortDescription = desc,
+			LongDescription = desc,
+			Dependencies = list?.ToDictionary(x => (int)x.Id, x => new ModDependency
 			{
 				Id = (int)x.Id,
 				DisplayName = x.Name,
 				Type = DependencyType.Mod
-			}),
+			}) ?? [],
 			Tags = ["Code Mod"],
 			ModVersion = "1",
 			GameVersion = "*.*.*",
-			Thumbnail = @"C:\Users\Jad\Desktop\Untitled.png",
+			Thumbnail = thumbnail,
 		};
 
 		var wipInfo = await Context.Mods.RegisterWIP(config.DisplayName, config.ShortDescription, config.LongDescription, 100UL);
-		PrepareContent(config, wipInfo);
+		PrepareContent(config, wipInfo, folder);
 		var updateWipData = new UpdateWipData
 		{
 			guid = wipInfo.Guid,
@@ -728,7 +728,7 @@ internal class WorkshopService : IWorkshopService
 		var publishWipData = new PublishWipData
 		{
 			wipGuid = wipInfo.Guid,
-			os = ModPlatform.Any,
+			os = ModPlatform.Windows,
 			recommendedGameVersion = config.GameVersion,
 			userModVersion = config.ModVersion,
 			forumLink = config.ForumLink,
@@ -736,9 +736,11 @@ internal class WorkshopService : IWorkshopService
 			tags = config.Tags.ToList<string>()
 		};
 		var publishResult = await Context.Mods.PublishWIP(publishWipData);
+
+		return publishResult.ModId;
 	}
 
-	private static void PrepareContent(BaseOptionSet config, RegisterResult wipInfo)
+	private static void PrepareContent(BaseOptionSet config, RegisterResult wipInfo, string folder)
 	{
 		var text = Path.Combine(wipInfo.Path, "Content");
 		if (Directory.Exists(text))
@@ -746,7 +748,8 @@ internal class WorkshopService : IWorkshopService
 			Directory.Delete(text, true);
 		}
 		Directory.CreateDirectory(text);
-		File.WriteAllLines(Path.Combine(text, "ModList.txt"), config.Dependencies.ToArray(x => $"{x.Key} - {x.Value.DisplayName}"));
+		new DirectoryInfo(folder).CopyAll(new(text));
+		//File.WriteAllLines(Path.Combine(text, "ModList.txt"), config.Dependencies.ToArray(x => $"{x.Key} - {x.Value.DisplayName}"));
 		var text2 = Path.Combine(wipInfo.Path, ".metadata");
 		var text3 = Path.Combine(text2, Path.GetFileName(config.Thumbnail));
 		if (!string.IsNullOrEmpty(config.Thumbnail) && File.Exists(config.Thumbnail))
