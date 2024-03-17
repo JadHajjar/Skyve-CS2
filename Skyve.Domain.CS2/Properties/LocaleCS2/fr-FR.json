@@ -69,7 +69,7 @@
   "UIDeveloperMode": "Enable UI Developer Mode",
   "LogsToPlayerLog": "Copy logs to Player.log",
   "InvalidFolderSettings": "Invalid setup detected",
-  "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
+  "InvalidFolderSettingsInfo": "Skyve n'as pas réussi à détecter le dossier des données de Cities: Skyines II.\n\nCliquez ici pour sélectionner le dossier des données manuellement.",
   "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
   "DefaultLocation": "Emplacement par défaut",
   "JunctionTitle": "Custom Content Location",
