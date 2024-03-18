@@ -139,7 +139,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		base.UIChanged();
 
 		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding
-			= TLP_Bottom.Padding = P_Tags.Padding = P_Tags.Margin = P_Links.Padding = P_Links.Margin
+			= TLP_Bottom.Padding =  P_Tags.Margin =  P_Links.Margin
 			= DD_DLCs.Margin = DD_PackageType.Margin = DD_Stability.Margin = DD_Usage.Margin
 			= B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer2.Height = (int)(2 * UI.FontScale);

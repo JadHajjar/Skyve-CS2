@@ -71,7 +71,7 @@ internal class CentralManager : ICentralManager
 		}
 	}
 
-	private async Task Initialize()
+	public async Task Initialize()
 	{
 		if (!_settings.SessionSettings.FirstTimeSetupCompleted)
 		{

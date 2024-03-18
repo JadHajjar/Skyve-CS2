@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<TargetName>Skyve Mod</TargetName>
+		<LangVersion>9</LangVersion>
 	</PropertyGroup>
 
 	<Import Project="../../Skyve/Config.props" />

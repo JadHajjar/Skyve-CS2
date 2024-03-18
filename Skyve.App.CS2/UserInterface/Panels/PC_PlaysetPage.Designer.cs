@@ -120,7 +120,7 @@ partial class PC_PlaysetPage
 			this.TLP_Options.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Options.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Options.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Options.Size = new System.Drawing.Size(876, 589);
+			this.TLP_Options.Size = new System.Drawing.Size(876, 662);
 			this.TLP_Options.TabIndex = 0;
 			// 
 			// DD_SaveFile
@@ -222,6 +222,7 @@ partial class PC_PlaysetPage
 			this.slickSpacer1.TabIndex = 10;
 			this.slickSpacer1.TabStop = false;
 			this.slickSpacer1.Text = "slickSpacer1";
+			this.slickSpacer1.Visible = false;
 			// 
 			// CB_StartNewGame
 			// 
@@ -487,7 +488,7 @@ partial class PC_PlaysetPage
 			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Side.Size = new System.Drawing.Size(4504, 267);
+			this.TLP_Side.Size = new System.Drawing.Size(4504, 279);
 			this.TLP_Side.TabIndex = 1;
 			// 
 			// tableLayoutPanel1
@@ -526,9 +527,9 @@ partial class PC_PlaysetPage
 			// 
 			this.L_ColorInfo.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.L_ColorInfo.AutoSize = true;
-			this.L_ColorInfo.Location = new System.Drawing.Point(38, 6);
+			this.L_ColorInfo.Location = new System.Drawing.Point(38, 8);
 			this.L_ColorInfo.Name = "L_ColorInfo";
-			this.L_ColorInfo.Size = new System.Drawing.Size(45, 19);
+			this.L_ColorInfo.Size = new System.Drawing.Size(44, 16);
 			this.L_ColorInfo.TabIndex = 28;
 			this.L_ColorInfo.Text = "label1";
 			// 
@@ -543,7 +544,7 @@ partial class PC_PlaysetPage
 			this.tableLayoutPanel2.Controls.Add(this.I_Thumbnail, 0, 0);
 			this.tableLayoutPanel2.Controls.Add(this.L_ThumbnailInfo, 1, 0);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 140);
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 136);
 			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 1;
@@ -600,9 +601,9 @@ partial class PC_PlaysetPage
 			this.B_EditThumbnail.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon5.Name = "EditImage";
 			this.B_EditThumbnail.ImageName = dynamicIcon5;
-			this.B_EditThumbnail.Location = new System.Drawing.Point(3, 232);
+			this.B_EditThumbnail.Location = new System.Drawing.Point(3, 228);
 			this.B_EditThumbnail.Name = "B_EditThumbnail";
-			this.B_EditThumbnail.Size = new System.Drawing.Size(178, 32);
+			this.B_EditThumbnail.Size = new System.Drawing.Size(174, 28);
 			this.B_EditThumbnail.SpaceTriggersClick = true;
 			this.B_EditThumbnail.TabIndex = 26;
 			this.B_EditThumbnail.Text = "EditPlaysetThumbnail";
@@ -631,7 +632,7 @@ partial class PC_PlaysetPage
 			// 
 			this.L_Thumbnail.AutoSize = true;
 			this.TLP_Side.SetColumnSpan(this.L_Thumbnail, 3);
-			this.L_Thumbnail.Location = new System.Drawing.Point(3, 124);
+			this.L_Thumbnail.Location = new System.Drawing.Point(3, 120);
 			this.L_Thumbnail.Name = "L_Thumbnail";
 			this.L_Thumbnail.Size = new System.Drawing.Size(44, 16);
 			this.L_Thumbnail.TabIndex = 28;
@@ -647,10 +648,10 @@ partial class PC_PlaysetPage
 			this.CB_NoBanner.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_NoBanner.DefaultValue = false;
 			this.CB_NoBanner.EnterTriggersClick = false;
-			this.CB_NoBanner.Location = new System.Drawing.Point(3, 182);
+			this.CB_NoBanner.Location = new System.Drawing.Point(3, 178);
 			this.CB_NoBanner.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
 			this.CB_NoBanner.Name = "CB_NoBanner";
-			this.CB_NoBanner.Size = new System.Drawing.Size(145, 44);
+			this.CB_NoBanner.Size = new System.Drawing.Size(140, 44);
 			this.CB_NoBanner.SpaceTriggersClick = true;
 			this.CB_NoBanner.TabIndex = 27;
 			this.CB_NoBanner.Text = "NoThumbnail";
@@ -666,7 +667,7 @@ partial class PC_PlaysetPage
 			this.B_EditColor.ImageName = dynamicIcon6;
 			this.B_EditColor.Location = new System.Drawing.Point(3, 89);
 			this.B_EditColor.Name = "B_EditColor";
-			this.B_EditColor.Size = new System.Drawing.Size(169, 32);
+			this.B_EditColor.Size = new System.Drawing.Size(167, 28);
 			this.B_EditColor.SpaceTriggersClick = true;
 			this.B_EditColor.TabIndex = 26;
 			this.B_EditColor.Text = "ChangePlaysetColor";
@@ -679,9 +680,9 @@ partial class PC_PlaysetPage
 			this.B_ClearColor.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon7.Name = "Select";
 			this.B_ClearColor.ImageName = dynamicIcon7;
-			this.B_ClearColor.Location = new System.Drawing.Point(187, 89);
+			this.B_ClearColor.Location = new System.Drawing.Point(183, 89);
 			this.B_ClearColor.Name = "B_ClearColor";
-			this.B_ClearColor.Size = new System.Drawing.Size(156, 32);
+			this.B_ClearColor.Size = new System.Drawing.Size(155, 28);
 			this.B_ClearColor.SpaceTriggersClick = true;
 			this.B_ClearColor.TabIndex = 26;
 			this.B_ClearColor.Text = "ResetPlaysetColor";
@@ -694,9 +695,9 @@ partial class PC_PlaysetPage
 			this.B_ClearThumbnail.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon8.Name = "RemoveImage";
 			this.B_ClearThumbnail.ImageName = dynamicIcon8;
-			this.B_ClearThumbnail.Location = new System.Drawing.Point(187, 232);
+			this.B_ClearThumbnail.Location = new System.Drawing.Point(183, 228);
 			this.B_ClearThumbnail.Name = "B_ClearThumbnail";
-			this.B_ClearThumbnail.Size = new System.Drawing.Size(161, 32);
+			this.B_ClearThumbnail.Size = new System.Drawing.Size(160, 28);
 			this.B_ClearThumbnail.SpaceTriggersClick = true;
 			this.B_ClearThumbnail.TabIndex = 26;
 			this.B_ClearThumbnail.Text = "ResetPlaysetImage";

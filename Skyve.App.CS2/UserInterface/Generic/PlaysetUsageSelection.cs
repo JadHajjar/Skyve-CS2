@@ -57,14 +57,11 @@ internal class PlaysetUsageSelection : SlickControl
 
 		if (Selected)
 		{
-			e.Graphics.FillRoundedRectangleWithShadow(ClientRectangle.Pad(Padding.Left / 2), Padding.Left / 2, Padding.Left / 2, FormDesign.Design.BackColor.MergeColor(FormDesign.Design.ActiveColor, 90), Color.FromArgb(8, FormDesign.Design.ActiveColor));
-
-			using var pen = new Pen(FormDesign.Design.ActiveColor, 1.5F);
-			e.Graphics.DrawRoundedRectangle(pen, ClientRectangle.Pad(Padding.Left / 2), Padding.Left / 2);
+			e.Graphics.FillRoundedRectangleWithShadow(ClientRectangle.Pad(Padding.Left / 2), Padding.Left / 2, Padding.Left / 2, FormDesign.Design.BackColor.MergeColor(FormDesign.Design.ActiveColor, 90), Color.FromArgb(8, FormDesign.Design.ActiveColor), true);
 		}
 		else if (HoverState.HasFlag(HoverState.Hovered) && ClientRectangle.Pad(Padding).Contains(PointToClient(Cursor.Position)))
 		{
-			e.Graphics.FillRoundedRectangleWithShadow(ClientRectangle.Pad(Padding.Left / 2), Padding.Left / 2, Padding.Left / 2, FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? 8 : -8), FormDesign.Design.IsDarkTheme ? Color.FromArgb(2, 255, 255, 255) : Color.FromArgb(15, FormDesign.Design.AccentColor));
+			e.Graphics.FillRoundedRectangleWithShadow(ClientRectangle.Pad(Padding.Left / 2), Padding.Left / 2, Padding.Left / 2, FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? 8 : -8), FormDesign.Design.IsDarkTheme ? Color.FromArgb(2, 255, 255, 255) : Color.FromArgb(15, FormDesign.Design.AccentColor), true);
 		}
 		else
 		{

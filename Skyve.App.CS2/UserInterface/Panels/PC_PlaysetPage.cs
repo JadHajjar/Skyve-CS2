@@ -36,7 +36,9 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 			ValidExtensions = IO.ImageExtensions
 		};
 
-		T_Content.LinkedControl = LC_Items = new ContentList(SkyvePage.Playset, false, GetContents, () => Locale.Package, GetCountText);
+		T_Content.LinkedControl = LC_Items = new ContentList(SkyvePage.Playset, false, GetContents, () => Locale.Package);
+
+		LC_Items.SelectedPlayset = playset.Id;
 
 		P_Side.Controls.Add(SideControl = new PlaysetSideControl(playset) { Dock = DockStyle.Top });
 
@@ -102,43 +104,6 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 	private Task<IEnumerable<IPackageIdentity>> GetContents()
 	{
 		return _playsetManager.GetPlaysetContents(Playset);
-	}
-
-	protected string GetCountText()
-	{
-		int packagesIncluded = 0, modsIncluded = 0, modsEnabled = 0;
-
-		foreach (var item in LC_Items!.Items)
-		{
-			if (item?.IsIncluded() == true)
-			{
-				packagesIncluded++;
-
-				if (item.GetPackage()?.IsCodeMod == true)
-				{
-					modsIncluded++;
-
-					if (item.IsEnabled())
-					{
-						modsEnabled++;
-					}
-				}
-			}
-		}
-
-		var total = LC_Items!.ItemCount;
-
-		if (!_settings.UserSettings.AdvancedIncludeEnable)
-		{
-			return string.Format(Locale.PackageIncludedTotal, packagesIncluded, total);
-		}
-
-		if (modsIncluded == modsEnabled)
-		{
-			return string.Format(Locale.PackageIncludedAndEnabledTotal, packagesIncluded, total);
-		}
-
-		return string.Format(Locale.PackageIncludedEnabledTotal, packagesIncluded, modsIncluded, modsEnabled, total);
 	}
 
 	protected override void LocaleChanged()

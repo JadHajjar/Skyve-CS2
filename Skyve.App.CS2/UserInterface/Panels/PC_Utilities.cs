@@ -25,15 +25,11 @@ public partial class PC_Utilities : PanelContent
 		ServiceCenter.Get(out _settings, out _citiesManager, out _subscriptionsManager, out _notifier, out _locationManager, out _packageUtil, out _contentManager, out _workshopService, out _downloadService);
 
 		InitializeComponent();
-
-		DD_BOB.StartingFolder = _settings.FolderSettings.AppDataPath;
-
-		SlickTip.SetTo(DD_BOB, "XMLTip");
 	}
 
 	public override Color GetTopBarColor()
 	{
-		return FormDesign.Design.AccentBackColor;
+		return FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? 2 : -5);
 	}
 
 	protected override void LocaleChanged()
@@ -46,7 +42,7 @@ public partial class PC_Utilities : PanelContent
 	{
 		base.UIChanged();
 
-		B_Troubleshoot.Margin = P_BOB.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
+		B_Troubleshoot.Margin =  P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
 		B_ImportClipboard.Margin = UI.Scale(new Padding(10), UI.FontScale);
 		L_Troubleshoot.Font = UI.Font(9F);
 		L_Troubleshoot.Margin = UI.Scale(new Padding(3), UI.FontScale);
@@ -61,33 +57,10 @@ public partial class PC_Utilities : PanelContent
 	{
 		base.DesignChanged(design);
 
-		BackColor = design.AccentBackColor;
-
 		foreach (Control item in TLP_Main.Controls)
 		{
-			item.BackColor = design.BackColor.Tint(Lum: design.IsDarkTheme ? 1 : -1);
+			item.BackColor = design.BackColor;
 		}
-	}
-
-	private void DD_BOB_FileSelected(string obj)
-	{
-		var matches = Regex.Matches(File.ReadAllText(obj), "[\\>\"](\\d{5,6})\\.(.+?)[\\<\"]");
-		var assets = new List<IPackageIdentity>();
-
-		foreach (Match item in matches)
-		{
-			if (ulong.TryParse(item.Groups[1].Value, out var id) && !assets.Any(x => x.Id == id))
-			{
-				assets.Add(new GenericPackageIdentity(id));
-			}
-		}
-
-		Form.PushPanel(null, new PC_GenericPackageList(assets, true) { Text = LocaleHelper.GetGlobalText(P_BOB.Text) });
-	}
-
-	private bool DD_BOB_ValidFile(object sender, string arg)
-	{
-		return Path.GetExtension(arg).ToLower() == ".xml";
 	}
 
 	private bool DD_TextImport_ValidFile(object sender, string arg)
@@ -142,7 +115,7 @@ public partial class PC_Utilities : PanelContent
 		if (!B_ReloadAllData.Loading)
 		{
 			B_ReloadAllData.Loading = true;
-			await Task.Run(ServiceCenter.Get<ICentralManager>().Start);
+			await ServiceCenter.Get<ICentralManager>().Initialize();
 			B_ReloadAllData.Loading = false;
 			var img = B_ReloadAllData.ImageName;
 			B_ReloadAllData.ImageName = "Check";
@@ -208,6 +181,7 @@ public partial class PC_Utilities : PanelContent
 
 	private async void B_Troubleshoot_Click(object sender, EventArgs e)
 	{
+		ShowPrompt("Coming soon...", icon: PromptIcons.Info);return;
 		var sys = ServiceCenter.Get<ITroubleshootSystem>();
 
 		if (sys.IsInProgress)
@@ -228,5 +202,12 @@ public partial class PC_Utilities : PanelContent
 		{
 			Form.PushPanel<PC_Troubleshoot>();
 		}
+	}
+
+	private async void B_RunSync_Click(object sender, EventArgs e)
+	{
+		B_RunSync.Loading = true;
+		await _workshopService.RunSync();
+		B_RunSync.Loading = false;
 	}
 }
