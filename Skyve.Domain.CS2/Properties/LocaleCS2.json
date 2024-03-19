@@ -85,5 +85,9 @@
   "PDXModsShowcase": "PDX Mods Showcase",
   "CouldNotRetrieveMods": "Could not retrieve the mods' data",
   "NewGameUpdate": "New Cities: Skylines II Update",
-  "NewGameUpdateInfo": "Patch {0} is now available.\r\nBe sure to check your compatibility report before starting your game."
+  "NewGameUpdateInfo": "Patch {0} is now available.\r\nBe sure to check your compatibility report before starting your game.",
+  "PdxSyncInfo": "The PDX Synchronisation process handles downloading and updating your mods, as well as synchronising the settings and playsets you have between your local computer and PDX Mods services.",
+  "SyncOngoing": "Sync is currently ongoing",
+  "PdxSync": "PDX Mods Sync",
+  "RunSync": "Start Synchronisation"
 }

@@ -297,6 +297,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation PDXModsShowcase => _instance.GetText("PDXModsShowcase");
 
 	/// <summary>
+	/// PDX Mods Sync
+	/// </summary>
+	public static Translation PdxSync => _instance.GetText("PdxSync");
+
+	/// <summary>
+	/// The PDX Synchronisation process handles downloading and updating your mods, as well as synchronising the settings and playsets you have between your local computer and PDX Mods services.
+	/// </summary>
+	public static Translation PdxSyncInfo => _instance.GetText("PdxSyncInfo");
+
+	/// <summary>
 	/// This playset is already present in your list of playsets.
 	/// </summary>
 	public static Translation PlaysetAlreadyImported => _instance.GetText("PlaysetAlreadyImported");
@@ -322,6 +332,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation RunSetupOrRunApp => _instance.GetText("RunSetupOrRunApp");
 
 	/// <summary>
+	/// Start Synchronisation
+	/// </summary>
+	public static Translation RunSync => _instance.GetText("RunSync");
+
+	/// <summary>
 	/// Launch Cities: Skylines II
 	/// </summary>
 	public static Translation StartCities => _instance.GetText("StartCities");
@@ -336,6 +351,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// <para>Plural: Add these to your active playset</para>
 	/// </summary>
 	public static Translation SubscribeToItem => _instance.GetText("SubscribeToItem");
+
+	/// <summary>
+	/// Sync is currently ongoing
+	/// </summary>
+	public static Translation SyncOngoing => _instance.GetText("SyncOngoing");
 
 	/// <summary>
 	/// Enable UI Developer Mode

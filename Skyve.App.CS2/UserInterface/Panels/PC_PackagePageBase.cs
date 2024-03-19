@@ -20,6 +20,7 @@ public partial class PC_PackagePageBase : PanelContent
 	private readonly IPackageUtil _packageUtil;
 	private readonly ISettings _settings;
 	private TagControl? addTagControl;
+	private bool refreshPending;
 
 	public IPackageIdentity Package { get; private set; }
 
@@ -46,14 +47,38 @@ public partial class PC_PackagePageBase : PanelContent
 		if (autoRefresh)
 		{
 			_notifier.WorkshopInfoUpdated += Notifier_WorkshopInfoUpdated;
-			_notifier.PackageInclusionUpdated += Notifier_WorkshopInfoUpdated;
+			_notifier.PackageInclusionUpdated += Notifier_PackageInclusionUpdated;
 			_notifier.PackageInformationUpdated += Notifier_WorkshopInfoUpdated;
 		}
 	}
 
+	private void Notifier_PackageInclusionUpdated()
+	{
+		B_Incl.Invalidate();
+	}
+
 	private void Notifier_WorkshopInfoUpdated()
 	{
-		this.TryInvoke(() => SetPackage(Package));
+		if (Form.CurrentPanel == this)
+		{
+			this.TryInvoke(() => SetPackage(Package));
+		}
+		else
+		{
+			refreshPending = true;
+		}
+	}
+
+	protected override void OnShown()
+	{
+		base.OnShown();
+
+        if (refreshPending)
+        {
+			refreshPending = false;
+
+			this.TryInvoke(() => SetPackage(Package));
+		}
 	}
 
 	protected virtual void SetPackage(IPackageIdentity package)

@@ -176,7 +176,7 @@ public partial class MainForm : BasePanelForm
 		PI_CompatibilityManagement.Hidden = !((hasPackages || _userService.User.Manager) && !_userService.User.Malicious);
 		PI_ManageAllCompatibility.Hidden = PI_ReviewRequests.Hidden = !(_userService.User.Manager && !_userService.User.Malicious);
 		PI_ManageYourPackages.Hidden = !(hasPackages && !_userService.User.Malicious);
-		panelItem1.Hidden = !_userService.User.Verified;
+		//panelItem1.Hidden = !_userService.User.Verified;
 		base_P_Tabs.FilterChanged();
 	}
 

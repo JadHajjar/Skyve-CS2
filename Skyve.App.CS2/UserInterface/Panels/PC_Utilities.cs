@@ -1,5 +1,6 @@
 ﻿using Skyve.App.UserInterface.Panels;
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
 using System.IO;
@@ -25,6 +26,22 @@ public partial class PC_Utilities : PanelContent
 		ServiceCenter.Get(out _settings, out _citiesManager, out _subscriptionsManager, out _notifier, out _locationManager, out _packageUtil, out _contentManager, out _workshopService, out _downloadService);
 
 		InitializeComponent();
+
+		Notifier_WorkshopSync();
+
+		_notifier.WorkshopSyncStarted += Notifier_WorkshopSync;
+		_notifier.WorkshopSyncEnded += Notifier_WorkshopSync;
+	}
+
+	private void Notifier_WorkshopSync()
+	{
+		this.TryInvoke(() =>
+		{
+			var ready = _workshopService.IsReady && !_notifier.IsWorkshopSyncInProgress;
+			B_RunSync.Enabled = ready;
+			L_SyncStatus.Text = ready ? Locale.Ready : LocaleCS2.SyncOngoing;
+			L_SyncStatus.ForeColor = (ready ? FormDesign.Design.GreenColor : FormDesign.Design.OrangeColor).MergeColor(FormDesign.Design.ForeColor, 75);
+		});
 	}
 
 	public override Color GetTopBarColor()
@@ -36,6 +53,8 @@ public partial class PC_Utilities : PanelContent
 	{
 		Text = LocaleSlickUI.Utilities;
 		L_Troubleshoot.Text = Locale.TroubleshootInfo;
+		L_PdxSyncInfo.Text = LocaleCS2.PdxSyncInfo;
+		L_SyncStatusLabel.Text = LocaleCS2.CurrentStatus;
 	}
 
 	protected override void UIChanged()
@@ -47,6 +66,8 @@ public partial class PC_Utilities : PanelContent
 		L_Troubleshoot.Font=L_PdxSyncInfo.Font=L_SyncStatus.Font = UI.Font(9F);
 		L_SyncStatusLabel.Font = UI.Font(9F, FontStyle.Bold);
 		L_Troubleshoot.Margin = UI.Scale(new Padding(3), UI.FontScale);
+		L_PdxSyncInfo.Margin = L_SyncStatus.Margin = UI.Scale(new Padding(3, 3, 3, 10), UI.FontScale);
+		L_SyncStatusLabel.Margin = UI.Scale(new Padding(3, 3, 5, 10), UI.FontScale);
 
 		foreach (Control item in P_Reset.Controls)
 		{

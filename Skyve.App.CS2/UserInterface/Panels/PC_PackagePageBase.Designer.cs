@@ -20,7 +20,7 @@ partial class PC_PackagePageBase
 		if (disposing && (components != null))
 		{
 			_notifier.WorkshopInfoUpdated -= Notifier_WorkshopInfoUpdated;
-			_notifier.PackageInclusionUpdated -= Notifier_WorkshopInfoUpdated;
+			_notifier.PackageInclusionUpdated -= Notifier_PackageInclusionUpdated;
 			_notifier.PackageInformationUpdated -= Notifier_WorkshopInfoUpdated;
 			components.Dispose();
 		}
