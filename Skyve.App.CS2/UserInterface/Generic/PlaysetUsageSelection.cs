@@ -65,7 +65,7 @@ internal class PlaysetUsageSelection : SlickControl
 		}
 		else
 		{
-			e.Graphics.FillRoundedRectangleWithShadow(ClientRectangle.Pad(Padding.Left / 2), Padding.Left / 2, Padding.Left / 2);
+			e.Graphics.FillRoundedRectangleWithShadow(ClientRectangle.Pad(Padding.Left / 2), Padding.Left / 2, Padding.Left / 2, FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? -2 : 2));
 		}
 
 		var text = (int)Usage == -1 ? Locale.AnyUsage : LocaleCR.Get(Usage.ToString());
