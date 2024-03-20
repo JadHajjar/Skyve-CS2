@@ -53,7 +53,7 @@ internal class RightClickService : IRightClickService
 					new(list.Count == 1 ? Locale.ExcludeItem : Locale.ExcludeAllSelected, "X", async () => await packageUtil.SetIncluded(items, false), visible: anyIncluded && anyNotRequired),
 					SlickStripItem.Empty,
 					new(Locale.EditTags.FormatPlural(list.Count), "Tag", () => EditTags(list)),
-					new(Locale.EditCompatibility.FormatPlural(list.Count), "CompatibilityReport", () => { App.Program.MainForm.PushPanel(null, new PC_CompatibilityManagement(items)); }, visible: (userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author))) && anyWorkshop),
+					new(Locale.EditCompatibility.FormatPlural(list.Count), "CompatibilityReport", () => { App.Program.MainForm.PushPanel(new PC_CompatibilityManagement(items)); }, visible: (userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author))) && anyWorkshop),
 				]
 			},
 

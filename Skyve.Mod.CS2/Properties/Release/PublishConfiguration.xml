@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Publish>
-  <ModId Value="74150" />
+  <ModId Value="75804" />
   <DisplayName Value="Skyve [BETA]" />
   <ShortDescription Value="The all-in-one mod manager for Cities: Skylines II PDX Mods" />
   <LongDescription>
@@ -14,14 +14,10 @@ Skyve is your all-in-one mod manager for Cities: Skylines II PDX Mods.
   <Screenshot Value="Properties/Release/Screenshot_01.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="" />
-  <ModVersion Value="0.1.16" />
-  <GameVersion Value="1.0.*" />
+  <ModVersion Value="0.8.0" />
+  <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.1.16
-## Changes
-* Updated the compatibility info UI
-* Fixed the package selection screen
-* Fixed compatibility report bugs
-* Bug fixes
+# v0.8.0
+Miscellaneous Hotfix
 </ChangeLog>
 </Publish>

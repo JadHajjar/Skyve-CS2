@@ -103,7 +103,7 @@ public partial class PC_Utilities : PanelContent
 			}
 		}
 
-		Form.PushPanel(null, new PC_GenericPackageList(assets, true) { Text = LocaleHelper.GetGlobalText(P_Text.Text) });
+		Form.PushPanel(new PC_GenericPackageList(assets, true) { Text = LocaleHelper.GetGlobalText(P_Text.Text) });
 	}
 
 	private void B_ImportClipboard_Click(object sender, EventArgs e)
@@ -124,7 +124,7 @@ public partial class PC_Utilities : PanelContent
 			}
 		}
 
-		Form.PushPanel(null, new PC_GenericPackageList(assets, true) { Text = LocaleHelper.GetGlobalText(B_ImportClipboard.Text) });
+		Form.PushPanel(new PC_GenericPackageList(assets, true) { Text = LocaleHelper.GetGlobalText(B_ImportClipboard.Text) });
 	}
 
 	private void slickScroll1_Scroll(object sender, ScrollEventArgs e)

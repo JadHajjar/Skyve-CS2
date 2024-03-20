@@ -143,7 +143,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 			Name = package.Name,
 			AuthorId = workshopInfo?.Author?.Id?.ToString() ?? string.Empty,
 			FileName = package.GetLocalPackageIdentity()?.FilePath,
-			Links = workshopInfo?.Links.ToList(x => new PackageLink { Type = x.Type, Title = x.Title, Url = x.Url}) ?? [],
+			Links = workshopInfo?.Links.ToList(x => new PackageLink { Type = x.Type, Title = x.Title, Url = x.Url }) ?? [],
 			Tags = workshopInfo?.Tags.Values.ToList() ?? []
 		};
 
@@ -189,32 +189,32 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 
 		((CompatibilityUtil)_compatibilityUtil).PopulateAutomaticPackageInfo(info, package, workshopInfo);
 
-		if (workshopInfo?.Description is not null)
-		{
-			var matches = _urlRegex.Matches(workshopInfo.Description);
+		//if (workshopInfo?.Description is not null)
+		//{
+		//	var matches = _urlRegex.Matches(workshopInfo.Description);
 
-			foreach (Match match in matches)
-			{
-				var type = match.Groups[2].Value.ToLower() switch
-				{
-					"youtube.com" or "youtu.be" => LinkType.YouTube,
-					"github.com" => LinkType.Github,
-					"discord.com" or "discord.gg" => LinkType.Discord,
-					"crowdin.com" => LinkType.Crowdin,
-					"buymeacoffee.com" or "patreon.com" or "ko-fi.com" or "paypal.com" => LinkType.Donation,
-					_ => LinkType.Other
-				};
+		//	foreach (Match match in matches)
+		//	{
+		//		var type = match.Groups[2].Value.ToLower() switch
+		//		{
+		//			"youtube.com" or "youtu.be" => LinkType.YouTube,
+		//			"github.com" => LinkType.Github,
+		//			"discord.com" or "discord.gg" => LinkType.Discord,
+		//			"crowdin.com" => LinkType.Crowdin,
+		//			"buymeacoffee.com" or "patreon.com" or "ko-fi.com" or "paypal.com" => LinkType.Donation,
+		//			_ => LinkType.Other
+		//		};
 
-				if (type is not LinkType.Other && !(workshopInfo?.Links.Any(x => x.Url?.Equals(match.Value, StringComparison.InvariantCultureIgnoreCase) ?? false) ?? false))
-				{
-					info.Links.Add(new PackageLink
-					{
-						Url = match.Value,
-						Type = type,
-					});
-				}
-			}
-		}
+		//		if (type is not LinkType.Other && !(workshopInfo?.Links.Any(x => x.Url?.Equals(match.Value, StringComparison.InvariantCultureIgnoreCase) ?? false) ?? false))
+		//		{
+		//			info.Links.Add(new PackageLink
+		//			{
+		//				Url = match.Value,
+		//				Type = type,
+		//			});
+		//		}
+		//	}
+		//}
 
 		return info;
 	}

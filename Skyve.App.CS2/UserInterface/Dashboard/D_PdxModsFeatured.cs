@@ -237,7 +237,7 @@ internal class D_PdxModsFeatured : IDashboardItem
 
 			_buttonActions[pe.Rects.IconRect] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
 			_buttonActions[pe.Rects.DotsRect] = () => RightClick(workshopInfo);
-			_buttonActions[pe.Rects.AuthorRect] = () => App.Program.MainForm.PushPanel(null, new PC_UserPage(workshopInfo.Author!));
+			_buttonActions[pe.Rects.AuthorRect] = () => App.Program.MainForm.PushPanel(new PC_UserPage(workshopInfo.Author!));
 			_buttonRightClickActions[rect] = () => RightClick(workshopInfo);
 		}
 	}
