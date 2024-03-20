@@ -1,6 +1,6 @@
 {
   "Options.SECTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod]": "Skyve",
-  "Options.GROUP[Skyve Mod.Skyve.Mod.CS2.SkyveMod.GAMEPLAY_GROUP]": "Installation",
-  "Options.OPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "Install Skyve",
-  "Options.OPTION_DESCRIPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "Starts the Skyve setup process to install Skyve on your computer."
+  "Options.GROUP[Skyve Mod.Skyve.Mod.CS2.SkyveMod.GAMEPLAY_GROUP]": "安装",
+  "Options.OPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "安装 Skyve",
+  "Options.OPTION_DESCRIPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "启动 Skyve 安装程序，在您的电脑上安装 Skyve 。"
 }
