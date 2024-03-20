@@ -84,7 +84,9 @@ public class WorkshopService : IWorkshopService
 	public async Task Initialize()
 	{
 		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
+		{
 			throw new Exception("FolderSettings AppData folder does not exist");
+		}
 
 		var pdxSdkPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk");
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
@@ -553,6 +555,11 @@ public class WorkshopService : IWorkshopService
 			playset,
 			enable);
 
+		using (Lock)
+		{
+			await Task.Delay(1500);
+		}
+
 		_notifier.OnWorkshopSyncEnded();
 
 		return ProcessResult(result).Success;
@@ -572,6 +579,11 @@ public class WorkshopService : IWorkshopService
 			var result = await Context.Mods.Unsubscribe(id, playset);
 
 			results.Add(ProcessResult(result));
+		}
+
+		using (Lock)
+		{
+			await Task.Delay(1500);
 		}
 
 		_notifier.OnWorkshopSyncEnded();

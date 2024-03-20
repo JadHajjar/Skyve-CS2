@@ -131,7 +131,10 @@ internal class ModsUtil : IModUtil
 
 	public bool IsIncluded(IPackageIdentity mod, int? playsetId = null)
 	{
-		return mod.Id <= 0 || (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetId ?? currentPlayset].ContainsKey(mod.Id));
+		if (mod.Id <= 0)
+			return IsEnabled(mod);
+
+return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetId ?? currentPlayset].ContainsKey(mod.Id));
 	}
 
 	public bool IsEnabled(IPackageIdentity mod, int? playsetId = null)
@@ -169,14 +172,9 @@ internal class ModsUtil : IModUtil
 
 		SaveHistory();
 
-		//await _workshopService.WaitUntilReady();
+		SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), value);
 
-		if (!modConfig.ContainsKey(playset))
-		{
-			modConfig[playset] = [];
-		}
-
-		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) != value);
+		mods = mods.AllWhere(x => x.Id > 0 && IsEnabled(x, playset) != value);
 
 		if (!mods.Any())
 		{
@@ -249,7 +247,7 @@ internal class ModsUtil : IModUtil
 
 		SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), value);
 
-		mods = mods.AllWhere(x => x.Id > 0 && IsEnabled(x, playset) != value);
+		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) && IsEnabled(x, playset) != value);
 
 		if (!mods.Any())
 		{
@@ -260,14 +258,14 @@ internal class ModsUtil : IModUtil
 
 		_notifier.OnRefreshUI(true);
 
-		await _workshopService.WaitUntilReady();
-
 		if (!modConfig.ContainsKey(playset))
 		{
 			modConfig[playset] = [];
 		}
 
 		var modKeys = mods.ToList(x => (int)x.Id).DistinctList();
+
+		await _workshopService.WaitUntilReady();
 
 		bool result;
 		using (_workshopService.Lock)
