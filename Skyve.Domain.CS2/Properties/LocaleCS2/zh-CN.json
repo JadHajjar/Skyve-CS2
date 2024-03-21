@@ -35,7 +35,7 @@
     "One": "Remove from all your playsets",
     "Plural": "Remove the selected items from all your playsets"
   },
-  "PackageIsRemoved": "'{0}' was removed from PDX Mods",
+  "PackageIsRemoved": "插件 '{0}' 已从 Paradox Mods 移除",
   "PackageIsUnknown": "The information from PDX Mods hasn't loaded for '{0}' yet",
   "PackageIsIncomplete": "The local size of '{0}' ({1}) is different than PDX Mods' {2}",
   "OpenCitiesAppData": "打开 Cities: Skylines || 的 AppData 文件夹",
@@ -54,7 +54,7 @@
   "DropNewPlayset": "Drop or select a playset's file here to import it",
   "FilterIncludedByDefault": "Enable 'Included' filter for local content by default",
   "FilterIncludedByDefault_Tip": "Only shows local content that are included in your active playset by default.",
-  "RunSetupOrRunApp": "You can't run Skyve from this folder. If you've installed it already, run it from your Programs list.\r\n\r\nIf not, click on 'Ok' to run the setup.",
+  "RunSetupOrRunApp": "您不能从此文件夹中运行 Skyve 。如果您已经安装了 Skyve，请从程序列表中运行它。\n\n如果没有，请点击“OK”来运行安装程序。",
   "CantRunAppFromHere": "您不能从这个文件夹中运行 Skyve 。\n\n您可以从程序列表中运行 Skyve 应用，或者从模组的文件夹中运行 Skyve 安装程序。",
   "UpdateAvailable": "有可用更新",
   "UpdateAvailableInfo": "点击此处更新 Skyve",
