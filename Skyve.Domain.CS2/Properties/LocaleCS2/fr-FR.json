@@ -46,7 +46,10 @@
   "ParadoxLoginFailedEmpty": "Votre session a probablement expiré. Essayez de lancer le jeu pour vous reconnecter, ou cliquez ici pour vous connecter via Skyve.",
   "DownloadComplete": "Téléchargement terminé",
   "Downloading": "Téléchargement...",
-  "ModDownloadFailed": "Le téléchargement de \"{0}\" a échoué",
+  "ModsDownloadFailed": {
+    "One": "A mod failed to download",
+    "Plural": "Some mods failed to download"
+  },
   "LoginToParadox": "Se connecter à Paradox",
   "LoginFailed": "La connexion a échoué, vérifiez que votre email et votre mot de passe sont corrects. Ou réessayez plus tard.",
   "RememberMeInfo": "* Vos identifiants seront chiffrés et enregistré sur votre ordinateur.",
@@ -71,11 +74,32 @@
   "InvalidFolderSettings": "Invalid setup detected",
   "InvalidFolderSettingsInfo": "Skyve n'as pas réussi à détecter le dossier des données de Cities: Skyines II.\n\nCliquez ici pour sélectionner le dossier des données manuellement.",
   "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
-  "DefaultLocation": "Emplacement par défaut",
+  "DefaultLocation": "Default User Data Location",
   "JunctionTitle": "Custom Content Location",
   "JunctionDescription": "Change the location where the game stores its content. This includes any mods, assets, and settings.\r\n\r\nSkyve will create a link between your desired location and the default app data folder in this process.",
   "CurrentStatus": "Statut actuel :",
-  "ChangeLocation": "Modifier l'emplacement",
+  "ChangeLocation": "Change Content Location",
   "ResetLocation": "Réinitialiser l'emplacement",
-  "JunctionRestart": "Skyve et Cities: Skylines II vont se fermer pendant ce processus.\n\nSkyve redémarrera automatiquement une fois terminé."
+  "JunctionRestart": "Skyve et Cities: Skylines II vont se fermer pendant ce processus.\n\nSkyve redémarrera automatiquement une fois terminé.",
+  "PlaysetAlreadyImported": "This playset is already present in your list of playsets.",
+  "CouldNotRetrieveMods": "Could not retrieve the mods' data",
+  "NewGameUpdate": "New Cities: Skylines II Update",
+  "NewGameUpdateInfo": "Patch {0} is now available.\r\nBe sure to check your compatibility report before starting your game.",
+  "PdxSyncInfo": "The PDX Synchronization process handles downloading and updating your mods, as well as synchronizing the settings and playsets you have between your local computer and PDX Mods services.",
+  "SyncOngoing": "Sync is currently ongoing",
+  "PdxSync": "PDX Mods Sync",
+  "RunSync": "Start Synchronization",
+  "PDXModsNew": "New on PDX Mods",
+  "PDXModsUpdated": "Recently updated on PDX Mods",
+  "DiskStatus": "Disk Status",
+  "TotalCitiesSize": "Total C:S II User Data Stored",
+  "TotalSavesSize": "Savegames' Size",
+  "TotalSubbedSize": "Subscriptions' Size",
+  "TotalOtherSize": "Other Files' Size",
+  "FreeSpace": "{0} free",
+  "UsedOutOfSpace": "out of the {0} on drive {1}",
+  "LowSpaceCreateJunction": {
+    "Zero": "You're running out of disk space, you need to clear up some storage or get an additional hard disk.",
+    "One": "You're running out of disk space, go to the options to change the location where the game's content is saved."
+  }
 }
