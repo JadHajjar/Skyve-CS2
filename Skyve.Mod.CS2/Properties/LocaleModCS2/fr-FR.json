@@ -1,0 +1,6 @@
+{
+  "Options.SECTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod]": "Skyve",
+  "Options.GROUP[Skyve Mod.Skyve.Mod.CS2.SkyveMod.GAMEPLAY_GROUP]": "Installation",
+  "Options.OPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "Installer Skyve",
+  "Options.OPTION_DESCRIPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "Démarre le processus d'installation de Skyve pour installer Skyve sur votre ordinateur."
+}
