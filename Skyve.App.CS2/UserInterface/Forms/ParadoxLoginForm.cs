@@ -48,7 +48,7 @@ public partial class ParadoxLoginForm : SlickForm
 	private void TB_Password_IconClicked(object sender, EventArgs e)
 	{
 		TB_Password.Password = !TB_Password.Password;
-		TB_Password.ImageName = TB_Password.Password ? "I_PasswordShow" : "I_PasswordHide";
+		TB_Password.ImageName = TB_Password.Password ? "PasswordShow" : "PasswordHide";
 	}
 
 	private void I_Close_Click(object sender, EventArgs e)

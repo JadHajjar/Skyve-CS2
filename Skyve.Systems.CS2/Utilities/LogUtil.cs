@@ -33,7 +33,7 @@ internal class LogUtil : ILogUtil
 
 		try
 		{
-			foreach (var item in Directory.GetFiles(CrossIO.Combine(_locationManager.SkyveSettingsPath, "Support Logs")))
+			foreach (var item in Directory.GetFiles(CrossIO.Combine(_locationManager.SkyveDataPath, ".SupportLogs")))
 			{
 				if (DateTime.Now - File.GetLastWriteTime(item) > TimeSpan.FromDays(15))
 				{
@@ -70,9 +70,9 @@ internal class LogUtil : ILogUtil
 	{
 		using var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Create, true);
 
-		AddMainFilesToZip(zipArchive, out var mainLogDate);
+		AddMainFilesToZip(zipArchive, out var mainLogDate, out var logTrace);
 
-		foreach (var filePath in GetFilesForZip(mainLogDate))
+		foreach (var filePath in GetLogFilesForZip(mainLogDate))
 		{
 			if (CrossIO.FileExists(filePath))
 			{
@@ -80,16 +80,22 @@ internal class LogUtil : ILogUtil
 
 				CrossIO.CopyFile(filePath, tempFile, true);
 
+				logTrace.AddRange(ExtractTrace(filePath, tempFile));
+
 				try
 				{
-					zipArchive.CreateEntryFromFile(tempFile, $"Other Files\\{Path.GetFileName(filePath)}");
+					zipArchive.CreateEntryFromFile(tempFile, $"Logs\\{Path.GetFileName(filePath)}");
 				}
 				catch { }
+
+				CrossIO.DeleteFile(tempFile);
 			}
 		}
+
+		AddErrors(zipArchive, logTrace);
 	}
 
-	private IEnumerable<string> GetFilesForZip(DateTime mainLogDate)
+	private IEnumerable<string> GetLogFilesForZip(DateTime mainLogDate)
 	{
 		yield return GetLastCrashLog(mainLogDate);
 
@@ -102,14 +108,14 @@ internal class LogUtil : ILogUtil
 
 		foreach (var item in logFiles)
 		{
-			if (Math.Abs(mainLogDate.Ticks - item.LastWriteTime.Ticks) < TimeSpan.FromHours(1).Ticks)
+			if (Math.Abs(mainLogDate.Ticks - item.LastWriteTime.Ticks) < TimeSpan.FromDays(1).Ticks)
 			{
 				yield return item.FullName;
 			}
 		}
 	}
 
-	private void AddMainFilesToZip(ZipArchive zipArchive, out DateTime mainLogDate)
+	private void AddMainFilesToZip(ZipArchive zipArchive, out DateTime mainLogDate, out List<ILogTrace> logTrace)
 	{
 		if (CrossIO.FileExists(GameLogFile))
 		{
@@ -117,15 +123,13 @@ internal class LogUtil : ILogUtil
 			CrossIO.CopyFile(GameLogFile, tempLogFile, true);
 			zipArchive.CreateEntryFromFile(tempLogFile, "log.txt");
 
-			var logTrace = ExtractTrace(GameLogFile, tempLogFile);
-
-			AddErrors(zipArchive, logTrace);
-
+			logTrace = ExtractTrace(GameLogFile, tempLogFile);
 			mainLogDate = File.GetLastWriteTime(GameLogFile);
 			CrossIO.DeleteFile(tempLogFile, true);
 		}
 		else
 		{
+			logTrace = [];
 			mainLogDate = DateTime.Now;
 		}
 
@@ -182,6 +186,8 @@ internal class LogUtil : ILogUtil
 
 	private static void AddErrors(ZipArchive zipArchive, List<ILogTrace> logTrace)
 	{
+		logTrace = logTrace.AllWhere(x => x.Type is not "INFO" and not "DEBUG");
+
 		if (logTrace.Count == 0)
 		{
 			return;
@@ -189,7 +195,7 @@ internal class LogUtil : ILogUtil
 
 		var errorsEntry = zipArchive.CreateEntry("log_errors.txt");
 		using var writer = new StreamWriter(errorsEntry.Open());
-		var errors = logTrace.Select(e => e.ToString()).ListStrings("\r\n*********************************************\r\n");
+		var errors = logTrace.ListStrings(e => e.ToString() + "\r\n\r\n");
 
 		writer.Write(errors);
 	}
@@ -330,7 +336,7 @@ internal class LogUtil : ILogUtil
 			mainLogDate = DateTime.Now;
 		}
 
-		foreach (var filePath in GetFilesForZip(mainLogDate))
+		foreach (var filePath in GetLogFilesForZip(mainLogDate))
 		{
 			if (CrossIO.FileExists(filePath))
 			{

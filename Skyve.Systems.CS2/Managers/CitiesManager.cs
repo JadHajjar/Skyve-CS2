@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 
 using System;
@@ -32,7 +33,7 @@ internal class CitiesManager : ICitiesManager
 
 	public string GameVersion { get; }
 
-	public CitiesManager(ILogger logger, ILocationService locationManager, ISettings settings, IIOUtil iOUtil, IServiceProvider serviceProvider)
+	public CitiesManager(ILogger logger, ILocationService locationManager, ISettings settings, IIOUtil iOUtil, IServiceProvider serviceProvider, INotificationsService notificationsService)
 	{
 		_logger = logger;
 		_locationManager = locationManager;
@@ -54,6 +55,11 @@ internal class CitiesManager : ICitiesManager
 			try
 			{
 				GameVersion = (JsonConvert.DeserializeObject(File.ReadAllText(launcherSettings)) as JObject)?.Value<string>("version") ?? string.Empty;
+
+				if (File.GetLastWriteTime(launcherSettings) > DateTime.Now.AddDays(-7))
+				{
+					notificationsService.SendNotification(new GamePatchNotification(File.GetLastWriteTime(launcherSettings), GameVersion));
+				}
 			}
 			catch
 			{

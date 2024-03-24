@@ -22,7 +22,6 @@ internal class WorkshopEventsManager
 	private readonly WorkshopService _workshopService;
 	private readonly INotificationsService _notificationsService;
 	private readonly ISubscriptionsManager _subscriptionsManager;
-	private readonly IPackageManager _packageManager;
 
 	internal WorkshopEventsManager(WorkshopService workshopService, IServiceProvider serviceProvider)
 	{
@@ -30,22 +29,27 @@ internal class WorkshopEventsManager
 
 		_notificationsService = serviceProvider.GetService<INotificationsService>()!;
 		_subscriptionsManager = serviceProvider.GetService<ISubscriptionsManager>()!;
-		_packageManager = serviceProvider.GetService<IPackageManager>()!;
 	}
 
 	internal void RegisterModsCallbacks(IContext context)
 	{
 		context.Events.Subscribe<IModDownloadStarted>(OnDownloadStarted);
 		context.Events.Subscribe<IModDownloadCompleted>(OnDownloadComplete);
-		context.Events.Subscribe<IModUnsubscribed>(OnModUnsubscribe);
 		context.Events.Subscribe<ITransferStatusUpdated>(OnTransferUpdated);
 		context.Events.Subscribe<IInstallProgressEvent>(OnInstallProgress);
 		context.Events.Subscribe<IModDownloadFailed>(OnModDownloadFailed);
+		//context.Events.Subscribe<IModUnsubscribed>(OnModUnsubscribe);
 	}
 
 	private void OnModDownloadFailed(IModDownloadFailed failed)
 	{
-		_notificationsService.SendNotification(new PdxModDownloadFailed(failed.ModId));
+		var notification = _notificationsService.GetNotifications<PdxModDownloadFailed>().FirstOrDefault() ?? new PdxModDownloadFailed();
+
+		notification.Time = DateTime.Now;
+		notification.Mods.Add((ulong)failed.ModId);
+
+		_notificationsService.RemoveNotificationsOfType<PdxModDownloadFailed>();
+		_notificationsService.SendNotification(notification);
 	}
 
 	private void OnInstallProgress(IInstallProgressEvent @event)
@@ -66,17 +70,6 @@ internal class WorkshopEventsManager
 			ProcessedBytes = updated.TransferStatus.ProcessedBytes,
 			Size = updated.TransferStatus.Size
 		});
-	}
-
-	private void OnModUnsubscribe(IModUnsubscribed unsubscribed)
-	{
-		//_subscriptionsManager.OnModUnsubscribed(unsubscribed.ManagedModId);
-
-		var oldPackage = _packageManager.GetPackageById(new GenericPackageIdentity((ulong)unsubscribed.ManagedModId));
-		if (oldPackage is not null)
-		{
-			_packageManager.RemovePackage(oldPackage);
-		}
 	}
 
 	private void OnDownloadComplete(IModDownloadCompleted completed)

@@ -19,7 +19,7 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject
 	public string? Version { get; }
 	public IAsset[] Assets { get; set; }
 	public IThumbnailObject[] Images { get; set; }
-	public string Folder { get; }
+	public string Folder { get; set; }
 	public string FilePath { get; }
 	public string? SuggestedGameVersion { get; }
 

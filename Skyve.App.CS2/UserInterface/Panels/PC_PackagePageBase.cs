@@ -20,6 +20,7 @@ public partial class PC_PackagePageBase : PanelContent
 	private readonly IPackageUtil _packageUtil;
 	private readonly ISettings _settings;
 	private TagControl? addTagControl;
+	private bool refreshPending;
 
 	public IPackageIdentity Package { get; private set; }
 
@@ -46,14 +47,38 @@ public partial class PC_PackagePageBase : PanelContent
 		if (autoRefresh)
 		{
 			_notifier.WorkshopInfoUpdated += Notifier_WorkshopInfoUpdated;
-			_notifier.PackageInclusionUpdated += Notifier_WorkshopInfoUpdated;
+			_notifier.PackageInclusionUpdated += Notifier_PackageInclusionUpdated;
 			_notifier.PackageInformationUpdated += Notifier_WorkshopInfoUpdated;
 		}
 	}
 
+	private void Notifier_PackageInclusionUpdated()
+	{
+		B_Incl.Invalidate();
+	}
+
 	private void Notifier_WorkshopInfoUpdated()
 	{
-		this.TryInvoke(() => SetPackage(Package));
+		if (Form.CurrentPanel == this)
+		{
+			this.TryInvoke(() => SetPackage(Package));
+		}
+		else
+		{
+			refreshPending = true;
+		}
+	}
+
+	protected override void OnShown()
+	{
+		base.OnShown();
+
+        if (refreshPending)
+        {
+			refreshPending = false;
+
+			this.TryInvoke(() => SetPackage(Package));
+		}
 	}
 
 	protected virtual void SetPackage(IPackageIdentity package)
@@ -123,6 +148,10 @@ public partial class PC_PackagePageBase : PanelContent
 					}));
 					P_Requirements.ResumeDrawing();
 				}
+				else
+				{
+					TLP_ModRequirements.Invalidate(true);
+				}
 
 				TLP_ModRequirements.Visible = true;
 			}
@@ -173,7 +202,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 		//if (Package.LocalPackage is not null)
 		{
-			addTagControl = new TagControl { ImageName = "I_Add", ColorStyle = ColorStyle.Green };
+			addTagControl = new TagControl { ImageName = "Add", ColorStyle = ColorStyle.Green };
 			addTagControl.MouseClick += AddTagControl_MouseClick;
 			FLP_Package_Tags.Controls.Add(addTagControl);
 		}
@@ -211,8 +240,8 @@ public partial class PC_PackagePageBase : PanelContent
 		PB_Icon.Size = UI.Scale(new Size(72, 72), UI.FontScale);
 		I_More.Size = UI.Scale(new Size(20, 28), UI.FontScale);
 		TLP_Side.Padding = UI.Scale(new Padding(8, 0, 0, 0), UI.FontScale);
-		TLP_TopInfo.Margin = B_Incl.Margin = slickSpacer1.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		slickSpacer1.Height = (int)UI.FontScale;
+		TLP_TopInfo.Margin = B_Incl.Margin = base_slickSpacer.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		base_slickSpacer.Height = (int)UI.FontScale;
 		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding =
 		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		L_Info.Font = L_Requirements.Font = L_Tags.Font = L_Links.Font = UI.Font(7F, FontStyle.Bold);
@@ -256,13 +285,13 @@ public partial class PC_PackagePageBase : PanelContent
 
 		var stripItems = new SlickStripItem?[]
 		{
-			  anyDisabled ? new (isSelected ? Locale.EnableAllSelected : isFiltered ? Locale.EnableAllFiltered : Locale.EnableAll, "I_Ok", async () => await EnableAll(items)) : null
-			, anyEnabled ? new (isSelected ? Locale.DisableAllSelected : isFiltered ? Locale.DisableAllFiltered : Locale.DisableAll, "I_Enabled",  async () => await DisableAll(items)) : null
+			  anyDisabled ? new (isSelected ? Locale.EnableAllSelected : isFiltered ? Locale.EnableAllFiltered : Locale.EnableAll, "Ok", async () => await EnableAll(items)) : null
+			, anyEnabled ? new (isSelected ? Locale.DisableAllSelected : isFiltered ? Locale.DisableAllFiltered : Locale.DisableAll, "Enabled",  async () => await DisableAll(items)) : null
 			, new ()
-			, anyExcluded ? new (isSelected ? Locale.IncludeAllSelected : isFiltered ? Locale.IncludeAllFiltered : Locale.IncludeAll, "I_Add",  async() => await IncludeAll(items)) : null
-			, anyIncluded ? new (isSelected ? Locale.ExcludeAllSelected : isFiltered ? Locale.ExcludeAllFiltered : Locale.ExcludeAll, "I_X",  async() => await ExcludeAll(items)) : null
-			, anyDisabled ? new (isSelected ? Locale.ExcludeAllDisabledSelected : isFiltered ? Locale.ExcludeAllDisabledFiltered : Locale.ExcludeAllDisabled, "I_Cancel",  async() => await ExcludeAllDisabled(items)) : null
-			, new (isSelected ? Locale.CopyAllIdsSelected : isFiltered ? Locale.CopyAllIdsFiltered : Locale.CopyAllIds, "I_Copy", () => Clipboard.SetText(items.ListStrings(x => x.IsLocal() ? $"Local: {x.Name}" : $"{x.Id}: {x.Name}", CrossIO.NewLine)))
+			, anyExcluded ? new (isSelected ? Locale.IncludeAllSelected : isFiltered ? Locale.IncludeAllFiltered : Locale.IncludeAll, "Add",  async() => await IncludeAll(items)) : null
+			, anyIncluded ? new (isSelected ? Locale.ExcludeAllSelected : isFiltered ? Locale.ExcludeAllFiltered : Locale.ExcludeAll, "X",  async() => await ExcludeAll(items)) : null
+			, anyDisabled ? new (isSelected ? Locale.ExcludeAllDisabledSelected : isFiltered ? Locale.ExcludeAllDisabledFiltered : Locale.ExcludeAllDisabled, "Cancel",  async() => await ExcludeAllDisabled(items)) : null
+			, new (isSelected ? Locale.CopyAllIdsSelected : isFiltered ? Locale.CopyAllIdsFiltered : Locale.CopyAllIds, "Copy", () => Clipboard.SetText(items.ListStrings(x => x.IsLocal() ? $"Local: {x.Name}" : $"{x.Id}: {x.Name}", CrossIO.NewLine)))
 		};
 
 		this.TryBeginInvoke(() => SlickToolStrip.Show(App.Program.MainForm, B_BulkRequirements.PointToScreen(new Point(0, B_BulkRequirements.Height + 5)), stripItems));

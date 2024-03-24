@@ -43,7 +43,6 @@ partial class PackageChangelogControl
 			this.slickWebBrowser1.Name = "slickWebBrowser1";
 			this.slickWebBrowser1.Size = new System.Drawing.Size(702, 644);
 			this.slickWebBrowser1.TabIndex = 0;
-			this.slickWebBrowser1.WebBrowserShortcutsEnabled = false;
 			// 
 			// roundedPanel1
 			// 

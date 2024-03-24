@@ -14,6 +14,7 @@ public class PackageData
 	public string? AuthorId { get; set; }
 	public string? Note { get; set; }
 	public DateTime ReviewDate { get; set; }
+	public string? ReviewedGameVersion { get; set; }
 	public PackageStability Stability { get; set; }
 	public PackageUsage Usage { get; set; } = (PackageUsage)(-1);
 	public PackageType Type { get; set; }

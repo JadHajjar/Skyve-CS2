@@ -34,9 +34,14 @@ internal class D_PdxUser : IDashboardItem
 		return Draw;
 	}
 
+	protected override void DrawHeader(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
+	{
+		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.ParadoxAccount, "Paradox");
+	}
+
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, e.ClipRectangle, LocaleCS2.ParadoxAccount, "I_Paradox", out var fore, ref preferredHeight);
+		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.ParadoxAccount, "Paradox");
 
 		var loading = Loading;
 		Loading = string.IsNullOrEmpty(_userService.User.Id?.ToString()) && _workshopService.IsLoginPending;
@@ -54,7 +59,7 @@ internal class D_PdxUser : IDashboardItem
 
 			e.Graphics.DrawStringItem(LocaleCS2.LoggingIn
 				, Font
-				, fore
+				, FormDesign.Design.ForeColor
 				, textRect.Pad((int)(22 * UI.FontScale), 0, 0, 0)
 				, ref preferredHeight
 				, applyDrawing);
@@ -69,7 +74,7 @@ internal class D_PdxUser : IDashboardItem
 
 		e.Graphics.DrawStringItem(string.IsNullOrWhiteSpace(_userService.User.Name) ? LocaleCS2.NotLoggedInCheckNotification : Locale.LoggedInUser.Format(_userService.User.Name)
 			, Font
-			, fore
+			, FormDesign.Design.ForeColor
 			, textRect.Pad((int)(16 * UI.FontScale), 0, 0, 0)
 			, ref preferredHeight
 			, applyDrawing);
@@ -87,12 +92,14 @@ internal class D_PdxUser : IDashboardItem
 
 			DrawButton(e, applyDrawing, ref preferredHeight, notification.OnClick, new ButtonDrawArgs
 			{
-				Icon = "I_User",
+				Icon = "User",
 				Font = font,
 				Size = new Size(0, (int)(20 * UI.FontScale)),
 				Text = LocaleCS2.LoginToParadox,
-				Rectangle = e.ClipRectangle
+				Rectangle = e.ClipRectangle.Pad(BorderRadius)
 			});
+
+			preferredHeight += BorderRadius / 2;
 		}
 	}
 }

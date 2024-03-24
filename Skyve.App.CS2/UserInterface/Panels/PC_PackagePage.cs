@@ -6,6 +6,7 @@ using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Domain.Systems;
 
 using System.Drawing;
 using System.Text.RegularExpressions;
@@ -50,7 +51,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 			LC_Items = new ItemListControl.Simple(SkyvePage.SinglePackage) { IsPackagePage = true };
 		}
 
-		LC_References = new ContentList(SkyvePage.SinglePackage, true, GetItems, GetItemText, GetCountText);
+		LC_References = new ContentList(SkyvePage.SinglePackage, true, GetItems, GetItemText);
 		LC_References.TB_Search.Placeholder = "SearchGenericPackages";
 
 		T_References.LinkedControl = LC_References;
@@ -173,43 +174,6 @@ public partial class PC_PackagePage : PC_PackagePageBase
 	protected LocaleHelper.Translation GetItemText()
 	{
 		return Locale.Package;
-	}
-
-	protected string GetCountText()
-	{
-		int packagesIncluded = 0, modsIncluded = 0, modsEnabled = 0;
-
-		foreach (var item in LC_References!.Items)
-		{
-			if (item?.IsIncluded() == true)
-			{
-				packagesIncluded++;
-
-				if (item.GetPackage()?.IsCodeMod == true)
-				{
-					modsIncluded++;
-
-					if (item.IsEnabled())
-					{
-						modsEnabled++;
-					}
-				}
-			}
-		}
-
-		var total = LC_References!.ItemCount;
-
-		if (!_settings.UserSettings.AdvancedIncludeEnable)
-		{
-			return string.Format(Locale.PackageIncludedTotal, packagesIncluded, total);
-		}
-
-		if (modsIncluded == modsEnabled)
-		{
-			return string.Format(Locale.PackageIncludedAndEnabledTotal, packagesIncluded, total);
-		}
-
-		return string.Format(Locale.PackageIncludedEnabledTotal, packagesIncluded, modsIncluded, modsEnabled, total);
 	}
 
 	private void SlickWebBrowser_Navigating(object sender, WebBrowserNavigatingEventArgs e)

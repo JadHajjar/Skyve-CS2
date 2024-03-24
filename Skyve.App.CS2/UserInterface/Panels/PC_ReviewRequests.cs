@@ -29,7 +29,7 @@ public partial class PC_ReviewRequests : PanelContent
 
 		TB_Search.Placeholder = $"{LocaleSlickUI.Search}..";
 
-		Text = LocaleCR.ReviewRequests.Format($"({reviewRequests?.Length})");
+		Text = LocaleCR.ReviewRequests.Format(string.Empty);
 
 		SetPackage(packageCrList.SortedItems.FirstOrDefault());
 	}
@@ -140,7 +140,7 @@ public partial class PC_ReviewRequests : PanelContent
 			return;
 		}
 
-		e.DoNotDraw = !(TB_Search.Text.SearchCheck(package.ToString())
+		e.DoNotDraw = !(TB_Search.Text.SearchCheck(package.Name)
 			|| TB_Search.Text.SearchCheck(package.Author?.Name)
 			|| package.Id.ToString().IndexOf(TB_Search.Text, StringComparison.OrdinalIgnoreCase) != -1);
 	}
@@ -152,7 +152,7 @@ public partial class PC_ReviewRequests : PanelContent
 
 	private void TB_Search_TextChanged(object sender, EventArgs e)
 	{
-		TB_Search.ImageName = string.IsNullOrWhiteSpace(TB_Search.Text) ? "I_Search" : "I_ClearSearch";
+		TB_Search.ImageName = string.IsNullOrWhiteSpace(TB_Search.Text) ? "Search" : "ClearSearch";
 
 		packageCrList.FilterChanged();
 	}
@@ -205,5 +205,16 @@ public partial class PC_ReviewRequests : PanelContent
 		{
 			PushBack();
 		}
+	}
+
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
+		if (keyData == (Keys.Control | Keys.F))
+		{
+			TB_Search.Focus();
+			return true;
+		}
+
+		return base.ProcessCmdKey(ref msg, keyData);
 	}
 }

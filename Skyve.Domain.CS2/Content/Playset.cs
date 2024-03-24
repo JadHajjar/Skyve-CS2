@@ -36,11 +36,32 @@ public class Playset : IPlayset
 	public string? ThumbnailUrl { get; }
 	public bool Temporary { get; }
 
+	public override bool Equals(object? obj)
+	{
+		return obj is IPlayset playset &&
+			   Id == playset.Id;
+	}
+
+	public override int GetHashCode()
+	{
+		return 2108858624 + Id.GetHashCode();
+	}
+
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
 		thumbnail = DomainUtils.GetThumbnail(imageService, null, thumbnailUrl, (ulong)Id, "Playset");
 
 		return true;
+	}
+
+	public static bool operator ==(Playset? left, Playset? right)
+	{
+		return left?.Id == right?.Id;
+	}
+
+	public static bool operator !=(Playset? left, Playset? right)
+	{
+		return !(left?.Id == right?.Id);
 	}
 }

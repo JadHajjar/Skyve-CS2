@@ -37,38 +37,38 @@ internal class RightClickService : IRightClickService
 
 		return
 		[
-			new(Locale.ViewOnWorkshop, "I_Link", () => PlatformUtil.OpenUrl(list[0].Url), visible: list.Count == 1 && !string.IsNullOrWhiteSpace(list[0].Url)),
-			new(Locale.OpenPackageFolder.FormatPlural(list.Count), "I_Folder", () => list.Select(x => x.GetLocalPackageIdentity()?.FilePath).WhereNotEmpty().Foreach(PlatformUtil.OpenFolder), visible: anyInstalled),
-			new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "I_PC", () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => ServiceCenter.Get<IPackageManager>().MoveToLocalFolder(x!.Package)), visible: settings.UserSettings.ComplexListUI && anyWorkshopAndInstalled),
-			new((anyLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "I_Disposable", () => AskThenDelete(list), visible: settings.UserSettings.ComplexListUI && anyLocal),
+			new(Locale.ViewOnWorkshop, "Link", () => PlatformUtil.OpenUrl(list[0].Url), visible: list.Count == 1 && !string.IsNullOrWhiteSpace(list[0].Url)),
+			new(Locale.OpenPackageFolder.FormatPlural(list.Count), "Folder", () => list.Select(x => x.GetLocalPackageIdentity()?.FilePath).WhereNotEmpty().Foreach(PlatformUtil.OpenFolder), visible: anyInstalled),
+			new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "PC", () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => ServiceCenter.Get<IPackageManager>().MoveToLocalFolder(x!.Package)), visible: settings.UserSettings.ComplexListUI && anyWorkshopAndInstalled),
+			new((anyLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "Disposable", () => AskThenDelete(list), visible: settings.UserSettings.ComplexListUI && anyLocal),
 
 			SlickStripItem.Empty,
 
-			new(Locale.Manage, "I_Wrench", disabled: true)
+			new(Locale.Manage, "Wrench", disabled: true)
 			{
 				SubItems = [
-					new(list.Count == 1 ? Locale.EnableItem : Locale.EnableAllSelected, "I_Ok", async () => await packageUtil.SetEnabled(items, true), visible: anyDisabled),
-					new(list.Count == 1 ? Locale.DisableItem : Locale.DisableAllSelected, "I_Enabled", async () => await packageUtil.SetEnabled(items, false), visible: anyEnabled && anyNotRequired),
-					new(list.Count == 1 ? Locale.IncludeItem : Locale.IncludeAllSelected, "I_Add", async () => await packageUtil.SetIncluded(items, true), visible: anyExcluded),
-					new(list.Count == 1 ? Locale.ExcludeItem : Locale.ExcludeAllSelected, "I_X", async () => await packageUtil.SetIncluded(items, false), visible: anyIncluded && anyNotRequired),
+					new(list.Count == 1 ? Locale.EnableItem : Locale.EnableAllSelected, "Ok", async () => await packageUtil.SetEnabled(items, true), visible: anyDisabled),
+					new(list.Count == 1 ? Locale.DisableItem : Locale.DisableAllSelected, "Enabled", async () => await packageUtil.SetEnabled(items, false), visible: anyEnabled && anyNotRequired),
+					new(list.Count == 1 ? Locale.IncludeItem : Locale.IncludeAllSelected, "Add", async () => await packageUtil.SetIncluded(items, true), visible: anyExcluded),
+					new(list.Count == 1 ? Locale.ExcludeItem : Locale.ExcludeAllSelected, "X", async () => await packageUtil.SetIncluded(items, false), visible: anyIncluded && anyNotRequired),
 					SlickStripItem.Empty,
-					new(Locale.EditTags.FormatPlural(list.Count), "I_Tag", () => EditTags(list)),
-					new(Locale.EditCompatibility.FormatPlural(list.Count), "I_CompatibilityReport", () => { App.Program.MainForm.PushPanel(null, new PC_CompatibilityManagement(items)); }, visible: (userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author))) && anyWorkshop),
+					new(Locale.EditTags.FormatPlural(list.Count), "Tag", () => EditTags(list)),
+					new(Locale.EditCompatibility.FormatPlural(list.Count), "CompatibilityReport", () => { App.Program.MainForm.PushPanel(new PC_CompatibilityManagement(items)); }, visible: (userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author))) && anyWorkshop),
 				]
 			},
 
-			new(Locale.OtherPlaysets, "I_Playsets", disabled: true, visible: anyWorkshop)
+			new(Locale.OtherPlaysets, "Playsets", disabled: true, visible: anyWorkshop)
 			{
 				SubItems = [
-					new(Locale.EnableThisItemInAllPlaysets.FormatPlural(list.Count), "I_Ok", async () => await ServiceCenter.Get<IPlaysetManager>().SetEnabledForAll(list, true)),
-					new(Locale.DisableThisItemInAllPlaysets.FormatPlural(list.Count), "I_Enabled", async () => await ServiceCenter.Get<IPlaysetManager>().SetEnabledForAll(list, false)),
-					new(Locale.IncludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_Add", async () => await ServiceCenter.Get<IPlaysetManager>().SetIncludedForAll(list, true)),
-					new(Locale.ExcludeThisItemInAllPlaysets.FormatPlural(list.Count), "I_X", async () => await ServiceCenter.Get<IPlaysetManager>().SetIncludedForAll(list, false)),
+					new(Locale.EnableThisItemInAllPlaysets.FormatPlural(list.Count), "Ok", async () => await ServiceCenter.Get<IPlaysetManager>().SetEnabledForAll(list, true)),
+					new(Locale.DisableThisItemInAllPlaysets.FormatPlural(list.Count), "Enabled", async () => await ServiceCenter.Get<IPlaysetManager>().SetEnabledForAll(list, false)),
+					new(Locale.IncludeThisItemInAllPlaysets.FormatPlural(list.Count), "Add", async () => await ServiceCenter.Get<IPlaysetManager>().SetIncludedForAll(list, true)),
+					new(Locale.ExcludeThisItemInAllPlaysets.FormatPlural(list.Count), "X", async () => await ServiceCenter.Get<IPlaysetManager>().SetIncludedForAll(list, false)),
 				]
 			},
 
-			new(Locale.CopyPackageName.FormatPlural(list.Count), "I_Copy", () => Clipboard.SetText(list.ListStrings(CrossIO.NewLine)), visible: !anyWorkshop),
-			new(LocaleSlickUI.Copy, "I_Copy", disabled: true, visible: anyWorkshop)
+			new(Locale.CopyPackageName.FormatPlural(list.Count), "Copy", () => Clipboard.SetText(list.ListStrings(CrossIO.NewLine)), visible: !anyWorkshop),
+			new(LocaleSlickUI.Copy, "Copy", disabled: true, visible: anyWorkshop)
 			{
 				SubItems = [
 					new(Locale.CopyPackageName.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(CrossIO.NewLine))),
@@ -124,30 +124,29 @@ internal class RightClickService : IRightClickService
 		var customPlayset = playset.GetCustomPlayset();
 
 		return [
-			new(Locale.ViewThisPlaysetsPackages, "I_ViewFile", () => OpenPlaysetPage(playset)),
-			new(Locale.ChangePlaysetSettings, "I_PlaysetSettings", action: () => OpenPlaysetSettings(playset), visible: isLocal),
-			new(Locale.ActivatePlayset, "I_Check", action: () => ActivatePlayset(playset), visible: isLocal && !isCurrent),
+			new(Locale.ActivatePlayset, "Check", action: () => ActivatePlayset(playset), visible: isLocal && !isCurrent),
+			new(Locale.OpenPlaysetPage, "PlaysetSettings", () => OpenPlaysetPage(playset), visible: isLocal),
 			SlickStripItem.Empty,
-			new(Locale.BulkActions, "I_Actions", visible: isLocal && !isCurrent, disabled: true)
+			new(Locale.BulkActions, "Actions", visible: isLocal && !isCurrent, disabled: true)
 			{
 				SubItems = [
-					new(Locale.PlaysetMerge, "I_Merge", action: () => MergePlayset(playset)),
-					new(Locale.PlaysetExclude, "I_Exclude", action: () => ExcludePlayset(playset)),
+					new(Locale.PlaysetMerge, "Merge", action: () => MergePlayset(playset)),
+					new(Locale.PlaysetExclude, "Exclude", action: () => ExcludePlayset(playset)),
 				]
 			},
-			new(Locale.Manage, "I_Wrench", visible: isLocal, disabled: true)
+			new(Locale.Manage, "Wrench", visible: isLocal, disabled: true)
 			{
 				SubItems = [
-					new(customPlayset.IsFavorite ? Locale.UnFavoriteThisPlayset : Locale.FavoriteThisPlayset, "I_Star", () => TogglePlaysetFavorite(playset)),
-					new(Locale.ChangePlaysetColor, "I_Paint", () => ChangeColor(playset)),
-					new(Locale.EditPlaysetThumbnail, "I_EditImage", () => ChangeThumbnail(playset)),
+					new(customPlayset.IsFavorite ? Locale.UnFavoriteThisPlayset : Locale.FavoriteThisPlayset, "Star", () => TogglePlaysetFavorite(playset)),
+					new(Locale.ChangePlaysetColor, "Paint", () => ChangeColor(playset)),
+					new(Locale.EditPlaysetThumbnail, "EditImage", () => ChangeThumbnail(playset)),
 					SlickStripItem.Empty,
-					new(Locale.ResetPlaysetColor, "I_Select", () => ResetColor(playset), visible: customPlayset.Color.HasValue),
-					new(Locale.ResetPlaysetImage, "I_RemoveImage", () => ResetThumbnail(playset), visible: customPlayset.IsCustomThumbnailSet),
+					new(Locale.ResetPlaysetColor, "Select", () => ResetColor(playset), visible: customPlayset.Color.HasValue),
+					new(Locale.ResetPlaysetImage, "RemoveImage", () => ResetThumbnail(playset), visible: customPlayset.IsCustomThumbnailSet),
 				]
 			},
 			SlickStripItem.Empty,
-			new(Locale.PlaysetDelete, "I_Disposable", () => DeletePlayset(playset))
+			new(Locale.PlaysetDelete, "Trash", () => DeletePlayset(playset))
 		];
 	}
 
@@ -246,18 +245,6 @@ internal class RightClickService : IRightClickService
 	}
 
 	private void OpenPlaysetPage(IPlayset playset)
-	{
-		try
-		{
-			App.Program.MainForm.PushPanel(new PC_PlaysetContents(playset));
-		}
-		catch (Exception ex)
-		{
-			App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDownloadPlayset, form: App.Program.MainForm));
-		}
-	}
-
-	private void OpenPlaysetSettings(IPlayset playset)
 	{
 		try
 		{

@@ -6,23 +6,37 @@ using System.IO;
 
 namespace Skyve.Mod.CS2
 {
-internal partial class InstallSkyveUISystem : UISystemBase
-{
-	private ValueBinding<bool> isInstalledBinding;
-
-	protected override void OnCreate()
+	internal partial class InstallSkyveUISystem : UISystemBase
 	{
-		base.OnCreate();
+		private ValueBinding<bool> isInstalledBinding;
+		private bool installComplete;
 
-		AddBinding(isInstalledBinding = new ValueBinding<bool>("SkyveMod", "IsInstalled", File.Exists(@"C:\Program Files\Skyve CS-II\Skyve.exe")));
-		AddBinding(new TriggerBinding("SkyveMod", "InstallSkyve", Install));
+		protected override void OnCreate()
+		{
+			base.OnCreate();
+
+			AddBinding(isInstalledBinding = new ValueBinding<bool>("SkyveMod", "IsInstalled", File.Exists(@"C:\Program Files\Skyve CS-II\Skyve.exe")));
+			AddBinding(new TriggerBinding("SkyveMod", "InstallSkyve", Install));
+		}
+
+		private void Install()
+		{
+			if (SkyveMod.InstallApp())
+			{
+				installComplete = true;
+			}
+		}
+
+		protected override void OnUpdate()
+		{
+			if (installComplete && File.Exists(@"C:\Program Files\Skyve CS-II\Skyve.exe"))
+			{
+				installComplete = false;
+
+				isInstalledBinding.Update(true);
+			}
+
+			base.OnUpdate();
+		}
 	}
-
-	private void Install()
-	{
-		SkyveMod.InstallApp();
-
-		isInstalledBinding.Update(false);
-	}
-}
 }

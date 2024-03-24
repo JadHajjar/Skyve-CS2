@@ -9,13 +9,19 @@ internal class D_Playsets : IDashboardItem
 {
 	private readonly IPlaysetManager _playsetManager;
 	private readonly INotifier _notifier;
+	private readonly ICitiesManager _citiesManager;
+	private bool isRunning;
+	private bool loadingFromGameLaunch;
 
 	public D_Playsets()
 	{
-		ServiceCenter.Get(out _playsetManager, out _notifier);
+		ServiceCenter.Get(out _playsetManager, out _notifier, out _citiesManager);
 
 		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
 		_notifier.PlaysetUpdated += _notifier_PlaysetUpdated;
+
+		_citiesManager.MonitorTick += _citiesManager_MonitorTick;
+		_citiesManager.LaunchingStatusChanged += _citiesManager_LaunchingStatusChanged;
 
 		Loading = !_notifier.IsPlaysetsLoaded;
 	}
@@ -24,8 +30,30 @@ internal class D_Playsets : IDashboardItem
 	{
 		_notifier.PlaysetChanged -= _notifier_PlaysetChanged;
 		_notifier.PlaysetUpdated -= _notifier_PlaysetUpdated;
+		_citiesManager.MonitorTick -= _citiesManager_MonitorTick;
+		_citiesManager.LaunchingStatusChanged -= _citiesManager_LaunchingStatusChanged;
 
 		base.Dispose(disposing);
+	}
+
+	private void _citiesManager_LaunchingStatusChanged(bool obj)
+	{
+		this.TryInvoke(() =>
+		{
+			Loading = obj;
+			loadingFromGameLaunch = obj;
+			Enabled = !obj;
+		});
+	}
+
+	private void _citiesManager_MonitorTick(bool isAvailable, bool isRunning)
+	{
+		if (this.isRunning != isRunning)
+		{
+			this.isRunning = isRunning;
+
+			OnResizeRequested();
+		}
 	}
 
 	private void _notifier_PlaysetUpdated()
@@ -82,19 +110,33 @@ internal class D_Playsets : IDashboardItem
 		Draw(e, applyDrawing, ref preferredHeight, false);
 	}
 
+	protected override void DrawHeader(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
+	{
+		DrawSection(e, applyDrawing, ref preferredHeight, "Playsets", Locale.Playset.Plural);
+	}
+
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight, bool horizontal)
 	{
-		Color fore;
-		if (Loading)
+		if (Loading && !loadingFromGameLaunch)
 		{
-			DrawLoadingSection(e, applyDrawing, e.ClipRectangle, Locale.Playset.Plural, out fore, ref preferredHeight);
+			DrawLoadingSection(e, applyDrawing, ref preferredHeight, Locale.Playset.Plural);
 		}
 		else
 		{
-			DrawSection(e, applyDrawing, e.ClipRectangle, _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentCustomPlayset?.GetIcon() ?? "I_Playsets", out fore, ref preferredHeight, _playsetManager.CurrentCustomPlayset?.Color ?? FormDesign.Design.MenuColor, _playsetManager.CurrentPlayset is null ? null : Locale.ActivePlayset);
+			DrawSection(e, applyDrawing, ref preferredHeight, _playsetManager.CurrentPlayset?.Name ?? Locale.NoActivePlayset, _playsetManager.CurrentCustomPlayset?.GetIcon() ?? "Playsets", _playsetManager.CurrentPlayset is null ? null : Locale.ActivePlayset);
 		}
 
-		_buttonRightClickActions[_sections[0].rectangle.ClipTo(_sections[0].height)] = () => RightClick(_playsetManager.CurrentPlayset);
+		_buttonRightClickActions[headerRectangle] = () => RightClick(_playsetManager.CurrentPlayset);
+
+		DrawButton(e, applyDrawing, ref preferredHeight, (App.Program.MainForm as MainForm)!.LaunchStopCities, new ButtonDrawArgs
+		{
+			Text = LocaleHelper.GetGlobalText(isRunning ? "StopCities" : "StartCities"),
+			Rectangle = e.ClipRectangle.Pad(Margin),
+			Icon = isRunning ? "Stop" : "CS",
+			Padding = UI.Scale(new Padding(2), UI.FontScale),
+			Enabled = Enabled,
+			Control = this
+		});
 
 		if (_playsetManager.CurrentCustomPlayset != null)
 		{
@@ -104,14 +146,15 @@ internal class D_Playsets : IDashboardItem
 				using var colorBrush = Gradient(backColor, 3.5f);
 				e.Graphics.FillRoundedRectangle(colorBrush, new Rectangle(e.ClipRectangle.X + Margin.Left, preferredHeight, e.ClipRectangle.Width - Margin.Horizontal, Margin.Top), Margin.Top / 2);
 			}
-		}
 
-		preferredHeight += Margin.Vertical;
+			preferredHeight += Margin.Vertical;
+		}
 
 		var favs = _playsetManager.Playsets.AllWhere(x => x.GetCustomPlayset().IsFavorite);
 
 		if (favs.Count == 0)
 		{
+			preferredHeight += Margin.Top / 2;
 			return;
 		}
 
@@ -119,12 +162,12 @@ internal class D_Playsets : IDashboardItem
 
 		using var fontSmall = UI.Font(6.75F);
 
-		e.Graphics.DrawStringItem(Locale.FavoritePlaysets, fontSmall, Color.FromArgb(150, fore), e.ClipRectangle.Pad(Margin).Pad((int)(2 * UI.FontScale), 0, 0, 0), ref preferredHeight, applyDrawing);
+		e.Graphics.DrawStringItem(Locale.FavoritePlaysets, fontSmall, Color.FromArgb(150, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad((int)(2 * UI.FontScale), 0, 0, 0), ref preferredHeight, applyDrawing);
 
 		preferredHeight -= Margin.Top;
 
-		var preferredSize = horizontal ? 200 : 100;
-		var columns = (int)Math.Floor((e.ClipRectangle.Width - Margin.Left) / (100 * UI.FontScale));
+		var preferredSize = horizontal ? 115 : 100;
+		var columns = (int)Math.Max(1, Math.Floor((e.ClipRectangle.Width - Margin.Left) / (preferredSize * UI.FontScale)));
 		var columnWidth = (e.ClipRectangle.Width - Margin.Left) / columns;
 		var height = (horizontal ? 0 : columnWidth) + (int)(35 * UI.FontScale);
 
@@ -184,7 +227,7 @@ internal class D_Playsets : IDashboardItem
 			e.Graphics.FillRoundedRectangle(brush, bannerRect, Margin.Left / 2);
 		}
 
-		if (_playsetManager.CurrentPlayset == playset)
+		if (playset.Equals(_playsetManager.CurrentPlayset))
 		{
 			if (horizontal)
 			{

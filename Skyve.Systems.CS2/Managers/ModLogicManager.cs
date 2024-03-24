@@ -65,11 +65,6 @@ internal class ModLogicManager : IModLogicManager
 
 		var list = _modCollection.GetCollection(Path.GetFileName(mod.FilePath), out var collection);
 
-		if (mod.IsLocal())
-		{
-			return true;
-		}
-
 		if (!(collection?.Required ?? false) || list is null)
 		{
 			return false;

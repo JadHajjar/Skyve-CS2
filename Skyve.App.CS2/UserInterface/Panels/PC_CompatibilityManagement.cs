@@ -2,6 +2,7 @@
 using Skyve.App.UserInterface.CompatibilityReport;
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
+using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
@@ -30,18 +31,20 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	private readonly IWorkshopService _workshopService;
 	private readonly IUserService _userService;
 	private readonly ITagsService _tagsService;
+	private readonly ICitiesManager _cityManager;
 
 	public PC_CompatibilityManagement(IEnumerable<IPackageIdentity> packages) : this(false)
 	{
 		packageCrList.SetItems(packages.Distinct(x => x.Id));
 
-		if (singlePackage = packageCrList.ItemCount == 1)
+		if (singlePackage = packageCrList.FilteredCount == 1)
 		{
 			Padding = new Padding(5, 0, 0, 0);
 			base_P_Side.Visible = false;
+			CB_HideReviewedPackages.Visible = false;
 		}
 
-		SetPackage(packageCrList.SortedItems.FirstOrDefault());
+		SetPackage(packageCrList.SortedAndFilteredItems.FirstOrDefault());
 	}
 
 	public PC_CompatibilityManagement() : this(true)
@@ -50,7 +53,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	public PC_CompatibilityManagement(bool load) : base(new GenericPackageIdentity(), load, false)
 	{
-		ServiceCenter.Get(out _workshopService, out _compatibilityManager, out _userService, out _tagsService, out ISkyveDataManager skyveDataManager);
+		ServiceCenter.Get(out _workshopService, out _compatibilityManager, out _userService, out _tagsService, out _cityManager, out ISkyveDataManager skyveDataManager);
 
 		_skyveDataManager = (SkyveDataManager)skyveDataManager;
 
@@ -114,7 +117,14 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		if (e.Button == MouseButtons.Left)
 		{
-			ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(Package, false);
+			if (ModifierKeys.HasFlag(Keys.Control))
+			{
+				PlatformUtil.OpenUrl(Package.Url);
+			}
+			else
+			{
+				ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(Package, false);
+			}
 		}
 	}
 
@@ -129,7 +139,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		base.UIChanged();
 
 		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding
-			= TLP_Bottom.Padding = P_Tags.Padding = P_Tags.Margin = P_Links.Padding = P_Links.Margin
+			= TLP_Bottom.Padding =  P_Tags.Margin =  P_Links.Margin
 			= DD_DLCs.Margin = DD_PackageType.Margin = DD_Stability.Margin = DD_Usage.Margin
 			= B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer2.Height = (int)(2 * UI.FontScale);
@@ -177,7 +187,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		var canExit = !toBeDisposed
 			|| currentPage <= 0
-			|| currentPage >= packageCrList.ItemCount - 1
+			|| currentPage >= packageCrList.FilteredCount - 1
 			|| ShowPrompt(LocaleCR.ConfirmEndSession, PromptButtons.YesNo, PromptIcons.Question) == DialogResult.Yes;
 
 		if (toBeDisposed && canExit)
@@ -221,7 +231,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			item.Visible = true;
 		}
 
-		SetPackage(packageCrList.SortedItems.FirstOrDefault());
+		SetPackage(packageCrList.SortedAndFilteredItems.FirstOrDefault());
 	}
 
 	protected override async void SetPackage(IPackageIdentity package)
@@ -256,17 +266,17 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		base.SetPackage(package);
 
-		if (packageCrList.ItemCount > 0)
+		if (packageCrList.FilteredCount > 0)
 		{
-			currentPage = packageCrList.SortedItems.IndexOf(package);
+			currentPage = packageCrList.SortedAndFilteredItems.IndexOf(package);
 
-			if (currentPage < 0 || currentPage >= packageCrList.ItemCount)
+			if (currentPage < 0 || currentPage >= packageCrList.FilteredCount)
 			{
 				PushBack();
 				return;
 			}
 
-			L_Page.Text = $"{currentPage + 1} / {packageCrList.ItemCount}";
+			L_Page.Text = $"{currentPage + 1} / {packageCrList.FilteredCount}";
 		}
 		else
 		{
@@ -324,7 +334,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			SetData(postPackage);
 
 			B_Previous.Enabled = currentPage > 0;
-			B_Skip.Enabled = currentPage != packageCrList.ItemCount - 1;
+			B_Skip.Enabled = currentPage != packageCrList.FilteredCount - 1;
 
 			PB_Loading.Loading = false;
 			PB_Loading.Visible = false;
@@ -440,7 +450,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		if (B_Skip.Enabled)
 		{
-			SetPackage(ModifierKeys.HasFlag(Keys.Control) ? packageCrList.SortedItems.LastOrDefault() : packageCrList.SortedItems.Next(Package, true));
+			SetPackage(ModifierKeys.HasFlag(Keys.Control) ? packageCrList.SortedAndFilteredItems.LastOrDefault() : packageCrList.SortedAndFilteredItems.Next(Package, true));
 		}
 	}
 
@@ -448,7 +458,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		if (B_Previous.Enabled)
 		{
-			SetPackage(ModifierKeys.HasFlag(Keys.Control) ? packageCrList.SortedItems.FirstOrDefault() : packageCrList.SortedItems.Previous(Package, true));
+			SetPackage(ModifierKeys.HasFlag(Keys.Control) ? packageCrList.SortedAndFilteredItems.FirstOrDefault() : packageCrList.SortedAndFilteredItems.Previous(Package, true));
 		}
 	}
 
@@ -540,7 +550,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		if (await Apply())
 		{
-			SetPackage(packageCrList.SortedItems.Next(Package));
+			SetPackage(packageCrList.SortedAndFilteredItems.Next(Package));
 		}
 	}
 
@@ -561,6 +571,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		postPackage.FileName = Path.GetFileName(Package.GetLocalPackageIdentity()?.FilePath ?? string.Empty).IfEmpty(postPackage.FileName);
 		postPackage.Name = Package.Name;
 		postPackage.ReviewDate = DateTime.UtcNow;
+		postPackage.ReviewedGameVersion = _cityManager.GameVersion.IfEmpty(postPackage.ReviewedGameVersion);
 		postPackage.AuthorId = Package.GetWorkshopInfo()?.Author?.Id?.ToString();
 		postPackage.IsBlackListedById = CB_BlackListId.Checked;
 		postPackage.IsBlackListedByName = CB_BlackListName.Checked;
@@ -649,20 +660,17 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		if (e.Button == MouseButtons.Right)
 		{
-			SlickToolStrip.Show(Form, packageCrList.PointToClient(e.Location), ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(_workshopService.GetPackage(new GenericPackageIdentity((ulong)sender))!));
+			SlickToolStrip.Show(Form, packageCrList.PointToClient(e.Location), ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems((IPackageIdentity)sender));
 		}
 	}
 
 	private void TB_Search_TextChanged(object sender, EventArgs e)
 	{
-		TB_Search.ImageName = string.IsNullOrWhiteSpace(TB_Search.Text) ? "I_Search" : "I_ClearSearch";
+		TB_Search.ImageName = string.IsNullOrWhiteSpace(TB_Search.Text) ? "Search" : "ClearSearch";
 
 		packageCrList.FilterChanged();
 
-		//if (sender == CB_ShowUpToDate)
-		//{
-		//	SetPackage(0);
-		//}
+		var package = packageCrList.FilteredItems.FirstOrDefault();
 	}
 
 	private void PackageCrList_CanDrawItem(object sender, CanDrawItemEventArgs<IPackageIdentity> e)
@@ -674,18 +682,19 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			return;
 		}
 
-		//if (!CB_ShowUpToDate.Checked)
-		//{
-		//	var cr = package.GetPackageInfo();
+		if (CB_HideReviewedPackages.Checked)
+		{
+			var cr = package.GetPackageInfo();
+			var isUpToDate = cr?.ReviewDate > e.Item.GetWorkshopInfo()?.ServerTime;
 
-		//	if (cr is null || cr.ReviewDate > package.GetWorkshopInfo()?.ServerTime)
-		//	{
-		//		e.DoNotDraw = true;
-		//		return;
-		//	}
-		//}
+			if (isUpToDate)
+			{
+				e.DoNotDraw = true;
+				return;
+			}
+		}
 
-		e.DoNotDraw = !(TB_Search.Text.SearchCheck(package.ToString())
+		e.DoNotDraw = !(TB_Search.Text.SearchCheck(package.Name)
 			|| TB_Search.Text.SearchCheck(package.GetWorkshopInfo()?.Author?.Name)
 			|| package.Id.ToString().IndexOf(TB_Search.Text, StringComparison.OrdinalIgnoreCase) != -1);
 	}
@@ -698,5 +707,28 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	private void ControlValueChanged(object sender, EventArgs e)
 	{
 		valuesChanged = true;
+	}
+
+	private void CB_HideReviewedPackages_CheckChanged(object sender, EventArgs e)
+	{
+		packageCrList.FilterChanged();
+
+		var package = packageCrList.FilteredItems.FirstOrDefault();
+
+		if (package is not null)
+		{
+			SetPackage(package);
+		}
+	}
+
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
+		if (keyData == (Keys.Control | Keys.F))
+		{
+			TB_Search.Focus();
+			return true;
+		}
+
+		return base.ProcessCmdKey(ref msg, keyData);
 	}
 }

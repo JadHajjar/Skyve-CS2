@@ -36,7 +36,7 @@ public partial class PC_Options : PanelContent
 
 	public override Color GetTopBarColor()
 	{
-		return FormDesign.Design.AccentBackColor;
+		return FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? 2 : -5);
 	}
 
 	private void ApplyCurrentSettings()
@@ -97,12 +97,9 @@ public partial class PC_Options : PanelContent
 	{
 		base.DesignChanged(design);
 
-		BackColor = design.AccentBackColor;
-		ForeColor = design.ForeColor.MergeColor(design.BackColor, 80);
-
 		foreach (Control item in TLP_Main.Controls)
 		{
-			item.BackColor = design.BackColor.Tint(Lum: design.IsDarkTheme ? 1 : -1);
+			item.BackColor = design.BackColor;
 		}
 	}
 
@@ -223,11 +220,11 @@ public partial class PC_Options : PanelContent
 	{
 		ServiceCenter.Get<ILocationService>().CreateShortcut();
 
-		B_CreateShortcut.ImageName = "I_Check";
+		B_CreateShortcut.ImageName = "Check";
 
 		await Task.Delay(3000);
 
-		B_CreateShortcut.ImageName = "I_Link";
+		B_CreateShortcut.ImageName = "Link";
 	}
 
 	private void B_CreateJunction_Click(object sender, EventArgs e)

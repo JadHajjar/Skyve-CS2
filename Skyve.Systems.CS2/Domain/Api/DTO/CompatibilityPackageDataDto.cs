@@ -28,6 +28,7 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 			FileName = data.FileName,
 			Note = data.Note,
 			ReviewDate = data.ReviewDate,
+			ReviewedGameVersion = data.ReviewedGameVersion,
 			Tags = data.Tags ?? [],
 			Stability = (PackageStability)data.Stability,
 			Type = (PackageType)data.Type,

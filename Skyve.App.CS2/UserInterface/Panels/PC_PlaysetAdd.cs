@@ -1,6 +1,5 @@
 ﻿using Skyve.App.Interfaces;
 
-using System.IO;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
@@ -12,7 +11,7 @@ public partial class PC_PlaysetAdd : PanelContent
 	{
 		InitializeComponent();
 
-		DAD_NewProfile.StartingFolder = ServiceCenter.Get<ISettings>().FolderSettings.AppDataPath;
+		DAD_NewPlayset.StartingFolder = ServiceCenter.Get<ISettings>().FolderSettings.AppDataPath;
 	}
 
 	protected override void OnCreateControl()
@@ -23,7 +22,7 @@ public partial class PC_PlaysetAdd : PanelContent
 
 		if (_playsetManager.CurrentPlayset is null)
 		{
-			newProfileOptionControl2.Parent = null;
+			B_ClonePlayset.Parent = null;
 		}
 	}
 
@@ -32,17 +31,17 @@ public partial class PC_PlaysetAdd : PanelContent
 		base.UIChanged();
 
 		B_Cancel.Font = UI.Font(9.75F);
-		DAD_NewProfile.Margin = B_Cancel.Margin = UI.Scale(new Padding(10), UI.UIScale);
+		DAD_NewPlayset.Margin = B_Cancel.Margin = UI.Scale(new Padding(10), UI.UIScale);
 	}
 
-	private async void NewProfile_Click(object sender, EventArgs e)
+	private async void NewPlayset_Click(object sender, EventArgs e)
 	{
-		newProfileOptionControl1.Loading = true;
+		B_NewPlayset.Loading = true;
 		var newPlayset = await _playsetManager.CreateNewPlayset("New Playset");
 
 		if (newPlayset is null)
 		{
-			newProfileOptionControl1.Loading = false;
+			B_NewPlayset.Loading = false;
 			ShowPrompt(Locale.CouldNotCreatePlayset, icon: PromptIcons.Error);
 			return;
 		}
@@ -53,19 +52,19 @@ public partial class PC_PlaysetAdd : PanelContent
 		ServiceCenter.Get<IAppInterfaceService>().OpenPlaysetPage(newPlayset);
 	}
 
-	private async void CopyProfile_Click(object sender, EventArgs e)
+	private async void CopyPlayset_Click(object sender, EventArgs e)
 	{
 		if (_playsetManager.CurrentPlayset is null)
 		{
 			return;
 		}
 
-		newProfileOptionControl2.Loading = true;
+		B_ClonePlayset.Loading = true;
 		var newPlayset = await _playsetManager.ClonePlayset(_playsetManager.CurrentPlayset);
 
 		if (newPlayset is null)
 		{
-			newProfileOptionControl2.Loading = false;
+			B_ClonePlayset.Loading = false;
 			ShowPrompt(Locale.CouldNotCreatePlayset, icon: PromptIcons.Error);
 			return;
 		}
@@ -81,17 +80,18 @@ public partial class PC_PlaysetAdd : PanelContent
 		PushBack();
 	}
 
-	private async void DAD_NewProfile_FileSelected(string obj)
+	private async void DAD_NewPlayset_FileSelected(string obj)
 	{
-		var newPlayset = _playsetManager.Playsets.FirstOrDefault(x => x.Name!.Equals(Path.GetFileNameWithoutExtension(obj), StringComparison.InvariantCultureIgnoreCase));
-
-		newPlayset ??= await _playsetManager.ImportPlayset(obj);
-
 		try
 		{
+			DAD_NewPlayset.Loading = true;
+
+			var newPlayset = await _playsetManager.ImportPlayset(obj);
+
 			if (newPlayset is not null)
 			{
 				Dispose();
+
 				ServiceCenter.Get<IAppInterfaceService>().OpenPlaysetPage(newPlayset);
 			}
 		}
@@ -99,6 +99,8 @@ public partial class PC_PlaysetAdd : PanelContent
 		{
 			ShowPrompt(ex, "Failed to import your playset");
 		}
+
+		DAD_NewPlayset.Loading = false;
 	}
 
 	private async void B_ImportLink_Click(object sender, EventArgs e)

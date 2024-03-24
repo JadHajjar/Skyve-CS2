@@ -8,7 +8,7 @@ public struct TagItem(TagSource source, string key, string value) : ITag
 	public TagSource Source { get; set; } = source;
 	public string Key { get; set; } = key;
 	public string Value { get; set; } = value;
-	public readonly string Icon => Source switch { TagSource.ID => "I_Paradox", TagSource.Custom => "I_Search", _ => "I_Tag" };
+	public readonly string Icon => Source switch { TagSource.ID => "Paradox", TagSource.Custom => "Search", _ => "Tag" };
 	public readonly bool IsCustom => Source is TagSource.Custom;
 
 	public override readonly string ToString()

@@ -75,7 +75,7 @@ partial class PC_ReviewRequests
 			this.B_DeleteRequests.ButtonType = SlickControls.ButtonType.Active;
 			this.B_DeleteRequests.ColorStyle = Extensions.ColorStyle.Red;
 			this.B_DeleteRequests.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon1.Name = "I_Disposable";
+			dynamicIcon1.Name = "Trash";
 			this.B_DeleteRequests.ImageName = dynamicIcon1;
 			this.B_DeleteRequests.Location = new System.Drawing.Point(436, 403);
 			this.B_DeleteRequests.Name = "B_DeleteRequests";
@@ -130,11 +130,11 @@ partial class PC_ReviewRequests
 			this.packageCrList.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.packageCrList.HighlightOnHover = true;
 			this.packageCrList.ItemHeight = 32;
-			this.packageCrList.Location = new System.Drawing.Point(3, 53);
+			this.packageCrList.Location = new System.Drawing.Point(3, 54);
 			this.packageCrList.Name = "packageCrList";
 			this.packageCrList.SeparateWithLines = true;
 			this.packageCrList.ShowCompleted = false;
-			this.packageCrList.Size = new System.Drawing.Size(159, 325);
+			this.packageCrList.Size = new System.Drawing.Size(159, 324);
 			this.packageCrList.TabIndex = 2;
 			this.packageCrList.ItemMouseClick += new System.EventHandler<System.Windows.Forms.MouseEventArgs>(this.packageCrList_ItemMouseClick);
 			// 
@@ -142,17 +142,17 @@ partial class PC_ReviewRequests
 			// 
 			this.base_TLP_Side.SetColumnSpan(this.TB_Search, 3);
 			this.TB_Search.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon2.Name = "I_Search";
+			dynamicIcon2.Name = "Search";
 			this.TB_Search.ImageName = dynamicIcon2;
 			this.TB_Search.Location = new System.Drawing.Point(3, 3);
 			this.TB_Search.Name = "TB_Search";
-			this.TB_Search.Padding = new System.Windows.Forms.Padding(6, 6, 36, 6);
+			this.TB_Search.Padding = new System.Windows.Forms.Padding(6, 6, 82, 6);
 			this.TB_Search.Placeholder = "SearchGenericPackages";
 			this.TB_Search.SelectedText = "";
 			this.TB_Search.SelectionLength = 0;
 			this.TB_Search.SelectionStart = 0;
 			this.TB_Search.ShowLabel = false;
-			this.TB_Search.Size = new System.Drawing.Size(159, 44);
+			this.TB_Search.Size = new System.Drawing.Size(159, 45);
 			this.TB_Search.TabIndex = 3;
 			this.TB_Search.TextChanged += new System.EventHandler(this.TB_Search_TextChanged);
 			// 
@@ -161,7 +161,7 @@ partial class PC_ReviewRequests
 			this.B_Previous.ActiveColor = null;
 			this.B_Previous.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.B_Previous.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon3.Name = "I_ArrowUp";
+			dynamicIcon3.Name = "ArrowUp";
 			this.B_Previous.ImageName = dynamicIcon3;
 			this.B_Previous.Location = new System.Drawing.Point(3, 401);
 			this.B_Previous.Margin = new System.Windows.Forms.Padding(0);
@@ -174,7 +174,7 @@ partial class PC_ReviewRequests
 			// 
 			this.B_Skip.ActiveColor = null;
 			this.B_Skip.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon4.Name = "I_ArrowDown";
+			dynamicIcon4.Name = "ArrowDown";
 			this.B_Skip.ImageName = dynamicIcon4;
 			this.B_Skip.Location = new System.Drawing.Point(85, 401);
 			this.B_Skip.Margin = new System.Windows.Forms.Padding(0);
