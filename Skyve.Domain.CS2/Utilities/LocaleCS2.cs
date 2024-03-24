@@ -22,7 +22,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
 
 	/// <summary>
-	/// Change Location
+	/// Change Content Location
 	/// </summary>
 	public static Translation ChangeLocation => _instance.GetText("ChangeLocation");
 
@@ -49,7 +49,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation CurrentStatus => _instance.GetText("CurrentStatus");
 
 	/// <summary>
-	/// Default Location
+	/// Default User Data Location
 	/// </summary>
 	public static Translation DefaultLocation => _instance.GetText("DefaultLocation");
 
@@ -57,6 +57,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Enable Developer Mode
 	/// </summary>
 	public static Translation DeveloperMode => _instance.GetText("DeveloperMode");
+
+	/// <summary>
+	/// Disk Status
+	/// </summary>
+	public static Translation DiskStatus => _instance.GetText("DiskStatus");
 
 	/// <summary>
 	/// Download completed
@@ -123,6 +128,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Only shows local content that are included in your active playset by default.
 	/// </summary>
 	public static Translation FilterIncludedByDefaultTip => _instance.GetText("FilterIncludedByDefault_Tip");
+
+	/// <summary>
+	/// {0} free
+	/// </summary>
+	public static Translation FreeSpace => _instance.GetText("FreeSpace");
 
 	/// <summary>
 	/// Hide your profile in the main menu
@@ -221,6 +231,12 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation LogsToPlayerLog => _instance.GetText("LogsToPlayerLog");
 
 	/// <summary>
+	/// <para>You're running out of disk space, go to the options to change the location where the game's content is saved.</para>
+	/// <para>Zero: You're running out of disk space, you need to clear up some storage or get an additional hard disk.</para>
+	/// </summary>
+	public static Translation LowSpaceCreateJunction => _instance.GetText("LowSpaceCreateJunction");
+
+	/// <summary>
 	/// <para>A mod failed to download</para>
 	/// <para>Plural: Some mods failed to download</para>
 	/// </summary>
@@ -292,9 +308,14 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ParadoxLoginFailedTitle => _instance.GetText("ParadoxLoginFailedTitle");
 
 	/// <summary>
-	/// PDX Mods Showcase
+	/// New on PDX Mods
 	/// </summary>
-	public static Translation PDXModsShowcase => _instance.GetText("PDXModsShowcase");
+	public static Translation PDXModsNew => _instance.GetText("PDXModsNew");
+
+	/// <summary>
+	/// Recently updated on PDX Mods
+	/// </summary>
+	public static Translation PDXModsUpdated => _instance.GetText("PDXModsUpdated");
 
 	/// <summary>
 	/// PDX Mods Sync
@@ -302,7 +323,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation PdxSync => _instance.GetText("PdxSync");
 
 	/// <summary>
-	/// The PDX Synchronisation process handles downloading and updating your mods, as well as synchronising the settings and playsets you have between your local computer and PDX Mods services.
+	/// The PDX Synchronization process handles downloading and updating your mods, as well as synchronizing the settings and playsets you have between your local computer and PDX Mods services.
 	/// </summary>
 	public static Translation PdxSyncInfo => _instance.GetText("PdxSyncInfo");
 
@@ -332,7 +353,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation RunSetupOrRunApp => _instance.GetText("RunSetupOrRunApp");
 
 	/// <summary>
-	/// Start Synchronisation
+	/// Start Synchronization
 	/// </summary>
 	public static Translation RunSync => _instance.GetText("RunSync");
 
@@ -358,6 +379,26 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SyncOngoing => _instance.GetText("SyncOngoing");
 
 	/// <summary>
+	/// Total C:S II User Data Stored
+	/// </summary>
+	public static Translation TotalCitiesSize => _instance.GetText("TotalCitiesSize");
+
+	/// <summary>
+	/// Other Files' Size
+	/// </summary>
+	public static Translation TotalOtherSize => _instance.GetText("TotalOtherSize");
+
+	/// <summary>
+	/// Savegames' Size
+	/// </summary>
+	public static Translation TotalSavesSize => _instance.GetText("TotalSavesSize");
+
+	/// <summary>
+	/// Subscriptions' Size
+	/// </summary>
+	public static Translation TotalSubbedSize => _instance.GetText("TotalSubbedSize");
+
+	/// <summary>
 	/// Enable UI Developer Mode
 	/// </summary>
 	public static Translation UIDeveloperMode => _instance.GetText("UIDeveloperMode");
@@ -376,6 +417,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Click here to update Skyve
 	/// </summary>
 	public static Translation UpdateAvailableInfo => _instance.GetText("UpdateAvailableInfo");
+
+	/// <summary>
+	/// out of the {0} on drive {1}
+	/// </summary>
+	public static Translation UsedOutOfSpace => _instance.GetText("UsedOutOfSpace");
 
 	/// <summary>
 	/// View on PDX Mods

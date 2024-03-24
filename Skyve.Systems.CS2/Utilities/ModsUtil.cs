@@ -174,11 +174,16 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 
 		SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), value);
 
-		mods = mods.AllWhere(x => x.Id > 0 && IsEnabled(x, playset) != value);
+		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) != value);
 
 		if (!mods.Any())
 		{
 			return;
+		}
+
+		if (!modConfig.ContainsKey(playset))
+		{
+			modConfig[playset] = [];
 		}
 
 		var tempConfig = new Dictionary<ulong, bool>(modConfig[playset]);
@@ -193,11 +198,6 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 				if (item.Id <= 0)
 				{
 					continue;
-				}
-
-				if (!modConfig.ContainsKey(playset))
-				{
-					modConfig[playset] = [];
 				}
 
 				if (value)

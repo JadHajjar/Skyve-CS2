@@ -300,7 +300,7 @@ namespace Skyve.App.CS2
 			// PI_PdxMods
 			// 
 			this.PI_PdxMods.Group = "";
-			dynamicIcon17.Name = "Paradox";
+			dynamicIcon17.Name = "PDXMods";
 			this.PI_PdxMods.IconName = dynamicIcon17;
 			this.PI_PdxMods.SubItems = new SlickControls.PanelItem[0];
 			this.PI_PdxMods.Text = "PDX Mods";

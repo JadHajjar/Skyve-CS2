@@ -159,6 +159,11 @@ public partial class PackageChangelogControl : SlickControl
 
 	private string Major(string? version)
 	{
+		if (version is null or "")
+		{
+			return string.Empty;
+		}
+
 		var regex = Regex.Match(version, @"^([^\.])\.");
 
 		if (regex.Success)
@@ -171,6 +176,11 @@ public partial class PackageChangelogControl : SlickControl
 
 	private string Minor(string? version)
 	{
+		if (version is null or "")
+		{
+			return string.Empty;
+		}
+
 		var regex = Regex.Match(version, @"^[^\.]\.([^\.])\.?");
 
 		if (regex.Success)
@@ -183,6 +193,11 @@ public partial class PackageChangelogControl : SlickControl
 
 	private string Build(string? version)
 	{
+		if (version is null or "")
+		{
+			return string.Empty;
+		}
+
 		var regex = Regex.Match(version, @"^[^\.]\.[^\.]\.([^\.])\.?");
 
 		if (regex.Success)

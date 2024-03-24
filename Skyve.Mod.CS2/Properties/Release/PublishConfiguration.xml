@@ -2,19 +2,51 @@
 <Publish>
   <ModId Value="75804" />
   <DisplayName Value="Skyve [BETA]" />
-  <ShortDescription Value="The all-in-one mod manager for Cities: Skylines II PDX Mods" />
+	<ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
+	<ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />
+	<ShortDescription Value="The all-in-one mod manager for Cities: Skylines II and PDX Mods" />
   <LongDescription>
-Skyve is your all-in-one mod manager for Cities: Skylines II PDX Mods.
+Skyve is your all-in-one mod manager for Cities: Skylines II and PDX Mods.
+It's a standalone application that you can use without opening the game, and it allows you to manage playsets, download or update your mods, browse PDX Mods, and much more.
 
-* Easily manage all your mods, download and subscribe to mods from outside of the game.
-* Manage your playsets, and easily manage mods across playsets.
-* Get real-time compatibility information foor the mods you're using.
+# Installation
+After adding Skyve to your playset, you will see a new button in the main menu called "Install Skyve".
+This will start the one-click installation process and open the Skyve app at the end.
+
+Once you've installed Skyve, you'll be able to find it in your apps list on Windows.
+
+\* *Note that this is a standard application setup, which will prompt you for user account control permission. And it requires you to uninstall it from your apps list to completely remove it from your computer.*
+
+# Features
+## PDX Mods Integration
+Skyve comes with the same PDX Mods capabilities as the game. Which means you'll be able to browse PDX Mods directly from Skyve, alongside:
+* Subscribe and unsubscribe from mods.
+* Download new mods, or update mods you're subscribed to.
+* Manage playsets and enable/disable mods within them.
+
+Skyve also comes with extensive bulk actions:
+* Subscribe/unsubscribe/enable/disable multiple mods at a time.
+* Add or remove mods from 
+
 </LongDescription>
   <Thumbnail Value="Properties/Release/Thumbnail.png" />
-  <Screenshot Value="Properties/Release/Screenshot_01.png" />
+	<Screenshot Value="Properties/Release/Screenshot_01.png" />
+	<Screenshot Value="Properties/Release/Screenshot_02.png" />
+	<Screenshot Value="Properties/Release/Screenshot_03.png" />
+	<Screenshot Value="Properties/Release/Screenshot_04.png" />
+	<Screenshot Value="Properties/Release/Screenshot_05.png" />
+	<Screenshot Value="Properties/Release/Screenshot_06.png" />
+	<Screenshot Value="Properties/Release/Screenshot_07.png" />
+	<Screenshot Value="Properties/Release/Screenshot_08.png" />
+	<Screenshot Value="Properties/Release/Screenshot_09.png" />
+	<Screenshot Value="Properties/Release/Screenshot_10.png" />
+	<Screenshot Value="Properties/Release/Screenshot_11.png" />
+	<Screenshot Value="Properties/Release/Screenshot_12.png" />
+	<Screenshot Value="Properties/Release/Screenshot_13.png" />
+	<Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="" />
-  <ModVersion Value="0.8.0" />
+  <ModVersion Value="0.9.0" />
   <GameVersion Value="1.*" />
   <ChangeLog>
 # v0.8.0

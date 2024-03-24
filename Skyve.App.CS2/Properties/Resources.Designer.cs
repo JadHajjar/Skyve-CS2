@@ -253,6 +253,16 @@ namespace Skyve.App.CS2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap I_PDXMods_128 {
+            get {
+                object obj = ResourceManager.GetObject("I_PDXMods_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap I_PDXMods_16 {
             get {
                 object obj = ResourceManager.GetObject("I_PDXMods_16", resourceCulture);
@@ -273,6 +283,16 @@ namespace Skyve.App.CS2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap I_PDXMods_256 {
+            get {
+                object obj = ResourceManager.GetObject("I_PDXMods_256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap I_PDXMods_32 {
             get {
                 object obj = ResourceManager.GetObject("I_PDXMods_32", resourceCulture);
@@ -286,6 +306,16 @@ namespace Skyve.App.CS2.Properties {
         internal static System.Drawing.Bitmap I_PDXMods_48 {
             get {
                 object obj = ResourceManager.GetObject("I_PDXMods_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_PDXMods_64 {
+            get {
+                object obj = ResourceManager.GetObject("I_PDXMods_64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

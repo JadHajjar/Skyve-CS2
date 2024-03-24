@@ -34,6 +34,11 @@ internal class D_PdxUser : IDashboardItem
 		return Draw;
 	}
 
+	protected override void DrawHeader(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
+	{
+		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.ParadoxAccount, "Paradox");
+	}
+
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
 		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.ParadoxAccount, "Paradox");
@@ -91,8 +96,10 @@ internal class D_PdxUser : IDashboardItem
 				Font = font,
 				Size = new Size(0, (int)(20 * UI.FontScale)),
 				Text = LocaleCS2.LoginToParadox,
-				Rectangle = e.ClipRectangle
+				Rectangle = e.ClipRectangle.Pad(BorderRadius)
 			});
+
+			preferredHeight += BorderRadius / 2;
 		}
 	}
 }

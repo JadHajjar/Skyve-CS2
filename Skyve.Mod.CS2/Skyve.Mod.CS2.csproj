@@ -19,7 +19,7 @@
 	</PropertyGroup>
 
 	<Target Name="BuildUI" AfterTargets="AfterBuild">
-		<Exec Command="npm run build --prefix UI" />
+		<Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/UI" />
 	</Target>
 
 	<Target Name="CopyFiles" AfterTargets="DeployWIP">
@@ -27,12 +27,10 @@
 			<AppFiles Include="..\Skyve.Service.CS2\bin\$(BuildType)\**\*.*" />
 			<AppFiles Include="..\Skyve.App.CS2\bin\$(BuildType)\**\*.*" />
 			<SetupFiles Include="..\Skyve.App.CS2.Installer\bin\$(BuildType)\Skyve Setup.*" />
-			<UIFiles Include="bin\UI\**\*.*" />
 		</ItemGroup>
 		
 		<Copy SourceFiles="@(AppFiles)" DestinationFiles="@(AppFiles->'$(DeployDir)\.App\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(SetupFiles)" DestinationFolder="$(DeployDir)" />
-		<Copy SourceFiles="@(UIFiles)" DestinationFiles="@(UIFiles->'$(DeployDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
 	</Target>
 
 	<Target Name="UpdatePublishConfiguration" BeforeTargets="Publish">
