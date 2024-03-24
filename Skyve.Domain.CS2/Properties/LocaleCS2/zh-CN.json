@@ -46,7 +46,10 @@
   "ParadoxLoginFailedEmpty": "您的会话可能已过期。请尝试启动游戏并重新登录，或点击此处通过 Skyve 登录。",
   "DownloadComplete": "下载完毕",
   "Downloading": "正在下载...",
-  "ModDownloadFailed": "'{0}' 下载失败",
+  "ModsDownloadFailed": {
+    "One": "A mod failed to download",
+    "Plural": "Some mods failed to download"
+  },
   "LoginToParadox": "登录到 Paradox",
   "LoginFailed": "登录失败，请确保您的电子邮件地址和密码是正确的。或稍后再试。",
   "RememberMeInfo": "* 您的凭据将被加密，并保存到您的计算机中。",
@@ -71,11 +74,32 @@
   "InvalidFolderSettings": "检测到无效设置",
   "InvalidFolderSettingsInfo": "Skyve 无法找到 Cities: Skylines II 正确的数据文件夹。\n\n点击此处以手动选择数据文件夹。",
   "InvalidFolderSettingsFail": "您选择的路径不正确。请在您的 AppData 文件夹中选择 \"Cities: Skylines II\" 文件夹。",
-  "DefaultLocation": "默认位置",
+  "DefaultLocation": "Default User Data Location",
   "JunctionTitle": "自定义内容存储位置",
   "JunctionDescription": "更改游戏内容（所有模组、资产和游戏设置）的存储位置。\n在此过程中，Skyve 会创建一个链接，来链接您所设定的位置和默认 AppData 文件夹的位置。",
   "CurrentStatus": "当前状态：",
-  "ChangeLocation": "更改位置",
+  "ChangeLocation": "Change Content Location",
   "ResetLocation": "Reset Location",
-  "JunctionRestart": "在此过程中，Skyve 和 Cities: Skylines II 将会关闭。\n\n完成时，Skyve 将自动重新启动。"
+  "JunctionRestart": "在此过程中，Skyve 和 Cities: Skylines II 将会关闭。\n\n完成时，Skyve 将自动重新启动。",
+  "PlaysetAlreadyImported": "This playset is already present in your list of playsets.",
+  "CouldNotRetrieveMods": "Could not retrieve the mods' data",
+  "NewGameUpdate": "New Cities: Skylines II Update",
+  "NewGameUpdateInfo": "Patch {0} is now available.\r\nBe sure to check your compatibility report before starting your game.",
+  "PdxSyncInfo": "The PDX Synchronization process handles downloading and updating your mods, as well as synchronizing the settings and playsets you have between your local computer and PDX Mods services.",
+  "SyncOngoing": "Sync is currently ongoing",
+  "PdxSync": "PDX Mods Sync",
+  "RunSync": "Start Synchronization",
+  "PDXModsNew": "New on PDX Mods",
+  "PDXModsUpdated": "Recently updated on PDX Mods",
+  "DiskStatus": "Disk Status",
+  "TotalCitiesSize": "Total C:S II User Data Stored",
+  "TotalSavesSize": "Savegames' Size",
+  "TotalSubbedSize": "Subscriptions' Size",
+  "TotalOtherSize": "Other Files' Size",
+  "FreeSpace": "{0} free",
+  "UsedOutOfSpace": "out of the {0} on drive {1}",
+  "LowSpaceCreateJunction": {
+    "Zero": "You're running out of disk space, you need to clear up some storage or get an additional hard disk.",
+    "One": "You're running out of disk space, go to the options to change the location where the game's content is saved."
+  }
 }
