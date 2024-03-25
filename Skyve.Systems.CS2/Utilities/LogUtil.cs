@@ -200,13 +200,6 @@ internal class LogUtil : ILogUtil
 		writer.Write(errors);
 	}
 
-	private static void AddSimpleLog(ZipArchive zipArchive, string simpleLogText)
-	{
-		var simpleLogEntry = zipArchive.CreateEntry("log_simple.txt");
-		using var writer = new StreamWriter(simpleLogEntry.Open());
-		writer.Write(simpleLogText);
-	}
-
 	private string GetLastCrashLog(DateTime mainLogDate)
 	{
 		if (CrossIO.CurrentPlatform is not Platform.Windows)

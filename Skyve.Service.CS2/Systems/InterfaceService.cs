@@ -6,6 +6,11 @@ using System.Collections.Generic;
 namespace Skyve.Service.CS2.Systems;
 internal class InterfaceService : IInterfaceService
 {
+	public bool AskForDependencyConfirmation(List<IPackageIdentity> packages, List<IPackageIdentity> dependencies)
+	{
+		return false;
+	}
+
 	public void OpenOptionsPage()
 	{
 	}

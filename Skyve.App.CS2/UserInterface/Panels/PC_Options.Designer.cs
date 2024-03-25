@@ -87,6 +87,7 @@ partial class PC_Options
 			this.slickScroll1 = new SlickControls.SlickScroll();
 			this.slickSpacer3 = new SlickControls.SlickSpacer();
 			this.DD_Language = new Skyve.App.UserInterface.Dropdowns.LanguageDropDown();
+			this.DD_Dependency = new Skyve.App.CS2.UserInterface.Generic.DependencyResolutionDropdown();
 			this.TLP_Main.SuspendLayout();
 			this.TLP_HelpLogs.SuspendLayout();
 			this.TLP_Advanced.SuspendLayout();
@@ -124,7 +125,7 @@ partial class PC_Options
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_Main.Size = new System.Drawing.Size(1100, 832);
+			this.TLP_Main.Size = new System.Drawing.Size(1100, 891);
 			this.TLP_Main.TabIndex = 13;
 			// 
 			// TLP_HelpLogs
@@ -429,6 +430,7 @@ partial class PC_Options
 			this.TLP_Settings.Controls.Add(this.slickCheckbox7, 0, 5);
 			this.TLP_Settings.Controls.Add(this.CB_AssumeInternetConnectivity, 0, 4);
 			this.TLP_Settings.Controls.Add(this.slickCheckbox6, 0, 0);
+			this.TLP_Settings.Controls.Add(this.DD_Dependency, 0, 7);
 			this.TLP_Settings.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon10.Name = "Cog";
 			this.TLP_Settings.ImageName = dynamicIcon10;
@@ -444,7 +446,7 @@ partial class PC_Options
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Settings.Size = new System.Drawing.Size(544, 410);
+			this.TLP_Settings.Size = new System.Drawing.Size(544, 469);
 			this.TLP_Settings.TabIndex = 1;
 			this.TLP_Settings.Text = "Settings";
 			// 
@@ -856,6 +858,16 @@ partial class PC_Options
 			this.DD_Language.TabIndex = 0;
 			this.DD_Language.Text = "Language";
 			// 
+			// DD_Dependency
+			// 
+			this.DD_Dependency.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.DD_Dependency.Location = new System.Drawing.Point(21, 395);
+			this.DD_Dependency.Name = "DD_Dependency";
+			this.DD_Dependency.Size = new System.Drawing.Size(298, 53);
+			this.DD_Dependency.SkyvePage = Skyve.Domain.Enums.SkyvePage.None;
+			this.DD_Dependency.TabIndex = 7;
+			this.DD_Dependency.Text = "DependencyResolution";
+			// 
 			// PC_Options
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -934,4 +946,5 @@ partial class PC_Options
 	private SlickButton B_DeleteJunction;
 	private SlickSpacer slickSpacer5;
 	private System.Windows.Forms.Label L_JunctionTitle;
+	private Generic.DependencyResolutionDropdown DD_Dependency;
 }

@@ -166,7 +166,7 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 
 					return new ActionInfo(IncludeAndEnablePackages
 						, anyExcluded ? Locale.IncludeAll : Locale.EnableAll
-						, anyExcluded ? "Check" : "Enabled"
+						, anyExcluded ? "Add" : "Ok"
 						, FormDesign.Design.GreenColor);
 				}
 

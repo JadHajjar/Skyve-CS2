@@ -17,6 +17,12 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public LocaleCS2() : base($"Skyve.Domain.CS2.Properties.LocaleCS2.json") { }
 
 	/// <summary>
+	/// <para>'{1}' is required for the mod(s) you're adding.  Would you like to also add '{1}' to your playset?</para>
+	/// <para>Plural: The mod(s) you're adding have {0} dependencies: {1}  Would you like to also add them to your playset?</para>
+	/// </summary>
+	public static Translation AddingDependencies => _instance.GetText("AddingDependencies");
+
+	/// <summary>
 	/// You can't run Skyve from this folder.  Either run the app from your Programs list, or run the Skyve Setup from the mod's folder.
 	/// </summary>
 	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
@@ -52,6 +58,31 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Default User Data Location
 	/// </summary>
 	public static Translation DefaultLocation => _instance.GetText("DefaultLocation");
+
+	/// <summary>
+	/// Ask every time
+	/// </summary>
+	public static Translation DependencyAsk => _instance.GetText("Dependency_Ask");
+
+	/// <summary>
+	/// Automatically add dependencies
+	/// </summary>
+	public static Translation DependencyAutomatic => _instance.GetText("Dependency_Automatic");
+
+	/// <summary>
+	/// Do nothing
+	/// </summary>
+	public static Translation DependencyNone => _instance.GetText("Dependency_None");
+
+	/// <summary>
+	/// Dependency Resolution
+	/// </summary>
+	public static Translation DependencyResolution => _instance.GetText("DependencyResolution");
+
+	/// <summary>
+	/// Choose what will happen when you add a mod with dependencies that you do not have.
+	/// </summary>
+	public static Translation DependencyResolutionTip => _instance.GetText("DependencyResolution_Tip");
 
 	/// <summary>
 	/// Enable Developer Mode
@@ -241,6 +272,12 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// <para>Plural: Some mods failed to download</para>
 	/// </summary>
 	public static Translation ModsDownloadFailed => _instance.GetText("ModsDownloadFailed");
+
+	/// <summary>
+	/// <para>'{1}' has dependencies</para>
+	/// <para>Plural: The packages you're adding have dependencies</para>
+	/// </summary>
+	public static Translation ModsYouAreAddingRequireDependencies => _instance.GetText("ModsYouAreAddingRequireDependencies");
 
 	/// <summary>
 	/// New Cities: Skylines II Update

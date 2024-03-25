@@ -1,2 +1,11 @@
 [
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.0",
+    "Date": "2024-03-25",
+    "Tagline": "Official PDX Mods Release",
+    "ChangeGroups": [
+    ]
+  }
 ]

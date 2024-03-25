@@ -63,6 +63,11 @@ internal class ModLogicManager : IModLogicManager
 			return false;
 		}
 
+		if (Path.GetFileName(mod.Folder).ToLower() is "maps" or "saves")
+		{
+			return true;
+		}
+
 		var list = _modCollection.GetCollection(Path.GetFileName(mod.FilePath), out var collection);
 
 		if (!(collection?.Required ?? false) || list is null)

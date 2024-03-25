@@ -27,6 +27,8 @@ public partial class PC_Options : PanelContent
 			}
 		}
 
+		SlickTip.SetTo(DD_Dependency, LocaleHelper.GetGlobalText($"{DD_Dependency.Text}_Tip"));
+
 		B_CreateShortcut.Visible = CrossIO.CurrentPlatform is not Platform.Windows;
 
 		DD_Language.Items = LocaleHelper.GetAvailableLanguages().Distinct().ToArray();
