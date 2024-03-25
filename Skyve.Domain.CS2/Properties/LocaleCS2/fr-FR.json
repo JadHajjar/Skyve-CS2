@@ -73,7 +73,7 @@
   "LogsToPlayerLog": "Copier les logs dans le fichier Player.log",
   "InvalidFolderSettings": "Configuration non valide détectée",
   "InvalidFolderSettingsInfo": "Skyve n'as pas réussi à détecter le dossier des données de Cities: Skyines II.\n\nCliquez ici pour sélectionner le dossier des données manuellement.",
-  "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
+  "InvalidFolderSettingsFail": "Le chemin d'accès n'est pas correct. Veuillez sélectionner le dossier 'Cities Skylines II' du dossier app data.",
   "DefaultLocation": "Default User Data Location",
   "JunctionTitle": "Custom Content Location",
   "JunctionDescription": "Change the location where the game stores its content. This includes any mods, assets, and settings.\r\n\r\nSkyve will create a link between your desired location and the default app data folder in this process.",
