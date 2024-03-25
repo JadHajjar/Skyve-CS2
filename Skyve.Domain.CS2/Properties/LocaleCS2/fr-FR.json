@@ -47,8 +47,8 @@
   "DownloadComplete": "Téléchargement terminé",
   "Downloading": "Téléchargement...",
   "ModsDownloadFailed": {
-    "One": "A mod failed to download",
-    "Plural": "Some mods failed to download"
+    "One": "Le téléchargement d'un mod a échoué",
+    "Plural": "Le téléchargement de certains mods ont échoués"
   },
   "LoginToParadox": "Se connecter à Paradox",
   "LoginFailed": "La connexion a échoué, vérifiez que votre email et votre mot de passe sont corrects. Ou réessayez plus tard.",
@@ -69,9 +69,9 @@
   "NotLoggedInCheckNotification": "Vous n'êtes pas connecté à votre compte Paradox, regardez les notifications pour plus d'informations.",
   "HideUserSection": "Masquer votre profil dans le menu principal",
   "DeveloperMode": "Activer le mode développeur",
-  "UIDeveloperMode": "Enable UI Developer Mode",
-  "LogsToPlayerLog": "Copy logs to Player.log",
-  "InvalidFolderSettings": "Invalid setup detected",
+  "UIDeveloperMode": "Activer l'interface développeur",
+  "LogsToPlayerLog": "Copier les logs dans le fichier Player.log",
+  "InvalidFolderSettings": "Configuration non valide détectée",
   "InvalidFolderSettingsInfo": "Skyve n'as pas réussi à détecter le dossier des données de Cities: Skyines II.\n\nCliquez ici pour sélectionner le dossier des données manuellement.",
   "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
   "DefaultLocation": "Default User Data Location",
