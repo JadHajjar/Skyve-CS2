@@ -11,14 +11,14 @@
   "ExcludeAllSelected": "Usuń wybrane elementy z twojego aktywnego zestawu",
   "ExcludeAllDisabledSelected": "Usuń wybrane i dezaktywowane elementy z twojego aktywnego zestawu",
   "IncludeAllSelected": "Dodaj wybrane elementy do twojego aktywnego zestawu",
-  "ViewOnWorkshop": "Zobacz na Modach PDX",
+  "ViewOnWorkshop": "Zobacz na PDX Mods",
   "CopyWorkshopLink": {
-    "One": "Skopiuj link Moda PDX",
-    "Plural": "Skopiuj linki Modów PDX dla wybranych pakietów"
+    "One": "Skopiuj link PDX Mods",
+    "Plural": "Skopiuj linki PDX Mods dla wybranych pakietów"
   },
   "CopyWorkshopId": {
-    "One": "Skopiuj ID Moda PDX",
-    "Plural": "Skopiuj ID Modów PDX dla wybranych pakietów"
+    "One": "Skopiuj ID PDX Mods",
+    "Plural": "Skopiuj ID PDX Mods dla wybranych pakietów"
   },
   "LaunchThroughCities": "Uruchom przez Cities2.exe",
   "IncludeItem": "Dodaj do twojego aktywnego zestawu",
@@ -35,12 +35,12 @@
     "One": "Usuń z wszystkich twoich zestawów",
     "Plural": "Usuń wybrane elementy z wszystkich twoich zestawów"
   },
-  "PackageIsRemoved": "\"{0}\" został usunięty z Modów PDX",
-  "PackageIsUnknown": "Informacje z Modów PDX o \"{0}\" nie zostały jeszcze wczytane",
-  "PackageIsIncomplete": "Lokalny rozmiar \"{0}\" ({1}) różni się od rozmiaru na Modach PDX {2}",
+  "PackageIsRemoved": "\"{0}\" został usunięty z PDX Mods",
+  "PackageIsUnknown": "Informacje z PDX Mods o \"{0}\" nie zostały jeszcze wczytane",
+  "PackageIsIncomplete": "Lokalny rozmiar \"{0}\" ({1}) różni się od rozmiaru na PDX Mods {2}",
   "OpenCitiesAppData": "Otwórz folder AppData C:S II",
-  "ResetSteamCache": "Wyczyść pamięć podręczną Modów PDX",
-  "ParadoxLoginFailedTitle": "Nie udało się zalogować Cię do Modów PDX",
+  "ResetSteamCache": "Wyczyść pamięć podręczną PDX Mods",
+  "ParadoxLoginFailedTitle": "Nie udało się zalogować Cię do PDX Mods",
   "ParadoxLoginFailedNoConnection": "Nie posiadasz połączenia z internetem. Proszę, sprawdź swoje połączenie i spróbuj ponownie.",
   "ParadoxLoginFailedBadCredentials": "Zła nazwa użytkownika lub hasło. Kliknij tutaj, aby zaktualizować podane informacje.",
   "ParadoxLoginFailedEmpty": "Twoja sesja prawdopodobnie wygasła. Spróbuj uruchomić grę, aby zalogować się ponownie, lub kliknij tutaj, aby zalogować się przez Skyve.",
