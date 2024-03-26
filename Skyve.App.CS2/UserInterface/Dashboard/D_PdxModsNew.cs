@@ -44,7 +44,7 @@ internal class D_PdxModsNew : D_PdxModsBase
 
 	protected override async Task ProcessDataLoad(CancellationToken token)
 	{
-		var list = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, limit: 8)).ToList();
+		var list = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 8)).ToList();
 
 		if (token.IsCancellationRequested)
 		{
@@ -58,13 +58,13 @@ internal class D_PdxModsNew : D_PdxModsBase
 
 	protected override DrawingDelegate GetDrawingMethod(int width)
 	{
-		if (Loading)
-		{
-			return DrawLoading;
-		}
-
 		if (newMods.Count == 0)
 		{
+			if (Loading)
+			{
+				return DrawLoading;
+			}
+
 			return DrawNone;
 		}
 
@@ -79,6 +79,8 @@ internal class D_PdxModsNew : D_PdxModsBase
 	private void DrawNone(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
 		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsNew, "PDXMods");
+
+		Draw(e, applyDrawing, ref preferredHeight, false);
 
 		e.Graphics.DrawStringItem(LocaleCS2.CouldNotRetrieveMods
 			, Font
@@ -97,7 +99,14 @@ internal class D_PdxModsNew : D_PdxModsBase
 
 	protected override void DrawHeader(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsNew, "PDXMods");
+		if (Loading)
+		{
+			DrawLoading(e, applyDrawing, ref preferredHeight);
+		}
+		else
+		{
+			DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsNew, "PDXMods");
+		}
 	}
 
 	private void DrawSmall(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)

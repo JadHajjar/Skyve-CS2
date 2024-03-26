@@ -45,8 +45,8 @@ internal class D_PdxModsUpdated : D_PdxModsBase
 
 	protected override async Task ProcessDataLoad(CancellationToken token)
 	{
-		var newMods = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, limit: 8)).ToList();
-		var list = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, limit: 16))
+		var newMods = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 8)).ToList();
+		var list = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: SelectedTags, limit: 16))
 			.Where(x => !newMods.Any(y => y.Id == x.Id))
 			.Take(8)
 			.ToList();
@@ -68,13 +68,13 @@ internal class D_PdxModsUpdated : D_PdxModsBase
 
 	protected override DrawingDelegate GetDrawingMethod(int width)
 	{
-		if (Loading)
-		{
-			return DrawLoading;
-		}
-
 		if (recentlyUpdatedMods.Count == 0)
 		{
+			if (Loading)
+			{
+				return DrawLoading;
+			}
+
 			return DrawNone;
 		}
 
@@ -107,7 +107,14 @@ internal class D_PdxModsUpdated : D_PdxModsBase
 
 	protected override void DrawHeader(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsUpdated, "PDXMods");
+		if (Loading)
+		{
+			DrawLoading(e, applyDrawing, ref preferredHeight);
+		}
+		else
+		{
+			DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsUpdated, "PDXMods");
+		}
 	}
 
 	private void DrawSmall(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)

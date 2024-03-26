@@ -1,3 +1,7 @@
 {
-  "Official PDX Mods Release": "Official PDX Mods Release"
+  "Changes": "Changes",
+  "Official PDX Mods Release": "Official PDX Mods Release",
+  "Fixes to first-time usage related bugs": "Fixes to first-time usage related bugs",
+  "Added fail-safe in case appdata folder is not detected": "Added fail-safe in case appdata folder is not detected",
+  "Fixed non-english languages showing the incorrect text if they haven't been translated.": "Fixed non-english languages showing the incorrect text if they haven't been translated."
 }

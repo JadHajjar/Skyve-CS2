@@ -2,6 +2,22 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.1",
+    "Date": "2024-03-25",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed non-english languages showing the incorrect text if they haven't been translated.",
+          "Added fail-safe in case appdata folder is not detected",
+          "Fixes to first-time usage related bugs"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.0",
     "Date": "2024-03-25",
     "Tagline": "Official PDX Mods Release",

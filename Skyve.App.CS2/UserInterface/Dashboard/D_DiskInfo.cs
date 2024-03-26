@@ -100,8 +100,8 @@ internal class D_DiskInfo : IDashboardItem
 		}
 
 		contentInfo.TotalOtherSize = contentInfo.TotalCitiesSize - contentInfo.TotalSavesSize - contentInfo.TotalSubbedSize;
-		contentInfo.CriticalSpace = contentInfo.AvailableSpace < 5L * 1024L * 1024L * 1024L;
-		contentInfo.LowSpace = contentInfo.AvailableSpace < 15L * 1024L * 1024L * 1024L;
+		contentInfo.CriticalSpace = contentInfo.AvailableSpace < 10L * 1024L * 1024L * 1024L;
+		contentInfo.LowSpace = contentInfo.AvailableSpace < 20L * 1024L * 1024L * 1024L;
 
 		if (token.IsCancellationRequested)
 		{

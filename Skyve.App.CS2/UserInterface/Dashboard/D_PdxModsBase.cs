@@ -9,8 +9,14 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Dashboard;
 internal abstract class D_PdxModsBase : IDashboardItem
 {
+	private static readonly string[] _tags = ["Code Mod", "Map", "Savegame", "All"];
+	private string selectedTag;
+
+	protected string[]? SelectedTags => selectedTag == "All" ? null : [selectedTag];
+
 	public D_PdxModsBase()
 	{
+		selectedTag = _tags[0];
 	}
 
 	protected abstract List<IWorkshopInfo> GetPackages();
@@ -20,15 +26,74 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		SlickToolStrip.Show(App.Program.MainForm, ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(package));
 	}
 
+	private void SelectTag(string item)
+	{
+		selectedTag = item;
+
+		LoadData();
+	}
+
 	protected void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight, bool horizontal)
 	{
 		using var fontSmall = UI.Font(6.75F);
+
+		var tagRect = new Rectangle(e.ClipRectangle.X + BorderRadius, preferredHeight, 0, 0);
+
+		foreach (var item in _tags)
+		{
+			using var buttonArgs = new ButtonDrawArgs
+			{
+				Font = fontSmall,
+				Padding = UI.Scale(new Padding(3, 2, 4, 3), UI.FontScale),
+				Text = item,
+			};
+
+			if (selectedTag == item)
+			{
+				buttonArgs.ButtonType = ButtonType.Active;
+			}
+			else
+			{
+				buttonArgs.HoverState = HoverState & ~HoverState.Focused;
+				buttonArgs.Cursor = CursorLocation;
+			}
+
+			SlickButton.PrepareLayout(e.Graphics, buttonArgs);
+
+			buttonArgs.Rectangle = tagRect.Align(buttonArgs.Rectangle.Size, ContentAlignment.TopLeft);
+
+			if (buttonArgs.Rectangle.Right > e.ClipRectangle.Right)
+			{
+				tagRect.Y += buttonArgs.Rectangle.Height + BorderRadius / 2;
+				tagRect.X = e.ClipRectangle.X;
+
+				buttonArgs.Rectangle = tagRect.Align(buttonArgs.Rectangle.Size, ContentAlignment.TopLeft);
+			}
+
+			SlickButton.SetUpColors(buttonArgs);
+
+			SlickButton.DrawButton(e.Graphics, buttonArgs);
+
+			if (selectedTag != item)
+			{
+				_buttonActions[buttonArgs] = () => SelectTag(item);
+			}
+
+			tagRect.X += buttonArgs.Rectangle.Width + BorderRadius / 2;
+			tagRect.Height = buttonArgs.Rectangle.Height;
+		}
+
+		preferredHeight = tagRect.Bottom + BorderRadius*3/2;
+
+		var packages = GetPackages();
+
+		if (packages.Count == 0)
+			return;
 
 		var preferredSize = horizontal ? 350 : 90;
 		var columns = (int)Math.Max(1, Math.Floor((e.ClipRectangle.Width - Margin.Left) / (preferredSize * UI.FontScale)));
 		var columnWidth = (e.ClipRectangle.Width - Margin.Left) / columns;
 		var height = horizontal ? (int)(32 * UI.FontScale) : (columnWidth * 5 / 3);
-		var packages = GetPackages();
 
 		for (var i = 0; i < Math.Min(packages.Count, horizontal ? 8 : (columns < 5 ? (columns * 2) : columns)); i++)
 		{

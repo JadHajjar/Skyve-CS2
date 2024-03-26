@@ -676,7 +676,7 @@ public class WorkshopService : IWorkshopService
 			{
 				var conflicts = await Context.Mods.GetSyncConflicts();
 
-				await Context.Mods.Sync(SyncDirection.Upstream);
+				await Context.Mods.Sync(SyncDirection.Downstream);
 			}
 		}
 		catch (Exception ex)
