@@ -352,7 +352,7 @@ public class WorkshopService : IWorkshopService
 		return [];
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null)
+	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, bool _ = false, int? limit = null, int? page = null)
 	{
 		if (Context is null)
 		{
@@ -365,6 +365,7 @@ public class WorkshopService : IWorkshopService
 			searchQuery = query,
 			tags = requiredTags?.ToList(),
 			orderBy = GetPdxOrder(sorting),
+			page = page,
 			pageSize = limit ?? 100
 		});
 
@@ -550,19 +551,28 @@ public class WorkshopService : IWorkshopService
 			return false;
 		}
 
-		var result = await Context.Mods.SubscribeBulk(
+		try
+		{
+			var result = await Context.Mods.SubscribeBulk(
 			mods,
 			playset,
 			enable);
 
-		using (Lock)
-		{
-			await Task.Delay(1500);
+			using (Lock)
+			{
+				await Task.Delay(1500);
+			}
+
+			_notifier.OnWorkshopSyncEnded();
+
+			return ProcessResult(result).Success;
 		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Catastrophic error during SubscribeBulk");
 
-		_notifier.OnWorkshopSyncEnded();
-
-		return ProcessResult(result).Success;
+			return false;
+		}
 	}
 
 	internal async Task<bool> UnsubscribeBulk(IEnumerable<int> mods, int playset)
@@ -574,21 +584,30 @@ public class WorkshopService : IWorkshopService
 
 		var results = new List<Result>();
 
-		foreach (var id in mods)
+		try
 		{
-			var result = await Context.Mods.Unsubscribe(id, playset);
+			foreach (var id in mods)
+			{
+				var result = await Context.Mods.Unsubscribe(id, playset);
 
-			results.Add(ProcessResult(result));
+				results.Add(ProcessResult(result));
+			}
+
+			using (Lock)
+			{
+				await Task.Delay(1500);
+			}
+
+			_notifier.OnWorkshopSyncEnded();
+
+			return results.All(x => x.Success);
 		}
-
-		using (Lock)
+		catch (Exception ex)
 		{
-			await Task.Delay(1500);
+			_logger.Exception(ex, "Catastrophic error during UnsubscribeBulk");
+
+			return false;
 		}
-
-		_notifier.OnWorkshopSyncEnded();
-
-		return results.All(x => x.Success);
 	}
 
 	public async Task<bool> DeletePlayset(int playset)
@@ -637,13 +656,22 @@ public class WorkshopService : IWorkshopService
 			return false;
 		}
 
-		var result = enable
+		try
+		{
+			var result = enable
 				? await Context.Mods.EnableBulk(modKeys, playset)
 				: await Context.Mods.DisableBulk(modKeys, playset);
 
-		ProcessResult(result);
+			ProcessResult(result);
 
-		return result.Success;
+			return result.Success;
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, $"Catastrophic error during SetEnableBulk({enable})");
+
+			return false;
+		}
 	}
 
 	internal async Task<IPlayset?> ClonePlayset(int id)

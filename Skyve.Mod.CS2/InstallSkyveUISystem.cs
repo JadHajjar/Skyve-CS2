@@ -1,5 +1,6 @@
 ﻿using Colossal.UI.Binding;
 
+using Game.Tools;
 using Game.UI;
 
 using System.IO;

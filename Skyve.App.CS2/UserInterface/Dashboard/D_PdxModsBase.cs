@@ -4,22 +4,58 @@ using Skyve.App.UserInterface.Lists;
 using Skyve.App.UserInterface.Panels;
 
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
 internal abstract class D_PdxModsBase : IDashboardItem
 {
+	private static readonly Dictionary<string, DateTime> _lastLoadTimes = [];
 	private static readonly string[] _tags = ["Code Mod", "Map", "Savegame", "All"];
 	private string selectedTag;
 
+	protected readonly IWorkshopService WorkshopService;
 	protected string[]? SelectedTags => selectedTag == "All" ? null : [selectedTag];
 
 	public D_PdxModsBase()
 	{
 		selectedTag = _tags[0];
+		ServiceCenter.Get(out WorkshopService);
 	}
 
 	protected abstract List<IWorkshopInfo> GetPackages();
+
+	protected override void OnCreateControl()
+	{
+		base.OnCreateControl();
+
+		if (WorkshopService.IsAvailable)
+		{
+			if (!_lastLoadTimes.TryGetValue(Key, out var date) || (DateTime.Now - date).TotalMinutes > 15)
+			{
+				LoadData();
+			}
+		}
+		else
+		{
+			WorkshopService.ContextAvailable += LoadData;
+		}
+	}
+
+	protected override void Dispose(bool disposing)
+	{
+		base.Dispose(disposing);
+
+		WorkshopService.ContextAvailable -= LoadData;
+	}
+
+	protected override Task ProcessDataLoad(CancellationToken token)
+	{
+		_lastLoadTimes[Key] = DateTime.Now;
+
+		return base.ProcessDataLoad(token);
+	}
 
 	private void RightClick(IWorkshopInfo package)
 	{
@@ -62,10 +98,10 @@ internal abstract class D_PdxModsBase : IDashboardItem
 
 			buttonArgs.Rectangle = tagRect.Align(buttonArgs.Rectangle.Size, ContentAlignment.TopLeft);
 
-			if (buttonArgs.Rectangle.Right > e.ClipRectangle.Right)
+			if (buttonArgs.Rectangle.Right > e.ClipRectangle.Right - BorderRadius)
 			{
-				tagRect.Y += buttonArgs.Rectangle.Height + BorderRadius / 2;
-				tagRect.X = e.ClipRectangle.X;
+				tagRect.Y += buttonArgs.Rectangle.Height + (BorderRadius / 2);
+				tagRect.X = e.ClipRectangle.X + BorderRadius;
 
 				buttonArgs.Rectangle = tagRect.Align(buttonArgs.Rectangle.Size, ContentAlignment.TopLeft);
 			}
@@ -79,16 +115,18 @@ internal abstract class D_PdxModsBase : IDashboardItem
 				_buttonActions[buttonArgs] = () => SelectTag(item);
 			}
 
-			tagRect.X += buttonArgs.Rectangle.Width + BorderRadius / 2;
+			tagRect.X += buttonArgs.Rectangle.Width + (BorderRadius / 2);
 			tagRect.Height = buttonArgs.Rectangle.Height;
 		}
 
-		preferredHeight = tagRect.Bottom + BorderRadius*3/2;
+		preferredHeight = tagRect.Bottom + (BorderRadius * 3 / 2);
 
 		var packages = GetPackages();
 
 		if (packages.Count == 0)
+		{
 			return;
+		}
 
 		var preferredSize = horizontal ? 350 : 90;
 		var columns = (int)Math.Max(1, Math.Floor((e.ClipRectangle.Width - Margin.Left) / (preferredSize * UI.FontScale)));

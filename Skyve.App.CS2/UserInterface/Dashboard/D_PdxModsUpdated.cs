@@ -8,45 +8,18 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Dashboard;
 internal class D_PdxModsUpdated : D_PdxModsBase
 {
-	private readonly IWorkshopService _workshopService;
 	private static List<IWorkshopInfo> _recentlyUpdatedMods = [];
 	private List<IWorkshopInfo> recentlyUpdatedMods = _recentlyUpdatedMods;
-
-	public D_PdxModsUpdated()
-	{
-		ServiceCenter.Get(out _workshopService);
-	}
 
 	protected override List<IWorkshopInfo> GetPackages()
 	{
 		return [.. recentlyUpdatedMods];
 	}
 
-	protected override void OnCreateControl()
-	{
-		base.OnCreateControl();
-
-		if (_workshopService.IsAvailable)
-		{
-			LoadData();
-		}
-		else
-		{
-			_workshopService.ContextAvailable += LoadData;
-		}
-	}
-
-	protected override void Dispose(bool disposing)
-	{
-		base.Dispose(disposing);
-
-		_workshopService.ContextAvailable -= LoadData;
-	}
-
 	protected override async Task ProcessDataLoad(CancellationToken token)
 	{
-		var newMods = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 8)).ToList();
-		var list = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: SelectedTags, limit: 16))
+		var newMods = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 8)).ToList();
+		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: SelectedTags, limit: 16))
 			.Where(x => !newMods.Any(y => y.Id == x.Id))
 			.Take(8)
 			.ToList();
@@ -59,11 +32,8 @@ internal class D_PdxModsUpdated : D_PdxModsBase
 		_recentlyUpdatedMods = recentlyUpdatedMods = list;
 
 		OnResizeRequested();
-	}
 
-	private void RightClick(IWorkshopInfo package)
-	{
-		SlickToolStrip.Show(App.Program.MainForm, ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(package));
+		await base.ProcessDataLoad(token);
 	}
 
 	protected override DrawingDelegate GetDrawingMethod(int width)

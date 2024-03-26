@@ -260,4 +260,11 @@ public partial class PC_Options : PanelContent
 		Application.Exit();
 		ServiceCenter.Get<IIOUtil>().Execute(App.Program.ExecutablePath, $"-deleteJunction \"{_settings.FolderSettings.AppDataPath}\" -stub", administrator: true);
 	}
+
+	private void DD_Dependency_SelectedItemChanged(object sender, EventArgs e)
+	{
+		_settings.UserSettings.DependencyResolution = DD_Dependency.SelectedItem;
+
+		_settings.UserSettings.Save();
+	}
 }

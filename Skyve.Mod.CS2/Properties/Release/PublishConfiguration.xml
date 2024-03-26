@@ -88,11 +88,17 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="" />
-  <ModVersion Value="0.9.0" />
+  <ModVersion Value="0.9.1" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.9.0
-*Official PDX Mods Release*
+# v0.9.1
+## Changes
+* Added tags to the PDX Mods showcase on the dashboard.
+* Stopping the game from Skyve now closes it normally so settings are saved properly by the game.
+* Launching the game with no active playset will show a prompt letting you know that no mods will be enabled.
+* Launching the game before the synchronization process ends will show a prompt asking if you'd like to launch automatically when it's done.
+* Fixed non-english languages showing the incorrect text if they haven't been translated.
+* Fixed launch not working for Gamepass users.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

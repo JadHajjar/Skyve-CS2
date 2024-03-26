@@ -8,23 +8,25 @@ using Newtonsoft.Json.Linq;
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Notifications;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
+
+using SlickControls;
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Management;
 using System.Timers;
 
 namespace Skyve.Systems.CS2.Managers;
 
 internal class CitiesManager : ICitiesManager
 {
+	private readonly ISettings _settings;
 	private readonly ILogger _logger;
-	private readonly ILocationService _locationManager;
 	private readonly IIOUtil _iOUtil;
+	private readonly ILocationService _locationManager;
 	private readonly IServiceProvider _serviceProvider;
 
 	public event MonitorTickDelegate? MonitorTick;
@@ -39,14 +41,12 @@ internal class CitiesManager : ICitiesManager
 		_locationManager = locationManager;
 		_iOUtil = iOUtil;
 		_serviceProvider = serviceProvider;
+		_settings = settings;
 
 		var citiesMonitorTimer = new Timer(1000);
 
-		//if (CrossIO.CurrentPlatform is Platform.Windows)
-		{
-			citiesMonitorTimer.Elapsed += CitiesMonitorTimer_Elapsed;
-			citiesMonitorTimer.Start();
-		}
+		citiesMonitorTimer.Elapsed += CitiesMonitorTimer_Elapsed;
+		citiesMonitorTimer.Start();
 
 		var launcherSettings = CrossIO.Combine(settings.FolderSettings.GamePath, "Launcher", "launcher-settings.json");
 
@@ -81,30 +81,58 @@ internal class CitiesManager : ICitiesManager
 
 	public bool IsAvailable()
 	{
-		var _playsetManager = _serviceProvider.GetService<IPlaysetManager>();
-		var file = (_playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings.UseCitiesExe == true
+		var playsetManager = _serviceProvider.GetService<IPlaysetManager>();
+		var file = (playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings.UseCitiesExe == true || _settings.FolderSettings.GamingPlatform != Skyve.Domain.Enums.GamingPlatform.Steam
 			? _locationManager.CitiesPathWithExe
 			: _locationManager.SteamPathWithExe;
 
 		return CrossIO.FileExists(file);
 	}
 
-	public void Launch()
+	public async void Launch()
 	{
-		var _playsetManager = _serviceProvider.GetService<IPlaysetManager>();
-		var args = GetCommandArgs(_playsetManager);
-		var file = (_playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings.UseCitiesExe == true
+		var workshopService = _serviceProvider.GetService<IWorkshopService>();
+
+		if (!workshopService!.IsReady)
+		{
+			switch (MessagePrompt.Show(LocaleCS2.SyncOngoingLaunchGame, LocaleCS2.SyncOngoing, PromptButtons.YesNoCancel, PromptIcons.Hand))
+			{
+				case System.Windows.Forms.DialogResult.Cancel:
+					return;
+				case System.Windows.Forms.DialogResult.Yes:
+					await workshopService.WaitUntilReady();
+					break;
+			}
+		}
+		else if (_settings.UserSettings.SyncBeforeLaunching)
+		{
+			await workshopService.RunSync();
+		}
+
+		var playsetManager = _serviceProvider.GetService<IPlaysetManager>();
+
+		if (playsetManager!.CurrentPlayset is null)
+		{
+			switch (MessagePrompt.Show(LocaleCS2.StartingWithNoPlayset, Locale.NoActivePlayset, PromptButtons.OKCancel, PromptIcons.Hand))
+			{
+				case System.Windows.Forms.DialogResult.Cancel:
+					return;
+			}
+		}
+
+		var args = GetCommandArgs(playsetManager);
+		var file = (playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings.UseCitiesExe == true || _settings.FolderSettings.GamingPlatform != Skyve.Domain.Enums.GamingPlatform.Steam
 			? _locationManager.CitiesPathWithExe
 			: _locationManager.SteamPathWithExe;
 
 		_iOUtil.Execute(file, string.Join(" ", args));
 	}
 
-	private IEnumerable<string> GetCommandArgs(IPlaysetManager? _playsetManager)
+	private IEnumerable<string> GetCommandArgs(IPlaysetManager? playsetManager)
 	{
-		var launchOptions = (_playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings;
+		var launchOptions = (playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings;
 
-		if (!(launchOptions?.UseCitiesExe == true))
+		if (!(launchOptions?.UseCitiesExe == true || _settings.FolderSettings.GamingPlatform != Skyve.Domain.Enums.GamingPlatform.Steam))
 		{
 			yield return "-applaunch 949230";
 		}
@@ -184,39 +212,26 @@ internal class CitiesManager : ICitiesManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to kill C:S");
+			_logger.Exception(ex, "Failed to kill C:S II");
 		}
 	}
 
 	private void KillProcessAndChildren(Process proc)
 	{
-		//foreach (var childProc in GetChildProcesses(proc))
-		//{
-		//	KillProcessAndChildren(childProc);
-		//}
-
-		proc.Kill();
-	}
-
-	private List<Process> GetChildProcesses(Process proc)
-	{
-		var childProcs = new List<Process>();
-
-		try
+		if ((DateTime.Now - proc.StartTime).TotalSeconds < 30)
 		{
-			var mos = new ManagementObjectSearcher(
-			$"Select * From Win32_Process Where ParentProcessID={proc.Id}");
-
-			foreach (var mo in mos.Get().Cast<ManagementObject>())
-			{
-				var childPid = Convert.ToInt32(mo["ProcessID"]);
-				var childProc = Process.GetProcessById(childPid);
-				childProcs.Add(childProc);
-			}
+			proc.Kill();
+			return;
 		}
-		catch { }
 
-		return childProcs;
+		proc.CloseMainWindow();
+
+		System.Threading.Thread.Sleep(10_000);
+
+		if (!proc.HasExited)
+		{
+			proc.Kill();
+		}
 	}
 
 	public void SetLaunchingStatus(bool launching)

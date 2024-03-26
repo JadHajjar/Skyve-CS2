@@ -39,7 +39,7 @@ public class Installer
 
 		originalPath.CopyAll(targetFolder);
 
-		await Task.Delay(100);
+		await Task.Delay(150);
 
 		File.Copy(Application.ExecutablePath, uninstallPath, true);
 

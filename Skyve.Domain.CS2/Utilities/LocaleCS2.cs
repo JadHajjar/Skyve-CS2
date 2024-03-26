@@ -400,6 +400,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation StartCities => _instance.GetText("StartCities");
 
 	/// <summary>
+	/// You're about to launch the game with no active playset. This means that no mods will be enabled in the game.
+	/// </summary>
+	public static Translation StartingWithNoPlayset => _instance.GetText("StartingWithNoPlayset");
+
+	/// <summary>
 	/// Stop Cities: Skylines II
 	/// </summary>
 	public static Translation StopCities => _instance.GetText("StopCities");
@@ -411,9 +416,24 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SubscribeToItem => _instance.GetText("SubscribeToItem");
 
 	/// <summary>
+	/// Synchronize mods before launching the game
+	/// </summary>
+	public static Translation SyncBeforeLaunching => _instance.GetText("SyncBeforeLaunching");
+
+	/// <summary>
+	/// Runs a mod sync before launching to make sure all mods are up to date.
+	/// </summary>
+	public static Translation SyncBeforeLaunchingTip => _instance.GetText("SyncBeforeLaunching_Tip");
+
+	/// <summary>
 	/// Sync is currently ongoing
 	/// </summary>
 	public static Translation SyncOngoing => _instance.GetText("SyncOngoing");
+
+	/// <summary>
+	/// Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready? Select 'No' to start the game anyway.
+	/// </summary>
+	public static Translation SyncOngoingLaunchGame => _instance.GetText("SyncOngoingLaunchGame");
 
 	/// <summary>
 	/// Total C:S II User Data Stored

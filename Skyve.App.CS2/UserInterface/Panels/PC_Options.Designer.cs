@@ -71,6 +71,7 @@ partial class PC_Options
 			this.slickCheckbox7 = new SlickControls.SlickCheckbox();
 			this.CB_AssumeInternetConnectivity = new SlickControls.SlickCheckbox();
 			this.slickCheckbox6 = new SlickControls.SlickCheckbox();
+			this.DD_Dependency = new Skyve.App.CS2.UserInterface.Generic.DependencyResolutionDropdown();
 			this.TLP_Preferences = new SlickControls.RoundedGroupTableLayoutPanel();
 			this.slickCheckbox1 = new SlickControls.SlickCheckbox();
 			this.slickCheckbox2 = new SlickControls.SlickCheckbox();
@@ -81,13 +82,13 @@ partial class PC_Options
 			this.slickCheckbox11 = new SlickControls.SlickCheckbox();
 			this.TLP_UI = new SlickControls.RoundedGroupTableLayoutPanel();
 			this.B_HelpTranslate = new SlickControls.SlickButton();
+			this.DD_Language = new Skyve.App.UserInterface.Dropdowns.LanguageDropDown();
 			this.B_Theme = new SlickControls.SlickButton();
 			this.slickSpacer1 = new SlickControls.SlickSpacer();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.slickScroll1 = new SlickControls.SlickScroll();
 			this.slickSpacer3 = new SlickControls.SlickSpacer();
-			this.DD_Language = new Skyve.App.UserInterface.Dropdowns.LanguageDropDown();
-			this.DD_Dependency = new Skyve.App.CS2.UserInterface.Generic.DependencyResolutionDropdown();
+			this.slickCheckbox10 = new SlickControls.SlickCheckbox();
 			this.TLP_Main.SuspendLayout();
 			this.TLP_HelpLogs.SuspendLayout();
 			this.TLP_Advanced.SuspendLayout();
@@ -125,7 +126,7 @@ partial class PC_Options
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_Main.Size = new System.Drawing.Size(1100, 891);
+			this.TLP_Main.Size = new System.Drawing.Size(1100, 939);
 			this.TLP_Main.TabIndex = 13;
 			// 
 			// TLP_HelpLogs
@@ -430,14 +431,15 @@ partial class PC_Options
 			this.TLP_Settings.Controls.Add(this.slickCheckbox7, 0, 5);
 			this.TLP_Settings.Controls.Add(this.CB_AssumeInternetConnectivity, 0, 4);
 			this.TLP_Settings.Controls.Add(this.slickCheckbox6, 0, 0);
-			this.TLP_Settings.Controls.Add(this.DD_Dependency, 0, 7);
+			this.TLP_Settings.Controls.Add(this.DD_Dependency, 0, 8);
+			this.TLP_Settings.Controls.Add(this.slickCheckbox10, 0, 7);
 			this.TLP_Settings.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon10.Name = "Cog";
 			this.TLP_Settings.ImageName = dynamicIcon10;
 			this.TLP_Settings.Location = new System.Drawing.Point(3, 419);
 			this.TLP_Settings.Name = "TLP_Settings";
 			this.TLP_Settings.Padding = new System.Windows.Forms.Padding(18, 56, 18, 18);
-			this.TLP_Settings.RowCount = 8;
+			this.TLP_Settings.RowCount = 9;
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -446,7 +448,8 @@ partial class PC_Options
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Settings.Size = new System.Drawing.Size(544, 469);
+			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Settings.Size = new System.Drawing.Size(544, 517);
 			this.TLP_Settings.TabIndex = 1;
 			this.TLP_Settings.Text = "Settings";
 			// 
@@ -581,6 +584,17 @@ partial class PC_Options
 			this.slickCheckbox6.Tag = "FilterIncludedByDefault";
 			this.slickCheckbox6.Text = "FilterIncludedByDefault";
 			this.slickCheckbox6.UncheckedText = null;
+			// 
+			// DD_Dependency
+			// 
+			this.DD_Dependency.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.DD_Dependency.Location = new System.Drawing.Point(21, 443);
+			this.DD_Dependency.Name = "DD_Dependency";
+			this.DD_Dependency.Size = new System.Drawing.Size(390, 53);
+			this.DD_Dependency.SkyvePage = Skyve.Domain.Enums.SkyvePage.None;
+			this.DD_Dependency.TabIndex = 7;
+			this.DD_Dependency.Text = "DependencyResolution";
+			this.DD_Dependency.SelectedItemChanged += new System.EventHandler(this.DD_Dependency_SelectedItemChanged);
 			// 
 			// TLP_Preferences
 			// 
@@ -786,6 +800,20 @@ partial class PC_Options
 			this.B_HelpTranslate.Text = "HelpTranslate";
 			this.B_HelpTranslate.Click += new System.EventHandler(this.B_HelpTranslate_Click);
 			// 
+			// DD_Language
+			// 
+			this.DD_Language.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.DD_Language.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DD_Language.Font = new System.Drawing.Font("Segoe UI", 10.25F);
+			this.DD_Language.Location = new System.Drawing.Point(25, 63);
+			this.DD_Language.Margin = new System.Windows.Forms.Padding(7);
+			this.DD_Language.MatchBackgroundColor = false;
+			this.DD_Language.Name = "DD_Language";
+			this.DD_Language.Padding = new System.Windows.Forms.Padding(7);
+			this.DD_Language.Size = new System.Drawing.Size(219, 63);
+			this.DD_Language.TabIndex = 0;
+			this.DD_Language.Text = "Language";
+			// 
 			// B_Theme
 			// 
 			this.B_Theme.AutoSize = true;
@@ -844,29 +872,23 @@ partial class PC_Options
 			this.slickSpacer3.Text = "slickSpacer3";
 			this.slickSpacer3.Visible = false;
 			// 
-			// DD_Language
+			// slickCheckbox10
 			// 
-			this.DD_Language.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.DD_Language.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DD_Language.Font = new System.Drawing.Font("Segoe UI", 10.25F);
-			this.DD_Language.Location = new System.Drawing.Point(25, 63);
-			this.DD_Language.Margin = new System.Windows.Forms.Padding(7);
-			this.DD_Language.MatchBackgroundColor = false;
-			this.DD_Language.Name = "DD_Language";
-			this.DD_Language.Padding = new System.Windows.Forms.Padding(7);
-			this.DD_Language.Size = new System.Drawing.Size(219, 63);
-			this.DD_Language.TabIndex = 0;
-			this.DD_Language.Text = "Language";
-			// 
-			// DD_Dependency
-			// 
-			this.DD_Dependency.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.DD_Dependency.Location = new System.Drawing.Point(21, 395);
-			this.DD_Dependency.Name = "DD_Dependency";
-			this.DD_Dependency.Size = new System.Drawing.Size(298, 53);
-			this.DD_Dependency.SkyvePage = Skyve.Domain.Enums.SkyvePage.None;
-			this.DD_Dependency.TabIndex = 7;
-			this.DD_Dependency.Text = "DependencyResolution";
+			this.slickCheckbox10.AutoSize = true;
+			this.slickCheckbox10.Checked = false;
+			this.slickCheckbox10.CheckedText = null;
+			this.slickCheckbox10.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.slickCheckbox10.DefaultValue = false;
+			this.slickCheckbox10.EnterTriggersClick = false;
+			this.slickCheckbox10.Location = new System.Drawing.Point(21, 395);
+			this.slickCheckbox10.Name = "slickCheckbox10";
+			this.slickCheckbox10.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
+			this.slickCheckbox10.Size = new System.Drawing.Size(198, 42);
+			this.slickCheckbox10.SpaceTriggersClick = true;
+			this.slickCheckbox10.TabIndex = 6;
+			this.slickCheckbox10.Tag = "SyncBeforeLaunching";
+			this.slickCheckbox10.Text = "SyncBeforeLaunching";
+			this.slickCheckbox10.UncheckedText = null;
 			// 
 			// PC_Options
 			// 
@@ -947,4 +969,5 @@ partial class PC_Options
 	private SlickSpacer slickSpacer5;
 	private System.Windows.Forms.Label L_JunctionTitle;
 	private Generic.DependencyResolutionDropdown DD_Dependency;
+	private SlickCheckbox slickCheckbox10;
 }
