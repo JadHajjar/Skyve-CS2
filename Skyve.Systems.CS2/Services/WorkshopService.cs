@@ -106,7 +106,7 @@ public class WorkshopService : IWorkshopService
 			Environment = BackendEnvironment.Live,
 			TelemetryDebugEnabled = false,
 			Ecosystem = ecoSystem,
-			UserIdType = "steam",
+			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
 #if DEBUG
 			LogLevel = LogLevel.L1_Debug,
 #else
@@ -393,7 +393,7 @@ public class WorkshopService : IWorkshopService
 
 		var items = new List<IWorkshopInfo>();
 
-		for (var page = 0;; page++)
+		for (var page = 0; ; page++)
 		{
 
 			var result = await Context.Mods.Search(new SearchData
@@ -414,7 +414,7 @@ public class WorkshopService : IWorkshopService
 			}
 
 			var mods = result.Mods?.ToList(x => new PdxPackage(x)) ?? [];
-			
+
 			items.AddRange(mods);
 
 			if (mods.Count < 100)
@@ -571,7 +571,6 @@ public class WorkshopService : IWorkshopService
 			WorkshopQuerySorting.DateUpdated => SortMethod.Updated,
 			WorkshopQuerySorting.Rating => SortMethod.Rating,
 			WorkshopQuerySorting.Popularity => SortMethod.Popularity,
-			WorkshopQuerySorting.ActivationOrder => SortMethod.ActivationOrder,
 			WorkshopQuerySorting.Best => SortMethod.Best,
 			_ => SortMethod.Best,
 		};
@@ -596,13 +595,15 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var result = await Context.Mods.SubscribeBulk(
-				mods,
-				playset,
-				enable);
+			SubscribeResult result;
 
 			using (Lock)
 			{
+				result = await Context.Mods.SubscribeBulk(
+					mods,
+					playset,
+					enable);
+
 				await Task.Delay(1500);
 			}
 
@@ -629,16 +630,16 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			foreach (var id in mods)
-			{
-				var result = await Context.Mods.Unsubscribe(id, playset);
-
-				results.Add(ProcessResult(result));
-			}
-
 			using (Lock)
 			{
-				await Task.Delay(1500);
+				foreach (var id in mods)
+				{
+					var result = await Context.Mods.Unsubscribe(id, playset);
+
+					results.Add(ProcessResult(result));
+
+					await Task.Delay(1500);
+				}
 			}
 
 			_notifier.OnWorkshopSyncEnded();
@@ -830,6 +831,7 @@ public class WorkshopService : IWorkshopService
 		{
 			Directory.Delete(text, true);
 		}
+
 		Directory.CreateDirectory(text);
 		new DirectoryInfo(folder).CopyAll(new(text));
 		//File.WriteAllLines(Path.Combine(text, "ModList.txt"), config.Dependencies.ToArray(x => $"{x.Key} - {x.Value.DisplayName}"));
@@ -842,6 +844,7 @@ public class WorkshopService : IWorkshopService
 		else
 		{
 		}
+
 		if (config.Screenshots.Count > 0)
 		{
 			foreach (var text4 in config.Screenshots)

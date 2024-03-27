@@ -25,6 +25,7 @@ namespace Skyve.Mod.CS2
 		public Platform Platform { get; set; }
 		public GamingPlatform GamingPlatform { get; set; }
 		public string UserIdentifier { get; set; }
+		public string UserIdType { get; set; }
 
 		static FolderSettings()
 		{
@@ -40,9 +41,13 @@ namespace Skyve.Mod.CS2
 
 		public void Save()
 		{
+			Colossal.PSI.PdxSdk.PdxSdkExtensions.GetUserIdType(out var userType);
+
+			UserIdType = userType;
 			AppDataPath = EnvPath.kUserDataPath;
 			GamePath = Path.GetDirectoryName(EnvPath.kGameDataPath);
 			UserIdentifier = PlatformManager.instance.userSpecificPath;
+			GamingPlatform = GetGamingPlatform();
 			Platform = GetPlatform();
 
 			SkyveMod.Log.Info(FolderSettingsPath);
@@ -51,19 +56,24 @@ namespace Skyve.Mod.CS2
 			File.WriteAllText(FolderSettingsPath, JSON.Dump(this));
 		}
 
+		private GamingPlatform GetGamingPlatform()
+		{
+			return UserIdType switch
+			{
+				"xbox_xsts" => GamingPlatform.Microsoft,
+				"steam" => GamingPlatform.Steam,
+				_ => GamingPlatform.Unknown
+			};
+		}
+
 		public static Platform GetPlatform()
 		{
-			switch (Application.platform)
+			return Application.platform switch
 			{
-				case RuntimePlatform.LinuxPlayer:
-				case RuntimePlatform.LinuxEditor:
-					return Platform.Linux;
-				case RuntimePlatform.OSXEditor:
-				case RuntimePlatform.OSXPlayer:
-					return Platform.MacOSX;
-				default:
-					return Platform.Windows;
-			}
+				RuntimePlatform.LinuxPlayer or RuntimePlatform.LinuxEditor => Platform.Linux,
+				RuntimePlatform.OSXEditor or RuntimePlatform.OSXPlayer => Platform.MacOSX,
+				_ => Platform.Windows,
+			};
 		}
 	}
 }

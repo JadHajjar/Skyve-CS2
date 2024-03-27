@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Game;
 using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
@@ -20,7 +21,6 @@ using System.IO;
 using System.Timers;
 
 namespace Skyve.Systems.CS2.Managers;
-
 internal class CitiesManager : ICitiesManager
 {
 	private readonly ISettings _settings;
@@ -82,7 +82,7 @@ internal class CitiesManager : ICitiesManager
 	public bool IsAvailable()
 	{
 		var playsetManager = _serviceProvider.GetService<IPlaysetManager>();
-		var file = (playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings.UseCitiesExe == true || _settings.FolderSettings.GamingPlatform != Skyve.Domain.Enums.GamingPlatform.Steam
+		var file = IsExeLaunch((playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings)
 			? _locationManager.CitiesPathWithExe
 			: _locationManager.SteamPathWithExe;
 
@@ -121,7 +121,7 @@ internal class CitiesManager : ICitiesManager
 		}
 
 		var args = GetCommandArgs(playsetManager);
-		var file = (playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings.UseCitiesExe == true || _settings.FolderSettings.GamingPlatform != Skyve.Domain.Enums.GamingPlatform.Steam
+		var file = IsExeLaunch((playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings)
 			? _locationManager.CitiesPathWithExe
 			: _locationManager.SteamPathWithExe;
 
@@ -132,7 +132,7 @@ internal class CitiesManager : ICitiesManager
 	{
 		var launchOptions = (playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings;
 
-		if (!(launchOptions?.UseCitiesExe == true || _settings.FolderSettings.GamingPlatform != Skyve.Domain.Enums.GamingPlatform.Steam))
+		if (!IsExeLaunch(launchOptions))
 		{
 			yield return "-applaunch 949230";
 		}
@@ -180,13 +180,19 @@ internal class CitiesManager : ICitiesManager
 		}
 	}
 
+	private bool IsExeLaunch(GameLaunchOptions? launchOptions)
+	{
+		return launchOptions?.UseCitiesExe == true || _settings.FolderSettings.GamingPlatform != Skyve.Domain.Enums.GamingPlatform.Steam;
+	}
+
 	public void RunStub()
 	{
-		var command = $"-applaunch 949230 -stub";
+		string[] args = ["--stub", .. GetCommandArgs(null)];
+		var file = IsExeLaunch(null)
+			? _locationManager.CitiesPathWithExe
+			: _locationManager.SteamPathWithExe;
 
-		var file = _locationManager.SteamPathWithExe;
-
-		_iOUtil.Execute(file, command);
+		_iOUtil.Execute(file, string.Join(" ", args));
 	}
 
 	public bool IsRunning()
@@ -207,7 +213,7 @@ internal class CitiesManager : ICitiesManager
 		{
 			foreach (var proc in Process.GetProcessesByName("Cities2"))
 			{
-				KillProcessAndChildren(proc);
+				KillProcess(proc);
 			}
 		}
 		catch (Exception ex)
@@ -216,7 +222,7 @@ internal class CitiesManager : ICitiesManager
 		}
 	}
 
-	private void KillProcessAndChildren(Process proc)
+	private void KillProcess(Process proc)
 	{
 		if ((DateTime.Now - proc.StartTime).TotalSeconds < 30)
 		{

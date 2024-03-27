@@ -10,6 +10,7 @@ using Skyve.Domain.Systems;
 
 using System.Drawing;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -166,7 +167,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 		slickTabControl.Padding = UI.Scale(new Padding(5, 5, 0, 0), UI.FontScale);
 	}
 
-	protected async Task<IEnumerable<IPackageIdentity>> GetItems()
+	protected async Task<IEnumerable<IPackageIdentity>> GetItems(CancellationToken cancellationToken)
 	{
 		return await Task.FromResult(_compatibilityManager.GetPackagesThatReference(Package, _settings.UserSettings.ShowAllReferencedPackages));
 	}

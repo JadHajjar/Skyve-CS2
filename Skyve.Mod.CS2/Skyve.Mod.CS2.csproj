@@ -62,6 +62,9 @@
 		<Reference Include="Colossal.PSI.Common">
 			<Private>false</Private>
 		</Reference>
+		<Reference Include="Colossal.PSI.PdxSdk">
+			<Private>false</Private>
+		</Reference>
 		<Reference Include="Colossal.Localization">
 			<Private>false</Private>
 		</Reference>

@@ -5,6 +5,7 @@ using Skyve.App.UserInterface.Panels;
 using Skyve.Domain.CS2.Content;
 
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -101,7 +102,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		return true;
 	}
 
-	private Task<IEnumerable<IPackageIdentity>> GetContents()
+	private Task<IEnumerable<IPackageIdentity>> GetContents(CancellationToken cancellationToken)
 	{
 		return _playsetManager.GetPlaysetContents(Playset);
 	}
