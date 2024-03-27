@@ -153,8 +153,8 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 			Name = package.Name,
 			AuthorId = workshopInfo?.Author?.Id?.ToString() ?? string.Empty,
 			FileName = package.GetLocalPackageIdentity()?.FilePath,
-			Links = workshopInfo?.Links.ToList(x => new PackageLink { Type = x.Type, Title = x.Title, Url = x.Url }) ?? [],
-			Tags = workshopInfo?.Tags.Values.ToList() ?? []
+			Links = [],
+			Tags = []
 		};
 
 		if (workshopInfo?.Requirements.Any() ?? false)

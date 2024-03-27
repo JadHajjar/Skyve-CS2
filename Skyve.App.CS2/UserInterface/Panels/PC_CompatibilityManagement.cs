@@ -310,23 +310,6 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			{
 				postPackage = skyveDataManager.GetAutomatedReport(Package).CloneTo<PackageData, CompatibilityPostPackage>();
 			}
-			else
-			{
-				var automatedPackage = skyveDataManager.GetAutomatedReport(Package).CloneTo<PackageData, CompatibilityPostPackage>();
-
-				if (automatedPackage.Stability is PackageStability.Broken)
-				{
-					postPackage.Stability = PackageStability.Broken;
-				}
-
-				foreach (var item in automatedPackage.Statuses ?? [])
-				{
-					if (!postPackage.Statuses.Any(x => x.Type == item.Type))
-					{
-						postPackage.Statuses!.Add(item);
-					}
-				}
-			}
 
 			postPackage.IsBlackListedById = skyveDataManager.CompatibilityData.BlackListedIds?.Contains(postPackage.Id) ?? false;
 			postPackage.IsBlackListedByName = skyveDataManager.CompatibilityData.BlackListedNames?.Contains(postPackage.Name ?? string.Empty) ?? false;
@@ -479,7 +462,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 			foreach (var item in tags)
 			{
-				var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(item), Enabled = false };
+				var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(item) };
 				control.Click += TagControl_Click;
 				FLP_Tags.Controls.Add(control);
 			}
@@ -493,6 +476,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	private void TagControl_Click(object sender, EventArgs e)
 	{
 		(sender as Control)?.Dispose();
+
+		L_NoTags.Visible = FLP_Tags.Controls.Count == 0;
 
 		ControlValueChanged(sender, e);
 	}

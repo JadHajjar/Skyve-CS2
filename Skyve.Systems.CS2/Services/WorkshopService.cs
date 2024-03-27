@@ -352,11 +352,16 @@ public class WorkshopService : IWorkshopService
 		return [];
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, bool _ = false, int? limit = null, int? page = null)
+	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
 	{
 		if (Context is null)
 		{
 			return [];
+		}
+
+		if (all)
+		{
+			return await GetAllFilesAsync(sorting, query, requiredTags);
 		}
 
 		var result = await Context.Mods.Search(new SearchData
@@ -376,9 +381,47 @@ public class WorkshopService : IWorkshopService
 			return result.Mods?.ToList(x => new PdxPackage(x)) ?? [];
 		}
 
-		_logger.Error(result.Error.Raw);
-
 		return [];
+	}
+
+	public async Task<IEnumerable<IWorkshopInfo>> GetAllFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null)
+	{
+		if (Context is null)
+		{
+			return [];
+		}
+
+		var items = new List<IWorkshopInfo>();
+
+		for (var page = 0;; page++)
+		{
+
+			var result = await Context.Mods.Search(new SearchData
+			{
+				sortBy = GetPdxSorting(sorting),
+				searchQuery = query,
+				tags = requiredTags?.ToList(),
+				orderBy = GetPdxOrder(sorting),
+				page = page,
+				pageSize = 100
+			});
+
+			ProcessResult(result);
+
+			if (!result.Success)
+			{
+				return items;
+			}
+
+			var mods = result.Mods?.ToList(x => new PdxPackage(x)) ?? [];
+			
+			items.AddRange(mods);
+
+			if (mods.Count < 100)
+			{
+				return items;
+			}
+		}
 	}
 
 	public async Task<IEnumerable<ITag>> GetAvailableTags()
@@ -554,9 +597,9 @@ public class WorkshopService : IWorkshopService
 		try
 		{
 			var result = await Context.Mods.SubscribeBulk(
-			mods,
-			playset,
-			enable);
+				mods,
+				playset,
+				enable);
 
 			using (Lock)
 			{
