@@ -55,8 +55,13 @@ internal class D_ContentInfo : IDashboardItem
 		_notifier.PlaysetChanged += LoadData;
 	}
 
-	protected override Task ProcessDataLoad(CancellationToken token)
+	protected override Task<bool> ProcessDataLoad(CancellationToken token)
 	{
+		if (!_notifier.IsContentLoaded)
+		{
+			return Task.FromResult(false);
+		}
+
 		var contentInfo = new ContentInfo();
 
 		foreach (var mod in _packageManager.Packages)
@@ -170,10 +175,10 @@ internal class D_ContentInfo : IDashboardItem
 			preferredHeight += BorderRadius;
 
 			using var font = UI.Font(7.5F);
-			using var valueFont = UI.Font(8.75F,  FontStyle.Bold);
+			using var valueFont = UI.Font(8.75F, FontStyle.Bold);
 			using var icon = IconManager.GetIcon("PDXMods", valueFont.Height * 5 / 4);
 			DrawValue(e, textRect, Locale.RecentlyUpdatedItem.Format(Locale.Package.Plural), info.RecentlyUpdated.Count.ToString(), applyDrawing, ref preferredHeight, "PDXMods", FormDesign.Design.ActiveColor);
-			DrawValue(e, textRect.Pad(icon.Width+BorderRadius/2, 0, 0, 0), Locale.RecentlyUpdatedItem.Format(Locale.CodeMod.Plural), info.RecentlyUpdatedCodeMods.ToString(), applyDrawing, ref preferredHeight);
+			DrawValue(e, textRect.Pad(icon.Width + BorderRadius / 2, 0, 0, 0), Locale.RecentlyUpdatedItem.Format(Locale.CodeMod.Plural), info.RecentlyUpdatedCodeMods.ToString(), applyDrawing, ref preferredHeight);
 
 			DrawButton(e, applyDrawing, ref preferredHeight, ViewRecentlyUpdated, new ButtonDrawArgs
 			{

@@ -18,9 +18,9 @@ internal abstract class D_PdxModsBase : IDashboardItem
 	protected readonly IWorkshopService WorkshopService;
 	protected string[]? SelectedTags => selectedTag == "All" ? null : [selectedTag];
 
-	public D_PdxModsBase()
+	public D_PdxModsBase(string? tag)
 	{
-		selectedTag = _tags[0];
+		selectedTag = tag ?? _tags[0];
 		ServiceCenter.Get(out WorkshopService);
 	}
 
@@ -50,7 +50,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		WorkshopService.ContextAvailable -= LoadData;
 	}
 
-	protected override Task ProcessDataLoad(CancellationToken token)
+	protected override Task<bool> ProcessDataLoad(CancellationToken token)
 	{
 		_lastLoadTimes[Key] = DateTime.Now;
 

@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
-internal class D_PdxModsNew : D_PdxModsBase
+internal class D_PdxModsNew() : D_PdxModsBase(lastTag)
 {
 	private static List<IWorkshopInfo> _newMods = [];
+	private static string? lastTag;
 	private List<IWorkshopInfo> newMods = _newMods;
 
 	protected override List<IWorkshopInfo> GetPackages()
@@ -15,20 +16,21 @@ internal class D_PdxModsNew : D_PdxModsBase
 		return [.. newMods];
 	}
 
-	protected override async Task ProcessDataLoad(CancellationToken token)
+	protected override async Task<bool> ProcessDataLoad(CancellationToken token)
 	{
 		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 8)).ToList();
 
 		if (token.IsCancellationRequested)
 		{
-			return;
+			return false;
 		}
 
 		_newMods = newMods = list;
+		lastTag = SelectedTags?.FirstOrDefault();
 
 		OnResizeRequested();
 
-		await base.ProcessDataLoad(token);
+		return await base.ProcessDataLoad(token);
 	}
 
 	protected override DrawingDelegate GetDrawingMethod(int width)

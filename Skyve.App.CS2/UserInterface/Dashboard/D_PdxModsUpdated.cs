@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
-internal class D_PdxModsUpdated : D_PdxModsBase
+internal class D_PdxModsUpdated() : D_PdxModsBase(lastTag)
 {
 	private static List<IWorkshopInfo> _recentlyUpdatedMods = [];
+	private static string? lastTag;
 	private List<IWorkshopInfo> recentlyUpdatedMods = _recentlyUpdatedMods;
 
 	protected override List<IWorkshopInfo> GetPackages()
@@ -16,7 +17,7 @@ internal class D_PdxModsUpdated : D_PdxModsBase
 		return [.. recentlyUpdatedMods];
 	}
 
-	protected override async Task ProcessDataLoad(CancellationToken token)
+	protected override async Task<bool> ProcessDataLoad(CancellationToken token)
 	{
 		var newMods = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 8)).ToList();
 		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: SelectedTags, limit: 16))
@@ -26,14 +27,15 @@ internal class D_PdxModsUpdated : D_PdxModsBase
 
 		if (token.IsCancellationRequested)
 		{
-			return;
+			return false;
 		}
 
 		_recentlyUpdatedMods = recentlyUpdatedMods = list;
+		lastTag = SelectedTags?.FirstOrDefault();
 
 		OnResizeRequested();
 
-		await base.ProcessDataLoad(token);
+		return await base.ProcessDataLoad(token);
 	}
 
 	protected override DrawingDelegate GetDrawingMethod(int width)

@@ -327,27 +327,35 @@ public class WorkshopService : IWorkshopService
 		return new PdxUser(authorId!.ToString());
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> GetWorkshopItemsByUserAsync(object userId)
+	public async Task<IEnumerable<IWorkshopInfo>> GetWorkshopItemsByUserAsync(object userId, WorkshopQuerySorting sorting = WorkshopQuerySorting.DateCreated, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
 	{
 		if (Context is null)
 		{
 			return [];
 		}
 
+		if (all)
+		{
+			return await GetAllFilesAsync(sorting, query, requiredTags, userId);
+		}
+
 		var result = await Context.Mods.Search(new SearchData
 		{
 			author = userId.ToString(),
-			pageSize = 9999
+			sortBy = GetPdxSorting(sorting),
+			searchQuery = query,
+			tags = requiredTags?.ToList(),
+			orderBy = GetPdxOrder(sorting),
+			page = page,
+			pageSize = limit ?? 100
 		});
 
 		ProcessResult(result);
 
 		if (result.Success)
 		{
-			return result.Mods.ToList(x => new PdxPackage(x));
+			return result.Mods?.ToList(x => new PdxPackage(x)) ?? [];
 		}
-
-		_logger.Error(result.Error.Raw);
 
 		return [];
 	}
@@ -384,7 +392,7 @@ public class WorkshopService : IWorkshopService
 		return [];
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> GetAllFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null)
+	public async Task<IEnumerable<IWorkshopInfo>> GetAllFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, object? userId = null)
 	{
 		if (Context is null)
 		{
@@ -398,6 +406,7 @@ public class WorkshopService : IWorkshopService
 
 			var result = await Context.Mods.Search(new SearchData
 			{
+				author = userId?.ToString(),
 				sortBy = GetPdxSorting(sorting),
 				searchQuery = query,
 				tags = requiredTags?.ToList(),

@@ -195,10 +195,10 @@ internal class ModsUtil : IModUtil
 			switch (_settings.UserSettings.DependencyResolution)
 			{
 				case Skyve.Domain.Enums.DependencyResolveBehavior.Automatic:
-					modList.AddRange(await ResolveDependencies(modList));
+					modList.AddRange(await ResolveDependencies(modList, playsetId));
 					break;
 				case Skyve.Domain.Enums.DependencyResolveBehavior.Ask:
-					var dependencies = await ResolveDependencies(modList);
+					var dependencies = await ResolveDependencies(modList, playsetId);
 
 					if (dependencies.Count > 0 && _interfaceService.AskForDependencyConfirmation(modList, dependencies))
 					{
@@ -356,7 +356,7 @@ internal class ModsUtil : IModUtil
 		}
 	}
 
-	private async Task<List<IPackageIdentity>> ResolveDependencies(List<IPackageIdentity> mods)
+	private async Task<List<IPackageIdentity>> ResolveDependencies(List<IPackageIdentity> mods, int? playsetId)
 	{
 		if (mods.Count == 0)
 		{
@@ -373,7 +373,7 @@ internal class ModsUtil : IModUtil
 			{
 				foreach (var item in workshopInfo.Requirements)
 				{
-					if (!item.IsDlc && !mods.Any(x => x.Id == item.Id) && !list.Any(x => x.Id == item.Id) && !IsIncluded(item))
+					if (!item.IsDlc && !mods.Any(x => x.Id == item.Id) && !list.Any(x => x.Id == item.Id) && !IsIncluded(item, playsetId))
 					{
 						list.Add(item);
 					}
@@ -381,17 +381,17 @@ internal class ModsUtil : IModUtil
 			}
 		}
 
-		list.AddRange(await ResolveDependencies(list));
+		list.AddRange(await ResolveDependencies(list, playsetId));
 
 		return list;
 	}
 
 	public int GetLoadOrder(IPackage package)
 	{
-		if (package.LocalData?.Folder is null)
-		{
-			return 0;
-		}
+		//if (package.LocalData?.Folder is null)
+		//{
+		//	return 0;
+		//}
 
 		//if (modConfig.TryGetValue(package.LocalData.Folder, out var info))
 		//{

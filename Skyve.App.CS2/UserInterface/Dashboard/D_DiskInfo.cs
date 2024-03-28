@@ -65,7 +65,7 @@ internal class D_DiskInfo : IDashboardItem
 		_logger.Exception(ex, "Failed to get Disk Info Summary");
 	}
 
-	protected override async Task ProcessDataLoad(CancellationToken token)
+	protected override Task<bool> ProcessDataLoad(CancellationToken token)
 	{
 		var contentInfo = new ContentInfo();
 		var junctionLocation = JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath);
@@ -79,7 +79,7 @@ internal class D_DiskInfo : IDashboardItem
 
 		if (token.IsCancellationRequested)
 		{
-			return;
+			return Task.FromResult(false);
 		}
 
 		var savesFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves");
@@ -105,14 +105,14 @@ internal class D_DiskInfo : IDashboardItem
 
 		if (token.IsCancellationRequested)
 		{
-			return;
+			return Task.FromResult(false);
 		}
 
 		info = contentInfo;
 
 		OnResizeRequested();
 
-		await Task.CompletedTask;
+		return Task.FromResult(true);
 	}
 
 	protected override DrawingDelegate GetDrawingMethod(int width)

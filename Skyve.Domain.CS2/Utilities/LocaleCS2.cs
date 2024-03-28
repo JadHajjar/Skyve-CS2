@@ -395,6 +395,31 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation RunSync => _instance.GetText("RunSync");
 
 	/// <summary>
+	/// Most Popular
+	/// </summary>
+	public static Translation SortingBest => _instance.GetText("Sorting_Best");
+
+	/// <summary>
+	/// Most Recent
+	/// </summary>
+	public static Translation SortingDateCreated => _instance.GetText("Sorting_DateCreated");
+
+	/// <summary>
+	/// Last Updated
+	/// </summary>
+	public static Translation SortingDateUpdated => _instance.GetText("Sorting_DateUpdated");
+
+	/// <summary>
+	/// Most Subscribed
+	/// </summary>
+	public static Translation SortingPopularity => _instance.GetText("Sorting_Popularity");
+
+	/// <summary>
+	/// Alphabetical
+	/// </summary>
+	public static Translation SortingWorkshopName => _instance.GetText("Sorting_WorkshopName");
+
+	/// <summary>
 	/// Launch Cities: Skylines II
 	/// </summary>
 	public static Translation StartCities => _instance.GetText("StartCities");
