@@ -96,7 +96,7 @@
   "TotalSavesSize": "存档大小",
   "TotalSubbedSize": "订阅大小",
   "TotalOtherSize": "其他文件大小",
-  "FreeSpace": "{0} 空闲",
+  "FreeSpace": "剩余 {0}",
   "UsedOutOfSpace": "out of the {0} on drive {1}",
   "LowSpaceCreateJunction": {
     "Zero": "硬盘空间即将用尽，你需要清理一些空间，或者购买一个额外的硬盘。",
