@@ -1,6 +1,6 @@
 {
-  "StartCities": "启动 Cities: Skylines",
-  "StopCities": "关闭 Cities: Skylines",
+  "StartCities": "启动 Cities: Skylines II",
+  "StopCities": "关闭 Cities: Skylines II",
   "NoWorkshop": "禁用创意工坊插件",
   "ExcludeAll": "Remove all items from your active playset",
   "ExcludeAllDisabled": "Remove all disabled items from your active playset",
@@ -97,7 +97,7 @@
   "TotalSubbedSize": "订阅大小",
   "TotalOtherSize": "其他文件大小",
   "FreeSpace": "剩余 {0}",
-  "UsedOutOfSpace": "out of the {0} on drive {1}",
+  "UsedOutOfSpace": "{1} 盘 共 {0}",
   "LowSpaceCreateJunction": {
     "Zero": "硬盘空间即将用尽，你需要清理一些空间，或者购买一个额外的硬盘。",
     "One": "硬盘空间不足，请进入选项更改游戏内容的保存位置。"
