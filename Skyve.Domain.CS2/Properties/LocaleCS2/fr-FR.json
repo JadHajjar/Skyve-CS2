@@ -97,7 +97,7 @@
   "TotalSubbedSize": "Taille des abonnements",
   "TotalOtherSize": "Taille des autres fichiers",
   "FreeSpace": "{0} Libre",
-  "UsedOutOfSpace": "out of the {0} on drive {1}",
+  "UsedOutOfSpace": "sur {0} sur le disque {1}",
   "LowSpaceCreateJunction": {
     "Zero": "Vous êtes à court d'espace de stockage, vous devez faire de la place ou installer un disque supplémentaire.",
     "One": "Vous êtes à court d'espace de stockage, allez dans les options pour changer l'emplacement du contenu de jeu."
