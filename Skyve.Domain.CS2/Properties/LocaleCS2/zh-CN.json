@@ -4,7 +4,7 @@
   "NoWorkshop": "禁用创意工坊插件",
   "ExcludeAll": "Remove all items from your active playset",
   "ExcludeAllDisabled": "Remove all disabled items from your active playset",
-  "IncludeAll": "Add all items to your active playset",
+  "IncludeAll": "全部添加到当前配置文件",
   "ExcludeAllFiltered": "Remove filtered items from your active playset",
   "ExcludeAllDisabledFiltered": "Remove filtered & disabled items from your active playset",
   "IncludeAllFiltered": "Add filtered items to your active playset",
@@ -21,18 +21,18 @@
     "Plural": "复制已选插件的 PDX Mods ID"
   },
   "LaunchThroughCities": "通过 Cities2.exe 启动游戏",
-  "IncludeItem": "Add to your active playset",
-  "ExcludeItem": "Remove from your active playset",
+  "IncludeItem": "添加到当前配置文件",
+  "ExcludeItem": "从当前配置文件移除",
   "SubscribeToItem": {
-    "One": "Add to your active playset",
-    "Plural": "Add these to your active playset"
+    "One": "添加到当前配置文件",
+    "Plural": "添加到当前配置文件"
   },
   "IncludeThisItemInAllPlaysets": {
-    "One": "Add to all your playsets",
-    "Plural": "Add the selected items to all your playsets"
+    "One": "添加到所有配置文件",
+    "Plural": "将所有选中项添加到所有配置文件"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Remove from all your playsets",
+    "One": "从所有配置文件中移除",
     "Plural": "Remove the selected items from all your playsets"
   },
   "PackageIsRemoved": "插件 '{0}' 已从 Paradox Mods 移除",
@@ -54,9 +54,9 @@
   "LoginFailed": "登录失败，请确保您的电子邮件地址和密码是正确的。或稍后再试。",
   "RememberMeInfo": "* 您的凭据将被加密，并保存到您的计算机中。",
   "LoginDisclaimer": "登录流程将安全地通过 Paradox 服务处理，不会与 Skyve 共享数据。",
-  "DropNewPlayset": "Drop or select a playset's file here to import it",
+  "DropNewPlayset": "将配置文件拖到此处；或单击此处选择文件，来导入配置文件。",
   "FilterIncludedByDefault": "默认筛选出已装载的本地资产",
-  "FilterIncludedByDefault_Tip": "Only shows local content that are included in your active playset by default.",
+  "FilterIncludedByDefault_Tip": "默认只显示当前配置文件中已装载的本地资产。",
   "RunSetupOrRunApp": "您不能从此文件夹中运行 Skyve 。如果您已经安装了 Skyve，请从程序列表中运行它。\n\n如果没有，请点击“OK”来运行安装程序。",
   "CantRunAppFromHere": "您不能从这个文件夹中运行 Skyve 。\n\n您可以从程序列表中运行 Skyve 应用，或者从模组的文件夹中运行 Skyve 安装程序。",
   "UpdateAvailable": "有可用更新",
@@ -81,7 +81,7 @@
   "ChangeLocation": "更改内容存储位置",
   "ResetLocation": "重置位置",
   "JunctionRestart": "在此过程中，Skyve 和 Cities: Skylines II 将会关闭。\n\n完成时，Skyve 将自动重新启动。",
-  "PlaysetAlreadyImported": "This playset is already present in your list of playsets.",
+  "PlaysetAlreadyImported": "此配置文件已经在您的列表里了。",
   "CouldNotRetrieveMods": "无法获取模组数据",
   "NewGameUpdate": "Cities: Skylines II 最新更新",
   "NewGameUpdateInfo": "版本更新 {0} 现已发布。\n在开始游戏前，请务必检查兼容性。",
