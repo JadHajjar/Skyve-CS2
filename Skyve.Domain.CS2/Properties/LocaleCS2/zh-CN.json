@@ -55,7 +55,7 @@
   "RememberMeInfo": "* 您的凭据将被加密，并保存到您的计算机中。",
   "LoginDisclaimer": "登录流程将安全地通过 Paradox 服务处理，不会与 Skyve 共享数据。",
   "DropNewPlayset": "Drop or select a playset's file here to import it",
-  "FilterIncludedByDefault": "Enable 'Included' filter for local content by default",
+  "FilterIncludedByDefault": "默认筛选出已装载的本地资产",
   "FilterIncludedByDefault_Tip": "Only shows local content that are included in your active playset by default.",
   "RunSetupOrRunApp": "您不能从此文件夹中运行 Skyve 。如果您已经安装了 Skyve，请从程序列表中运行它。\n\n如果没有，请点击“OK”来运行安装程序。",
   "CantRunAppFromHere": "您不能从这个文件夹中运行 Skyve 。\n\n您可以从程序列表中运行 Skyve 应用，或者从模组的文件夹中运行 Skyve 安装程序。",
