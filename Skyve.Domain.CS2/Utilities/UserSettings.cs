@@ -21,7 +21,6 @@ public class UserSettings : ConfigFile, IUserSettings
 	bool IUserSettings.HidePseudoMods { get; set; }
 
 	public Dictionary<SkyvePage, SkyvePageContentSettings> PageSettings { get; set; } = [];
-	public ParadoxLoginInfo ParadoxLogin { get; set; }
 
 	public bool LinkModAssets { get; set; } = true;
 	public bool FadeDisabledItems { get; set; } = true;

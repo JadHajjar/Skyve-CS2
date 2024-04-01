@@ -8,7 +8,6 @@ internal class PC_SkyveChangeLog : PC_Changelog
 		$"Skyve.App.CS2.Changelog.json",
 		Assembly.GetExecutingAssembly().GetName().Version)
 	{
-		LocaleChangelog.Load();
 	}
 
 	protected override void PrepareChangelog(List<VersionChangeLog> changeLogs)

@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using Microsoft.Win32;
+
 using PDX.SDK.Contracts;
 using PDX.SDK.Contracts.Configuration;
 using PDX.SDK.Contracts.Credential;
@@ -116,10 +118,10 @@ public class WorkshopService : IWorkshopService
 
 		config.Mods.RootPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods");
 
-		if (Enum.TryParse<Language>(LocaleHelper.CurrentCulture.IetfLanguageTag.Substring(0, 2).ToLower(), out var lang))
-		{
-			config.Language = lang;
-		}
+		//if (Enum.TryParse<Language>(LocaleHelper.CurrentCulture.IetfLanguageTag.Substring(0, 2).ToLower(), out var lang))
+		//{
+		//	config.Language = lang;
+		//}
 
 		try
 		{
@@ -171,7 +173,7 @@ public class WorkshopService : IWorkshopService
 
 				loginWaitingConnection = false;
 
-				if (!_settings.UserSettings.ParadoxLogin.IsValid(KEYS.SALT))
+				if (!TryGetCredentials(out var credentials))
 				{
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
@@ -180,7 +182,7 @@ public class WorkshopService : IWorkshopService
 					return;
 				}
 
-				var loginResult = ProcessResult(await Context.Account.Login(GetCredentials()));
+				var loginResult = ProcessResult(await Context.Account.Login(credentials));
 
 				if (!loginResult.Success)
 				{
@@ -218,13 +220,10 @@ public class WorkshopService : IWorkshopService
 
 		if (rememberMe && loginResult.Success)
 		{
-			_settings.UserSettings.ParadoxLogin = new ParadoxLoginInfo
-			{
-				Email = Encryption.Encrypt(email, KEYS.SALT),
-				Password = Encryption.Encrypt(password, KEYS.SALT)
-			};
+			using var key = Registry.CurrentUser.CreateSubKey("Software\\Skyve");
 
-			_settings.UserSettings.Save();
+			key.SetValue("Email", Encryption.Encrypt(email, KEYS.SALT));
+			key.SetValue("Password", Encryption.Encrypt(password, KEYS.SALT));
 		}
 
 		if (loginResult.Success)
@@ -240,18 +239,20 @@ public class WorkshopService : IWorkshopService
 		return loginResult.Success;
 	}
 
-	private ICredential GetCredentials()
+	private bool TryGetCredentials(out ICredential credential)
 	{
 		try
 		{
-			var email = Encryption.Decrypt(_settings.UserSettings.ParadoxLogin.Email, KEYS.SALT);
-			var password = Encryption.Decrypt(_settings.UserSettings.ParadoxLogin.Password, KEYS.SALT);
+			using var key = Registry.CurrentUser.OpenSubKey("Software\\Skyve");
 
-			return new EmailAndPasswordCredential(email, password);
+			credential = new EmailAndPasswordCredential(Encryption.Decrypt(key.GetValue("Email").ToString(), KEYS.SALT), Encryption.Decrypt(key.GetValue("Password").ToString(), KEYS.SALT));
+
+			return true;
 		}
 		catch
 		{
-			return new EmailAndPasswordCredential(string.Empty, string.Empty);
+			credential = new EmailAndPasswordCredential(string.Empty, string.Empty);
+			return false;
 		}
 	}
 
@@ -644,6 +645,41 @@ public class WorkshopService : IWorkshopService
 				foreach (var id in mods)
 				{
 					var result = await Context.Mods.Unsubscribe(id, playset);
+
+					results.Add(ProcessResult(result));
+
+					await Task.Delay(1500);
+				}
+			}
+
+			_notifier.OnWorkshopSyncEnded();
+
+			return results.All(x => x.Success);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Catastrophic error during UnsubscribeBulk");
+
+			return false;
+		}
+	}
+
+	internal async Task<bool> UnsubscribeBulkCompletely(IEnumerable<int> mods)
+	{
+		if (Context is null)
+		{
+			return false;
+		}
+
+		var results = new List<Result>();
+
+		try
+		{
+			using (Lock)
+			{
+				foreach (var id in mods)
+				{
+					var result = await Context.Mods.Unsubscribe(id);
 
 					results.Add(ProcessResult(result));
 

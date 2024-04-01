@@ -14,7 +14,6 @@
 
 	<PropertyGroup>
 		<CustomInstallationPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II</CustomInstallationPath>
-		<PDXAccountDataPath>$(USERPROFILE)\Documents\pdx_account.txt</PDXAccountDataPath>
 		<PublishConfigurationPath>Properties\$(BuildType)\PublishConfiguration.xml</PublishConfigurationPath>
 	</PropertyGroup>
 

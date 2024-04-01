@@ -98,14 +98,4 @@
 		<Content Include="Resources\Skyve.ico" />
 		<EmbeddedResource Include="Changelog.json" />
 	</ItemGroup>
-
-	<PropertyGroup>
-		<ChangelogToLocale>$([System.IO.Path]::GetFullPath('..\Skyve\ChangelogToLocale\ChangelogToLocale.exe'))</ChangelogToLocale>
-		<OriginalJsonFile>"$([System.IO.Path]::GetFullPath('..\Skyve-CS2\Skyve.App.CS2\Changelog.json'))"</OriginalJsonFile>
-		<LocaleJsonFile>"$([System.IO.Path]::GetFullPath('..\Skyve-CS2\Skyve.App.CS2\Properties\Changelog.json'))"</LocaleJsonFile>
-	</PropertyGroup>
-
-	<Target Name="BuildLocale" BeforeTargets="PreBuildEvent">
-		<Exec Command="$(ChangelogToLocale) $(OriginalJsonFile) $(LocaleJsonFile)" />
-	</Target>
 </Project>

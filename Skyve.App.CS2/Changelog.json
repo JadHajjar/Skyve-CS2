@@ -2,8 +2,27 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.2",
+    "Date": "2024-03-28",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Updated the PDX Mods browsing tab. Filters, sorting, responsiveness have been improved.",
+          "Mods hidden because of your playset's usage are now shown as very dim in the mods list instead.",
+          "Fixed the background service not updating mods.",
+          "Fixed global tags not showing up correctly.",
+          "Fixed tags filter not working.",
+          "Fixed launch not working for Gamepass users."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.1",
-    "Date": "2024-03-25",
+    "Date": "2024-03-26",
     "ChangeGroups": [
       {
         "Name": "Changes",
@@ -12,8 +31,7 @@
           "Stopping the game from Skyve now closes it normally so settings are saved properly by the game.",
           "Launching the game with no active playset will show a prompt letting you know that no mods will be enabled.",
           "Launching the game before the synchronization process ends will show a prompt asking if you'd like to launch automatically when it's done.",
-          "Fixed non-english languages showing the incorrect text if they haven't been translated.",
-          "Fixed launch not working for Gamepass users."
+          "Fixed non-english languages showing the incorrect text if they haven't been translated."
         ]
       }
     ]

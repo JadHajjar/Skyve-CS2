@@ -32,7 +32,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 
 		if (WorkshopService.IsAvailable)
 		{
-			if (!_lastLoadTimes.TryGetValue(Key, out var date) || (DateTime.Now - date).TotalMinutes > 15)
+			if (!_lastLoadTimes.TryGetValue(Key, out var date) || (DateTime.Now - date).TotalMinutes > 15 || GetPackages().Count == 0)
 			{
 				LoadData();
 			}

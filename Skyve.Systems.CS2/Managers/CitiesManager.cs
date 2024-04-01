@@ -164,6 +164,11 @@ internal class CitiesManager : ICitiesManager
 			yield return "--developerMode";
 		}
 
+		if (launchSettings.UIDeveloperMode)
+		{
+			yield return "--uiDeveloperMode";
+		}
+
 		if (!string.IsNullOrEmpty(launchSettings.LogLevel) && !launchSettings.LogLevel.Equals("default", StringComparison.InvariantCultureIgnoreCase))
 		{
 			yield return "--logsEffectiveness=" + launchSettings.LogLevel;
