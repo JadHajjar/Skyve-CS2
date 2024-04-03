@@ -2,6 +2,35 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.2.2",
+    "Date": "2024-04-03",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed a bug that kept refreshing information on the dashboard."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.2.1",
+    "Date": "2024-04-03",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixes for non-english languages filtering by Tags in PDX Mods tab.",
+          "PDX Mods tab auto-load will now start before reaching the bottom"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.2",
     "Date": "2024-03-28",
     "ChangeGroups": [

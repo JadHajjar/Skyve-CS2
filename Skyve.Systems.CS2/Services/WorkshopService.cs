@@ -735,7 +735,7 @@ public class WorkshopService : IWorkshopService
 			return;
 		}
 
-		ProcessResult(await Context.Mods.SetLoadOrder(orderedMods, playset));
+		//ProcessResult(await Context.Mods.SetLoadOrder(orderedMods, playset));
 	}
 
 	internal async Task<bool> SetEnableBulk(List<int> modKeys, int playset, bool enable)

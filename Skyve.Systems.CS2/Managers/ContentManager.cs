@@ -404,7 +404,10 @@ internal class ContentManager : IContentManager
 			_packageManager.DeleteAll(item.LocalData!.Folder);
 		}
 
-		await _workshopService.UnsubscribeBulkCompletely(blackList.Select(x => (int)x.Id));
+		if (blackList.Count > 0)
+		{
+			await _workshopService.UnsubscribeBulkCompletely(blackList.Select(x => (int)x.Id));
+		}
 
 		_logger.Info($"Applying analysis results..");
 
