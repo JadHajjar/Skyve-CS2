@@ -5,12 +5,12 @@
   "ExcludeAll": "从当前配组移除所有内容",
   "ExcludeAllDisabled": "从当前配组移除所有禁用的内容",
   "IncludeAll": "全部添加到当前配组",
-  "ExcludeAllFiltered": "从当前配组移除所有已过滤内容",
-  "ExcludeAllDisabledFiltered": "从当前配组移除所有禁用&已过滤的内容",
-  "IncludeAllFiltered": "添加已过滤内容到当前配组",
+  "ExcludeAllFiltered": "从当前配组移除所有筛选出的项目",
+  "ExcludeAllDisabledFiltered": "从当前配组移除所有已禁用&筛选出的项目",
+  "IncludeAllFiltered": "将筛选出的项目添加到当前配组",
   "ExcludeAllSelected": "从当前配组中移除选中的项目",
   "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
-  "IncludeAllSelected": "Add selected items to your active playset",
+  "IncludeAllSelected": "将选中项目添加到当前配组",
   "ViewOnWorkshop": "在 PDX Mods 上查看",
   "CopyWorkshopLink": {
     "One": "复制 PDX Mods 链接",
@@ -48,7 +48,7 @@
   "Downloading": "正在下载...",
   "ModsDownloadFailed": {
     "One": "一个模组下载失败",
-    "Plural": "部分模组下载失败"
+    "Plural": "一些模组下载失败"
   },
   "LoginToParadox": "登录到 Paradox",
   "LoginFailed": "登录失败，请确保您的电子邮件地址和密码是正确的。或稍后再试。",
@@ -94,12 +94,12 @@
   "DiskStatus": "硬盘状态",
   "TotalCitiesSize": "C:S II 的所有用户数据",
   "TotalSavesSize": "存档大小",
-  "TotalSubbedSize": "订阅大小",
+  "TotalSubbedSize": "订阅项目总大小",
   "TotalOtherSize": "其他文件大小",
   "FreeSpace": "剩余 {0}",
   "UsedOutOfSpace": "{1} 盘 共 {0}",
   "LowSpaceCreateJunction": {
     "Zero": "硬盘空间即将用尽，你需要清理一些空间，或者购买一个额外的硬盘。",
-    "One": "硬盘空间不足，请进入选项更改游戏内容的保存位置。"
+    "One": "硬盘空间不足，请前往选项页面更改游戏内容的保存位置。"
   }
 }
