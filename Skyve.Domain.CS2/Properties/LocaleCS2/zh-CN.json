@@ -8,7 +8,7 @@
   "ExcludeAllFiltered": "从当前配组移除所有已过滤内容",
   "ExcludeAllDisabledFiltered": "从当前配组移除所有禁用&已过滤的内容",
   "IncludeAllFiltered": "添加已过滤内容到当前配组",
-  "ExcludeAllSelected": "Remove selected items from your active playset",
+  "ExcludeAllSelected": "从当前配组中移除选中的项目",
   "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
   "IncludeAllSelected": "Add selected items to your active playset",
   "ViewOnWorkshop": "在 PDX Mods 上查看",
