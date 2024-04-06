@@ -2,5 +2,5 @@
   "Options.SECTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod]": "Skyve",
   "Options.GROUP[Skyve Mod.Skyve.Mod.CS2.SkyveMod.GAMEPLAY_GROUP]": "설치",
   "Options.OPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "Skyve 설치",
-  "Options.OPTION_DESCRIPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "Skyve 설치를 위해 Skyve 설치 프로세스 시작하기"
+  "Options.OPTION_DESCRIPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "Skyve 설치를 위한 Skyve 설치 프로세스 시작하기"
 }
