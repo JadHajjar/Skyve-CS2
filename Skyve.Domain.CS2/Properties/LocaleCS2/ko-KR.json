@@ -4,7 +4,7 @@
   "NoWorkshop": "창작마당 패키지 비활성화",
   "ExcludeAll": "활성 PLAYSET에서 모든 항목 제거",
   "ExcludeAllDisabled": "비활성화된 모든 항목을 현재 PLAYSET에서 제거",
-  "IncludeAll": "모든 항목을 활성 PLAYSET에 추가",
+  "IncludeAll": "모든 항목을 현재 PLAYSET에 추가",
   "ExcludeAllFiltered": "Remove filtered items from your active playset",
   "ExcludeAllDisabledFiltered": "Remove filtered & disabled items from your active playset",
   "IncludeAllFiltered": "Add filtered items to your active playset",
