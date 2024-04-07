@@ -12,11 +12,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using static System.Environment;
+
 namespace Skyve.App.CS2.Installer;
 public class Installer
 {
 	private const string REG_KEY = "SkyveAppCs2";
-	private const string INSTALL_PATH = @"C:\Program Files\Skyve CS-II";
+	private static string INSTALL_PATH = @"C:\Program Files\Skyve CS-II";
+	private static bool DesktopShortcut;
+	private static bool InstallService;
 
 	public static async Task Install()
 	{
@@ -37,21 +41,39 @@ public class Installer
 
 		await Task.Delay(100);
 
-		originalPath.CopyAll(targetFolder);
+		try
+		{
+			originalPath.CopyAll(targetFolder);
+		}
+		catch (Exception ex)
+		{
+			throw new KnownException(ex, $"Skyve could not copy the files to this folder:\r\n\"{targetFolder.FullName}\"\r\n\r\nTry selecting another location to install Skyve.");
+		}
 
 		await Task.Delay(150);
 
 		File.Copy(Application.ExecutablePath, uninstallPath, true);
 
+		CreateUninstallRegistry(exePath, uninstallPath);
+
 		ExtensionClass.CreateShortcut(shortcutPath, exePath);
 
-		CreateUninstallRegistry(exePath, uninstallPath);
+		if (DesktopShortcut)
+		{
+			ExtensionClass.CreateShortcut(Path.Combine(GetFolderPath(SpecialFolder.Desktop), "Skyve CS-II.lnk"), exePath);
+		}
+
+		try
+		{
+			File.WriteAllText(Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II", "ModsSettings", "Skyve", "InstallPath"), targetFolder.FullName);
+		}
+		catch { }
 
 		Process.Start(exePath);
 
 		try
 		{
-			await RegisterService(false);
+			await RegisterService(!InstallService);
 		}
 		catch { }
 	}
@@ -268,8 +290,13 @@ public class Installer
 				key.SetValue("Publisher", "T. D. W.");
 				key.SetValue("DisplayIcon", FormatPath(appPath));
 				key.SetValue("DisplayVersion", version.ToString(2));
-				key.SetValue("URLInfoAbout", "");
+#if STABLE
+				key.SetValue("URLInfoAbout", "https://mods.paradoxplaza.com/mods/75804/Windows/");
+#else
+				key.SetValue("URLInfoAbout", "https://mods.paradoxplaza.com/mods/75804/Windows/");
+#endif
 				key.SetValue("UninstallString", FormatPath(uninstallPath));
+				key.SetValue("InstallService", InstallService);
 
 				if (!isUpdate)
 				{
@@ -286,6 +313,53 @@ public class Installer
 		{
 			throw new Exception("An error occurred writing uninstall information to the registry.  The service is fully installed but can only be uninstalled manually through the command line.", ex);
 		}
+	}
+
+	public static string? GetCurrentInstallationPath()
+	{
+		try
+		{
+			using var parent = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true) ?? throw new Exception("Uninstall registry key not found.");
+
+			RegistryKey? key = null;
+
+			try
+			{
+				key = parent.OpenSubKey(REG_KEY, true);
+
+				if (key is null)
+				{
+					return null;
+				}
+
+				var path = key.GetValue("UninstallString")?.ToString();
+
+				if (string.IsNullOrEmpty(path))
+				{
+					return null;
+				}
+
+				InstallService = key.GetValue("InstallService") is null or true;
+
+				return INSTALL_PATH = Path.GetDirectoryName(path!.Trim('"').Replace("\\\\", "\\"));
+			}
+			finally
+			{
+				key?.Close();
+				key?.Dispose();
+			}
+		}
+		catch 
+		{
+			return null;
+		}
+	}
+
+	public static void SetInstallSettings(string path, bool desktopShortcut, bool installService)
+	{
+		INSTALL_PATH = path;
+		DesktopShortcut = desktopShortcut;
+		InstallService = installService;
 	}
 
 	private static string FormatPath(string path)

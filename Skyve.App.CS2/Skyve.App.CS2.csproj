@@ -60,9 +60,7 @@
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
 		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs" />
-		<Compile Update="UserInterface\Dashboard\D_ContentInfo.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="UserInterface\Dashboard\D_ContentInfo.cs" />
 		<Compile Update="UserInterface\Dashboard\D_PdxModsBase.cs">
 		  <SubType>UserControl</SubType>
 		</Compile>

@@ -88,12 +88,13 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.9.2.2" />
+  <ModVersion Value="0.9.2.3" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.9.2.2
+# v0.9.2.3
 ## Changes
-* Fixed a bug that kept refreshing information on the dashboard.
+* Added a setup screen when first installing Skyve to let users change the install location.
+* Load order is now handled automatically by Skyve.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

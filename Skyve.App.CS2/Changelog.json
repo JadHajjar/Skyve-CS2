@@ -2,6 +2,21 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.2.3",
+    "Date": "2024-04-07",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added a setup screen when first installing Skyve to let users change the install location.",
+          "Load order is now handled automatically by Skyve."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.2.2",
     "Date": "2024-04-03",
     "ChangeGroups": [

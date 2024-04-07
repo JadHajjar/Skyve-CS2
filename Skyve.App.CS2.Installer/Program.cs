@@ -2,6 +2,8 @@
 
 using Microsoft.Win32;
 
+using SlickControls;
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -32,6 +34,7 @@ internal static class Program
 			return;
 		}
 
+		SlickCursors.Initialize();
 		Application.EnableVisualStyles();
 		Application.SetCompatibleTextRenderingDefault(false);
 
