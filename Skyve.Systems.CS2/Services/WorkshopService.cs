@@ -598,7 +598,7 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset, bool enable)
 	{
-		if (Context is null)
+		if (Context is null || playset <= 1)
 		{
 			return false;
 		}
@@ -631,7 +631,7 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<bool> UnsubscribeBulk(IEnumerable<int> mods, int playset)
 	{
-		if (Context is null)
+		if (Context is null || playset <= 1)
 		{
 			return false;
 		}

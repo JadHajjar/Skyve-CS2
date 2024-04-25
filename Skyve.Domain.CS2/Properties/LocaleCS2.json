@@ -45,6 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "Your saved username/password failed to log in. Click here to update your information.",
   "ParadoxLoginFailedEmpty": "Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.",
   "DownloadComplete": "Download completed",
+  "DownloadFailed": "Download failed",
   "Downloading": "Downloading...",
   "ModsDownloadFailed": {
     "One": "A mod failed to download",

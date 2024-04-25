@@ -50,6 +50,12 @@ internal class WorkshopEventsManager
 
 		_notificationsService.RemoveNotificationsOfType<PdxModDownloadFailed>();
 		_notificationsService.SendNotification(notification);
+
+		_subscriptionsManager.OnInstallFinished(new PackageInstallProgress
+		{
+			Id = (ulong)failed.ModId,
+			Progress = -1
+		});
 	}
 
 	private void OnInstallProgress(IInstallProgressEvent @event)

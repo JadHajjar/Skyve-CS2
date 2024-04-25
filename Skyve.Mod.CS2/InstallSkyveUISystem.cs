@@ -11,7 +11,6 @@ namespace Skyve.Mod.CS2
 {
 	internal partial class InstallSkyveUISystem : UISystemBase
 	{
-		private const string REG_KEY = "SkyveAppCs2";
 		private ValueBinding<bool> isInstalledBinding;
 		private bool installComplete;
 

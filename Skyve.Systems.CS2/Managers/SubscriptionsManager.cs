@@ -49,7 +49,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		Status = new SubscriptionStatus(
 			isActive: false,
 			modId: info.Id,
-			progress: 1f,
+			progress: info.Progress,
 			processedBytes: 0,
 			totalSize: 0);
 

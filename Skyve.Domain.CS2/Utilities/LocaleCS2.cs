@@ -100,6 +100,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation DownloadComplete => _instance.GetText("DownloadComplete");
 
 	/// <summary>
+	/// Download failed
+	/// </summary>
+	public static Translation DownloadFailed => _instance.GetText("DownloadFailed");
+
+	/// <summary>
 	/// Downloading...
 	/// </summary>
 	public static Translation Downloading => _instance.GetText("Downloading");
