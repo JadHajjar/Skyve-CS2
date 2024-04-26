@@ -54,11 +54,11 @@
   "LoginFailed": "로그인에 실패했습니다. 이메일 및 비밀번호를 정확하게 입력하거나 나중에 다시 시도하십시오.",
   "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
   "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve.",
-  "DropNewPlayset": "Drop or select a playset's file here to import it",
+  "DropNewPlayset": "PLAYSET 파일을 가져오려면 여기에 놓거나 선택하세요",
   "FilterIncludedByDefault": "Enable 'Included' filter for local content by default",
   "FilterIncludedByDefault_Tip": "Only shows local content that are included in your active playset by default.",
   "RunSetupOrRunApp": "You can't run Skyve from this folder. If you've installed it already, run it from your Programs list.\r\n\r\nIf not, click on 'Ok' to run the setup.",
-  "CantRunAppFromHere": "You can't run Skyve from this folder.\r\n\r\nEither run the app from your Programs list, or run the Skyve Setup from the mod's folder.",
+  "CantRunAppFromHere": "이 폴더에서는 Skyve를 실행할 수 없습니다.\n\n프로그램 목록의 앱이나 모드 폴더의 Skyve 설치 파일을 실행하세요.",
   "UpdateAvailable": "새 업데이트가 있습니다",
   "UpdateAvailableInfo": "클릭하여 Skyve 업데이트",
   "VoteMod": "이 모드를 추천합니다",
@@ -73,7 +73,7 @@
   "LogsToPlayerLog": "Player.log에 로그 복사",
   "InvalidFolderSettings": "Invalid setup detected",
   "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
-  "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
+  "InvalidFolderSettingsFail": "선택된 경로는 올바르지 않습니다. AppData의 'Cities Skylines II' 폴더를 선택하십시오.",
   "DefaultLocation": "Default User Data Location",
   "JunctionTitle": "Custom Content Location",
   "JunctionDescription": "Change the location where the game stores its content. This includes any mods, assets, and settings.\r\n\r\nSkyve will create a link between your desired location and the default app data folder in this process.",
@@ -99,7 +99,7 @@
   "FreeSpace": "{0} 사용 가능",
   "UsedOutOfSpace": "out of the {0} on drive {1}",
   "LowSpaceCreateJunction": {
-    "Zero": "You're running out of disk space, you need to clear up some storage or get an additional hard disk.",
-    "One": "You're running out of disk space, go to the options to change the location where the game's content is saved."
+    "Zero": "디스크 공간이 부족합니다. 저장소 공간을 확보하거나 디스크를 추가하십시오.",
+    "One": "디스크 공간이 부족합니다. 옵션에서 저장된 게임 콘텐츠 경로를 변경하십시오."
   }
 }
