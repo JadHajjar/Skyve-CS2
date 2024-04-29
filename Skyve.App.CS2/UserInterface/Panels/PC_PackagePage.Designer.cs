@@ -51,7 +51,7 @@ partial class PC_PackagePage
 			this.T_Playsets = new SlickControls.SlickTabControl.Tab();
 			this.T_Changelog = new SlickControls.SlickTabControl.Tab();
 			this.packageChangelogControl1 = new Skyve.App.CS2.UserInterface.Content.PackageChangelogControl();
-			this.commentsControl1 = new Skyve.App.CS2.UserInterface.Generic.CommentsControl();
+			this.commentsControl1 = new Skyve.App.CS2.UserInterface.Generic.CommentsSectionControl();
 			this.SuspendLayout();
 			// 
 			// slickTabControl
@@ -253,5 +253,5 @@ partial class PC_PackagePage
 	private SlickTabControl.Tab T_Changelog;
 	private Content.PackageChangelogControl packageChangelogControl1;
 	private SlickTabControl.Tab T_Comments;
-	private Generic.CommentsControl commentsControl1;
+	private Generic.CommentsSectionControl commentsControl1;
 }

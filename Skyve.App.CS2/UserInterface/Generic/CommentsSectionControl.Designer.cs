@@ -1,6 +1,6 @@
 ﻿namespace Skyve.App.CS2.UserInterface.Generic;
 
-partial class CommentsControl
+partial class CommentsSectionControl
 {
 	/// <summary> 
 	/// Required designer variable.
@@ -29,7 +29,6 @@ partial class CommentsControl
 	private void InitializeComponent()
 	{
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.C_Comments = new SlickControls.SlickControl();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -43,30 +42,21 @@ partial class CommentsControl
 			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(638, 100);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(0, 100);
 			this.tableLayoutPanel1.TabIndex = 2;
 			// 
-			// C_Comments
-			// 
-			this.C_Comments.Dock = System.Windows.Forms.DockStyle.Top;
-			this.C_Comments.Location = new System.Drawing.Point(0, 100);
-			this.C_Comments.Name = "C_Comments";
-			this.C_Comments.Size = new System.Drawing.Size(638, 150);
-			this.C_Comments.TabIndex = 3;
-			this.C_Comments.Paint += new System.Windows.Forms.PaintEventHandler(this.C_Comments_Paint);
-			// 
-			// CommentsControl
+			// CommentsSectionControl
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.Controls.Add(this.C_Comments);
+			this.AutoSize = true;
+			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.Controls.Add(this.tableLayoutPanel1);
-			this.Name = "CommentsControl";
-			this.Size = new System.Drawing.Size(638, 574);
+			this.Name = "CommentsSectionControl";
+			this.Size = new System.Drawing.Size(0, 100);
 			this.ResumeLayout(false);
 
 	}
 
 	#endregion
 	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-	private SlickControl C_Comments;
 }

@@ -214,7 +214,7 @@ internal class ModsUtil : IModUtil
 			? await _subscriptionsManager.Subscribe(mods, playset)
 			: await _subscriptionsManager.UnSubscribe(mods, playset);
 
-		if (result|| value)
+		if (result)
 		{
 			//if (value)
 			//{

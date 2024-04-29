@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Generic;
-public partial class CommentsControl : UserControl
+public partial class CommentsSectionControl : UserControl
 {
 	private IModCommentsInfo? modCommentsInfo;
 
 	public IPackageIdentity? Package { get; set; }
 
-    public CommentsControl()
+    public CommentsSectionControl()
 	{
 		InitializeComponent();
 	}
@@ -28,18 +28,12 @@ public partial class CommentsControl : UserControl
 			return;
 
 		modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package);
-	}
 
-	private void C_Comments_Paint(object sender, PaintEventArgs e)
-	{
-		if(modCommentsInfo?.Posts is null) return;
+		if (modCommentsInfo?.Posts == null) return;
 
-		var y = 0;
 		foreach (var item in modCommentsInfo.Posts)
 		{
-			e.Graphics.DrawStringItem(item.Message, Font, ForeColor, C_Comments.ClientRectangle, ref y);
+			Controls.Add(new CommentControl(item, Package));
 		}
-
-		C_Comments.Height = y;
 	}
 }
