@@ -90,6 +90,7 @@ public partial class PackageChangelogControl : SlickControl
 				{
 					base_P_Tabs.Add(PanelTab.Separator());
 					base_P_Tabs.Add(PanelTab.GroupName("All Versions"));
+					addedTitle = true;
 				}
 
 				AddVersion(item);

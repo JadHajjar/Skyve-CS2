@@ -33,6 +33,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 		T_Content.LinkedControl = LC_Items;
 		T_Compatibility.LinkedControl = new PackageCompatibilityReportControl(package);
 		T_Playsets.LinkedControl = new OtherPlaysetPackage(package);
+		commentsControl1.Package = package;
 
 		T_Playsets.Visible = !package.IsLocal();
 
@@ -70,7 +71,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 		SetPackage(package);
 	}
 
-	protected override void SetPackage(IPackageIdentity package)
+	protected override async void SetPackage(IPackageIdentity package)
 	{
 		base.SetPackage(package);
 

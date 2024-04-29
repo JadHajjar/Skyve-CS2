@@ -214,8 +214,13 @@ internal class ModsUtil : IModUtil
 			? await _subscriptionsManager.Subscribe(mods, playset)
 			: await _subscriptionsManager.UnSubscribe(mods, playset);
 
-		if (result)
+		if (result|| value)
 		{
+			//if (value)
+			//{
+			//	await SetEnabled(mods, !_settings.UserSettings.DisableNewModsByDefault, playsetId);
+			//}
+
 			foreach (var item in mods)
 			{
 				if (item.Id <= 0)
@@ -373,7 +378,7 @@ internal class ModsUtil : IModUtil
 			{
 				foreach (var item in workshopInfo.Requirements)
 				{
-					if (!item.IsDlc && !mods.Any(x => x.Id == item.Id) && !list.Any(x => x.Id == item.Id) && !IsIncluded(item, playsetId))
+					if (!item.IsDlc && !mods.Any(x => x.Id == item.Id) && !list.Any(x => x.Id == item.Id) && !IsEnabled(item, playsetId))
 					{
 						list.Add(item);
 					}

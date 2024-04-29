@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using PdxPlatform = PDX.SDK.Contracts.Enums.Platform;
@@ -596,6 +597,43 @@ public class WorkshopService : IWorkshopService
 		return result;
 	}
 
+	public async Task<IModCommentsInfo?> GetComments(IPackageIdentity packageIdentity, int page = 1)
+	{
+		if (Context is null)
+		{
+			return null;
+		}
+
+		var info = GetInfo(packageIdentity);
+
+		if (info is not PdxModDetails modDetails || string.IsNullOrEmpty(modDetails.ForumLink))
+		{
+			return null;
+		}
+
+		var regex = Regex.Match(modDetails.ForumLink, @"forum/threads/[^\.]+\.(\d+)", RegexOptions.IgnoreCase);
+
+		if (!regex.Success)
+		{
+			return null;
+		}
+
+		var result = ProcessResult(await Context.Mods.GetForumThread((int)info.Id, modDetails.PdxModsVersion, int.Parse(regex.Groups[1].Value), page, 30));
+
+		if (!result.Success)
+		{
+			return null;
+		}
+
+		return new PdxForumThreadInfo
+		{
+			HasMore = result.Count == 30,
+			CanPost = result.CanPost,
+			Page = page,
+			Posts = result.Posts.ToList(x => (IModComment)new PdxForumPost(x))
+		};
+	}
+
 	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset, bool enable)
 	{
 		if (Context is null || playset <= 1)
@@ -611,8 +649,7 @@ public class WorkshopService : IWorkshopService
 			{
 				result = await Context.Mods.SubscribeBulk(
 					mods,
-					playset,
-					enable);
+					playset);
 
 				await Task.Delay(1500);
 			}
@@ -788,7 +825,7 @@ public class WorkshopService : IWorkshopService
 		try
 		{
 			var result = ProcessResult(await Context.Mods.Sync());
-
+	
 			if (result.Error is not null && result.Error == Mods.PromptNeeded)
 			{
 				var conflicts = await Context.Mods.GetSyncConflicts();

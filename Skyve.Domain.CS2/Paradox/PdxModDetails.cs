@@ -46,6 +46,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
+		ForumLink = mod.ForumLinks?.FirstOrDefault();
 		Tags = mod.Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 		Requirements = mod.Dependencies?.ToArray(x => new PdxModRequirement(x)) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
@@ -65,6 +66,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public string? ShortDescription { get; set; }
 	public string? Description { get; set; }
 	public long ServerSize { get; set; }
+	public string? ForumLink { get; set; }
 	public string PdxModsVersion { get; set; }
 	public string Version { get; set; }
 	public int Subscribers { get; set; }

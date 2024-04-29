@@ -1,7 +1,5 @@
 ﻿using Extensions;
 
-using PDX.SDK.Contracts.Service.Mods.Enums;
-
 using Skyve.Domain.Systems;
 
 using System;
