@@ -2,11 +2,11 @@
   "StartCities": "启动 Cities: Skylines II",
   "StopCities": "关闭 Cities: Skylines II",
   "NoWorkshop": "禁用创意工坊插件",
-  "ExcludeAll": "从当前配组移除所有内容",
-  "ExcludeAllDisabled": "从当前配组移除所有禁用的内容",
+  "ExcludeAll": "从当前播放集移除所有项目",
+  "ExcludeAllDisabled": "从当前播放集中移除所有已禁用项目",
   "IncludeAll": "全部添加到当前配组",
-  "ExcludeAllFiltered": "从当前配组移除所有筛选出的项目",
-  "ExcludeAllDisabledFiltered": "从当前配组移除所有已禁用&筛选出的项目",
+  "ExcludeAllFiltered": "从当前播放集中移除所有筛选出的项目",
+  "ExcludeAllDisabledFiltered": "从当前播放集中移除所有已禁用和筛选出的项目",
   "IncludeAllFiltered": "将筛选出的项目添加到当前配组",
   "ExcludeAllSelected": "从当前配组中移除选中的项目",
   "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
@@ -33,7 +33,7 @@
   },
   "ExcludeThisItemInAllPlaysets": {
     "One": "从所有配组中移除",
-    "Plural": "Remove the selected items from all your playsets"
+    "Plural": "从所有播放集中移除选中项目"
   },
   "PackageIsRemoved": "插件 '{0}' 已从 Paradox Mods 移除",
   "PackageIsUnknown": "无法从PDX Mods 获取“{0}”的信息",
