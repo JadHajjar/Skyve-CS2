@@ -11,7 +11,7 @@
   "ExcludeAllSelected": "Remove selected items from your active playset",
   "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
   "IncludeAllSelected": "Add selected items to your active playset",
-  "ViewOnWorkshop": "View on PDX Mods",
+  "ViewOnWorkshop": "Auf PDX Mods anzeigen",
   "CopyWorkshopLink": {
     "One": "Copy PDX Mods link",
     "Plural": "Copy the selected packages' PDX Mods links"
@@ -20,7 +20,7 @@
     "One": "Copy PDX Mods ID",
     "Plural": "Copy the selected packages' PDX Mods IDs"
   },
-  "LaunchThroughCities": "Launch through Cities2.exe",
+  "LaunchThroughCities": "Start durch Cities2.exe",
   "IncludeItem": "Add to your active playset",
   "ExcludeItem": "Remove from your active playset",
   "SubscribeToItem": {
@@ -32,14 +32,14 @@
     "Plural": "Add the selected items to all your playsets"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Remove from all your playsets",
+    "One": "Entferne von allen deinen Playsets",
     "Plural": "Remove the selected items from all your playsets"
   },
   "PackageIsRemoved": "'{0}' was removed from PDX Mods",
-  "PackageIsUnknown": "The information from PDX Mods hasn't loaded for '{0}' yet",
+  "PackageIsUnknown": "Die Informationen von PDX Mods für '{0}' wurden noch nicht geladen",
   "PackageIsIncomplete": "The local size of '{0}' ({1}) is different than PDX Mods' {2}",
-  "OpenCitiesAppData": "Open C:S II's AppData folder",
-  "ResetSteamCache": "Clear PDX Mods cache",
+  "OpenCitiesAppData": "C:S II's AppData Ordner öffnen",
+  "ResetSteamCache": "PDX Mods Cache leeren",
   "ParadoxLoginFailedTitle": "Could not log you in to PDX Mods",
   "ParadoxLoginFailedNoConnection": "You're not connected to the internet, please check your connection and click here to try again.",
   "ParadoxLoginFailedBadCredentials": "Your saved username/password failed to log in. Click here to update your information.",
@@ -47,12 +47,12 @@
   "DownloadComplete": "Download completed",
   "Downloading": "Downloading...",
   "ModsDownloadFailed": {
-    "One": "A mod failed to download",
+    "One": "Eine Mod konnte nicht heruntergeladen werden",
     "Plural": "Some mods failed to download"
   },
-  "LoginToParadox": "Log in to Paradox",
-  "LoginFailed": "Login failed, make sure your e-mail and password are correct. Or try again later.",
-  "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
+  "LoginToParadox": "Bei Paradox anmelden",
+  "LoginFailed": "Anmeldung fehlgeschlagen, stellen Sie sicher, dass Ihre E-Mail und Ihr Passwort korrekt sind. Oder versuchen Sie es später erneut.",
+  "RememberMeInfo": "* Ihre Zugangsdaten werden verschlüsselt und auf Ihrem Computer gespeichert.",
   "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve.",
   "DropNewPlayset": "Drop or select a playset's file here to import it",
   "FilterIncludedByDefault": "Enable 'Included' filter for local content by default",
@@ -64,7 +64,7 @@
   "VoteMod": "Like this mod",
   "UnVoteMod": "Un-Like this mod",
   "LogLevel": "Log Level",
-  "ParadoxAccount": "Paradox Account",
+  "ParadoxAccount": "Paradox-Konto",
   "LoggingIn": "Logging in...",
   "NotLoggedInCheckNotification": "You're not logged in to Paradox, check your notifications for more information.",
   "HideUserSection": "Hide your profile in the main menu",
