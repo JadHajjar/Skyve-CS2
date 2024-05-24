@@ -35,7 +35,7 @@
     "One": "Entferne von allen deinen Playsets",
     "Plural": "Remove the selected items from all your playsets"
   },
-  "PackageIsRemoved": "'{0}' was removed from PDX Mods",
+  "PackageIsRemoved": "'{0}' ist auf PDX Mods nicht mehr verfügbar",
   "PackageIsUnknown": "Die Informationen von PDX Mods für '{0}' wurden noch nicht geladen",
   "PackageIsIncomplete": "The local size of '{0}' ({1}) is different than PDX Mods' {2}",
   "OpenCitiesAppData": "C:S II's AppData Ordner öffnen",
