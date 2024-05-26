@@ -11,12 +11,12 @@ public class PdxPlaysetImport
 	{
 		public int Id { get; set; }
 		public string? Name { get; set; }
-		public string? DisplayImagePath { get; set; }
-		public int ModsCount { get; set; }
-		public int ModsSize { get; set; }
-		public string? Updated { get; set; }
-		public string? PlaysetModsLatestUpdated { get; set; }
-		public string? UpdatedSyncedWithBackend { get; set; }
+		//public string? DisplayImagePath { get; set; }
+		//public int ModsCount { get; set; }
+		//public long ModsSize { get; set; }
+		//public string? Updated { get; set; }
+		//public string? PlaysetModsLatestUpdated { get; set; }
+		//public string? UpdatedSyncedWithBackend { get; set; }
 	}
 
 	public class ModInfo : IPackageIdentity

@@ -241,7 +241,12 @@ internal class LogUtil : ILogUtil
 		{
 			for (var i = 0; i < lines.Length; i++)
 			{
-				if (ParseLine(lines[i], out var date, out var type, out var title))
+				var line = lines[i];
+
+				if (!IsValid(line))
+					continue;
+
+				if (ParseLine(line, out var date, out var type, out var title))
 				{
 					currentTrace = new LogTrace(type!, title!, date, originalFile);
 
@@ -249,7 +254,7 @@ internal class LogUtil : ILogUtil
 				}
 				else
 				{
-					currentTrace?.AddTrace(lines[i]);
+					currentTrace?.AddTrace(line);
 				}
 			}
 		}
@@ -278,6 +283,16 @@ internal class LogUtil : ILogUtil
 		}
 
 		return traces;
+	}
+
+	private bool IsValid(string line)
+	{
+        if (line.Contains("uses compression method Deflated that is not supported"))
+        {
+			return false;
+        }
+
+        return true;
 	}
 
 	private bool ParseLine(string line, out DateTime date, out string? info, out string? title)

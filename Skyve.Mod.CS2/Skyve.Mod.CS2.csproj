@@ -34,9 +34,9 @@
 
 	<Target Name="UpdatePublishConfiguration" BeforeTargets="Publish">
 		<PropertyGroup>
-			<PdxPublishConfiguration>$([System.IO.Path]::GetFullPath('..\PdxPublishConfiguration\PdxPublishConfiguration.exe'))</PdxPublishConfiguration>
-			<ChangelogJsonFile>"$([System.IO.Path]::GetFullPath('..\Skyve.App.CS2\Changelog.json'))"</ChangelogJsonFile>
-			<PublishConfigurationFile>"$([System.IO.Path]::GetFullPath('..\Skyve.Mod.CS2\$(PublishConfigurationPath)'))"</PublishConfigurationFile>
+			<PdxPublishConfiguration>$([System.IO.Path]::GetFullPath('$(SolutionDir)\..\PdxPublishConfiguration\PdxPublishConfiguration.exe'))</PdxPublishConfiguration>
+			<ChangelogJsonFile>"$([System.IO.Path]::GetFullPath('$(SolutionDir)\..\Skyve.App.CS2\Changelog.json'))"</ChangelogJsonFile>
+			<PublishConfigurationFile>"$([System.IO.Path]::GetFullPath('$(SolutionDir)\..\Skyve.Mod.CS2\$(PublishConfigurationPath)'))"</PublishConfigurationFile>
 		</PropertyGroup>
 
 		<Exec Command="$(PdxPublishConfiguration) $(PublishConfigurationFile) $(Version) $(BuildType) $(ChangelogJsonFile) $(ModPublisherCommand)" />

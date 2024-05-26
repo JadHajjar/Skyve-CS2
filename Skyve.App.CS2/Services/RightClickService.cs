@@ -71,7 +71,7 @@ internal class RightClickService : IRightClickService
 			new(LocaleSlickUI.Copy, "Copy", disabled: true, visible: anyWorkshop)
 			{
 				SubItems = [
-					new(Locale.CopyPackageName.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(CrossIO.NewLine))),
+					new(Locale.CopyPackageName.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(x => x.CleanName(true), CrossIO.NewLine))),
 					new(Locale.CopyWorkshopLink.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(x => x.Url, CrossIO.NewLine))),
 					new(Locale.CopyWorkshopId.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(x => x.Id.ToString(), CrossIO.NewLine)))
 				]

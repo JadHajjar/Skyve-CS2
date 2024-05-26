@@ -33,16 +33,16 @@ namespace Skyve.Mod.CS2
 
 			updateSystem.UpdateAt<InstallSkyveUISystem>(SystemUpdatePhase.UIUpdate);
 
-			//Settings = new SkyveModSettings(this);
+			Settings = new SkyveModSettings(this);
 
-			//Settings.RegisterInOptionsUI();
+			Settings.RegisterInOptionsUI();
 
 			foreach (var item in Locale.GetAvailableSources())
 			{
 				GameManager.instance.localizationManager.AddSource(item.LocaleId, item);
 			}
 
-			//AssetDatabase.global.LoadSettings(nameof(SkyveModSettings), Settings, new SkyveModSettings(this));
+			AssetDatabase.global.LoadSettings(nameof(SkyveMod), Settings, new SkyveModSettings(this));
 
 			try
 			{

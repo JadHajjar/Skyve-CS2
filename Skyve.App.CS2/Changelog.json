@@ -2,6 +2,35 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.2.6",
+    "Date": "2024-05-09",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed an error in the compatibility report page.",
+          "Fixed not being able to import playsets that include over 2GB of mods"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.2.5",
+    "Date": "2024-05-04",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added an install button in the Options to allow re-installing or in case the button in the main menu is not showing up."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.2.4",
     "Date": "2024-04-25",
     "ChangeGroups": [

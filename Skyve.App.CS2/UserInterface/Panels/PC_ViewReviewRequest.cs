@@ -76,6 +76,11 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 		SetPackage(Package);
 	}
 
+	protected override void SetPackage(IPackageIdentity package)
+	{
+		base.SetPackage(package.GetWorkshopInfo() ?? package);
+	}
+
 	private async void LogControl_Click(object sender, EventArgs e)
 	{
 		if (logControl.Loading)
