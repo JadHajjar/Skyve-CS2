@@ -20,7 +20,6 @@
 		<Title>Skyve</Title>
 		<AssemblyName>Skyve.App.CS2.Setup</AssemblyName>
 		<TargetName>Skyve Setup</TargetName>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 
 	<ItemGroup>

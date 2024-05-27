@@ -1,17 +1,10 @@
 ﻿using Extensions;
 
-using Microsoft.Win32;
-
 using SlickControls;
 
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.ServiceProcess;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.Installer;
@@ -21,8 +14,18 @@ internal static class Program
 	[STAThread]
 	private static void Main()
 	{
+		if (!WinExtensionClass.IsAdministrator)
+		{
+			Process.Start(new ProcessStartInfo(Application.ExecutablePath)
+			{
+				Verb = "runas"
+			});
+
+			return;
+		}
+
 		var fileName = Path.GetFileNameWithoutExtension(Application.ExecutablePath).ToLower();
-		
+
 		if (fileName == "uninstall")
 		{
 			var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.exe");

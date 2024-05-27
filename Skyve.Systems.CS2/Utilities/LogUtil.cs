@@ -74,22 +74,7 @@ internal class LogUtil : ILogUtil
 
 		foreach (var filePath in GetLogFilesForZip(mainLogDate))
 		{
-			if (CrossIO.FileExists(filePath))
-			{
-				var tempFile = CrossIO.GetTempFileName();
-
-				CrossIO.CopyFile(filePath, tempFile, true);
-
-				logTrace.AddRange(ExtractTrace(filePath, tempFile));
-
-				try
-				{
-					zipArchive.CreateEntryFromFile(tempFile, $"Logs\\{Path.GetFileName(filePath)}");
-				}
-				catch { }
-
-				CrossIO.DeleteFile(tempFile);
-			}
+			CreateFileEntry(zipArchive, $"Logs\\{Path.GetFileName(filePath)}", filePath);
 		}
 
 		AddErrors(zipArchive, logTrace);
@@ -121,7 +106,7 @@ internal class LogUtil : ILogUtil
 		{
 			var tempLogFile = CrossIO.GetTempFileName();
 			CrossIO.CopyFile(GameLogFile, tempLogFile, true);
-			zipArchive.CreateEntryFromFile(tempLogFile, "log.txt");
+			CreateEntry(zipArchive, "Log.log", File.ReadAllText(tempLogFile));
 
 			logTrace = ExtractTrace(GameLogFile, tempLogFile);
 			mainLogDate = File.GetLastWriteTime(GameLogFile);
@@ -135,18 +120,12 @@ internal class LogUtil : ILogUtil
 
 		if (CrossIO.FileExists(_logger.LogFilePath))
 		{
-			var tempSkyveLogFile = CrossIO.GetTempFileName();
-			CrossIO.CopyFile(_logger.LogFilePath, tempSkyveLogFile, true);
-			zipArchive.CreateEntryFromFile(tempSkyveLogFile, "Skyve\\SkyveLog.log");
-			CrossIO.DeleteFile(tempSkyveLogFile, true);
+			CreateFileEntry(zipArchive, "Skyve\\SkyveLog.log", _logger.LogFilePath);
 		}
 
 		if (CrossIO.FileExists(_logger.PreviousLogFilePath))
 		{
-			var tempPrevSkyveLogFile = CrossIO.GetTempFileName();
-			CrossIO.CopyFile(_logger.PreviousLogFilePath, tempPrevSkyveLogFile, true);
-			zipArchive.CreateEntryFromFile(tempPrevSkyveLogFile, "Skyve\\SkyveLog_Previous.log");
-			CrossIO.DeleteFile(tempPrevSkyveLogFile, true);
+			CreateFileEntry(zipArchive, "Skyve\\SkyveLog_Previous.log", _logger.PreviousLogFilePath);
 		}
 
 		AddCompatibilityReport(zipArchive);
@@ -158,15 +137,12 @@ internal class LogUtil : ILogUtil
 	{
 		//var culture = LocaleHelper.CurrentCulture;
 		//LocaleHelper.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-
-		var profileEntry = zipArchive.CreateEntry("Skyve\\CompatibilityReport.json");
-		using var writer = new StreamWriter(profileEntry.Open());
-
+		
 		//_compatibilityManager.CacheReport();
 		var reports = _contentManager.Packages.ToList(x => x.GetCompatibilityInfo());
 		reports.RemoveAll(x => x.GetNotification() < Skyve.Compatibility.Domain.Enums.NotificationType.Warning && !(x.IsIncluded(out var partial) || partial));
 
-		writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(reports, Newtonsoft.Json.Formatting.Indented));
+		CreateEntry(zipArchive, "Skyve\\CompatibilityReport.json", reports);
 
 		//LocaleHelper.CurrentCulture = culture;
 		//_compatibilityManager.CacheReport();
@@ -179,9 +155,7 @@ internal class LogUtil : ILogUtil
 			return;
 		}
 
-		var profileEntry = zipArchive.CreateEntry("Skyve\\CurrentPlayset.json");
-		using var writer = new StreamWriter(profileEntry.Open());
-		writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(_playsetManager.CurrentPlayset, Newtonsoft.Json.Formatting.Indented));
+		CreateEntry(zipArchive, "Skyve\\CurrentPlayset.json", _playsetManager.GetLogPlayset());
 	}
 
 	private static void AddErrors(ZipArchive zipArchive, List<ILogTrace> logTrace)
@@ -193,11 +167,7 @@ internal class LogUtil : ILogUtil
 			return;
 		}
 
-		var errorsEntry = zipArchive.CreateEntry("log_errors.txt");
-		using var writer = new StreamWriter(errorsEntry.Open());
-		var errors = logTrace.ListStrings(e => e.ToString() + "\r\n\r\n");
-
-		writer.Write(errors);
+		CreateEntry(zipArchive, "Log_Errors.log", logTrace.ListStrings(e => e.ToString() + "\r\n\r\n"));
 	}
 
 	private string GetLastCrashLog(DateTime mainLogDate)
@@ -359,5 +329,31 @@ internal class LogUtil : ILogUtil
 		}
 
 		return traces;
+	}
+
+	private static void CreateFileEntry(ZipArchive zipArchive, string entry, string filename)
+	{
+		if (!CrossIO.FileExists(filename))
+			return;
+
+		var tempFile = CrossIO.GetTempFileName();
+		CrossIO.CopyFile(filename, tempFile, true);
+		
+		CreateEntry(zipArchive, entry, File.ReadAllText(tempFile));
+
+		CrossIO.DeleteFile(tempFile, true);
+	}
+
+	private static void CreateEntry<T>(ZipArchive zipArchive, string entry, T obj)
+	{
+		CreateEntry(zipArchive, entry, Newtonsoft.Json.JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented));
+	}
+
+	private static void CreateEntry(ZipArchive zipArchive, string entry, ref string content)
+	{
+		var profileEntry = zipArchive.CreateEntry(entry);
+		using var writer = new StreamWriter(profileEntry.Open());
+
+		writer.Write(content.RegexReplace(@"(users[/\\]).+?([/\\])", x => $"{x.Groups[1].Value}%username%{x.Groups[2].Value}"));
 	}
 }

@@ -475,4 +475,9 @@ internal class PlaysetManager : IPlaysetManager
 	{
 		return await _workshopService.GetModsInPlayset(playset.Id, true);
 	}
+
+	public object GetLogPlayset()
+	{
+		throw new NotImplementedException();
+	}
 }

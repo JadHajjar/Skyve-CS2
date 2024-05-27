@@ -2,6 +2,26 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.3",
+    "Date": "2024-05-09",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Log report files now all have a username filter to hide the sender's windows username.",
+          "Log report can now be imported to view the sender's active playset mods",
+          "Added a log filter to hide useless warnings in the log.",
+          "Fixed not being able to import a compatibility report if you do not have any issues listed.",
+          "Fixed some users not being able to launch the installer.",
+          "Fixed the update times not being in users' local time.",
+          "Fixed 'Copy mod name' in the right-click menu not working."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.2.6",
     "Date": "2024-05-09",
     "ChangeGroups": [
