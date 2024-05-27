@@ -6,7 +6,7 @@ using System;
 using System.Drawing;
 
 namespace Skyve.Domain.CS2.Paradox;
-public class PdxPlaysetPackage : IPackage
+public class PdxPlaysetPackage : IPlaysetPackage
 {
 	public PdxPlaysetPackage(IPlaysetMod mod)
 	{
@@ -18,14 +18,18 @@ public class PdxPlaysetPackage : IPackage
 
 		Id = (ulong)subscribedMod.Id;
 		Name = subscribedMod.DisplayName;
+		IsEnabled = mod.IsEnabled;
+		LoadOrder = mod.LoadOrder;
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
-	public string? Version { get; }
-	public bool IsCodeMod { get; }
-	public bool IsLocal { get; }
-	public ILocalPackageData? LocalData { get; }
 	public ulong Id { get; }
 	public string Name { get; }
 	public string? Url { get; }
+	public string? Version { get; }
+	public bool IsCodeMod { get; }
+	public bool IsLocal { get; }
+	public bool IsEnabled { get; }
+	public int LoadOrder { get; }
+	public ILocalPackageData? LocalData { get; }
 }

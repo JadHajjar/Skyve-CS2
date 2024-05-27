@@ -120,12 +120,40 @@ internal class CitiesManager : ICitiesManager
 			}
 		}
 
+		try
+		{
+			CleanupData();
+		}
+		catch { }
+
 		var args = GetCommandArgs(playsetManager);
 		var file = IsExeLaunch((playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings)
 			? _locationManager.CitiesPathWithExe
 			: _locationManager.SteamPathWithExe;
 
 		_iOUtil.Execute(file, string.Join(" ", args));
+	}
+
+	private void CleanupData()
+	{
+		var logDir = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Logs"));
+		var dir1 = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods", "Gooee"));
+		var dir2 = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "Gooee"));
+
+		if (logDir.Exists)
+		{
+			logDir.Delete(true);
+		}
+
+		if (dir1.Exists)
+		{
+			dir1.Delete(true);
+		}
+
+		if (dir2.Exists)
+		{
+			dir2.Delete(true);
+		}
 	}
 
 	private IEnumerable<string> GetCommandArgs(IPlaysetManager? playsetManager)

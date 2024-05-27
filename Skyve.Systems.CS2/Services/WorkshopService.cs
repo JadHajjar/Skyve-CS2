@@ -274,7 +274,7 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<PdxModDetails?> GetInfoAsync(int id)
 	{
-		if (Context is null || id <= 0)
+		if (Context is null || id <= 0 || !IsLoggedIn)
 		{
 			return null;
 		}
@@ -524,16 +524,31 @@ public class WorkshopService : IWorkshopService
 		return Context is null ? 0 : ProcessResult(await Context.Mods.GetActivePlayset()).PlaysetId;
 	}
 
-	public async Task<IEnumerable<IPackage>> GetModsInPlayset(int playsetId, bool includeOnline = false)
+	public async Task<IEnumerable<IPlaysetPackage>> GetModsInPlayset(int playsetId, bool includeOnline = false)
 	{
 		if (Context is null)
 		{
 			return [];
 		}
 
-		var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, includeOnline: includeOnline));
+		var list = new List<PdxPlaysetPackage>();
 
-		return result.Mods?.ToList(x => new PdxPlaysetPackage(x)) ?? [];
+		while (true)
+		{
+			var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, includeOnline: includeOnline));
+
+			if (result.Mods is not null)
+			{
+				list.AddRange(result.Mods.Select(x => new PdxPlaysetPackage(x)));
+			}
+
+			if (!result.Success || result.Mods?.Count < 100)
+			{
+				break;
+			}
+		}
+
+		return list;
 	}
 
 	public async Task WaitUntilReady()
@@ -825,7 +840,7 @@ public class WorkshopService : IWorkshopService
 		try
 		{
 			var result = ProcessResult(await Context.Mods.Sync());
-	
+
 			if (result.Error is not null && result.Error == Mods.PromptNeeded)
 			{
 				var conflicts = await Context.Mods.GetSyncConflicts();

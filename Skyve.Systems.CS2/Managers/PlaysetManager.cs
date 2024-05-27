@@ -341,12 +341,7 @@ internal class PlaysetManager : IPlaysetManager
 			throw new Exception(LocaleCS2.PlaysetAlreadyImported);
 		}
 
-		var newPlayset = await CreateNewPlayset(playset.GeneralData?.Name ?? "New Playset");
-
-		if (newPlayset is null)
-		{
-			throw new Exception(Locale.CouldNotCreatePlayset);
-		}
+		var newPlayset = await CreateNewPlayset(playset.GeneralData?.Name ?? "New Playset") ?? throw new Exception(Locale.CouldNotCreatePlayset);
 
 		if (playset.SubscribedMods is not null)
 		{
@@ -357,6 +352,11 @@ internal class PlaysetManager : IPlaysetManager
 		}
 
 		return newPlayset;
+	}
+
+	public Task<IPlayset?> CreateLogPlayset(string file)
+	{
+		return Task.FromResult((IPlayset?)JsonConvert.DeserializeObject<PdxPlaysetImport>(CrossIO.FileExists(file) ? File.ReadAllText(file) : file));
 	}
 
 	public async Task SetIncludedForAll(IPackageIdentity package, bool value)
@@ -471,13 +471,42 @@ internal class PlaysetManager : IPlaysetManager
 		CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
 	}
 
-	public async Task<IEnumerable<IPackageIdentity>> GetPlaysetContents(IPlayset playset)
+	public async Task<IEnumerable<IPlaysetPackage>> GetPlaysetContents(IPlayset playset)
 	{
 		return await _workshopService.GetModsInPlayset(playset.Id, true);
 	}
 
-	public object GetLogPlayset()
+	public async Task<object> GetLogPlayset()
 	{
-		throw new NotImplementedException();
+		if (CurrentPlayset is null)
+		{
+			throw new NullReferenceException(nameof(CurrentPlayset));
+		}
+
+		var contents = await GetPlaysetContents(CurrentPlayset!);
+
+		return new PdxPlaysetImport
+		{
+			ContractFormatVersion = -1,
+			GeneralData = new()
+			{
+				Id = CurrentPlayset.Id,
+				Name = CurrentPlayset.Name,
+			},
+			SubscribedMods = contents.ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Id.ToString(), new()
+			{
+				Id = (int)x.Id,
+				Name = x.Name,
+				IsEnabled = x.IsEnabled,
+				LoadOrder = x.LoadOrder,
+				Version = x.Version,
+			})),
+			LocalMods = _packageManager.Packages.Where(x => x.IsLocal && _packageUtil.IsIncluded(x) && x.Name is not "Maps" and not "Saves").ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Name, new()
+			{
+				Name = x.Name,
+				IsEnabled = _packageUtil.IsEnabled(x),
+				Version = x.Version,
+			}))
+		};
 	}
 }

@@ -94,6 +94,8 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => Images ?? [];
 	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
 
+	bool IWorkshopInfo.IsPartialInfo { get; }
+
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;

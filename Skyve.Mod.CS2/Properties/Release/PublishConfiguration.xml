@@ -88,16 +88,28 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.9.2.6" />
+  <ModVersion Value="0.9.3" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.9.2.6
-## Hotfix
-* Fixed an error in the compatibility report page.
-* Fixed not being able to import assets that include over 2GB of mods
+# v0.9.3
+## Improvements &amp; Fixes
+* Added missing icons for new PDX Mods links.
+* Added a cleanup process when launching the game through Skyve.
+* Improved the change-log grouping.
+* Fixed the enabled filter not working correctly.
+* Fixed not being able to see more than 100 mods in your playset.
+* Fixed some users not being able to launch the installer.
+* Fixed the update times not being in users' local time.
+* Fixed 'Copy mod name' in the right-click menu not working.
+
+## Log Report Changes
+* Log report files now all have a 'username filter' to hide the sender's windows username.
+* Log report can now be imported to view the sender's active playset mods. This is done by drag-n-dropping the log report in the Playsets list page.
+* Added a log filter to hide useless warnings in the log.
+* Fixed not being able to import a log report in the Compatibility Report page if you do not have any issues listed.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
-	<ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />
-	<ExternalLink Type="buymeacoffee" Url="https://www.buymeacoffee.com/tdwsvillage" />
-	<ExternalLink Type="crowdin" Url="https://crowdin.com/project/load-order-mod-2" />
+  <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />
+  <ExternalLink Type="buymeacoffee" Url="https://www.buymeacoffee.com/tdwsvillage" />
+  <ExternalLink Type="crowdin" Url="https://crowdin.com/project/load-order-mod-2" />
 </Publish>

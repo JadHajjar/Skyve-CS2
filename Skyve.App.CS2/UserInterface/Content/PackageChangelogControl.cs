@@ -1,5 +1,6 @@
 ﻿using SlickControls.Controls.Advanced;
 
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -80,9 +81,9 @@ public partial class PackageChangelogControl : SlickControl
 
 		foreach (var grp in _modChangelogs
 			.Where(x => _current == null || x != _current)
-			.Distinct((x, y) => Major(x.Version) == Major(y.Version) && Minor(x.Version) == Minor(y.Version))
+			.Distinct((x, y) => Major(x.Version, out _) == Major(y.Version, out _) && Minor(x.Version, out _) == Minor(y.Version, out _))
 			.OrderByDescending(x => x.ReleasedDate)
-			.GroupBy(x => Major(x.Version)))
+			.GroupBy(x => Major(x.Version, out _)))
 		{
 			foreach (var item in grp)
 			{
@@ -100,13 +101,18 @@ public partial class PackageChangelogControl : SlickControl
 
 	private void AddVersion(IModChangelog versionInfo, string? text = null)
 	{
-		var M = Major(versionInfo.Version);
-		var m = Minor(versionInfo.Version);
-		var vers = _modChangelogs.Where(x => Major(x.Version) == M && Minor(x.Version) == m);
+		var M = Major(versionInfo.Version, out _);
+		var m = Minor(versionInfo.Version, out _);
+		var vers = _modChangelogs
+			.Where(x => Major(x.Version, out _) == M && Minor(x.Version, out _) == m)
+			.OrderBy(x => x.ReleasedDate);
+
+		var firstVersion = Regex.Match(vers.First().Version, @"^[^\.]+\.[^\.]+\.?[^\.]*\.?").Value.Trim('.');
+		var lastVersion = Regex.Match(vers.Last().Version, @"^[^\.]+\.[^\.]+\.?[^\.]*\.?").Value.Trim('.');
 
 		var tab = new PanelTab(new PanelItem()
 		{
-			Text = text.IfNull(vers.Count() == 1 ? $"v {versionInfo.Version}" : $"v {M}.{m}.{vers.Min(x => Build(x.Version))} → {M}.{m}.{vers.Max(x => Build(x.Version))}"),
+			Text = text.IfNull(vers.Count() == 1 ? $"v {versionInfo.Version}" : $"v {firstVersion} → {lastVersion}"),
 			Data = text != null ? null : versionInfo
 		});
 
@@ -134,7 +140,7 @@ public partial class PackageChangelogControl : SlickControl
 		}
 		else
 		{
-			foreach (var item in _modChangelogs.Where(x => Major(x.Version) == Major(inf.Version) && Minor(x.Version) == Minor(inf.Version)).OrderByDescending(x => x.ReleasedDate))
+			foreach (var item in _modChangelogs.Where(x => Major(x.Version, out _) == Major(inf.Version, out _) && Minor(x.Version, out _) == Minor(inf.Version, out _)).OrderByDescending(x => x.ReleasedDate))
 			{
 				changelogs.Add(item);
 			}
@@ -158,54 +164,60 @@ public partial class PackageChangelogControl : SlickControl
 		base_P_Tabs.Invalidate();
 	}
 
-	private string Major(string? version)
+	private string Major(string? version, out string full)
 	{
 		if (version is null or "")
 		{
-			return string.Empty;
+			return full = string.Empty;
 		}
 
-		var regex = Regex.Match(version, @"^([^\.])\.");
+		var regex = Regex.Match(version, @"^([^\.]+)\.");
 
 		if (regex.Success)
 		{
-			return regex.Groups[1].Value;
+			full = regex.Groups[1].Value;
+
+			return Regex.Match(regex.Groups[1].Value, @"^\d+").Value.IfEmpty(full);
 		}
 
-		return string.Empty;
+		return full = string.Empty;
 	}
 
-	private string Minor(string? version)
+	private string Minor(string? version, out string full)
 	{
 		if (version is null or "")
 		{
-			return string.Empty;
+			return full = string.Empty;
 		}
 
-		var regex = Regex.Match(version, @"^[^\.]\.([^\.])\.?");
+		var regex = Regex.Match(version, @"^[^\.]+\.([^\.]+)\.?");
 
 		if (regex.Success)
 		{
-			return regex.Groups[1].Value;
+			full = regex.Groups[1].Value;
+
+			return Regex.Match(regex.Groups[1].Value, @"^\d+").Value.IfEmpty(full);
 		}
 
-		return string.Empty;
+		return full = string.Empty;
 	}
 
-	private string Build(string? version)
+	private string Build(string? version, out string full)
 	{
 		if (version is null or "")
 		{
-			return string.Empty;
+			return full = string.Empty;
 		}
 
-		var regex = Regex.Match(version, @"^[^\.]\.[^\.]\.([^\.])\.?");
+		var regex = Regex.Match(version, @"^[^\.]+\.[^\.]+\.([^\.]+)\.?");
 
 		if (regex.Success)
 		{
-			return regex.Groups[1].Value;
+			full = regex.Groups[1].Value;
+
+			return Regex.Match(regex.Groups[1].Value, @"^\d+").Value.IfEmpty(full);
 		}
 
-		return string.Empty;
+		return full = string.Empty;
 	}
 }

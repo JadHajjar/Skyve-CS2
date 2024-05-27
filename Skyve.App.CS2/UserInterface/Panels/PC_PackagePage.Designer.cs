@@ -45,13 +45,13 @@ partial class PC_PackagePage
 			this.T_Gallery = new SlickControls.SlickTabControl.Tab();
 			this.carouselControl = new Skyve.App.UserInterface.Generic.CarouselControl();
 			this.T_Comments = new SlickControls.SlickTabControl.Tab();
+			this.commentsControl1 = new Skyve.App.CS2.UserInterface.Generic.CommentsSectionControl();
 			this.T_Content = new SlickControls.SlickTabControl.Tab();
 			this.T_Compatibility = new SlickControls.SlickTabControl.Tab();
 			this.T_References = new SlickControls.SlickTabControl.Tab();
 			this.T_Playsets = new SlickControls.SlickTabControl.Tab();
 			this.T_Changelog = new SlickControls.SlickTabControl.Tab();
 			this.packageChangelogControl1 = new Skyve.App.CS2.UserInterface.Content.PackageChangelogControl();
-			this.commentsControl1 = new Skyve.App.CS2.UserInterface.Generic.CommentsSectionControl();
 			this.SuspendLayout();
 			// 
 			// slickTabControl
@@ -135,6 +135,16 @@ partial class PC_PackagePage
 			this.T_Comments.TabStop = false;
 			this.T_Comments.Text = "Comments";
 			// 
+			// commentsControl1
+			// 
+			this.commentsControl1.AutoSize = true;
+			this.commentsControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.commentsControl1.Location = new System.Drawing.Point(0, 0);
+			this.commentsControl1.Name = "commentsControl1";
+			this.commentsControl1.Package = null;
+			this.commentsControl1.Size = new System.Drawing.Size(638, 574);
+			this.commentsControl1.TabIndex = 16;
+			// 
 			// T_Content
 			// 
 			this.T_Content.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -215,18 +225,11 @@ partial class PC_PackagePage
 			// 
 			// packageChangelogControl1
 			// 
+			this.packageChangelogControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.packageChangelogControl1.Location = new System.Drawing.Point(0, 0);
 			this.packageChangelogControl1.Name = "packageChangelogControl1";
-			this.packageChangelogControl1.Size = new System.Drawing.Size(902, 644);
+			this.packageChangelogControl1.Size = new System.Drawing.Size(796, 543);
 			this.packageChangelogControl1.TabIndex = 15;
-			// 
-			// commentsControl1
-			// 
-			this.commentsControl1.Location = new System.Drawing.Point(0, 0);
-			this.commentsControl1.Name = "commentsControl1";
-			this.commentsControl1.Package = null;
-			this.commentsControl1.Size = new System.Drawing.Size(638, 574);
-			this.commentsControl1.TabIndex = 16;
 			// 
 			// PC_PackagePage
 			// 

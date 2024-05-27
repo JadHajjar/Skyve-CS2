@@ -139,7 +139,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		base.UIChanged();
 
 		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding
-			= TLP_Bottom.Padding =  P_Tags.Margin =  P_Links.Margin
+			= TLP_Bottom.Padding = P_Tags.Margin = P_Links.Margin
 			= DD_DLCs.Margin = DD_PackageType.Margin = DD_Stability.Margin = DD_Usage.Margin
 			= B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		slickSpacer2.Height = (int)(2 * UI.FontScale);
@@ -292,6 +292,14 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		slickTabControl.Visible = false;
 		TLP_Bottom.Visible = false;
 
+		var workshopInfo = package.GetWorkshopInfo();
+		T_Changelog.Visible = workshopInfo?.Changelog?.Any() ?? false;
+
+		if (T_Changelog.Visible)
+		{
+			packageChangelogControl1.SetChangelogs(workshopInfo!.Version ?? string.Empty, workshopInfo!.Changelog);
+		}
+
 		try
 		{
 			if (!_userService.User.Manager && !_userService.User.Equals(Package.GetWorkshopInfo()?.Author))
@@ -305,11 +313,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			var catalogue = await skyveApiUtil.GetPackageData(Package.Id);
 
 			postPackage = catalogue?.CloneTo<PackageData, CompatibilityPostPackage>();
-
-			if (postPackage is null)
-			{
-				postPackage = skyveDataManager.GetAutomatedReport(Package).CloneTo<PackageData, CompatibilityPostPackage>();
-			}
+			postPackage ??= skyveDataManager.GetAutomatedReport(Package).CloneTo<PackageData, CompatibilityPostPackage>();
 
 			postPackage.IsBlackListedById = skyveDataManager.CompatibilityData.BlackListedIds?.Contains(postPackage.Id) ?? false;
 			postPackage.IsBlackListedByName = skyveDataManager.CompatibilityData.BlackListedNames?.Contains(postPackage.Name ?? string.Empty) ?? false;

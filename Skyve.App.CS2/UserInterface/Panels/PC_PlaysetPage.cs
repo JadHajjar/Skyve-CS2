@@ -102,9 +102,11 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		return true;
 	}
 
-	private Task<IEnumerable<IPackageIdentity>> GetContents(CancellationToken cancellationToken)
+	private async Task<IEnumerable<IPackageIdentity>> GetContents(CancellationToken cancellationToken)
 	{
-		return _playsetManager.GetPlaysetContents(Playset);
+		var items = await _playsetManager.GetPlaysetContents(Playset);
+
+		return items.Cast<IPackageIdentity>();
 	}
 
 	protected override void LocaleChanged()

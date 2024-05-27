@@ -91,6 +91,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	public bool HasVoted { get; set; }
+	bool IWorkshopInfo.IsPartialInfo => true;
 	public IEnumerable<IThumbnailObject> Images => LocalData.Images;
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];

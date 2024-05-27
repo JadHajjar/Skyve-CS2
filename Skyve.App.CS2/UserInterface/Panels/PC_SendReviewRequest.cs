@@ -149,11 +149,11 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 			postPackage.RequiredDLCs = DD_DLCs.SelectedItems.Select(x => x.Id).ListStrings(",");
 		}
 
-		postPackage.LogFile = await Task.Run(() =>
+		postPackage.LogFile = await Task.Run(async () =>
 		{
 			using var stream = new MemoryStream();
 
-			ServiceCenter.Get<ILogUtil>().CreateZipToStream(stream);
+			await ServiceCenter.Get<ILogUtil>().CreateZipToStream(stream);
 
 			return stream.ToArray();
 		});

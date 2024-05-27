@@ -3,18 +3,28 @@
     "Stable": false,
     "Beta": true,
     "Version": "0.9.3",
-    "Date": "2024-05-09",
+    "Date": "2024-05-27",
     "ChangeGroups": [
       {
-        "Name": "Changes",
+        "Name": "Improvements & Fixes",
         "Changes": [
-          "Log report files now all have a username filter to hide the sender's windows username.",
-          "Log report can now be imported to view the sender's active playset mods",
-          "Added a log filter to hide useless warnings in the log.",
-          "Fixed not being able to import a compatibility report if you do not have any issues listed.",
+          "Added missing icons for new PDX Mods links.",
+          "Added a cleanup process when launching the game through Skyve.",
+          "Improved the change-log grouping.",
+          "Fixed the enabled filter not working correctly.",
+          "Fixed not being able to see more than 100 mods in your playset.",
           "Fixed some users not being able to launch the installer.",
           "Fixed the update times not being in users' local time.",
           "Fixed 'Copy mod name' in the right-click menu not working."
+        ]
+      },
+      {
+        "Name": "Log Report Changes",
+        "Changes": [
+          "Log report files now all have a 'username filter' to hide the sender's windows username.",
+          "Log report can now be imported to view the sender's active playset mods. This is done by drag-n-dropping the log report in the Playsets list page.",
+          "Added a log filter to hide useless warnings in the log.",
+          "Fixed not being able to import a log report in the Compatibility Report page if you do not have any issues listed."
         ]
       }
     ]

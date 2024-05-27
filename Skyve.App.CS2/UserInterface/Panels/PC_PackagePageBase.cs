@@ -59,7 +59,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 	private void Notifier_WorkshopInfoUpdated()
 	{
-		if (Form.CurrentPanel == this)
+		if (Form?.CurrentPanel == this)
 		{
 			this.TryInvoke(() => SetPackage(Package));
 		}

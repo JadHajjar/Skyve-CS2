@@ -11,22 +11,25 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
 internal class LogUtil : ILogUtil
 {
 	private readonly ICompatibilityManager _compatibilityManager;
 	private readonly ILocationService _locationManager;
-	private readonly IPackageManager _contentManager;
+	private readonly IPackageManager _packageManager;
 	private readonly IPlaysetManager _playsetManager;
+	private readonly IPackageUtil _packageUtil;
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
 
-	public LogUtil(ILocationService locationManager, IPackageManager contentManager, IPlaysetManager profileManager, ILogger logger, ICompatibilityManager compatibilityManager, ISettings settings)
+	public LogUtil(ILocationService locationManager, IPackageManager packageManager, IPlaysetManager profileManager, ILogger logger, ICompatibilityManager compatibilityManager, ISettings settings, IPackageUtil packageUtil)
 	{
 		_compatibilityManager = compatibilityManager;
 		_locationManager = locationManager;
-		_contentManager = contentManager;
+		_packageManager = packageManager;
+		_packageUtil = packageUtil;
 		_playsetManager = profileManager;
 		_logger = logger;
 		_settings = settings;
@@ -54,19 +57,19 @@ internal class LogUtil : ILogUtil
 
 	public string GameLogFolder => CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Logs");
 
-	public string CreateZipFile(string? folder = null)
+	public async Task<string> CreateZipFile(string? folder = null)
 	{
 		var file = CrossIO.Combine(folder ?? Path.GetTempPath(), $"LogReport_{DateTime.Now:yy-MM-dd_HH-mm}.zip");
 
 		using (var fileStream = File.Create(file))
 		{
-			CreateZipToStream(fileStream);
+			await CreateZipToStream(fileStream);
 		}
 
 		return file;
 	}
 
-	public void CreateZipToStream(Stream fileStream)
+	public async Task CreateZipToStream(Stream fileStream)
 	{
 		using var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Create, true);
 
@@ -76,6 +79,8 @@ internal class LogUtil : ILogUtil
 		{
 			CreateFileEntry(zipArchive, $"Logs\\{Path.GetFileName(filePath)}", filePath);
 		}
+
+		await AddProfile(zipArchive);
 
 		AddErrors(zipArchive, logTrace);
 	}
@@ -128,19 +133,19 @@ internal class LogUtil : ILogUtil
 			CreateFileEntry(zipArchive, "Skyve\\SkyveLog_Previous.log", _logger.PreviousLogFilePath);
 		}
 
-		AddCompatibilityReport(zipArchive);
+		CreateEntry(zipArchive, "Mods List.txt", _packageManager.Packages.Where(x => _packageUtil.IsIncludedAndEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name}" : $"{x.Id}: {x.Name}", CrossIO.NewLine));
 
-		AddProfile(zipArchive);
+		AddCompatibilityReport(zipArchive);
 	}
 
 	private void AddCompatibilityReport(ZipArchive zipArchive)
 	{
 		//var culture = LocaleHelper.CurrentCulture;
 		//LocaleHelper.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-		
+
 		//_compatibilityManager.CacheReport();
-		var reports = _contentManager.Packages.ToList(x => x.GetCompatibilityInfo());
-		reports.RemoveAll(x => x.GetNotification() < Skyve.Compatibility.Domain.Enums.NotificationType.Warning && !(x.IsIncluded(out var partial) || partial));
+		var reports = _packageManager.Packages.Where(x => x.IsEnabled()).ToList(x => x.GetCompatibilityInfo());
+		reports.RemoveAll(x => x.GetNotification() <= Skyve.Compatibility.Domain.Enums.NotificationType.Warning && !_packageUtil.IsIncludedAndEnabled(x));
 
 		CreateEntry(zipArchive, "Skyve\\CompatibilityReport.json", reports);
 
@@ -148,14 +153,14 @@ internal class LogUtil : ILogUtil
 		//_compatibilityManager.CacheReport();
 	}
 
-	private void AddProfile(ZipArchive zipArchive)
+	private async Task AddProfile(ZipArchive zipArchive)
 	{
 		if (_playsetManager.CurrentPlayset is null)
 		{
 			return;
 		}
 
-		CreateEntry(zipArchive, "Skyve\\CurrentPlayset.json", _playsetManager.GetLogPlayset());
+		CreateEntry(zipArchive, "Skyve\\CurrentPlayset.json", await _playsetManager.GetLogPlayset());
 	}
 
 	private static void AddErrors(ZipArchive zipArchive, List<ILogTrace> logTrace)
@@ -214,7 +219,9 @@ internal class LogUtil : ILogUtil
 				var line = lines[i];
 
 				if (!IsValid(line))
+				{
 					continue;
+				}
 
 				if (ParseLine(line, out var date, out var type, out var title))
 				{
@@ -257,12 +264,12 @@ internal class LogUtil : ILogUtil
 
 	private bool IsValid(string line)
 	{
-        if (line.Contains("uses compression method Deflated that is not supported"))
-        {
+		if (line.Contains("uses compression method Deflated that is not supported"))
+		{
 			return false;
-        }
+		}
 
-        return true;
+		return true;
 	}
 
 	private bool ParseLine(string line, out DateTime date, out string? info, out string? title)
@@ -334,11 +341,13 @@ internal class LogUtil : ILogUtil
 	private static void CreateFileEntry(ZipArchive zipArchive, string entry, string filename)
 	{
 		if (!CrossIO.FileExists(filename))
+		{
 			return;
+		}
 
 		var tempFile = CrossIO.GetTempFileName();
 		CrossIO.CopyFile(filename, tempFile, true);
-		
+
 		CreateEntry(zipArchive, entry, File.ReadAllText(tempFile));
 
 		CrossIO.DeleteFile(tempFile, true);
@@ -349,7 +358,7 @@ internal class LogUtil : ILogUtil
 		CreateEntry(zipArchive, entry, Newtonsoft.Json.JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented));
 	}
 
-	private static void CreateEntry(ZipArchive zipArchive, string entry, ref string content)
+	private static void CreateEntry(ZipArchive zipArchive, string entry, string content)
 	{
 		var profileEntry = zipArchive.CreateEntry(entry);
 		using var writer = new StreamWriter(profileEntry.Open());

@@ -107,6 +107,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	string IPackage.Version => UserModVersion.IfEmpty(Version);
 	string IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
 	string? IWorkshopInfo.SuggestedGameVersion => RequiredGameVersion;
+	bool IWorkshopInfo.IsPartialInfo => true;
 	LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => [];

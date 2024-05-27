@@ -34,6 +34,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 		T_Compatibility.LinkedControl = new PackageCompatibilityReportControl(package);
 		T_Playsets.LinkedControl = new OtherPlaysetPackage(package);
 		commentsControl1.Package = package;
+		T_Comments.Visible = false;
 
 		T_Playsets.Visible = !package.IsLocal();
 
