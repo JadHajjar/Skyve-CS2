@@ -1,16 +1,16 @@
 {
-  "StartCities": "启动 Cities: Skylines",
-  "StopCities": "关闭 Cities: Skylines",
+  "StartCities": "启动 Cities: Skylines II",
+  "StopCities": "关闭 Cities: Skylines II",
   "NoWorkshop": "禁用创意工坊插件",
-  "ExcludeAll": "Remove all items from your active playset",
-  "ExcludeAllDisabled": "Remove all disabled items from your active playset",
-  "IncludeAll": "Add all items to your active playset",
-  "ExcludeAllFiltered": "Remove filtered items from your active playset",
-  "ExcludeAllDisabledFiltered": "Remove filtered & disabled items from your active playset",
-  "IncludeAllFiltered": "Add filtered items to your active playset",
-  "ExcludeAllSelected": "Remove selected items from your active playset",
-  "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
-  "IncludeAllSelected": "Add selected items to your active playset",
+  "ExcludeAll": "从当前播放集移除所有项目",
+  "ExcludeAllDisabled": "从当前播放集中移除所有已禁用项目",
+  "IncludeAll": "全部添加到当前配组",
+  "ExcludeAllFiltered": "从当前播放集中移除所有筛选出的项目",
+  "ExcludeAllDisabledFiltered": "从当前播放集中移除所有已禁用和筛选出的项目",
+  "IncludeAllFiltered": "将筛选出的项目添加到当前播放集",
+  "ExcludeAllSelected": "从当前播放集中移除选中项目",
+  "ExcludeAllDisabledSelected": "从当前播放集中移除所有选中和已禁用的项目",
+  "IncludeAllSelected": "将选中项目添加到当前播放集",
   "ViewOnWorkshop": "在 PDX Mods 上查看",
   "CopyWorkshopLink": {
     "One": "复制 PDX Mods 链接",
@@ -21,24 +21,24 @@
     "Plural": "复制已选插件的 PDX Mods ID"
   },
   "LaunchThroughCities": "通过 Cities2.exe 启动游戏",
-  "IncludeItem": "Add to your active playset",
-  "ExcludeItem": "Remove from your active playset",
+  "IncludeItem": "添加到当前播放集",
+  "ExcludeItem": "从当前播放集中移除",
   "SubscribeToItem": {
-    "One": "Add to your active playset",
-    "Plural": "Add these to your active playset"
+    "One": "添加到当前播放集",
+    "Plural": "添加到当前播放集"
   },
   "IncludeThisItemInAllPlaysets": {
-    "One": "Add to all your playsets",
-    "Plural": "Add the selected items to all your playsets"
+    "One": "添加到所有播放集中",
+    "Plural": "将所有选中项添加到所有播放集中"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Remove from all your playsets",
-    "Plural": "Remove the selected items from all your playsets"
+    "One": "从所有播放集中移除",
+    "Plural": "从所有播放集中移除选中项目"
   },
   "PackageIsRemoved": "插件 '{0}' 已从 Paradox Mods 移除",
   "PackageIsUnknown": "无法从PDX Mods 获取“{0}”的信息",
   "PackageIsIncomplete": "插件 '{0}' 的本地文件大小({1}) 与其 PDX Mods 版本的文件大小 ({2}) 不同",
-  "OpenCitiesAppData": "打开 Cities: Skylines || 的 AppData 文件夹",
+  "OpenCitiesAppData": "打开 C:S || 的 AppData 文件夹",
   "ResetSteamCache": "清除 Paradox Mods 的缓存",
   "ParadoxLoginFailedTitle": "无法登录到 Paradox Mods",
   "ParadoxLoginFailedNoConnection": "您的网络连接异常，请检查您的连接，然后点击此处重试。",
@@ -48,15 +48,15 @@
   "Downloading": "正在下载...",
   "ModsDownloadFailed": {
     "One": "一个模组下载失败",
-    "Plural": "部分模组下载失败"
+    "Plural": "一些模组下载失败"
   },
   "LoginToParadox": "登录到 Paradox",
   "LoginFailed": "登录失败，请确保您的电子邮件地址和密码是正确的。或稍后再试。",
   "RememberMeInfo": "* 您的凭据将被加密，并保存到您的计算机中。",
   "LoginDisclaimer": "登录流程将安全地通过 Paradox 服务处理，不会与 Skyve 共享数据。",
-  "DropNewPlayset": "Drop or select a playset's file here to import it",
-  "FilterIncludedByDefault": "Enable 'Included' filter for local content by default",
-  "FilterIncludedByDefault_Tip": "Only shows local content that are included in your active playset by default.",
+  "DropNewPlayset": "将配组拖到此处；或单击此处选择文件，来导入配组。",
+  "FilterIncludedByDefault": "默认筛选出已装载的本地资产",
+  "FilterIncludedByDefault_Tip": "默认只显示当前配组中已装载的本地资产。",
   "RunSetupOrRunApp": "您不能从此文件夹中运行 Skyve 。如果您已经安装了 Skyve，请从程序列表中运行它。\n\n如果没有，请点击“OK”来运行安装程序。",
   "CantRunAppFromHere": "您不能从这个文件夹中运行 Skyve 。\n\n您可以从程序列表中运行 Skyve 应用，或者从模组的文件夹中运行 Skyve 安装程序。",
   "UpdateAvailable": "有可用更新",
@@ -81,10 +81,10 @@
   "ChangeLocation": "更改内容存储位置",
   "ResetLocation": "重置位置",
   "JunctionRestart": "在此过程中，Skyve 和 Cities: Skylines II 将会关闭。\n\n完成时，Skyve 将自动重新启动。",
-  "PlaysetAlreadyImported": "This playset is already present in your list of playsets.",
+  "PlaysetAlreadyImported": "此配组已经在您的列表里了。",
   "CouldNotRetrieveMods": "无法获取模组数据",
-  "NewGameUpdate": "新的 Cities: Skylines II 更新",
-  "NewGameUpdateInfo": "Patch {0} is now available.\r\nBe sure to check your compatibility report before starting your game.",
+  "NewGameUpdate": "Cities: Skylines II 最新更新",
+  "NewGameUpdateInfo": "版本更新 {0} 现已发布。\n在开始游戏前，请务必检查兼容性。",
   "PdxSyncInfo": "PDX 同步程序负责下载和更新模组，在本地和 PDX Mods 服务器之间同步设置和配组。",
   "SyncOngoing": "同步正在进行中",
   "PdxSync": "与 PDX Mods 同步",
@@ -92,14 +92,14 @@
   "PDXModsNew": "PDX Mods 上的新插件",
   "PDXModsUpdated": "PDX Mods 上最近更新的插件",
   "DiskStatus": "硬盘状态",
-  "TotalCitiesSize": "C:S II 的所有用户数据",
+  "TotalCitiesSize": "C:S II 的用户数据总大小",
   "TotalSavesSize": "存档大小",
-  "TotalSubbedSize": "订阅大小",
+  "TotalSubbedSize": "订阅项目总大小",
   "TotalOtherSize": "其他文件大小",
-  "FreeSpace": "{0} 空闲",
-  "UsedOutOfSpace": "out of the {0} on drive {1}",
+  "FreeSpace": "剩余 {0}",
+  "UsedOutOfSpace": "{1} 盘 共 {0}",
   "LowSpaceCreateJunction": {
     "Zero": "硬盘空间即将用尽，你需要清理一些空间，或者购买一个额外的硬盘。",
-    "One": "硬盘空间不足，请进入选项更改游戏内容的保存位置。"
+    "One": "硬盘空间不足，请前往选项页面更改游戏内容的保存位置。"
   }
 }
