@@ -12,7 +12,6 @@ public class ParadoxLink : ILink
 	public ParadoxLink(ExternalLink externalLink)
 	{
 		Url = externalLink.URL;
-		Title = Type.ToString();
 		Type = externalLink.Type switch
 		{
 			"discord" => LinkType.Discord,
@@ -28,6 +27,8 @@ public class ParadoxLink : ILink
 			"gitlab" => LinkType.Gitlabs,
 			_ => LinkType.Website
 		};
+		
+		Title = Type.ToString();
 
 		if (Type is LinkType.BuyMeACoffee)
 		{

@@ -532,10 +532,11 @@ public class WorkshopService : IWorkshopService
 		}
 
 		var list = new List<PdxPlaysetPackage>();
+		var page = 1;
 
 		while (true)
 		{
-			var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, includeOnline: includeOnline));
+			var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, page++, includeOnline: includeOnline));
 
 			if (result.Mods is not null)
 			{
