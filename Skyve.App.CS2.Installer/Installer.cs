@@ -69,7 +69,14 @@ public class Installer
 		}
 		catch { }
 
-		Process.Start(exePath);
+		try
+		{
+			Process.Start(exePath);
+		}
+		catch (Exception ex)
+		{
+			throw new KnownException(ex, "The skyve app could not be found. It is likely an anti-virus software removed it.\r\n\r\nApp location: " + exePath);
+		}
 
 		try
 		{
@@ -142,7 +149,7 @@ public class Installer
 
 	private static void Run(string command)
 	{
-		var filePath = Path.Combine(Path.GetTempPath(), "SkyveBatch.bat");
+		var filePath = Path.ChangeExtension(CrossIO.GetTempFileName(), "bat");
 
 		File.WriteAllText(filePath, command);
 
@@ -160,9 +167,13 @@ public class Installer
 		var output = p.StandardOutput.ReadToEnd();
 		p.WaitForExit();
 
-		File.Delete(filePath);
+		try
+		{
+			File.Delete(filePath);
 
-		File.Delete(Path.Combine(Application.StartupPath, "InstallUtil.InstallLog"));
+			File.Delete(Path.Combine(Application.StartupPath, "InstallUtil.InstallLog"));
+		}
+		catch { }
 	}
 
 	public static async Task UnInstall()

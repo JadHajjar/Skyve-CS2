@@ -466,7 +466,7 @@ public class WorkshopService : IWorkshopService
 
 		var mods = ProcessResult(await Context.Mods.List());
 
-		return !mods.Success || mods.Mods is null ? (List<Mod>)([]) : mods.Mods;
+		return !mods.Success || mods.Mods is null ? [] : mods.Mods;
 	}
 
 	public async Task<List<IPlayset>> GetPlaysets(bool localOnly)
