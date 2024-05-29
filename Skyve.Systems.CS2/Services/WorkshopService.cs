@@ -650,7 +650,7 @@ public class WorkshopService : IWorkshopService
 		};
 	}
 
-	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset, bool enable)
+	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset)
 	{
 		if (Context is null || playset <= 1)
 		{

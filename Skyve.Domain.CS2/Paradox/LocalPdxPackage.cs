@@ -85,6 +85,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public bool IsCollection { get; set; }
 	public bool IsInvalid { get; set; }
 	public string Guid { get; set; }
+	string? IWorkshopInfo.VersionId => Version;
 	string? IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
 	IUser? IWorkshopInfo.Author => new PdxUser(Author);
 	Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);

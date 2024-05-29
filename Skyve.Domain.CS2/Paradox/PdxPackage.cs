@@ -105,6 +105,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	string IPackage.Version => UserModVersion.IfEmpty(Version);
+	string? IWorkshopInfo.VersionId => Version;
 	string IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
 	string? IWorkshopInfo.SuggestedGameVersion => RequiredGameVersion;
 	bool IWorkshopInfo.IsPartialInfo => true;

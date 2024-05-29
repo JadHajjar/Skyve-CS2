@@ -85,6 +85,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public string? SuggestedGameVersion { get; set; }
 	bool IPackage.IsLocal { get; }
 	ILocalPackageData? IPackage.LocalData { get; }
+	string? IWorkshopInfo.VersionId => PdxModsVersion;
 	string? IPackageIdentity.Url => $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	bool IPackage.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
 	bool IWorkshopInfo.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");

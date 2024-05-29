@@ -65,6 +65,9 @@
 		<Compile Update="UserInterface\Dashboard\D_PdxModsUpdated.cs" />
 		<Compile Update="UserInterface\Dashboard\D_DiskInfo.cs" />
 		<Compile Update="UserInterface\Dashboard\D_Playsets.cs" />
+		<Compile Update="UserInterface\Generic\ModVersionDropDown.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 		<Compile Update="UserInterface\Panels\PC_SendReviewRequest.cs" />
 		<Compile Update="UserInterface\Panels\PC_ReviewRequests.cs" />
 		<Compile Update="UserInterface\Panels\PC_ViewReviewRequest.cs" />

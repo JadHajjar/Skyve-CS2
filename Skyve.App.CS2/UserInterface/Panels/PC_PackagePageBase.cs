@@ -1,4 +1,5 @@
 ﻿using Skyve.App.CS2.UserInterface.Content;
+using Skyve.App.CS2.UserInterface.Generic;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
@@ -15,6 +16,7 @@ namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_PackagePageBase : PanelContent
 {
 	protected readonly IncludedButton B_Incl;
+	protected readonly ModVersionDropDown DD_Version;
 	protected readonly PackageTitleControl L_Title;
 	private readonly INotifier _notifier;
 	private readonly IPackageUtil _packageUtil;
@@ -41,14 +43,27 @@ public partial class PC_PackagePageBase : PanelContent
 		Package = package;
 
 		TLP_Side.Controls.Add(B_Incl = new(package) { Dock = DockStyle.Top }, 0, 2);
+		TLP_Side.Controls.Add(DD_Version = new(package) { Dock = DockStyle.Top, Visible = !package.IsLocal() }, 0, 3);
 		TLP_TopInfo.Controls.Add(L_Title = new(package) { Dock = DockStyle.Fill });
 		L_Title.MouseClick += I_More_MouseClick;
+		DD_Version.SelectedItemChanged += DD_Version_SelectedItemChanged;
 
 		if (autoRefresh)
 		{
 			_notifier.WorkshopInfoUpdated += Notifier_WorkshopInfoUpdated;
 			_notifier.PackageInclusionUpdated += Notifier_PackageInclusionUpdated;
 			_notifier.PackageInformationUpdated += Notifier_WorkshopInfoUpdated;
+		}
+	}
+
+	private async void DD_Version_SelectedItemChanged(object sender, EventArgs e)
+	{
+		var currentVersion = _packageUtil.GetSelectedVersion(Package);
+		var selectedVersion = DD_Version.SelectedItem?.VersionId;
+
+		if (currentVersion != selectedVersion && !string.IsNullOrEmpty(selectedVersion))
+		{
+		await	_packageUtil.SetVersion(Package, selectedVersion);
 		}
 	}
 
@@ -108,6 +123,11 @@ public partial class PC_PackagePageBase : PanelContent
 
 		L_Author.Visible = workshopInfo is not null;
 		L_Author.Text = workshopInfo?.Author?.Name;
+
+		var currentVersion = _packageUtil.GetSelectedVersion(package);
+		DD_Version.Items = workshopInfo?.Changelog.OrderByDescending(x => x.ReleasedDate).ToArray() ?? [];
+		DD_Version.Visible = !string.IsNullOrEmpty(currentVersion) && DD_Version.Items.Length > 0;
+		DD_Version.SelectedItem = DD_Version.Items.FirstOrDefault(x => x.VersionId == currentVersion);
 
 		// Links
 		{
@@ -243,7 +263,7 @@ public partial class PC_PackagePageBase : PanelContent
 		TLP_Side.Padding = UI.Scale(new Padding(8, 0, 0, 0), UI.FontScale);
 		TLP_TopInfo.Margin = B_Incl.Margin = base_slickSpacer.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		base_slickSpacer.Height = (int)UI.FontScale;
-		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding =
+		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding = DD_Version.Margin =
 		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		L_Info.Font = L_Requirements.Font = L_Tags.Font = L_Links.Font = UI.Font(7F, FontStyle.Bold);
 		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = L_Links.Margin = UI.Scale(new Padding(3), UI.FontScale);

@@ -1,4 +1,6 @@
-﻿namespace Skyve.App.CS2.UserInterface.Panels;
+﻿using Skyve.App.CS2.UserInterface.Generic;
+
+namespace Skyve.App.CS2.UserInterface.Panels;
 
 partial class PC_CompatibilityManagement
 {

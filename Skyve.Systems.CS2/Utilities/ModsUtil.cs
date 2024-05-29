@@ -585,4 +585,14 @@ internal class ModsUtil : IModUtil
 		_notifier.OnInclusionUpdated();
 		_notifier.OnRefreshUI(true);
 	}
+
+	public string? GetSelectedVersion(IPackageIdentity package, int? playsetId = null)
+	{
+		return modConfig.GetVersion(playsetId ?? currentPlayset, package.Id);
+	}
+
+	public async Task SetVersion(IPackageIdentity package, string version, int? playsetId = null)
+	{
+		await _workshopService.SubscribeBulk([new KeyValuePair<int, string?>((int)package.Id, version)], playsetId ?? currentPlayset);
+	}
 }
