@@ -75,7 +75,10 @@ internal static class Program
 				{
 					if (MessagePrompt.Show(LocaleCS2.RunSetupOrRunApp, PromptButtons.OKCancel, PromptIcons.Hand) == DialogResult.OK)
 					{
-						Process.Start(setupFile);
+						Process.Start(new ProcessStartInfo(setupFile)
+						{
+							Verb = WinExtensionClass.IsAdministrator ? string.Empty : "runas"
+						});
 					}
 				}
 				else

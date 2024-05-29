@@ -28,6 +28,7 @@ internal class D_ContentInfo : IDashboardItem
 		internal int CodeModsTotal;
 		internal int CodeModsEnabled;
 		internal int RecentlyUpdatedCodeMods;
+		internal int OutOfDateMods;
 	}
 
 	public D_ContentInfo()
@@ -97,6 +98,15 @@ internal class D_ContentInfo : IDashboardItem
 				if (mod.IsCodeMod)
 				{
 					contentInfo.CodeModsEnabled++;
+				}
+
+				switch (_packageUtil.GetStatus(mod, out _))
+				{
+					case DownloadStatus.OutOfDate:
+						contentInfo.OutOfDateMods++;
+						break;
+					case DownloadStatus.PartiallyDownloaded:
+						break;
 				}
 			}
 			else
@@ -170,6 +180,11 @@ internal class D_ContentInfo : IDashboardItem
 
 		preferredHeight += BorderRadius;
 
+		if (info.OutOfDateMods > 0)
+		{
+			DrawValue(e, textRect, Locale.OutOfDateItem.Format(Locale.Package.Plural.ToLower()), info.OutOfDateMods.ToString(), applyDrawing, ref preferredHeight, "OutOfDate", FormDesign.Design.OrangeColor);
+		}
+
 		if (info.RecentlyUpdated.Count > 0)
 		{
 			preferredHeight += BorderRadius;
@@ -178,7 +193,7 @@ internal class D_ContentInfo : IDashboardItem
 			using var valueFont = UI.Font(8.75F, FontStyle.Bold);
 			using var icon = IconManager.GetIcon("PDXMods", valueFont.Height * 5 / 4);
 			DrawValue(e, textRect, Locale.RecentlyUpdatedItem.Format(Locale.Package.Plural), info.RecentlyUpdated.Count.ToString(), applyDrawing, ref preferredHeight, "PDXMods", FormDesign.Design.ActiveColor);
-			DrawValue(e, textRect.Pad(icon.Width + BorderRadius / 2, 0, 0, 0), Locale.RecentlyUpdatedItem.Format(Locale.CodeMod.Plural), info.RecentlyUpdatedCodeMods.ToString(), applyDrawing, ref preferredHeight);
+			DrawValue(e, textRect.Pad(icon.Width + (BorderRadius / 2), 0, 0, 0), Locale.RecentlyUpdatedItem.Format(Locale.CodeMod.Plural), info.RecentlyUpdatedCodeMods.ToString(), applyDrawing, ref preferredHeight);
 
 			DrawButton(e, applyDrawing, ref preferredHeight, ViewRecentlyUpdated, new ButtonDrawArgs
 			{
@@ -190,8 +205,10 @@ internal class D_ContentInfo : IDashboardItem
 				Rectangle = e.ClipRectangle.Pad(BorderRadius)
 			});
 
-			preferredHeight += BorderRadius / 2;
+			preferredHeight -= BorderRadius / 2;
 		}
+
+		preferredHeight += BorderRadius;
 	}
 
 	private void ViewRecentlyUpdated()

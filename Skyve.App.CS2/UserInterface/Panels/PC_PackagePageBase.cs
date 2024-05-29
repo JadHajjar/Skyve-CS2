@@ -63,7 +63,10 @@ public partial class PC_PackagePageBase : PanelContent
 
 		if (currentVersion != selectedVersion && !string.IsNullOrEmpty(selectedVersion))
 		{
-		await	_packageUtil.SetVersion(Package, selectedVersion);
+			DD_Version.Loading = true;
+			await _packageUtil.SetVersion(Package, selectedVersion!);
+			await Task.Delay(1000);
+			DD_Version.Loading = false;
 		}
 	}
 
@@ -88,8 +91,8 @@ public partial class PC_PackagePageBase : PanelContent
 	{
 		base.OnShown();
 
-        if (refreshPending)
-        {
+		if (refreshPending)
+		{
 			refreshPending = false;
 
 			this.TryInvoke(() => SetPackage(Package));

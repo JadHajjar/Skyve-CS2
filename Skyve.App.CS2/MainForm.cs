@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -151,7 +152,10 @@ public partial class MainForm : BasePanelForm
 		{
 			try
 			{
-				Process.Start(Path.Combine(mostRecent.LocalData!.Folder, "Skyve Setup.exe"));
+				Process.Start(new ProcessStartInfo(Path.Combine(mostRecent.LocalData!.Folder, "Skyve Setup.exe"))
+				{
+					Verb = WinExtensionClass.IsAdministrator ? string.Empty : "runas"
+				});
 
 				_updateAvailableControl.Hide();
 			}

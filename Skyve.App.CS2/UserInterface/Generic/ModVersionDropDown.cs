@@ -33,16 +33,27 @@ public class ModVersionDropDown : SlickSelectionDropDown<IModChangelog>
 
 		rectangle.Width -= Padding.Left;
 
-		if (_modUtil.GetSelectedVersion(_package) == item.VersionId)
+		var isSelected = _modUtil.GetSelectedVersion(_package) == item.VersionId;
+		var isOutOfDate = Items[0] != item;
+
+		if (SelectedItem == item && Loading)
 		{
-			using var icon = IconManager.GetIcon("Ok", rectangle.Height * 3 / 4).Color(FormDesign.Design.GreenColor);
+			using var icon = IconManager.GetIcon(isOutOfDate ? "OutOfDate" : "Ok", rectangle.Height * 3 / 4).Color(isOutOfDate ? FormDesign.Design.OrangeColor : FormDesign.Design.GreenColor);
+
+			DrawLoader(e.Graphics, rectangle.Align(icon.Size, ContentAlignment.MiddleLeft));
+
+			rectangle = rectangle.Pad(icon.Width + Padding.Left, 0, 0, 0);
+		}
+		else if (isSelected)
+		{
+			using var icon = IconManager.GetIcon(isOutOfDate ? "OutOfDate" : "Ok", rectangle.Height * 3 / 4).Color(isOutOfDate ? FormDesign.Design.OrangeColor : FormDesign.Design.GreenColor);
 
 			e.Graphics.DrawImage(icon, rectangle.Align(icon.Size, ContentAlignment.MiddleLeft));
 
 			rectangle = rectangle.Pad(icon.Width + Padding.Left, 0, 0, 0);
 		}
 
-		using var brush = new SolidBrush(foreColor);
+		using var brush = new SolidBrush(isOutOfDate && isSelected ? FormDesign.Design.OrangeColor : foreColor);
 		using var format1 = new StringFormat { LineAlignment = StringAlignment.Center };
 
 		using var font1 = UI.Font(8.25F).FitTo(item.Version, rectangle, e.Graphics);

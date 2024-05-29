@@ -88,15 +88,13 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.9.3.1" />
+  <ModVersion Value="0.9.3.2" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.9.3.1
-## Hotfix
-* Fixed not being able to see more than 100 mods in your playset.
-* Fixed mod links all showing as 'Website'.
-* Fixed mods getting a 'Source code not available' warning before the mod's information had even loaded.
-* Added new translations.
+# v0.9.3.2
+## Out of date changes
+* Mods in your current playset that do not match the latest version of the mod are now shown as 'Out of date' in the mod list, and on your dashboard.
+* Added a dropdown in the mod page where you can select a specific mod version.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

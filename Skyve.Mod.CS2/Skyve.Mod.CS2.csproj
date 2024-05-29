@@ -25,10 +25,29 @@
 		<ItemGroup>
 			<AppFiles Include="..\Skyve.Service.CS2\bin\$(BuildType)\**\*.*" />
 			<AppFiles Include="..\Skyve.App.CS2\bin\$(BuildType)\**\*.*" />
-			<SetupFiles Include="..\Skyve.App.CS2.Installer\bin\$(BuildType)\Skyve Setup.*" />
+			<SetupFiles Include="..\Skyve.App.CS2.Installer\bin\$(BuildType)\**\*.*" />
+			
+			<App Include="$(ProjectDir)..\Skyve.App.CS2\bin\$(BuildType)\Skyve.exe" />
+			<Service Include="$(ProjectDir)..\Skyve.Service.CS2\bin\$(BuildType)\Skyve.Service.exe" />
+			<Setup Include="$(ProjectDir)..\Skyve.App.CS2.Installer\bin\$(BuildType)\Skyve Setup.exe" />
 		</ItemGroup>
 
-		<ZipDirectory SourceDirectory="$(AppFiles)" DestinationFile="$(DeployDir)\.App\AppData.zip" />
+		<SignFile
+			CertificateThumbprint="73d56ed78973d5ba0f5e98dee87b374a88a43b34"
+			SigningTarget="@(App)"
+			TargetFrameworkVersion="v4.7.2" />
+
+		<SignFile
+			CertificateThumbprint="73d56ed78973d5ba0f5e98dee87b374a88a43b34"
+			SigningTarget="@(Service)"
+			TargetFrameworkVersion="v4.7.2" />
+
+		<SignFile
+			CertificateThumbprint="73d56ed78973d5ba0f5e98dee87b374a88a43b34"
+			SigningTarget="@(Setup)"
+			TargetFrameworkVersion="v4.7.2" />
+
+		<Copy SourceFiles="@(AppFiles)" DestinationFiles="@(AppFiles->'$(DeployDir)\.App\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(SetupFiles)" DestinationFolder="$(DeployDir)" />
 	</Target>
 

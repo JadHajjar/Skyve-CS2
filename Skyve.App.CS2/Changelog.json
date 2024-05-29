@@ -2,6 +2,21 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.3.2",
+    "Date": "2024-05-29",
+    "ChangeGroups": [
+      {
+        "Name": "Out of date changes",
+        "Changes": [
+          "Mods in your current playset that do not match the latest version of the mod are now shown as 'Out of date' in the mod list, and on your dashboard.",
+          "Added a dropdown in the mod page where you can select a specific mod version."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.3.1",
     "Date": "2024-05-28",
     "ChangeGroups": [

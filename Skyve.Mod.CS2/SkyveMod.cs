@@ -7,10 +7,9 @@ using Game.Modding;
 using Game.SceneFlow;
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Security.Principal;
 
 namespace Skyve.Mod.CS2
 {
@@ -98,11 +97,19 @@ namespace Skyve.Mod.CS2
 
 			try
 			{
-				Process.Start(Path.Combine(ModPath, "Skyve Setup.exe"));
+				var isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+
+				Process.Start(new ProcessStartInfo(Path.Combine(ModPath, "Skyve Setup.exe"))
+				{
+					Verb = isAdmin ? string.Empty : "runas"
+				});
 
 				return true;
 			}
-			catch { return false; }
+			catch
+			{
+				return false;
+			}
 		}
 
 		public void OnDispose()

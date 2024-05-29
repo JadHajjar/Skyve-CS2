@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using PDX.SDK.Contracts.Enums.Errors;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain;
@@ -76,7 +77,10 @@ internal class ModsUtil : IModUtil
 		{
 			foreach (var item in mod.Playsets)
 			{
-				config.SetState(item.PlaysetId, (ulong)mod.Id, item.ModIsEnabled, item.Version);
+				config.SetState(item.PlaysetId
+					, (ulong)mod.Id
+					, item.ModIsEnabled
+					, currentPlayset == item.PlaysetId ? mod.Version : item.Version);
 			}
 		}
 
@@ -593,6 +597,34 @@ internal class ModsUtil : IModUtil
 
 	public async Task SetVersion(IPackageIdentity package, string version, int? playsetId = null)
 	{
-		await _workshopService.SubscribeBulk([new KeyValuePair<int, string?>((int)package.Id, version)], playsetId ?? currentPlayset);
+		if (!_workshopService.IsAvailable)
+		{
+			return;
+		}
+
+		var playset = playsetId ?? currentPlayset;
+
+		if (playset <= 0)
+		{
+			return;
+		}
+
+		await _workshopService.WaitUntilReady();
+
+		var result = await _workshopService.SubscribeBulk([new KeyValuePair<int, string?>((int)package.Id, version)], playset);
+
+		if (result)
+		{
+			modConfig.SetVersion(playset, package.Id, version);
+		}
+
+		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
+		{
+			return;
+		}
+
+		_notifier.OnWorkshopSyncEnded();
+		_notifier.OnInclusionUpdated();
+		_notifier.OnRefreshUI(true);
 	}
 }
