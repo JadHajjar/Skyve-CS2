@@ -31,6 +31,25 @@ public class LogTrace : ILogTrace
 			.RegexRemove(@" in \<\w+\>:\d+"));
 	}
 
+	public override bool Equals(object? obj)
+	{
+		return obj is LogTrace trace &&
+			   Title == trace.Title &&
+			   Timestamp == trace.Timestamp &&
+			   SourceFile == trace.SourceFile &&
+			   Type == trace.Type;
+	}
+
+	public override int GetHashCode()
+	{
+		var hashCode = -1611215073;
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Title);
+		hashCode = hashCode * -1521134295 + Timestamp.GetHashCode();
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(SourceFile);
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Type);
+		return hashCode;
+	}
+
 	public override string ToString()
 	{
 		return $"[{Type}] - [{Timestamp:HH:mm:ss,fff}] - ({Path.GetFileName(SourceFile)})\r\n" +

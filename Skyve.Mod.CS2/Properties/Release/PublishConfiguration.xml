@@ -88,13 +88,15 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.9.3.2" />
+  <ModVersion Value="0.9.3.3" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.9.3.2
-## Out of date changes
-* Mods in your current playset that do not match the latest version of the mod are now shown as 'Out of date' in the mod list, and on your dashboard.
-* Added a dropdown in the mod page where you can select a specific mod version.
+# v0.9.3.3
+## Scrolling Changes
+* Updated the scrolling behavior of all 'large list' pages.
+* Scrolling is now on a standard scroll value instead of being index-based. This makes scrolling less jumpy and won't leave the bottom of the list empty.
+* Changed the scrolling behavior of the Log list to the new scrolling that's used by other large lists. This will help with performance and will allow you to scroll to the very end when there's a lot of items in the list.'
+* Fixed items sometimes jumping while scrolling in grid view.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

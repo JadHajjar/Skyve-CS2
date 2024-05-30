@@ -2,11 +2,28 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.3.3",
+    "Date": "2024-05-30",
+    "ChangeGroups": [
+      {
+        "Name": "Scrolling Changes",
+        "Changes": [
+          "Updated the scrolling behavior of all 'large list' pages.",
+          "Scrolling is now on a standard scroll value instead of being index-based. This makes scrolling less jumpy and won't leave the bottom of the list empty.",
+          "Changed the scrolling behavior of the Log list to the new scrolling that's used by other large lists. This will help with performance and will allow you to scroll to the very end when there's a lot of items in the list.'",
+          "Fixed items sometimes jumping while scrolling in grid view."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.3.2",
     "Date": "2024-05-29",
     "ChangeGroups": [
       {
-        "Name": "Out of date changes",
+        "Name": "Out of date Changes",
         "Changes": [
           "Mods in your current playset that do not match the latest version of the mod are now shown as 'Out of date' in the mod list, and on your dashboard.",
           "Added a dropdown in the mod page where you can select a specific mod version."
