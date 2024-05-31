@@ -100,7 +100,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, null	, ThumbnailUrl, Id, PdxModsVersion	);
+		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, PdxModsVersion);
 
 		return true;
 	}

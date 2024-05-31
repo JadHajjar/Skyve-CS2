@@ -35,4 +35,23 @@ internal static class DomainUtils
 
 		return null;
 	}
+
+	internal static Bitmap? GetThumbnail(IImageService imageService, string? thumbnailPath, string? thumbnailUrl, string id)
+	{
+		var size = UI.Scale(new Size(200, 200), UI.FontScale);
+
+		if (CrossIO.FileExists(thumbnailPath))
+		{
+			return imageService.GetImage(thumbnailPath, true, $"{id}{Path.GetExtension(thumbnailPath)}", isFilePath: true, downscaleTo: size).Result;
+		}
+
+		var thumbnail = imageService.GetImage(thumbnailUrl, true, $"{id}{Path.GetExtension(thumbnailUrl)}", downscaleTo: size).Result;
+
+		if (thumbnail is not null)
+		{
+			return thumbnail;
+		}
+
+		return null;
+	}
 }

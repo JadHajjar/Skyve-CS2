@@ -48,6 +48,7 @@ public class WorkshopService : IWorkshopService
 	private readonly UserService _userService;
 	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
+	private readonly PdxUserProcessor _userProcessor;
 	private readonly Locker _locker = new();
 
 	private bool loginWaitingConnection;
@@ -82,6 +83,7 @@ public class WorkshopService : IWorkshopService
 		_pdxLogUtil = pdxLogUtil;
 		_userService = (UserService)userService;
 		_modProcessor = new PdxModProcessor(this, saveHandler, _notifier);
+		_userProcessor = new PdxUserProcessor(this, saveHandler, _notifier);
 	}
 
 	public async Task Initialize()
@@ -289,6 +291,35 @@ public class WorkshopService : IWorkshopService
 			var ratingResult = await Context.Mods.GetUserRating(id);
 
 			return new PdxModDetails(result.Mod, ratingResult.Rating != 0);
+		}
+
+		return null;
+	}
+
+	public IAuthor? GetUser(IUser user)
+	{
+		return string.IsNullOrEmpty(user?.Id?.ToString()) ? null : _userProcessor.Get(user!.Id!.ToString()).Result;
+	}
+
+	public async Task<IAuthor?> GetUserAsync(IUser user)
+	{
+		return string.IsNullOrEmpty(user?.Id?.ToString()) ? null : await _userProcessor.Get(user!.Id!.ToString());
+	}
+
+	internal async Task<PdxUser?> GetUserAsync(string username)
+	{
+		if (Context is null || string.IsNullOrEmpty(username) || !IsLoggedIn)
+		{
+			return null;
+		}
+
+		var result = await Context.Mods.GetModCreatorProfile(username);
+
+		ProcessResult(result);
+
+		if (result?.CreatorProfile is not null)
+		{
+			return new PdxUser(result.CreatorProfile);
 		}
 
 		return null;

@@ -1,4 +1,5 @@
 ﻿using Skyve.App.UserInterface.Content;
+using Skyve.App.UserInterface.Generic;
 using Skyve.Domain;
 using Skyve.Domain.Systems;
 
@@ -55,7 +56,7 @@ partial class PC_PackagePageBase
 			this.TLP_TopInfo = new System.Windows.Forms.TableLayoutPanel();
 			this.PB_Icon = new Skyve.App.UserInterface.Content.PackageIcon();
 			this.I_More = new SlickControls.SlickIcon();
-			this.L_Author = new SlickControls.SlickLabel();
+			this.L_Author = new AuthorControl();
 			this.base_slickSpacer = new SlickControls.SlickSpacer();
 			this.TLP_ModRequirements = new SlickControls.RoundedTableLayoutPanel();
 			this.L_Requirements = new System.Windows.Forms.Label();
@@ -315,13 +316,9 @@ partial class PC_PackagePageBase
 			// 
 			// L_Author
 			// 
-			this.L_Author.AutoSize = true;
 			this.L_Author.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon2.Name = "Author";
-			this.L_Author.ImageName = dynamicIcon2;
 			this.L_Author.Location = new System.Drawing.Point(93, 75);
 			this.L_Author.Name = "L_Author";
-			this.L_Author.Selected = false;
 			this.L_Author.Size = new System.Drawing.Size(24, 24);
 			this.L_Author.SpaceTriggersClick = true;
 			this.L_Author.TabIndex = 3;
@@ -503,7 +500,7 @@ partial class PC_PackagePageBase
 	private SlickControls.SmartFlowPanel FLP_Package_Tags;
 	private SlickButton B_BulkRequirements;
 	private System.Windows.Forms.Panel P_Requirements;
-	private SlickLabel L_Author;
+	private AuthorControl L_Author;
 	private RoundedTableLayoutPanel TLP_Links;
 	private System.Windows.Forms.Label L_Links;
 	private SmartFlowPanel FLP_Package_Links;

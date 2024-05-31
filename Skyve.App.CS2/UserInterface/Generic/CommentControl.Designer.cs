@@ -28,49 +28,52 @@ partial class CommentControl
 	/// </summary>
 	private void InitializeComponent()
 	{
-			this.roundedTableLayoutPanel1 = new SlickControls.RoundedTableLayoutPanel();
-			this.slickControl1 = new SlickControls.SlickControl();
+			SlickControls.DynamicIcon dynamicIcon3 = new SlickControls.DynamicIcon();
+			this.TLP_Back = new SlickControls.RoundedTableLayoutPanel();
+			this.C_UserImage = new SlickControls.SlickControl();
 			this.L_Author = new System.Windows.Forms.Label();
 			this.L_AuthorLabel = new SlickControls.SlickLabel();
 			this.slickButton1 = new SlickControls.SlickButton();
 			this.L_Time = new System.Windows.Forms.Label();
-			this.roundedTableLayoutPanel1.SuspendLayout();
+			this.C_Message = new SlickControls.SlickControl();
+			this.TLP_Back.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// roundedTableLayoutPanel1
+			// TLP_Back
 			// 
-			this.roundedTableLayoutPanel1.AddOutline = true;
-			this.roundedTableLayoutPanel1.AddShadow = true;
-			this.roundedTableLayoutPanel1.AutoSize = true;
-			this.roundedTableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.roundedTableLayoutPanel1.ColumnCount = 5;
-			this.roundedTableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.roundedTableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.roundedTableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.roundedTableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.roundedTableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.roundedTableLayoutPanel1.Controls.Add(this.slickControl1, 0, 0);
-			this.roundedTableLayoutPanel1.Controls.Add(this.L_Author, 1, 0);
-			this.roundedTableLayoutPanel1.Controls.Add(this.L_AuthorLabel, 2, 0);
-			this.roundedTableLayoutPanel1.Controls.Add(this.slickButton1, 4, 0);
-			this.roundedTableLayoutPanel1.Controls.Add(this.L_Time, 1, 1);
-			this.roundedTableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.roundedTableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-			this.roundedTableLayoutPanel1.Name = "roundedTableLayoutPanel1";
-			this.roundedTableLayoutPanel1.RowCount = 3;
-			this.roundedTableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.roundedTableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.roundedTableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.roundedTableLayoutPanel1.Size = new System.Drawing.Size(0, 73);
-			this.roundedTableLayoutPanel1.TabIndex = 0;
+			this.TLP_Back.AddShadow = true;
+			this.TLP_Back.AutoSize = true;
+			this.TLP_Back.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.TLP_Back.ColumnCount = 5;
+			this.TLP_Back.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_Back.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_Back.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_Back.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TLP_Back.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_Back.Controls.Add(this.C_UserImage, 0, 0);
+			this.TLP_Back.Controls.Add(this.L_Author, 1, 0);
+			this.TLP_Back.Controls.Add(this.L_AuthorLabel, 2, 0);
+			this.TLP_Back.Controls.Add(this.slickButton1, 4, 0);
+			this.TLP_Back.Controls.Add(this.L_Time, 1, 1);
+			this.TLP_Back.Controls.Add(this.C_Message, 1, 2);
+			this.TLP_Back.Dock = System.Windows.Forms.DockStyle.Top;
+			this.TLP_Back.Location = new System.Drawing.Point(0, 0);
+			this.TLP_Back.Name = "TLP_Back";
+			this.TLP_Back.RowCount = 3;
+			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Back.Size = new System.Drawing.Size(669, 100);
+			this.TLP_Back.TabIndex = 0;
 			// 
-			// slickControl1
+			// C_UserImage
 			// 
-			this.slickControl1.Location = new System.Drawing.Point(3, 3);
-			this.slickControl1.Name = "slickControl1";
-			this.roundedTableLayoutPanel1.SetRowSpan(this.slickControl1, 2);
-			this.slickControl1.Size = new System.Drawing.Size(55, 44);
-			this.slickControl1.TabIndex = 0;
+			this.C_UserImage.Location = new System.Drawing.Point(3, 3);
+			this.C_UserImage.Name = "C_UserImage";
+			this.TLP_Back.SetRowSpan(this.C_UserImage, 2);
+			this.C_UserImage.Size = new System.Drawing.Size(55, 44);
+			this.C_UserImage.TabIndex = 0;
+			this.C_UserImage.Paint += new System.Windows.Forms.PaintEventHandler(this.C_UserImage_Paint);
 			// 
 			// L_Author
 			// 
@@ -87,8 +90,8 @@ partial class CommentControl
 			this.L_AuthorLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.L_AuthorLabel.AutoSize = true;
 			this.L_AuthorLabel.ButtonType = SlickControls.ButtonType.Active;
-			this.L_AuthorLabel.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.L_AuthorLabel.Display = true;
+			this.L_AuthorLabel.Enabled = false;
 			this.L_AuthorLabel.Location = new System.Drawing.Point(105, 3);
 			this.L_AuthorLabel.Name = "L_AuthorLabel";
 			this.L_AuthorLabel.Selected = true;
@@ -99,36 +102,48 @@ partial class CommentControl
 			// 
 			// slickButton1
 			// 
-			this.slickButton1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.slickButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.slickButton1.AutoSize = true;
 			this.slickButton1.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.slickButton1.Location = new System.Drawing.Point(-78, 3);
+			dynamicIcon3.Name = "Reply";
+			this.slickButton1.ImageName = dynamicIcon3;
+			this.slickButton1.Location = new System.Drawing.Point(622, 3);
 			this.slickButton1.Name = "slickButton1";
-			this.slickButton1.Size = new System.Drawing.Size(76, 21);
+			this.TLP_Back.SetRowSpan(this.slickButton1, 2);
+			this.slickButton1.Size = new System.Drawing.Size(44, 21);
 			this.slickButton1.SpaceTriggersClick = true;
 			this.slickButton1.TabIndex = 3;
-			this.slickButton1.Text = "slickButton1";
+			this.slickButton1.Text = "Reply";
 			// 
 			// L_Time
 			// 
-			this.L_Time.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.L_Time.AutoSize = true;
-			this.L_Time.Location = new System.Drawing.Point(64, 32);
+			this.TLP_Back.SetColumnSpan(this.L_Time, 2);
+			this.L_Time.Location = new System.Drawing.Point(64, 27);
 			this.L_Time.Name = "L_Time";
 			this.L_Time.Size = new System.Drawing.Size(35, 13);
 			this.L_Time.TabIndex = 1;
 			this.L_Time.Text = "label1";
 			// 
+			// C_Message
+			// 
+			this.TLP_Back.SetColumnSpan(this.C_Message, 4);
+			this.C_Message.Dock = System.Windows.Forms.DockStyle.Top;
+			this.C_Message.Location = new System.Drawing.Point(64, 53);
+			this.C_Message.Name = "C_Message";
+			this.C_Message.Size = new System.Drawing.Size(602, 44);
+			this.C_Message.TabIndex = 0;
+			this.C_Message.Paint += new System.Windows.Forms.PaintEventHandler(this.C_Message_Paint);
+			// 
 			// CommentControl
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.AutoSize = true;
 			this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.Controls.Add(this.roundedTableLayoutPanel1);
+			this.Controls.Add(this.TLP_Back);
 			this.Name = "CommentControl";
-			this.Size = new System.Drawing.Size(0, 73);
-			this.roundedTableLayoutPanel1.ResumeLayout(false);
-			this.roundedTableLayoutPanel1.PerformLayout();
+			this.Size = new System.Drawing.Size(669, 177);
+			this.TLP_Back.ResumeLayout(false);
+			this.TLP_Back.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -136,10 +151,11 @@ partial class CommentControl
 
 	#endregion
 
-	private RoundedTableLayoutPanel roundedTableLayoutPanel1;
-	private SlickControl slickControl1;
+	private RoundedTableLayoutPanel TLP_Back;
+	private SlickControl C_UserImage;
 	private System.Windows.Forms.Label L_Author;
 	private SlickLabel L_AuthorLabel;
-	private SlickButton slickButton1;
 	private System.Windows.Forms.Label L_Time;
+	private SlickControl C_Message;
+	private SlickButton slickButton1;
 }

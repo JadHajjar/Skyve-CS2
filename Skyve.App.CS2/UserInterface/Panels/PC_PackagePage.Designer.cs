@@ -39,6 +39,7 @@ partial class PC_PackagePage
 			SlickControls.DynamicIcon dynamicIcon5 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon6 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon7 = new SlickControls.DynamicIcon();
+			SlickControls.DynamicIcon dynamicIcon8 = new SlickControls.DynamicIcon();
 			this.slickTabControl = new SlickControls.SlickTabControl();
 			this.T_Info = new SlickControls.SlickTabControl.Tab();
 			this.slickWebBrowser = new SlickControls.Controls.Advanced.SlickWebBrowser();
@@ -83,7 +84,7 @@ partial class PC_PackagePage
 			this.T_Info.LinkedControl = this.slickWebBrowser;
 			this.T_Info.Location = new System.Drawing.Point(0, 5);
 			this.T_Info.Name = "T_Info";
-			this.T_Info.Size = new System.Drawing.Size(99, 75);
+			this.T_Info.Size = new System.Drawing.Size(99, 60);
 			this.T_Info.TabIndex = 0;
 			this.T_Info.TabStop = false;
 			this.T_Info.Text = "Info";
@@ -97,7 +98,7 @@ partial class PC_PackagePage
 			this.slickWebBrowser.Location = new System.Drawing.Point(0, 0);
 			this.slickWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
 			this.slickWebBrowser.Name = "slickWebBrowser";
-			this.slickWebBrowser.Size = new System.Drawing.Size(796, 543);
+			this.slickWebBrowser.Size = new System.Drawing.Size(796, 558);
 			this.slickWebBrowser.TabIndex = 17;
 			this.slickWebBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.SlickWebBrowser_Navigating);
 			// 
@@ -111,7 +112,7 @@ partial class PC_PackagePage
 			this.T_Gallery.LinkedControl = this.carouselControl;
 			this.T_Gallery.Location = new System.Drawing.Point(99, 5);
 			this.T_Gallery.Name = "T_Gallery";
-			this.T_Gallery.Size = new System.Drawing.Size(99, 75);
+			this.T_Gallery.Size = new System.Drawing.Size(99, 60);
 			this.T_Gallery.TabIndex = 0;
 			this.T_Gallery.TabStop = false;
 			this.T_Gallery.Text = "Gallery";
@@ -127,10 +128,12 @@ partial class PC_PackagePage
 			// 
 			this.T_Comments.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Comments.Dock = System.Windows.Forms.DockStyle.Left;
+			dynamicIcon3.Name = "Chat";
+			this.T_Comments.IconName = dynamicIcon3;
 			this.T_Comments.LinkedControl = this.commentsControl1;
 			this.T_Comments.Location = new System.Drawing.Point(198, 5);
 			this.T_Comments.Name = "T_Comments";
-			this.T_Comments.Size = new System.Drawing.Size(99, 75);
+			this.T_Comments.Size = new System.Drawing.Size(99, 60);
 			this.T_Comments.TabIndex = 3;
 			this.T_Comments.TabStop = false;
 			this.T_Comments.Text = "Comments";
@@ -150,12 +153,12 @@ partial class PC_PackagePage
 			this.T_Content.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Content.Dock = System.Windows.Forms.DockStyle.Left;
 			this.T_Content.FillTab = true;
-			dynamicIcon3.Name = "Assets";
-			this.T_Content.IconName = dynamicIcon3;
+			dynamicIcon4.Name = "Assets";
+			this.T_Content.IconName = dynamicIcon4;
 			this.T_Content.LinkedControl = null;
 			this.T_Content.Location = new System.Drawing.Point(297, 5);
 			this.T_Content.Name = "T_Content";
-			this.T_Content.Size = new System.Drawing.Size(99, 75);
+			this.T_Content.Size = new System.Drawing.Size(99, 60);
 			this.T_Content.TabIndex = 2;
 			this.T_Content.TabStop = false;
 			this.T_Content.Text = "Content";
@@ -165,12 +168,12 @@ partial class PC_PackagePage
 			this.T_Compatibility.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Compatibility.Dock = System.Windows.Forms.DockStyle.Left;
 			this.T_Compatibility.Font = new System.Drawing.Font("Nirmala UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			dynamicIcon4.Name = "CompatibilityReport";
-			this.T_Compatibility.IconName = dynamicIcon4;
+			dynamicIcon5.Name = "CompatibilityReport";
+			this.T_Compatibility.IconName = dynamicIcon5;
 			this.T_Compatibility.LinkedControl = null;
 			this.T_Compatibility.Location = new System.Drawing.Point(396, 5);
 			this.T_Compatibility.Name = "T_Compatibility";
-			this.T_Compatibility.Size = new System.Drawing.Size(99, 75);
+			this.T_Compatibility.Size = new System.Drawing.Size(99, 60);
 			this.T_Compatibility.TabIndex = 0;
 			this.T_Compatibility.TabStop = false;
 			this.T_Compatibility.Text = "Compatibility";
@@ -181,12 +184,12 @@ partial class PC_PackagePage
 			this.T_References.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_References.Dock = System.Windows.Forms.DockStyle.Left;
 			this.T_References.FillTab = true;
-			dynamicIcon5.Name = "Share";
-			this.T_References.IconName = dynamicIcon5;
+			dynamicIcon6.Name = "Share";
+			this.T_References.IconName = dynamicIcon6;
 			this.T_References.LinkedControl = null;
 			this.T_References.Location = new System.Drawing.Point(495, 5);
 			this.T_References.Name = "T_References";
-			this.T_References.Size = new System.Drawing.Size(99, 75);
+			this.T_References.Size = new System.Drawing.Size(99, 60);
 			this.T_References.TabIndex = 1;
 			this.T_References.TabStop = false;
 			this.T_References.Text = "References";
@@ -198,12 +201,12 @@ partial class PC_PackagePage
 			this.T_Playsets.Dock = System.Windows.Forms.DockStyle.Left;
 			this.T_Playsets.FillTab = true;
 			this.T_Playsets.Font = new System.Drawing.Font("Nirmala UI", 9F);
-			dynamicIcon6.Name = "Playsets";
-			this.T_Playsets.IconName = dynamicIcon6;
+			dynamicIcon7.Name = "Playsets";
+			this.T_Playsets.IconName = dynamicIcon7;
 			this.T_Playsets.LinkedControl = null;
 			this.T_Playsets.Location = new System.Drawing.Point(594, 5);
 			this.T_Playsets.Name = "T_Playsets";
-			this.T_Playsets.Size = new System.Drawing.Size(99, 75);
+			this.T_Playsets.Size = new System.Drawing.Size(99, 60);
 			this.T_Playsets.TabIndex = 0;
 			this.T_Playsets.TabStop = false;
 			this.T_Playsets.Text = "Playsets";
@@ -213,19 +216,18 @@ partial class PC_PackagePage
 			this.T_Changelog.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Changelog.Dock = System.Windows.Forms.DockStyle.Left;
 			this.T_Changelog.FillTab = true;
-			dynamicIcon7.Name = "Versions";
-			this.T_Changelog.IconName = dynamicIcon7;
+			dynamicIcon8.Name = "Versions";
+			this.T_Changelog.IconName = dynamicIcon8;
 			this.T_Changelog.LinkedControl = this.packageChangelogControl1;
 			this.T_Changelog.Location = new System.Drawing.Point(693, 5);
 			this.T_Changelog.Name = "T_Changelog";
-			this.T_Changelog.Size = new System.Drawing.Size(99, 75);
+			this.T_Changelog.Size = new System.Drawing.Size(99, 60);
 			this.T_Changelog.TabIndex = 0;
 			this.T_Changelog.TabStop = false;
 			this.T_Changelog.Text = "Changelog";
 			// 
 			// packageChangelogControl1
 			// 
-			this.packageChangelogControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.packageChangelogControl1.Location = new System.Drawing.Point(0, 0);
 			this.packageChangelogControl1.Name = "packageChangelogControl1";
 			this.packageChangelogControl1.Size = new System.Drawing.Size(796, 543);

@@ -125,7 +125,7 @@ public partial class PC_PackagePageBase : PanelContent
 		LI_Votes.ValueColor = workshopInfo?.HasVoted == true ? FormDesign.Design.GreenColor : null;
 
 		L_Author.Visible = workshopInfo is not null;
-		L_Author.Text = workshopInfo?.Author?.Name;
+		L_Author.Author = workshopInfo?.Author;
 
 		var currentVersion = _packageUtil.GetSelectedVersion(package);
 		DD_Version.Items = workshopInfo?.Changelog.OrderByDescending(x => x.ReleasedDate).ToArray() ?? [];

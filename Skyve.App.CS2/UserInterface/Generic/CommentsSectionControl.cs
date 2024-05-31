@@ -33,7 +33,10 @@ public partial class CommentsSectionControl : UserControl
 
 		foreach (var item in modCommentsInfo.Posts)
 		{
-			Controls.Add(new CommentControl(item, Package));
+			var control = new CommentControl(item, Package);
+
+			Controls.Add(control);
+			Controls.SetChildIndex(control, 0);
 		}
 	}
 }
