@@ -40,7 +40,8 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool SnapDashToGrid { get; set; }
 	public bool ComplexListUI { get; set; }
 	public bool FilterIncludedByDefault { get; set; } = true;
-	public bool SyncBeforeLaunching { get; } = true;
+	public bool SyncBeforeLaunching { get; set; } = true;
+	public bool ColoredAuthorNames { get; set; } = true;
 	public DependencyResolveBehavior DependencyResolution { get; set; }
 
 	public void Save()

@@ -9,7 +9,6 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 
 using PdxIMod = PDX.SDK.Contracts.Service.Mods.Models.IMod;
@@ -97,6 +96,11 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<ILink> IWorkshopInfo.Links => [];
+
+	bool IWorkshopInfo.HasComments()
+	{
+		return false;
+	}
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{

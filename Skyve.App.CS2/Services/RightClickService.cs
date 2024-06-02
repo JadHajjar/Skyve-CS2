@@ -40,7 +40,6 @@ internal class RightClickService : IRightClickService
 			new(Locale.ViewOnWorkshop, "Link", () => PlatformUtil.OpenUrl(list[0].Url), visible: list.Count == 1 && !string.IsNullOrWhiteSpace(list[0].Url)),
 			new(Locale.OpenPackageFolder.FormatPlural(list.Count), "Folder", () => list.Select(x => x.GetLocalPackageIdentity()?.FilePath).WhereNotEmpty().Foreach(PlatformUtil.OpenFolder), visible: anyInstalled),
 			new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "PC", () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => ServiceCenter.Get<IPackageManager>().MoveToLocalFolder(x!.Package)), visible: settings.UserSettings.ComplexListUI && anyWorkshopAndInstalled),
-			new((anyLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "Disposable", () => AskThenDelete(list), visible: settings.UserSettings.ComplexListUI && anyLocal),
 
 			SlickStripItem.Empty,
 
@@ -54,6 +53,8 @@ internal class RightClickService : IRightClickService
 					SlickStripItem.Empty,
 					new(Locale.EditTags.FormatPlural(list.Count), "Tag", () => EditTags(list)),
 					new(Locale.EditCompatibility.FormatPlural(list.Count), "CompatibilityReport", () => { App.Program.MainForm.PushPanel(new PC_CompatibilityManagement(items)); }, visible: (userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author))) && anyWorkshop),
+					SlickStripItem.Empty,
+					new((anyLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "Trash", () => AskThenDelete(list), visible: anyLocal),
 				]
 			},
 
@@ -75,7 +76,7 @@ internal class RightClickService : IRightClickService
 					new(Locale.CopyWorkshopLink.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(x => x.Url, CrossIO.NewLine))),
 					new(Locale.CopyWorkshopId.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(x => x.Id.ToString(), CrossIO.NewLine)))
 				]
-			}
+			},
 		];
 	}
 

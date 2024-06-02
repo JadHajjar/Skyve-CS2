@@ -262,6 +262,7 @@ public class WorkshopService : IWorkshopService
 	public void ClearCache()
 	{
 		_modProcessor.Clear();
+		_userProcessor.Clear();
 	}
 
 	public IWorkshopInfo? GetInfo(IPackageIdentity identity)
@@ -296,12 +297,12 @@ public class WorkshopService : IWorkshopService
 		return null;
 	}
 
-	public IAuthor? GetUser(IUser user)
+	public IAuthor? GetUser(IUser? user)
 	{
 		return string.IsNullOrEmpty(user?.Id?.ToString()) ? null : _userProcessor.Get(user!.Id!.ToString()).Result;
 	}
 
-	public async Task<IAuthor?> GetUserAsync(IUser user)
+	public async Task<IAuthor?> GetUserAsync(IUser? user)
 	{
 		return string.IsNullOrEmpty(user?.Id?.ToString()) ? null : await _userProcessor.Get(user!.Id!.ToString());
 	}

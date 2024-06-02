@@ -1,4 +1,6 @@
-﻿namespace Skyve.App.CS2.UserInterface.Generic;
+﻿using Skyve.App.UserInterface.Content;
+
+namespace Skyve.App.CS2.UserInterface.Generic;
 
 partial class CommentControl
 {
@@ -30,7 +32,7 @@ partial class CommentControl
 	{
 			SlickControls.DynamicIcon dynamicIcon3 = new SlickControls.DynamicIcon();
 			this.TLP_Back = new SlickControls.RoundedTableLayoutPanel();
-			this.C_UserImage = new SlickControls.SlickControl();
+			this.C_UserImage = new UserIcon();
 			this.L_Author = new System.Windows.Forms.Label();
 			this.L_AuthorLabel = new SlickControls.SlickLabel();
 			this.slickButton1 = new SlickControls.SlickButton();
@@ -73,7 +75,6 @@ partial class CommentControl
 			this.TLP_Back.SetRowSpan(this.C_UserImage, 2);
 			this.C_UserImage.Size = new System.Drawing.Size(55, 44);
 			this.C_UserImage.TabIndex = 0;
-			this.C_UserImage.Paint += new System.Windows.Forms.PaintEventHandler(this.C_UserImage_Paint);
 			// 
 			// L_Author
 			// 
@@ -152,7 +153,7 @@ partial class CommentControl
 	#endregion
 
 	private RoundedTableLayoutPanel TLP_Back;
-	private SlickControl C_UserImage;
+	private UserIcon C_UserImage;
 	private System.Windows.Forms.Label L_Author;
 	private SlickLabel L_AuthorLabel;
 	private System.Windows.Forms.Label L_Time;

@@ -59,6 +59,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		InitializeComponent();
 
+		IsReadOnly = true;
+
 		SlickTip.SetTo(B_Skip, "Skip");
 		SlickTip.SetTo(B_Previous, "Previous");
 		SlickTip.SetTo(P_Tags, "GlobalTagsInfo");
@@ -293,9 +295,11 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		TLP_Bottom.Visible = false;
 
 		var workshopInfo = package.GetWorkshopInfo();
-		T_Changelog.Visible = workshopInfo?.Changelog?.Any() ?? false;
+		var hasChangelog= workshopInfo?.Changelog?.Any() ?? false;
 
-		if (T_Changelog.Visible)
+		T_Changelog.Visible = hasChangelog;
+
+		if (hasChangelog)
 		{
 			packageChangelogControl1.SetChangelogs(workshopInfo!.Version ?? string.Empty, workshopInfo!.Changelog);
 		}

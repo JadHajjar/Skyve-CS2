@@ -23,8 +23,11 @@ public partial class PC_PackagePageBase : PanelContent
 	private readonly ISettings _settings;
 	private TagControl? addTagControl;
 	private bool refreshPending;
+	private bool isReadOnly;
 
 	public IPackageIdentity Package { get; private set; }
+
+	protected bool IsReadOnly { get => isReadOnly; set => SetReadOnly(value); }
 
 #nullable disable
 	[Obsolete("DESIGNER ONLY", true)]
@@ -68,6 +71,14 @@ public partial class PC_PackagePageBase : PanelContent
 			await Task.Delay(1000);
 			DD_Version.Loading = false;
 		}
+	}
+
+	private void SetReadOnly(bool value)
+	{
+		isReadOnly = value;
+
+		B_Incl.Visible = !value;
+		DD_Version.Visible = !value;
 	}
 
 	private void Notifier_PackageInclusionUpdated()
@@ -129,7 +140,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 		var currentVersion = _packageUtil.GetSelectedVersion(package);
 		DD_Version.Items = workshopInfo?.Changelog.OrderByDescending(x => x.ReleasedDate).ToArray() ?? [];
-		DD_Version.Visible = !string.IsNullOrEmpty(currentVersion) && DD_Version.Items.Length > 0;
+		DD_Version.Visible = !isReadOnly && !string.IsNullOrEmpty(currentVersion) && DD_Version.Items.Length > 0;
 		DD_Version.SelectedItem = DD_Version.Items.FirstOrDefault(x => x.VersionId == currentVersion);
 
 		// Links
@@ -224,7 +235,7 @@ public partial class PC_PackagePageBase : PanelContent
 			FLP_Package_Tags.Controls.Add(control);
 		}
 
-		//if (Package.LocalPackage is not null)
+		if (!isReadOnly)
 		{
 			addTagControl = new TagControl { ImageName = "Add", ColorStyle = ColorStyle.Green };
 			addTagControl.MouseClick += AddTagControl_MouseClick;

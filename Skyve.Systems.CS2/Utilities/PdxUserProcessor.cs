@@ -75,11 +75,6 @@ internal class PdxUserProcessor : PeriodicProcessor<string, PdxUser>
 		{
 			var path = saveHandler.GetPath(CACHE_FILE);
 
-			if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(7) && ConnectionHandler.IsConnected)
-			{
-				return null;
-			}
-
 			saveHandler.Load(out Dictionary<string, PdxUser>? dic, CACHE_FILE);
 
 			return dic;

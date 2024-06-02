@@ -4,6 +4,7 @@ using Colossal.Logging;
 
 using Game;
 using Game.Modding;
+using Game.Rendering;
 using Game.SceneFlow;
 
 using System;

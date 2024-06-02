@@ -1,6 +1,5 @@
-﻿using Skyve.Domain.CS2.Utilities;
-
-using SlickControls;
+﻿using Skyve.App.Interfaces;
+using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
 using System.Threading.Tasks;
@@ -43,6 +42,27 @@ public class DownloadsInfoControl : SlickControl
 			{
 				this.TryInvoke(Hide);
 			}
+		}
+	}
+
+	protected override void OnMouseClick(MouseEventArgs e)
+	{
+		base.OnMouseClick(e);
+
+		var workshopInfo = new GenericPackageIdentity(_subscriptionsManager.Status.ModId).GetWorkshopInfo();
+
+		if (workshopInfo is null)
+		{
+			return;
+		}
+
+		if (e.Button == MouseButtons.Left)
+		{
+			ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
+		}
+		else if (e.Button == MouseButtons.Right)
+		{
+			SlickToolStrip.Show(App.Program.MainForm, ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(workshopInfo));
 		}
 	}
 

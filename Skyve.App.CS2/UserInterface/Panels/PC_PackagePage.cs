@@ -35,6 +35,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 		T_Playsets.LinkedControl = new OtherPlaysetPackage(package);
 		commentsControl1.Package = package;
 
+		T_Comments.Visible = false;
 		T_Playsets.Visible = !package.IsLocal();
 
 		if (compatibilityPage)
@@ -79,6 +80,8 @@ public partial class PC_PackagePage : PC_PackagePageBase
 
 		var workshopInfo = Package.GetWorkshopInfo();
 		var localData = Package.GetLocalPackage();
+
+		T_Comments.Visible = workshopInfo != null && workshopInfo.HasComments();
 
 		// Info
 		{

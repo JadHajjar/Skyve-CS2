@@ -8,7 +8,6 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 
 namespace Skyve.Domain.CS2.Paradox;
@@ -18,25 +17,33 @@ public class PdxUser : IAuthor, ITimestamped, IEquatable<IUser?>
 	public string Name { get; set; }
 	public string? ProfileUrl => $"https://mods.paradoxplaza.com/authors/{Id}";
 	public string? AvatarUrl { get; set; }
-	public List<ILink> ExternalLinks { get; set; }
+	public List<ParadoxLink> Links { get; set; }
 	public string Bio { get; set; }
 	public int FollowerCount { get; set; }
 	public DateTime Timestamp { get; set; } = DateTime.Now;
+	List<ILink> IAuthor.Links => Links.ToList(x => (ILink)x);
+
+	[Obsolete("JsonOnly", true)]
+	public PdxUser()
+	{
+		Id = Name = Bio = string.Empty;
+		Links = [];
+	}
 
 	public PdxUser(string authorId)
 	{
 		Id = Name = authorId;
 		Bio = string.Empty;
-		ExternalLinks = [];
+		Links = [];
 	}
 
 	public PdxUser(ModCreator author)
 	{
 		Id = Name = author.Username;
 		AvatarUrl = author.Avatar.Url;
-		Bio = author.Bio;
+		Bio = Markdig.Markdown.ToPlainText(author.Bio);
 		FollowerCount = author.FollowerCount;
-		ExternalLinks = author.ExternalLinks.ToList(x => (ILink)new ParadoxLink(x));
+		Links = author.ExternalLinks.ToList(x => new ParadoxLink(x));
 	}
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)

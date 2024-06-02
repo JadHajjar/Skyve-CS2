@@ -1,7 +1,5 @@
 ﻿using Extensions;
 
-using Newtonsoft.Json;
-
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
@@ -11,15 +9,14 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 
 namespace Skyve.Domain.CS2.Paradox;
 public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 {
 	[Obsolete("", true)]
-    public PdxModDetails()
-    {
+	public PdxModDetails()
+	{
 		Name = string.Empty;
 		Guid = string.Empty;
 		Version = string.Empty;
@@ -27,7 +24,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		Tags = [];
 	}
 
-    public PdxModDetails(ModDetails mod, bool hasVoted)
+	public PdxModDetails(ModDetails mod, bool hasVoted)
 	{
 		Id = (ulong)mod.Id;
 		Name = mod.DisplayName;
@@ -96,6 +93,11 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
 
 	bool IWorkshopInfo.IsPartialInfo { get; }
+
+	bool IWorkshopInfo.HasComments()
+	{
+		return !string.IsNullOrWhiteSpace(ForumLink);
+	}
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{

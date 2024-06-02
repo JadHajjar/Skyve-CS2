@@ -29,6 +29,10 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <PackageReference Include="Markdig" Version="0.34.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<Reference Include="System.Windows.Forms" />
 		<ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Domain\Skyve.Domain.csproj" />
