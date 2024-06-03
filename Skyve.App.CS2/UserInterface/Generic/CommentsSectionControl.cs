@@ -1,42 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Generic;
 public partial class CommentsSectionControl : UserControl
 {
 	private IModCommentsInfo? modCommentsInfo;
+	private bool isLoading;
+	private int page = 1;
 
 	public IPackageIdentity? Package { get; set; }
 
-    public CommentsSectionControl()
+	public CommentsSectionControl()
 	{
 		InitializeComponent();
+
+		AutoSize = true;
 	}
 
-	protected override async void OnCreateControl()
+	protected override void OnCreateControl()
 	{
 		base.OnCreateControl();
 
-		if (Package is null)
-			return;
+		PB_Loading.Size = UI.Scale(new System.Drawing.Size(24, 24), UI.FontScale);
+		PB_Loading.Location = new System.Drawing.Point((Width - PB_Loading.Width) / 2, (int)(175 * UI.FontScale));
 
-		modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package);
+		this.TryBeginInvoke(FindScroll);
 
-		if (modCommentsInfo?.Posts == null) return;
+		Task.Run(() => LoadComments());
+	}
 
-		foreach (var item in modCommentsInfo.Posts)
+	private void FindScroll()
+	{
+		var scrollbar = SlickScroll.GlobalGetScrollbar(this);
+
+		if (scrollbar != null)
 		{
-			var control = new CommentControl(item, Package);
-
-			Controls.Add(control);
-			Controls.SetChildIndex(control, 0);
+			scrollbar.Scroll += Scrollbar_Scroll;
 		}
+	}
+
+	private void Scrollbar_Scroll(object sender, ScrollEventArgs e)
+	{
+		if (e.NewValue > 90)
+		{
+			Task.Run(() => LoadComments(page + 1));
+		}
+	}
+
+	private async void LoadComments(int page = 1)
+	{
+		if (Package is null || isLoading)
+		{
+			return;
+		}
+
+		isLoading = true;
+
+		modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package, page);
+
+		if ((modCommentsInfo?.Posts) != null)
+		{
+			this.page = page;
+
+			this.TryInvoke(() =>
+			{
+				PB_Loading.Visible = false;
+
+				this.SuspendDrawing();
+				foreach (var item in modCommentsInfo.Posts)
+				{
+					var control = new CommentControl(item, Package) { Dock = DockStyle.Top };
+
+					Controls.Add(control);
+					Controls.SetChildIndex(control, 0);
+				}
+				this.ResumeDrawing();
+			});
+		}
+
+		isLoading = false;
 	}
 }

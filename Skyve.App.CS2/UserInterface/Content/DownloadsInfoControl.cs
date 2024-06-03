@@ -21,6 +21,7 @@ public class DownloadsInfoControl : SlickControl
 
 		Margin = default;
 		Visible = false;
+		Cursor = Cursors.Hand;
 	}
 
 	private async void SubscriptionsManager_UpdateDisplayNotification()
@@ -137,6 +138,12 @@ public class DownloadsInfoControl : SlickControl
 		if (_subscriptionsManager.Status.Progress < 1f)
 		{
 			e.Graphics.DrawString($"{_subscriptionsManager.Status.Progress * 100:0}%", font, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Far });
+		}
+
+		if (HoverState.HasFlag(HoverState.Hovered))
+		{
+			using var backBrush = new SolidBrush(Color.FromArgb(50, FormDesign.Design.ActiveColor));
+			e.Graphics.FillRoundedRectangle(backBrush, ClientRectangle.Pad(Padding - new Padding(Padding.Left)), Padding.Left*2);
 		}
 	}
 }

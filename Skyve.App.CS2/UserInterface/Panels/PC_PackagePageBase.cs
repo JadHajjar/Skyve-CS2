@@ -5,6 +5,7 @@ using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
+using Skyve.Domain;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
@@ -282,6 +283,7 @@ public partial class PC_PackagePageBase : PanelContent
 		L_Info.Font = L_Requirements.Font = L_Tags.Font = L_Links.Font = UI.Font(7F, FontStyle.Bold);
 		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = L_Links.Margin = UI.Scale(new Padding(3), UI.FontScale);
 		L_Author.Margin = L_Title.Margin = UI.Scale(new Padding(5, 0, 0, 0), UI.FontScale);
+		L_Author.Font = UI.Font(9.5F);
 
 		TLP_TopInfo.Height = (int)(72 * UI.FontScale);
 	}
@@ -434,5 +436,13 @@ public partial class PC_PackagePageBase : PanelContent
 		var workshopInfo = Package.GetWorkshopInfo();
 		LI_Votes.LabelText = LI_Votes.HoverState.HasFlag(HoverState.Hovered) ? (workshopInfo?.HasVoted == true ? LocaleCS2.UnVoteMod : LocaleCS2.VoteMod) : "Votes";
 		LI_Votes.Invalidate();
+	}
+
+	private void FLP_Package_Links_SizeChanged(object sender, EventArgs e)
+	{
+		foreach (Control ctrl in FLP_Package_Links.Controls)
+		{
+			ctrl.Size = new(ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal, ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal);
+		}
 	}
 }

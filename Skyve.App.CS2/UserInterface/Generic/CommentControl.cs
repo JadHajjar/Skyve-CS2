@@ -1,37 +1,50 @@
 ﻿using Skyve.App.UserInterface.Content;
+using Skyve.App.UserInterface.Generic;
+using Skyve.App.Utilities;
 
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Generic;
 public partial class CommentControl : SlickControl
 {
 	private readonly IModComment _comment;
-	private readonly IPackageIdentity _packageIdentity;
+	private Dictionary<Rectangle, Action> actionRects = [];
+	private StringBuilder commentText;
 
 	public CommentControl(IModComment comment, IPackageIdentity packageIdentity)
 	{
 		InitializeComponent();
-		Dock = DockStyle.Top;
 		AutoSize = true;
+		AutoInvalidate = false;
 
 		_comment = comment;
-		_packageIdentity = packageIdentity;
 
 		C_UserImage.User = ServiceCenter.Get<IUserService>().TryGetUser(_comment.Username);
 		L_Author.Text = _comment.Username;
 		L_Time.Text = _comment.Created.ToRelatedString();
 		L_AuthorLabel.Visible = _comment.Username == packageIdentity.GetWorkshopInfo()?.Author?.Id?.ToString();
+
+		var matches = Regex.Matches(_comment.Message, @"\[ATTACH.+?\](\d+)\[/ATTACH\]");
+
+		foreach (Match match in matches)
+		{
+			FLP_Thumbnails.Controls.Add(new MiniThumbControl(new AttachmentThumbnail(match.Groups[1].Value)) { Label = $"Attachment #{match.Groups[1].Value}" });
+		}
 	}
 
 	protected override void UIChanged()
 	{
 		TLP_Back.Padding = Padding = UI.Scale(new Padding(6), UI.FontScale);
 		C_UserImage.Size = UI.Scale(new Size(48, 48), UI.FontScale);
-		L_AuthorLabel.Padding = UI.Scale(new Padding(2), UI.FontScale);
+		L_Time.Padding = L_AuthorLabel.Padding = UI.Scale(new Padding(4, 2, 2, 2), UI.FontScale);
 		L_Author.Font = UI.Font(9.75F, FontStyle.Bold);
-		L_Time.Font = UI.Font(7.5F);
+		L_Time.Font = UI.Font(7F);
+		L_Time.Margin = UI.Scale(new Padding(3, 4, 0, 5), UI.FontScale);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -39,7 +52,35 @@ public partial class CommentControl : SlickControl
 		base.DesignChanged(design);
 
 		TLP_Back.BackColor = design.AccentBackColor;
-		L_Time.ForeColor = design.LabelColor;
+		L_Time.CustomBackColor = design.InfoColor.MergeColor(design.BackColor, 35);
+	}
+
+	private void C_Message_MouseMove(object sender, MouseEventArgs e)
+	{
+		var hovered = actionRects.Any(x => x.Key.Contains(e.Location));
+
+		C_Message .Cursor = hovered ? Cursors.Hand : Cursors.Default;
+	}
+
+	private void C_Message_MouseClick(object sender, MouseEventArgs e)
+	{
+		foreach (var item in actionRects)
+		{
+			if (item.Key.Contains(e.Location))
+			{
+				item.Value();
+			}
+		}
+	}
+
+	private void B_Copy_Click(object sender, EventArgs e)
+	{
+		Clipboard.SetText(commentText.ToString());
+	}
+
+	private void B_Reply_Click(object sender, EventArgs e)
+	{
+
 	}
 
 	private void C_Message_Paint(object sender, PaintEventArgs e)
@@ -50,6 +91,9 @@ public partial class CommentControl : SlickControl
 
 		painter.Paint(out var height);
 
+		actionRects = painter.Actions;
+		commentText = painter.Text;
+
 		C_Message.Height = height;
 	}
 
@@ -57,12 +101,15 @@ public partial class CommentControl : SlickControl
 	{
 		private readonly List<(ForumFormat Format, Dictionary<string, object> Options)> activeFormats = [];
 		private readonly List<ForumFormat> validFormats = Enum.GetValues(typeof(ForumFormat)).Cast<ForumFormat>().ToList();
-		private PointF location;
 		private readonly SolidBrush defaultBrush = new(FormDesign.Design.ForeColor);
 		private readonly Font Font = UI.Font(8.25F);
+		private PointF location;
 		private int activeNesting;
 		private int lineHeight;
 		private int workingIndex;
+
+		public Dictionary<Rectangle, Action> Actions { get; } = [];
+		public StringBuilder Text { get; } = new();
 
 		public void Dispose()
 		{
@@ -105,9 +152,18 @@ public partial class CommentControl : SlickControl
 								{
 									DrawFormat(activeFormats.Last());
 								}
+
+								if (format is ForumFormat.QUOTE && _comment.Message[endIndex + 1] is '\n')
+								{
+									endIndex++;
+								}
 							}
 
-							activeNesting = GetActiveNesting();
+							if (format is ForumFormat.QUOTE)
+							{
+								location.X = activeNesting = GetActiveNesting();
+							}
+
 							workingIndex = endIndex + 1;
 							continue;
 						}
@@ -129,7 +185,7 @@ public partial class CommentControl : SlickControl
 							DrawCharacter("•");
 						}
 
-						location.X = 25 * (float)UI.FontScale;
+						location.X = 25 * (float)UI.FontScale + activeNesting;
 						workingIndex += 3;
 						continue;
 					}
@@ -138,7 +194,19 @@ public partial class CommentControl : SlickControl
 				var i = workingIndex;
 				for (; workingIndex < _comment.Message.Length; workingIndex++)
 				{
-					if (_comment.Message[workingIndex] is ' ' or '\t' or '\r' or '[' or '\n')
+					if (activeFormats.Any(x => x.Format is ForumFormat.URL))
+					{
+						if (_comment.Message[workingIndex] is '[' or '\n')
+						{
+							if (i == workingIndex)
+							{
+								workingIndex++;
+							}
+
+							break;
+						}
+					}
+					else if (_comment.Message[workingIndex] is ' ' or '\t' or '\r' or '[' or '\n')
 					{
 						if (i == workingIndex)
 						{
@@ -157,10 +225,12 @@ public partial class CommentControl : SlickControl
 
 		private int GetActiveNesting()
 		{
-			for (var i =activeFormats.Count - 1; i >0; i--)
+			for (var i = activeFormats.Count - 1; i >= 0; i--)
 			{
 				if (activeFormats[i].Format is ForumFormat.QUOTE)
-					return (int)(5 * UI.FontScale + 10 * UI.FontScale * (int)activeFormats[i].Options["Nesting"]);
+				{
+					return (int)(12 * UI.FontScale + 10 * UI.FontScale * (int)activeFormats[i].Options["Nesting"]);
+				}
 			}
 
 			return 0;
@@ -227,17 +297,17 @@ public partial class CommentControl : SlickControl
 
 					if (nesting == 0)
 					{
-						e.Graphics.FillRectangle(new SolidBrush(FormDesign.Design.AccentBackColor), new Rectangle(0, (int)(location.Y +lineHeight+ (8 * UI.FontScale)), Size.Width, Size.Height));
+						e.Graphics.FillRectangle(new SolidBrush(FormDesign.Design.AccentBackColor), new Rectangle(0, (int)(location.Y + lineHeight + (8 * UI.FontScale)), Size.Width, Size.Height));
 
-						location.Y += lineHeight+ 5 * (float)UI.FontScale;
+						location.Y += lineHeight + 5 * (float)UI.FontScale;
 					}
 					else
 					{
 						var diff = (int)(5 * UI.FontScale);
 
 						location.Y += diff;
-						
-						DrawQuote(diff*2+1, nesting - 1);
+
+						DrawQuote(diff * 2 + (int)(2 * UI.FontScale), nesting - 1);
 					}
 				}
 
@@ -249,7 +319,7 @@ public partial class CommentControl : SlickControl
 		{
 			if (value.Format is ForumFormat.ATTACH)
 			{
-				DrawCharacter("ATTACHEMENT #");	
+				DrawCharacter("ATTACHEMENT #");
 				return;
 			}
 
@@ -264,7 +334,7 @@ public partial class CommentControl : SlickControl
 			}
 
 			location.Y -= 6 * (float)UI.FontScale;
-			DrawQuote((int)(40 * UI.FontScale));
+			DrawQuote((int)(46 * UI.FontScale));
 			location.Y += 6 * (float)UI.FontScale;
 
 			var userImage = ServiceCenter.Get<IWorkshopService>().GetUser(ServiceCenter.Get<IUserService>().TryGetUser(value.Options["Sender"].ToString()))?.GetThumbnail();
@@ -283,7 +353,7 @@ public partial class CommentControl : SlickControl
 				e.Graphics.DrawImage(icon, avatarRect.CenterR(icon.Size));
 			}
 
-			avatarRect.X += avatarRect.Width + (avatarRect.X / 2);
+			avatarRect.X += avatarRect.Width + (int)(5 * UI.FontScale);
 			avatarRect.Width = Size.Width - avatarRect.X;
 
 			using var font = UI.Font(9F, FontStyle.Bold);
@@ -293,11 +363,13 @@ public partial class CommentControl : SlickControl
 			using var icon2 = IconManager.GetIcon("Reply", avatarRect.Height).Color(FormDesign.Design.IconColor);
 			e.Graphics.DrawImage(icon2, avatarRect.Pad(0, 0, (int)(4 * UI.FontScale), 0).Align(icon2.Size, ContentAlignment.TopRight));
 
-			location = new PointF((int)(10 * (int)value.Options["Nesting"] * UI.FontScale), location.Y + (int)(22 * UI.FontScale));
+			location = new PointF((int)(10 * (int)value.Options["Nesting"] * UI.FontScale), location.Y + (int)(28 * UI.FontScale));
 		}
 
 		private void DrawCharacter(string text)
 		{
+			Text.Append(text);
+
 			if (text == " ")
 			{
 				return;
@@ -333,7 +405,7 @@ public partial class CommentControl : SlickControl
 				fontStyle |= FontStyle.Italic;
 			}
 
-			if (activeFormats.Any(x => x.Format is ForumFormat.U))
+			if (activeFormats.Any(x => x.Format is ForumFormat.U or ForumFormat.URL))
 			{
 				fontStyle |= FontStyle.Underline;
 			}
@@ -347,7 +419,7 @@ public partial class CommentControl : SlickControl
 			{
 				solidBrush = new SolidBrush((Color)activeFormats.Last(x => x.Format is ForumFormat.COLOR).Options["Color"]);
 			}
-			else if (activeFormats.Any(x => x.Format is ForumFormat.USER))
+			else if (activeFormats.Any(x => x.Format is ForumFormat.USER or ForumFormat.URL))
 			{
 				solidBrush = new SolidBrush(FormDesign.Design.ActiveColor);
 			}
@@ -364,15 +436,21 @@ public partial class CommentControl : SlickControl
 
 			if (location.X + size.Width > Size.Width)
 			{
-				location = new PointF(0, location.Y + lineHeight + (float)(2.5 * UI.FontScale));
+				location = new PointF(0, location.Y + lineHeight);
 				lineHeight = font.Height;
 
 				if (activeFormats.Any(x => x.Format is ForumFormat.QUOTE))
 				{
 					DrawQuote(lineHeight);
 
-					location.X = (int)(8 * UI.FontScale) + activeNesting;
+					location.X = activeNesting;
 				}
+			}
+
+			if (activeFormats.Any(x => x.Format is ForumFormat.URL))
+			{
+				var url = (string)activeFormats.Last(x => x.Format is ForumFormat.URL).Options["URL"];
+				Actions[new Rectangle(Point.Round(location), Size.Round(size))] = () => PlatformUtil.OpenUrl(url);
 			}
 
 			e.Graphics.DrawString(text, font, solidBrush ?? defaultBrush, location);
@@ -387,13 +465,15 @@ public partial class CommentControl : SlickControl
 			var nesting = forcedNesting ?? (int)(UI.FontScale * 15 * (int)activeFormats.Last(x => x.Format is ForumFormat.QUOTE).Options["Nesting"]);
 			var diff = (int)(5 * UI.FontScale);
 			using var brush1 = new SolidBrush(FormDesign.Design.ActiveColor);
-			using var brush2 = new LinearGradientBrush(new Rectangle(1 + nesting, (int)location.Y + diff, Size.Width- nesting, height + (diff / 2)), FormDesign.Design.ActiveColor.MergeColor(FormDesign.Design.AccentBackColor, 35 - nesting / 2), FormDesign.Design.ActiveColor.MergeColor(FormDesign.Design.AccentBackColor, 5), 0f);
+			using var brush2 = new LinearGradientBrush(new Rectangle(1 + nesting, (int)location.Y + diff, Size.Width - nesting, height + (diff / 2) + 2), FormDesign.Design.ActiveColor.MergeColor(FormDesign.Design.AccentBackColor, 35 - nesting / 2), FormDesign.Design.ActiveColor.MergeColor(FormDesign.Design.AccentBackColor, 5), 0f);
 
-			if (nesting > 0) 
+			if (nesting > 0)
+			{
 				DrawQuote(height, (int)activeFormats.Last(x => x.Format is ForumFormat.QUOTE).Options["Nesting"] - 1);
+			}
 
-			e.Graphics.FillRectangle(brush2, new Rectangle(1 + nesting, (int)location.Y + diff, Size.Width - nesting, height + (diff / 2) + 1));
-			e.Graphics.FillRectangle(brush1, new Rectangle(0 + nesting, (int)location.Y + diff, (int)(3 * UI.FontScale), height + (diff / 2) + 1));
+			e.Graphics.FillRectangle(brush2, new Rectangle(1 + nesting, (int)location.Y + diff, Size.Width - nesting, height + (diff / 2) + 2));
+			e.Graphics.FillRectangle(brush1, new Rectangle(0 + nesting, (int)location.Y + diff, (int)(3 * UI.FontScale), height + (diff / 2) + 2));
 		}
 	}
 
@@ -412,5 +492,16 @@ public partial class CommentControl : SlickControl
 		ATTACH,
 		USER,
 		QUOTE
+	}
+
+	private class AttachmentThumbnail(string id) : IThumbnailObject
+	{
+		public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+		{
+			thumbnailUrl = $"https://forum.paradoxplaza.com/forum/attachments/{id}";
+			thumbnail = imageService.GetImage(thumbnailUrl, true, $"Attachment_{id}.jpeg").Result;
+
+			return true;
+		}
 	}
 }
