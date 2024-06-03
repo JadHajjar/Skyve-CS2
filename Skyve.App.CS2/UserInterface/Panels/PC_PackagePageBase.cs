@@ -272,20 +272,20 @@ public partial class PC_PackagePageBase : PanelContent
 	{
 		base.UIChanged();
 
-		P_SideContainer.Width = (int)(260 * UI.FontScale);
-		PB_Icon.Size = UI.Scale(new Size(72, 72), UI.FontScale);
-		I_More.Size = UI.Scale(new Size(20, 28), UI.FontScale);
-		TLP_Side.Padding = UI.Scale(new Padding(8, 0, 0, 0), UI.FontScale);
-		TLP_TopInfo.Margin = B_Incl.Margin = base_slickSpacer.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		P_SideContainer.Width = UI.Scale(260);
+		PB_Icon.Size = UI.Scale(new Size(72, 72));
+		I_More.Size = UI.Scale(new Size(20, 28));
+		TLP_Side.Padding = UI.Scale(new Padding(8, 0, 0, 0));
+		TLP_TopInfo.Margin = B_Incl.Margin = base_slickSpacer.Margin = UI.Scale(new Padding(5));
 		base_slickSpacer.Height = (int)UI.FontScale;
 		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding = DD_Version.Margin =
-		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5));
 		L_Info.Font = L_Requirements.Font = L_Tags.Font = L_Links.Font = UI.Font(7F, FontStyle.Bold);
-		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = L_Links.Margin = UI.Scale(new Padding(3), UI.FontScale);
-		L_Author.Margin = L_Title.Margin = UI.Scale(new Padding(5, 0, 0, 0), UI.FontScale);
+		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = L_Links.Margin = UI.Scale(new Padding(3));
+		L_Author.Margin = L_Title.Margin = UI.Scale(new Padding(5, 0, 0, 0));
 		L_Author.Font = UI.Font(9.5F);
 
-		TLP_TopInfo.Height = (int)(72 * UI.FontScale);
+		TLP_TopInfo.Height = UI.Scale(72);
 	}
 
 	protected override void DesignChanged(FormDesign design)

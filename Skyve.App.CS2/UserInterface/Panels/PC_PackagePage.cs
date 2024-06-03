@@ -167,8 +167,8 @@ public partial class PC_PackagePage : PC_PackagePageBase
 	{
 		base.UIChanged();
 
-		_packageCompatibilityControl.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		slickTabControl.Padding = UI.Scale(new Padding(5, 5, 0, 0), UI.FontScale);
+		_packageCompatibilityControl.Margin = UI.Scale(new Padding(5));
+		slickTabControl.Padding = UI.Scale(new Padding(5, 5, 0, 0));
 	}
 
 	protected async Task<IEnumerable<IPackageIdentity>> GetItems(CancellationToken cancellationToken)
@@ -215,10 +215,10 @@ public partial class PC_PackagePage : PC_PackagePageBase
 		{
 			using var brush = new SolidBrush(compatibility.Value.GetColor());
 
-			var rect = T_Compatibility.ClientRectangle.CenterR(UI.Scale(new Size(8, 8), UI.FontScale));
+			var rect = T_Compatibility.ClientRectangle.CenterR(UI.Scale(new Size(8, 8)));
 
-			rect.X += (int)(6 * UI.FontScale);
-			rect.Y -= (int)(14 * UI.FontScale);
+			rect.X += UI.Scale(6);
+			rect.Y -= UI.Scale(14);
 
 			e.Graphics.FillEllipse(brush, rect);
 		}

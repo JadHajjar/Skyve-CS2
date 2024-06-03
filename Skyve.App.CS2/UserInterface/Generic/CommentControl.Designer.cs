@@ -72,16 +72,16 @@ partial class CommentControl
 			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Back.Size = new System.Drawing.Size(669, 107);
+			this.TLP_Back.Size = new System.Drawing.Size(669, 118);
 			this.TLP_Back.TabIndex = 0;
 			// 
 			// L_Author
 			// 
 			this.L_Author.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.L_Author.AutoSize = true;
-			this.L_Author.Location = new System.Drawing.Point(64, 8);
+			this.L_Author.Location = new System.Drawing.Point(64, 9);
 			this.L_Author.Name = "L_Author";
-			this.L_Author.Size = new System.Drawing.Size(35, 13);
+			this.L_Author.Size = new System.Drawing.Size(44, 16);
 			this.L_Author.TabIndex = 1;
 			this.L_Author.Text = "label1";
 			// 
@@ -93,10 +93,10 @@ partial class CommentControl
 			this.L_AuthorLabel.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.L_AuthorLabel.Display = true;
 			this.L_AuthorLabel.Enabled = false;
-			this.L_AuthorLabel.Location = new System.Drawing.Point(105, 4);
+			this.L_AuthorLabel.Location = new System.Drawing.Point(114, 3);
 			this.L_AuthorLabel.Name = "L_AuthorLabel";
 			this.L_AuthorLabel.Selected = true;
-			this.L_AuthorLabel.Size = new System.Drawing.Size(49, 21);
+			this.L_AuthorLabel.Size = new System.Drawing.Size(61, 28);
 			this.L_AuthorLabel.SpaceTriggersClick = true;
 			this.L_AuthorLabel.TabIndex = 2;
 			this.L_AuthorLabel.Text = "Author";
@@ -108,10 +108,10 @@ partial class CommentControl
 			this.B_Reply.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon1.Name = "Reply";
 			this.B_Reply.ImageName = dynamicIcon1;
-			this.B_Reply.Location = new System.Drawing.Point(602, 3);
+			this.B_Reply.Location = new System.Drawing.Point(588, 3);
 			this.B_Reply.Name = "B_Reply";
 			this.TLP_Back.SetRowSpan(this.B_Reply, 2);
-			this.B_Reply.Size = new System.Drawing.Size(64, 24);
+			this.B_Reply.Size = new System.Drawing.Size(78, 28);
 			this.B_Reply.SpaceTriggersClick = true;
 			this.B_Reply.TabIndex = 3;
 			this.B_Reply.Text = "Reply";
@@ -121,7 +121,7 @@ partial class CommentControl
 			// 
 			this.TLP_Back.SetColumnSpan(this.C_Message, 5);
 			this.C_Message.Dock = System.Windows.Forms.DockStyle.Top;
-			this.C_Message.Location = new System.Drawing.Point(64, 60);
+			this.C_Message.Location = new System.Drawing.Point(64, 71);
 			this.C_Message.Name = "C_Message";
 			this.C_Message.Size = new System.Drawing.Size(602, 44);
 			this.C_Message.TabIndex = 0;
@@ -133,8 +133,8 @@ partial class CommentControl
 			// 
 			this.TLP_Back.SetColumnSpan(this.FLP_Thumbnails, 5);
 			this.FLP_Thumbnails.Dock = System.Windows.Forms.DockStyle.Top;
-			this.FLP_Thumbnails.Location = new System.Drawing.Point(61, 107);
-			this.FLP_Thumbnails.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
+			this.FLP_Thumbnails.Location = new System.Drawing.Point(61, 118);
+			this.FLP_Thumbnails.Margin = new System.Windows.Forms.Padding(0);
 			this.FLP_Thumbnails.Name = "FLP_Thumbnails";
 			this.FLP_Thumbnails.Size = new System.Drawing.Size(608, 0);
 			this.FLP_Thumbnails.TabIndex = 4;
@@ -149,10 +149,10 @@ partial class CommentControl
 			this.L_Time.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.L_Time.Display = true;
 			this.L_Time.Enabled = false;
-			this.L_Time.Location = new System.Drawing.Point(64, 33);
+			this.L_Time.Location = new System.Drawing.Point(64, 37);
 			this.L_Time.Name = "L_Time";
 			this.L_Time.Selected = true;
-			this.L_Time.Size = new System.Drawing.Size(49, 21);
+			this.L_Time.Size = new System.Drawing.Size(61, 28);
 			this.L_Time.SpaceTriggersClick = true;
 			this.L_Time.TabIndex = 2;
 			this.L_Time.Text = "Author";
@@ -164,20 +164,22 @@ partial class CommentControl
 			this.B_Copy.Dock = System.Windows.Forms.DockStyle.Right;
 			dynamicIcon2.Name = "Copy";
 			this.B_Copy.ImageName = dynamicIcon2;
-			this.B_Copy.Location = new System.Drawing.Point(572, 3);
+			this.B_Copy.Location = new System.Drawing.Point(554, 3);
 			this.B_Copy.Name = "B_Copy";
-			this.B_Copy.Size = new System.Drawing.Size(24, 24);
+			this.B_Copy.Size = new System.Drawing.Size(28, 28);
 			this.B_Copy.SpaceTriggersClick = true;
 			this.B_Copy.TabIndex = 3;
 			this.B_Copy.Click += new System.EventHandler(this.B_Copy_Click);
 			// 
 			// C_UserImage
 			// 
+			this.C_UserImage.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.C_UserImage.Location = new System.Drawing.Point(3, 3);
 			this.C_UserImage.Name = "C_UserImage";
 			this.TLP_Back.SetRowSpan(this.C_UserImage, 3);
 			this.C_UserImage.Size = new System.Drawing.Size(55, 44);
 			this.C_UserImage.TabIndex = 0;
+			this.C_UserImage.Click += new System.EventHandler(this.C_UserImage_Click);
 			// 
 			// CommentControl
 			// 

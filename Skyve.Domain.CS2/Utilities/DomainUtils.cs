@@ -12,7 +12,7 @@ internal static class DomainUtils
 {
 	internal static Bitmap? GetThumbnail(IImageService imageService, string? thumbnailPath, string? thumbnailUrl, ulong id, string version)
 	{
-		var size = UI.Scale(new Size(200, 200), UI.FontScale);
+		var size = UI.Scale(new Size(200, 200));
 
 		if (CrossIO.FileExists(thumbnailPath))
 		{
@@ -38,7 +38,7 @@ internal static class DomainUtils
 
 	internal static Bitmap? GetThumbnail(IImageService imageService, string? thumbnailPath, string? thumbnailUrl, string id)
 	{
-		var size = UI.Scale(new Size(200, 200), UI.FontScale);
+		var size = UI.Scale(new Size(200, 200));
 
 		if (CrossIO.FileExists(thumbnailPath))
 		{

@@ -333,7 +333,7 @@ public partial class MainForm : BasePanelForm
 	{
 		base.UIChanged();
 
-		MinimumSize = UI.Scale(new Size(600, 350), UI.FontScale);
+		MinimumSize = UI.Scale(new Size(600, 350));
 
 		_imageService.ClearCache(false);
 	}

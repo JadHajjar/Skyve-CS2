@@ -200,7 +200,7 @@ internal class D_ContentInfo : IDashboardItem
 				Icon = "Link",
 				Font = font,
 				ButtonType = ButtonType.Dimmed,
-				Size = new Size(0, (int)(20 * UI.FontScale)),
+				Size = new Size(0, UI.Scale(20)),
 				Text = Locale.ViewRecentlyUpdatedItems.Format(Locale.Package.FormatPlural(info.RecentlyUpdated.Count)),
 				Rectangle = e.ClipRectangle.Pad(BorderRadius)
 			});

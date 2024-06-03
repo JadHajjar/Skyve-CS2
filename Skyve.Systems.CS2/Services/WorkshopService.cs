@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -666,7 +667,7 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await Context.Mods.GetForumThread((int)info.Id, modDetails.PdxModsVersion, int.Parse(regex.Groups[1].Value), page, 30));
+		var result = ProcessResult(await Context.Mods.GetForumThread((int)info.Id, modDetails.PdxModsVersion, int.Parse(regex.Groups[1].Value), page, 20));
 
 		if (!result.Success)
 		{
@@ -675,11 +676,42 @@ public class WorkshopService : IWorkshopService
 
 		return new PdxForumThreadInfo
 		{
-			HasMore = result.Count == 30,
+			HasMore = result.Posts.Length == 20,
 			CanPost = result.CanPost,
 			Page = page,
 			Posts = result.Posts.ToList(x => (IModComment)new PdxForumPost(x))
 		};
+	}
+
+	public async Task<IModComment?> PostNewComment(IPackageIdentity packageIdentity, string comment)
+	{
+		if (Context is null)
+		{
+			return null;
+		}
+
+		var info = GetInfo(packageIdentity);
+
+		if (info is not PdxModDetails modDetails || string.IsNullOrEmpty(modDetails.ForumLink))
+		{
+			return null;
+		}
+
+		var regex = Regex.Match(modDetails.ForumLink, @"forum/threads/[^\.]+\.(\d+)", RegexOptions.IgnoreCase);
+
+		if (!regex.Success)
+		{
+			return null;
+		}
+
+		var result = ProcessResult(await Context.Mods.CreateForumPost((int)info.Id, modDetails.PdxModsVersion, int.Parse(regex.Groups[1].Value), comment.Replace("\r", "").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\"", "'")));
+
+		if (!result.Success)
+		{
+			return null;
+		}
+
+		return new PdxForumPost(result.Post);
 	}
 
 	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset)

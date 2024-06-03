@@ -60,7 +60,7 @@ public class IncludedButton : SlickButton
 
 	public override Size CalculateAutoSize(Size availableSize)
 	{
-		return new Size(Width, (int)(30 * UI.FontScale));
+		return new Size(Width, UI.Scale(30));
 	}
 
 	protected override void OnPaint(PaintEventArgs e)
@@ -162,7 +162,7 @@ public class IncludedButton : SlickButton
 		}
 
 		using var brush = ClientRectangle.Gradient(activeColor);
-		e.Graphics.FillRoundedRectangle(brush, ClientRectangle, (int)(4 * UI.FontScale));
+		e.Graphics.FillRoundedRectangle(brush, ClientRectangle, UI.Scale(4));
 
 		Rectangle iconRect;
 

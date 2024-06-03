@@ -37,7 +37,7 @@ internal class DependencyResolutionDropdown : SlickSelectionDropDown<DependencyR
 	{
 		base.UIChanged();
 
-		Width = (int)(250 * UI.FontScale);
+		Width = UI.Scale(250);
 	}
 
 	protected override bool SearchMatch(string searchText, DependencyResolveBehavior item)

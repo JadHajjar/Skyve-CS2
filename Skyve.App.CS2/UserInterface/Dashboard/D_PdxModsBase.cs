@@ -80,7 +80,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			using var buttonArgs = new ButtonDrawArgs
 			{
 				Font = fontSmall,
-				Padding = UI.Scale(new Padding(3, 2, 4, 3), UI.FontScale),
+				Padding = UI.Scale(new Padding(3, 2, 4, 3)),
 				Text = item,
 			};
 
@@ -131,7 +131,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		var preferredSize = horizontal ? 350 : 90;
 		var columns = (int)Math.Max(1, Math.Floor((e.ClipRectangle.Width - Margin.Left) / (preferredSize * UI.FontScale)));
 		var columnWidth = (e.ClipRectangle.Width - Margin.Left) / columns;
-		var height = horizontal ? (int)(32 * UI.FontScale) : (columnWidth * 5 / 3);
+		var height = horizontal ? UI.Scale(32) : (columnWidth * 5 / 3);
 
 		for (var i = 0; i < Math.Min(packages.Count, horizontal ? 8 : (columns < 5 ? (columns * 2) : columns)); i++)
 		{
@@ -175,7 +175,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			}
 			else
 			{
-				e.Graphics.DrawRoundedImage(banner, bannerRect, (int)(5 * UI.FontScale));
+				e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(5));
 			}
 
 			if (HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))
@@ -240,7 +240,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			using var generic = IconManager.GetIcon("Paradox", e.Rects.IconRect.Height).Color(e.BackColor);
 			using var brush = new SolidBrush(FormDesign.Design.IconColor);
 
-			e.Graphics.FillRoundedRectangle(brush, e.Rects.IconRect, (int)(5 * UI.FontScale));
+			e.Graphics.FillRoundedRectangle(brush, e.Rects.IconRect, UI.Scale(5));
 			e.Graphics.DrawImage(generic, e.Rects.IconRect.CenterR(generic.Size));
 		}
 		else if (e.Item.IsLocal())
@@ -257,10 +257,10 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		if (e.HoverState.HasFlag(HoverState.Hovered) && e.Rects.IconRect.Contains(CursorLocation))
 		{
 			using var brush = new SolidBrush(Color.FromArgb(75, 255, 255, 255));
-			e.Graphics.FillRoundedRectangle(brush, e.Rects.IconRect, (int)(5 * UI.FontScale));
+			e.Graphics.FillRoundedRectangle(brush, e.Rects.IconRect, UI.Scale(5));
 		}
 
-		void drawThumbnail(Bitmap generic) => e.Graphics.DrawRoundedImage(generic, e.Rects.IconRect, (int)(5 * UI.FontScale), FormDesign.Design.BackColor);
+		void drawThumbnail(Bitmap generic) => e.Graphics.DrawRoundedImage(generic, e.Rects.IconRect, UI.Scale(5), FormDesign.Design.BackColor);
 	}
 	private void DrawTitleAndTags(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e)
 	{
@@ -380,7 +380,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		var rects = new ItemListControl.Rectangles(item)
 		{
 			IconRect = rectangle.Align(new Size(rectangle.Width, rectangle.Width), ContentAlignment.TopCenter),
-			DotsRect = new Rectangle(rectangle.X, rectangle.Y + rectangle.Width + (Margin.Top / 2), rectangle.Width, 0).Align(UI.Scale(new Size(16, 24), UI.FontScale), ContentAlignment.TopRight)
+			DotsRect = new Rectangle(rectangle.X, rectangle.Y + rectangle.Width + (Margin.Top / 2), rectangle.Width, 0).Align(UI.Scale(new Size(16, 24)), ContentAlignment.TopRight)
 		};
 
 		using var titleFont = UI.Font(10.5F, FontStyle.Bold);

@@ -16,9 +16,9 @@ internal class UpdateAvailableControl : SlickControl
 	{
 		base.UIChanged();
 
-		Height = (int)(42 * UI.FontScale);
-		Padding = UI.Scale(new Padding(7, 5, 7, 5), UI.FontScale);
-		Margin = UI.Scale(new Padding(0, 5, 0, 5), UI.FontScale);
+		Height = UI.Scale(42);
+		Padding = UI.Scale(new Padding(7, 5, 7, 5));
+		Margin = UI.Scale(new Padding(0, 5, 0, 5));
 	}
 
 	protected override void OnPaint(PaintEventArgs e)

@@ -16,17 +16,17 @@ public partial class ParadoxLoginForm : SlickForm
 		L_Disclaimer.Text = LocaleCS2.LoginDisclaimer;
 		L_Title.Text = LocaleCS2.LoginToParadox;
 		L_Title.Font = UI.Font(11.75F, FontStyle.Bold);
-		L_Title.Margin = B_Login.Margin = UI.Scale(new Padding(0, 15, 0, 15), UI.FontScale);
+		L_Title.Margin = B_Login.Margin = UI.Scale(new Padding(0, 15, 0, 15));
 		L_LoginFailed.Font = L_RememberMeInfo.Font = L_Disclaimer.Font = UI.Font(7.5F, FontStyle.Italic);
-		L_LoginFailed.Margin = L_RememberMeInfo.Margin = L_Disclaimer.Margin = UI.Scale(new Padding(0, 8, 0, 8), UI.FontScale);
-		I_Paradox.Size = UI.Scale(new Size(48, 48), UI.FontScale);
-		B_Login.Padding = UI.Scale(new Padding(5), UI.FontScale);
+		L_LoginFailed.Margin = L_RememberMeInfo.Margin = L_Disclaimer.Margin = UI.Scale(new Padding(0, 8, 0, 8));
+		I_Paradox.Size = UI.Scale(new Size(48, 48));
+		B_Login.Padding = UI.Scale(new Padding(5));
 		B_Login.Font = UI.Font(9F, FontStyle.Bold);
-		TB_Email.Margin = TB_Password.Margin = B_Login.Margin = CB_RememberMe.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		TB_Email.Margin = TB_Password.Margin = B_Login.Margin = CB_RememberMe.Margin = UI.Scale(new Padding(5));
 		L_Title.MaximumSize = L_LoginFailed.MaximumSize = L_RememberMeInfo.MaximumSize = L_Disclaimer.MaximumSize = new Size((int)(UI.FontScale * 230), 9999);
 		TB_Email.MaximumSize = TB_Password.MaximumSize = new Size((int)(UI.FontScale * 230), L_Title.Font.Height * 4 / 3);
 		TB_Email.MinimumSize = TB_Password.MinimumSize = new Size((int)(UI.FontScale * 230), L_Title.Font.Height * 4 / 3);
-		I_Close.Size = UI.Scale(new Size(24, 24), UI.FontScale);
+		I_Close.Size = UI.Scale(new Size(24, 24));
 	}
 
 	protected override void OnCreateControl()

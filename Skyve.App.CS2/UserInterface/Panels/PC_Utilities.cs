@@ -61,17 +61,17 @@ public partial class PC_Utilities : PanelContent
 	{
 		base.UIChanged();
 
-		B_Troubleshoot.Margin = B_RunSync.Margin = P_Sync.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
-		B_ImportClipboard.Margin = UI.Scale(new Padding(10), UI.FontScale);
+		B_Troubleshoot.Margin = B_RunSync.Margin = P_Sync.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10));
+		B_ImportClipboard.Margin = UI.Scale(new Padding(10));
 		L_Troubleshoot.Font=L_PdxSyncInfo.Font=L_SyncStatus.Font = UI.Font(9F);
 		L_SyncStatusLabel.Font = UI.Font(9F, FontStyle.Bold);
-		L_Troubleshoot.Margin = UI.Scale(new Padding(3), UI.FontScale);
-		L_PdxSyncInfo.Margin = L_SyncStatus.Margin = UI.Scale(new Padding(3, 3, 3, 10), UI.FontScale);
-		L_SyncStatusLabel.Margin = UI.Scale(new Padding(3, 3, 5, 10), UI.FontScale);
+		L_Troubleshoot.Margin = UI.Scale(new Padding(3));
+		L_PdxSyncInfo.Margin = L_SyncStatus.Margin = UI.Scale(new Padding(3, 3, 3, 10));
+		L_SyncStatusLabel.Margin = UI.Scale(new Padding(3, 3, 5, 10));
 
 		foreach (Control item in P_Reset.Controls)
 		{
-			item.Margin = UI.Scale(new Padding(5), UI.FontScale);
+			item.Margin = UI.Scale(new Padding(5));
 		}
 	}
 

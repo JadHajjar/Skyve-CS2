@@ -150,7 +150,7 @@ internal class D_DiskInfo : IDashboardItem
 
 		preferredHeight += BorderRadius;
 
-		var graphSize = Math.Min((e.ClipRectangle.Width / 2) - (Margin.Horizontal * 2), (int)(60 * UI.FontScale));
+		var graphSize = Math.Min((e.ClipRectangle.Width / 2) - (Margin.Horizontal * 2), UI.Scale(60));
 		using var pen = new Pen(FormDesign.Design.AccentColor, graphSize / 5f);
 		using var activePen = new Pen(info.CriticalSpace ? FormDesign.Design.RedColor : info.LowSpace ? FormDesign.Design.OrangeColor : FormDesign.Design.ActiveColor, graphSize / 5f) { StartCap = System.Drawing.Drawing2D.LineCap.Round, EndCap = System.Drawing.Drawing2D.LineCap.Round };
 
@@ -200,7 +200,7 @@ internal class D_DiskInfo : IDashboardItem
 				{
 					Icon = "Cog",
 					Font = font,
-					Size = new Size(0, (int)(20 * UI.FontScale)),
+					Size = new Size(0, UI.Scale(20)),
 					Text = LocaleCS2.ChangeLocation,
 					Rectangle = e.ClipRectangle.Pad(BorderRadius)
 				});

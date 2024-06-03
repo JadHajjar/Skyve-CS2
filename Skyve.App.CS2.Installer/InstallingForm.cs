@@ -129,14 +129,14 @@ public partial class InstallingForm : SlickForm
 	{
 		base.UIChanged();
 
-		roundedTableLayoutPanel1.Padding = TLP_Main.Padding = UI.Scale(new Padding(15), UI.FontScale);
-		pictureBox1.Size = UI.Scale(new Size(64, 64), UI.FontScale);
+		roundedTableLayoutPanel1.Padding = TLP_Main.Padding = UI.Scale(new Padding(15));
+		pictureBox1.Size = UI.Scale(new Size(64, 64));
 		label1.Font = UI.Font(20F, FontStyle.Bold);
-		slickButton2.Margin = UI.Scale(new Padding(0, 0, 10, 0), UI.FontScale);
+		slickButton2.Margin = UI.Scale(new Padding(0, 0, 10, 0));
 		slickButton2.Font = slickButton1.Font = UI.Font(9.75F);
-		label2.Margin = UI.Scale(new Padding(5, 20, 0, 5), UI.FontScale);
-		label3.Margin = UI.Scale(new Padding(5, 5, 0, 0), UI.FontScale);
-		slickPathTextBox1.Margin = UI.Scale(new Padding(0, 0, 0, 15), UI.FontScale);
+		label2.Margin = UI.Scale(new Padding(5, 20, 0, 5));
+		label3.Margin = UI.Scale(new Padding(5, 5, 0, 0));
+		slickPathTextBox1.Margin = UI.Scale(new Padding(0, 0, 0, 15));
 		label2.Font =
 		label3.Font = UI.Font(7.5F, FontStyle.Italic);
 	}

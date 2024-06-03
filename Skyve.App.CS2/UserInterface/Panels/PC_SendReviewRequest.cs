@@ -38,17 +38,17 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 
 		foreach (Control item in TLP_MainInfo.Controls)
 		{
-			item.Margin = UI.Scale(new Padding(5), UI.FontScale);
+			item.Margin = UI.Scale(new Padding(5));
 		}
 
-		TLP_Button.Padding = TLP_Description.Padding = P_Content.Padding = UI.Scale(new Padding(7), UI.FontScale);
-		slickSpacer2.Margin = L_Disclaimer.Margin = B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		B_AddInteraction.Padding = B_AddStatus.Padding = UI.Scale(new Padding(15), UI.FontScale);
+		TLP_Button.Padding = TLP_Description.Padding = P_Content.Padding = UI.Scale(new Padding(7));
+		slickSpacer2.Margin = L_Disclaimer.Margin = B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
+		B_AddInteraction.Padding = B_AddStatus.Padding = UI.Scale(new Padding(15));
 		B_AddInteraction.Font = B_AddStatus.Font = UI.Font(9.75F);
 		B_AddInteraction.Margin = B_AddStatus.Margin = UI.Scale(new Padding(50, 40, 0, 0), UI.UIScale);
 		TB_Note.MinimumSize = UI.Scale(new Size(0, 100), UI.UIScale);
 		L_Disclaimer.Font = UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
-		slickSpacer2.Height = (int)(2 * UI.FontScale);
+		slickSpacer2.Height = UI.Scale(2);
 	}
 
 	protected override void DesignChanged(FormDesign design)

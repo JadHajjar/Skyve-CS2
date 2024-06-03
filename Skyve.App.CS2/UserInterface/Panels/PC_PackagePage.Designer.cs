@@ -141,7 +141,8 @@ partial class PC_PackagePage
 			this.T_Comments.Size = new System.Drawing.Size(156, 75);
 			this.T_Comments.TabIndex = 3;
 			this.T_Comments.TabStop = false;
-			this.T_Comments.Text = "Comments";
+			this.T_Comments.FillTab = true;
+		this.T_Comments.Text = "Comments";
 			// 
 			// commentsControl1
 			// 

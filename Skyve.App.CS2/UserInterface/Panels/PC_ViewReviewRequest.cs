@@ -24,14 +24,14 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 		InitializeComponent();
 		_request = request;
 
-		//TLP_Info.Controls.Add(new SteamUserControl(request.UserId) { InfoText = "Requested by", Dock = DockStyle.Top, Margin = UI.Scale(new Padding(5), UI.FontScale) }, 0, 1);
+		//TLP_Info.Controls.Add(new SteamUserControl(request.UserId) { InfoText = "Requested by", Dock = DockStyle.Top, Margin = UI.Scale(new Padding(5)) }, 0, 1);
 
 		logControl = new SlickControl
 		{
 			Cursor = Cursors.Hand,
 			Text = $"RequestBy_{userService.TryGetUser(_request.UserId)?.Name}_{DateTime.Now:yy-MM-dd_HH-mm}",
 			Size = UI.Scale(new Size(150, 75), UI.UIScale),
-			Margin = UI.Scale(new Padding(5), UI.FontScale)
+			Margin = UI.Scale(new Padding(5))
 		};
 
 		logControl.Paint += PC_ReviewSingleRequest_Paint;
@@ -123,17 +123,17 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 
 		L_ProposedChanges.Font = L_Desc.Font = L_LogReport.Font = UI.Font(9.75F, FontStyle.Bold);
 		L_Note.Font = UI.Font(9.25F);
-		L_LogReport.Margin = slickSpacer3.Margin = UI.Scale(new Padding(3, 15, 3, 3), UI.FontScale);
-		L_ProposedChanges.Margin = UI.Scale(new Padding(3, 15, 3, 7), UI.FontScale);
-		TLP_Main.Padding = UI.Scale(new Padding(10, 5, 10, 0), UI.FontScale);
-		I_Copy.Size = UI.Scale(new Size(32, 32), UI.FontScale);
-		I_Copy.Padding = UI.Scale(new Padding(4), UI.FontScale);
+		L_LogReport.Margin = slickSpacer3.Margin = UI.Scale(new Padding(3, 15, 3, 3));
+		L_ProposedChanges.Margin = UI.Scale(new Padding(3, 15, 3, 7));
+		TLP_Main.Padding = UI.Scale(new Padding(10, 5, 10, 0));
+		I_Copy.Size = UI.Scale(new Size(32, 32));
+		I_Copy.Padding = UI.Scale(new Padding(4));
 		slickSpacer3.Height = slickSpacer2.Height = (int)UI.FontScale;
-		L_Desc.Margin = L_Note.Margin = UI.Scale(new Padding(3), UI.FontScale);
+		L_Desc.Margin = L_Note.Margin = UI.Scale(new Padding(3));
 
 		foreach (Control item in tableLayoutPanel1.Controls)
 		{
-			item.Margin = UI.Scale(new Padding(7), UI.FontScale);
+			item.Margin = UI.Scale(new Padding(7));
 		}
 	}
 

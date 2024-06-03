@@ -22,9 +22,9 @@ public partial class PackageChangelogControl : SlickControl
 
 	protected override void UIChanged()
 	{
-		roundedPanel1.Padding = UI.Scale(new Padding(5), UI.FontScale);
-		roundedPanel1.Width = (int)(150 * UI.FontScale);
-		Padding = UI.Scale(new Padding(5), UI.FontScale);
+		roundedPanel1.Padding = UI.Scale(new Padding(5));
+		roundedPanel1.Width = UI.Scale(150);
+		Padding = UI.Scale(new Padding(5));
 	}
 
 	protected override void DesignChanged(FormDesign design)

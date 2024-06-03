@@ -74,8 +74,8 @@ public class DownloadsInfoControl : SlickControl
 
 	protected override void UIChanged()
 	{
-		Padding = UI.Scale(new Padding(3, 8, 3, 4), UI.FontScale);
-		Height = (int)(60 * UI.FontScale);
+		Padding = UI.Scale(new Padding(3, 8, 3, 4));
+		Height = UI.Scale(60);
 	}
 
 	protected override void OnPaint(PaintEventArgs e)
@@ -93,7 +93,7 @@ public class DownloadsInfoControl : SlickControl
 
 		var workshopInfo = new GenericPackageIdentity(_subscriptionsManager.Status.ModId).GetWorkshopInfo();
 		var thumbnail = workshopInfo?.GetThumbnail();
-		var thumbRect = new Rectangle(new Point(Padding.Left, Padding.Top), UI.Scale(new Size(34, 34), UI.FontScale));
+		var thumbRect = new Rectangle(new Point(Padding.Left, Padding.Top), UI.Scale(new Size(34, 34)));
 
 		SlickTip.SetTo(this, workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), _subscriptionsManager.Status.TotalSize > 0 ? (_subscriptionsManager.Status.ProcessedBytes.SizeString(1) + "/" + _subscriptionsManager.Status.TotalSize.SizeString(1)) : null);
 
@@ -109,7 +109,7 @@ public class DownloadsInfoControl : SlickControl
 		}
 		else
 		{
-			e.Graphics.DrawRoundedImage(thumbnail, thumbRect, (int)(5 * UI.FontScale));
+			e.Graphics.DrawRoundedImage(thumbnail, thumbRect, UI.Scale(5));
 		}
 
 		using var font = UI.Font(8.25F, FontStyle.Bold);
@@ -119,7 +119,7 @@ public class DownloadsInfoControl : SlickControl
 
 		e.Graphics.DrawString(workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), font, brush, new Rectangle(thumbRect.Right + Padding.Left, Padding.Top - (Padding.Left / 2), Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.TopLeft), new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
 
-		var barRect = new Rectangle(Padding.Left, Height - Padding.Bottom - (int)(8 * UI.FontScale), Width - Padding.Right, (int)(8 * UI.FontScale));
+		var barRect = new Rectangle(Padding.Left, Height - Padding.Bottom - UI.Scale(8), Width - Padding.Right, UI.Scale(8));
 
 		e.Graphics.FillRoundedRectangle(brush, barRect, barRect.Height / 2);
 

@@ -39,7 +39,7 @@ internal class PackageCompatibilityControl : SlickControl
 		var notificationType = compatibilityReport?.GetNotification();
 		var status = _packageUtil.GetStatus(Package, out _);
 
-		Height = (int)(32 * UI.FontScale) * ((status <= DownloadStatus.OK ? 0 : 1) + (notificationType <= NotificationType.Info ? 0 : 1));
+		Height = UI.Scale(32) * ((status <= DownloadStatus.OK ? 0 : 1) + (notificationType <= NotificationType.Info ? 0 : 1));
 	}
 
 	protected override void OnPaint(PaintEventArgs e)
@@ -50,7 +50,7 @@ internal class PackageCompatibilityControl : SlickControl
 		var notificationType = compatibilityReport?.GetNotification();
 		var status = _packageUtil.GetStatus(Package, out _);
 
-		var height = (int)(32 * UI.FontScale);
+		var height = UI.Scale(32);
 
 		if (notificationType > NotificationType.Info)
 		{
