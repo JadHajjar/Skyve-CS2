@@ -122,6 +122,8 @@ public partial class CommentsSectionControl : UserControl
 		}
 
 		TB_Message.Text = string.Empty;
+		TB_Message_Enter(sender, e);
+
 		var control = new CommentControl(post, Package) { Dock = DockStyle.Top };
 
 		P_Comments.Controls.Add(control);

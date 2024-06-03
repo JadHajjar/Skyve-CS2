@@ -364,7 +364,7 @@ public partial class CommentControl : SlickControl
 				return;
 			}
 
-			if ((int)value.Options["Nesting"] != 0)
+			if (location.Y > 0)
 			{
 				location.Y += UI.Scale(10);
 			}
