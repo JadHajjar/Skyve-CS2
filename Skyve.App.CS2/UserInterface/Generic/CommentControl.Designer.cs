@@ -33,6 +33,7 @@ partial class CommentControl
 			SlickControls.DynamicIcon dynamicIcon1 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon2 = new SlickControls.DynamicIcon();
 			this.TLP_Back = new SlickControls.RoundedTableLayoutPanel();
+			this.C_UserImage = new Skyve.App.UserInterface.Content.UserIcon();
 			this.L_Author = new System.Windows.Forms.Label();
 			this.L_AuthorLabel = new SlickControls.SlickLabel();
 			this.B_Reply = new SlickControls.SlickButton();
@@ -40,7 +41,6 @@ partial class CommentControl
 			this.FLP_Thumbnails = new SlickControls.SmartFlowPanel();
 			this.L_Time = new SlickControls.SlickLabel();
 			this.B_Copy = new SlickControls.SlickButton();
-			this.C_UserImage = new Skyve.App.UserInterface.Content.UserIcon();
 			this.TLP_Back.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -74,6 +74,16 @@ partial class CommentControl
 			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Back.Size = new System.Drawing.Size(669, 118);
 			this.TLP_Back.TabIndex = 0;
+			// 
+			// C_UserImage
+			// 
+			this.C_UserImage.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.C_UserImage.Location = new System.Drawing.Point(3, 3);
+			this.C_UserImage.Name = "C_UserImage";
+			this.TLP_Back.SetRowSpan(this.C_UserImage, 3);
+			this.C_UserImage.Size = new System.Drawing.Size(55, 44);
+			this.C_UserImage.TabIndex = 0;
+			this.C_UserImage.Click += new System.EventHandler(this.C_UserImage_Click);
 			// 
 			// L_Author
 			// 
@@ -115,6 +125,7 @@ partial class CommentControl
 			this.B_Reply.SpaceTriggersClick = true;
 			this.B_Reply.TabIndex = 3;
 			this.B_Reply.Text = "Reply";
+			this.B_Reply.SizeChanged += new System.EventHandler(this.B_Reply_SizeChanged);
 			this.B_Reply.Click += new System.EventHandler(this.B_Reply_Click);
 			// 
 			// C_Message
@@ -170,16 +181,6 @@ partial class CommentControl
 			this.B_Copy.SpaceTriggersClick = true;
 			this.B_Copy.TabIndex = 3;
 			this.B_Copy.Click += new System.EventHandler(this.B_Copy_Click);
-			// 
-			// C_UserImage
-			// 
-			this.C_UserImage.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.C_UserImage.Location = new System.Drawing.Point(3, 3);
-			this.C_UserImage.Name = "C_UserImage";
-			this.TLP_Back.SetRowSpan(this.C_UserImage, 3);
-			this.C_UserImage.Size = new System.Drawing.Size(55, 44);
-			this.C_UserImage.TabIndex = 0;
-			this.C_UserImage.Click += new System.EventHandler(this.C_UserImage_Click);
 			// 
 			// CommentControl
 			// 

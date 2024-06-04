@@ -39,7 +39,8 @@ public partial class CommentsSectionControl : SlickControl
 		PB_Loading.Size = UI.Scale(new Size(28, 28));
 		PB_Loading.Location = new Point((Width - PB_Loading.Width) / 2, UI.Scale(175));
 		spacer.Height = UI.Scale(1);
-		spacer.Margin = TLP_SendMessage.Padding = UI.Scale(new Padding(5, 5, 5, 0));
+		spacer.Margin = UI.Scale(new Padding(5, 5, 5, 0));
+		TLP_SendMessage.Padding = UI.Scale(new Padding(12, 5, 12, 0));
 	}
 
 	private void Scrollbar_Scroll(object sender, ScrollEventArgs e)
@@ -259,7 +260,7 @@ public partial class CommentsSectionControl : SlickControl
 
 		this.TryBeginInvoke(() =>
 		{
-			TB_Message.Select(firstPart.Length + $"[{text}]".Length, addedText.Length - $"[{text}]".Length * 2 - 1);
+			TB_Message.Select(firstPart.Length + $"[{text}]".Length, addedText.Length - ($"[{text}]".Length * 2) - 1);
 		});
 	}
 

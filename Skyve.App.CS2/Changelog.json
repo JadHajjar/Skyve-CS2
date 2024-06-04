@@ -3,7 +3,7 @@
     "Stable": false,
     "Beta": true,
     "Version": "0.9.4",
-    "Date": "2024-05-30",
+    "Date": "2024-06-04",
     "Tagline": "Author & Account Update",
     "ChangeGroups": [
       {
@@ -28,6 +28,8 @@
         "Name": "Other Changes",
         "Changes": [
           "You can now click the download notification to go to a mod's page. You can now also right-click to open up the right-click menu.",
+          "Improved log list performance.",
+          "Small UI performance improvements.",
           "Fixed list views sometimes getting cut off at the end."
         ]
       }

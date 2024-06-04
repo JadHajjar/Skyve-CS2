@@ -38,7 +38,11 @@ public partial class CommentControl : SlickControl
 
 		foreach (Match match in matches)
 		{
-			FLP_Thumbnails.Controls.Add(new MiniThumbControl(new AttachmentThumbnail(match.Groups[1].Value)) { Label = $"Attachment #{match.Groups[1].Value}" });
+			FLP_Thumbnails.Controls.Add(new MiniThumbControl(new AttachmentThumbnail(match.Groups[1].Value))
+			{
+				Label = $"Attachment #{match.Groups[1].Value}",
+				Size = UI.Scale(new Size(150, 100))
+			});
 		}
 	}
 
@@ -463,7 +467,7 @@ public partial class CommentControl : SlickControl
 
 			if (location.X + size.Width > Size.Width)
 			{
-				location = new PointF(0, location.Y + lineHeight);
+				location = new PointF(0, location.Y + lineHeight + UI.Scale(1.5f));
 				lineHeight = font.Height;
 
 				if (activeFormats.Any(x => x.Format is ForumFormat.QUOTE))
@@ -489,13 +493,11 @@ public partial class CommentControl : SlickControl
 
 		private void NewLine()
 		{
-			location = new PointF(activeNesting, location.Y + lineHeight.If(0, Font.Height));
+			location = new PointF(activeNesting, location.Y + lineHeight.If(0, Font.Height) + UI.Scale(1.5f));
 
 			if (activeFormats.Any(x => x.Format is ForumFormat.QUOTE))
 			{
-				DrawQuote(lineHeight.If(0, Font.Height));
-
-				//location.X += UI.Scale(8);
+				DrawQuote(lineHeight.If(0, Font.Height) + UI.Scale(2));
 			}
 
 			lineHeight = 0;
@@ -544,5 +546,10 @@ public partial class CommentControl : SlickControl
 
 			return true;
 		}
+	}
+
+	private void B_Reply_SizeChanged(object sender, EventArgs e)
+	{
+		B_Copy.MinimumSize = new Size(B_Reply.Height, B_Reply.Height);
 	}
 }
