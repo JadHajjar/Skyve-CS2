@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Generic;
-public partial class CommentsSectionControl : UserControl
+public partial class CommentsSectionControl : SlickControl
 {
 	private IModCommentsInfo? modCommentsInfo;
 	private bool isLoading;
@@ -25,6 +25,13 @@ public partial class CommentsSectionControl : UserControl
 	{
 		base.OnCreateControl();
 
+		Task.Run(() => LoadComments());
+	}
+
+	protected override void UIChanged()
+	{
+		B_Send.Font = UI.Font(9F);
+		B_Send.Padding = UI.Scale(new Padding(6));
 		TB_Message.Margin = L_LoggedInAs.Margin = C_UserIcon.Margin = B_Send.Margin = UI.Scale(new Padding(3));
 		L_LoggedInAs.Font = UI.Font(7F, FontStyle.Bold);
 		TB_Message.Height = UI.Scale(48) - L_LoggedInAs.Height - L_LoggedInAs.Margin.Horizontal;
@@ -33,8 +40,6 @@ public partial class CommentsSectionControl : UserControl
 		PB_Loading.Location = new Point((Width - PB_Loading.Width) / 2, UI.Scale(175));
 		spacer.Height = UI.Scale(1);
 		spacer.Margin = TLP_SendMessage.Padding = UI.Scale(new Padding(5, 5, 5, 0));
-
-		Task.Run(() => LoadComments());
 	}
 
 	private void Scrollbar_Scroll(object sender, ScrollEventArgs e)
@@ -138,7 +143,7 @@ public partial class CommentsSectionControl : UserControl
 
 		if (comment != null)
 		{
-			return $"[QUOTE='{comment.Comment.Username}, post: {comment.Comment.PostId}, member: {comment.Comment.UserId}']{comment.Comment.Message}[/QUOTE]";
+			return $"[QUOTE='{comment.Comment.Username}, post: {comment.Comment.PostId}, member: {comment.Comment.UserId}']{comment.Comment.Message}[/QUOTE]\r\n";
 		}
 
 		return string.Empty;
@@ -146,14 +151,135 @@ public partial class CommentsSectionControl : UserControl
 
 	private void TB_Message_Enter(object sender, EventArgs e)
 	{
-		this.TryBeginInvoke(() => AnimationHandler.Animate(TB_Message, new Size(0,
-			TB_Message.Focused || !string.IsNullOrWhiteSpace(TB_Message.Text)
-			? UI.Scale(150)
-			: UI.Scale(48) - L_LoggedInAs.Height - L_LoggedInAs.Margin.Horizontal), 2.5, AnimationOption.IgnoreWidth));
+		this.TryBeginInvoke(() =>
+		{
+			var isOpen = TB_Message.Focused || !string.IsNullOrWhiteSpace(TB_Message.Text) || FLP_FormatButtons.Controls.Any(x => x.Focused);
+
+			FLP_FormatButtons.Visible = isOpen;
+
+			AnimationHandler.Animate(TB_Message
+				, new Size(0, isOpen ? UI.Scale(150) : UI.Scale(48) - L_LoggedInAs.Height - L_LoggedInAs.Margin.Horizontal)
+				, 2.5
+				, AnimationOption.IgnoreWidth);
+		});
 	}
 
 	private void TB_Message_TextChanged(object sender, EventArgs e)
 	{
+		B_Send.ButtonType = !string.IsNullOrWhiteSpace(TB_Message.Text) ? ButtonType.Active : ButtonType.Normal;
 		B_Send.Enabled = !string.IsNullOrWhiteSpace(TB_Message.Text);
+	}
+
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
+		if (keyData == Keys.Escape && (!string.IsNullOrWhiteSpace(TB_Message.Text) || TB_Message.Focused))
+		{
+			TB_Message.Text = string.Empty;
+			P_Comments.Focus();
+			TB_Message_Enter(this, EventArgs.Empty);
+
+			return true;
+		}
+
+		if (keyData == Keys.Enter && TB_Message.Focused)
+		{
+			SendKeys.Send("+{ENTER}");
+
+			return true;
+		}
+
+		switch (keyData)
+		{
+			case Keys.Control | Keys.B:
+				B_Bold_Click(this, EventArgs.Empty);
+				return true;
+			case Keys.Control | Keys.I:
+				B_Italic_Click(this, EventArgs.Empty);
+				return true;
+			case Keys.Control | Keys.U:
+				B_Underline_Click(this, EventArgs.Empty);
+				return true;
+		}
+
+		return base.ProcessCmdKey(ref msg, keyData);
+	}
+
+	private void B_Bold_Click(object sender, EventArgs e)
+	{
+		WrapSelection("B");
+	}
+
+	private void B_Italic_Click(object sender, EventArgs e)
+	{
+		WrapSelection("I");
+	}
+
+	private void B_Underline_Click(object sender, EventArgs e)
+	{
+		WrapSelection("U");
+	}
+
+	private void B_Link_Click(object sender, EventArgs e)
+	{
+		var prompt = MessagePrompt.ShowInput(string.Empty, "Enter URL");
+		if (prompt.DialogResult == DialogResult.OK)
+		{
+			var text = $"[URL=\"{prompt.Input}\"]{TB_Message.SelectedText.Trim()}[/URL]";
+
+			Append(text, text.Length - (string.IsNullOrWhiteSpace(TB_Message.SelectedText) ? 6 : 0));
+		}
+	}
+
+	private void B_List_Click(object sender, EventArgs e)
+	{
+		Append("\r\n[LIST]\r\n[*] \r\n[*] \r\n[*] \r\n[/LIST]", 14);
+	}
+
+	private void B_NumberedList_Click(object sender, EventArgs e)
+	{
+		Append("\r\n[LIST=1]\r\n[*] \n[*] \r\n[*] \r\n[/LIST]", 15);
+	}
+
+	private void WrapSelection(string text)
+	{
+		var selectedText = TB_Message.SelectedText;
+		var firstPart = TB_Message.Text.Substring(0, TB_Message.SelectionStart);
+		var secondPart = TB_Message.Text.Substring(TB_Message.SelectionStart + TB_Message.SelectionLength);
+
+		if (selectedText.LastOrDefault() is ' ')
+		{
+			selectedText = selectedText.Substring(0, selectedText.Length - 1);
+			secondPart = ' ' + secondPart;
+		}
+
+		var addedText = $"[{text}]{selectedText}[/{text}]";
+
+		TB_Message.Text = firstPart + addedText + secondPart;
+		TB_Message.Focus();
+
+		this.TryBeginInvoke(() =>
+		{
+			TB_Message.Select(firstPart.Length + $"[{text}]".Length, addedText.Length - $"[{text}]".Length * 2 - 1);
+		});
+	}
+
+	private void Append(string text, int focus)
+	{
+		var selectedText = TB_Message.SelectedText;
+		var firstPart = TB_Message.Text.Substring(0, TB_Message.SelectionStart);
+		var secondPart = TB_Message.Text.Substring(TB_Message.SelectionStart + TB_Message.SelectionLength);
+
+		if (selectedText.LastOrDefault() is ' ')
+		{
+			secondPart = ' ' + secondPart;
+		}
+
+		TB_Message.Text = firstPart + text + secondPart;
+		TB_Message.Focus();
+
+		this.TryBeginInvoke(() =>
+		{
+			TB_Message.Select(firstPart.Length + focus, 0);
+		});
 	}
 }

@@ -2,6 +2,40 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.4",
+    "Date": "2024-05-30",
+    "Tagline": "Author & Account Update",
+    "ChangeGroups": [
+      {
+        "Name": "User Changes",
+        "Changes": [
+          "Added an automatic, unique color for users and authors throughout the app.",
+          "Added custom Avatars images for users and authors throughout the app.",
+          "Updated the user page with the Bio & Links that users have set up on PDX Mods.",
+          "Added a new setting in the Options to disable colored user names and avatars."
+        ]
+      },
+      {
+        "Name": "Comments",
+        "Changes": [
+          "Added a new 'Comments' section in the Mod Page.",
+          "You can directly reply and comment on mods from Skyve.",
+          "Use various formatting options with dedicated formatting buttons and shortcuts.",
+          "Easily track a conversation with color-coded user avatars"
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "You can now click the download notification to go to a mod's page. You can now also right-click to open up the right-click menu.",
+          "Fixed list views sometimes getting cut off at the end."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.3.3",
     "Date": "2024-05-30",
     "ChangeGroups": [

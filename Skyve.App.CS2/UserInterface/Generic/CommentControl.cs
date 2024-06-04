@@ -31,7 +31,7 @@ public partial class CommentControl : SlickControl
 
 		C_UserImage.User = ServiceCenter.Get<IUserService>().TryGetUser(_comment.Username);
 		L_Author.Text = _comment.Username;
-		L_Time.Text = _comment.Created.ToRelatedString();
+		L_Time.Text = _comment.Created.ToLocalTime().ToRelatedString();
 		L_AuthorLabel.Visible = _comment.Username == packageIdentity.GetWorkshopInfo()?.Author?.Id?.ToString();
 
 		var matches = Regex.Matches(_comment.Message, @"\[ATTACH.+?\](\d+)\[/ATTACH\]");
@@ -57,7 +57,7 @@ public partial class CommentControl : SlickControl
 		base.DesignChanged(design);
 
 		TLP_Back.BackColor = design.AccentBackColor;
-		L_Time.CustomBackColor = design.InfoColor.MergeColor(design.BackColor, 35);
+		L_Time.CustomBackColor = design.InfoColor.MergeColor(design.BackColor, 25);
 	}
 
 	private void C_Message_MouseMove(object sender, MouseEventArgs e)
@@ -104,7 +104,7 @@ public partial class CommentControl : SlickControl
 
 	private void C_UserImage_Click(object sender, EventArgs e)
 	{
-		App.Program.MainForm.PushPanel(new PC_UserPage(C_UserImage.User));
+		App.Program.MainForm.PushPanel(new PC_UserPage(C_UserImage.User!));
 	}
 
 	internal void SetSize(Graphics g, Size size)
@@ -503,14 +503,14 @@ public partial class CommentControl : SlickControl
 
 		private void DrawQuote(int height, int? forcedNesting = null)
 		{
-			var nesting = forcedNesting ?? (int)(UI.FontScale * 15 * (int)activeFormats.Last(x => x.Format is ForumFormat.QUOTE).Options["Nesting"]);
+			var nesting =  (int)(UI.FontScale * 15 * (forcedNesting ?? (int)activeFormats.Last(x => x.Format is ForumFormat.QUOTE).Options["Nesting"]));
 			var diff = UI.Scale(5);
 			using var brush1 = new SolidBrush(FormDesign.Design.ActiveColor);
 			using var brush2 = new LinearGradientBrush(new Rectangle(1 + nesting, (int)location.Y + diff, Size.Width - nesting, height + (diff / 2) + 2), FormDesign.Design.ActiveColor.MergeColor(FormDesign.Design.AccentBackColor, 35 - (nesting / 2)), FormDesign.Design.ActiveColor.MergeColor(FormDesign.Design.AccentBackColor, 5), 0f);
 
 			if (nesting > 0)
 			{
-				DrawQuote(height, (int)activeFormats.Last(x => x.Format is ForumFormat.QUOTE).Options["Nesting"] - 1);
+				DrawQuote(height, (forcedNesting ?? (int)activeFormats.Last(x => x.Format is ForumFormat.QUOTE).Options["Nesting"]) - 1);
 			}
 
 			g.FillRectangle(brush2, new Rectangle(1 + nesting, (int)location.Y + diff, Size.Width - nesting, height + (diff / 2) + 2));
