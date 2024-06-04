@@ -4,6 +4,7 @@ using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.Systems;
+using Skyve.Systems.CS2.Managers;
 using Skyve.Systems.CS2.Services;
 
 using System;
@@ -22,10 +23,11 @@ internal class TagsService : ITagsService
 
 	private readonly INotifier _notifier;
 	private readonly ILogger _logger;
+	private readonly ISkyveDataManager _skyveDataManager;
 	private readonly SaveHandler _saveHandler;
 	private readonly WorkshopService _workshopService;
 
-	public TagsService(INotifier notifier, IWorkshopService workshopService, ILogger logger, SaveHandler saveHandler)
+	public TagsService(INotifier notifier, IWorkshopService workshopService, ILogger logger, SaveHandler saveHandler, ISkyveDataManager skyveDataManager)
 	{
 		_assetTagsDictionary = new(new PathEqualityComparer());
 		_customTagsDictionary = new(new PathEqualityComparer());
@@ -33,9 +35,10 @@ internal class TagsService : ITagsService
 		_notifier = notifier;
 		_logger = logger;
 		_saveHandler = saveHandler;
+		_skyveDataManager = skyveDataManager;
 		_workshopService = (WorkshopService)workshopService;
-		_assetTags = new HashSet<string>();
-		_workshopTags = new Dictionary<string, int>();
+		_assetTags = [];
+		_workshopTags = [];
 
 		_saveHandler.Load(out Dictionary<string, string[]> customTags, "CustomTags.json");
 
@@ -157,6 +160,22 @@ internal class TagsService : ITagsService
 				}
 			}
 		}
+
+		foreach (var package in ((SkyveDataManager)_skyveDataManager).CompatibilityData.Packages.Values.ToList())
+		{
+			if (package.Tags is not null)
+			{
+				foreach (var item in package.Tags)
+				{
+					if (!returned.Contains(item))
+					{
+						returned.Add(item);
+
+						yield return new TagItem(TagSource.Global, item, item);
+					}
+				}
+			}
+		}
 	}
 
 	public IEnumerable<ITag> GetTags(IPackageIdentity package, bool ignoreParent = false)
@@ -190,7 +209,21 @@ internal class TagsService : ITagsService
 			}
 		}
 
-		if (package.GetLocalPackageIdentity() is ILocalPackageData localPackage)
+		var skyveTags = _skyveDataManager.TryGetPackageInfo(package.Id)?.Tags;
+
+		if (skyveTags is not null)
+		{
+			foreach (var item in skyveTags)
+			{
+				if (!returned.Contains(item))
+				{
+					returned.Add(item);
+					yield return new TagItem(TagSource.Global, item, item);
+				}
+			}
+		}
+
+		if (package.GetLocalPackageIdentity() is ILocalPackageIdentity localPackage)
 		{
 			if (_customTagsDictionary.TryGetValue(localPackage.FilePath, out var customTags))
 			{
@@ -204,29 +237,11 @@ internal class TagsService : ITagsService
 				}
 			}
 		}
-
-		if (!ignoreParent && package.GetLocalPackageIdentity() is ILocalPackageData lp && _customTagsDictionary.TryGetValue(lp.Folder, out var customParentTags))
-		{
-			foreach (var item in customParentTags)
-			{
-				if (!returned.Contains(item))
-				{
-					returned.Add(item);
-					yield return new TagItem(TagSource.Custom, item, item);
-				}
-			}
-		}
 	}
 
 	public void SetTags(IPackageIdentity package, IEnumerable<string> value)
 	{
-		if (package is IAsset asset)
-		{
-			_customTagsDictionary[asset.FilePath] = value.WhereNotEmpty().ToArray();
-
-			_saveHandler.Save(_customTagsDictionary, "CustomTags.json");
-		}
-		else if (package.GetLocalPackageIdentity() is ILocalPackageData lp)
+		if (package.GetLocalPackageIdentity() is ILocalPackageData lp)
 		{
 			_customTagsDictionary[lp.Folder] = value.WhereNotEmpty().ToArray();
 
@@ -238,39 +253,45 @@ internal class TagsService : ITagsService
 
 	public bool HasAllTags(IPackageIdentity package, IEnumerable<ITag> tags)
 	{
-		var workshopTags = package.GetWorkshopInfo()?.Tags;
+		var matchedTags = tags.ToList(x => x.Value);
+		var identity = package.GetLocalPackageIdentity();
+		var workshopTags = package.GetWorkshopInfo()?.Tags.Values.ToList() ?? [];
 
-		if (package is ILocalPackageData localPackage)
+		matchedTags.RemoveAll(y => workshopTags.Any(x => x.Equals(y, StringComparison.InvariantCultureIgnoreCase)));
+
+		if (matchedTags.Count == 0 )
 		{
-			foreach (var tag in tags)
-			{
-				if (_tagsCache.TryGetValue(tag.Value, out var hash) && hash.Contains(localPackage.FilePath))
-				{
-					continue;
-				}
-
-				if (workshopTags?.Any(x => x.Value.Equals(tag.Value, StringComparison.InvariantCultureIgnoreCase)) ?? false)
-				{
-					continue;
-				}
-
-				return false;
-			}
-
 			return true;
 		}
 
-		foreach (var tag in tags)
-		{
-			if (workshopTags?.Any(x => x.Value.Equals(tag.Value, StringComparison.InvariantCultureIgnoreCase)) ?? false)
-			{
-				continue;
-			}
+		var assetTags = identity is not null && _assetTagsDictionary.TryGetValue(identity.FilePath, out var tags1) ? tags1 : [];
 
-			return false;
+		matchedTags.RemoveAll(x => assetTags.Any(x => x.Equals(x, StringComparison.InvariantCultureIgnoreCase)));
+
+		if (matchedTags.Count == 0)
+		{
+			return true;
 		}
 
-		return true;
+		var customTags = identity is not null && _customTagsDictionary.TryGetValue(identity.FilePath, out var tags2) ? tags2 : [];
+
+		matchedTags.RemoveAll(y => customTags.Any(x => x.Equals(y, StringComparison.InvariantCultureIgnoreCase)));
+
+		if (matchedTags.Count == 0)
+		{
+			return true;
+		}
+
+		var skyveTags = _skyveDataManager.TryGetPackageInfo(package.Id)?.Tags ?? [];
+
+		matchedTags.RemoveAll(y => skyveTags.Any(x => x.Equals(y, StringComparison.InvariantCultureIgnoreCase)));
+
+		if (matchedTags.Count == 0)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	public int GetTagUsage(ITag tag)

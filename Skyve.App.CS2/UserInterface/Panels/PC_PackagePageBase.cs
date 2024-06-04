@@ -1,9 +1,11 @@
 ﻿using Skyve.App.CS2.UserInterface.Content;
+using Skyve.App.CS2.UserInterface.Generic;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
+using Skyve.Domain;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
@@ -15,14 +17,18 @@ namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_PackagePageBase : PanelContent
 {
 	protected readonly IncludedButton B_Incl;
+	protected readonly ModVersionDropDown DD_Version;
 	protected readonly PackageTitleControl L_Title;
 	private readonly INotifier _notifier;
 	private readonly IPackageUtil _packageUtil;
 	private readonly ISettings _settings;
 	private TagControl? addTagControl;
 	private bool refreshPending;
+	private bool isReadOnly;
 
 	public IPackageIdentity Package { get; private set; }
+
+	protected bool IsReadOnly { get => isReadOnly; set => SetReadOnly(value); }
 
 #nullable disable
 	[Obsolete("DESIGNER ONLY", true)]
@@ -41,8 +47,10 @@ public partial class PC_PackagePageBase : PanelContent
 		Package = package;
 
 		TLP_Side.Controls.Add(B_Incl = new(package) { Dock = DockStyle.Top }, 0, 2);
+		TLP_Side.Controls.Add(DD_Version = new(package) { Dock = DockStyle.Top, Visible = !package.IsLocal() }, 0, 3);
 		TLP_TopInfo.Controls.Add(L_Title = new(package) { Dock = DockStyle.Fill });
 		L_Title.MouseClick += I_More_MouseClick;
+		DD_Version.SelectedItemChanged += DD_Version_SelectedItemChanged;
 
 		if (autoRefresh)
 		{
@@ -52,6 +60,28 @@ public partial class PC_PackagePageBase : PanelContent
 		}
 	}
 
+	private async void DD_Version_SelectedItemChanged(object sender, EventArgs e)
+	{
+		var currentVersion = _packageUtil.GetSelectedVersion(Package);
+		var selectedVersion = DD_Version.SelectedItem?.VersionId;
+
+		if (currentVersion != selectedVersion && !string.IsNullOrEmpty(selectedVersion))
+		{
+			DD_Version.Loading = true;
+			await _packageUtil.SetVersion(Package, selectedVersion!);
+			await Task.Delay(1000);
+			DD_Version.Loading = false;
+		}
+	}
+
+	private void SetReadOnly(bool value)
+	{
+		isReadOnly = value;
+
+		B_Incl.Visible = !value;
+		DD_Version.Visible = !value;
+	}
+
 	private void Notifier_PackageInclusionUpdated()
 	{
 		B_Incl.Invalidate();
@@ -59,7 +89,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 	private void Notifier_WorkshopInfoUpdated()
 	{
-		if (Form.CurrentPanel == this)
+		if (Form?.CurrentPanel == this)
 		{
 			this.TryInvoke(() => SetPackage(Package));
 		}
@@ -73,8 +103,8 @@ public partial class PC_PackagePageBase : PanelContent
 	{
 		base.OnShown();
 
-        if (refreshPending)
-        {
+		if (refreshPending)
+		{
 			refreshPending = false;
 
 			this.TryInvoke(() => SetPackage(Package));
@@ -99,7 +129,7 @@ public partial class PC_PackagePageBase : PanelContent
 		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
 		LI_Version.ValueText = localData?.Version ?? workshopInfo?.Version;
-		LI_UpdateTime.ValueText = _settings.UserSettings.ShowDatesRelatively ? date.ToRelatedString(true, false) : date.ToString("g");
+		LI_UpdateTime.ValueText = date == default ? null : _settings.UserSettings.ShowDatesRelatively ? date.ToLocalTime().ToRelatedString(true, false) : date.ToLocalTime().ToString("g");
 		LI_ModId.ValueText = Package.Id > 0 ? Package.Id.ToString() : null;
 		LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);
 		LI_Votes.ValueText = workshopInfo?.VoteCount >= 0 ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
@@ -107,7 +137,12 @@ public partial class PC_PackagePageBase : PanelContent
 		LI_Votes.ValueColor = workshopInfo?.HasVoted == true ? FormDesign.Design.GreenColor : null;
 
 		L_Author.Visible = workshopInfo is not null;
-		L_Author.Text = workshopInfo?.Author?.Name;
+		L_Author.Author = workshopInfo?.Author;
+
+		var currentVersion = _packageUtil.GetSelectedVersion(package);
+		DD_Version.Items = workshopInfo?.Changelog.OrderByDescending(x => x.ReleasedDate).ToArray() ?? [];
+		DD_Version.Visible = !isReadOnly && !string.IsNullOrEmpty(currentVersion) && DD_Version.Items.Length > 0;
+		DD_Version.SelectedItem = DD_Version.Items.FirstOrDefault(x => x.VersionId == currentVersion);
 
 		// Links
 		{
@@ -139,11 +174,12 @@ public partial class PC_PackagePageBase : PanelContent
 				{
 					P_Requirements.SuspendDrawing();
 					P_Requirements.Controls.Clear(true);
-					P_Requirements.Controls.AddRange(requirements.ToArray(x => new MiniPackageControl(x.Id)
+					P_Requirements.Controls.AddRange(requirements.ToArray(x => new MiniPackageControl(x)
 					{
 						ReadOnly = true,
 						Large = requirements.Count < 6,
 						ShowIncluded = true,
+						IsDlc = x.IsDlc,
 						Dock = DockStyle.Top
 					}));
 					P_Requirements.ResumeDrawing();
@@ -200,7 +236,7 @@ public partial class PC_PackagePageBase : PanelContent
 			FLP_Package_Tags.Controls.Add(control);
 		}
 
-		//if (Package.LocalPackage is not null)
+		if (!isReadOnly)
 		{
 			addTagControl = new TagControl { ImageName = "Add", ColorStyle = ColorStyle.Green };
 			addTagControl.MouseClick += AddTagControl_MouseClick;
@@ -236,19 +272,20 @@ public partial class PC_PackagePageBase : PanelContent
 	{
 		base.UIChanged();
 
-		P_SideContainer.Width = (int)(260 * UI.FontScale);
-		PB_Icon.Size = UI.Scale(new Size(72, 72), UI.FontScale);
-		I_More.Size = UI.Scale(new Size(20, 28), UI.FontScale);
-		TLP_Side.Padding = UI.Scale(new Padding(8, 0, 0, 0), UI.FontScale);
-		TLP_TopInfo.Margin = B_Incl.Margin = base_slickSpacer.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		P_SideContainer.Width = UI.Scale(260);
+		PB_Icon.Size = UI.Scale(new Size(72, 72));
+		I_More.Size = UI.Scale(new Size(20, 28));
+		TLP_Side.Padding = UI.Scale(new Padding(8, 0, 0, 0));
+		TLP_TopInfo.Margin = B_Incl.Margin = base_slickSpacer.Margin = UI.Scale(new Padding(5));
 		base_slickSpacer.Height = (int)UI.FontScale;
-		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding =
-		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding = DD_Version.Margin =
+		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5));
 		L_Info.Font = L_Requirements.Font = L_Tags.Font = L_Links.Font = UI.Font(7F, FontStyle.Bold);
-		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = L_Links.Margin = UI.Scale(new Padding(3), UI.FontScale);
-		L_Author.Margin = L_Title.Margin = UI.Scale(new Padding(5, 0, 0, 0), UI.FontScale);
+		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = L_Links.Margin = UI.Scale(new Padding(3));
+		L_Author.Margin = L_Title.Margin = UI.Scale(new Padding(5, 0, 0, 0));
+		L_Author.Font = UI.Font(9.5F);
 
-		TLP_TopInfo.Height = (int)(72 * UI.FontScale);
+		TLP_TopInfo.Height = UI.Scale(72);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -399,5 +436,13 @@ public partial class PC_PackagePageBase : PanelContent
 		var workshopInfo = Package.GetWorkshopInfo();
 		LI_Votes.LabelText = LI_Votes.HoverState.HasFlag(HoverState.Hovered) ? (workshopInfo?.HasVoted == true ? LocaleCS2.UnVoteMod : LocaleCS2.VoteMod) : "Votes";
 		LI_Votes.Invalidate();
+	}
+
+	private void FLP_Package_Links_SizeChanged(object sender, EventArgs e)
+	{
+		foreach (Control ctrl in FLP_Package_Links.Controls)
+		{
+			ctrl.Size = new(ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal, ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal);
+		}
 	}
 }

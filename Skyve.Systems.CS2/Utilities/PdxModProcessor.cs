@@ -1,6 +1,5 @@
 ﻿using Extensions;
 
-using Skyve.Domain;
 using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
@@ -44,7 +43,9 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 				var package = await _workshopService.GetInfoAsync(item);
 
 				if (package != null)
+				{
 					results[item] = package;
+				}
 			}
 			catch { failed = true; }
 		}
@@ -73,11 +74,6 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 		try
 		{
 			var path = saveHandler.GetPath(CACHE_FILE);
-
-			if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(7) && ConnectionHandler.IsConnected)
-			{
-				return null;
-			}
 
 			saveHandler.Load(out Dictionary<int, PdxModDetails>? dic, CACHE_FILE);
 

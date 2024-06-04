@@ -5,6 +5,7 @@ using Skyve.App.UserInterface.Panels;
 using Skyve.Domain.CS2.Content;
 
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -101,9 +102,11 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		return true;
 	}
 
-	private Task<IEnumerable<IPackageIdentity>> GetContents()
+	private async Task<IEnumerable<IPackageIdentity>> GetContents(CancellationToken cancellationToken)
 	{
-		return _playsetManager.GetPlaysetContents(Playset);
+		var items = await _playsetManager.GetPlaysetContents(Playset);
+
+		return items.Cast<IPackageIdentity>();
 	}
 
 	protected override void LocaleChanged()
@@ -121,19 +124,19 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		TLP_Options.Padding = TLP_Side.Padding = UI.Scale(new Padding(10, 0, 10, 10), UI.UIScale);
 		TLP_AdvancedDev.Margin = UI.Scale(new Padding(0, 15, 0, 0), UI.UIScale);
 
-		P_Side.Width = (int)(250 * UI.FontScale);
-		P_Side.Padding = UI.Scale(new Padding(15, 0, 15, 15), UI.FontScale);
-		slickSpacer1.Margin = B_EditThumbnail.Margin = B_EditColor.Margin = B_ClearThumbnail.Margin = B_ClearColor.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		P_Side.Width = UI.Scale(250);
+		P_Side.Padding = UI.Scale(new Padding(15, 0, 15, 15));
+		slickSpacer1.Margin = B_EditThumbnail.Margin = B_EditColor.Margin = B_ClearThumbnail.Margin = B_ClearColor.Margin = UI.Scale(new Padding(5));
 		slickSpacer1.Height = (int)UI.FontScale;
 
-		I_Color.Size = I_Thumbnail.Size = UI.Scale(new Size(24, 24), UI.FontScale);
-		I_Color.Padding = I_Thumbnail.Padding = UI.Scale(new Padding(4), UI.FontScale);
-		I_Color.Margin = I_Thumbnail.Margin = UI.Scale(new Padding(3), UI.FontScale);
+		I_Color.Size = I_Thumbnail.Size = UI.Scale(new Size(24, 24));
+		I_Color.Padding = I_Thumbnail.Padding = UI.Scale(new Padding(4));
+		I_Color.Margin = I_Thumbnail.Margin = UI.Scale(new Padding(3));
 
 		L_Usage.Font = L_Thumbnail.Font = L_Color.Font = UI.Font(9F, FontStyle.Bold);
-		L_Usage.Margin = L_Thumbnail.Margin = L_Color.Margin = UI.Scale(new Padding(3, 20, 3, 3), UI.FontScale);
+		L_Usage.Margin = L_Thumbnail.Margin = L_Color.Margin = UI.Scale(new Padding(3, 20, 3, 3));
 		L_UsageInfo.Font = L_ThumbnailInfo.Font = L_ColorInfo.Font = UI.Font(8F);
-		L_UsageInfo.Margin = L_ThumbnailInfo.Margin = L_ColorInfo.Margin = UI.Scale(new Padding(3, 3, 3, 3), UI.FontScale);
+		L_UsageInfo.Margin = L_ThumbnailInfo.Margin = L_ColorInfo.Margin = UI.Scale(new Padding(3, 3, 3, 3));
 	}
 
 	protected override void DesignChanged(FormDesign design)

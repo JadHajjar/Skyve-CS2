@@ -9,7 +9,6 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 
 using PdxIMod = PDX.SDK.Contracts.Service.Mods.Models.IMod;
@@ -85,16 +84,23 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public bool IsCollection { get; set; }
 	public bool IsInvalid { get; set; }
 	public string Guid { get; set; }
+	string? IWorkshopInfo.VersionId => Version;
 	string? IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
 	IUser? IWorkshopInfo.Author => new PdxUser(Author);
 	Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	public bool HasVoted { get; set; }
+	bool IWorkshopInfo.IsPartialInfo => true;
 	public IEnumerable<IThumbnailObject> Images => LocalData.Images;
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<ILink> IWorkshopInfo.Links => [];
+
+	bool IWorkshopInfo.HasComments()
+	{
+		return false;
+	}
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{

@@ -12,11 +12,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using static System.Environment;
+
 namespace Skyve.App.CS2.Installer;
 public class Installer
 {
 	private const string REG_KEY = "SkyveAppCs2";
-	private const string INSTALL_PATH = @"C:\Program Files\Skyve CS-II";
+	private static string INSTALL_PATH = @"C:\Program Files\Skyve CS-II";
+	private static bool DesktopShortcut;
+	private static bool InstallService;
 
 	public static async Task Install()
 	{
@@ -37,21 +41,46 @@ public class Installer
 
 		await Task.Delay(100);
 
-		originalPath.CopyAll(targetFolder);
+		try
+		{
+			originalPath.CopyAll(targetFolder);
+		}
+		catch (Exception ex)
+		{
+			throw new KnownException(ex, $"Skyve could not copy the files to this folder:\r\n\"{targetFolder.FullName}\"\r\n\r\nTry selecting another location to install Skyve.");
+		}
 
-		await Task.Delay(100);
+		await Task.Delay(150);
 
 		File.Copy(Application.ExecutablePath, uninstallPath, true);
 
-		ExtensionClass.CreateShortcut(shortcutPath, exePath);
-
 		CreateUninstallRegistry(exePath, uninstallPath);
 
-		Process.Start(exePath);
+		ExtensionClass.CreateShortcut(shortcutPath, exePath);
+
+		if (DesktopShortcut)
+		{
+			ExtensionClass.CreateShortcut(Path.Combine(GetFolderPath(SpecialFolder.Desktop), "Skyve CS-II.lnk"), exePath);
+		}
 
 		try
 		{
-			await RegisterService(false);
+			File.WriteAllText(Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II", "ModsSettings", "Skyve", "InstallPath"), targetFolder.FullName);
+		}
+		catch { }
+
+		try
+		{
+			Process.Start(exePath);
+		}
+		catch (Exception ex)
+		{
+			throw new KnownException(ex, "The skyve app could not be found. It is likely an anti-virus software removed it.\r\n\r\nApp location: " + exePath);
+		}
+
+		try
+		{
+			await RegisterService(!InstallService);
 		}
 		catch { }
 	}
@@ -120,7 +149,7 @@ public class Installer
 
 	private static void Run(string command)
 	{
-		var filePath = Path.Combine(Path.GetTempPath(), "SkyveBatch.bat");
+		var filePath = Path.ChangeExtension(CrossIO.GetTempFileName(), "bat");
 
 		File.WriteAllText(filePath, command);
 
@@ -138,9 +167,13 @@ public class Installer
 		var output = p.StandardOutput.ReadToEnd();
 		p.WaitForExit();
 
-		File.Delete(filePath);
+		try
+		{
+			File.Delete(filePath);
 
-		File.Delete(Path.Combine(Application.StartupPath, "InstallUtil.InstallLog"));
+			File.Delete(Path.Combine(Application.StartupPath, "InstallUtil.InstallLog"));
+		}
+		catch { }
 	}
 
 	public static async Task UnInstall()
@@ -268,8 +301,13 @@ public class Installer
 				key.SetValue("Publisher", "T. D. W.");
 				key.SetValue("DisplayIcon", FormatPath(appPath));
 				key.SetValue("DisplayVersion", version.ToString(2));
-				key.SetValue("URLInfoAbout", "");
+#if STABLE
+				key.SetValue("URLInfoAbout", "https://mods.paradoxplaza.com/mods/75804/Windows/");
+#else
+				key.SetValue("URLInfoAbout", "https://mods.paradoxplaza.com/mods/75804/Windows/");
+#endif
 				key.SetValue("UninstallString", FormatPath(uninstallPath));
+				key.SetValue("InstallService", InstallService);
 
 				if (!isUpdate)
 				{
@@ -286,6 +324,53 @@ public class Installer
 		{
 			throw new Exception("An error occurred writing uninstall information to the registry.  The service is fully installed but can only be uninstalled manually through the command line.", ex);
 		}
+	}
+
+	public static string? GetCurrentInstallationPath()
+	{
+		try
+		{
+			using var parent = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true) ?? throw new Exception("Uninstall registry key not found.");
+
+			RegistryKey? key = null;
+
+			try
+			{
+				key = parent.OpenSubKey(REG_KEY, true);
+
+				if (key is null)
+				{
+					return null;
+				}
+
+				var path = key.GetValue("UninstallString")?.ToString();
+
+				if (string.IsNullOrEmpty(path))
+				{
+					return null;
+				}
+
+				InstallService = key.GetValue("InstallService") is null or true;
+
+				return INSTALL_PATH = Path.GetDirectoryName(path!.Trim('"').Replace("\\\\", "\\"));
+			}
+			finally
+			{
+				key?.Close();
+				key?.Dispose();
+			}
+		}
+		catch 
+		{
+			return null;
+		}
+	}
+
+	public static void SetInstallSettings(string path, bool desktopShortcut, bool installService)
+	{
+		INSTALL_PATH = path;
+		DesktopShortcut = desktopShortcut;
+		InstallService = installService;
 	}
 
 	private static string FormatPath(string path)

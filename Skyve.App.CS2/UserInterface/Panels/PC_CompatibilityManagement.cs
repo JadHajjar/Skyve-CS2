@@ -59,6 +59,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		InitializeComponent();
 
+		IsReadOnly = true;
+
 		SlickTip.SetTo(B_Skip, "Skip");
 		SlickTip.SetTo(B_Previous, "Previous");
 		SlickTip.SetTo(P_Tags, "GlobalTagsInfo");
@@ -130,28 +132,28 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	protected override void UIChanged()
 	{
-		base_P_Side.Width = (int)(175 * UI.FontScale);
-		base_TLP_Side.Padding = UI.Scale(new Padding(5), UI.FontScale);
-		base_P_Side.Padding = UI.Scale(new Padding(0, 5, 5, 5), UI.FontScale);
-		slickTabControl.Padding = P_SideContainer.Padding = new Padding(0, (int)(30 * UI.FontScale), 0, 0);
-		CustomTitleBounds = new Point(singlePackage ? 0 : (int)(175 * UI.FontScale), 0);
+		base_P_Side.Width = UI.Scale(175);
+		base_TLP_Side.Padding = UI.Scale(new Padding(5));
+		base_P_Side.Padding = UI.Scale(new Padding(0, 5, 5, 5));
+		slickTabControl.Padding = P_SideContainer.Padding = new Padding(0, UI.Scale(30), 0, 0);
+		CustomTitleBounds = new Point(singlePackage ? 0 : UI.Scale(175), 0);
 
 		base.UIChanged();
 
 		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding
-			= TLP_Bottom.Padding =  P_Tags.Margin =  P_Links.Margin
+			= TLP_Bottom.Padding = P_Tags.Margin = P_Links.Margin
 			= DD_DLCs.Margin = DD_PackageType.Margin = DD_Stability.Margin = DD_Usage.Margin
-			= B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		slickSpacer2.Height = (int)(2 * UI.FontScale);
+			= B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5));
+		slickSpacer2.Height = UI.Scale(2);
 		slickSpacer3.Height = slickSpacer4.Height = slickSpacer5.Height = (int)UI.FontScale;
-		B_AddInteraction.Size = B_AddStatus.Size = UI.Scale(new Size(105, 70), UI.FontScale);
-		B_AddInteraction.Margin = B_AddStatus.Margin = UI.Scale(new Padding(15), UI.FontScale);
-		L_NoLinks.Margin = L_NoTags.Margin = UI.Scale(new Padding(10), UI.FontScale);
-		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32), UI.FontScale);
+		B_AddInteraction.Size = B_AddStatus.Size = UI.Scale(new Size(105, 70));
+		B_AddInteraction.Margin = B_AddStatus.Margin = UI.Scale(new Padding(15));
+		L_NoLinks.Margin = L_NoTags.Margin = UI.Scale(new Padding(10));
+		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32));
 		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
-		TB_Note.Margin = UI.Scale(new Padding(5, 20, 5, 5), UI.FontScale);
-		TB_Note.MinimumSize = new Size(0, (int)(200 * UI.FontScale));
-		PB_Loading.Size = UI.Scale(new Size(32, 32), UI.FontScale);
+		TB_Note.Margin = UI.Scale(new Padding(5, 20, 5, 5));
+		TB_Note.MinimumSize = new Size(0, UI.Scale(200));
+		PB_Loading.Size = UI.Scale(new Size(32, 32));
 		CB_BlackListId.Font = CB_BlackListName.Font = UI.Font(7.5F);
 	}
 
@@ -292,6 +294,16 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		slickTabControl.Visible = false;
 		TLP_Bottom.Visible = false;
 
+		var workshopInfo = package.GetWorkshopInfo();
+		var hasChangelog= workshopInfo?.Changelog?.Any() ?? false;
+
+		T_Changelog.Visible = hasChangelog;
+
+		if (hasChangelog)
+		{
+			packageChangelogControl1.SetChangelogs(workshopInfo!.Version ?? string.Empty, workshopInfo!.Changelog);
+		}
+
 		try
 		{
 			if (!_userService.User.Manager && !_userService.User.Equals(Package.GetWorkshopInfo()?.Author))
@@ -305,28 +317,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			var catalogue = await skyveApiUtil.GetPackageData(Package.Id);
 
 			postPackage = catalogue?.CloneTo<PackageData, CompatibilityPostPackage>();
-
-			if (postPackage is null)
-			{
-				postPackage = skyveDataManager.GetAutomatedReport(Package).CloneTo<PackageData, CompatibilityPostPackage>();
-			}
-			else
-			{
-				var automatedPackage = skyveDataManager.GetAutomatedReport(Package).CloneTo<PackageData, CompatibilityPostPackage>();
-
-				if (automatedPackage.Stability is PackageStability.Broken)
-				{
-					postPackage.Stability = PackageStability.Broken;
-				}
-
-				foreach (var item in automatedPackage.Statuses ?? [])
-				{
-					if (!postPackage.Statuses.Any(x => x.Type == item.Type))
-					{
-						postPackage.Statuses!.Add(item);
-					}
-				}
-			}
+			postPackage ??= skyveDataManager.GetAutomatedReport(Package).CloneTo<PackageData, CompatibilityPostPackage>();
 
 			postPackage.IsBlackListedById = skyveDataManager.CompatibilityData.BlackListedIds?.Contains(postPackage.Id) ?? false;
 			postPackage.IsBlackListedByName = skyveDataManager.CompatibilityData.BlackListedNames?.Contains(postPackage.Name ?? string.Empty) ?? false;
@@ -479,7 +470,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 			foreach (var item in tags)
 			{
-				var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(item), Enabled = false };
+				var control = new TagControl { TagInfo = _tagsService.CreateCustomTag(item) };
 				control.Click += TagControl_Click;
 				FLP_Tags.Controls.Add(control);
 			}
@@ -493,6 +484,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	private void TagControl_Click(object sender, EventArgs e)
 	{
 		(sender as Control)?.Dispose();
+
+		L_NoTags.Visible = FLP_Tags.Controls.Count == 0;
 
 		ControlValueChanged(sender, e);
 	}

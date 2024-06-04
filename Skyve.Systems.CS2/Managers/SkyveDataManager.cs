@@ -4,7 +4,6 @@ using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
-using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.Compatibility.Domain;
 using Skyve.Systems.CS2.Domain;
@@ -20,7 +19,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
-public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService _userService, SkyveApiUtil _skyveApiUtil, ICompatibilityUtil _compatibilityUtil, SaveHandler saveHandler) : ISkyveDataManager
+public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService _userService, SkyveApiUtil _skyveApiUtil, ICompatibilityUtil _compatibilityUtil, INotificationsService _notificationsService, SaveHandler saveHandler) : ISkyveDataManager
 {
 	private readonly Dictionary<IPackageIdentity, CompatibilityInfo> _cache = new(new IPackageEqualityComparer());
 	private readonly Regex _bracketsRegex = new(@"[\[\(](.+?)[\]\)]", RegexOptions.Compiled);
@@ -81,6 +80,17 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 			CompatibilityData = new IndexedCompatibilityData(packages, blackList.BlackListedIds, blackList.BlackListedNames);
 
 			_notifier.OnCompatibilityDataLoaded();
+
+			var announcements = await _skyveApiUtil.GetAnnouncements();
+
+			_notificationsService.RemoveNotificationsOfType<AnnouncementNotification>();
+			foreach (var item in announcements ?? [])
+			{
+				if (item.Title is not null and not "")
+				{
+					_notificationsService.SendNotification(item);
+				}
+			}
 
 #if DEBUG
 			if (System.Diagnostics.Debugger.IsAttached)
@@ -143,8 +153,8 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 			Name = package.Name,
 			AuthorId = workshopInfo?.Author?.Id?.ToString() ?? string.Empty,
 			FileName = package.GetLocalPackageIdentity()?.FilePath,
-			Links = workshopInfo?.Links.ToList(x => new PackageLink { Type = x.Type, Title = x.Title, Url = x.Url }) ?? [],
-			Tags = workshopInfo?.Tags.Values.ToList() ?? []
+			Links = [],
+			Tags = []
 		};
 
 		if (workshopInfo?.Requirements.Any() ?? false)

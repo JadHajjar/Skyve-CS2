@@ -20,7 +20,6 @@
 		<Title>Skyve</Title>
 		<AssemblyName>Skyve.App.CS2.Setup</AssemblyName>
 		<TargetName>Skyve Setup</TargetName>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -52,9 +51,18 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
+	  <ProjectReference Include="..\..\SlickControls\SlickControls.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Reference Include="System.ServiceProcess" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resources.resx</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 </Project>

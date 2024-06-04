@@ -20,6 +20,16 @@ public class IncludedButton : SlickButton
 		ServiceCenter.Get(out _modLogicManager, out _modUtil, out _subscriptionsManager);
 	}
 
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
+		if (keyData == Keys.Alt)
+		{
+			Invalidate();
+		}
+
+		return base.ProcessCmdKey(ref msg, keyData);
+	}
+
 	protected override async void OnMouseClick(MouseEventArgs e)
 	{
 		base.OnMouseClick(e);
@@ -30,7 +40,7 @@ public class IncludedButton : SlickButton
 
 			Loading = true;
 
-			if (!isIncluded)
+			if (!isIncluded || ModifierKeys.HasFlag(Keys.Alt))
 			{
 				await _modUtil.SetIncluded(Package, !isIncluded);
 			}
@@ -50,7 +60,7 @@ public class IncludedButton : SlickButton
 
 	public override Size CalculateAutoSize(Size availableSize)
 	{
-		return new Size(Width, (int)(30 * UI.FontScale));
+		return new Size(Width, UI.Scale(30));
 	}
 
 	protected override void OnPaint(PaintEventArgs e)
@@ -80,6 +90,10 @@ public class IncludedButton : SlickButton
 			else if (required)
 			{
 				text = Locale.ThisModIsRequiredYouCantDisableIt;
+			}
+			else if (ModifierKeys.HasFlag(Keys.Alt))
+			{
+				text = Locale.ExcludeItem;
 			}
 			else if (isEnabled)
 			{
@@ -148,7 +162,7 @@ public class IncludedButton : SlickButton
 		}
 
 		using var brush = ClientRectangle.Gradient(activeColor);
-		e.Graphics.FillRoundedRectangle(brush, ClientRectangle, (int)(4 * UI.FontScale));
+		e.Graphics.FillRoundedRectangle(brush, ClientRectangle, UI.Scale(4));
 
 		Rectangle iconRect;
 
@@ -173,7 +187,7 @@ public class IncludedButton : SlickButton
 		}
 		else
 		{
-			var icon = new DynamicIcon(_subscriptionsManager.IsSubscribing(Package) ? "Wait" : isPartialIncluded ? "Slash" : isEnabled ? "Ok" : !isIncluded ? "Add" : "Enabled");
+			var icon = new DynamicIcon(_subscriptionsManager.IsSubscribing(Package) ? "Wait" : isPartialIncluded ? "Slash" : isEnabled ? "Ok" : !isIncluded ? "Add" : (isHovered && ModifierKeys.HasFlag(Keys.Alt)) ? "X" : "Enabled");
 			using var includedIcon = icon.Get(Height * 3 / 4).Color(iconColor);
 
 			iconRect = new Rectangle(new Point((Height - includedIcon.Height) / 2, (Height - includedIcon.Height) / 2), includedIcon.Size);

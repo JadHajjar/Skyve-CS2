@@ -5,6 +5,8 @@ using Skyve.Domain;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Utilities;
 
+using SkyveApi.Domain.CS2;
+
 using SlickControls;
 
 using System;

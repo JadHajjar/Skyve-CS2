@@ -60,34 +60,21 @@
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
 		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs" />
-		<Compile Update="UserInterface\Dashboard\D_ContentInfo.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="UserInterface\Dashboard\D_PdxModsBase.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="UserInterface\Dashboard\D_ContentInfo.cs" />
+		<Compile Update="UserInterface\Dashboard\D_PdxModsBase.cs" />
 		<Compile Update="UserInterface\Dashboard\D_PdxModsUpdated.cs" />
-		<Compile Update="UserInterface\Dashboard\D_DiskInfo.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="UserInterface\Dashboard\D_DiskInfo.cs" />
 		<Compile Update="UserInterface\Dashboard\D_Playsets.cs" />
+		<Compile Update="UserInterface\Generic\ModVersionDropDown.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 		<Compile Update="UserInterface\Panels\PC_SendReviewRequest.cs" />
-		<Compile Update="UserInterface\Panels\PC_ReviewRequests.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="UserInterface\Panels\PC_ViewReviewRequest.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="UserInterface\Panels\PC_ReviewRequests.cs" />
+		<Compile Update="UserInterface\Panels\PC_ViewReviewRequest.cs" />
 		<Compile Update="UserInterface\Panels\PC_Options.cs" />
-		<Compile Update="UserInterface\Panels\PC_PackagePageBase.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="UserInterface\Panels\PC_PackagePage.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="UserInterface\Panels\PC_PlaysetAdd.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="UserInterface\Panels\PC_PackagePageBase.cs" />
+		<Compile Update="UserInterface\Panels\PC_PackagePage.cs" />
+		<Compile Update="UserInterface\Panels\PC_PlaysetAdd.cs" />
 		<Compile Update="UserInterface\Panels\PC_PlaysetPage.cs" />
 		<Compile Update="UserInterface\Panels\PC_SkyveChangeLog.cs" />
 		<Compile Update="UserInterface\Panels\PC_Utilities.cs" />
@@ -98,14 +85,4 @@
 		<Content Include="Resources\Skyve.ico" />
 		<EmbeddedResource Include="Changelog.json" />
 	</ItemGroup>
-
-	<PropertyGroup>
-		<ChangelogToLocale>$([System.IO.Path]::GetFullPath('..\Skyve\ChangelogToLocale\ChangelogToLocale.exe'))</ChangelogToLocale>
-		<OriginalJsonFile>"$([System.IO.Path]::GetFullPath('..\Skyve-CS2\Skyve.App.CS2\Changelog.json'))"</OriginalJsonFile>
-		<LocaleJsonFile>"$([System.IO.Path]::GetFullPath('..\Skyve-CS2\Skyve.App.CS2\Properties\Changelog.json'))"</LocaleJsonFile>
-	</PropertyGroup>
-
-	<Target Name="BuildLocale" BeforeTargets="PreBuildEvent">
-		<Exec Command="$(ChangelogToLocale) $(OriginalJsonFile) $(LocaleJsonFile)" />
-	</Target>
 </Project>

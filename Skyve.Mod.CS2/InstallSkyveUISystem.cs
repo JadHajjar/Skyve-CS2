@@ -2,6 +2,9 @@
 
 using Game.UI;
 
+using Microsoft.Win32;
+
+using System;
 using System.IO;
 
 namespace Skyve.Mod.CS2
@@ -15,7 +18,7 @@ namespace Skyve.Mod.CS2
 		{
 			base.OnCreate();
 
-			AddBinding(isInstalledBinding = new ValueBinding<bool>("SkyveMod", "IsInstalled", File.Exists(@"C:\Program Files\Skyve CS-II\Skyve.exe")));
+			AddBinding(isInstalledBinding = new ValueBinding<bool>("SkyveMod", "IsInstalled", IsInstalled()));
 			AddBinding(new TriggerBinding("SkyveMod", "InstallSkyve", Install));
 		}
 
@@ -29,7 +32,7 @@ namespace Skyve.Mod.CS2
 
 		protected override void OnUpdate()
 		{
-			if (installComplete && File.Exists(@"C:\Program Files\Skyve CS-II\Skyve.exe"))
+			if (installComplete && IsInstalled())
 			{
 				installComplete = false;
 
@@ -37,6 +40,23 @@ namespace Skyve.Mod.CS2
 			}
 
 			base.OnUpdate();
+		}
+
+		private bool IsInstalled()
+		{
+			return File.Exists(Path.Combine(GetCurrentInstallationPath() ?? "C:\\Program Files", "Skyve.exe"));
+		}
+
+		public static string GetCurrentInstallationPath()
+		{
+			try
+			{
+				return File.ReadAllText(Path.Combine(FolderSettings.SettingsFolder, "InstallPath"));
+			}
+			catch
+			{
+				return null;
+			}
 		}
 	}
 }

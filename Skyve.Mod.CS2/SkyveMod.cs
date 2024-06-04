@@ -4,13 +4,13 @@ using Colossal.Logging;
 
 using Game;
 using Game.Modding;
+using Game.Rendering;
 using Game.SceneFlow;
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Security.Principal;
 
 namespace Skyve.Mod.CS2
 {
@@ -33,16 +33,16 @@ namespace Skyve.Mod.CS2
 
 			updateSystem.UpdateAt<InstallSkyveUISystem>(SystemUpdatePhase.UIUpdate);
 
-			//Settings = new SkyveModSettings(this);
+			Settings = new SkyveModSettings(this);
 
-			//Settings.RegisterInOptionsUI();
+			Settings.RegisterInOptionsUI();
 
 			foreach (var item in Locale.GetAvailableSources())
 			{
 				GameManager.instance.localizationManager.AddSource(item.LocaleId, item);
 			}
 
-			//AssetDatabase.global.LoadSettings(nameof(SkyveModSettings), Settings, new SkyveModSettings(this));
+			AssetDatabase.global.LoadSettings(nameof(SkyveMod), Settings, new SkyveModSettings(this));
 
 			try
 			{
@@ -98,11 +98,19 @@ namespace Skyve.Mod.CS2
 
 			try
 			{
-				Process.Start(Path.Combine(ModPath, "Skyve Setup.exe"));
+				var isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+
+				Process.Start(new ProcessStartInfo(Path.Combine(ModPath, "Skyve Setup.exe"))
+				{
+					Verb = isAdmin ? string.Empty : "runas"
+				});
 
 				return true;
 			}
-			catch { return false; }
+			catch
+			{
+				return false;
+			}
 		}
 
 		public void OnDispose()

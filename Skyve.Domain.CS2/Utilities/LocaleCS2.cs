@@ -17,6 +17,12 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public LocaleCS2() : base($"Skyve.Domain.CS2.Properties.LocaleCS2.json") { }
 
 	/// <summary>
+	/// <para>'{1}' is required for the mod(s) you're adding.  Would you like to also add '{1}' to your playset?</para>
+	/// <para>Plural: The mod(s) you're adding have {0} dependencies: {1}  Would you like to also add them to your playset?</para>
+	/// </summary>
+	public static Translation AddingDependencies => _instance.GetText("AddingDependencies");
+
+	/// <summary>
 	/// You can't run Skyve from this folder.  Either run the app from your Programs list, or run the Skyve Setup from the mod's folder.
 	/// </summary>
 	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
@@ -54,6 +60,31 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation DefaultLocation => _instance.GetText("DefaultLocation");
 
 	/// <summary>
+	/// Ask every time
+	/// </summary>
+	public static Translation DependencyAsk => _instance.GetText("Dependency_Ask");
+
+	/// <summary>
+	/// Automatically add dependencies
+	/// </summary>
+	public static Translation DependencyAutomatic => _instance.GetText("Dependency_Automatic");
+
+	/// <summary>
+	/// Do nothing
+	/// </summary>
+	public static Translation DependencyNone => _instance.GetText("Dependency_None");
+
+	/// <summary>
+	/// Dependency Resolution
+	/// </summary>
+	public static Translation DependencyResolution => _instance.GetText("DependencyResolution");
+
+	/// <summary>
+	/// Choose what will happen when you add a mod with dependencies that you do not have.
+	/// </summary>
+	public static Translation DependencyResolutionTip => _instance.GetText("DependencyResolution_Tip");
+
+	/// <summary>
 	/// Enable Developer Mode
 	/// </summary>
 	public static Translation DeveloperMode => _instance.GetText("DeveloperMode");
@@ -67,6 +98,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Download completed
 	/// </summary>
 	public static Translation DownloadComplete => _instance.GetText("DownloadComplete");
+
+	/// <summary>
+	/// Download failed
+	/// </summary>
+	public static Translation DownloadFailed => _instance.GetText("DownloadFailed");
 
 	/// <summary>
 	/// Downloading...
@@ -243,6 +279,12 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ModsDownloadFailed => _instance.GetText("ModsDownloadFailed");
 
 	/// <summary>
+	/// <para>'{1}' has dependencies</para>
+	/// <para>Plural: The packages you're adding have dependencies</para>
+	/// </summary>
+	public static Translation ModsYouAreAddingRequireDependencies => _instance.GetText("ModsYouAreAddingRequireDependencies");
+
+	/// <summary>
 	/// New Cities: Skylines II Update
 	/// </summary>
 	public static Translation NewGameUpdate => _instance.GetText("NewGameUpdate");
@@ -358,9 +400,39 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation RunSync => _instance.GetText("RunSync");
 
 	/// <summary>
+	/// Most Popular
+	/// </summary>
+	public static Translation SortingBest => _instance.GetText("Sorting_Best");
+
+	/// <summary>
+	/// Most Recent
+	/// </summary>
+	public static Translation SortingDateCreated => _instance.GetText("Sorting_DateCreated");
+
+	/// <summary>
+	/// Last Updated
+	/// </summary>
+	public static Translation SortingDateUpdated => _instance.GetText("Sorting_DateUpdated");
+
+	/// <summary>
+	/// Most Subscribed
+	/// </summary>
+	public static Translation SortingPopularity => _instance.GetText("Sorting_Popularity");
+
+	/// <summary>
+	/// Alphabetical
+	/// </summary>
+	public static Translation SortingWorkshopName => _instance.GetText("Sorting_WorkshopName");
+
+	/// <summary>
 	/// Launch Cities: Skylines II
 	/// </summary>
 	public static Translation StartCities => _instance.GetText("StartCities");
+
+	/// <summary>
+	/// You're about to launch the game with no active playset. This means that no mods will be enabled in the game.
+	/// </summary>
+	public static Translation StartingWithNoPlayset => _instance.GetText("StartingWithNoPlayset");
 
 	/// <summary>
 	/// Stop Cities: Skylines II
@@ -374,9 +446,24 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SubscribeToItem => _instance.GetText("SubscribeToItem");
 
 	/// <summary>
+	/// Synchronize mods before launching the game
+	/// </summary>
+	public static Translation SyncBeforeLaunching => _instance.GetText("SyncBeforeLaunching");
+
+	/// <summary>
+	/// Runs a mod sync before launching to make sure all mods are up to date.
+	/// </summary>
+	public static Translation SyncBeforeLaunchingTip => _instance.GetText("SyncBeforeLaunching_Tip");
+
+	/// <summary>
 	/// Sync is currently ongoing
 	/// </summary>
 	public static Translation SyncOngoing => _instance.GetText("SyncOngoing");
+
+	/// <summary>
+	/// Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready? Select 'No' to start the game anyway.
+	/// </summary>
+	public static Translation SyncOngoingLaunchGame => _instance.GetText("SyncOngoingLaunchGame");
 
 	/// <summary>
 	/// Total C:S II User Data Stored

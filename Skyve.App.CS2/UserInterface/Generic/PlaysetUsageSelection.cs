@@ -17,9 +17,9 @@ internal class PlaysetUsageSelection : SlickControl
 
 	protected override void UIChanged()
 	{
-		Padding = UI.Scale(new Padding(12), UI.FontScale);
+		Padding = UI.Scale(new Padding(12));
 		Font = UI.Font(9F, FontStyle.Bold);
-		Size = UI.Scale(new Size(100, 100), UI.FontScale);
+		Size = UI.Scale(new Size(100, 100));
 
 		base.UIChanged();
 	}

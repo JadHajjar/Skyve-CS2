@@ -21,7 +21,6 @@ public class UserSettings : ConfigFile, IUserSettings
 	bool IUserSettings.HidePseudoMods { get; set; }
 
 	public Dictionary<SkyvePage, SkyvePageContentSettings> PageSettings { get; set; } = [];
-	public ParadoxLoginInfo ParadoxLogin { get; set; }
 
 	public bool LinkModAssets { get; set; } = true;
 	public bool FadeDisabledItems { get; set; } = true;
@@ -41,6 +40,9 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool SnapDashToGrid { get; set; }
 	public bool ComplexListUI { get; set; }
 	public bool FilterIncludedByDefault { get; set; } = true;
+	public bool SyncBeforeLaunching { get; set; } = true;
+	public bool ColoredAuthorNames { get; set; } = true;
+	public DependencyResolveBehavior DependencyResolution { get; set; }
 
 	public void Save()
 	{

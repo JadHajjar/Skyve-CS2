@@ -55,12 +55,12 @@ internal class D_PdxUser : IDashboardItem
 
 		if (Loading)
 		{
-			DrawLoader(e.Graphics, new Rectangle(textRect.X, preferredHeight, 0, 0).Align(UI.Scale(new Size(18, 18), UI.FontScale), ContentAlignment.TopLeft));
+			DrawLoader(e.Graphics, new Rectangle(textRect.X, preferredHeight, 0, 0).Align(UI.Scale(new Size(18, 18)), ContentAlignment.TopLeft));
 
 			e.Graphics.DrawStringItem(LocaleCS2.LoggingIn
 				, Font
 				, FormDesign.Design.ForeColor
-				, textRect.Pad((int)(22 * UI.FontScale), 0, 0, 0)
+				, textRect.Pad(UI.Scale(22), 0, 0, 0)
 				, ref preferredHeight
 				, applyDrawing);
 
@@ -75,13 +75,13 @@ internal class D_PdxUser : IDashboardItem
 		e.Graphics.DrawStringItem(string.IsNullOrWhiteSpace(_userService.User.Name) ? LocaleCS2.NotLoggedInCheckNotification : Locale.LoggedInUser.Format(_userService.User.Name)
 			, Font
 			, FormDesign.Design.ForeColor
-			, textRect.Pad((int)(16 * UI.FontScale), 0, 0, 0)
+			, textRect.Pad(UI.Scale(16), 0, 0, 0)
 			, ref preferredHeight
 			, applyDrawing);
 
 		dotRect.Height = preferredHeight - dotRect.Y;
 
-		e.Graphics.FillEllipse(dotBrush, dotRect.Align(UI.Scale(new Size(10, 10), UI.FontScale), ContentAlignment.MiddleLeft));
+		e.Graphics.FillEllipse(dotBrush, dotRect.Align(UI.Scale(new Size(10, 10)), ContentAlignment.MiddleLeft));
 
 		preferredHeight += Padding.Top / 2;
 
@@ -94,7 +94,7 @@ internal class D_PdxUser : IDashboardItem
 			{
 				Icon = "User",
 				Font = font,
-				Size = new Size(0, (int)(20 * UI.FontScale)),
+				Size = new Size(0, UI.Scale(20)),
 				Text = LocaleCS2.LoginToParadox,
 				Rectangle = e.ClipRectangle.Pad(BorderRadius)
 			});

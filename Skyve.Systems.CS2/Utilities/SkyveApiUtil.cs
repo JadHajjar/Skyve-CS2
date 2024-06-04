@@ -9,6 +9,7 @@ using Skyve.Systems.CS2.Domain.DTO;
 
 using SkyveApi.Domain.CS2;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -107,5 +108,10 @@ public class SkyveApiUtil
 	public async Task<ReviewRequest?> GetReviewRequest(string userId, ulong packageId)
 	{
 		return ConvertDto<ReviewRequestData, ReviewRequest, ReviewRequestDto>(await Get<ReviewRequestData>("/GetReviewRequest", (nameof(userId), userId), (nameof(packageId), packageId)));
+	}
+
+	public async Task<INotificationInfo[]?> GetAnnouncements()
+	{
+		return ConvertDto<AnnouncementData, AnnouncementNotification, AnnouncementDto>(await Get<AnnouncementData[]>("/Announcements"));
 	}
 }

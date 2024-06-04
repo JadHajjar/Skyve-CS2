@@ -6,7 +6,6 @@ using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
@@ -25,14 +24,14 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 		InitializeComponent();
 		_request = request;
 
-		//TLP_Info.Controls.Add(new SteamUserControl(request.UserId) { InfoText = "Requested by", Dock = DockStyle.Top, Margin = UI.Scale(new Padding(5), UI.FontScale) }, 0, 1);
+		//TLP_Info.Controls.Add(new SteamUserControl(request.UserId) { InfoText = "Requested by", Dock = DockStyle.Top, Margin = UI.Scale(new Padding(5)) }, 0, 1);
 
 		logControl = new SlickControl
 		{
 			Cursor = Cursors.Hand,
 			Text = $"RequestBy_{userService.TryGetUser(_request.UserId)?.Name}_{DateTime.Now:yy-MM-dd_HH-mm}",
 			Size = UI.Scale(new Size(150, 75), UI.UIScale),
-			Margin = UI.Scale(new Padding(5), UI.FontScale)
+			Margin = UI.Scale(new Padding(5))
 		};
 
 		logControl.Paint += PC_ReviewSingleRequest_Paint;
@@ -77,44 +76,45 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 		SetPackage(Package);
 	}
 
-	private void LogControl_Click(object sender, EventArgs e)
+	protected override void SetPackage(IPackageIdentity package)
 	{
-		if (_request.LogFile != null)
-		{
-			var fileName = CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveDataPath, ".SupportLogs", logControl.Text + ".zip");
-
-			Directory.CreateDirectory(Path.GetDirectoryName(fileName));
-
-			File.WriteAllBytes(fileName, _request.LogFile);
-
-			PlatformUtil.OpenFolder(fileName);
-		}
+		base.SetPackage(package.GetWorkshopInfo() ?? package);
 	}
 
-	protected override async Task<bool> LoadDataAsync()
+	private async void LogControl_Click(object sender, EventArgs e)
 	{
-		logControl.Loading = true;
-
-		var request = await _skyveApiUtil.GetReviewRequest(_request.UserId ?? string.Empty, _request.PackageId);
-
-		if (request is not null)
+		if (logControl.Loading)
 		{
-			_request = request;
-
-			return true;
+			return;
 		}
 
-		return false;
-	}
+		if (_request.LogFile == null)
+		{
+			logControl.Loading = true;
 
-	protected override void OnDataLoad()
-	{
+			var request = await _skyveApiUtil.GetReviewRequest(_request.UserId ?? string.Empty, _request.PackageId);
+
+			if (request is not null)
+			{
+				_request = request;
+			}
+		}
+
+		if (_request.LogFile == null)
+		{
+			logControl.Dispose();
+			return;
+		}
+
+		var fileName = CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveDataPath, ".SupportLogs", logControl.Text + ".zip");
+
+		Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+
+		File.WriteAllBytes(fileName, _request.LogFile);
+
+		PlatformUtil.OpenFolder(fileName);
+
 		logControl.Loading = false;
-	}
-
-	protected override void OnLoadFail()
-	{
-		logControl.Dispose();
 	}
 
 	protected override void UIChanged()
@@ -123,17 +123,17 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 
 		L_ProposedChanges.Font = L_Desc.Font = L_LogReport.Font = UI.Font(9.75F, FontStyle.Bold);
 		L_Note.Font = UI.Font(9.25F);
-		L_LogReport.Margin = slickSpacer3.Margin = UI.Scale(new Padding(3, 15, 3, 3), UI.FontScale);
-		L_ProposedChanges.Margin = UI.Scale(new Padding(3, 15, 3, 7), UI.FontScale);
-		TLP_Main.Padding = UI.Scale(new Padding(10, 5, 10, 0), UI.FontScale);
-		I_Copy.Size = UI.Scale(new Size(32, 32), UI.FontScale);
-		I_Copy.Padding = UI.Scale(new Padding(4), UI.FontScale);
+		L_LogReport.Margin = slickSpacer3.Margin = UI.Scale(new Padding(3, 15, 3, 3));
+		L_ProposedChanges.Margin = UI.Scale(new Padding(3, 15, 3, 7));
+		TLP_Main.Padding = UI.Scale(new Padding(10, 5, 10, 0));
+		I_Copy.Size = UI.Scale(new Size(32, 32));
+		I_Copy.Padding = UI.Scale(new Padding(4));
 		slickSpacer3.Height = slickSpacer2.Height = (int)UI.FontScale;
-		L_Desc.Margin = L_Note.Margin = UI.Scale(new Padding(3), UI.FontScale);
+		L_Desc.Margin = L_Note.Margin = UI.Scale(new Padding(3));
 
 		foreach (Control item in tableLayoutPanel1.Controls)
 		{
-			item.Margin = UI.Scale(new Padding(7), UI.FontScale);
+			item.Margin = UI.Scale(new Padding(7));
 		}
 	}
 
@@ -148,12 +148,6 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 
 		e.Graphics.SetUp(ctrl.BackColor);
 
-		if (ctrl.Loading)
-		{
-			ctrl.DrawLoader(e.Graphics, ctrl.ClientRectangle.CenterR(UI.Scale(new Size(24, 24), UI.UIScale)));
-			return;
-		}
-
 		using var fileIcon = IconManager.GetLargeIcon("File").Color(FormDesign.Design.MenuForeColor);
 
 		var Padding = ctrl.Margin;
@@ -163,7 +157,16 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 		var fileContentRect = fileRect.CenterR(Math.Max((int)textSize.Width + 3, fileIcon.Width), fileHeight);
 
 		e.Graphics.FillRoundedRectangle(new SolidBrush(ctrl.HoverState.HasFlag(HoverState.Hovered) ? FormDesign.Design.MenuColor.MergeColor(FormDesign.Design.ActiveColor) : FormDesign.Design.MenuColor), fileRect, Padding.Left);
-		e.Graphics.DrawImage(fileIcon, fileContentRect.Align(fileIcon.Size, ContentAlignment.TopCenter));
+
+		if (ctrl.Loading)
+		{
+			ctrl.DrawLoader(e.Graphics, fileContentRect.Align(fileIcon.Size, ContentAlignment.TopCenter));
+		}
+		else
+		{
+			e.Graphics.DrawImage(fileIcon, fileContentRect.Align(fileIcon.Size, ContentAlignment.TopCenter));
+		}
+
 		e.Graphics.DrawString(ctrl.Text, new Font(Font, FontStyle.Bold), new SolidBrush(FormDesign.Design.MenuForeColor), fileContentRect, new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Far });
 	}
 

@@ -5,66 +5,43 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
-internal class D_PdxModsNew : D_PdxModsBase
+internal class D_PdxModsNew() : D_PdxModsBase(lastTag)
 {
-	private readonly IWorkshopService _workshopService;
 	private static List<IWorkshopInfo> _newMods = [];
+	private static string? lastTag;
 	private List<IWorkshopInfo> newMods = _newMods;
-
-	public D_PdxModsNew()
-	{
-		ServiceCenter.Get(out _workshopService);
-	}
 
 	protected override List<IWorkshopInfo> GetPackages()
 	{
 		return [.. newMods];
 	}
 
-	protected override void OnCreateControl()
+	protected override async Task<bool> ProcessDataLoad(CancellationToken token)
 	{
-		base.OnCreateControl();
-
-		if (_workshopService.IsAvailable)
-		{
-			LoadData();
-		}
-		else
-		{
-			_workshopService.ContextAvailable += LoadData;
-		}
-	}
-
-	protected override void Dispose(bool disposing)
-	{
-		base.Dispose(disposing);
-
-		_workshopService.ContextAvailable -= LoadData;
-	}
-
-	protected override async Task ProcessDataLoad(CancellationToken token)
-	{
-		var list = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, limit: 8)).ToList();
+		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 8)).ToList();
 
 		if (token.IsCancellationRequested)
 		{
-			return;
+			return false;
 		}
 
 		_newMods = newMods = list;
+		lastTag = SelectedTags?.FirstOrDefault();
 
 		OnResizeRequested();
+
+		return await base.ProcessDataLoad(token);
 	}
 
 	protected override DrawingDelegate GetDrawingMethod(int width)
 	{
-		if (Loading)
-		{
-			return DrawLoading;
-		}
-
 		if (newMods.Count == 0)
 		{
+			if (Loading)
+			{
+				return DrawLoading;
+			}
+
 			return DrawNone;
 		}
 
@@ -79,6 +56,8 @@ internal class D_PdxModsNew : D_PdxModsBase
 	private void DrawNone(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
 		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsNew, "PDXMods");
+
+		Draw(e, applyDrawing, ref preferredHeight, false);
 
 		e.Graphics.DrawStringItem(LocaleCS2.CouldNotRetrieveMods
 			, Font
@@ -97,7 +76,14 @@ internal class D_PdxModsNew : D_PdxModsBase
 
 	protected override void DrawHeader(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsNew, "PDXMods");
+		if (Loading)
+		{
+			DrawLoading(e, applyDrawing, ref preferredHeight);
+		}
+		else
+		{
+			DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsNew, "PDXMods");
+		}
 	}
 
 	private void DrawSmall(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)

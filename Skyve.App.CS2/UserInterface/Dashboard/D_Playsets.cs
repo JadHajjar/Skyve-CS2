@@ -133,7 +133,7 @@ internal class D_Playsets : IDashboardItem
 			Text = LocaleHelper.GetGlobalText(isRunning ? "StopCities" : "StartCities"),
 			Rectangle = e.ClipRectangle.Pad(Margin),
 			Icon = isRunning ? "Stop" : "CS",
-			Padding = UI.Scale(new Padding(2), UI.FontScale),
+			Padding = UI.Scale(new Padding(2)),
 			Enabled = Enabled,
 			Control = this
 		});
@@ -162,14 +162,14 @@ internal class D_Playsets : IDashboardItem
 
 		using var fontSmall = UI.Font(6.75F);
 
-		e.Graphics.DrawStringItem(Locale.FavoritePlaysets, fontSmall, Color.FromArgb(150, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad((int)(2 * UI.FontScale), 0, 0, 0), ref preferredHeight, applyDrawing);
+		e.Graphics.DrawStringItem(Locale.FavoritePlaysets, fontSmall, Color.FromArgb(150, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad(UI.Scale(2), 0, 0, 0), ref preferredHeight, applyDrawing);
 
 		preferredHeight -= Margin.Top;
 
 		var preferredSize = horizontal ? 115 : 100;
 		var columns = (int)Math.Max(1, Math.Floor((e.ClipRectangle.Width - Margin.Left) / (preferredSize * UI.FontScale)));
 		var columnWidth = (e.ClipRectangle.Width - Margin.Left) / columns;
-		var height = (horizontal ? 0 : columnWidth) + (int)(35 * UI.FontScale);
+		var height = (horizontal ? 0 : columnWidth) + UI.Scale(35);
 
 		for (var i = 0; i < favs.Count; i++)
 		{
@@ -217,7 +217,7 @@ internal class D_Playsets : IDashboardItem
 		}
 		else
 		{
-			e.Graphics.DrawRoundedImage(banner, bannerRect, (int)(5 * UI.FontScale));
+			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(5));
 		}
 
 		if (HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))
@@ -237,7 +237,7 @@ internal class D_Playsets : IDashboardItem
 			}
 			else
 			{
-				var activeRect = new Rectangle(bannerRect.X + (Margin.Left / 2), bannerRect.Bottom - (int)(16 * UI.FontScale) - (Margin.Bottom / 2), bannerRect.Width - Margin.Left, (int)(16 * UI.FontScale));
+				var activeRect = new Rectangle(bannerRect.X + (Margin.Left / 2), bannerRect.Bottom - UI.Scale(16) - (Margin.Bottom / 2), bannerRect.Width - Margin.Left, UI.Scale(16));
 				using var greenBrush = new SolidBrush(FormDesign.Design.GreenColor);
 
 				e.Graphics.FillRoundedRectangle(greenBrush, activeRect, activeRect.Height / 4);

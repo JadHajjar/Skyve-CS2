@@ -3,7 +3,7 @@ import skyveBack from "../images/skyve.png";
 import { ModuleRegistryExtend } from "cs2/modding";
 import { bindValue, trigger, useValue } from "cs2/api";
 
-export const isInstalled$ = bindValue<boolean>("SkyveMod", "IsInstalled");
+export const isInstalled$ = bindValue<boolean>("SkyveMod", "IsInstalled", true);
 export const CustomMenuButton: ModuleRegistryExtend = (Component) => {
   return (props) => {
     const { children, ...otherProps } = props || {};

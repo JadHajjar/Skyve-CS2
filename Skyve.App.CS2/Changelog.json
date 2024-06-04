@@ -1,2 +1,253 @@
 [
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.4",
+    "Date": "2024-06-04",
+    "Tagline": "Author & Account Update",
+    "ChangeGroups": [
+      {
+        "Name": "User Changes",
+        "Changes": [
+          "Added an automatic, unique color for users and authors throughout the app.",
+          "Added custom Avatars images for users and authors throughout the app.",
+          "Updated the user page with the Bio & Links that users have set up on PDX Mods.",
+          "Added a new setting in the Options to disable colored user names and avatars."
+        ]
+      },
+      {
+        "Name": "Comments",
+        "Changes": [
+          "Added a new 'Comments' section in the Mod Page.",
+          "You can directly reply and comment on mods from Skyve.",
+          "Use various formatting options with dedicated formatting buttons and shortcuts.",
+          "Easily track a conversation with color-coded user avatars"
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "You can now click the download notification to go to a mod's page. You can now also right-click to open up the right-click menu.",
+          "Improved log list performance.",
+          "Small UI performance improvements.",
+          "Fixed list views sometimes getting cut off at the end."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.3.3",
+    "Date": "2024-05-30",
+    "ChangeGroups": [
+      {
+        "Name": "Scrolling Changes",
+        "Changes": [
+          "Updated the scrolling behavior of all 'large list' pages.",
+          "Scrolling is now on a standard scroll value instead of being index-based. This makes scrolling less jumpy and won't leave the bottom of the list empty.",
+          "Changed the scrolling behavior of the Log list to the new scrolling that's used by other large lists. This will help with performance and will allow you to scroll to the very end when there's a lot of items in the list.'",
+          "Fixed items sometimes jumping while scrolling in grid view."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.3.2",
+    "Date": "2024-05-29",
+    "ChangeGroups": [
+      {
+        "Name": "Out of date Changes",
+        "Changes": [
+          "Mods in your current playset that do not match the latest version of the mod are now shown as 'Out of date' in the mod list, and on your dashboard.",
+          "Added a dropdown in the mod page where you can select a specific mod version."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.3.1",
+    "Date": "2024-05-28",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed not being able to see more than 100 mods in your playset.",
+          "Fixed mod links all showing as 'Website'.",
+          "Fixed mods getting a 'Source code not available' warning before the mod's information had even loaded.",
+          "Added new translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.3",
+    "Date": "2024-05-27",
+    "ChangeGroups": [
+      {
+        "Name": "Improvements & Fixes",
+        "Changes": [
+          "Added missing icons for new PDX Mods links.",
+          "Added a cleanup process when launching the game through Skyve.",
+          "Improved the change-log grouping.",
+          "Fixed the enabled filter not working correctly.",
+          "Fixed some users not being able to launch the installer.",
+          "Fixed the update times not being in users' local time.",
+          "Fixed 'Copy mod name' in the right-click menu not working."
+        ]
+      },
+      {
+        "Name": "Log Report Changes",
+        "Changes": [
+          "Log report files now all have a 'username filter' to hide the sender's windows username.",
+          "Log report can now be imported to view the sender's active playset mods. This is done by drag-n-dropping the log report in the Playsets list page.",
+          "Added a log filter to hide useless warnings in the log.",
+          "Fixed not being able to import a log report in the Compatibility Report page if you do not have any issues listed."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.2.6",
+    "Date": "2024-05-09",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed an error in the compatibility report page.",
+          "Fixed not being able to import playsets that include over 2GB of mods"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.2.5",
+    "Date": "2024-05-04",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added an install button in the Options to allow re-installing or in case the button in the main menu is not showing up."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.2.4",
+    "Date": "2024-04-25",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed potential errors in the compatibility report.",
+          "Fixed not being able to right-click in the assets view.",
+          "The download notification now correctly goes away if a download fails.",
+          "Mod descriptions now scale properly on 4K displays.",
+          "Fixed the mods change-log tab showing 'All Versions' more than once."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.2.3",
+    "Date": "2024-04-07",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added a setup screen when first installing Skyve to let users change the install location.",
+          "Load order is now handled automatically by Skyve."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.2.2",
+    "Date": "2024-04-03",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed a bug that kept refreshing information on the dashboard."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.2.1",
+    "Date": "2024-04-03",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixes for non-english languages filtering by Tags in PDX Mods tab.",
+          "PDX Mods tab auto-load will now start before reaching the bottom"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.2",
+    "Date": "2024-03-28",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Updated the PDX Mods browsing tab. Filters, sorting, responsiveness have been improved.",
+          "Mods hidden because of your playset's usage are now shown as very dim in the mods list instead.",
+          "Fixed the background service not updating mods.",
+          "Fixed global tags not showing up correctly.",
+          "Fixed tags filter not working.",
+          "Fixed launch not working for Gamepass users."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.1",
+    "Date": "2024-03-26",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added tags to the PDX Mods showcase on the dashboard.",
+          "Stopping the game from Skyve now closes it normally so settings are saved properly by the game.",
+          "Launching the game with no active playset will show a prompt letting you know that no mods will be enabled.",
+          "Launching the game before the synchronization process ends will show a prompt asking if you'd like to launch automatically when it's done.",
+          "Fixed non-english languages showing the incorrect text if they haven't been translated."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.0",
+    "Date": "2024-03-25",
+    "Tagline": "Official PDX Mods Release",
+    "ChangeGroups": [
+    ]
+  }
 ]

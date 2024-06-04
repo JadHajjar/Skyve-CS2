@@ -10,7 +10,6 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 
 using PdxIMod = PDX.SDK.Contracts.Service.Mods.Models.IMod;
@@ -105,8 +104,10 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	string IPackage.Version => UserModVersion.IfEmpty(Version);
+	string? IWorkshopInfo.VersionId => Version;
 	string IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
 	string? IWorkshopInfo.SuggestedGameVersion => RequiredGameVersion;
+	bool IWorkshopInfo.IsPartialInfo => true;
 	LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => [];
@@ -118,5 +119,10 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version);
 
 		return true;
+	}
+
+	bool IWorkshopInfo.HasComments()
+	{
+		return false;
 	}
 }

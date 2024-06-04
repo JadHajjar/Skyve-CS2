@@ -1,7 +1,5 @@
 ﻿using Extensions;
 
-using Newtonsoft.Json;
-
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
@@ -11,15 +9,14 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 
 namespace Skyve.Domain.CS2.Paradox;
 public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 {
 	[Obsolete("", true)]
-    public PdxModDetails()
-    {
+	public PdxModDetails()
+	{
 		Name = string.Empty;
 		Guid = string.Empty;
 		Version = string.Empty;
@@ -27,7 +24,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		Tags = [];
 	}
 
-    public PdxModDetails(ModDetails mod, bool hasVoted)
+	public PdxModDetails(ModDetails mod, bool hasVoted)
 	{
 		Id = (ulong)mod.Id;
 		Name = mod.DisplayName;
@@ -46,6 +43,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
+		ForumLink = mod.ForumLinks?.FirstOrDefault();
 		Tags = mod.Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 		Requirements = mod.Dependencies?.ToArray(x => new PdxModRequirement(x)) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
@@ -65,6 +63,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public string? ShortDescription { get; set; }
 	public string? Description { get; set; }
 	public long ServerSize { get; set; }
+	public string? ForumLink { get; set; }
 	public string PdxModsVersion { get; set; }
 	public string Version { get; set; }
 	public int Subscribers { get; set; }
@@ -83,6 +82,7 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	public string? SuggestedGameVersion { get; set; }
 	bool IPackage.IsLocal { get; }
 	ILocalPackageData? IPackage.LocalData { get; }
+	string? IWorkshopInfo.VersionId => PdxModsVersion;
 	string? IPackageIdentity.Url => $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	bool IPackage.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
 	bool IWorkshopInfo.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
@@ -92,10 +92,17 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => Images ?? [];
 	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
 
+	bool IWorkshopInfo.IsPartialInfo { get; }
+
+	bool IWorkshopInfo.HasComments()
+	{
+		return !string.IsNullOrWhiteSpace(ForumLink);
+	}
+
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, null	, ThumbnailUrl, Id, PdxModsVersion	);
+		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, PdxModsVersion);
 
 		return true;
 	}

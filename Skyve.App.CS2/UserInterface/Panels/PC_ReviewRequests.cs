@@ -53,17 +53,17 @@ public partial class PC_ReviewRequests : PanelContent
 
 	protected override void UIChanged()
 	{
-		base_P_Side.Width = (int)(175 * UI.FontScale);
-		base_TLP_Side.Padding = UI.Scale(new Padding(5), UI.FontScale);
-		base_P_Side.Padding = UI.Scale(new Padding(0, 5, 5, 5), UI.FontScale);
-		tableLayoutPanel1.Padding = new Padding(0, (int)(30 * UI.FontScale), 0, 0);
+		base_P_Side.Width = UI.Scale(175);
+		base_TLP_Side.Padding = UI.Scale(new Padding(5));
+		base_P_Side.Padding = UI.Scale(new Padding(0, 5, 5, 5));
+		tableLayoutPanel1.Padding = new Padding(0, UI.Scale(30), 0, 0);
 		CustomTitleBounds = new Point(tableLayoutPanel1.Left, 0);
 
 		base.UIChanged();
 
-		B_DeleteRequests.Margin = slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding = UI.Scale(new Padding(5), UI.FontScale);
+		B_DeleteRequests.Margin = slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding = UI.Scale(new Padding(5));
 		slickSpacer3.Height = (int)UI.FontScale;
-		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32), UI.FontScale);
+		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32));
 		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
 	}
 

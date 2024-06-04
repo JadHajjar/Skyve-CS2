@@ -21,9 +21,19 @@ public class ParadoxLink : ILink
 			"x" => LinkType.X,
 			"paypal" => LinkType.Paypal,
 			"patreon" => LinkType.Patreon,
+			"buymeacoffee" => LinkType.BuyMeACoffee,
+			"crowdin" => LinkType.Crowdin,
+			"kofi" => LinkType.Kofi,
+			"gitlab" => LinkType.Gitlabs,
 			_ => LinkType.Website
 		};
+		
 		Title = Type.ToString();
+
+		if (Type is LinkType.BuyMeACoffee)
+		{
+			Title = "Buy Me A Coffee";
+		}
 	}
 
 	public ParadoxLink()

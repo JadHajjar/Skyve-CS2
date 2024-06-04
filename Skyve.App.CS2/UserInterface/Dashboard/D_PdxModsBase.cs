@@ -4,31 +4,134 @@ using Skyve.App.UserInterface.Lists;
 using Skyve.App.UserInterface.Panels;
 
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
 internal abstract class D_PdxModsBase : IDashboardItem
 {
-	public D_PdxModsBase()
+	private static readonly Dictionary<string, DateTime> _lastLoadTimes = [];
+	private static readonly string[] _tags = ["Code Mod", "Map", "Savegame", "All"];
+	private string selectedTag;
+
+	protected readonly IWorkshopService WorkshopService;
+	protected string[]? SelectedTags => selectedTag == "All" ? null : [selectedTag];
+
+	public D_PdxModsBase(string? tag)
 	{
+		selectedTag = tag ?? _tags[0];
+		ServiceCenter.Get(out WorkshopService);
 	}
 
 	protected abstract List<IWorkshopInfo> GetPackages();
+
+	protected override void OnCreateControl()
+	{
+		base.OnCreateControl();
+
+		if (WorkshopService.IsAvailable)
+		{
+			if (!_lastLoadTimes.TryGetValue(Key, out var date) || (DateTime.Now - date).TotalMinutes > 15 || GetPackages().Count == 0)
+			{
+				LoadData();
+			}
+		}
+		else
+		{
+			WorkshopService.ContextAvailable += LoadData;
+		}
+	}
+
+	protected override void Dispose(bool disposing)
+	{
+		base.Dispose(disposing);
+
+		WorkshopService.ContextAvailable -= LoadData;
+	}
+
+	protected override Task<bool> ProcessDataLoad(CancellationToken token)
+	{
+		_lastLoadTimes[Key] = DateTime.Now;
+
+		return base.ProcessDataLoad(token);
+	}
 
 	private void RightClick(IWorkshopInfo package)
 	{
 		SlickToolStrip.Show(App.Program.MainForm, ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(package));
 	}
 
+	private void SelectTag(string item)
+	{
+		selectedTag = item;
+
+		LoadData();
+	}
+
 	protected void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight, bool horizontal)
 	{
 		using var fontSmall = UI.Font(6.75F);
 
+		var tagRect = new Rectangle(e.ClipRectangle.X + BorderRadius, preferredHeight, 0, 0);
+
+		foreach (var item in _tags)
+		{
+			using var buttonArgs = new ButtonDrawArgs
+			{
+				Font = fontSmall,
+				Padding = UI.Scale(new Padding(3, 2, 4, 3)),
+				Text = item,
+			};
+
+			if (selectedTag == item)
+			{
+				buttonArgs.ButtonType = ButtonType.Active;
+			}
+			else
+			{
+				buttonArgs.HoverState = HoverState & ~HoverState.Focused;
+				buttonArgs.Cursor = CursorLocation;
+			}
+
+			SlickButton.PrepareLayout(e.Graphics, buttonArgs);
+
+			buttonArgs.Rectangle = tagRect.Align(buttonArgs.Rectangle.Size, ContentAlignment.TopLeft);
+
+			if (buttonArgs.Rectangle.Right > e.ClipRectangle.Right - BorderRadius)
+			{
+				tagRect.Y += buttonArgs.Rectangle.Height + (BorderRadius / 2);
+				tagRect.X = e.ClipRectangle.X + BorderRadius;
+
+				buttonArgs.Rectangle = tagRect.Align(buttonArgs.Rectangle.Size, ContentAlignment.TopLeft);
+			}
+
+			SlickButton.SetUpColors(buttonArgs);
+
+			SlickButton.DrawButton(e.Graphics, buttonArgs);
+
+			if (selectedTag != item)
+			{
+				_buttonActions[buttonArgs] = () => SelectTag(item);
+			}
+
+			tagRect.X += buttonArgs.Rectangle.Width + (BorderRadius / 2);
+			tagRect.Height = buttonArgs.Rectangle.Height;
+		}
+
+		preferredHeight = tagRect.Bottom + (BorderRadius * 3 / 2);
+
+		var packages = GetPackages();
+
+		if (packages.Count == 0)
+		{
+			return;
+		}
+
 		var preferredSize = horizontal ? 350 : 90;
 		var columns = (int)Math.Max(1, Math.Floor((e.ClipRectangle.Width - Margin.Left) / (preferredSize * UI.FontScale)));
 		var columnWidth = (e.ClipRectangle.Width - Margin.Left) / columns;
-		var height = horizontal ? (int)(32 * UI.FontScale) : (columnWidth * 5 / 3);
-		var packages = GetPackages();
+		var height = horizontal ? UI.Scale(32) : (columnWidth * 5 / 3);
 
 		for (var i = 0; i < Math.Min(packages.Count, horizontal ? 8 : (columns < 5 ? (columns * 2) : columns)); i++)
 		{
@@ -72,7 +175,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			}
 			else
 			{
-				e.Graphics.DrawRoundedImage(banner, bannerRect, (int)(5 * UI.FontScale));
+				e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(5));
 			}
 
 			if (HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))
@@ -137,7 +240,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			using var generic = IconManager.GetIcon("Paradox", e.Rects.IconRect.Height).Color(e.BackColor);
 			using var brush = new SolidBrush(FormDesign.Design.IconColor);
 
-			e.Graphics.FillRoundedRectangle(brush, e.Rects.IconRect, (int)(5 * UI.FontScale));
+			e.Graphics.FillRoundedRectangle(brush, e.Rects.IconRect, UI.Scale(5));
 			e.Graphics.DrawImage(generic, e.Rects.IconRect.CenterR(generic.Size));
 		}
 		else if (e.Item.IsLocal())
@@ -154,10 +257,10 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		if (e.HoverState.HasFlag(HoverState.Hovered) && e.Rects.IconRect.Contains(CursorLocation))
 		{
 			using var brush = new SolidBrush(Color.FromArgb(75, 255, 255, 255));
-			e.Graphics.FillRoundedRectangle(brush, e.Rects.IconRect, (int)(5 * UI.FontScale));
+			e.Graphics.FillRoundedRectangle(brush, e.Rects.IconRect, UI.Scale(5));
 		}
 
-		void drawThumbnail(Bitmap generic) => e.Graphics.DrawRoundedImage(generic, e.Rects.IconRect, (int)(5 * UI.FontScale), FormDesign.Design.BackColor);
+		void drawThumbnail(Bitmap generic) => e.Graphics.DrawRoundedImage(generic, e.Rects.IconRect, UI.Scale(5), FormDesign.Design.BackColor);
 	}
 	private void DrawTitleAndTags(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e)
 	{
@@ -277,7 +380,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		var rects = new ItemListControl.Rectangles(item)
 		{
 			IconRect = rectangle.Align(new Size(rectangle.Width, rectangle.Width), ContentAlignment.TopCenter),
-			DotsRect = new Rectangle(rectangle.X, rectangle.Y + rectangle.Width + (Margin.Top / 2), rectangle.Width, 0).Align(UI.Scale(new Size(16, 24), UI.FontScale), ContentAlignment.TopRight)
+			DotsRect = new Rectangle(rectangle.X, rectangle.Y + rectangle.Width + (Margin.Top / 2), rectangle.Width, 0).Align(UI.Scale(new Size(16, 24)), ContentAlignment.TopRight)
 		};
 
 		using var titleFont = UI.Font(10.5F, FontStyle.Bold);

@@ -29,11 +29,16 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <PackageReference Include="Markdig" Version="0.34.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<Reference Include="System.Windows.Forms" />
 		<ProjectReference Include="..\..\Extensions\Extensions\Extensions.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Domain\Skyve.Domain.csproj" />
 		<ProjectReference Include="..\..\Skyve\Skyve.Systems\Skyve.Systems.csproj" />
 		<ProjectReference Include="..\..\SlickControls\SlickControls.csproj" />
+
 		<Reference Include="PDX.SDK">
 			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.dll</HintPath>
 		</Reference>
@@ -46,9 +51,9 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<LocaleJsonToClassExe>$([System.IO.Path]::GetFullPath('..\Extensions\LocaleJsonToClass\LocaleJsonToClass.exe'))</LocaleJsonToClassExe>
-		<LocaleJsonFile>"$([System.IO.Path]::GetFullPath('..\Skyve-CS2\Skyve.Domain.CS2\Properties\LocaleCS2.json'))"</LocaleJsonFile>
-		<LocaleCsFile>"$([System.IO.Path]::GetFullPath('..\Skyve-CS2\Skyve.Domain.CS2\Utilities\LocaleCS2.cs'))"</LocaleCsFile>
+		<LocaleJsonToClassExe>$([System.IO.Path]::GetFullPath('$(SolutionDir)\..\Extensions\LocaleJsonToClass\LocaleJsonToClass.exe'))</LocaleJsonToClassExe>
+		<LocaleJsonFile>"$([System.IO.Path]::GetFullPath('$(SolutionDir)\..\Skyve-CS2\Skyve.Domain.CS2\Properties\LocaleCS2.json'))"</LocaleJsonFile>
+		<LocaleCsFile>"$([System.IO.Path]::GetFullPath('$(SolutionDir)\..\Skyve-CS2\Skyve.Domain.CS2\Utilities\LocaleCS2.cs'))"</LocaleCsFile>
 	</PropertyGroup>
 
 	<Target Name="BuildLocale" BeforeTargets="PreBuildEvent">

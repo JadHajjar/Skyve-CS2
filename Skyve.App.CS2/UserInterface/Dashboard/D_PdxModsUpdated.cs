@@ -6,75 +6,47 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
-internal class D_PdxModsUpdated : D_PdxModsBase
+internal class D_PdxModsUpdated() : D_PdxModsBase(lastTag)
 {
-	private readonly IWorkshopService _workshopService;
 	private static List<IWorkshopInfo> _recentlyUpdatedMods = [];
+	private static string? lastTag;
 	private List<IWorkshopInfo> recentlyUpdatedMods = _recentlyUpdatedMods;
-
-	public D_PdxModsUpdated()
-	{
-		ServiceCenter.Get(out _workshopService);
-	}
 
 	protected override List<IWorkshopInfo> GetPackages()
 	{
 		return [.. recentlyUpdatedMods];
 	}
 
-	protected override void OnCreateControl()
+	protected override async Task<bool> ProcessDataLoad(CancellationToken token)
 	{
-		base.OnCreateControl();
-
-		if (_workshopService.IsAvailable)
-		{
-			LoadData();
-		}
-		else
-		{
-			_workshopService.ContextAvailable += LoadData;
-		}
-	}
-
-	protected override void Dispose(bool disposing)
-	{
-		base.Dispose(disposing);
-
-		_workshopService.ContextAvailable -= LoadData;
-	}
-
-	protected override async Task ProcessDataLoad(CancellationToken token)
-	{
-		var newMods = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, limit: 8)).ToList();
-		var list = (await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, limit: 16))
+		var newMods = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 8)).ToList();
+		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: SelectedTags, limit: 16))
 			.Where(x => !newMods.Any(y => y.Id == x.Id))
 			.Take(8)
 			.ToList();
 
 		if (token.IsCancellationRequested)
 		{
-			return;
+			return false;
 		}
 
 		_recentlyUpdatedMods = recentlyUpdatedMods = list;
+		lastTag = SelectedTags?.FirstOrDefault();
 
 		OnResizeRequested();
-	}
 
-	private void RightClick(IWorkshopInfo package)
-	{
-		SlickToolStrip.Show(App.Program.MainForm, ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(package));
+		return await base.ProcessDataLoad(token);
 	}
 
 	protected override DrawingDelegate GetDrawingMethod(int width)
 	{
-		if (Loading)
-		{
-			return DrawLoading;
-		}
-
 		if (recentlyUpdatedMods.Count == 0)
 		{
+			if (Loading)
+			{
+				return DrawLoading;
+			}
+
 			return DrawNone;
 		}
 
@@ -107,7 +79,14 @@ internal class D_PdxModsUpdated : D_PdxModsBase
 
 	protected override void DrawHeader(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsUpdated, "PDXMods");
+		if (Loading)
+		{
+			DrawLoading(e, applyDrawing, ref preferredHeight);
+		}
+		else
+		{
+			DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.PDXModsUpdated, "PDXMods");
+		}
 	}
 
 	private void DrawSmall(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)

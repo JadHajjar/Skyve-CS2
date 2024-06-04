@@ -17,6 +17,7 @@ public class FolderSettings : ConfigFile, IFolderSettings
 	public GamingPlatform GamingPlatform { get; set; }
 	public Platform Platform { get; set; }
 	public string UserIdentifier { get; set; }
+	public string UserIdType { get; set; }
 
 	public void Save()
 	{

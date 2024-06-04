@@ -28,6 +28,7 @@ internal class D_ContentInfo : IDashboardItem
 		internal int CodeModsTotal;
 		internal int CodeModsEnabled;
 		internal int RecentlyUpdatedCodeMods;
+		internal int OutOfDateMods;
 	}
 
 	public D_ContentInfo()
@@ -55,8 +56,13 @@ internal class D_ContentInfo : IDashboardItem
 		_notifier.PlaysetChanged += LoadData;
 	}
 
-	protected override Task ProcessDataLoad(CancellationToken token)
+	protected override Task<bool> ProcessDataLoad(CancellationToken token)
 	{
+		if (!_notifier.IsContentLoaded)
+		{
+			return Task.FromResult(false);
+		}
+
 		var contentInfo = new ContentInfo();
 
 		foreach (var mod in _packageManager.Packages)
@@ -92,6 +98,15 @@ internal class D_ContentInfo : IDashboardItem
 				if (mod.IsCodeMod)
 				{
 					contentInfo.CodeModsEnabled++;
+				}
+
+				switch (_packageUtil.GetStatus(mod, out _))
+				{
+					case DownloadStatus.OutOfDate:
+						contentInfo.OutOfDateMods++;
+						break;
+					case DownloadStatus.PartiallyDownloaded:
+						break;
 				}
 			}
 			else
@@ -165,28 +180,35 @@ internal class D_ContentInfo : IDashboardItem
 
 		preferredHeight += BorderRadius;
 
+		if (info.OutOfDateMods > 0)
+		{
+			DrawValue(e, textRect, Locale.OutOfDateItem.Format(Locale.Package.Plural.ToLower()), info.OutOfDateMods.ToString(), applyDrawing, ref preferredHeight, "OutOfDate", FormDesign.Design.OrangeColor);
+		}
+
 		if (info.RecentlyUpdated.Count > 0)
 		{
 			preferredHeight += BorderRadius;
 
 			using var font = UI.Font(7.5F);
-			using var valueFont = UI.Font(8.75F,  FontStyle.Bold);
+			using var valueFont = UI.Font(8.75F, FontStyle.Bold);
 			using var icon = IconManager.GetIcon("PDXMods", valueFont.Height * 5 / 4);
 			DrawValue(e, textRect, Locale.RecentlyUpdatedItem.Format(Locale.Package.Plural), info.RecentlyUpdated.Count.ToString(), applyDrawing, ref preferredHeight, "PDXMods", FormDesign.Design.ActiveColor);
-			DrawValue(e, textRect.Pad(icon.Width+BorderRadius/2, 0, 0, 0), Locale.RecentlyUpdatedItem.Format(Locale.CodeMod.Plural), info.RecentlyUpdatedCodeMods.ToString(), applyDrawing, ref preferredHeight);
+			DrawValue(e, textRect.Pad(icon.Width + (BorderRadius / 2), 0, 0, 0), Locale.RecentlyUpdatedItem.Format(Locale.CodeMod.Plural), info.RecentlyUpdatedCodeMods.ToString(), applyDrawing, ref preferredHeight);
 
 			DrawButton(e, applyDrawing, ref preferredHeight, ViewRecentlyUpdated, new ButtonDrawArgs
 			{
 				Icon = "Link",
 				Font = font,
 				ButtonType = ButtonType.Dimmed,
-				Size = new Size(0, (int)(20 * UI.FontScale)),
+				Size = new Size(0, UI.Scale(20)),
 				Text = Locale.ViewRecentlyUpdatedItems.Format(Locale.Package.FormatPlural(info.RecentlyUpdated.Count)),
 				Rectangle = e.ClipRectangle.Pad(BorderRadius)
 			});
 
-			preferredHeight += BorderRadius / 2;
+			preferredHeight -= BorderRadius / 2;
 		}
+
+		preferredHeight += BorderRadius;
 	}
 
 	private void ViewRecentlyUpdated()

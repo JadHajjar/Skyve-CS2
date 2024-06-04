@@ -49,7 +49,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		Status = new SubscriptionStatus(
 			isActive: false,
 			modId: info.Id,
-			progress: 1f,
+			progress: info.Progress,
 			processedBytes: 0,
 			totalSize: 0);
 
@@ -110,8 +110,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		{
 			result = await _workshopService.SubscribeBulk(
 				ids.Distinct(x => x.Id).Select(x => new KeyValuePair<int, string?>((int)x.Id, null)),
-				currentPlayset,
-				!_settings.UserSettings.DisableNewModsByDefault);
+				currentPlayset);
 		}
 
 		foreach (var item in ids)

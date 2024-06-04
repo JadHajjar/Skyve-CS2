@@ -1,7 +1,11 @@
-﻿using Skyve.App.CS2.UserInterface.Forms;
+﻿
+using Skyve.App.CS2.UserInterface.Forms;
 using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Panels;
+using Skyve.Domain.CS2.Utilities;
+
+using System.Windows.Forms;
 
 namespace Skyve.App.CS2.Services;
 internal class InterfaceService : IAppInterfaceService
@@ -54,5 +58,11 @@ internal class InterfaceService : IAppInterfaceService
 	void IInterfaceService.OpenPlaysetPage(IPlayset playset, bool settingsTab)
 	{
 		App.Program.MainForm.PushPanel(new PC_PlaysetPage(playset, settingsTab));
+	}
+
+	bool IInterfaceService.AskForDependencyConfirmation(List<IPackageIdentity> packages, List<IPackageIdentity> dependencies)
+	{
+		return MessagePrompt.Show(LocaleCS2.AddingDependencies.FormatPlural(packages.Count, packages[0].CleanName(true)), LocaleCS2.ModsYouAreAddingRequireDependencies.FormatPlural(dependencies.Count, dependencies.ListStrings(x => x.CleanName(true), ", ")),  PromptButtons.YesNo, PromptIcons.Question, App.Program.MainForm)
+			== DialogResult.Yes;
 	}
 }

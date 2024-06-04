@@ -33,10 +33,10 @@ internal class InfoAndLabelControl : SlickControl
 		}
 		else
 		{
-			Height = (int)(35 * UI.FontScale);
+			Height = UI.Scale(35);
 		}
 
-		Padding = UI.Scale(new Padding(3), UI.FontScale);
+		Padding = UI.Scale(new Padding(3));
 	}
 
 	protected override void OnMouseMove(MouseEventArgs e)

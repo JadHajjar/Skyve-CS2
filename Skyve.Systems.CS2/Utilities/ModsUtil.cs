@@ -2,10 +2,12 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using PDX.SDK.Contracts.Enums.Errors;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 using Skyve.Systems.CS2.Utilities.IO;
@@ -21,8 +23,8 @@ internal class ModsUtil : IModUtil
 {
 	private int currentPlayset;
 	private int currentHistoryIndex;
-	private Dictionary<int, Dictionary<ulong, bool>> modConfig = [];
-	private readonly List<Dictionary<int, Dictionary<ulong, bool>>> _modConfigHistory = [];
+	private ModStateCollection modConfig = new();
+	private readonly List<ModStateCollection> _modConfigHistory = [];
 	private readonly List<ulong> _enabling = [];
 
 	private readonly AssemblyUtil _assemblyUtil;
@@ -34,8 +36,9 @@ internal class ModsUtil : IModUtil
 	private readonly ISettings _settings;
 	private readonly ILogger _logger;
 	private readonly IServiceProvider _serviceProvider;
+	private readonly IInterfaceService _interfaceService;
 
-	public ModsUtil(IWorkshopService workshopService, ISubscriptionsManager subscriptionsManager, IModLogicManager modLogicManager, INotifier notifier, AssemblyUtil assemblyUtil, MacAssemblyUtil macAssemblyUtil, ISettings settings, IServiceProvider serviceProvider, ILogger logger)
+	public ModsUtil(IWorkshopService workshopService, ISubscriptionsManager subscriptionsManager, IModLogicManager modLogicManager, INotifier notifier, AssemblyUtil assemblyUtil, MacAssemblyUtil macAssemblyUtil, ISettings settings, IServiceProvider serviceProvider, ILogger logger, IInterfaceService interfaceService)
 	{
 		_assemblyUtil = assemblyUtil;
 		_workshopService = (WorkshopService)workshopService;
@@ -46,6 +49,7 @@ internal class ModsUtil : IModUtil
 		_settings = settings;
 		_logger = logger;
 		_serviceProvider = serviceProvider;
+		_interfaceService = interfaceService;
 		_notifier.CompatibilityDataLoaded += BuildLoadOrder;
 		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
 		_notifier.WorkshopSyncEnded += async () => await RefreshModConfig();
@@ -67,18 +71,16 @@ internal class ModsUtil : IModUtil
 
 		var mods = await _workshopService.GetLocalPackages();
 
-		var config = new Dictionary<int, Dictionary<ulong, bool>>();
+		var config = new ModStateCollection();
 
 		foreach (var mod in mods)
 		{
 			foreach (var item in mod.Playsets)
 			{
-				if (!config.ContainsKey(item.PlaysetId))
-				{
-					config[item.PlaysetId] = [];
-				}
-
-				config[item.PlaysetId][(ulong)mod.Id] = item.ModIsEnabled;
+				config.SetState(item.PlaysetId
+					, (ulong)mod.Id
+					, item.ModIsEnabled
+					, currentPlayset == item.PlaysetId ? mod.Version : item.Version);
 			}
 		}
 
@@ -93,7 +95,7 @@ internal class ModsUtil : IModUtil
 		}
 
 		var index = 1;
-		var mods = _serviceProvider.GetService<ILoadOrderHelper>()?.GetOrderedMods().Reverse().OfType<IMod>();
+		var mods = _serviceProvider.GetService<ILoadOrderHelper>()?.GetOrderedMods().OfType<IMod>();
 		var orderedMods = new List<ModLoadOrder>();
 		var playset = await _workshopService.GetActivePlaysetId();
 
@@ -132,9 +134,11 @@ internal class ModsUtil : IModUtil
 	public bool IsIncluded(IPackageIdentity mod, int? playsetId = null)
 	{
 		if (mod.Id <= 0)
+		{
 			return IsEnabled(mod);
+		}
 
-return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetId ?? currentPlayset].ContainsKey(mod.Id));
+		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id);
 	}
 
 	public bool IsEnabled(IPackageIdentity mod, int? playsetId = null)
@@ -146,7 +150,7 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
 		}
 
-		return modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetId ?? currentPlayset].TryGet(mod.Id);
+		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id);
 	}
 
 	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null)
@@ -156,8 +160,6 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 
 	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null)
 	{
-		//value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
-
 		if (!_workshopService.IsAvailable)
 		{
 			return;
@@ -172,6 +174,8 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 
 		SaveHistory();
 
+		mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+
 		SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), value);
 
 		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) != value);
@@ -181,18 +185,37 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 			return;
 		}
 
-		if (!modConfig.ContainsKey(playset))
+		if (value && mods is List<IPackageIdentity> modList)
 		{
-			modConfig[playset] = [];
+			switch (_settings.UserSettings.DependencyResolution)
+			{
+				case Skyve.Domain.Enums.DependencyResolveBehavior.Automatic:
+					modList.AddRange(await ResolveDependencies(modList, playsetId));
+					break;
+				case Skyve.Domain.Enums.DependencyResolveBehavior.Ask:
+					var dependencies = await ResolveDependencies(modList, playsetId);
+
+					if (dependencies.Count > 0 && _interfaceService.AskForDependencyConfirmation(modList, dependencies))
+					{
+						modList.AddRange(dependencies);
+					}
+
+					break;
+			}
 		}
 
-		var tempConfig = new Dictionary<ulong, bool>(modConfig[playset]);
+		var tempConfig = modConfig.CreateFragment(playset);
 		var result = value
 			? await _subscriptionsManager.Subscribe(mods, playset)
 			: await _subscriptionsManager.UnSubscribe(mods, playset);
 
 		if (result)
 		{
+			//if (value)
+			//{
+			//	await SetEnabled(mods, !_settings.UserSettings.DisableNewModsByDefault, playsetId);
+			//}
+
 			foreach (var item in mods)
 			{
 				if (item.Id <= 0)
@@ -202,11 +225,11 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 
 				if (value)
 				{
-					modConfig[playset][item.Id] = !_settings.UserSettings.DisableNewModsByDefault;
+					modConfig.SetEnabled(playset, item.Id, !_settings.UserSettings.DisableNewModsByDefault);
 				}
 				else
 				{
-					modConfig[playset].Remove(item.Id);
+					modConfig.Remove(playset, item.Id);
 				}
 			}
 
@@ -229,8 +252,6 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 
 	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null)
 	{
-		//value = (value || _modLogicManager.IsRequired(mod, this)) && !_modLogicManager.IsForbidden(mod);
-
 		if (!_workshopService.IsAvailable)
 		{
 			return;
@@ -245,6 +266,8 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 
 		SaveHistory();
 
+		mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+
 		SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), value);
 
 		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) && IsEnabled(x, playset) != value);
@@ -257,11 +280,6 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 		_enabling.AddRange(mods.Select(x => x.Id).Where(x => x > 0));
 
 		_notifier.OnRefreshUI(true);
-
-		if (!modConfig.ContainsKey(playset))
-		{
-			modConfig[playset] = [];
-		}
 
 		var modKeys = mods.ToList(x => (int)x.Id).DistinctList();
 
@@ -282,7 +300,7 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 					continue;
 				}
 
-				modConfig[playset][item.Id] = value;
+				modConfig.SetEnabled(playset, item.Id, value);
 			}
 
 			SaveHistory();
@@ -333,12 +351,42 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 		}
 	}
 
+	private async Task<List<IPackageIdentity>> ResolveDependencies(List<IPackageIdentity> mods, int? playsetId)
+	{
+		if (mods.Count == 0)
+		{
+			return [];
+		}
+
+		var list = new List<IPackageIdentity>();
+
+		foreach (var mod in mods)
+		{
+			var workshopInfo = await _workshopService.GetInfoAsync(mod);
+
+			if (workshopInfo is not null)
+			{
+				foreach (var item in workshopInfo.Requirements)
+				{
+					if (!item.IsDlc && !mods.Any(x => x.Id == item.Id) && !list.Any(x => x.Id == item.Id) && !IsEnabled(item, playsetId))
+					{
+						list.Add(item);
+					}
+				}
+			}
+		}
+
+		list.AddRange(await ResolveDependencies(list, playsetId));
+
+		return list;
+	}
+
 	public int GetLoadOrder(IPackage package)
 	{
-		if (package.LocalData?.Folder is null)
-		{
-			return 0;
-		}
+		//if (package.LocalData?.Folder is null)
+		//{
+		//	return 0;
+		//}
 
 		//if (modConfig.TryGetValue(package.LocalData.Folder, out var info))
 		//{
@@ -380,38 +428,20 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 
 	private void SaveHistory()
 	{
-		if (modConfig.Count == 0)
+		if (modConfig.IsEmpty)
 		{
 			return;
 		}
 
 		var differentConfig = _modConfigHistory.Count == 0;
-		var config = modConfig.ToDictionary(x => x.Key, x => new Dictionary<ulong, bool>(x.Value));
+		var config = modConfig.Clone();
 
-		if (_modConfigHistory.Count == 0 || AreConfigsDifferent(config, _modConfigHistory[0]))
+		if (_modConfigHistory.Count == 0 || config.Equals(_modConfigHistory[0]))
 		{
 			_modConfigHistory.Insert(0, config);
 
 			currentHistoryIndex = 0;
 		}
-	}
-
-	private bool AreConfigsDifferent(Dictionary<int, Dictionary<ulong, bool>> config1, Dictionary<int, Dictionary<ulong, bool>> config2)
-	{
-		if (!config1.Keys.SequenceEqual(config2.Keys))
-		{
-			return true;
-		}
-
-		foreach (var key in config1.Keys)
-		{
-			if (!config1[key].SequenceEqual(config2[key]))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	public async Task UndoChanges()
@@ -434,9 +464,10 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 		}
 	}
 
-	public async Task ApplyModConfig(Dictionary<int, Dictionary<ulong, bool>> modConfigNew)
+	public async Task ApplyModConfig(ModStateCollection newState)
 	{
-		var modConfigOld = modConfig;
+		var modConfigOld = modConfig.ToDictionary();
+		var modConfigNew = newState.ToDictionary();
 
 		var itemsToExclude = new List<(int, ulong)>();
 		var itemsToInclude = new List<(int, ulong)>();
@@ -453,7 +484,7 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 				{
 					itemsToInclude.Add((key, item.Key));
 
-					if (item.Value)
+					if (item.Value.IsEnabled)
 					{
 						itemsToEnable.Add((key, item.Key));
 					}
@@ -472,7 +503,7 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 				{
 					itemsToInclude.Add((key, item.Key));
 
-					if (item.Value)
+					if (item.Value.IsEnabled)
 					{
 						itemsToEnable.Add((key, item.Key));
 					}
@@ -486,7 +517,7 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 
 				if (enabled != item.Value)
 				{
-					if (item.Value)
+					if (item.Value.IsEnabled)
 					{
 						itemsToEnable.Add((key, item.Key));
 					}
@@ -548,13 +579,51 @@ return (modConfig.ContainsKey(playsetId ?? currentPlayset) && modConfig[playsetI
 			await _workshopService.SetEnableBulk(grp.ToList(x => (int)x.Item2), grp.Key, false);
 		}
 
-		modConfig = modConfigNew.ToDictionary(x => x.Key, x => new Dictionary<ulong, bool>(x.Value));
+		modConfig = newState.Clone();
 
 		_enabling.RemoveRange(itemsToExclude.Select(x => x.Item2));
 		_enabling.RemoveRange(itemsToInclude.Select(x => x.Item2));
 		_enabling.RemoveRange(itemsToDisable.Select(x => x.Item2));
 		_enabling.RemoveRange(itemsToEnable.Select(x => x.Item2));
 
+		_notifier.OnInclusionUpdated();
+		_notifier.OnRefreshUI(true);
+	}
+
+	public string? GetSelectedVersion(IPackageIdentity package, int? playsetId = null)
+	{
+		return modConfig.GetVersion(playsetId ?? currentPlayset, package.Id);
+	}
+
+	public async Task SetVersion(IPackageIdentity package, string version, int? playsetId = null)
+	{
+		if (!_workshopService.IsAvailable)
+		{
+			return;
+		}
+
+		var playset = playsetId ?? currentPlayset;
+
+		if (playset <= 0)
+		{
+			return;
+		}
+
+		await _workshopService.WaitUntilReady();
+
+		var result = await _workshopService.SubscribeBulk([new KeyValuePair<int, string?>((int)package.Id, version)], playset);
+
+		if (result)
+		{
+			modConfig.SetVersion(playset, package.Id, version);
+		}
+
+		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
+		{
+			return;
+		}
+
+		_notifier.OnWorkshopSyncEnded();
 		_notifier.OnInclusionUpdated();
 		_notifier.OnRefreshUI(true);
 	}

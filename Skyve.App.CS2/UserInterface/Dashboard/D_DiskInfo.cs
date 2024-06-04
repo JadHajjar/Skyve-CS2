@@ -65,7 +65,7 @@ internal class D_DiskInfo : IDashboardItem
 		_logger.Exception(ex, "Failed to get Disk Info Summary");
 	}
 
-	protected override async Task ProcessDataLoad(CancellationToken token)
+	protected override Task<bool> ProcessDataLoad(CancellationToken token)
 	{
 		var contentInfo = new ContentInfo();
 		var junctionLocation = JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath);
@@ -79,7 +79,7 @@ internal class D_DiskInfo : IDashboardItem
 
 		if (token.IsCancellationRequested)
 		{
-			return;
+			return Task.FromResult(false);
 		}
 
 		var savesFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves");
@@ -100,19 +100,19 @@ internal class D_DiskInfo : IDashboardItem
 		}
 
 		contentInfo.TotalOtherSize = contentInfo.TotalCitiesSize - contentInfo.TotalSavesSize - contentInfo.TotalSubbedSize;
-		contentInfo.CriticalSpace = contentInfo.AvailableSpace < 5L * 1024L * 1024L * 1024L;
-		contentInfo.LowSpace = contentInfo.AvailableSpace < 15L * 1024L * 1024L * 1024L;
+		contentInfo.CriticalSpace = contentInfo.AvailableSpace < 10L * 1024L * 1024L * 1024L;
+		contentInfo.LowSpace = contentInfo.AvailableSpace < 20L * 1024L * 1024L * 1024L;
 
 		if (token.IsCancellationRequested)
 		{
-			return;
+			return Task.FromResult(false);
 		}
 
 		info = contentInfo;
 
 		OnResizeRequested();
 
-		await Task.CompletedTask;
+		return Task.FromResult(true);
 	}
 
 	protected override DrawingDelegate GetDrawingMethod(int width)
@@ -150,7 +150,7 @@ internal class D_DiskInfo : IDashboardItem
 
 		preferredHeight += BorderRadius;
 
-		var graphSize = Math.Min((e.ClipRectangle.Width / 2) - (Margin.Horizontal * 2), (int)(60 * UI.FontScale));
+		var graphSize = Math.Min((e.ClipRectangle.Width / 2) - (Margin.Horizontal * 2), UI.Scale(60));
 		using var pen = new Pen(FormDesign.Design.AccentColor, graphSize / 5f);
 		using var activePen = new Pen(info.CriticalSpace ? FormDesign.Design.RedColor : info.LowSpace ? FormDesign.Design.OrangeColor : FormDesign.Design.ActiveColor, graphSize / 5f) { StartCap = System.Drawing.Drawing2D.LineCap.Round, EndCap = System.Drawing.Drawing2D.LineCap.Round };
 
@@ -200,7 +200,7 @@ internal class D_DiskInfo : IDashboardItem
 				{
 					Icon = "Cog",
 					Font = font,
-					Size = new Size(0, (int)(20 * UI.FontScale)),
+					Size = new Size(0, UI.Scale(20)),
 					Text = LocaleCS2.ChangeLocation,
 					Rectangle = e.ClipRectangle.Pad(BorderRadius)
 				});
