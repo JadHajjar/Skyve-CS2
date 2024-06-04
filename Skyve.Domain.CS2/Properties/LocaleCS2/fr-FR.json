@@ -45,6 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "Vos identifiants enregistrés n'ont pas pu vous connecter. Cliquez ici pour mettre à jour vos informations.",
   "ParadoxLoginFailedEmpty": "Votre session a probablement expiré. Essayez de lancer le jeu pour vous reconnecter, ou cliquez ici pour vous connecter via Skyve.",
   "DownloadComplete": "Téléchargement terminé",
+  "DownloadFailed": "Download failed",
   "Downloading": "Téléchargement...",
   "ModsDownloadFailed": {
     "One": "Le téléchargement d'un mod a échoué",
@@ -101,5 +102,27 @@
   "LowSpaceCreateJunction": {
     "Zero": "Vous êtes à court d'espace de stockage, vous devez faire de la place ou installer un disque supplémentaire.",
     "One": "Vous êtes à court d'espace de stockage, allez dans les options pour changer l'emplacement du contenu de jeu."
-  }
+  },
+  "ModsYouAreAddingRequireDependencies": {
+    "One": "'{1}' has dependencies",
+    "Plural": "The packages you're adding have dependencies"
+  },
+  "AddingDependencies": {
+    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
+    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+  },
+  "Dependency_Automatic": "Automatically add dependencies",
+  "Dependency_Ask": "Ask every time",
+  "Dependency_None": "Do nothing",
+  "DependencyResolution": "Dependency Resolution",
+  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
+  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
+  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
+  "SyncBeforeLaunching": "Synchronize mods before launching the game",
+  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
+  "Sorting_Best": "Most Popular",
+  "Sorting_Popularity": "Most Subscribed",
+  "Sorting_DateUpdated": "Last Updated",
+  "Sorting_DateCreated": "Most Recent",
+  "Sorting_WorkshopName": "Alphabetical"
 }
