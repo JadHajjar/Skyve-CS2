@@ -45,6 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "使用已保存的用户名/密码登录失败。请点击此处更新您的信息。",
   "ParadoxLoginFailedEmpty": "您的会话可能已过期。请尝试启动游戏并重新登录，或点击此处通过 Skyve 登录。",
   "DownloadComplete": "下载完毕",
+  "DownloadFailed": "Download failed",
   "Downloading": "正在下载...",
   "ModsDownloadFailed": {
     "One": "一个模组下载失败",
@@ -101,5 +102,27 @@
   "LowSpaceCreateJunction": {
     "Zero": "硬盘空间即将用尽，你需要清理一些空间，或者购买一个额外的硬盘。",
     "One": "硬盘空间不足，请前往选项页面更改游戏内容的保存位置。"
-  }
+  },
+  "ModsYouAreAddingRequireDependencies": {
+    "One": "'{1}' has dependencies",
+    "Plural": "The packages you're adding have dependencies"
+  },
+  "AddingDependencies": {
+    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
+    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+  },
+  "Dependency_Automatic": "Automatically add dependencies",
+  "Dependency_Ask": "Ask every time",
+  "Dependency_None": "Do nothing",
+  "DependencyResolution": "Dependency Resolution",
+  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
+  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
+  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
+  "SyncBeforeLaunching": "Synchronize mods before launching the game",
+  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
+  "Sorting_Best": "Most Popular",
+  "Sorting_Popularity": "Most Subscribed",
+  "Sorting_DateUpdated": "Last Updated",
+  "Sorting_DateCreated": "Most Recent",
+  "Sorting_WorkshopName": "Alphabetical"
 }

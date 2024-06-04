@@ -45,6 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "Não foi possível acessar seu usuário/senha salvos. Clique aqui para atualizar seus dados.",
   "ParadoxLoginFailedEmpty": "A sua sessão provavelmente expirou. Tente iniciar o jogo para entrar novamente, ou clique aqui para entrar pelo Skyve.",
   "DownloadComplete": "Baixado com sucesso",
+  "DownloadFailed": "Download failed",
   "Downloading": "Baixando...",
   "ModsDownloadFailed": {
     "One": "Não foi possível baixar um Mod",
@@ -101,5 +102,27 @@
   "LowSpaceCreateJunction": {
     "Zero": "Você está ficando sem espaço em disco, precisa liberar espaço em disco ou mudar o local de salvamento.",
     "One": "Você está ficando sem espaço em disco, vá para as opções para alterar o local onde o conteúdo do jogo é salvo."
-  }
+  },
+  "ModsYouAreAddingRequireDependencies": {
+    "One": "'{1}' has dependencies",
+    "Plural": "The packages you're adding have dependencies"
+  },
+  "AddingDependencies": {
+    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
+    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+  },
+  "Dependency_Automatic": "Automatically add dependencies",
+  "Dependency_Ask": "Ask every time",
+  "Dependency_None": "Do nothing",
+  "DependencyResolution": "Dependency Resolution",
+  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
+  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
+  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
+  "SyncBeforeLaunching": "Synchronize mods before launching the game",
+  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
+  "Sorting_Best": "Most Popular",
+  "Sorting_Popularity": "Most Subscribed",
+  "Sorting_DateUpdated": "Last Updated",
+  "Sorting_DateCreated": "Most Recent",
+  "Sorting_WorkshopName": "Alphabetical"
 }
