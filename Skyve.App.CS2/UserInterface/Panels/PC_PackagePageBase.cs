@@ -5,7 +5,6 @@ using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
-using Skyve.Domain;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
@@ -63,9 +62,9 @@ public partial class PC_PackagePageBase : PanelContent
 	private async void DD_Version_SelectedItemChanged(object sender, EventArgs e)
 	{
 		var currentVersion = _packageUtil.GetSelectedVersion(Package);
-		var selectedVersion = DD_Version.SelectedItem?.VersionId;
+		var selectedVersion = DD_Version.SelectedItem == DD_Version.Items.FirstOrDefault() ? null : DD_Version.SelectedItem?.VersionId;
 
-		if (currentVersion != selectedVersion && !string.IsNullOrEmpty(selectedVersion))
+		if (currentVersion != selectedVersion)
 		{
 			DD_Version.Loading = true;
 			await _packageUtil.SetVersion(Package, selectedVersion!);

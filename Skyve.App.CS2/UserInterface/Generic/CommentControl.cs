@@ -374,7 +374,7 @@ public partial class CommentControl : SlickControl
 			}
 
 			location.Y -= 6 * (float)UI.FontScale;
-			DrawQuote(UI.Scale(46));
+			DrawQuote(UI.Scale(48));
 			location.Y += 6 * (float)UI.FontScale;
 
 			var userImage = ServiceCenter.Get<IWorkshopService>().GetUser(ServiceCenter.Get<IUserService>().TryGetUser(value.Options["Sender"].ToString()))?.GetThumbnail();

@@ -73,13 +73,20 @@ public partial class PC_Utilities : PanelContent
 		{
 			item.Margin = UI.Scale(new Padding(5));
 		}
+
+		slickScroll1.Reset();
 	}
 
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
 
-		foreach (Control item in TLP_Main.Controls)
+		foreach (Control item in panel1.Controls)
+		{
+			item.BackColor = design.BackColor;
+		}
+
+		foreach (Control item in panel2.Controls)
 		{
 			item.BackColor = design.BackColor;
 		}
