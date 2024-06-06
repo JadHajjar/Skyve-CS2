@@ -9,7 +9,7 @@
   "ExcludeAllDisabledFiltered": "Remove filtered & disabled items from your active playset",
   "IncludeAllFiltered": "Add filtered items to your active playset",
   "ExcludeAllSelected": "선택 항목을 현재 PLAYSET에 제거",
-  "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
+  "ExcludeAllDisabledSelected": "비활성 및 선택된 항목을 현재 PLAYSET에서 제거",
   "IncludeAllSelected": "선택 항목을 현재 PLAYSET에 추가",
   "ViewOnWorkshop": "View on PDX Mods",
   "CopyWorkshopLink": {
@@ -75,8 +75,8 @@
   "InvalidFolderSettings": "Invalid setup detected",
   "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
   "InvalidFolderSettingsFail": "선택된 경로는 올바르지 않습니다. AppData의 'Cities Skylines II' 폴더를 선택하십시오.",
-  "DefaultLocation": "Default User Data Location",
-  "JunctionTitle": "Custom Content Location",
+  "DefaultLocation": "기본 사용자 데이터 위치",
+  "JunctionTitle": "커스텀 콘텐츠 위치",
   "JunctionDescription": "Change the location where the game stores its content. This includes any mods, assets, and settings.\r\n\r\nSkyve will create a link between your desired location and the default app data folder in this process.",
   "CurrentStatus": "현재 상태:",
   "ChangeLocation": "콘텐츠 위치 변경",
@@ -112,7 +112,7 @@
     "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
   },
   "Dependency_Automatic": "Automatically add dependencies",
-  "Dependency_Ask": "Ask every time",
+  "Dependency_Ask": "매번 묻기",
   "Dependency_None": "Do nothing",
   "DependencyResolution": "Dependency Resolution",
   "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
@@ -120,9 +120,9 @@
   "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
   "SyncBeforeLaunching": "Synchronize mods before launching the game",
   "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
-  "Sorting_Best": "Most Popular",
-  "Sorting_Popularity": "Most Subscribed",
+  "Sorting_Best": "인기순",
+  "Sorting_Popularity": "구독순",
   "Sorting_DateUpdated": "Last Updated",
   "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "Sorting_WorkshopName": "로마자순"
 }
