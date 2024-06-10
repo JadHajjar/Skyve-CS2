@@ -45,7 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "Zła nazwa użytkownika lub hasło. Kliknij tutaj, aby zaktualizować podane informacje.",
   "ParadoxLoginFailedEmpty": "Twoja sesja prawdopodobnie wygasła. Spróbuj uruchomić grę, aby zalogować się ponownie, lub kliknij tutaj, aby zalogować się przez Skyve.",
   "DownloadComplete": "Pobieranie ukończone",
-  "DownloadFailed": "Download failed",
+  "DownloadFailed": "Pobieranie nieudane",
   "Downloading": "Pobieranie...",
   "ModsDownloadFailed": {
     "One": "Nie udało się pobrać moda",
@@ -104,25 +104,25 @@
     "One": "Kończy Ci się miejsce na dysku, przejdź do opcji, aby zmienić lokalizację, w której zapisywana jest zawartość gry."
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "'{1}' has dependencies",
-    "Plural": "The packages you're adding have dependencies"
+    "One": "'{1}' posiada zależności",
+    "Plural": "Pakiety, które dodajesz posiadają zależności"
   },
   "AddingDependencies": {
-    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
-    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+    "One": "'{1}' jest wymagane dla mod(-a)(-ów), któr(-y)(-e) dodajesz.\n\nCzy chcesz dodać '{1}' do swojego zestawu?",
+    "Plural": "Mod(-y), któr(-y)(-e) dodajesz ma {0} zależności: {1}\n\nCzy chcesz dodać zależności do swojego zestawu?"
   },
-  "Dependency_Automatic": "Automatically add dependencies",
-  "Dependency_Ask": "Ask every time",
-  "Dependency_None": "Do nothing",
-  "DependencyResolution": "Dependency Resolution",
-  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
-  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
-  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
-  "SyncBeforeLaunching": "Synchronize mods before launching the game",
-  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
-  "Sorting_Best": "Most Popular",
-  "Sorting_Popularity": "Most Subscribed",
-  "Sorting_DateUpdated": "Last Updated",
-  "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "Dependency_Automatic": "Automatycznie dodawaj zależności",
+  "Dependency_Ask": "Zawsze pytaj",
+  "Dependency_None": "Nic nie rób",
+  "DependencyResolution": "Rozwiązanie zależności",
+  "DependencyResolution_Tip": "Wybierz, co się stanie, gdy dodasz moda z zależnościami, których nie posiadasz.",
+  "SyncOngoingLaunchGame": "Skyve nadal synchronizuje twoje mody, czy chcesz uruchomić grę, gdy mody będą gotowe?\nWybierz 'Nie', aby mimo to rozpocząć grę.",
+  "StartingWithNoPlayset": "Zamierzasz uruchomić grę bez aktywnego zestawu.\nOznacza to, że żadne mody nie będą włączone w grze.",
+  "SyncBeforeLaunching": "Zsynchronizuj mody przed uruchomieniem gry",
+  "SyncBeforeLaunching_Tip": "Uruchamia synchronizację modów przed uruchomieniem, aby upewnić się, że wszystkie mody są aktualne.",
+  "Sorting_Best": "Najpopularniejsze",
+  "Sorting_Popularity": "Najczęściej subskrybowane",
+  "Sorting_DateUpdated": "Ostatnia aktualizacja",
+  "Sorting_DateCreated": "Najnowsze",
+  "Sorting_WorkshopName": "Alfabetycznie"
 }
