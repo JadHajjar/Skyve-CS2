@@ -45,7 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "A mentett felhasználónév/jelszó nem jó a bejelentkezéshez. Kattints ide az adatok frissítéséhez.",
   "ParadoxLoginFailedEmpty": "A munkamenet valószínűleg lejárt. Próbáld meg elindítani a játékot az újbóli bejelentkezéshez, vagy kattints ide a Skyve-on keresztüli bejelentkezéshez.",
   "DownloadComplete": "A letöltés befejeződött",
-  "DownloadFailed": "Download failed",
+  "DownloadFailed": "Letöltés sikertelen",
   "Downloading": "Letöltés...",
   "ModsDownloadFailed": {
     "One": "Nem sikerült letölteni egy modot",
@@ -104,7 +104,7 @@
     "One": "Hamarosan elfogy a lemezterület, lépj a beállításokhoz a játék tartalmának mentési helyének módosításához."
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "'{1}' has dependencies",
+    "One": "'{1}' függőségeket tartalmaz",
     "Plural": "The packages you're adding have dependencies"
   },
   "AddingDependencies": {
