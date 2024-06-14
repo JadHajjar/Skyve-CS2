@@ -16,14 +16,14 @@ public partial class PC_Utilities : PanelContent
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly INotifier _notifier;
 	private readonly ILocationService _locationManager;
-	private readonly IPackageManager _contentManager;
+	private readonly IPackageManager _packageManager;
 	private readonly IPackageUtil _packageUtil;
 	private readonly IWorkshopService _workshopService;
 	private readonly IDownloadService _downloadService;
 
 	public PC_Utilities()
 	{
-		ServiceCenter.Get(out _settings, out _citiesManager, out _subscriptionsManager, out _notifier, out _locationManager, out _packageUtil, out _contentManager, out _workshopService, out _downloadService);
+		ServiceCenter.Get(out _settings, out _citiesManager, out _subscriptionsManager, out _notifier, out _locationManager, out _packageUtil, out _packageManager, out _workshopService, out _downloadService);
 
 		InitializeComponent();
 
@@ -35,12 +35,17 @@ public partial class PC_Utilities : PanelContent
 
 	private void Notifier_WorkshopSync()
 	{
+		var outOfDatePackages = _packageManager.Packages.AllWhere(x => _packageUtil.IsIncluded(x) && _packageUtil.GetStatus(x, out _) == DownloadStatus.OutOfDate);
+
 		this.TryInvoke(() =>
 		{
 			var ready = _workshopService.IsReady && !_notifier.IsWorkshopSyncInProgress;
 			B_RunSync.Enabled = ready;
 			L_SyncStatus.Text = ready ? Locale.Ready : LocaleCS2.SyncOngoing;
 			L_SyncStatus.ForeColor = (ready ? FormDesign.Design.GreenColor : FormDesign.Design.OrangeColor).MergeColor(FormDesign.Design.ForeColor, 75);
+
+			outOfDatePackagesControl1.SetPackages(outOfDatePackages);
+			P_Issues.Visible = outOfDatePackages.Count() > 0;
 		});
 	}
 
@@ -63,7 +68,7 @@ public partial class PC_Utilities : PanelContent
 
 		B_Troubleshoot.Margin = B_RunSync.Margin = P_Sync.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10));
 		B_ImportClipboard.Margin = UI.Scale(new Padding(10));
-		L_Troubleshoot.Font=L_PdxSyncInfo.Font=L_SyncStatus.Font = UI.Font(9F);
+		L_Troubleshoot.Font = L_PdxSyncInfo.Font = L_SyncStatus.Font = UI.Font(9F);
 		L_SyncStatusLabel.Font = UI.Font(9F, FontStyle.Bold);
 		L_Troubleshoot.Margin = UI.Scale(new Padding(3));
 		L_PdxSyncInfo.Margin = L_SyncStatus.Margin = UI.Scale(new Padding(3, 3, 3, 10));
@@ -210,7 +215,8 @@ public partial class PC_Utilities : PanelContent
 
 	private async void B_Troubleshoot_Click(object sender, EventArgs e)
 	{
-		ShowPrompt("Coming soon...", icon: PromptIcons.Info);return;
+		ShowPrompt("Coming soon...", icon: PromptIcons.Info);
+		return;
 		var sys = ServiceCenter.Get<ITroubleshootSystem>();
 
 		if (sys.IsInProgress)
@@ -234,6 +240,13 @@ public partial class PC_Utilities : PanelContent
 	}
 
 	private async void B_RunSync_Click(object sender, EventArgs e)
+	{
+		B_RunSync.Loading = true;
+		await _workshopService.RunSync();
+		B_RunSync.Loading = false;
+	}
+
+	private async void B_FixAllIssues_Click(object sender, EventArgs e)
 	{
 		B_RunSync.Loading = true;
 		await _workshopService.RunSync();

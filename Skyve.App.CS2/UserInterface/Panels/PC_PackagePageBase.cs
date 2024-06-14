@@ -62,12 +62,11 @@ public partial class PC_PackagePageBase : PanelContent
 	private async void DD_Version_SelectedItemChanged(object sender, EventArgs e)
 	{
 		var currentVersion = _packageUtil.GetSelectedVersion(Package);
-		var selectedVersion = DD_Version.SelectedItem == DD_Version.Items.FirstOrDefault() ? null : DD_Version.SelectedItem?.VersionId;
 
-		if (currentVersion != selectedVersion)
+		if (currentVersion != DD_Version.SelectedItem?.VersionId)
 		{
 			DD_Version.Loading = true;
-			await _packageUtil.SetVersion(Package, selectedVersion!);
+			await _packageUtil.SetVersion(Package, DD_Version.SelectedItem == DD_Version.Items.FirstOrDefault() ? null : DD_Version.SelectedItem?.VersionId);
 			await Task.Delay(1000);
 			DD_Version.Loading = false;
 		}
