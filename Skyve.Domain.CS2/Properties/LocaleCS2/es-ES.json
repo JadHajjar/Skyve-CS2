@@ -45,7 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "No se pudo iniciar sesión con tu nombre de usuario/contraseña guardados. Haz clic aquí para actualizar tu información.",
   "ParadoxLoginFailedEmpty": "Es probable que tu sesión haya expirado. Intenta iniciar el juego para iniciar sesión de nuevo, o haz clic aquí para iniciar sesión a través de Skyve.",
   "DownloadComplete": "Descarga finalizada",
-  "DownloadFailed": "Download failed",
+  "DownloadFailed": "Descarga fallida",
   "Downloading": "Descargando...",
   "ModsDownloadFailed": {
     "One": "Error al descargar un mod",
@@ -104,12 +104,12 @@
     "One": "Se está quedando sin espacio en disco, vaya a las opciones para cambiar la ubicación donde se guarda el contenido del juego."
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "'{1}' has dependencies",
-    "Plural": "The packages you're adding have dependencies"
+    "One": "'{1}' tiene dependencias",
+    "Plural": "Los paquetes que estás añadiendo tienen dependencias"
   },
   "AddingDependencies": {
-    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
-    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+    "One": "'{1}' es necesario para el/los mod(s) que agregas.\n\n¿Te gustaría añadir también '{1}' a tu playset?",
+    "Plural": "Los mod(s) que agregas tienen {0} dependencias: {1}\n\n¿Quieres añadirlas también a tu playset?"
   },
   "Dependency_Automatic": "Automatically add dependencies",
   "Dependency_Ask": "Ask every time",
@@ -117,12 +117,12 @@
   "DependencyResolution": "Dependency Resolution",
   "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
   "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
-  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
+  "StartingWithNoPlayset": "Estás a punto de iniciar el juego sin un playset activo.\nEsto significa que no se habilitarán mods en el juego.",
   "SyncBeforeLaunching": "Synchronize mods before launching the game",
   "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
   "Sorting_Best": "Most Popular",
   "Sorting_Popularity": "Most Subscribed",
   "Sorting_DateUpdated": "Last Updated",
-  "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "Sorting_DateCreated": "Más recientes",
+  "Sorting_WorkshopName": "Alfabéticamente"
 }
