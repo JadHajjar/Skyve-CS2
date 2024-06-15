@@ -105,24 +105,24 @@
   },
   "ModsYouAreAddingRequireDependencies": {
     "One": "'{1}' függőségeket tartalmaz",
-    "Plural": "The packages you're adding have dependencies"
+    "Plural": "A hozzáadott csomagok függőséggel rendelkeznek"
   },
   "AddingDependencies": {
-    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
-    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+    "One": "A hozzáadni kívánt mod(ok)hoz '{1}' szükséges.\n\nSzeretné hozzáadni a(z) '{1}' elemet is a játékkészletéhez?",
+    "Plural": "A hozzáadni kívánt mod(ok)nak {0} függősége van: {1}\n\nSzeretnéd hozzáadni őket a játékkészletedhez?"
   },
-  "Dependency_Automatic": "Automatically add dependencies",
-  "Dependency_Ask": "Ask every time",
-  "Dependency_None": "Do nothing",
-  "DependencyResolution": "Dependency Resolution",
-  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
-  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
-  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
-  "SyncBeforeLaunching": "Synchronize mods before launching the game",
-  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
-  "Sorting_Best": "Most Popular",
-  "Sorting_Popularity": "Most Subscribed",
-  "Sorting_DateUpdated": "Last Updated",
-  "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "Dependency_Automatic": "Függőségek automatikus hozzáadása",
+  "Dependency_Ask": "Mindig kérdezzen rá",
+  "Dependency_None": "Nincs művelet",
+  "DependencyResolution": "Függőség felbontása",
+  "DependencyResolution_Tip": "Válassza ki, hogy mi történjen, ha olyan modot ad hozzá, amelynek függőségei nem állnak rendelkezésre.",
+  "SyncOngoingLaunchGame": "A Skyve még mindig szinkronizálja a modjaidat, szeretnéd elindítani a játékot, ha a modjaid készen állnak?\nA játék indításához válasszad a „Nem” lehetőséget.",
+  "StartingWithNoPlayset": "Aktív játékkészlet nélkül indítod el a játékot.\nEz azt jelenti, hogy semmilyen mod nem lesz engedélyezve a játékban.",
+  "SyncBeforeLaunching": "A játék indítása előtt szinkronizálja a modokat",
+  "SyncBeforeLaunching_Tip": "Indítás előtt lefuttat egy mod-szinkronizálást, hogy megbizonyosodjon arról, hogy minden mod naprakész.",
+  "Sorting_Best": "Legnépszerűbb",
+  "Sorting_Popularity": "Legtöbb feliratkozó",
+  "Sorting_DateUpdated": "Utolsó frissítés",
+  "Sorting_DateCreated": "Legutóbbi",
+  "Sorting_WorkshopName": "ABC sorrend"
 }
