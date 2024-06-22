@@ -2,18 +2,18 @@
   "StartCities": "Begin Cities: Skylines",
   "StopCities": "Stop Cities: Skylines",
   "NoWorkshop": "Geen workshoppakketten",
-  "ExcludeAll": "Remove all items from your active playset",
-  "ExcludeAllDisabled": "Remove all disabled items from your active playset",
-  "IncludeAll": "Add all items to your active playset",
-  "ExcludeAllFiltered": "Remove filtered items from your active playset",
-  "ExcludeAllDisabledFiltered": "Remove filtered & disabled items from your active playset",
-  "IncludeAllFiltered": "Add filtered items to your active playset",
-  "ExcludeAllSelected": "Remove selected items from your active playset",
-  "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
-  "IncludeAllSelected": "Add selected items to your active playset",
-  "ViewOnWorkshop": "View on PDX Mods",
+  "ExcludeAll": "Verwijder alle items van je actieve playset",
+  "ExcludeAllDisabled": "Verwijder alle uitgeschakelde items van je actieve playset",
+  "IncludeAll": "Voeg alle items toe aan je actieve playset",
+  "ExcludeAllFiltered": "Verwijder gefilterde items van je actieve playset",
+  "ExcludeAllDisabledFiltered": "Verwijder gefilterde en uitgeschakelde items van je actieve playset",
+  "IncludeAllFiltered": "Voeg gefilterde items toe aan je actieve playset",
+  "ExcludeAllSelected": "Verwijder geselecteerde items uit je actieve playset",
+  "ExcludeAllDisabledSelected": "Verwijder geselecteerde en uitgeschakelde items van je actieve playset",
+  "IncludeAllSelected": "Voeg geselecteerde items toe aan je actieve playset",
+  "ViewOnWorkshop": "Bekijk op PDX Mods",
   "CopyWorkshopLink": {
-    "One": "Copy PDX Mods link",
+    "One": "PDX Mods link kopiëren",
     "Plural": "Copy the selected packages' PDX Mods links"
   },
   "CopyWorkshopId": {
@@ -123,6 +123,6 @@
   "Sorting_Best": "Most Popular",
   "Sorting_Popularity": "Most Subscribed",
   "Sorting_DateUpdated": "Last Updated",
-  "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "Sorting_DateCreated": "Meest Recent",
+  "Sorting_WorkshopName": "Alfabetisch"
 }
