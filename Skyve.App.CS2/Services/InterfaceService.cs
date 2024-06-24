@@ -47,7 +47,7 @@ internal class InterfaceService : IAppInterfaceService
 
 	void IInterfaceService.OpenPackagePage(IPackageIdentity package, bool openCompatibilityPage)
 	{
-		App.Program.MainForm.PushPanel(new PC_PackagePage(package, openCompatibilityPage));
+		App.Program.MainForm.TryInvoke(() => App.Program.MainForm.PushPanel(new PC_PackagePage(package, openCompatibilityPage)));
 	}
 
 	PanelContent IAppInterfaceService.RequestReviewPanel(IPackageIdentity package)
@@ -57,12 +57,30 @@ internal class InterfaceService : IAppInterfaceService
 
 	void IInterfaceService.OpenPlaysetPage(IPlayset playset, bool settingsTab)
 	{
-		App.Program.MainForm.PushPanel(new PC_PlaysetPage(playset, settingsTab));
+		App.Program.MainForm.TryInvoke(() => App.Program.MainForm.PushPanel(new PC_PlaysetPage(playset, settingsTab)));
 	}
 
 	bool IInterfaceService.AskForDependencyConfirmation(List<IPackageIdentity> packages, List<IPackageIdentity> dependencies)
 	{
-		return MessagePrompt.Show(LocaleCS2.AddingDependencies.FormatPlural(packages.Count, packages[0].CleanName(true)), LocaleCS2.ModsYouAreAddingRequireDependencies.FormatPlural(dependencies.Count, dependencies.ListStrings(x => x.CleanName(true), ", ")),  PromptButtons.YesNo, PromptIcons.Question, App.Program.MainForm)
-			== DialogResult.Yes;
+		return DialogResult.Yes == MessagePrompt.Show(LocaleCS2.AddingDependencies.FormatPlural(packages.Count, packages[0].CleanName(true)), LocaleCS2.ModsYouAreAddingRequireDependencies.FormatPlural(dependencies.Count, dependencies.ListStrings(x => x.CleanName(true), ", ")), PromptButtons.YesNo, PromptIcons.Question, App.Program.MainForm);
+	}
+
+	void IInterfaceService.OpenLogReport(bool save)
+	{
+		App.Program.MainForm.TryInvoke(() =>
+		{
+			var panel = new PC_HelpAndLogs();
+
+			App.Program.MainForm.PushPanel(panel);
+
+			if (save)
+			{
+				panel.B_SaveZip_Click(panel, EventArgs.Empty);
+			}
+			else
+			{
+				panel.B_CopyZip_Click(panel, EventArgs.Empty);
+			}
+		});
 	}
 }

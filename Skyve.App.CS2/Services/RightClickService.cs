@@ -74,6 +74,7 @@ internal class RightClickService : IRightClickService
 				SubItems = [
 					new(Locale.CopyPackageName.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(x => x.CleanName(true), CrossIO.NewLine))),
 					new(Locale.CopyWorkshopLink.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(x => x.Url, CrossIO.NewLine))),
+					new(Locale.CopyWorkshopMarkdownLink.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(x => $"[{x.CleanName(true)}]({x.Url})", CrossIO.NewLine))),
 					new(Locale.CopyWorkshopId.FormatPlural(list.Count), () => Clipboard.SetText(list.ListStrings(x => x.Id.ToString(), CrossIO.NewLine)))
 				]
 			},

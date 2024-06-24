@@ -10,11 +10,12 @@ internal class OutOfDatePackagesControl : SlickControl
 	public void SetPackages(List<IPackage> value)
 	{
 		packages = value;
+		Invalidate();
 	}
 
 	public OutOfDatePackagesControl()
 	{
-		//AutoInvalidate = false;
+		AutoInvalidate = false;
 	}
 
 	protected override void OnPaint(PaintEventArgs e)
@@ -56,6 +57,7 @@ internal class OutOfDatePackagesControl : SlickControl
 		using var brush = new SolidBrush(ForeColor);
 		var rect = Rectangle.FromLTRB(0, imageRect.Bottom + UI.Scale(3), Width, 9999).Pad(UI.Scale(3));
 		var text = packages.Count == 1 ? Locale.PackageIsOutOfDateVersion.Format(packages[0].CleanName()) : string.Format(Locale.PackageIsOutOfDateVersion.Plural, packages.Count.ToString(), Locale.Package.Plural);
+		
 		e.Graphics.DrawString(text, base.Font, brush, rect);
 
 		Height = rect.Y + (int)e.Graphics.Measure(text, Font, rect.Width).Height + UI.Scale(3);

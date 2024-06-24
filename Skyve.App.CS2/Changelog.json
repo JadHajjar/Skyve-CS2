@@ -2,6 +2,35 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.5",
+    "Date": "2024-06-04",
+    "ChangeGroups": [
+      {
+        "Name": "New Additions",
+        "Changes": [
+          "Added a new section in the Utilities tab that shows mods with issues, for example 'Out of date' mods. This section comes with a one-click button to fix all issues instantly.",
+          "Added 'Copy PDX Mods link as Markdown' to the copy section when right-clicking on a mod.",
+          "Added a more specific error message when launching Skyve with an incomplete configuration, letting users know they need to launch the game to complete the setup.",
+          "Added custom protocols that can be access to open pages in Skyve, as well as running specific actions using web URLs. For example:\r\n• skyve-mod.com/app/mods/75804\r\n• skyve-mod.com/app/logreport/save",
+        ]
+      },
+      {
+        "Name": "Changes & Fixes",
+        "Changes": [
+          "Improved the single instance system, where launching Skyve will show up the already-running instance if available.",
+          "Log Report's Mod List now includes the mod's version.",
+          "Skyve version is now always automatically set to the latest version to keep users up to date.",
+          "Applied author colors to the dashboard mod sections.",
+          "Fixed the mod version not correctly updating after changing it.",
+          "Fixed compatibility report list showing mods that are not enabled.",
+          "Fixed image cache clearing going to the recycle bin instead of permanently getting deleted."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.4",
     "Date": "2024-06-04",
     "Tagline": "Author & Account Update",

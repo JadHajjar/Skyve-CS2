@@ -11,6 +11,8 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
+using static System.Environment;
+
 namespace Skyve.Systems.CS2.Services;
 internal class LocationService : ILocationService
 {
@@ -69,7 +71,14 @@ internal class LocationService : ILocationService
 
 		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
 		{
-			notificationsService.SendNotification(new InvalidFolderSettingsNotification());
+			if (Directory.Exists(Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II")))
+			{
+				notificationsService.SendNotification(new SkyveNotSetupNotification());
+			}
+			else
+			{
+				notificationsService.SendNotification(new InvalidFolderSettingsNotification());
+			}
 		}
 	}
 

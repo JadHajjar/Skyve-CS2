@@ -58,12 +58,16 @@ public partial class CommentsSectionControl : SlickControl
 			return;
 		}
 
-		PanelContent.GetParentPanel(this).StartLoader();
-		isLoading = true;
-		modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package, page);
-		noMorePages = !(modCommentsInfo?.HasMore ?? false);
+		try
+		{
+			App.Program.MainForm.CurrentPanel.StartLoader();
+			isLoading = true;
+			modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package, page);
+			noMorePages = !(modCommentsInfo?.HasMore ?? false);
+			App.Program.MainForm.CurrentPanel.StopLoader();
+		}
+		catch { }
 
-		PanelContent.GetParentPanel(this).StopLoader();
 		this.TryInvoke(() => TLP_SendMessage.Visible = modCommentsInfo?.CanPost ?? false);
 
 		if ((modCommentsInfo?.Posts) != null)

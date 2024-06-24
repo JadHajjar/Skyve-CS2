@@ -48,6 +48,7 @@ internal class LogUtil : ILogUtil
 	}
 
 	public string GameLogFile => CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Player.log");
+	public string PreviousGameLogFile => CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Player-prev.log");
 
 	public string GameDataPath => CrossIO.CurrentPlatform switch
 	{
@@ -123,6 +124,13 @@ internal class LogUtil : ILogUtil
 			mainLogDate = DateTime.Now;
 		}
 
+		if (CrossIO.FileExists(PreviousGameLogFile)) 
+		{
+			var tempLogFile = CrossIO.GetTempFileName();
+			CrossIO.CopyFile(PreviousGameLogFile, tempLogFile, true);
+			CreateEntry(zipArchive, "Log_Previous.log", File.ReadAllText(tempLogFile));
+		}
+
 		if (CrossIO.FileExists(_logger.LogFilePath))
 		{
 			CreateFileEntry(zipArchive, "Skyve\\SkyveLog.log", _logger.LogFilePath);
@@ -133,7 +141,7 @@ internal class LogUtil : ILogUtil
 			CreateFileEntry(zipArchive, "Skyve\\SkyveLog_Previous.log", _logger.PreviousLogFilePath);
 		}
 
-		CreateEntry(zipArchive, "Mods List.txt", _packageManager.Packages.Where(x => _packageUtil.IsIncludedAndEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name}" : $"{x.Id}: {x.Name}", CrossIO.NewLine));
+		CreateEntry(zipArchive, "Mods List.txt", _packageManager.Packages.Where(x => _packageUtil.IsIncludedAndEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name} {x.Version}" : $"{x.Id}: {x.Name} {x.Version}", CrossIO.NewLine));
 
 		AddCompatibilityReport(zipArchive);
 	}
@@ -212,7 +220,7 @@ internal class LogUtil : ILogUtil
 		var traces = new List<ILogTrace>();
 		LogTrace? currentTrace = null;
 
-		if (!originalFile.EndsWith("Player.log"))
+		if (!originalFile.EndsWith("Player.log") && !originalFile.EndsWith("Player-prev.log"))
 		{
 			for (var i = 0; i < lines.Length; i++)
 			{

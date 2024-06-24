@@ -2,7 +2,6 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-using PDX.SDK.Contracts.Enums.Errors;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain;
@@ -616,6 +615,23 @@ internal class ModsUtil : IModUtil
 		if (result)
 		{
 			modConfig.SetVersion(playset, package.Id, version);
+
+			var mod = (await _workshopService.GetLocalPackages()).FirstOrDefault(x => (ulong)x.Id == package.Id);
+
+			if (mod != null)
+			{
+				var playsetInMod = mod.Playsets.FirstOrDefault(x => x.PlaysetId == playset);
+
+				if (playsetInMod != null)
+				{
+					playsetInMod.Version = version ?? mod.LatestVersion;
+				}
+
+				if (currentPlayset == playset)
+				{
+					mod.Version = version ?? mod.LatestVersion;
+				}
+			}
 		}
 
 		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)

@@ -42,6 +42,7 @@ public static class Startup
 		services.AddTransient<IVersionUpdateService, VersionUpdateService>();
 		services.AddTransient<ILogUtil, LogUtil>();
 		services.AddTransient<ICentralManager, CentralManager>();
+		services.AddTransient<NamedPipelineUtil>();
 		services.AddTransient<AssemblyUtil>();
 		services.AddTransient<MacAssemblyUtil>();
 

@@ -29,6 +29,8 @@ namespace Skyve.Mod.CS2
 			if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
 			{
 				ModPath = Path.GetDirectoryName(asset.path);
+
+				Log.Info(ModPath);
 			}
 
 			updateSystem.UpdateAt<InstallSkyveUISystem>(SystemUpdatePhase.UIUpdate);
@@ -99,6 +101,10 @@ namespace Skyve.Mod.CS2
 			try
 			{
 				var isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+			
+				Log.Info(nameof(isAdmin) + " " + isAdmin);
+
+				Log.Info("Starting \"" + Path.Combine(ModPath, "Skyve Setup.exe")+"\"");
 
 				Process.Start(new ProcessStartInfo(Path.Combine(ModPath, "Skyve Setup.exe"))
 				{
@@ -107,8 +113,10 @@ namespace Skyve.Mod.CS2
 
 				return true;
 			}
-			catch
+			catch (Exception ex)
 			{
+				Log.Error(ex, "Failed to start the setup app");
+
 				return false;
 			}
 		}

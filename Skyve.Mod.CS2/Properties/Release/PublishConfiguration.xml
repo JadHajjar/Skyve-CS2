@@ -88,15 +88,26 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.9.3.3" />
+  <ModVersion Value="0.9.5" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.9.3.3
-## Scrolling Changes
-* Updated the scrolling behavior of all 'large list' pages.
-* Scrolling is now on a standard scroll value instead of being index-based. This makes scrolling less jumpy and won't leave the bottom of the list empty.
-* Changed the scrolling behavior of the Log list to the new scrolling that's used by other large lists. This will help with performance and will allow you to scroll to the very end when there's a lot of items in the list.'
-* Fixed items sometimes jumping while scrolling in grid view.
+# v0.9.5
+## New Additions
+* Added a new section in the Utilities tab that shows mods with issues, for example 'Out of date' mods. This section comes with a one-click button to fix all issues instantly.
+* Added 'Copy PDX Mods link as Markdown' to the copy section when right-clicking on a mod.
+* Added a more specific error message when launching Skyve with an incomplete configuration, letting users know they need to launch the game to complete the setup.
+* Added custom protocols that can be access to open pages in Skyve, as well as running specific actions using web URLs. For example:
+• skyve-mod.com/app/mods/75804
+• skyve-mod.com/app/logreport/save
+
+## Changes &amp; Fixes
+* Improved the single instance system, where launching Skyve will show up the already-running instance if available.
+* Log Report's Mod List now includes the mod's version.
+* Skyve version is now always automatically set to the latest version to keep users up to date.
+* Applied author colors to the dashboard mod sections.
+* Fixed the mod version not correctly updating after changing it.
+* Fixed compatibility report list showing mods that are not enabled.
+* Fixed image cache clearing going to the recycle bin instead of permanently getting deleted.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

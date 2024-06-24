@@ -24,29 +24,36 @@ internal static class Program
 			return;
 		}
 
-		var fileName = Path.GetFileNameWithoutExtension(Application.ExecutablePath).ToLower();
-
-		if (fileName == "uninstall")
+		try
 		{
-			var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.exe");
+			var fileName = Path.GetFileNameWithoutExtension(Application.ExecutablePath).ToLower();
 
-			File.Copy(Application.ExecutablePath, tempPath, true);
+			if (fileName == "uninstall")
+			{
+				var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.exe");
 
-			Process.Start(tempPath);
+				File.Copy(Application.ExecutablePath, tempPath, true);
 
-			return;
+				Process.Start(tempPath);
+
+				return;
+			}
+
+			SlickCursors.Initialize();
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+
+			if (Environment.OSVersion.Version.Major >= 6)
+			{
+				SetProcessDPIAware();
+			}
+
+			Application.Run(new InstallingForm(Guid.TryParse(fileName, out _)));
 		}
-
-		SlickCursors.Initialize();
-		Application.EnableVisualStyles();
-		Application.SetCompatibleTextRenderingDefault(false);
-
-		if (Environment.OSVersion.Version.Major >= 6)
+		catch (Exception ex)
 		{
-			SetProcessDPIAware();
+			MessagePrompt.Show(ex, "Something went wrong while starting the installer");
 		}
-
-		Application.Run(new InstallingForm(Guid.TryParse(fileName, out _)));
 	}
 
 	[System.Runtime.InteropServices.DllImport("user32.dll")]

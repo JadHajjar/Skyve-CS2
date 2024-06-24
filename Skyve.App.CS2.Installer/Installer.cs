@@ -83,6 +83,8 @@ public class Installer
 			await RegisterService(!InstallService);
 		}
 		catch { }
+
+		RegisterCustomProtocol("Skyve", exePath);
 	}
 
 	public static async Task RegisterService(bool uninstall)
@@ -360,9 +362,38 @@ public class Installer
 				key?.Dispose();
 			}
 		}
-		catch 
+		catch
 		{
 			return null;
+		}
+	}
+
+	public static void RegisterCustomProtocol(string protocolName, string executablePath)
+	{
+		try
+		{
+			// Create the root key for the custom protocol
+			using (var protocolKey = Registry.ClassesRoot.CreateSubKey(protocolName))
+			{
+				if (protocolKey == null)
+				{
+					throw new Exception("Failed to create registry key.");
+				}
+
+				protocolKey.SetValue("", $"{protocolName} Protocol");
+				protocolKey.SetValue("URL Protocol", "");
+
+				// Create the shell\open\command subkey
+				using var shellKey = protocolKey.CreateSubKey("shell");
+				using var openKey = shellKey.CreateSubKey("open");
+				using var commandKey = openKey.CreateSubKey("command") ?? throw new Exception("Failed to create command registry key.");
+
+				commandKey.SetValue("", $"\"{executablePath}\" -cmd \"%1\"");
+			}
+		}
+		catch
+		{
+			//throw new Exception(ex, $"Error registering protocol: {ex.Message}");
 		}
 	}
 

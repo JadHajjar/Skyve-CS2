@@ -45,6 +45,12 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation CopyWorkshopLink => _instance.GetText("CopyWorkshopLink");
 
 	/// <summary>
+	/// <para>Copy PDX Mods link as Markdown</para>
+	/// <para>Plural: Copy the selected packages' PDX Mods links as Markdown</para>
+	/// </summary>
+	public static Translation CopyWorkshopMarkdownLink => _instance.GetText("CopyWorkshopMarkdownLink");
+
+	/// <summary>
 	/// Could not retrieve the mods' data
 	/// </summary>
 	public static Translation CouldNotRetrieveMods => _instance.GetText("CouldNotRetrieveMods");
@@ -398,6 +404,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Start Synchronization
 	/// </summary>
 	public static Translation RunSync => _instance.GetText("RunSync");
+
+	/// <summary>
+	/// Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.  Make sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.
+	/// </summary>
+	public static Translation SkyvenotSetUpInfo => _instance.GetText("SkyvenotSetUpInfo");
 
 	/// <summary>
 	/// Most Popular

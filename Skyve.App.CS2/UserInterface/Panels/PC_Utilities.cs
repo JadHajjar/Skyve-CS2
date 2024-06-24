@@ -248,8 +248,16 @@ public partial class PC_Utilities : PanelContent
 
 	private async void B_FixAllIssues_Click(object sender, EventArgs e)
 	{
-		B_RunSync.Loading = true;
-		await _workshopService.RunSync();
-		B_RunSync.Loading = false;
+		B_FixAllIssues.Loading = true;
+		B_FixAllIssues.Enabled = false;
+		var outOfDatePackages = _packageManager.Packages.AllWhere(x => _packageUtil.IsIncluded(x) && _packageUtil.GetStatus(x, out _) == DownloadStatus.OutOfDate);
+
+		foreach (var package in outOfDatePackages)
+		{
+			await _packageUtil.SetVersion(package, null);
+		}
+
+		B_FixAllIssues.Loading = false;
+		B_FixAllIssues.Enabled = true;
 	}
 }

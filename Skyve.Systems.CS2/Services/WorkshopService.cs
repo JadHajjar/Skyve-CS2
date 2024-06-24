@@ -573,7 +573,7 @@ public class WorkshopService : IWorkshopService
 
 			if (result.Mods is not null)
 			{
-				list.AddRange(result.Mods.Select(x => new PdxPlaysetPackage(x)));
+				list.AddRange(result.Mods.Select(x => new PdxPlaysetPackage(x)).Distinct(x => x.Id));
 			}
 
 			if (!result.Success || result.Mods?.Count < 100)

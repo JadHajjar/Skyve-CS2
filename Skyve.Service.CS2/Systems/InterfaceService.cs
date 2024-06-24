@@ -11,6 +11,11 @@ internal class InterfaceService : IInterfaceService
 		return false;
 	}
 
+	public void OpenLogReport(bool save)
+	{
+
+	}
+
 	public void OpenOptionsPage()
 	{
 	}

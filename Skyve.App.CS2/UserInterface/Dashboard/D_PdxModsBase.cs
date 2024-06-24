@@ -1,7 +1,9 @@
 ﻿using Skyve.App.Interfaces;
+using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Dashboard;
 using Skyve.App.UserInterface.Lists;
 using Skyve.App.UserInterface.Panels;
+using Skyve.Domain.Systems;
 
 using System.Drawing;
 using System.Threading;
@@ -16,12 +18,13 @@ internal abstract class D_PdxModsBase : IDashboardItem
 	private string selectedTag;
 
 	protected readonly IWorkshopService WorkshopService;
+	protected readonly IUserService UserService;
 	protected string[]? SelectedTags => selectedTag == "All" ? null : [selectedTag];
 
 	public D_PdxModsBase(string? tag)
 	{
 		selectedTag = tag ?? _tags[0];
-		ServiceCenter.Get(out WorkshopService);
+		ServiceCenter.Get(out WorkshopService, out UserService);
 	}
 
 	protected abstract List<IWorkshopInfo> GetPackages();
@@ -189,12 +192,13 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			var textRect = rect.Pad(Margin.Left + bannerRect.Width, Margin.Left / 4, Margin.Left / 2, Margin.Left / 4);
 			using var textBrush = new SolidBrush(FormDesign.Design.ForeColor);
 			using var fadedBrush = new SolidBrush(Color.FromArgb(180, FormDesign.Design.ForeColor));
+			using var authorBrush = new SolidBrush(Color.FromArgb(180, UserIcon.GetUserColor(workshopInfo.Author?.Name ?? string.Empty, true)));
 			using var textFont = UI.Font(8F, FontStyle.Bold).FitToWidth(text, textRect, e.Graphics);
 			using var smallFont = UI.Font(6.75F);
 			using var format = new StringFormat { LineAlignment = StringAlignment.Far };
 
 			e.Graphics.DrawString(text, textFont, textBrush, textRect);
-			e.Graphics.DrawString(workshopInfo.Author?.Name ?? string.Empty, smallFont, fadedBrush, textRect, format);
+			e.Graphics.DrawString(workshopInfo.Author?.Name ?? string.Empty, smallFont, authorBrush, textRect, format);
 
 			var tagRect = new Rectangle(textRect.X + (int)e.Graphics.Measure(text, Font).Width + (Margin.Left / 2), textRect.Y + (Margin.Top / 4), 0, textRect.Height);
 
@@ -303,6 +307,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			e.DrawableItem.CachedHeight += tagRect.Height;
 		}
 	}
+
 	private void DrawAuthor(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e, IWorkshopInfo? workshopInfo)
 	{
 		var author = workshopInfo?.Author;
@@ -322,12 +327,47 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			e.DrawableItem.CachedHeight = e.Rects.AuthorRect.Bottom + (Margin.Top / 3);
 
 			var isHovered = e.Rects.AuthorRect.Contains(CursorLocation);
-			using var brush = new SolidBrush(isHovered ? FormDesign.Design.ActiveColor : Color.FromArgb(200, ForeColor));
+			using var brush = new SolidBrush(isHovered ? FormDesign.Design.ActiveColor : UserIcon.GetUserColor(author.Id?.ToString() ?? string.Empty, true));
 
-			e.Graphics.DrawImage(authorIcon.Color(brush.Color, brush.Color.A), e.Rects.AuthorRect.Align(authorIcon.Size, ContentAlignment.MiddleLeft));
+			DrawAuthorImage(e, author, e.Rects.AuthorRect.Align(new(size.Height, size.Height), ContentAlignment.MiddleLeft), brush.Color);
+			
 			e.Graphics.DrawString(author.Name, isHovered ? authorFontUnderline : authorFont, brush, e.Rects.AuthorRect, stringFormat);
 		}
 	}
+
+	private void DrawAuthorImage(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e, IUser author, Rectangle rectangle, Color color)
+	{
+		var image = WorkshopService.GetUser(author).GetThumbnail();
+
+		if (image != null)
+		{
+			e.Graphics.DrawRoundImage(image, rectangle.Pad((int)(1.5 * UI.FontScale)));
+
+			if (e.HoverState.HasFlag(HoverState.Hovered) && e.Rects.AuthorRect.Contains(CursorLocation))
+			{
+				using var pen = new Pen(color, 1.5f);
+
+				e.Graphics.DrawEllipse(pen, rectangle.Pad((int)(1.5 * UI.FontScale)));
+			}
+		}
+		else
+		{
+			using var authorIcon = IconManager.GetIcon("Author", rectangle.Height);
+
+			e.Graphics.DrawImage(authorIcon.Color(color, color.A), rectangle.CenterR(authorIcon.Size));
+		}
+
+		if (UserService.IsUserVerified(author))
+		{
+			var checkRect = rectangle.Align(new Size(rectangle.Height / 3, rectangle.Height / 3), ContentAlignment.BottomRight);
+
+			e.Graphics.FillEllipse(new SolidBrush(FormDesign.Design.GreenColor), checkRect.Pad(-UI.Scale(2)));
+
+			using var img = IconManager.GetIcon("Check", checkRect.Height);
+			e.Graphics.DrawImage(img.Color(Color.White), checkRect.Pad(0, 0, -1, -1));
+		}
+	}
+
 	private void DrawVersionAndTags(ItemPaintEventArgs<IPackageIdentity, ItemListControl.Rectangles> e, IWorkshopInfo? workshopInfo)
 	{
 #if CS1
