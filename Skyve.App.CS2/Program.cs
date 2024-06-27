@@ -30,7 +30,7 @@ internal static class Program
 		}
 		else
 		{
-			App.Program.AppDataPath = Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II");
+			App.Program.AppDataPath = Path.Combine(GetFolderPath(SpecialFolder.UserProfile), "AppData", "LocalLow", "Colossal Order", "Cities Skylines II");
 		}
 
 		SaveHandler.AppName = "Skyve";
