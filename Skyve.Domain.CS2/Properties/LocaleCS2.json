@@ -129,5 +129,7 @@
   "Sorting_Popularity": "Most Subscribed",
   "Sorting_DateUpdated": "Last Updated",
   "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "Sorting_WorkshopName": "Alphabetical",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page"
 }

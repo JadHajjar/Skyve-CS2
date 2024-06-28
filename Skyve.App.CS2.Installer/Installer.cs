@@ -22,12 +22,12 @@ public class Installer
 	private static bool DesktopShortcut;
 	private static bool InstallService;
 
-	public static async Task Install()
+	public static async Task Install(string workingDirectory)
 	{
 		await KillRunningApps();
 
 		var targetFolder = new DirectoryInfo(INSTALL_PATH);
-		var originalPath = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), ".App"));
+		var originalPath = new DirectoryInfo(Path.Combine(workingDirectory, ".App"));
 		var shortcutPath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Skyve CS-II.lnk";
 		var exePath = Path.Combine(targetFolder.FullName, "Skyve.exe");
 		var servicePath = Path.Combine(targetFolder.FullName, "Skyve.Service.exe");
@@ -309,7 +309,7 @@ public class Installer
 				key.SetValue("URLInfoAbout", "https://mods.paradoxplaza.com/mods/75804/Windows/");
 #endif
 				key.SetValue("UninstallString", FormatPath(uninstallPath));
-				key.SetValue("InstallService", InstallService);
+				key.SetValue("InstallBackgroundService", InstallService);
 
 				if (!isUpdate)
 				{
@@ -352,7 +352,7 @@ public class Installer
 					return null;
 				}
 
-				InstallService = key.GetValue("InstallService") is null or true;
+				InstallService = !bool.TryParse(key.GetValue("InstallBackgroundService")?.ToString(), out var install) || install;
 
 				return INSTALL_PATH = Path.GetDirectoryName(path!.Trim('"').Replace("\\\\", "\\"));
 			}

@@ -1,6 +1,7 @@
 ﻿using Colossal.IO.AssetDatabase;
 using Colossal.Json;
 using Colossal.Logging;
+using Colossal.PSI.Environment;
 
 using Game;
 using Game.Modding;
@@ -101,14 +102,21 @@ namespace Skyve.Mod.CS2
 			try
 			{
 				var isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
-			
-				Log.Info(nameof(isAdmin) + " " + isAdmin);
+				var setupFile = Path.Combine(ModPath, "Skyve Setup.exe");
+				var tempSetupFile = Path.Combine(EnvPath.kTempDataPath, "Skyve Setup.exe");
 
-				Log.Info("Starting \"" + Path.Combine(ModPath, "Skyve Setup.exe")+"\"");
+				Log.Info($"{nameof(isAdmin)} {isAdmin}");
 
-				Process.Start(new ProcessStartInfo(Path.Combine(ModPath, "Skyve Setup.exe"))
+				Log.Info($"Copying setup from \"{setupFile}\" to \"{tempSetupFile}\"");
+
+				File.Copy(setupFile, tempSetupFile, true);
+
+				Log.Info($"Starting \"{tempSetupFile}\"");
+
+				Process.Start(new ProcessStartInfo(tempSetupFile)
 				{
-					Verb = isAdmin ? string.Empty : "runas"
+					Verb = isAdmin ? string.Empty : "runas",
+					Arguments = $"\"{ModPath}\""
 				});
 
 				return true;

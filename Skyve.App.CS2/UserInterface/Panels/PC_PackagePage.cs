@@ -72,7 +72,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 		SetPackage(package);
 	}
 
-	protected override async void SetPackage(IPackageIdentity package)
+	protected override void SetPackage(IPackageIdentity package)
 	{
 		base.SetPackage(package);
 

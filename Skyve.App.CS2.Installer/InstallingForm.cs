@@ -5,16 +5,21 @@ using SlickControls;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.ServiceProcess;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.Installer;
 public partial class InstallingForm : SlickForm
 {
-	public InstallingForm(bool uninstalling)
+	private readonly string _workingDirectory;
+
+	public InstallingForm(bool uninstalling, string workingDirectory)
 	{
 		InitializeComponent();
 
+		_workingDirectory = workingDirectory;
 		var currentInstallationPath = Installer.GetCurrentInstallationPath();
 
 		if (uninstalling)
@@ -68,7 +73,7 @@ public partial class InstallingForm : SlickForm
 
 		try
 		{
-			await Installer.Install();
+			await Installer.Install(_workingDirectory);
 
 			await Task.Delay(500);
 		}
@@ -136,7 +141,7 @@ public partial class InstallingForm : SlickForm
 		slickButton2.Font = slickButton1.Font = UI.Font(9.75F);
 		label2.Margin = UI.Scale(new Padding(5, 20, 0, 5));
 		label3.Margin = UI.Scale(new Padding(5, 5, 0, 0));
-		slickPathTextBox1.Margin = UI.Scale(new Padding(0, 0, 0, 15));
+		TB_InstallPath.Margin = UI.Scale(new Padding(0, 0, 0, 15));
 		label2.Font =
 		label3.Font = UI.Font(7.5F, FontStyle.Italic);
 	}
@@ -151,7 +156,7 @@ public partial class InstallingForm : SlickForm
 		label2.ForeColor = label3.ForeColor = design.InfoColor.MergeColor(design.ForeColor);
 	}
 
-	private void pictureBox1_Paint(object sender, PaintEventArgs e)
+	private void PB_Background_Paint(object sender, PaintEventArgs e)
 	{
 		var icon1 = Properties.Resources.I_AppIcon_128;
 		var icon2 = Properties.Resources.I_GlowAppIcon_128;
@@ -165,25 +170,25 @@ public partial class InstallingForm : SlickForm
 		e.Graphics.DrawImage(icon2, pictureBox1.ClientRectangle);
 	}
 
-	private void slickPathTextBox1_PathSelected(object sender, EventArgs e)
+	private void TB_InstallPath_PathSelected(object sender, EventArgs e)
 	{
-		var folder = Path.GetFileName(slickPathTextBox1.Text);
+		var folder = Path.GetFileName(TB_InstallPath.Text);
 
 		if (!folder.Contains("skyve", StringComparison.InvariantCultureIgnoreCase))
 		{
-			slickPathTextBox1.Text = Path.Combine(slickPathTextBox1.Text, "Skyve CS-II");
+			TB_InstallPath.Text = Path.Combine(TB_InstallPath.Text, "Skyve CS-II");
 		}
 	}
 
-	private void slickButton2_Click(object sender, EventArgs e)
+	private void B_Install_Click(object sender, EventArgs e)
 	{
-		Installer.SetInstallSettings(slickPathTextBox1.Text, slickCheckbox1.Checked, slickCheckbox2.Checked);
+		Installer.SetInstallSettings(TB_InstallPath.Text, CB_CreateShortcut.Checked, CB_InstallService.Checked);
 		StartInstall();
 		TLP_Main.Visible = false;
 		pictureBox.Visible = true;
 	}
 
-	private void slickButton1_Click(object sender, EventArgs e)
+	private void B_Cancel_Click(object sender, EventArgs e)
 	{
 		Close();
 	}

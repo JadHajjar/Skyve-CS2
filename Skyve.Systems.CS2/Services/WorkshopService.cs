@@ -15,6 +15,7 @@ using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.CS2.Paradox;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Managers;
@@ -644,6 +645,28 @@ public class WorkshopService : IWorkshopService
 		}
 
 		return result;
+	}
+
+	public ILink? GetCommentsPageUrl(IPackageIdentity packageIdentity)
+	{
+		if (Context is null)
+		{
+			return null;
+		}
+
+		var info = GetInfo(packageIdentity);
+
+		if (info is not PdxModDetails modDetails || string.IsNullOrEmpty(modDetails.ForumLink))
+		{
+			return null;
+		}
+
+		return new ParadoxLink
+		{
+			Title = LocaleCS2.ForumPage,
+			Type = LinkType.Paradox,
+			Url = modDetails.ForumLink + "latest"
+		};
 	}
 
 	public async Task<IModCommentsInfo?> GetComments(IPackageIdentity packageIdentity, int page = 1)

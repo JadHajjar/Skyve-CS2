@@ -88,26 +88,18 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.9.5" />
+  <ModVersion Value="0.9.5.1" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.9.5
-## New Additions
-* Added a new section in the Utilities tab that shows mods with issues, for example 'Out of date' mods. This section comes with a one-click button to fix all issues instantly.
-* Added 'Copy PDX Mods link as Markdown' to the copy section when right-clicking on a mod.
-* Added a more specific error message when launching Skyve with an incomplete configuration, letting users know they need to launch the game to complete the setup.
-* Added custom protocols that can be access to open pages in Skyve, as well as running specific actions using web URLs. For example:
-• skyve-mod.com/app/mods/75804
-• skyve-mod.com/app/logreport/save
-
+# v0.9.5.1
 ## Changes &amp; Fixes
-* Improved the single instance system, where launching Skyve will show up the already-running instance if available.
-* Log Report's Mod List now includes the mod's version.
-* Skyve version is now always automatically set to the latest version to keep users up to date.
-* Applied author colors to the dashboard mod sections.
-* Fixed the mod version not correctly updating after changing it.
-* Fixed compatibility report list showing mods that are not enabled.
-* Fixed image cache clearing going to the recycle bin instead of permanently getting deleted.
+* Added a tag on comments that reflect the version number of the mod at the time of posting. The tag is shown in Green when the version is the latest one of the mod.
+* Added a link to the forum page of the mod if available.
+* Added Player-prev.log to the log report.
+* Fixed a case where users could not install Skyve properly.
+* Fixed a crash when jumping between tabs in the Mod Page.
+* Fixed the Skyve background service not getting installed.
+* Fixed compatibility info for 'Broken From Patch' not working as intended.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

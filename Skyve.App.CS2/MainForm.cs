@@ -144,27 +144,41 @@ public partial class MainForm : BasePanelForm
 
 	private void _updateAvailableControl_MouseClick(object sender, MouseEventArgs e)
 	{
+		var logger = ServiceCenter.Get<ILogger>();
 		var logicManager = ServiceCenter.Get<IModLogicManager>();
 		var skyveApps = logicManager.GetCollection("Skyve Mod.dll");
 		var mostRecent = skyveApps.Where(x => x.LocalData != null).OrderBy(x => File.GetLastWriteTimeUtc(x.LocalData?.FilePath)).LastOrDefault();
 
-		if (mostRecent != null)
-		{
-			try
-			{
-				Process.Start(new ProcessStartInfo(Path.Combine(mostRecent.LocalData!.Folder, "Skyve Setup.exe"))
-				{
-					Verb = WinExtensionClass.IsAdministrator ? string.Empty : "runas"
-				});
-
-				_updateAvailableControl.Hide();
-			}
-			catch { }
-		}
-		else
+		if (mostRecent == null)
 		{
 			_updateAvailableControl.Hide();
+
+			return;
 		}
+
+		try
+		{
+			var isAdmin = WinExtensionClass.IsAdministrator;
+			var setupFile = Path.Combine(mostRecent.LocalData!.Folder, "Skyve Setup.exe");
+			var tempSetupFile = Path.Combine(Path.GetTempPath(), "Skyve Setup.exe");
+
+			logger.Info($"{nameof(isAdmin)} {isAdmin}");
+
+			logger.Info($"Copying setup from \"{setupFile}\" to \"{tempSetupFile}\"");
+
+			File.Copy(setupFile, tempSetupFile, true);
+
+			logger.Info($"Starting \"{tempSetupFile}\"");
+
+			Process.Start(new ProcessStartInfo(tempSetupFile)
+			{
+				Verb = isAdmin ? string.Empty : "runas",
+				Arguments = $"\"{mostRecent.LocalData!.Folder}\""
+			});
+
+			_updateAvailableControl.Hide();
+		}
+		catch { }
 	}
 
 	private void _notifier_CompatibilityReportProcessed()

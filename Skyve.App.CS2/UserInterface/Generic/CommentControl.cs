@@ -3,6 +3,7 @@ using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Generic;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
+using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -21,7 +22,7 @@ public partial class CommentControl : SlickControl
 
 	public IModComment Comment => _comment;
 
-	public CommentControl(IModComment comment, IPackageIdentity packageIdentity)
+	public CommentControl(IModComment comment, IPackageIdentity packageIdentity, string? versionNumber)
 	{
 		InitializeComponent();
 		AutoSize = true;
@@ -33,6 +34,8 @@ public partial class CommentControl : SlickControl
 		L_Author.Text = _comment.Username;
 		L_Time.Text = _comment.Created.ToLocalTime().ToRelatedString();
 		L_AuthorLabel.Visible = _comment.Username == packageIdentity.GetWorkshopInfo()?.Author?.Id?.ToString();
+		L_Version.Text = versionNumber is null ? LocaleCS2.InitialRelease : $"v{versionNumber}";
+		L_Version.CustomBackColor = versionNumber == packageIdentity.GetWorkshopInfo()?.Version ? FormDesign.Design.GreenColor : FormDesign.Design.InfoColor.MergeColor(FormDesign.Design.BackColor);
 
 		var matches = Regex.Matches(_comment.Message, @"\[ATTACH.+?\](\d+)\[/ATTACH\]");
 
@@ -50,10 +53,10 @@ public partial class CommentControl : SlickControl
 	{
 		TLP_Back.Padding = Padding = UI.Scale(new Padding(6));
 		C_UserImage.Size = UI.Scale(new Size(48, 48));
-		L_Time.Padding = L_AuthorLabel.Padding = UI.Scale(new Padding(4, 2, 2, 2));
+		L_Version.Padding = L_Time.Padding = L_AuthorLabel.Padding = UI.Scale(new Padding(4, 2, 2, 2));
 		L_Author.Font = UI.Font(9.75F, FontStyle.Bold);
-		L_Time.Font = UI.Font(7F);
-		L_Time.Margin = UI.Scale(new Padding(3, 4, 0, 5));
+		L_Version.Font = L_Time.Font = UI.Font(7F);
+		L_Version.Margin = L_Time.Margin = UI.Scale(new Padding(3, 4, 0, 5));
 	}
 
 	protected override void DesignChanged(FormDesign design)

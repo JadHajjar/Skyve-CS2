@@ -5,6 +5,7 @@ using SlickControls;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.Installer;
@@ -12,7 +13,7 @@ namespace Skyve.App.CS2.Installer;
 internal static class Program
 {
 	[STAThread]
-	private static void Main()
+	private static void Main(params string[] args)
 	{
 		if (!WinExtensionClass.IsAdministrator)
 		{
@@ -48,7 +49,7 @@ internal static class Program
 				SetProcessDPIAware();
 			}
 
-			Application.Run(new InstallingForm(Guid.TryParse(fileName, out _)));
+			Application.Run(new InstallingForm(Guid.TryParse(fileName, out _), args.ElementAtOrDefault(0) ?? Application.StartupPath));
 		}
 		catch (Exception ex)
 		{

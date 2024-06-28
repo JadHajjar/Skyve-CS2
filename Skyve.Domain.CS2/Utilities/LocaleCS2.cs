@@ -172,6 +172,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation FilterIncludedByDefaultTip => _instance.GetText("FilterIncludedByDefault_Tip");
 
 	/// <summary>
+	/// Forum Page
+	/// </summary>
+	public static Translation ForumPage => _instance.GetText("ForumPage");
+
+	/// <summary>
 	/// {0} free
 	/// </summary>
 	public static Translation FreeSpace => _instance.GetText("FreeSpace");
@@ -206,6 +211,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// <para>Plural: Add the selected items to all your playsets</para>
 	/// </summary>
 	public static Translation IncludeThisItemInAllPlaysets => _instance.GetText("IncludeThisItemInAllPlaysets");
+
+	/// <summary>
+	/// Initial Release
+	/// </summary>
+	public static Translation InitialRelease => _instance.GetText("InitialRelease");
 
 	/// <summary>
 	/// Invalid setup detected

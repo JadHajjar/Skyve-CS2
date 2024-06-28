@@ -33,7 +33,6 @@ partial class CommentControl
 			SlickControls.DynamicIcon dynamicIcon1 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon2 = new SlickControls.DynamicIcon();
 			this.TLP_Back = new SlickControls.RoundedTableLayoutPanel();
-			this.C_UserImage = new Skyve.App.UserInterface.Content.UserIcon();
 			this.L_Author = new System.Windows.Forms.Label();
 			this.L_AuthorLabel = new SlickControls.SlickLabel();
 			this.B_Reply = new SlickControls.SlickButton();
@@ -41,7 +40,11 @@ partial class CommentControl
 			this.FLP_Thumbnails = new SlickControls.SmartFlowPanel();
 			this.L_Time = new SlickControls.SlickLabel();
 			this.B_Copy = new SlickControls.SlickButton();
+			this.L_Version = new SlickControls.SlickLabel();
+			this.C_UserImage = new Skyve.App.UserInterface.Content.UserIcon();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.TLP_Back.SuspendLayout();
+			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// TLP_Back
@@ -62,8 +65,8 @@ partial class CommentControl
 			this.TLP_Back.Controls.Add(this.B_Reply, 5, 0);
 			this.TLP_Back.Controls.Add(this.C_Message, 1, 2);
 			this.TLP_Back.Controls.Add(this.FLP_Thumbnails, 1, 3);
-			this.TLP_Back.Controls.Add(this.L_Time, 1, 1);
 			this.TLP_Back.Controls.Add(this.B_Copy, 4, 0);
+			this.TLP_Back.Controls.Add(this.flowLayoutPanel1, 1, 1);
 			this.TLP_Back.Dock = System.Windows.Forms.DockStyle.Top;
 			this.TLP_Back.Location = new System.Drawing.Point(0, 0);
 			this.TLP_Back.Name = "TLP_Back";
@@ -72,18 +75,9 @@ partial class CommentControl
 			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Back.Size = new System.Drawing.Size(669, 118);
+			this.TLP_Back.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TLP_Back.Size = new System.Drawing.Size(669, 138);
 			this.TLP_Back.TabIndex = 0;
-			// 
-			// C_UserImage
-			// 
-			this.C_UserImage.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.C_UserImage.Location = new System.Drawing.Point(3, 3);
-			this.C_UserImage.Name = "C_UserImage";
-			this.TLP_Back.SetRowSpan(this.C_UserImage, 3);
-			this.C_UserImage.Size = new System.Drawing.Size(55, 44);
-			this.C_UserImage.TabIndex = 0;
-			this.C_UserImage.Click += new System.EventHandler(this.C_UserImage_Click);
 			// 
 			// L_Author
 			// 
@@ -132,9 +126,9 @@ partial class CommentControl
 			// 
 			this.TLP_Back.SetColumnSpan(this.C_Message, 5);
 			this.C_Message.Dock = System.Windows.Forms.DockStyle.Top;
-			this.C_Message.Location = new System.Drawing.Point(64, 71);
+			this.C_Message.Location = new System.Drawing.Point(3, 71);
 			this.C_Message.Name = "C_Message";
-			this.C_Message.Size = new System.Drawing.Size(602, 44);
+			this.C_Message.Size = new System.Drawing.Size(579, 44);
 			this.C_Message.TabIndex = 0;
 			this.C_Message.Paint += new System.Windows.Forms.PaintEventHandler(this.C_Message_Paint);
 			this.C_Message.MouseClick += new System.Windows.Forms.MouseEventHandler(this.C_Message_MouseClick);
@@ -144,10 +138,10 @@ partial class CommentControl
 			// 
 			this.TLP_Back.SetColumnSpan(this.FLP_Thumbnails, 5);
 			this.FLP_Thumbnails.Dock = System.Windows.Forms.DockStyle.Top;
-			this.FLP_Thumbnails.Location = new System.Drawing.Point(61, 118);
+			this.FLP_Thumbnails.Location = new System.Drawing.Point(0, 118);
 			this.FLP_Thumbnails.Margin = new System.Windows.Forms.Padding(0);
 			this.FLP_Thumbnails.Name = "FLP_Thumbnails";
-			this.FLP_Thumbnails.Size = new System.Drawing.Size(608, 0);
+			this.FLP_Thumbnails.Size = new System.Drawing.Size(585, 0);
 			this.FLP_Thumbnails.TabIndex = 4;
 			// 
 			// L_Time
@@ -156,17 +150,16 @@ partial class CommentControl
 			this.L_Time.AutoSize = true;
 			this.L_Time.ButtonType = SlickControls.ButtonType.Active;
 			this.L_Time.ColorStyle = Extensions.ColorStyle.Icon;
-			this.TLP_Back.SetColumnSpan(this.L_Time, 3);
 			this.L_Time.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.L_Time.Display = true;
 			this.L_Time.Enabled = false;
-			this.L_Time.Location = new System.Drawing.Point(64, 37);
+			this.L_Time.Location = new System.Drawing.Point(3, 3);
 			this.L_Time.Name = "L_Time";
 			this.L_Time.Selected = true;
-			this.L_Time.Size = new System.Drawing.Size(61, 28);
+			this.L_Time.Size = new System.Drawing.Size(52, 28);
 			this.L_Time.SpaceTriggersClick = true;
 			this.L_Time.TabIndex = 2;
-			this.L_Time.Text = "Author";
+			this.L_Time.Text = "Time";
 			// 
 			// B_Copy
 			// 
@@ -182,6 +175,47 @@ partial class CommentControl
 			this.B_Copy.TabIndex = 3;
 			this.B_Copy.Click += new System.EventHandler(this.B_Copy_Click);
 			// 
+			// L_Version
+			// 
+			this.L_Version.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.L_Version.AutoSize = true;
+			this.L_Version.ButtonType = SlickControls.ButtonType.Active;
+			this.L_Version.ColorStyle = Extensions.ColorStyle.Icon;
+			this.L_Version.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.L_Version.Display = true;
+			this.L_Version.Enabled = false;
+			this.L_Version.Location = new System.Drawing.Point(61, 3);
+			this.L_Version.Name = "L_Version";
+			this.L_Version.Selected = true;
+			this.L_Version.Size = new System.Drawing.Size(67, 28);
+			this.L_Version.SpaceTriggersClick = true;
+			this.L_Version.TabIndex = 2;
+			this.L_Version.Text = "Version";
+			// 
+			// C_UserImage
+			// 
+			this.C_UserImage.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.C_UserImage.Location = new System.Drawing.Point(3, 3);
+			this.C_UserImage.Name = "C_UserImage";
+			this.TLP_Back.SetRowSpan(this.C_UserImage, 3);
+			this.C_UserImage.Size = new System.Drawing.Size(55, 44);
+			this.C_UserImage.TabIndex = 0;
+			this.C_UserImage.Click += new System.EventHandler(this.C_UserImage_Click);
+			// 
+			// flowLayoutPanel1
+			// 
+			this.flowLayoutPanel1.AutoSize = true;
+			this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.TLP_Back.SetColumnSpan(this.flowLayoutPanel1, 5);
+			this.flowLayoutPanel1.Controls.Add(this.L_Time);
+			this.flowLayoutPanel1.Controls.Add(this.L_Version);
+			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(61, 34);
+			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(608, 34);
+			this.flowLayoutPanel1.TabIndex = 5;
+			// 
 			// CommentControl
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -191,6 +225,8 @@ partial class CommentControl
 			this.Size = new System.Drawing.Size(669, 177);
 			this.TLP_Back.ResumeLayout(false);
 			this.TLP_Back.PerformLayout();
+			this.flowLayoutPanel1.ResumeLayout(false);
+			this.flowLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -207,4 +243,6 @@ partial class CommentControl
 	private SmartFlowPanel FLP_Thumbnails;
 	private SlickLabel L_Time;
 	private SlickButton B_Copy;
+	private SlickLabel L_Version;
+	private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 }

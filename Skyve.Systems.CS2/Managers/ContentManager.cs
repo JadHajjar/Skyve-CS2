@@ -256,7 +256,7 @@ internal class ContentManager : IContentManager
 				return new LocalPdxPackage(pdxMod,
 					assets,
 					isCodeMod,
-					version?.GetString(),
+					pdxMod.UserModVersion ?? version?.ToString() ?? string.Empty,
 					modDll);
 			}
 
@@ -264,7 +264,7 @@ internal class ContentManager : IContentManager
 				assets,
 				[],
 				isCodeMod,
-				version?.GetString(),
+				version?.ToString() ?? string.Empty,
 				modDll,
 				null);
 		}
@@ -334,7 +334,7 @@ internal class ContentManager : IContentManager
 		package.RefreshData(
 			assets,
 			isCodeMod,
-			version.GetString(),
+			localPackage.Version ?? version?.ToString() ?? string.Empty,
 			modDll,
 			localPackage.LocalData?.SuggestedGameVersion);
 
