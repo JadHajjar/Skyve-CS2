@@ -152,6 +152,21 @@ public class ModStateCollection
 
 		foreach (var key in _enabledConfig.Keys)
 		{
+			if (!_enabledConfig.ContainsKey(key))
+			{
+				if (modStateCollection._enabledConfig.ContainsKey(key))
+				{
+					return false;
+				}
+
+				continue;
+			}
+
+			if (!modStateCollection._enabledConfig.ContainsKey(key))
+			{
+				return false;
+			}
+
 			if (!_enabledConfig[key].SequenceEqual(modStateCollection._enabledConfig[key]))
 			{
 				return false;
