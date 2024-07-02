@@ -96,6 +96,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation DeveloperMode => _instance.GetText("DeveloperMode");
 
 	/// <summary>
+	/// Disable Burst-Compilation
+	/// </summary>
+	public static Translation DisableBurstCompile => _instance.GetText("DisableBurstCompile");
+
+	/// <summary>
 	/// Disk Status
 	/// </summary>
 	public static Translation DiskStatus => _instance.GetText("DiskStatus");

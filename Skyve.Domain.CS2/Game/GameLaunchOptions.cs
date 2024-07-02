@@ -20,4 +20,5 @@ public struct GameLaunchOptions
 	public string? CustomArgs { get; set; }
 	public string LogLevel { get; set; }
 	public bool LogsToPlayerLog { get; set; }
+	public bool DisableBurstCompile { get; set; }
 }

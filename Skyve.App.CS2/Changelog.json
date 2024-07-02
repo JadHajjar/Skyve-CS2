@@ -2,6 +2,37 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.9.5.3",
+    "Date": "2024-07-03",
+    "ChangeGroups": [
+      {
+        "Name": "Changes & Fixes",
+        "Changes": [
+          "Your last selected tags in the PDX Mods page are now remembered throughout your session.",
+          "Added a 'Disable Burst Compilation' launch option to the advanced playset launch options.",
+          "Fixed being able to import a playset by dropping a log report into the designated drop section."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.5.2",
+    "Date": "2024-06-29",
+    "ChangeGroups": [
+      {
+        "Name": "Changes & Fixes",
+        "Changes": [
+          "Fixed not being able to properly update Skyve using an install location other than the default one.",
+          "Fixed the 'Unknown Publisher' popup when installing Skyve from the in-game button and in-app update button."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.5.1",
     "Date": "2024-06-28",
     "ChangeGroups": [

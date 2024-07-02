@@ -88,18 +88,13 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.9.5.1" />
+  <ModVersion Value="0.9.5.2" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.9.5.1
+# v0.9.5.2
 ## Changes &amp; Fixes
-* Added a tag on comments that reflect the version number of the mod at the time of posting. The tag is shown in Green when the version is the latest one of the mod.
-* Added a link to the forum page of the mod if available.
-* Added Player-prev.log to the log report.
-* Fixed a case where users could not install Skyve properly.
-* Fixed a crash when jumping between tabs in the Mod Page.
-* Fixed the Skyve background service not getting installed.
-* Fixed compatibility info for 'Broken From Patch' not working as intended.
+* Fixed not being able to properly update Skyve using an install location other than the default one.
+* Fixed the 'Unknown Publisher' popup when installing Skyve from the in-game button and in-app update button.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

@@ -13,30 +13,12 @@ namespace Skyve.App.CS2.Installer;
 internal static class Program
 {
 	[STAThread]
-	private static void Main(params string[] args)
+	private static void Main(string[] args)
 	{
-		if (!WinExtensionClass.IsAdministrator)
-		{
-			Process.Start(new ProcessStartInfo(Application.ExecutablePath)
-			{
-				Verb = "runas"
-			});
-
-			return;
-		}
-
 		try
 		{
-			var fileName = Path.GetFileNameWithoutExtension(Application.ExecutablePath).ToLower();
-
-			if (fileName == "uninstall")
+			if (RedirectIfNeeded(args, out var uninstall))
 			{
-				var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.exe");
-
-				File.Copy(Application.ExecutablePath, tempPath, true);
-
-				Process.Start(tempPath);
-
 				return;
 			}
 
@@ -49,12 +31,47 @@ internal static class Program
 				SetProcessDPIAware();
 			}
 
-			Application.Run(new InstallingForm(Guid.TryParse(fileName, out _), args.ElementAtOrDefault(0) ?? Application.StartupPath));
+			Application.Run(new InstallingForm(uninstall));
 		}
 		catch (Exception ex)
 		{
 			MessagePrompt.Show(ex, "Something went wrong while starting the installer");
 		}
+	}
+
+	private static bool RedirectIfNeeded(string[] args, out bool uninstall)
+	{
+		var isAdmin = WinExtensionClass.IsAdministrator;
+		var setupFile = Application.ExecutablePath;
+		var fileName = Path.GetFileNameWithoutExtension(setupFile).ToLower();
+
+		uninstall = args.ElementAtOrDefault(0) == "uninstall";
+
+		if (!uninstall && fileName == "uninstall")
+		{
+			var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), $"Skyve Uninstall.exe");
+
+			Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
+
+			File.Copy(Application.ExecutablePath, tempPath, true);
+
+			Process.Start(new ProcessStartInfo(tempPath) 
+			{
+				Verb = isAdmin ? "" : "runas",
+				Arguments = "uninstall" 
+			});
+
+			return true;
+		}
+
+		if (!isAdmin)
+		{
+			Process.Start(new ProcessStartInfo(setupFile) { Verb = "runas" });
+
+			return true;
+		}
+
+		return false;
 	}
 
 	[System.Runtime.InteropServices.DllImport("user32.dll")]

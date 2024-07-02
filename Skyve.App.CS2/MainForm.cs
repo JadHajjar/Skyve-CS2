@@ -1,4 +1,5 @@
-﻿using Skyve.App.CS2.UserInterface.Content;
+﻿using Skyve.App.CS2.Installer;
+using Skyve.App.CS2.UserInterface.Content;
 using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Content;
@@ -158,23 +159,9 @@ public partial class MainForm : BasePanelForm
 
 		try
 		{
-			var isAdmin = WinExtensionClass.IsAdministrator;
 			var setupFile = Path.Combine(mostRecent.LocalData!.Folder, "Skyve Setup.exe");
-			var tempSetupFile = Path.Combine(Path.GetTempPath(), "Skyve Setup.exe");
 
-			logger.Info($"{nameof(isAdmin)} {isAdmin}");
-
-			logger.Info($"Copying setup from \"{setupFile}\" to \"{tempSetupFile}\"");
-
-			File.Copy(setupFile, tempSetupFile, true);
-
-			logger.Info($"Starting \"{tempSetupFile}\"");
-
-			Process.Start(new ProcessStartInfo(tempSetupFile)
-			{
-				Verb = isAdmin ? string.Empty : "runas",
-				Arguments = $"\"{mostRecent.LocalData!.Folder}\""
-			});
+			InstallHelper.Run(setupFile);
 
 			_updateAvailableControl.Hide();
 		}

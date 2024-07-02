@@ -90,6 +90,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 			CB_DeveloperMode.Checked = extendedPlayset.LaunchSettings.UIDeveloperMode;
 			CB_UIDeveloperMode.Checked = extendedPlayset.LaunchSettings.DeveloperMode;
 			CB_UseCitiesExe.Checked = extendedPlayset.LaunchSettings.UseCitiesExe;
+			CB_DisableBurstCompile.Checked = extendedPlayset.LaunchSettings.DisableBurstCompile;
 			DD_LogLevel.SelectedItem = extendedPlayset.LaunchSettings.LogLevel.IfEmpty("DEFAULT");
 			TB_CustomArgs.Text = extendedPlayset.LaunchSettings.CustomArgs;
 		}
@@ -181,6 +182,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 				UIDeveloperMode = CB_DeveloperMode.Checked,
 				DeveloperMode = CB_UIDeveloperMode.Checked,
 				UseCitiesExe = CB_UseCitiesExe.Checked,
+				DisableBurstCompile = CB_DisableBurstCompile.Checked,
 				LogLevel = DD_LogLevel.SelectedItem,
 				CustomArgs = TB_CustomArgs.Text,
 			};

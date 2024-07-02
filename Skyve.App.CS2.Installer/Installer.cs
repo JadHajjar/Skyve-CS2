@@ -22,12 +22,12 @@ public class Installer
 	private static bool DesktopShortcut;
 	private static bool InstallService;
 
-	public static async Task Install(string workingDirectory)
+	public static async Task Install()
 	{
 		await KillRunningApps();
 
 		var targetFolder = new DirectoryInfo(INSTALL_PATH);
-		var originalPath = new DirectoryInfo(Path.Combine(workingDirectory, ".App"));
+		var originalPath = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), ".App"));
 		var shortcutPath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Skyve CS-II.lnk";
 		var exePath = Path.Combine(targetFolder.FullName, "Skyve.exe");
 		var servicePath = Path.Combine(targetFolder.FullName, "Skyve.Service.exe");

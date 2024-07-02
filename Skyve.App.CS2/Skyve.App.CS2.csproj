@@ -27,6 +27,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Include="..\Skyve.App.CS2.Installer\InstallHelper.cs" Link="InstallHelper.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Markdig" Version="0.34.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Mono.Cecil" Version="0.11.3" />

@@ -131,5 +131,6 @@
   "Sorting_DateCreated": "Most Recent",
   "Sorting_WorkshopName": "Alphabetical",
   "InitialRelease": "Initial Release",
-  "ForumPage": "Forum Page"
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation"
 }

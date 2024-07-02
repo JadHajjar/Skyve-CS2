@@ -13,13 +13,10 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.Installer;
 public partial class InstallingForm : SlickForm
 {
-	private readonly string _workingDirectory;
-
-	public InstallingForm(bool uninstalling, string workingDirectory)
+	public InstallingForm(bool uninstalling)
 	{
 		InitializeComponent();
 
-		_workingDirectory = workingDirectory;
 		var currentInstallationPath = Installer.GetCurrentInstallationPath();
 
 		if (uninstalling)
@@ -73,7 +70,7 @@ public partial class InstallingForm : SlickForm
 
 		try
 		{
-			await Installer.Install(_workingDirectory);
+			await Installer.Install();
 
 			await Task.Delay(500);
 		}
