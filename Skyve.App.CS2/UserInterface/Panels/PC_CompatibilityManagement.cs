@@ -2,6 +2,7 @@
 using Skyve.App.UserInterface.CompatibilityReport;
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
+using Skyve.App.UserInterface.Lists;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
@@ -24,6 +25,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	private CompatibilityPostPackage? postPackage;
 	private CompatibilityPostPackage? lastPackageData;
 	private bool valuesChanged;
+	private readonly EditHistoryList editHistoryList;
 	private readonly ReviewRequest? _request;
 
 	private readonly ICompatibilityManager _compatibilityManager;
@@ -68,6 +70,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		TB_Search.Placeholder = $"{LocaleSlickUI.Search}..";
 		T_Statuses.Text = LocaleCR.StatusesCount.Format(0);
 		T_Interactions.Text = LocaleCR.InteractionCount.Format(0);
+		T_EditHistory.LinkedControl = editHistoryList = new EditHistoryList();
 
 		packageCrList.CanDrawItem += PackageCrList_CanDrawItem;
 
@@ -145,16 +148,21 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			= DD_DLCs.Margin = DD_PackageType.Margin = DD_Stability.Margin = DD_Usage.Margin
 			= B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5));
 		slickSpacer2.Height = UI.Scale(2);
-		slickSpacer3.Height = slickSpacer4.Height = slickSpacer5.Height = (int)UI.FontScale;
+		slickSpacer3.Height = slickSpacer4.Height = slickSpacer5.Height = UI.Scale(1);
 		B_AddInteraction.Size = B_AddStatus.Size = UI.Scale(new Size(105, 70));
 		B_AddInteraction.Margin = B_AddStatus.Margin = UI.Scale(new Padding(15));
 		L_NoLinks.Margin = L_NoTags.Margin = UI.Scale(new Padding(10));
 		B_Previous.Size = B_Skip.Size = UI.Scale(new Size(32, 32));
 		L_Page.Font = UI.Font(7.5F, FontStyle.Bold);
+		TB_EditNote.Margin = UI.Scale(new Padding(20, 5, 10, 5));
 		TB_Note.Margin = UI.Scale(new Padding(5, 20, 5, 5));
-		TB_Note.MinimumSize = new Size(0, UI.Scale(200));
+		TB_Note.Height = UI.Scale(200);
+		TB_EditNote.Height = UI.Scale(32);
 		PB_Loading.Size = UI.Scale(new Size(32, 32));
 		CB_BlackListId.Font = CB_BlackListName.Font = UI.Font(7.5F);
+		B_Apply.Font = B_ReuseData.Font = UI.Font(9.75F);
+
+		TLP_Bottom.ColumnStyles[3].Width = UI.Scale(260);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -295,7 +303,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		TLP_Bottom.Visible = false;
 
 		var workshopInfo = package.GetWorkshopInfo();
-		var hasChangelog= workshopInfo?.Changelog?.Any() ?? false;
+		var hasChangelog = workshopInfo?.Changelog?.Any() ?? false;
 
 		T_Changelog.Visible = hasChangelog;
 
@@ -336,6 +344,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			TLP_MainInfo.Width = 0;
 			packageCrList.Invalidate();
 			valuesChanged = false;
+
+			editHistoryList.SetItems(await skyveApiUtil.GetPackageEdits(Package.Id));
 		}
 		catch
 		{
@@ -368,7 +378,13 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			DD_Usage.SelectedItems = Enum.GetValues(typeof(PackageUsage)).Cast<PackageUsage>().Where(x => postPackage.Usage.HasFlag(x));
 		}
 
+		if (DD_Stability.SelectedItem is PackageStability.NotReviewed && !DD_Stability.Enabled)
+		{
+			DD_Stability.SelectedItem = PackageStability.NotEnoughInformation;
+		}
+
 		TB_Note.Text = postPackage.Note;
+		TB_EditNote.Text = string.Empty;
 
 		FLP_Tags.Controls.Clear(true);
 		FLP_Statuses.Controls.Clear(true, x => x is IPackageStatusControl<StatusType, PackageStatus>);
@@ -560,6 +576,12 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			return false;
 		}
 
+		if (DD_Stability.SelectedItem is PackageStability.HasIssues or PackageStability.Broken && TB_Note.Text.Trim().Length < 5)
+		{
+			ShowPrompt(LocaleCR.AddMeaningfulNote, PromptButtons.OK, PromptIcons.Hand);
+			return false;
+		}
+
 		postPackage.Id = Package.Id;
 		postPackage.FileName = Path.GetFileName(Package.GetLocalPackageIdentity()?.FilePath ?? string.Empty).IfEmpty(postPackage.FileName);
 		postPackage.Name = Package.Name;
@@ -573,6 +595,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		postPackage.Usage = DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next);
 		postPackage.RequiredDLCs = DD_DLCs.SelectedItems.Select(x => x.Id).ToList();
 		postPackage.Note = TB_Note.Text;
+		postPackage.EditNote = TB_EditNote.Text;
 		postPackage.Tags = FLP_Tags.Controls.OfType<TagControl>().Where(x => !string.IsNullOrEmpty(x.TagInfo?.Value)).ToList(x => x.TagInfo!.Value);
 		postPackage.Links = FLP_Links.Controls.OfType<LinkControl>().ToList(x => (PackageLink)x.Link);
 		postPackage.Statuses = FLP_Statuses.Controls.OfType<IPackageStatusControl<StatusType, PackageStatus>>().ToList(x => x.PackageStatus);
@@ -678,7 +701,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		if (CB_HideReviewedPackages.Checked)
 		{
 			var cr = package.GetPackageInfo();
-			var isUpToDate = cr?.ReviewDate > e.Item.GetWorkshopInfo()?.ServerTime;
+			var isUpToDate = cr?.ReviewDate.ToLocalTime() > e.Item.GetWorkshopInfo()?.ServerTime.ToLocalTime();
 
 			if (isUpToDate)
 			{

@@ -6,6 +6,7 @@ using Skyve.Domain.Systems;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Skyve.Systems.CS2.Utilities;
 
@@ -80,7 +81,16 @@ public class ModDllManager : IModDllManager
 
 	public void SaveDllCache()
 	{
-		_saveHandler.Save(_dllCache.Values, CACHE_FILENAME);
+		try
+		{
+			var dlls = _dllCache.Values.ToList();
+
+			_saveHandler.Save(dlls, CACHE_FILENAME);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to save DLL cache");
+		}
 	}
 
 	public void ClearDllCache()

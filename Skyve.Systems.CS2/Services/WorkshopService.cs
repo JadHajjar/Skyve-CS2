@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
 using PDX.SDK.Contracts;
@@ -669,7 +670,7 @@ public class WorkshopService : IWorkshopService
 		};
 	}
 
-	public async Task<IModCommentsInfo?> GetComments(IPackageIdentity packageIdentity, int page = 1)
+	public async Task<IModCommentsInfo?> GetComments(IPackageIdentity packageIdentity, int page = 1, int limit = 20)
 	{
 		if (Context is null)
 		{
@@ -690,7 +691,7 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await Context.Mods.GetForumThread((int)info.Id, modDetails.PdxModsVersion, int.Parse(regex.Groups[1].Value), page, 20));
+		var result = ProcessResult(await Context.Mods.GetForumThread((int)info.Id, modDetails.PdxModsVersion, int.Parse(regex.Groups[1].Value), page, limit));
 
 		if (!result.Success)
 		{
@@ -699,7 +700,7 @@ public class WorkshopService : IWorkshopService
 
 		return new PdxForumThreadInfo
 		{
-			HasMore = result.Posts.Length == 20,
+			HasMore = result.Posts.Length == limit,
 			CanPost = result.CanPost,
 			Page = page,
 			Posts = result.Posts.ToList(x => (IModComment)new PdxForumPost(x))

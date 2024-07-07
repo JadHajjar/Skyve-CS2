@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Enums;
@@ -245,7 +247,14 @@ internal class TagsService : ITagsService
 		{
 			_customTagsDictionary[lp.Folder] = value.WhereNotEmpty().ToArray();
 
-			_saveHandler.Save(_customTagsDictionary, "CustomTags.json");
+			try
+			{
+				_saveHandler.Save(_customTagsDictionary, "CustomTags.json");
+			}
+			catch (Exception ex)
+			{
+				_logger.Exception(ex);
+			}
 		}
 
 		_notifier.OnRefreshUI(true);

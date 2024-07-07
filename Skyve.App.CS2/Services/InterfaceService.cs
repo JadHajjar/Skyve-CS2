@@ -45,9 +45,9 @@ internal class InterfaceService : IAppInterfaceService
 		return new PC_PlaysetAdd();
 	}
 
-	void IInterfaceService.OpenPackagePage(IPackageIdentity package, bool openCompatibilityPage)
+	void IInterfaceService.OpenPackagePage(IPackageIdentity package, bool openCompatibilityPage, bool openCommentsPage)
 	{
-		App.Program.MainForm.TryInvoke(() => App.Program.MainForm.PushPanel(new PC_PackagePage(package, openCompatibilityPage)));
+		App.Program.MainForm.TryInvoke(() => App.Program.MainForm.PushPanel(new PC_PackagePage(package, openCompatibilityPage, openCommentsPage)));
 	}
 
 	PanelContent IAppInterfaceService.RequestReviewPanel(IPackageIdentity package)

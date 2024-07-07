@@ -132,5 +132,6 @@
   "Sorting_WorkshopName": "Alphabetical",
   "InitialRelease": "Initial Release",
   "ForumPage": "Forum Page",
-  "DisableBurstCompile": "Disable Burst-Compilation"
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'"
 }

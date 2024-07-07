@@ -31,6 +31,7 @@ public class UpdatedPackagesNotificationInfo : INotificationInfo
 	public string Icon { get; }
 	public Color? Color { get; }
 	public bool HasAction { get; }
+	public bool CanBeRead { get; }
 
 	public void OnClick()
 	{
@@ -39,5 +40,10 @@ public class UpdatedPackagesNotificationInfo : INotificationInfo
 
 	public void OnRightClick()
 	{
+	}
+
+	public void OnRead()
+	{
+		throw new NotImplementedException();
 	}
 }

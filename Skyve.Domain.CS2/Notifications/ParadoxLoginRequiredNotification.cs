@@ -27,10 +27,16 @@ public class ParadoxLoginRequiredNotification : INotificationInfo
 	public string Icon { get; }
 	public Color? Color => FormDesign.Design.RedColor;
 	public bool HasAction { get; }
+	public bool CanBeRead { get; }
 
 	public void OnClick()
 	{
 		_interfaceService.OpenParadoxLogin();
+	}
+
+	public void OnRead()
+	{
+		throw new NotImplementedException();
 	}
 
 	public void OnRightClick()

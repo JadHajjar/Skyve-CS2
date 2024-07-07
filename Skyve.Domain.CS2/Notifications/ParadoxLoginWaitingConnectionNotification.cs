@@ -27,10 +27,16 @@ public class ParadoxLoginWaitingConnectionNotification : INotificationInfo
 	public string Icon { get; }
 	public Color? Color => FormDesign.Design.YellowColor;
 	public bool HasAction { get; }
+	public bool CanBeRead { get; }
 
 	public void OnClick()
 	{
 		_workshopService.Login();
+	}
+
+	public void OnRead()
+	{
+		throw new NotImplementedException();
 	}
 
 	public void OnRightClick()

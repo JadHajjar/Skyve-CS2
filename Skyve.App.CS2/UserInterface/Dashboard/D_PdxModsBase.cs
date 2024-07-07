@@ -157,6 +157,20 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		{
 			preferredHeight += Margin.Top;
 		}
+
+		using var font = UI.Font(7.5F);
+
+		DrawButton(e, applyDrawing, ref preferredHeight, ViewMore, new ButtonDrawArgs
+		{
+			Font = font,
+			Icon = "PDXMods",
+			ButtonType = ButtonType.Dimmed,
+			Size = new Size(0, UI.Scale(20)),
+			Text = Locale.ViewMoreWorkshop,
+			Rectangle = e.ClipRectangle.Pad(BorderRadius)
+		});
+
+		preferredHeight += BorderRadius/2;
 	}
 
 	private void DrawMod(PaintEventArgs e, IWorkshopInfo workshopInfo, Rectangle rect, bool horizontal)
@@ -429,4 +443,6 @@ internal abstract class D_PdxModsBase : IDashboardItem
 
 		return rects;
 	}
+
+	protected abstract void ViewMore();
 }

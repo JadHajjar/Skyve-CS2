@@ -164,7 +164,10 @@ public partial class PC_PackagePageBase : PanelContent
 				FLP_Package_Links.ResumeDrawing();
 			}
 
-			TLP_Links.Visible = links.Count > 0;
+			if (TLP_Links.Visible = links.Count > 0)
+			{
+				FLP_Package_Links_SizeChanged(this, EventArgs.Empty);
+			}
 		}
 
 		// Requirements
@@ -447,5 +450,7 @@ public partial class PC_PackagePageBase : PanelContent
 		{
 			ctrl.Size = new(ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal, ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal);
 		}
+
+		FLP_Package_Links.PerformLayout();
 	}
 }

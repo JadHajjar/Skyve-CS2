@@ -20,7 +20,7 @@ internal class InterfaceService : IInterfaceService
 	{
 	}
 
-	public void OpenPackagePage(IPackageIdentity package, bool openCompatibilityPage)
+	public void OpenPackagePage(IPackageIdentity package, bool openCompatibilityPage, bool openCommentsPage)
 	{
 	}
 

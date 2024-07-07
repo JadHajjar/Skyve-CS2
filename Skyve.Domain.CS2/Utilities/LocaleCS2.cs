@@ -517,6 +517,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation UIDeveloperMode => _instance.GetText("UIDeveloperMode");
 
 	/// <summary>
+	/// New comments on '{0}'
+	/// </summary>
+	public static Translation UnreadComment => _instance.GetText("UnreadComment");
+
+	/// <summary>
 	/// Un-Like this mod
 	/// </summary>
 	public static Translation UnVoteMod => _instance.GetText("UnVoteMod");

@@ -88,13 +88,24 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.9.5.2" />
+  <ModVersion Value="0.10.0" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.9.5.2
-## Changes &amp; Fixes
-* Fixed not being able to properly update Skyve using an install location other than the default one.
-* Fixed the 'Unknown Publisher' popup when installing Skyve from the in-game button and in-app update button.
+# v0.10.0
+## Review Requests
+* You can now attach a save-game directly in your review request to better help us track down an issue. *This is optional.
+* If you have a pending review request, it will be shown while viewing a mod's compatibility information.
+* Skyve managers can now contact you on Skyve about your review request, letting you know if anything changed or if more information is needed.
+* You will now get a notification if anything new happens with your review request, or if the mod's compatibility data is changed.
+
+## Comments
+* Added a 'New' tag on comments that you haven't read yet. *This is local only, Skyve does not know if you read the comments on the PDX Forumns.
+* Creators that have comments on their mods will get a notification when there's new comments that they haven't read yet.
+
+## Other Changes
+* Added a button in the dashboard's new and recently updated mods sections to quickly jump to the PDX Mods tab with the selected tags and sorting.
+* Fixed thumbnails in the mod gallery and comments not working/showing correctly.
+* Fixed clicking on the attachment in the comments section not opening the image.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

@@ -238,4 +238,9 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 	{
 		return CompatibilityData.Packages.Keys;
 	}
+
+	public Task<ReviewReply?> GetReviewStatus(IPackageIdentity package)
+	{
+		return _skyveApiUtil.GetReviewStatus(package.Id);
+	}
 }

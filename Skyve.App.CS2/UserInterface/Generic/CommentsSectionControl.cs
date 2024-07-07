@@ -11,6 +11,7 @@ public partial class CommentsSectionControl : SlickControl
 	private bool isLoading;
 	private int page = 1;
 	private bool noMorePages;
+	private DateTime lastRead;
 
 	public IPackageIdentity? Package { get; set; }
 
@@ -67,6 +68,9 @@ public partial class CommentsSectionControl : SlickControl
 			changelogs = (await ServiceCenter.Get<IWorkshopService>().GetInfoAsync(Package))?.Changelog.OrderBy(x => x.ReleasedDate).ToArray();
 			noMorePages = !(modCommentsInfo?.HasMore ?? false);
 			App.Program.MainForm.CurrentPanel.StopLoader();
+
+			lastRead = ServiceCenter.Get<IUpdateManager>().GetLastReadComment(Package);
+			ServiceCenter.Get<IUpdateManager>().MarkCommentAsRead(Package);
 		}
 		catch { }
 
@@ -88,7 +92,7 @@ public partial class CommentsSectionControl : SlickControl
 				g.SetUp();
 				foreach (var item in modCommentsInfo.Posts)
 				{
-					var control = new CommentControl(item, Package, changelogs?.LastOrDefault(x => item.Created >= x.ReleasedDate)?.Version) { Dock = DockStyle.Top };
+					var control = new CommentControl(item, Package, changelogs?.LastOrDefault(x => item.Created >= x.ReleasedDate)?.Version, lastRead) { Dock = DockStyle.Top };
 					control.Reply += OnReply;
 					control.SetSize(g, Size);
 
@@ -136,7 +140,7 @@ public partial class CommentsSectionControl : SlickControl
 		TB_Message.Text = string.Empty;
 		TB_Message_Enter(sender, e);
 
-		var control = new CommentControl(post, Package, Package.GetWorkshopInfo()?.Version) { Dock = DockStyle.Top };
+		var control = new CommentControl(post, Package, Package.GetWorkshopInfo()?.Version, lastRead) { Dock = DockStyle.Top };
 
 		P_Comments.Controls.Add(control);
 

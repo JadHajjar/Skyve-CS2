@@ -26,6 +26,7 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 			Id = data.Id,
 			Name = data.Name,
 			Note = data.Note,
+			EditNote = data.EditNote,
 			RequiredDLCs = data.RequiredDLCs,
 			ReviewDate = data.ReviewDate,
 			ReviewedGameVersion = data.ReviewedGameVersion,

@@ -480,7 +480,14 @@ internal class PlaysetManager : IPlaysetManager
 
 	public void Save(ICustomPlayset customPlayset)
 	{
-		_saveHandler.Save(customPlayset, CrossIO.Combine("Playsets", $"{customPlayset.Id}.json"));
+		try
+		{
+			_saveHandler.Save(customPlayset, CrossIO.Combine("Playsets", $"{customPlayset.Id}.json"));
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex);
+		}
 
 		lock (_playsets)
 		{

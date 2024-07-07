@@ -145,6 +145,10 @@ internal class CentralManager : ICentralManager
 
 		if (_workshopService.IsLoggedIn)
 		{
+			await _updateManager.SendReviewRequestNotifications();
+
+			await _updateManager.SendUnreadCommentsNotifications();
+
 			await UpdateSkyveVersionsInPlaysets();
 		}
 

@@ -22,7 +22,7 @@ public partial class CommentControl : SlickControl
 
 	public IModComment Comment => _comment;
 
-	public CommentControl(IModComment comment, IPackageIdentity packageIdentity, string? versionNumber)
+	public CommentControl(IModComment comment, IPackageIdentity packageIdentity, string? versionNumber, DateTime lastRead)
 	{
 		InitializeComponent();
 		AutoSize = true;
@@ -36,16 +36,22 @@ public partial class CommentControl : SlickControl
 		L_AuthorLabel.Visible = _comment.Username == packageIdentity.GetWorkshopInfo()?.Author?.Id?.ToString();
 		L_Version.Text = versionNumber is null ? LocaleCS2.InitialRelease : $"v{versionNumber}";
 		L_Version.CustomBackColor = versionNumber == packageIdentity.GetWorkshopInfo()?.Version ? FormDesign.Design.GreenColor : FormDesign.Design.InfoColor.MergeColor(FormDesign.Design.BackColor);
+		L_Unread.Visible = lastRead != default && lastRead < _comment.Created;
+		L_Unread.CustomBackColor = FormDesign.Design.RedColor;
 
 		var matches = Regex.Matches(_comment.Message, @"\[ATTACH.+?\](\d+)\[/ATTACH\]");
 
 		foreach (Match match in matches)
 		{
-			FLP_Thumbnails.Controls.Add(new MiniThumbControl(new AttachmentThumbnail(match.Groups[1].Value))
+			var control = new MiniThumbControl(new AttachmentThumbnail(match.Groups[1].Value))
 			{
 				Label = $"Attachment #{match.Groups[1].Value}",
 				Size = UI.Scale(new Size(150, 100))
-			});
+			};
+
+			control.Click += (s, e) => PlatformUtil.OpenUrl($"https://forum.paradoxplaza.com/forum/attachments/{match.Groups[1].Value}");
+
+			FLP_Thumbnails.Controls.Add(control);
 		}
 	}
 
@@ -53,10 +59,10 @@ public partial class CommentControl : SlickControl
 	{
 		TLP_Back.Padding = Padding = UI.Scale(new Padding(6));
 		C_UserImage.Size = UI.Scale(new Size(48, 48));
-		L_Version.Padding = L_Time.Padding = L_AuthorLabel.Padding = UI.Scale(new Padding(4, 2, 2, 2));
+		L_Unread.Padding = L_Version.Padding = L_Time.Padding = L_AuthorLabel.Padding = UI.Scale(new Padding(4, 2, 2, 2));
 		L_Author.Font = UI.Font(9.75F, FontStyle.Bold);
-		L_Version.Font = L_Time.Font = UI.Font(7F);
-		L_Version.Margin = L_Time.Margin = UI.Scale(new Padding(3, 4, 0, 5));
+		L_Unread.Font = L_Version.Font = L_Time.Font = UI.Font(7F);
+		L_Unread.Margin = L_Version.Margin = L_Time.Margin = UI.Scale(new Padding(3, 4, 0, 5));
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -484,7 +490,7 @@ public partial class CommentControl : SlickControl
 			if (activeFormats.Any(x => x.Format is ForumFormat.URL))
 			{
 				var url = (string)activeFormats.Last(x => x.Format is ForumFormat.URL).Options["URL"];
-				Actions[new Rectangle(Point.Round(location), Size.Round(size))] = () => PlatformUtil.OpenUrl(url);
+				Actions[new Rectangle(Point.Round(location), Size.Round(size))] = () => OpenUrl(url);
 			}
 
 			g.DrawString(text, font, solidBrush ?? defaultBrush, location);
@@ -492,6 +498,20 @@ public partial class CommentControl : SlickControl
 			location.X += size.Width;
 
 			solidBrush?.Dispose();
+		}
+
+		private void OpenUrl(string url)
+		{
+			var regex = Regex.Match(url, @"mods\.paradoxplaza\.com/mods/(\d+)");
+
+			if (regex.Success)
+			{
+				ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(new GenericPackageIdentity(ulong.Parse(regex.Groups[1].Value)), false);
+
+				return;
+			}
+
+			PlatformUtil.OpenUrl(url);
 		}
 
 		private void NewLine()

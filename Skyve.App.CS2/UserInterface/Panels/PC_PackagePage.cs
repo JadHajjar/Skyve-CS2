@@ -23,7 +23,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 	private readonly ISettings _settings;
 	private readonly PackageCompatibilityControl _packageCompatibilityControl;
 
-	public PC_PackagePage(IPackageIdentity package, bool compatibilityPage = false) : base(package)
+	public PC_PackagePage(IPackageIdentity package, bool compatibilityPage = false, bool openCommentsPage = false) : base(package)
 	{
 		ServiceCenter.Get(out _compatibilityManager, out _settings, out IImageService imageService);
 
@@ -37,11 +37,8 @@ public partial class PC_PackagePage : PC_PackagePageBase
 
 		T_Comments.Visible = false;
 		T_Playsets.Visible = !package.IsLocal();
-
-		if (compatibilityPage)
-		{
-			T_Compatibility.PreSelected = true;
-		}
+		T_Compatibility.PreSelected = compatibilityPage;
+		T_Comments.PreSelected = openCommentsPage;
 
 		Controls.Add(_packageCompatibilityControl = new(package) { Dock = DockStyle.Top });
 
@@ -63,11 +60,6 @@ public partial class PC_PackagePage : PC_PackagePageBase
 		T_Playsets.LinkedControl = new OtherPlaysetPackage(package);
 
 		T_Playsets.Visible = !package.IsLocal();
-
-		if (compatibilityPage)
-		{
-			T_Compatibility.PreSelected = true;
-		}
 
 		SetPackage(package);
 	}

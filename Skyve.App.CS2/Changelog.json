@@ -2,6 +2,52 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.10.0",
+    "Date": "2024-07-07",
+    "ChangeGroups": [
+      {
+        "Name": "Review Requests",
+        "Changes": [
+          "You can now attach a save-game directly in your review request to better help us track down an issue. *This is optional.",
+          "If you have a pending review request, it will be shown while viewing a mod's compatibility information.",
+          "Skyve managers can now contact you on Skyve about your review request, letting you know if anything changed or if more information is needed.",
+          "You will now get a notification if anything new happens with your review request, or if the mod's compatibility data is changed."
+        ]
+      },
+      {
+        "Name": "Comments",
+        "Changes": [
+          "Added a 'New' tag on comments that you haven't read yet. *This is local only, Skyve does not know if you read the comments on the PDX Forumns.",
+          "Creators that have comments on their mods will get a notification when there's new comments that they haven't read yet."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Added a button in the dashboard's new and recently updated mods sections to quickly jump to the PDX Mods tab with the selected tags and sorting.",
+          "Fixed thumbnails in the mod gallery and comments not working/showing correctly.",
+          "Fixed clicking on the attachment in the comments section not opening the image."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.5.4",
+    "Date": "2024-07-04",
+    "ChangeGroups": [
+      {
+        "Name": "Fixes",
+        "Changes": [
+          "Crash fixes."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.5.3",
     "Date": "2024-07-03",
     "ChangeGroups": [
@@ -22,7 +68,7 @@
     "Date": "2024-06-29",
     "ChangeGroups": [
       {
-        "Name": "Changes & Fixes",
+        "Name": "Fixes",
         "Changes": [
           "Fixed not being able to properly update Skyve using an install location other than the default one.",
           "Fixed the 'Unknown Publisher' popup when installing Skyve from the in-game button and in-app update button."

@@ -12,6 +12,7 @@ internal class LastVersionNotification : INotificationInfo
 	public string Icon { get; }
 	public Color? Color { get; }
 	public bool HasAction { get; }
+	public bool CanBeRead { get; }
 
 	public LastVersionNotification()
 	{
@@ -40,5 +41,10 @@ internal class LastVersionNotification : INotificationInfo
 
 	public void OnRightClick()
 	{
+	}
+
+	public void OnRead()
+	{
+		throw new NotImplementedException();
 	}
 }

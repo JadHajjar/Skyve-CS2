@@ -45,6 +45,7 @@ public static class Startup
 		services.AddTransient<NamedPipelineUtil>();
 		services.AddTransient<AssemblyUtil>();
 		services.AddTransient<MacAssemblyUtil>();
+		services.AddTransient<GoFileApiUtil>();
 
 		return services;
 	}

@@ -29,6 +29,7 @@ internal class ReviewRequestDto : IDTO<ReviewRequestData, ReviewRequest>, IDTO<R
 			StatusPackages = data.StatusPackages,
 			Timestamp = data.Timestamp,
 			UserId = data.UserId,
+			SaveUrl = data.SaveUrl
 		};
 	}
 
@@ -56,6 +57,7 @@ internal class ReviewRequestDto : IDTO<ReviewRequestData, ReviewRequest>, IDTO<R
 			StatusPackages = data.StatusPackages,
 			Timestamp = data.Timestamp,
 			UserId = data.UserId,
+			SaveUrl = data.SaveUrl
 		};
 	}
 }

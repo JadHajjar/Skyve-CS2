@@ -45,28 +45,32 @@ public class NamedPipelineUtil(ICentralManager centralManager)
 
 	private async void PipeServerLoop()
 	{
-		var pipeSecurity = new PipeSecurity();
-
-		pipeSecurity.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, null), PipeAccessRights.FullControl, AccessControlType.Allow));
-
-		while (true)
+		try
 		{
-			using var pipeServer = new NamedPipeServerStream(PIPE_NAME, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 0, 0, pipeSecurity);
+			var pipeSecurity = new PipeSecurity();
 
-			pipeServer.WaitForConnection();
+			pipeSecurity.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, null), PipeAccessRights.FullControl, AccessControlType.Allow));
 
-			using var reader = new StreamReader(pipeServer);
+			while (true)
+			{
+				using var pipeServer = new NamedPipeServerStream(PIPE_NAME, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 0, 0, pipeSecurity);
 
-			var message = reader.ReadLine();
+				pipeServer.WaitForConnection();
 
-			CommandUtil.Parse(SplitArgs(message));
+				using var reader = new StreamReader(pipeServer);
 
-			await centralManager.RunCommands();
+				var message = reader.ReadLine();
 
-			Application.OpenForms[0].TryInvoke(Application.OpenForms[0].ShowUp);
+				CommandUtil.Parse(SplitArgs(message));
 
-			pipeServer.Disconnect();
+				await centralManager.RunCommands();
+
+				Application.OpenForms[0].TryInvoke(Application.OpenForms[0].ShowUp);
+
+				pipeServer.Disconnect();
+			}
 		}
+		catch { }
 	}
 
 	private string[] SplitArgs(string input)

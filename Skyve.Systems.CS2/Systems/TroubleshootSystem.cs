@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using PDX.SDK.Contracts.Logging;
+
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
@@ -10,6 +12,8 @@ using Skyve.Systems.CS2.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using ILogger = Skyve.Domain.Systems.ILogger;
 
 namespace Skyve.Systems.CS2.Systems;
 internal class TroubleshootSystem : ITroubleshootSystem
@@ -22,6 +26,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 	private readonly INotifier _notifier;
 	private readonly IPackageUtil _packageUtil;
 	private readonly IModUtil _modUtil;
+	private readonly ILogger _logger;
 	private readonly SaveHandler _saveHandler;
 
 	public event Action? StageChanged;
@@ -36,7 +41,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 	public int CurrentStage => currentState?.CurrentStage ?? 0;
 	public int TotalStages => currentState?.TotalStages ?? 0;
 
-	public TroubleshootSystem(IPackageManager packageManager, IPlaysetManager playsetManager, ISettings settings, INotifier notifier, ICitiesManager citiesManager, IPackageUtil packageUtil, IModLogicManager modLogicManager, IModUtil modUtil, SaveHandler saveHandler)
+	public TroubleshootSystem(IPackageManager packageManager, IPlaysetManager playsetManager, ISettings settings, INotifier notifier, ICitiesManager citiesManager, IPackageUtil packageUtil, IModLogicManager modLogicManager, IModUtil modUtil, SaveHandler saveHandler, ILogger logger)
 	{
 		try
 		{ saveHandler.Load(out currentState, "TroubleshootState.json"); }
@@ -49,6 +54,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		_notifier = notifier;
 		_packageUtil = packageUtil;
 		_modUtil = modUtil;
+		_logger = logger;
 		_saveHandler = saveHandler;
 
 		citiesManager.MonitorTick += CitiesManager_MonitorTick;
@@ -333,7 +339,14 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 	private void Save()
 	{
-		_saveHandler.Save(currentState, "TroubleshootState.json");
+		try
+		{
+			_saveHandler.Save(currentState, "TroubleshootState.json");
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex);
+		}
 	}
 
 	private void CitiesManager_MonitorTick(bool isAvailable, bool isRunning)
