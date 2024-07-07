@@ -9,7 +9,7 @@
   "ExcludeAllDisabledFiltered": "Remove filtered & disabled items from your active playset",
   "IncludeAllFiltered": "Add filtered items to your active playset",
   "ExcludeAllSelected": "선택 항목을 현재 PLAYSET에 제거",
-  "ExcludeAllDisabledSelected": "Remove selected & disabled items from your active playset",
+  "ExcludeAllDisabledSelected": "비활성 및 선택된 항목을 현재 PLAYSET에서 제거",
   "IncludeAllSelected": "선택 항목을 현재 PLAYSET에 추가",
   "ViewOnWorkshop": "View on PDX Mods",
   "CopyWorkshopLink": {
@@ -45,6 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "저장된 닉네임/비밀번호로 로그인에 실패하였습니다. 여기를 클릭하여 로그인 정보를 업데이트 하십시오.",
   "ParadoxLoginFailedEmpty": "현재 세션이 만료된 것으로 보입니다. 게임을 실행하여 로그인을 다시 하거나, Skyve를 통해 로그인하려면 여기를 클릭하세요.",
   "DownloadComplete": "다운로드 완료",
+  "DownloadFailed": "Download failed",
   "Downloading": "다운로드 중...",
   "ModsDownloadFailed": {
     "One": "다운로드에 실패한 모드",
@@ -74,8 +75,8 @@
   "InvalidFolderSettings": "Invalid setup detected",
   "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
   "InvalidFolderSettingsFail": "선택된 경로는 올바르지 않습니다. AppData의 'Cities Skylines II' 폴더를 선택하십시오.",
-  "DefaultLocation": "Default User Data Location",
-  "JunctionTitle": "Custom Content Location",
+  "DefaultLocation": "기본 사용자 데이터 위치",
+  "JunctionTitle": "커스텀 콘텐츠 위치",
   "JunctionDescription": "Change the location where the game stores its content. This includes any mods, assets, and settings.\r\n\r\nSkyve will create a link between your desired location and the default app data folder in this process.",
   "CurrentStatus": "현재 상태:",
   "ChangeLocation": "콘텐츠 위치 변경",
@@ -101,5 +102,27 @@
   "LowSpaceCreateJunction": {
     "Zero": "디스크 공간이 부족합니다. 저장소 공간을 확보하거나 디스크를 추가하십시오.",
     "One": "디스크 공간이 부족합니다. 옵션에서 저장된 게임 콘텐츠 경로를 변경하십시오."
-  }
+  },
+  "ModsYouAreAddingRequireDependencies": {
+    "One": "'{1}' has dependencies",
+    "Plural": "The packages you're adding have dependencies"
+  },
+  "AddingDependencies": {
+    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
+    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+  },
+  "Dependency_Automatic": "Automatically add dependencies",
+  "Dependency_Ask": "매번 묻기",
+  "Dependency_None": "Do nothing",
+  "DependencyResolution": "Dependency Resolution",
+  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
+  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
+  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
+  "SyncBeforeLaunching": "Synchronize mods before launching the game",
+  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
+  "Sorting_Best": "인기순",
+  "Sorting_Popularity": "구독순",
+  "Sorting_DateUpdated": "Last Updated",
+  "Sorting_DateCreated": "Most Recent",
+  "Sorting_WorkshopName": "로마자순"
 }

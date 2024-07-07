@@ -2,7 +2,7 @@
   "StartCities": "Запустить Cities: Skylines",
   "StopCities": "Закрыть Cities: Skylines",
   "NoWorkshop": "Отключить пакеты мастерской",
-  "ExcludeAll": "Remove all items from your active playset",
+  "ExcludeAll": "Удалить все элементы из вашего активного плейсета",
   "ExcludeAllDisabled": "Remove all disabled items from your active playset",
   "IncludeAll": "Add all items to your active playset",
   "ExcludeAllFiltered": "Remove filtered items from your active playset",
@@ -45,6 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "Your saved username/password failed to log in. Click here to update your information.",
   "ParadoxLoginFailedEmpty": "Your session has likely expired. Try launching the game to log in again, or click here to log in through Skyve.",
   "DownloadComplete": "Download completed",
+  "DownloadFailed": "Download failed",
   "Downloading": "Downloading...",
   "ModsDownloadFailed": {
     "One": "A mod failed to download",
@@ -61,17 +62,17 @@
   "CantRunAppFromHere": "You can't run Skyve from this folder.\r\n\r\nEither run the app from your Programs list, or run the Skyve Setup from the mod's folder.",
   "UpdateAvailable": "Update available",
   "UpdateAvailableInfo": "Click here to update Skyve",
-  "VoteMod": "Like this mod",
-  "UnVoteMod": "Un-Like this mod",
+  "VoteMod": "Мне нравится этот мод",
+  "UnVoteMod": "Мне не нравится этот мод",
   "LogLevel": "Log Level",
   "ParadoxAccount": "Paradox Account",
   "LoggingIn": "Logging in...",
-  "NotLoggedInCheckNotification": "You're not logged in to Paradox, check your notifications for more information.",
-  "HideUserSection": "Hide your profile in the main menu",
-  "DeveloperMode": "Enable Developer Mode",
-  "UIDeveloperMode": "Enable UI Developer Mode",
-  "LogsToPlayerLog": "Copy logs to Player.log",
-  "InvalidFolderSettings": "Invalid setup detected",
+  "NotLoggedInCheckNotification": "Вы не вошли в Paradox, проверьте уведомления для большего кол-ва информации.",
+  "HideUserSection": "Скрыть ваш профиль в главном меню",
+  "DeveloperMode": "Включить параметры для разработчиков",
+  "UIDeveloperMode": "Включить режим разработчика интерфейса",
+  "LogsToPlayerLog": "Скопировать логи в Player.log",
+  "InvalidFolderSettings": "Обнаружена неверная установка",
   "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
   "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
   "DefaultLocation": "Default User Data Location",
@@ -101,5 +102,27 @@
   "LowSpaceCreateJunction": {
     "Zero": "You're running out of disk space, you need to clear up some storage or get an additional hard disk.",
     "One": "You're running out of disk space, go to the options to change the location where the game's content is saved."
-  }
+  },
+  "ModsYouAreAddingRequireDependencies": {
+    "One": "'{1}' has dependencies",
+    "Plural": "The packages you're adding have dependencies"
+  },
+  "AddingDependencies": {
+    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
+    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+  },
+  "Dependency_Automatic": "Automatically add dependencies",
+  "Dependency_Ask": "Ask every time",
+  "Dependency_None": "Do nothing",
+  "DependencyResolution": "Dependency Resolution",
+  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
+  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
+  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
+  "SyncBeforeLaunching": "Synchronize mods before launching the game",
+  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
+  "Sorting_Best": "Most Popular",
+  "Sorting_Popularity": "Most Subscribed",
+  "Sorting_DateUpdated": "Last Updated",
+  "Sorting_DateCreated": "Most Recent",
+  "Sorting_WorkshopName": "Alphabetical"
 }

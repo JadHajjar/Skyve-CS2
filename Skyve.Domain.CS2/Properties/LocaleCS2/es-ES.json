@@ -45,6 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "No se pudo iniciar sesión con tu nombre de usuario/contraseña guardados. Haz clic aquí para actualizar tu información.",
   "ParadoxLoginFailedEmpty": "Es probable que tu sesión haya expirado. Intenta iniciar el juego para iniciar sesión de nuevo, o haz clic aquí para iniciar sesión a través de Skyve.",
   "DownloadComplete": "Descarga finalizada",
+  "DownloadFailed": "Descarga fallida",
   "Downloading": "Descargando...",
   "ModsDownloadFailed": {
     "One": "Error al descargar un mod",
@@ -101,5 +102,27 @@
   "LowSpaceCreateJunction": {
     "Zero": "Se está quedando sin espacio en el disco, necesitas liberar espacio on agregar un disco duro adicional.",
     "One": "Se está quedando sin espacio en disco, vaya a las opciones para cambiar la ubicación donde se guarda el contenido del juego."
-  }
+  },
+  "ModsYouAreAddingRequireDependencies": {
+    "One": "'{1}' tiene dependencias",
+    "Plural": "Los paquetes que estás añadiendo tienen dependencias"
+  },
+  "AddingDependencies": {
+    "One": "'{1}' es necesario para el/los mod(s) que agregas.\n\n¿Te gustaría añadir también '{1}' a tu playset?",
+    "Plural": "Los mod(s) que agregas tienen {0} dependencias: {1}\n\n¿Quieres añadirlas también a tu playset?"
+  },
+  "Dependency_Automatic": "Añadir dependencias automáticamente",
+  "Dependency_Ask": "Preguntar siempre",
+  "Dependency_None": "No hacer nada",
+  "DependencyResolution": "Resolución de dependencias",
+  "DependencyResolution_Tip": "Elija que pasará cuando añada un mod con dependencias que no tenga.",
+  "SyncOngoingLaunchGame": "Skyve todavía está sincronizando tus mods, ¿quieres iniciar el juego una vez que tus mods estén listos?\nSelecciona 'No' para iniciar el juego de todos modos.",
+  "StartingWithNoPlayset": "Estás a punto de iniciar el juego sin un playset activo.\nEsto significa que no se habilitarán mods en el juego.",
+  "SyncBeforeLaunching": "Sincronizar mods antes de iniciar el juego",
+  "SyncBeforeLaunching_Tip": "Ejecuta una sincronización antes de iniciar para asegurarse de que todos los mods están actualizados.",
+  "Sorting_Best": "Más popular",
+  "Sorting_Popularity": "Más suscritos",
+  "Sorting_DateUpdated": "Ultima actualización",
+  "Sorting_DateCreated": "Más recientes",
+  "Sorting_WorkshopName": "Alfabéticamente"
 }
