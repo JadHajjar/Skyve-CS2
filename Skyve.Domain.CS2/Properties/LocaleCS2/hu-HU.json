@@ -45,6 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "A mentett felhasználónév/jelszó nem jó a bejelentkezéshez. Kattints ide az adatok frissítéséhez.",
   "ParadoxLoginFailedEmpty": "A munkamenet valószínűleg lejárt. Próbáld meg elindítani a játékot az újbóli bejelentkezéshez, vagy kattints ide a Skyve-on keresztüli bejelentkezéshez.",
   "DownloadComplete": "A letöltés befejeződött",
+  "DownloadFailed": "Letöltés sikertelen",
   "Downloading": "Letöltés...",
   "ModsDownloadFailed": {
     "One": "Nem sikerült letölteni egy modot",
@@ -101,5 +102,27 @@
   "LowSpaceCreateJunction": {
     "Zero": "Elfogy a lemezterület, fel kell szabadítani egy kis tárhelyet, vagy be kell szerezni egy további merevlemezt.",
     "One": "Hamarosan elfogy a lemezterület, lépj a beállításokhoz a játék tartalmának mentési helyének módosításához."
-  }
+  },
+  "ModsYouAreAddingRequireDependencies": {
+    "One": "'{1}' függőségeket tartalmaz",
+    "Plural": "A hozzáadott csomagok függőséggel rendelkeznek"
+  },
+  "AddingDependencies": {
+    "One": "A hozzáadni kívánt mod(ok)hoz '{1}' szükséges.\n\nSzeretné hozzáadni a(z) '{1}' elemet is a játékkészletéhez?",
+    "Plural": "A hozzáadni kívánt mod(ok)nak {0} függősége van: {1}\n\nSzeretnéd hozzáadni őket a játékkészletedhez?"
+  },
+  "Dependency_Automatic": "Függőségek automatikus hozzáadása",
+  "Dependency_Ask": "Mindig kérdezzen rá",
+  "Dependency_None": "Nincs művelet",
+  "DependencyResolution": "Függőség felbontása",
+  "DependencyResolution_Tip": "Válassza ki, hogy mi történjen, ha olyan modot ad hozzá, amelynek függőségei nem állnak rendelkezésre.",
+  "SyncOngoingLaunchGame": "A Skyve még mindig szinkronizálja a modjaidat, szeretnéd elindítani a játékot, ha a modjaid készen állnak?\nA játék indításához válasszad a „Nem” lehetőséget.",
+  "StartingWithNoPlayset": "Aktív játékkészlet nélkül indítod el a játékot.\nEz azt jelenti, hogy semmilyen mod nem lesz engedélyezve a játékban.",
+  "SyncBeforeLaunching": "A játék indítása előtt szinkronizálja a modokat",
+  "SyncBeforeLaunching_Tip": "Indítás előtt lefuttat egy mod-szinkronizálást, hogy megbizonyosodjon arról, hogy minden mod naprakész.",
+  "Sorting_Best": "Legnépszerűbb",
+  "Sorting_Popularity": "Legtöbb feliratkozó",
+  "Sorting_DateUpdated": "Utolsó frissítés",
+  "Sorting_DateCreated": "Legutóbbi",
+  "Sorting_WorkshopName": "ABC sorrend"
 }
