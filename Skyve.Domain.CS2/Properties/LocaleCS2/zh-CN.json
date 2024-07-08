@@ -45,7 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "使用已保存的用户名/密码登录失败。请点击此处更新您的信息。",
   "ParadoxLoginFailedEmpty": "您的会话可能已过期。请尝试启动游戏并重新登录，或点击此处通过 Skyve 登录。",
   "DownloadComplete": "下载完毕",
-  "DownloadFailed": "Download failed",
+  "DownloadFailed": "下载失败",
   "Downloading": "正在下载...",
   "ModsDownloadFailed": {
     "One": "一个模组下载失败",
@@ -104,25 +104,25 @@
     "One": "硬盘空间不足，请前往选项页面更改游戏内容的保存位置。"
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "'{1}' has dependencies",
-    "Plural": "The packages you're adding have dependencies"
+    "One": "‘{1}’ 存在依赖",
+    "Plural": "添加的软件包存在依赖关系"
   },
   "AddingDependencies": {
-    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
+    "One": "添加的模组需要‘{1}’才能使用。\n是否将‘{1}’添加至配组？",
     "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
   },
-  "Dependency_Automatic": "Automatically add dependencies",
-  "Dependency_Ask": "Ask every time",
-  "Dependency_None": "Do nothing",
-  "DependencyResolution": "Dependency Resolution",
+  "Dependency_Automatic": "自动添加依赖",
+  "Dependency_Ask": "每次询问",
+  "Dependency_None": "无需采取任何操作",
+  "DependencyResolution": "解析依赖",
   "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
-  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
-  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
-  "SyncBeforeLaunching": "Synchronize mods before launching the game",
-  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
-  "Sorting_Best": "Most Popular",
-  "Sorting_Popularity": "Most Subscribed",
-  "Sorting_DateUpdated": "Last Updated",
-  "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "SyncOngoingLaunchGame": "Skyve正在同步你的模组，是否在同步完成后再启动？\n选择‘否’直接启动。",
+  "StartingWithNoPlayset": "正在无配组的情况下启动游戏。\n这意味着不会加载任何模组。",
+  "SyncBeforeLaunching": "在启动游戏前同步模组",
+  "SyncBeforeLaunching_Tip": "在启动游戏前同步模组，确保模组已经最新。",
+  "Sorting_Best": "最受欢迎",
+  "Sorting_Popularity": "最多订阅",
+  "Sorting_DateUpdated": "最后更新",
+  "Sorting_DateCreated": "最近添加",
+  "Sorting_WorkshopName": "字母序"
 }
