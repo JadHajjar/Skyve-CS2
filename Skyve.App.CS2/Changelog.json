@@ -2,6 +2,23 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.10.1",
+    "Date": "2024-07-08",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added the .cid file automatically when uploading a save-game.",
+          "Added a link button that can be sent to you using the review request replies.",
+          "Fixed getting multiple notifications about new comments during a long session.",
+          "Fixed getting a notification about new comments if it was 'you' that commented."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.10.0",
     "Date": "2024-07-07",
     "ChangeGroups": [

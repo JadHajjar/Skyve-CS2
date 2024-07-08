@@ -170,9 +170,12 @@ internal class UpdateManager : IUpdateManager
 
 				if (comments is not null && (comments.Posts?.Any() ?? false))
 				{
-					if (!_lastViewedComments.TryGetValue(mod.Id, out var date) || date < comments.Posts[0].Created)
+					if ((!_lastViewedComments.TryGetValue(mod.Id, out var date) || date < comments.Posts[0].Created) && comments.Posts[0].Username != _userService.User.Id?.ToString())
 					{
-						_notificationsService.SendNotification(new UnreadCommentNotification(mod, comments.Posts[0], this, _interfaceService, _notificationsService));
+						if (!_notificationsService.GetNotifications<UnreadCommentNotification>().Any(x => x.PackageId == mod.Id))
+						{
+							_notificationsService.SendNotification(new UnreadCommentNotification(mod, comments.Posts[0], this, _interfaceService, _notificationsService));
+						}
 					}
 
 					dictionary[mod] = comments.Posts[0];

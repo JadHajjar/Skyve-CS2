@@ -70,9 +70,9 @@ partial class PC_ViewReviewRequest
 			this.slickSpacer4 = new SlickControls.SlickSpacer();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+			this.TB_Link = new SlickControls.SlickTextBox();
 			this.TB_Note = new SlickControls.SlickTextBox();
 			this.B_SendReply = new SlickControls.SlickButton();
-			this.TB_Link = new SlickControls.SlickTextBox();
 			this.TLP_Main.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -118,7 +118,7 @@ partial class PC_ViewReviewRequest
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_Main.Size = new System.Drawing.Size(38659, 518);
+			this.TLP_Main.Size = new System.Drawing.Size(65535, 518);
 			this.TLP_Main.TabIndex = 2;
 			// 
 			// slickSpacer3
@@ -127,7 +127,7 @@ partial class PC_ViewReviewRequest
 			this.TLP_Main.SetColumnSpan(this.slickSpacer3, 3);
 			this.slickSpacer3.Location = new System.Drawing.Point(3, 60);
 			this.slickSpacer3.Name = "slickSpacer3";
-			this.slickSpacer3.Size = new System.Drawing.Size(38653, 1);
+			this.slickSpacer3.Size = new System.Drawing.Size(65529, 1);
 			this.slickSpacer3.TabIndex = 7;
 			this.slickSpacer3.TabStop = false;
 			this.slickSpacer3.Text = "slickSpacer3";
@@ -192,7 +192,7 @@ partial class PC_ViewReviewRequest
 			this.tableLayoutPanel3.RowCount = 2;
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(38659, 435);
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(65535, 435);
 			this.tableLayoutPanel3.TabIndex = 3;
 			this.tableLayoutPanel3.Visible = false;
 			// 
@@ -203,7 +203,7 @@ partial class PC_ViewReviewRequest
 			this.DD_Stability.ItemHeight = 24;
 			this.DD_Stability.Location = new System.Drawing.Point(3, 3);
 			this.DD_Stability.Name = "DD_Stability";
-			this.DD_Stability.Size = new System.Drawing.Size(16101, 56);
+			this.DD_Stability.Size = new System.Drawing.Size(27300, 56);
 			this.DD_Stability.TabIndex = 18;
 			this.DD_Stability.Text = "Stability";
 			// 
@@ -212,9 +212,9 @@ partial class PC_ViewReviewRequest
 			this.DD_Usage.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.DD_Usage.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DD_Usage.ItemHeight = 24;
-			this.DD_Usage.Location = new System.Drawing.Point(22553, 3);
+			this.DD_Usage.Location = new System.Drawing.Point(32767, 3);
 			this.DD_Usage.Name = "DD_Usage";
-			this.DD_Usage.Size = new System.Drawing.Size(16103, 54);
+			this.DD_Usage.Size = new System.Drawing.Size(27301, 54);
 			this.DD_Usage.TabIndex = 20;
 			this.DD_Usage.Text = "Usage";
 			// 
@@ -223,9 +223,9 @@ partial class PC_ViewReviewRequest
 			this.DD_PackageType.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.DD_PackageType.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DD_PackageType.ItemHeight = 24;
-			this.DD_PackageType.Location = new System.Drawing.Point(22553, 65);
+			this.DD_PackageType.Location = new System.Drawing.Point(32767, 65);
 			this.DD_PackageType.Name = "DD_PackageType";
-			this.DD_PackageType.Size = new System.Drawing.Size(16103, 54);
+			this.DD_PackageType.Size = new System.Drawing.Size(27301, 54);
 			this.DD_PackageType.TabIndex = 21;
 			this.DD_PackageType.Text = "PackageType";
 			// 
@@ -236,7 +236,7 @@ partial class PC_ViewReviewRequest
 			this.DD_DLCs.ItemHeight = 24;
 			this.DD_DLCs.Location = new System.Drawing.Point(3, 65);
 			this.DD_DLCs.Name = "DD_DLCs";
-			this.DD_DLCs.Size = new System.Drawing.Size(16101, 54);
+			this.DD_DLCs.Size = new System.Drawing.Size(27300, 54);
 			this.DD_DLCs.TabIndex = 19;
 			this.DD_DLCs.Text = "RequiredDLCs";
 			// 
@@ -252,7 +252,7 @@ partial class PC_ViewReviewRequest
 			// L_Savegame
 			// 
 			this.L_Savegame.AutoSize = true;
-			this.L_Savegame.Location = new System.Drawing.Point(19318, 38);
+			this.L_Savegame.Location = new System.Drawing.Point(32756, 38);
 			this.L_Savegame.Name = "L_Savegame";
 			this.L_Savegame.Size = new System.Drawing.Size(77, 19);
 			this.L_Savegame.TabIndex = 1;
@@ -303,7 +303,7 @@ partial class PC_ViewReviewRequest
 			this.B_DeleteRequest.ImageName = dynamicIcon2;
 			this.B_DeleteRequest.Location = new System.Drawing.Point(3, 23);
 			this.B_DeleteRequest.Name = "B_DeleteRequest";
-			this.B_DeleteRequest.Size = new System.Drawing.Size(161, 32);
+			this.B_DeleteRequest.Size = new System.Drawing.Size(141, 32);
 			this.B_DeleteRequest.SpaceTriggersClick = true;
 			this.B_DeleteRequest.TabIndex = 2;
 			this.B_DeleteRequest.Text = "DeleteRequests";
@@ -316,9 +316,9 @@ partial class PC_ViewReviewRequest
 			this.B_Reply.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon3.Name = "Chat";
 			this.B_Reply.ImageName = dynamicIcon3;
-			this.B_Reply.Location = new System.Drawing.Point(263, 23);
+			this.B_Reply.Location = new System.Drawing.Point(277, 23);
 			this.B_Reply.Name = "B_Reply";
-			this.B_Reply.Size = new System.Drawing.Size(159, 32);
+			this.B_Reply.Size = new System.Drawing.Size(157, 32);
 			this.B_Reply.SpaceTriggersClick = true;
 			this.B_Reply.TabIndex = 1;
 			this.B_Reply.Text = "ReplyToRequester";
@@ -330,9 +330,9 @@ partial class PC_ViewReviewRequest
 			this.B_ApplyChanges.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon4.Name = "Link";
 			this.B_ApplyChanges.ImageName = dynamicIcon4;
-			this.B_ApplyChanges.Location = new System.Drawing.Point(428, 23);
+			this.B_ApplyChanges.Location = new System.Drawing.Point(440, 23);
 			this.B_ApplyChanges.Name = "B_ApplyChanges";
-			this.B_ApplyChanges.Size = new System.Drawing.Size(208, 32);
+			this.B_ApplyChanges.Size = new System.Drawing.Size(200, 32);
 			this.B_ApplyChanges.SpaceTriggersClick = true;
 			this.B_ApplyChanges.TabIndex = 1;
 			this.B_ApplyChanges.Text = "ApplyRequestedChanges";
@@ -345,9 +345,9 @@ partial class PC_ViewReviewRequest
 			this.B_ManagePackage.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon5.Name = "Link";
 			this.B_ManagePackage.ImageName = dynamicIcon5;
-			this.B_ManagePackage.Location = new System.Drawing.Point(642, 23);
+			this.B_ManagePackage.Location = new System.Drawing.Point(646, 23);
 			this.B_ManagePackage.Name = "B_ManagePackage";
-			this.B_ManagePackage.Size = new System.Drawing.Size(151, 32);
+			this.B_ManagePackage.Size = new System.Drawing.Size(147, 32);
 			this.B_ManagePackage.SpaceTriggersClick = true;
 			this.B_ManagePackage.TabIndex = 0;
 			this.B_ManagePackage.Text = "ManagePackage";
@@ -422,7 +422,7 @@ partial class PC_ViewReviewRequest
 			this.TLP_Reply.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Reply.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Reply.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_Reply.Size = new System.Drawing.Size(976, 378);
+			this.TLP_Reply.Size = new System.Drawing.Size(1190, 378);
 			this.TLP_Reply.TabIndex = 21;
 			// 
 			// TLP_Actions
@@ -445,7 +445,7 @@ partial class PC_ViewReviewRequest
 			this.TLP_Actions.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Actions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.TLP_Actions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_Actions.Size = new System.Drawing.Size(970, 232);
+			this.TLP_Actions.Size = new System.Drawing.Size(1184, 232);
 			this.TLP_Actions.TabIndex = 26;
 			// 
 			// B_LetUserKnowIsFixed
@@ -454,7 +454,7 @@ partial class PC_ViewReviewRequest
 			this.B_LetUserKnowIsFixed.FromScratch = false;
 			dynamicIcon6.Name = "Ok";
 			this.B_LetUserKnowIsFixed.ImageName = dynamicIcon6;
-			this.B_LetUserKnowIsFixed.Location = new System.Drawing.Point(357, 3);
+			this.B_LetUserKnowIsFixed.Location = new System.Drawing.Point(464, 3);
 			this.B_LetUserKnowIsFixed.Name = "B_LetUserKnowIsFixed";
 			this.B_LetUserKnowIsFixed.Padding = new System.Windows.Forms.Padding(22);
 			this.B_LetUserKnowIsFixed.Size = new System.Drawing.Size(256, 101);
@@ -468,7 +468,7 @@ partial class PC_ViewReviewRequest
 			this.B_LetUserKnowSaveFileNeeded.FromScratch = false;
 			dynamicIcon7.Name = "SaveGame";
 			this.B_LetUserKnowSaveFileNeeded.ImageName = dynamicIcon7;
-			this.B_LetUserKnowSaveFileNeeded.Location = new System.Drawing.Point(357, 110);
+			this.B_LetUserKnowSaveFileNeeded.Location = new System.Drawing.Point(464, 110);
 			this.B_LetUserKnowSaveFileNeeded.Name = "B_LetUserKnowSaveFileNeeded";
 			this.B_LetUserKnowSaveFileNeeded.Padding = new System.Windows.Forms.Padding(22);
 			this.B_LetUserKnowSaveFileNeeded.Size = new System.Drawing.Size(256, 119);
@@ -481,7 +481,7 @@ partial class PC_ViewReviewRequest
 			this.slickSpacer1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
 			this.slickSpacer1.Location = new System.Drawing.Point(3, 114);
 			this.slickSpacer1.Name = "slickSpacer1";
-			this.slickSpacer1.Size = new System.Drawing.Size(465, 23);
+			this.slickSpacer1.Size = new System.Drawing.Size(572, 23);
 			this.slickSpacer1.TabIndex = 22;
 			this.slickSpacer1.TabStop = false;
 			this.slickSpacer1.Text = "slickSpacer1";
@@ -489,9 +489,9 @@ partial class PC_ViewReviewRequest
 			// slickSpacer4
 			// 
 			this.slickSpacer4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-			this.slickSpacer4.Location = new System.Drawing.Point(508, 114);
+			this.slickSpacer4.Location = new System.Drawing.Point(615, 114);
 			this.slickSpacer4.Name = "slickSpacer4";
-			this.slickSpacer4.Size = new System.Drawing.Size(465, 23);
+			this.slickSpacer4.Size = new System.Drawing.Size(572, 23);
 			this.slickSpacer4.TabIndex = 23;
 			this.slickSpacer4.TabStop = false;
 			this.slickSpacer4.Text = "slickSpacer4";
@@ -499,7 +499,7 @@ partial class PC_ViewReviewRequest
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(474, 111);
+			this.label1.Location = new System.Drawing.Point(581, 111);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(28, 19);
 			this.label1.TabIndex = 24;
@@ -511,8 +511,8 @@ partial class PC_ViewReviewRequest
 			this.tableLayoutPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.tableLayoutPanel4.ColumnCount = 2;
 			this.TLP_Reply.SetColumnSpan(this.tableLayoutPanel4, 3);
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 83.33334F));
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667F));
+			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
+			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
 			this.tableLayoutPanel4.Controls.Add(this.TB_Link, 1, 0);
 			this.tableLayoutPanel4.Controls.Add(this.TB_Note, 0, 0);
 			this.tableLayoutPanel4.Controls.Add(this.B_SendReply, 1, 1);
@@ -523,8 +523,23 @@ partial class PC_ViewReviewRequest
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(970, 105);
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(1184, 105);
 			this.tableLayoutPanel4.TabIndex = 25;
+			// 
+			// TB_Link
+			// 
+			this.TB_Link.Dock = System.Windows.Forms.DockStyle.Top;
+			this.TB_Link.LabelText = "Link";
+			this.TB_Link.Location = new System.Drawing.Point(891, 3);
+			this.TB_Link.MultiLine = true;
+			this.TB_Link.Name = "TB_Link";
+			this.TB_Link.Padding = new System.Windows.Forms.Padding(6, 19, 6, 6);
+			this.TB_Link.Placeholder = "Write a message to send to the requester";
+			this.TB_Link.SelectedText = "";
+			this.TB_Link.SelectionLength = 0;
+			this.TB_Link.SelectionStart = 0;
+			this.TB_Link.Size = new System.Drawing.Size(290, 41);
+			this.TB_Link.TabIndex = 22;
 			// 
 			// TB_Note
 			// 
@@ -541,7 +556,7 @@ partial class PC_ViewReviewRequest
 			this.TB_Note.SelectedText = "";
 			this.TB_Note.SelectionLength = 0;
 			this.TB_Note.SelectionStart = 0;
-			this.TB_Note.Size = new System.Drawing.Size(802, 41);
+			this.TB_Note.Size = new System.Drawing.Size(882, 41);
 			this.TB_Note.TabIndex = 21;
 			// 
 			// B_SendReply
@@ -552,28 +567,13 @@ partial class PC_ViewReviewRequest
 			this.B_SendReply.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon8.Name = "Link";
 			this.B_SendReply.ImageName = dynamicIcon8;
-			this.B_SendReply.Location = new System.Drawing.Point(833, 50);
+			this.B_SendReply.Location = new System.Drawing.Point(1071, 50);
 			this.B_SendReply.Name = "B_SendReply";
-			this.B_SendReply.Size = new System.Drawing.Size(134, 32);
+			this.B_SendReply.Size = new System.Drawing.Size(110, 32);
 			this.B_SendReply.SpaceTriggersClick = true;
 			this.B_SendReply.TabIndex = 0;
 			this.B_SendReply.Text = "SendReply";
 			this.B_SendReply.Click += new System.EventHandler(this.B_SendReply_Click);
-			// 
-			// TB_Link
-			// 
-			this.TB_Link.Dock = System.Windows.Forms.DockStyle.Top;
-			this.TB_Link.LabelText = "Link";
-			this.TB_Link.Location = new System.Drawing.Point(811, 3);
-			this.TB_Link.MultiLine = true;
-			this.TB_Link.Name = "TB_Link";
-			this.TB_Link.Padding = new System.Windows.Forms.Padding(6, 19, 6, 6);
-			this.TB_Link.Placeholder = "Write a message to send to the requester";
-			this.TB_Link.SelectedText = "";
-			this.TB_Link.SelectionLength = 0;
-			this.TB_Link.SelectionStart = 0;
-			this.TB_Link.Size = new System.Drawing.Size(156, 41);
-			this.TB_Link.TabIndex = 22;
 			// 
 			// PC_ViewReviewRequest
 			// 

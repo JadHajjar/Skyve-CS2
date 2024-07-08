@@ -304,6 +304,9 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 			RequestUpdate = true,
 			Username = _request.UserId
 		});
+
+		TB_Link.Text = string.Empty;
+		TB_Note.Text = string.Empty;
 	}
 
 	private async Task SendMessage(SlickControl button, ReviewReply reply)
@@ -317,6 +320,11 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 		if (!result.Success)
 		{
 			ShowPrompt("Failed to send the reply.\r\n\r\n" + result.Message, icon: PromptIcons.Error);
+		}
+		else
+		{
+			P_Reply.Visible = false;
+			P_Info.Visible = true;
 		}
 	}
 }

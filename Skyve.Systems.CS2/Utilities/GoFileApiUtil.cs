@@ -28,14 +28,25 @@ public class GoFileApiUtil
 		var folderId = await CreateFolder(filePath);
 		var server = await GetServer();
 
+		if (File.Exists(filePath + ".cid"))
+		{
+			await UploadFile(filePath + ".cid", folderId, server);
+		}
+
+		return await UploadFile(filePath, folderId, server);
+	}
+
+	private async Task<string> UploadFile(string filePath, string folderId, string server)
+	{
 		using var httpClient = new HttpClient();
 		using var form = new MultipartFormDataContent();
 
 		var fileBytes = File.ReadAllBytes(filePath);
 		var fileContent = new ByteArrayContent(fileBytes);
 		fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
-		
+
 		form.Add(fileContent, "file", Path.GetFileName(filePath));
+
 		form.Add(new StringContent(folderId), "folderId");
 
 		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
