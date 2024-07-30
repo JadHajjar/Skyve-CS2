@@ -519,7 +519,7 @@ internal class PlaysetManager : IPlaysetManager
 				Id = CurrentPlayset.Id,
 				Name = CurrentPlayset.Name,
 			},
-			SubscribedMods = contents.ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Id.ToString(), new()
+			SubscribedMods = contents.Where(x => !(x.GetWorkshopInfo()?.Tags?.Any(x => x.Key is "Map" or "Savegame") ?? false)).ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Id.ToString(), new()
 			{
 				Id = (int)x.Id,
 				Name = x.Name,

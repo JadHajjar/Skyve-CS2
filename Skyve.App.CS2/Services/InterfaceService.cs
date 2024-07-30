@@ -62,7 +62,7 @@ internal class InterfaceService : IAppInterfaceService
 
 	bool IInterfaceService.AskForDependencyConfirmation(List<IPackageIdentity> packages, List<IPackageIdentity> dependencies)
 	{
-		return DialogResult.Yes == MessagePrompt.Show(LocaleCS2.AddingDependencies.FormatPlural(packages.Count, packages[0].CleanName(true)), LocaleCS2.ModsYouAreAddingRequireDependencies.FormatPlural(dependencies.Count, dependencies.ListStrings(x => x.CleanName(true), ", ")), PromptButtons.YesNo, PromptIcons.Question, App.Program.MainForm);
+		return DialogResult.Yes == MessagePrompt.Show(LocaleCS2.AddingDependencies.FormatPlural(dependencies.Count, dependencies.ListStrings(x => x.CleanName(true), ", ")), LocaleCS2.ModsYouAreAddingRequireDependencies.FormatPlural(packages.Count, packages.ListStrings(x => x.CleanName(true), ", ")), PromptButtons.YesNo, PromptIcons.Question, App.Program.MainForm);
 	}
 
 	void IInterfaceService.OpenLogReport(bool save)

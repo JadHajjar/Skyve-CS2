@@ -367,7 +367,10 @@ internal class ModsUtil : IModUtil
 			{
 				foreach (var item in workshopInfo.Requirements)
 				{
-					if (!item.IsDlc && !mods.Any(x => x.Id == item.Id) && !list.Any(x => x.Id == item.Id) && !IsEnabled(item, playsetId))
+					if (!item.IsDlc 
+						&& !mods.Any(x => x.Id == item.Id) 
+						&& !list.Any(x => x.Id == item.Id) 
+						&& !IsEnabled(item, playsetId))
 					{
 						list.Add(item);
 					}

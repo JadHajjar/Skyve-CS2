@@ -2,6 +2,22 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.10.2",
+    "Date": "2024-07-30",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed Dev Mode and UI Dev Mode being mixed up in the playset menu.",
+          "Added a 'Safe Mode' launch option in the Utilities page.",
+          "Save-games and Maps are no longer included in log reports' playset info."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.10.1",
     "Date": "2024-07-08",
     "ChangeGroups": [
