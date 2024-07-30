@@ -233,6 +233,17 @@ internal class CitiesManager : ICitiesManager
 		_iOUtil.Execute(file, string.Join(" ", args));
 	}
 
+	public void RunSafeMode()
+	{
+		var playsetManager = _serviceProvider.GetService<IPlaysetManager>();
+		string[] args = ["--burst-disable-compilation", .. GetCommandArgs(playsetManager)];
+		var file = IsExeLaunch(null)
+			? _locationManager.CitiesPathWithExe
+			: _locationManager.SteamPathWithExe;
+
+		_iOUtil.Execute(file, string.Join(" ", args));
+	}
+
 	public bool IsRunning()
 	{
 		try

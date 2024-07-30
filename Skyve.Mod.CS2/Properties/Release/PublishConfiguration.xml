@@ -88,15 +88,15 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.10.1" />
+  <ModVersion Value="0.10.2" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.10.1
+# v0.10.2
 ## Changes
-* Added the .cid file automatically when uploading a save-game.
-* Added a link button that can be sent to you using the review request replies.
-* Fixed getting multiple notifications about new comments during a long session.
-* Fixed getting a notification about new comments if it was 'you' that commented.
+* Added a 'Safe Mode' launch option in the Utilities page.
+* Fixed Dev Mode and UI Dev Mode being mixed up in the playset menu.
+* Save-games and Maps are no longer included in log reports' playset info.
+* Updated translations.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

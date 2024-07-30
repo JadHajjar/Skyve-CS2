@@ -133,5 +133,8 @@
   "InitialRelease": "Initial Release",
   "ForumPage": "Forum Page",
   "DisableBurstCompile": "Disable Burst-Compilation",
-  "UnreadComment": "New comments on '{0}'"
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support."
 }

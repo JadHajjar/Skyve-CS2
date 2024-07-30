@@ -60,18 +60,19 @@ public partial class PC_Utilities : PanelContent
 		L_Troubleshoot.Text = Locale.TroubleshootInfo;
 		L_PdxSyncInfo.Text = LocaleCS2.PdxSyncInfo;
 		L_SyncStatusLabel.Text = LocaleCS2.CurrentStatus;
+		L_SafeMode.Text = LocaleCS2.SafeModeInfo;
 	}
 
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
-		B_Troubleshoot.Margin = B_RunSync.Margin = P_Sync.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10));
+		B_SafeMode.Margin = B_Troubleshoot.Margin = B_RunSync.Margin = P_Sync.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10));
 		B_ImportClipboard.Margin = UI.Scale(new Padding(10));
 		L_Troubleshoot.Font = L_PdxSyncInfo.Font = L_SyncStatus.Font = UI.Font(9F);
 		L_SyncStatusLabel.Font = UI.Font(9F, FontStyle.Bold);
 		L_Troubleshoot.Margin = UI.Scale(new Padding(3));
-		L_PdxSyncInfo.Margin = L_SyncStatus.Margin = UI.Scale(new Padding(3, 3, 3, 10));
+		L_SafeMode.Margin = L_PdxSyncInfo.Margin = L_SyncStatus.Margin = UI.Scale(new Padding(3, 3, 3, 10));
 		L_SyncStatusLabel.Margin = UI.Scale(new Padding(3, 3, 5, 10));
 
 		foreach (Control item in P_Reset.Controls)
@@ -259,5 +260,16 @@ public partial class PC_Utilities : PanelContent
 
 		B_FixAllIssues.Loading = false;
 		B_FixAllIssues.Enabled = true;
+	}
+
+	private async void B_SafeMode_Click(object sender, EventArgs e)
+	{
+		B_SafeMode.Loading = true;
+
+		_citiesManager.RunSafeMode();
+
+		await Task.Delay(5000);
+
+		B_SafeMode.Loading = false;
 	}
 }

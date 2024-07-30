@@ -253,6 +253,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation JunctionTitle => _instance.GetText("JunctionTitle");
 
 	/// <summary>
+	/// Launch in Safe Mode
+	/// </summary>
+	public static Translation LaunchInSafeMode => _instance.GetText("LaunchInSafeMode");
+
+	/// <summary>
 	/// Launch through Cities2.exe
 	/// </summary>
 	public static Translation LaunchThroughCities => _instance.GetText("LaunchThroughCities");
@@ -419,6 +424,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Start Synchronization
 	/// </summary>
 	public static Translation RunSync => _instance.GetText("RunSync");
+
+	/// <summary>
+	/// Safe Mode
+	/// </summary>
+	public static Translation SafeMode => _instance.GetText("SafeMode");
+
+	/// <summary>
+	/// Launch the game in 'Safe Mode' to help identify issues with crashes.  It is hard to identify the source of a crash, and makes recovering a save impossible sometimes. Safe mode allows the game to avoid crashes in most cases to lets you recover a save, and for errors to properly be logged and analysed by tech support.
+	/// </summary>
+	public static Translation SafeModeInfo => _instance.GetText("SafeModeInfo");
 
 	/// <summary>
 	/// Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.  Make sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.
