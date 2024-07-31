@@ -104,17 +104,17 @@
     "One": "硬盘空间不足，请前往选项页面更改游戏内容的保存位置。"
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "‘{1}’ 存在依赖",
-    "Plural": "添加的软件包存在依赖关系"
+    "One": "‘{1}’ 需要前置项目",
+    "Plural": "您正在添加的模组需要前置项目"
   },
   "AddingDependencies": {
     "One": "添加的模组需要‘{1}’才能使用。\n是否将‘{1}’添加至配组？",
-    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+    "Plural": "您正在添加的模组有 {0} 个依赖项： {1}\n\n要将它们一并添加到您的配组中吗？"
   },
-  "Dependency_Automatic": "自动添加依赖",
+  "Dependency_Automatic": "自动添加前置项目",
   "Dependency_Ask": "每次询问",
   "Dependency_None": "无需采取任何操作",
-  "DependencyResolution": "解析依赖",
+  "DependencyResolution": "选择如何处理前置项目",
   "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
   "SyncOngoingLaunchGame": "Skyve正在同步你的模组，是否在同步完成后再启动？\n选择‘否’直接启动。",
   "StartingWithNoPlayset": "正在无配组的情况下启动游戏。\n这意味着不会加载任何模组。",
