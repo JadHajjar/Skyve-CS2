@@ -105,7 +105,7 @@
   },
   "ModsYouAreAddingRequireDependencies": {
     "One": "'{1}' ha dipendenze",
-    "Plural": "The packages you're adding have dependencies"
+    "Plural": "I pacchetti che aggiungi hanno dipendenze"
   },
   "AddingDependencies": {
     "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
@@ -120,9 +120,9 @@
   "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
   "SyncBeforeLaunching": "Synchronize mods before launching the game",
   "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
-  "Sorting_Best": "Most Popular",
-  "Sorting_Popularity": "Most Subscribed",
-  "Sorting_DateUpdated": "Last Updated",
-  "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "Sorting_Best": "Più Popolari",
+  "Sorting_Popularity": "Più Sottoscritti",
+  "Sorting_DateUpdated": "Ultima modifica",
+  "Sorting_DateCreated": "Più recenti",
+  "Sorting_WorkshopName": "Alfabetico"
 }
