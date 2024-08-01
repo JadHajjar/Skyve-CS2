@@ -45,7 +45,7 @@
   "ParadoxLoginFailedBadCredentials": "Il tuo username/password salvati sono errati. Clicca qui per aggiornare le tue informazioni.",
   "ParadoxLoginFailedEmpty": "Probabilmente la tua sessione è scaduta. Prova ad avviare il gioco per accedere di nuovo, o clicca qui per accedere tramite Skyve.",
   "DownloadComplete": "Download completato",
-  "DownloadFailed": "Download failed",
+  "DownloadFailed": "Download non riuscito",
   "Downloading": "Download in corso...",
   "ModsDownloadFailed": {
     "One": "Impossibile scaricare una mod",
@@ -104,17 +104,17 @@
     "One": "Stai esaurendo lo spazio su disco, vai alle opzioni per cambiare la posizione in cui il contenuto del gioco viene salvato."
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "'{1}' has dependencies",
+    "One": "'{1}' ha dipendenze",
     "Plural": "The packages you're adding have dependencies"
   },
   "AddingDependencies": {
     "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
     "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
   },
-  "Dependency_Automatic": "Automatically add dependencies",
-  "Dependency_Ask": "Ask every time",
-  "Dependency_None": "Do nothing",
-  "DependencyResolution": "Dependency Resolution",
+  "Dependency_Automatic": "Aggiungi automaticamente le dipendenze",
+  "Dependency_Ask": "Chiedi ogni volta",
+  "Dependency_None": "Non fare nulla",
+  "DependencyResolution": "Risoluzione Dipendenze",
   "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
   "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
   "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
