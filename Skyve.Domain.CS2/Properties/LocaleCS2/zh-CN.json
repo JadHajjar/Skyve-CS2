@@ -115,7 +115,7 @@
   "Dependency_Ask": "每次询问",
   "Dependency_None": "无需采取任何操作",
   "DependencyResolution": "选择如何处理前置项目",
-  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
+  "DependencyResolution_Tip": "当添加一个缺少前置依赖的模组时，选择你的偏好",
   "SyncOngoingLaunchGame": "Skyve正在同步你的模组，是否在同步完成后再启动？\n选择‘否’直接启动。",
   "StartingWithNoPlayset": "正在无配组的情况下启动游戏。\n这意味着不会加载任何模组。",
   "SyncBeforeLaunching": "在启动游戏前同步模组",
