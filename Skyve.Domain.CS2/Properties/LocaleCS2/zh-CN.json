@@ -49,7 +49,7 @@
   "Downloading": "正在下载...",
   "ModsDownloadFailed": {
     "One": "一个模组下载失败",
-    "Plural": "一些模组下载失败"
+    "Plural": "有多个模组下载失败"
   },
   "LoginToParadox": "登录到 Paradox",
   "LoginFailed": "登录失败，请确保您的电子邮件地址和密码是正确的。或稍后再试。",
