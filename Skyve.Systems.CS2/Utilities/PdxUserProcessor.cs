@@ -23,7 +23,7 @@ internal class PdxUserProcessor : PeriodicProcessor<string, PdxUser>
 		_workshopService = workshopService;
 		_saveHandler = saveHandler;
 		_notifier = notifier;
-		MaxCacheTime = TimeSpan.FromDays(5);
+		MaxCacheTime = TimeSpan.FromDays(10);
 	}
 
 	protected override bool CanProcess()

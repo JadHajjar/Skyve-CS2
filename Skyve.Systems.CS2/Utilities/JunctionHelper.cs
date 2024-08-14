@@ -18,7 +18,7 @@ public static class JunctionHelper
 
 		Process.Start(new ProcessStartInfo()
 		{
-			Arguments = $"/C xcopy /E /I /Y \"{appDataFolder}\" \"{targetFolder}\" & rmdir /S /Q \"{appDataFolder}\" & mklink /J \"{appDataFolder}\" \"{targetFolder}\" & exit",
+			Arguments = $"/C xcopy /E /I /Y \"{appDataFolder}\" \"{targetFolder}\" && rmdir /S /Q \"{appDataFolder}\" && mklink /J \"{appDataFolder}\" \"{targetFolder}\" & exit",
 			WindowStyle = ProcessWindowStyle.Hidden,
 			UseShellExecute = false,
 			CreateNoWindow = true,
@@ -38,7 +38,7 @@ public static class JunctionHelper
 		{
 			Process.Start(new ProcessStartInfo()
 			{
-				Arguments = $"/C rd \"{appDataFolder}\" & xcopy /E /I /Y \"{currentTarget}\" \"{appDataFolder}\" & rmdir /S /Q \"{currentTarget}\" & exit",
+				Arguments = $"/C rd \"{appDataFolder}\" && xcopy /E /I /Y \"{currentTarget}\" \"{appDataFolder}\" && rmdir /S /Q \"{currentTarget}\" & exit",
 				WindowStyle = ProcessWindowStyle.Hidden,
 				UseShellExecute = false,
 				CreateNoWindow = true,

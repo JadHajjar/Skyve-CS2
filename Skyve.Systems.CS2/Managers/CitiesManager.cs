@@ -122,7 +122,10 @@ internal class CitiesManager : ICitiesManager
 
 		try
 		{
-			CleanupData();
+			if (!_settings.UserSettings.AdvancedLaunchOptions)
+			{
+				CleanupData();
+			}
 		}
 		catch { }
 
@@ -137,22 +140,10 @@ internal class CitiesManager : ICitiesManager
 	private void CleanupData()
 	{
 		var logDir = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Logs"));
-		var dir1 = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods", "Gooee"));
-		var dir2 = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "Gooee"));
 
 		if (logDir.Exists)
 		{
 			logDir.Delete(true);
-		}
-
-		if (dir1.Exists)
-		{
-			dir1.Delete(true);
-		}
-
-		if (dir2.Exists)
-		{
-			dir2.Delete(true);
 		}
 	}
 
@@ -225,7 +216,7 @@ internal class CitiesManager : ICitiesManager
 
 	public void RunStub()
 	{
-		string[] args = ["--stub", .. GetCommandArgs(null)];
+		string[] args = [.. GetCommandArgs(null), "--stub"];
 		var file = IsExeLaunch(null)
 			? _locationManager.CitiesPathWithExe
 			: _locationManager.SteamPathWithExe;
@@ -236,7 +227,7 @@ internal class CitiesManager : ICitiesManager
 	public void RunSafeMode()
 	{
 		var playsetManager = _serviceProvider.GetService<IPlaysetManager>();
-		string[] args = ["--burst-disable-compilation", .. GetCommandArgs(playsetManager)];
+		string[] args = [.. GetCommandArgs(playsetManager), "--burst-disable-compilation", "--logsEffectiveness=DEBUG"];
 		var file = IsExeLaunch(null)
 			? _locationManager.CitiesPathWithExe
 			: _locationManager.SteamPathWithExe;

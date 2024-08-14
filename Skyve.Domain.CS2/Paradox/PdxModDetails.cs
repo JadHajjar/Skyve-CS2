@@ -12,7 +12,8 @@ using System.Drawing;
 using System.Linq;
 
 namespace Skyve.Domain.CS2.Paradox;
-public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
+
+public class PdxModDetails : IModDetails
 {
 	[Obsolete("", true)]
 	public PdxModDetails()

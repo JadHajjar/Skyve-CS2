@@ -88,15 +88,12 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.10.2" />
+  <ModVersion Value="0.10.2.4" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.10.2
+# v0.10.2.4
 ## Changes
-* Added a 'Safe Mode' launch option in the Utilities page.
-* Fixed Dev Mode and UI Dev Mode being mixed up in the playset menu.
-* Save-games and Maps are no longer included in log reports' playset info.
-* Updated translations.
+* Backend improvements to reduce repeated calls to the PDX servers.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

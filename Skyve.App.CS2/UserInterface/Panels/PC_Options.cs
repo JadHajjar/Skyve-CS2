@@ -237,6 +237,16 @@ public partial class PC_Options : PanelContent
 		{
 			if (Directory.Exists(dialog.SelectedPath))
 			{
+				if (new DirectoryInfo(dialog.SelectedPath).Attributes.HasFlag(FileAttributes.System))
+				{
+					return;
+				}
+
+				if (dialog.SelectedPath.Length < 5)
+				{
+					return;
+				}
+
 				if (ShowPrompt(LocaleCS2.JunctionRestart, Locale.RestartRequired, PromptButtons.OKCancel, PromptIcons.Info) != DialogResult.OK)
 				{
 					return;

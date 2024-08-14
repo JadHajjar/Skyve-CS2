@@ -2,6 +2,63 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.10.2.4",
+    "Date": "2024-08-12",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Backend improvements to reduce repeated calls to the PDX servers."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.2.3",
+    "Date": "2024-08-11",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Moved the data cleanup to the skyve-app launch instead of game launch."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.2.2",
+    "Date": "2024-08-10",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed mods that have not yet received updates after their initial release causing an infinite reload when having their page open.",
+          "Enabled DEBUG logging during safe mode launch."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.2.1",
+    "Date": "2024-08-10",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed an issue with 'Safe Mode' not working."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.10.2",
     "Date": "2024-07-30",
     "ChangeGroups": [

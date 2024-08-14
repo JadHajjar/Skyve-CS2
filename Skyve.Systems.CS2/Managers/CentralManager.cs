@@ -7,6 +7,7 @@ using Skyve.Systems.CS2.Utilities;
 using SlickControls;
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
@@ -152,6 +153,12 @@ internal class CentralManager : ICentralManager
 			await UpdateSkyveVersionsInPlaysets();
 		}
 
+		try
+		{
+			CleanupData();
+		}
+		catch { }
+
 		_logger.Info($"Finished.");
 	}
 
@@ -232,21 +239,35 @@ internal class CentralManager : ICentralManager
 	public async Task UpdateSkyveVersionsInPlaysets()
 	{
 #if Stable
+		const ulong MODID = ;
 #else
 		const ulong MODID = 75804;
 #endif
 		var package = new GenericPackageIdentity(MODID);
 
-		await _packageUtil.SetVersion(package, null);
+		//await _packageUtil.SetVersion(package, null);
+	}
 
-		foreach (var playset in _playsetManager.Playsets)
+	private void CleanupData()
+	{
+		var folders = new string[] {
+			"Mods/Gooee",
+			"ModsData/Gooee",
+			"Mods/LegacyFlavour",
+			"ModsData/LegacyFlavour",
+			"Mods/FindStuff",
+			"Mods/MapImageLayer",
+			"Mods/RealisticDensity",
+			"Mods/UltimateMonitor",
+		};
+
+		foreach (var folder in folders)
 		{
-			if (playset != _playsetManager.CurrentPlayset)
+			var dir = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, folder));
+
+			if (dir.Exists)
 			{
-				if (_packageUtil.IsIncluded(package, playset.Id))
-				{
-					await _packageUtil.SetVersion(package, null, playset.Id);
-				}
+				dir.Delete(true);
 			}
 		}
 	}

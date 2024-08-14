@@ -63,7 +63,7 @@ public partial class PC_PackagePageBase : PanelContent
 	{
 		var currentVersion = _packageUtil.GetSelectedVersion(Package);
 
-		if (currentVersion != DD_Version.SelectedItem?.VersionId)
+		if (DD_Version.Items.Length > 1 && currentVersion != DD_Version.SelectedItem?.VersionId)
 		{
 			DD_Version.Loading = true;
 			await _packageUtil.SetVersion(Package, DD_Version.SelectedItem == DD_Version.Items.FirstOrDefault() ? null : DD_Version.SelectedItem?.VersionId);

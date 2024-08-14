@@ -114,6 +114,7 @@ public class WorkshopService : IWorkshopService
 			Environment = BackendEnvironment.Live,
 			TelemetryDebugEnabled = false,
 			Ecosystem = ecoSystem,
+			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/{typeof(WorkshopService).Assembly.GetName().Version}" } },
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
 #if DEBUG
 			LogLevel = LogLevel.L1_Debug,
@@ -278,7 +279,7 @@ public class WorkshopService : IWorkshopService
 		return identity.Id <= 0 ? null : await _modProcessor.Get((int)identity.Id, true);
 	}
 
-	internal async Task<PdxModDetails?> GetInfoAsync(int id)
+	internal async Task<IModDetails?> GetInfoAsync(int id)
 	{
 		if (Context is null || id <= 0 || !IsLoggedIn)
 		{
@@ -295,6 +296,10 @@ public class WorkshopService : IWorkshopService
 			var ratingResult = await Context.Mods.GetUserRating(id);
 
 			return new PdxModDetails(result.Mod, ratingResult.Rating != 0);
+		}
+		else if (result?.Error.Category is BaseCategory.NotFound)
+		{
+			return new PdxBannedMod(id);
 		}
 
 		return null;
@@ -326,7 +331,7 @@ public class WorkshopService : IWorkshopService
 			return new PdxUser(result.CreatorProfile);
 		}
 
-		return null;
+		return new PdxUser(username);
 	}
 
 	internal async Task<ModDetails?> GetInfoRawAsync(int id)
