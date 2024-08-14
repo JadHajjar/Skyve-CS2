@@ -409,5 +409,15 @@ namespace Skyve.App.CS2.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Skyve_PleaseWait_Background {
+            get {
+                object obj = ResourceManager.GetObject("Skyve_PleaseWait_Background", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

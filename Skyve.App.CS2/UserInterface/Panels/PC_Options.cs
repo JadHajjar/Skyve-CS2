@@ -237,13 +237,38 @@ public partial class PC_Options : PanelContent
 		{
 			if (Directory.Exists(dialog.SelectedPath))
 			{
-				if (new DirectoryInfo(dialog.SelectedPath).Attributes.HasFlag(FileAttributes.System))
+				var invalidPaths = new[]
 				{
+					Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+					Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+					"C:/windows" +
+					"C:/program files"
+				};
+
+				if (dialog.SelectedPath.Length < 5
+					|| new DirectoryInfo(dialog.SelectedPath).Attributes.HasAnyFlag(FileAttributes.System, FileAttributes.ReadOnly, FileAttributes.Temporary)
+					|| invalidPaths.Any(x => dialog.SelectedPath.PathContains(x)))
+				{
+					ShowPrompt(LocaleCS2.JunctionInvalidFolder, PromptButtons.OK, PromptIcons.Hand);
 					return;
 				}
 
-				if (dialog.SelectedPath.Length < 5)
+				try
 				{
+					var targetFolder = new DirectoryInfo(Path.Combine(dialog.SelectedPath, "Cities Skylines II"));
+
+					if (targetFolder.Exists)
+					{
+						ShowPrompt(LocaleCS2.JunctionInvalidFolder, PromptButtons.OK, PromptIcons.Hand);
+						return;
+					}
+
+					targetFolder.Create();
+					targetFolder.Delete();
+				}
+				catch
+				{
+					ShowPrompt(LocaleCS2.JunctionInvalidFolder, PromptButtons.OK, PromptIcons.Hand);
 					return;
 				}
 

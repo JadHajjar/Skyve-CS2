@@ -2,6 +2,22 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.10.2.5",
+    "Date": "2024-08-14",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added more restrictions and safeguards when changing the content location for the game to prevent users losing their data.",
+          "Added a visual window to let users know that the location change process is still ongoing.",
+          "Improved folder cleanup."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.10.2.4",
     "Date": "2024-08-12",
     "ChangeGroups": [

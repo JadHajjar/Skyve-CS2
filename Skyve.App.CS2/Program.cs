@@ -64,6 +64,21 @@ internal static class Program
 		{
 			HandleIncorrectLaunchLocation();
 
+			if (args.Any(x => x.StartsWith("-createJunction") || x.StartsWith("-deleteJunction")))
+			{
+				Application.EnableVisualStyles();
+				Application.SetCompatibleTextRenderingDefault(false);
+
+				if (OSVersion.Version.Major >= 6)
+				{
+					SetProcessDPIAware();
+				}
+
+				Application.Run(new PleaseWaitForm(args));
+
+				return;
+			}
+
 			if (CommandUtil.Parse(args))
 			{
 				return;

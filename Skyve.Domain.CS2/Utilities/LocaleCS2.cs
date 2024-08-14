@@ -243,6 +243,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation JunctionDescription => _instance.GetText("JunctionDescription");
 
 	/// <summary>
+	/// The selected folder is not a valid destination. Please try another one.
+	/// </summary>
+	public static Translation JunctionInvalidFolder => _instance.GetText("JunctionInvalidFolder");
+
+	/// <summary>
 	/// Skyve and Cities: Skylines II will close during this process.  Skyve will restart automatically once finished.
 	/// </summary>
 	public static Translation JunctionRestart => _instance.GetText("JunctionRestart");

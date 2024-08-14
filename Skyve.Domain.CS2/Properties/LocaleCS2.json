@@ -88,6 +88,7 @@
   "ResetLocation": "Reset Location",
   "JunctionRestart": "Skyve and Cities: Skylines II will close during this process.\r\n\r\nSkyve will restart automatically once finished.",
   "PlaysetAlreadyImported": "This playset is already present in your list of playsets.",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Could not retrieve the mods' data",
   "NewGameUpdate": "New Cities: Skylines II Update",
   "NewGameUpdateInfo": "Patch {0} is now available.\r\nBe sure to check your compatibility report before starting your game.",
