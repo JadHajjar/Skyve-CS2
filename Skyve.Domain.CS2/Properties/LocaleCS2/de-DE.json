@@ -98,24 +98,24 @@
   "TotalSubbedSize": "Größe von Abonnements",
   "TotalOtherSize": "Größe der anderen Dateien",
   "FreeSpace": "{0} frei",
-  "UsedOutOfSpace": "out of the {0} on drive {1}",
+  "UsedOutOfSpace": "von insgesamt {0} auf Laufwerk {1}",
   "LowSpaceCreateJunction": {
-    "Zero": "You're running out of disk space, you need to clear up some storage or get an additional hard disk.",
-    "One": "You're running out of disk space, go to the options to change the location where the game's content is saved."
+    "Zero": "Ihre Festplatte hat keinen Speicherplatz mehr. Schaffen Sie entweder mehr Platz durch das Löschen nicht benötigter Dateien, oder nutzen sie eine andere Festplatte.",
+    "One": "Ihre Festplatte hat keinen Speicherplatz mehr. In den Optionen können Sie einstellen, wo das Spiel seine Dateien speichert."
   },
   "ModsYouAreAddingRequireDependencies": {
     "One": "'{1}' hat Abhängigkeiten",
-    "Plural": "The packages you're adding have dependencies"
+    "Plural": "Das Paket, das Sie hinzufügen möchten, hat Abhängigkeiten"
   },
   "AddingDependencies": {
-    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
-    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+    "One": "\"{1}\" wird für die Mod(s) benötigt.\n\nMöchten Sie \"{1}\" dem aktuellen Playset hinzufügen?",
+    "Plural": "Die Mod(s), die sie hinzufügen wollen hat {0} Abhängigkeiten: {1}\n\nMöchten Sie diese dem aktuellen Playset hinzufügen?"
   },
   "Dependency_Automatic": "Abhängigkeiten automatisch hinzufügen",
   "Dependency_Ask": "Immer nachfragen",
   "Dependency_None": "Nichts tun",
-  "DependencyResolution": "Dependency Resolution",
-  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
+  "DependencyResolution": "Handhabung von Abhängigkeiten",
+  "DependencyResolution_Tip": "Was soll passieren, wenn Sie eine Mod hinzufügen, die von anderen, nicht installierten Mods, abhängt.",
   "SyncOngoingLaunchGame": "Skyve synchronisiert deine Mods noch. Möchtest du das Spiel starten, sobald alle Mods bereit wurden?\nWähle \"Nein\", um das Spiel sofort zu starten.",
   "StartingWithNoPlayset": "Du bist dabei das Spiel ohne aktiven Spielset zu starten.\nDas bedeutet, dass keine Mods im Spiel aktiviert werden.",
   "SyncBeforeLaunching": "Mods synchronisieren, bevor das Spiel gestartet wird",
