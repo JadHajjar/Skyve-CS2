@@ -116,7 +116,7 @@
   "Dependency_None": "Ne rien faire",
   "DependencyResolution": "Résolution des dépendances",
   "DependencyResolution_Tip": "Choisissez ce qu’il se passe quand vous ajoutez un mod avec des dépendances que vous n'avez pas installé.",
-  "SyncOngoingLaunchGame": "Skyve est toujours en train de synchroniser vos mods, voulez-vous lancer le jeu une fois que vos mods sont prêts ?\nSélectionnez « Non » pour lancer le jeu quand même.",
+  "SyncOngoingLaunchGame": "Skyve synchronise vos mods, voulez-vous lancer le jeu une fois que la synchronisation sera terminée ?\nSélectionnez “Non” pour lancer le jeu quand même.",
   "StartingWithNoPlayset": "Vous êtes sur le point de lancer le jeu sans playset actif.\nCela signifie qu’aucun mod ne sera activé dans le jeu.",
   "SyncBeforeLaunching": "Synchroniser les mods avant de lancer le jeu",
   "SyncBeforeLaunching_Tip": "Exécute une synchronisation des mods avant de lancer le jeu pour s'assurer que tous les mods sont à jour.",
