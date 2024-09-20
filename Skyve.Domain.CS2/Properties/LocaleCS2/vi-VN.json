@@ -60,7 +60,7 @@
   "FilterIncludedByDefault_Tip": "Only shows local content that are included in your active playset by default.",
   "RunSetupOrRunApp": "You can't run Skyve from this folder. If you've installed it already, run it from your Programs list.\r\n\r\nIf not, click on 'Ok' to run the setup.",
   "CantRunAppFromHere": "You can't run Skyve from this folder.\r\n\r\nEither run the app from your Programs list, or run the Skyve Setup from the mod's folder.",
-  "UpdateAvailable": "Update available",
+  "UpdateAvailable": "Bản cập nhật có sẵn",
   "UpdateAvailableInfo": "Click here to update Skyve",
   "VoteMod": "Like this mod",
   "UnVoteMod": "Un-Like this mod",
@@ -87,12 +87,12 @@
   "NewGameUpdate": "New Cities: Skylines II Update",
   "NewGameUpdateInfo": "Patch {0} is now available.\r\nBe sure to check your compatibility report before starting your game.",
   "PdxSyncInfo": "The PDX Synchronization process handles downloading and updating your mods, as well as synchronizing the settings and playsets you have between your local computer and PDX Mods services.",
-  "SyncOngoing": "Sync is currently ongoing",
-  "PdxSync": "PDX Mods Sync",
-  "RunSync": "Start Synchronization",
-  "PDXModsNew": "New on PDX Mods",
-  "PDXModsUpdated": "Recently updated on PDX Mods",
-  "DiskStatus": "Disk Status",
+  "SyncOngoing": "Đồng bộ hóa đang diễn ra",
+  "PdxSync": "Đồng bộ mod PDX",
+  "RunSync": "Bắt đầu đồng bộ hóa",
+  "PDXModsNew": "Mới trên PDX mod",
+  "PDXModsUpdated": "Vừa mới cập nhật trên PDX mod",
+  "DiskStatus": "Trạng thái ổ đĩa",
   "TotalCitiesSize": "Total C:S II User Data Stored",
   "TotalSavesSize": "Savegames' Size",
   "TotalSubbedSize": "Subscriptions' Size",
@@ -101,19 +101,19 @@
   "UsedOutOfSpace": "out of the {0} on drive {1}",
   "LowSpaceCreateJunction": {
     "Zero": "You're running out of disk space, you need to clear up some storage or get an additional hard disk.",
-    "One": "You're running out of disk space, go to the options to change the location where the game's content is saved."
+    "One": "Bạn sắp hết dung lượng trên ổ đĩa của bạn, hãy vào mục tùy chọn để thay đổi vị trí nội dung trong trò chơi."
   },
   "ModsYouAreAddingRequireDependencies": {
     "One": "'{1}' has dependencies",
     "Plural": "The packages you're adding have dependencies"
   },
   "AddingDependencies": {
-    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
-    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+    "One": "{1} đang cần thiết cho mod bạn đang thêm vào\n\nBạn có muốn thêm {1} vào bộ sưu tập không?",
+    "Plural": "Mod bạn đang thêm có {0} mod phụ thuộc: {1}\n\nBạn có muốn thêm vào bộ sưu tập không?"
   },
-  "Dependency_Automatic": "Automatically add dependencies",
-  "Dependency_Ask": "Ask every time",
-  "Dependency_None": "Do nothing",
+  "Dependency_Automatic": "Tự động thêm bản phụ thuộc",
+  "Dependency_Ask": "Luôn hỏi",
+  "Dependency_None": "Không làm gì cả",
   "DependencyResolution": "Dependency Resolution",
   "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
   "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
