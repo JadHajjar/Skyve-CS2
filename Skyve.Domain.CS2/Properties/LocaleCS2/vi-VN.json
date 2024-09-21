@@ -49,7 +49,7 @@
   "Downloading": "Đang tải xuống...",
   "ModsDownloadFailed": {
     "One": "Mod này không thể tải xuống",
-    "Plural": "Some mods failed to download"
+    "Plural": "Một số mod tải xuống thất bại"
   },
   "LoginToParadox": "Đăng nhập vào Paradox",
   "LoginFailed": "Đăng nhập thất bại, hãy chắc chắn rằng e-mail và mật khẩu của bạn đã đúng. Hoặc thử lại sau.",
