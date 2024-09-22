@@ -92,8 +92,8 @@ public class PdxModDetails : IModDetails
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => Changelog ?? [];
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => Images ?? [];
 	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
-
 	bool IWorkshopInfo.IsPartialInfo { get; }
+	bool IPackage.IsBuiltIn { get; }
 
 	bool IWorkshopInfo.HasComments()
 	{

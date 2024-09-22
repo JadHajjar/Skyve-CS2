@@ -27,6 +27,7 @@ public class PdxModIdentityPackage : IPackage
 	public ILocalPackageData? LocalData { get; }
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
+	public bool IsBuiltIn { get; }
 	public ulong Id { get; }
 	public string Name { get; }
 	public string? Url { get; }

@@ -16,6 +16,7 @@ public class PdxBannedMod(int id) : IModDetails
 	public string? Version { get; }
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
+	public bool IsBuiltIn { get; }
 	public ILocalPackageData? LocalData { get; }
 	public IUser? Author { get; }
 	public string? ThumbnailUrl { get; }

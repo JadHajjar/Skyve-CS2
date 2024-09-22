@@ -1,6 +1,5 @@
 ﻿using Extensions;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
 using PDX.SDK.Contracts;
@@ -27,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -419,7 +417,7 @@ public class WorkshopService : IWorkshopService
 			sortBy = GetPdxSorting(sorting),
 			searchQuery = query,
 			tags = requiredTags?.ToList(),
-			time = (SearchTime)(int)searchTime,
+			time = sorting == WorkshopQuerySorting.Best ? (SearchTime)(int)searchTime : null,
 			orderBy = GetPdxOrder(sorting),
 			page = page,
 			pageSize = limit ?? 100
@@ -745,7 +743,7 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset)
 	{
-		if (Context is null || playset <= 1)
+		if (Context is null || playset <= 1 || !mods.Any())
 		{
 			return false;
 		}
@@ -777,7 +775,7 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<bool> UnsubscribeBulk(IEnumerable<int> mods, int playset)
 	{
-		if (Context is null || playset <= 1)
+		if (Context is null || playset <= 1 || !mods.Any())
 		{
 			return false;
 		}
@@ -791,6 +789,76 @@ public class WorkshopService : IWorkshopService
 				foreach (var id in mods)
 				{
 					var result = await Context.Mods.Unsubscribe(id, playset);
+
+					results.Add(ProcessResult(result));
+
+					await Task.Delay(1500);
+				}
+			}
+
+			_notifier.OnWorkshopSyncEnded();
+
+			return results.All(x => x.Success);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Catastrophic error during UnsubscribeBulk");
+
+			return false;
+		}
+	}
+
+	internal async Task<bool> SubscribeBulk(IEnumerable<string> mods, int playset)
+	{
+		if (Context is null || playset <= 1 || !mods.Any())
+		{
+			return false;
+		}
+
+		var results = new List<Result>();
+
+		try
+		{
+			using (Lock)
+			{
+				foreach (var name in mods)
+				{
+					var result = await Context.Mods.Subscribe(name, playset);
+
+					results.Add(ProcessResult(result));
+
+					await Task.Delay(1500);
+				}
+			}
+
+			_notifier.OnWorkshopSyncEnded();
+
+			return results.All(x => x.Success);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Catastrophic error during UnsubscribeBulk");
+
+			return false;
+		}
+	}
+
+	internal async Task<bool> UnsubscribeBulk(IEnumerable<string> mods, int playset)
+	{
+		if (Context is null || playset <= 1 || !mods.Any())
+		{
+			return false;
+		}
+
+		var results = new List<Result>();
+
+		try
+		{
+			using (Lock)
+			{
+				foreach (var name in mods)
+				{
+					var result = await Context.Mods.Unsubscribe(name, playset);
 
 					results.Add(ProcessResult(result));
 
@@ -909,6 +977,31 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
+	internal async Task<bool> SetEnableBulk(List<string> modNames, int playset, bool enable)
+	{
+		if (Context is null)
+		{
+			return false;
+		}
+
+		try
+		{
+			var result = enable
+				? await Context.Mods.EnableBulk(modNames, playset)
+				: await Context.Mods.DisableBulk(modNames, playset);
+
+			ProcessResult(result);
+
+			return result.Success;
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, $"Catastrophic error during SetEnableBulk({enable})");
+
+			return false;
+		}
+	}
+
 	internal async Task<IPlayset?> ClonePlayset(int id)
 	{
 		if (Context is null)
@@ -935,7 +1028,7 @@ public class WorkshopService : IWorkshopService
 		{
 			var result = ProcessResult(await Context.Mods.Sync());
 
-			if (result.Error is not null && result.Error == Mods.PromptNeeded)
+			if (result?.Error == Mods.PromptNeeded)
 			{
 				var conflicts = await Context.Mods.GetSyncConflicts();
 
@@ -959,6 +1052,11 @@ public class WorkshopService : IWorkshopService
 		}
 
 		ProcessResult(await Context.Mods.DeactivateActivePlayset());
+	}
+
+	public bool IsLocal(IPackageIdentity identity)
+	{
+		return identity.Id <= 0 && identity is not LocalPdxPackage;
 	}
 
 	public async Task<int> CreateCollection(string folder, string name, string desc, string thumbnail, List<IPackageIdentity> list = null)

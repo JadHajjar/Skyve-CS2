@@ -5,17 +5,20 @@ namespace Skyve.Domain.CS2.Utilities;
 public class ModStateCollection
 {
 	private readonly Dictionary<int, Dictionary<ulong, bool>> _enabledConfig;
+	private readonly Dictionary<int, Dictionary<string, bool>> _enabledLocalConfig;
 	private readonly Dictionary<int, Dictionary<ulong, string>> _versionConfig;
 
 	public ModStateCollection()
 	{
 		_enabledConfig = [];
+		_enabledLocalConfig = [];
 		_versionConfig = [];
 	}
 
-	public ModStateCollection(Dictionary<int, Dictionary<ulong, bool>> enabledConfig, Dictionary<int, Dictionary<ulong, string>> versionConfig)
+	public ModStateCollection(Dictionary<int, Dictionary<ulong, bool>> enabledConfig, Dictionary<int, Dictionary<string, bool>> enabledLocalConfig, Dictionary<int, Dictionary<ulong, string>> versionConfig)
 	{
 		_enabledConfig = enabledConfig;
+		_enabledLocalConfig = enabledLocalConfig;
 		_versionConfig = versionConfig;
 	}
 
@@ -25,6 +28,12 @@ public class ModStateCollection
 	{
 		return _enabledConfig.TryGetValue(playset, out var dic)
 			&& dic.ContainsKey(modId);
+	}
+
+	public bool IsIncluded(int playset, string modName)
+	{
+		return _enabledLocalConfig.TryGetValue(playset, out var dic)
+			&& dic.ContainsKey(modName);
 	}
 
 	public void Remove(int playset, ulong modId)
@@ -40,10 +49,25 @@ public class ModStateCollection
 		}
 	}
 
+	public void Remove(int playset, string modName)
+	{
+		if (_enabledLocalConfig.TryGetValue(playset, out var dic1))
+		{
+			dic1.Remove(modName);
+		}
+	}
+
 	public bool IsEnabled(int playset, ulong modId)
 	{
 		return _enabledConfig.TryGetValue(playset, out var dic)
 			&& dic.TryGetValue(modId, out var enabled)
+			&& enabled;
+	}
+
+	public bool IsEnabled(int playset, string modName)
+	{
+		return _enabledLocalConfig.TryGetValue(playset, out var dic)
+			&& dic.TryGetValue(modName, out var enabled)
 			&& enabled;
 	}
 
@@ -56,6 +80,18 @@ public class ModStateCollection
 		else
 		{
 			_enabledConfig[playset] = new() { [modId] = enabled };
+		}
+	}
+
+	public void SetEnabled(int playset, string name, bool enabled)
+	{
+		if (_enabledLocalConfig.TryGetValue(playset, out var dic))
+		{
+			dic[name] = enabled;
+		}
+		else
+		{
+			_enabledLocalConfig[playset] = new() { [name] = enabled };
 		}
 	}
 
@@ -81,16 +117,24 @@ public class ModStateCollection
 		}
 	}
 
-	public void SetState(int playset, ulong modId, bool enabled, string version)
+	public void SetState(int playset, IPackageIdentity mod, bool enabled, string version)
 	{
-		SetEnabled(playset, modId, enabled);
-		SetVersion(playset, modId, version);
+		if (mod.Id == 0)
+		{
+			SetEnabled(playset, mod.Name, enabled);
+		}
+		else
+		{
+			SetEnabled(playset, mod.Id, enabled);
+			SetVersion(playset, mod.Id, version);
+		}
 	}
 
 	public ModStateCollection Clone()
 	{
 		return new ModStateCollection(
 			_enabledConfig.ToDictionary(x => x.Key, y => new Dictionary<ulong, bool>(y.Value)),
+			_enabledLocalConfig.ToDictionary(x => x.Key, y => new Dictionary<string, bool>(y.Value)),
 			_versionConfig.ToDictionary(x => x.Key, y => new Dictionary<ulong, string>(y.Value))
 		);
 	}

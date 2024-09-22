@@ -155,8 +155,8 @@ internal class ContentManager : IContentManager
 	{
 		var packages = new List<IPackage>();
 		var gameModsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods");
-		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves");
-		var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps");
+		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves", _settings.FolderSettings.UserIdentifier);
+		//var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps", _settings.FolderSettings.UserIdentifier);
 
 		if (Directory.Exists(gameModsPath))
 		{
@@ -178,27 +178,25 @@ internal class ContentManager : IContentManager
 		}
 
 		var savedPackage = GetPackage(gameSavesPath, true, null);
-		var mapsPackage = GetPackage(gameMapsPath, true, null);
+		//var mapsPackage = GetPackage(gameMapsPath, true, null);
 
 		if (savedPackage is not null)
 		{
+			savedPackage.IsBuiltIn = true;
 			packages.Add(savedPackage);
 		}
 
-		if (mapsPackage is not null)
-		{
-			packages.Add(mapsPackage);
-		}
+		//if (mapsPackage is not null)
+		//{
+		//	mapsPackage.IsBuiltIn = true;
+		//	packages.Add(mapsPackage);
+		//}
 
 		var subscribedItems = await _workshopService.GetLocalPackages();
 
-		foreach (var mod in subscribedItems.OrderBy(x => x.LocalData is null).Distinct(x => x.Id))
+		foreach (var mod in subscribedItems.Where(x => x.LocalData is not null))
 		{
-			if (mod.LocalData is null)
-			{
-				//packages.Add(new PdxPackage(mod));
-			}
-			else if (mod.LocalData.LocalType == LocalType.Subscribed)
+			if (mod.LocalData.LocalType is not LocalType.WorkInProgress)
 			{
 				var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
 

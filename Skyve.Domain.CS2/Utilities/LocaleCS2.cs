@@ -441,6 +441,46 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SafeModeInfo => _instance.GetText("SafeModeInfo");
 
 	/// <summary>
+	/// Time Period
+	/// </summary>
+	public static Translation SearchTime => _instance.GetText("SearchTime");
+
+	/// <summary>
+	/// All Time
+	/// </summary>
+	public static Translation SearchTimeAllTime => _instance.GetText("SearchTime_AllTime");
+
+	/// <summary>
+	/// 24 hours
+	/// </summary>
+	public static Translation SearchTimeDay => _instance.GetText("SearchTime_Day");
+
+	/// <summary>
+	/// 1 Month
+	/// </summary>
+	public static Translation SearchTimeMonth => _instance.GetText("SearchTime_Month");
+
+	/// <summary>
+	/// 3 Months
+	/// </summary>
+	public static Translation SearchTimeQuarter => _instance.GetText("SearchTime_Quarter");
+
+	/// <summary>
+	/// 6 Months
+	/// </summary>
+	public static Translation SearchTimeSixMonths => _instance.GetText("SearchTime_SixMonths");
+
+	/// <summary>
+	/// 7 Days
+	/// </summary>
+	public static Translation SearchTimeWeek => _instance.GetText("SearchTime_Week");
+
+	/// <summary>
+	/// 1 Year
+	/// </summary>
+	public static Translation SearchTimeYear => _instance.GetText("SearchTime_Year");
+
+	/// <summary>
 	/// Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.  Make sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.
 	/// </summary>
 	public static Translation SkyvenotSetUpInfo => _instance.GetText("SkyvenotSetUpInfo");

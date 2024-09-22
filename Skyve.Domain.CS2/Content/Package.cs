@@ -15,6 +15,7 @@ public class Package : IPackage, IEquatable<Package?>
 	public string? Url { get; protected set; }
 	public bool IsCodeMod { get; protected set; }
 	public bool IsLocal { get; protected set; }
+	public bool IsBuiltIn { get; set; }
 	public LocalPackageData LocalData { get; private set; }
 	ILocalPackageData? IPackage.LocalData => LocalData;
 	string? IPackage.Version => LocalData.Version;
