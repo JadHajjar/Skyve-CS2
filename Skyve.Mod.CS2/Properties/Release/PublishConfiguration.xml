@@ -88,12 +88,14 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.10.2.4" />
+  <ModVersion Value="0.10.2.5" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.10.2.4
+# v0.10.2.5
 ## Changes
-* Backend improvements to reduce repeated calls to the PDX servers.
+* Added more restrictions and safeguards when changing the content location for the game to prevent users losing their data.
+* Added a visual window to let users know that the location change process is still ongoing.
+* Improved folder cleanup.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

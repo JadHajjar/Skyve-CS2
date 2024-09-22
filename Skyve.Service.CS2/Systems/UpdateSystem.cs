@@ -8,11 +8,13 @@ internal class UpdateSystem
 {
 	private readonly IWorkshopService _workshopService;
 	private readonly ILogger _logger;
+	private readonly ICitiesManager _citiesManager;
 
-	public UpdateSystem(IWorkshopService workshopService, ILogger logger)
+	public UpdateSystem(IWorkshopService workshopService, ILogger logger, ICitiesManager citiesManager)
 	{
 		_workshopService = workshopService;
 		_logger = logger;
+		_citiesManager = citiesManager;
 	}
 
 	internal async Task RunUpdate()
@@ -21,7 +23,7 @@ internal class UpdateSystem
 
 		if (_workshopService.IsReady)
 		{
-			if (IsSkyveAppRunning())
+			if (IsSkyveAppRunning() || _citiesManager.IsRunning())
 			{
 				_logger.Info("Sync Skipped, App Running");
 				return;

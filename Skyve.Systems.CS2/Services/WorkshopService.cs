@@ -402,7 +402,7 @@ public class WorkshopService : IWorkshopService
 		return [];
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
+	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, WorkshopSearchTime searchTime = WorkshopSearchTime.AllTime, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
 	{
 		if (Context is null)
 		{
@@ -419,6 +419,7 @@ public class WorkshopService : IWorkshopService
 			sortBy = GetPdxSorting(sorting),
 			searchQuery = query,
 			tags = requiredTags?.ToList(),
+			time = (SearchTime)(int)searchTime,
 			orderBy = GetPdxOrder(sorting),
 			page = page,
 			pageSize = limit ?? 100
@@ -445,7 +446,6 @@ public class WorkshopService : IWorkshopService
 
 		for (var page = 0; ; page++)
 		{
-
 			var result = await Context.Mods.Search(new SearchData
 			{
 				author = userId?.ToString(),
