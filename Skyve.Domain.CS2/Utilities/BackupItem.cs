@@ -1,26 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Skyve.Domain.CS2.Utilities;
-internal abstract class BackupItem : IBackupItem
+public abstract class BackupItem(string name) : IBackupItem
 {
-	internal class Save : BackupItem
-	{
+	public DateTime Time { get; }
+	public string Name { get; } = name;
 
+	public virtual bool CanSave()
+	{
+		return true;
 	}
-	internal class Settings : BackupItem
-	{
 
+	public abstract void Save();
+
+	public class SaveGame(IAsset save) : BackupItem(save.Name)
+	{
+		public override void Save()
+		{
+			throw new NotImplementedException();
+		}
 	}
-	internal class Playset : BackupItem
-	{
 
+	public class SettingsFiles(string[] settingsFiles, string[] modSettingFolders) : BackupItem("SettingsFiles")
+	{
+		public override void Save()
+		{
+			throw new NotImplementedException();
+		}
 	}
-	internal class LocalMod : BackupItem
-	{
 
+	public class ActivePlayset(List<IPlaysetPackage> playsetPackages) : BackupItem("ActivePlayset")
+	{
+		public override void Save()
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	public class LocalMods(List<IPackage> packages) : BackupItem("LocalMods")
+	{
+		public override void Save()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

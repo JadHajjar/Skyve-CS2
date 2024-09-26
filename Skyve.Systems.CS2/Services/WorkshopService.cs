@@ -1028,11 +1028,11 @@ public class WorkshopService : IWorkshopService
 		{
 			var result = ProcessResult(await Context.Mods.Sync());
 
-			if (result?.Error == Mods.PromptNeeded)
+			if (result.Error != null && result.Error == Mods.PromptNeeded)
 			{
 				var conflicts = await Context.Mods.GetSyncConflicts();
 
-				await Context.Mods.Sync(SyncDirection.Downstream);
+				ProcessResult(await Context.Mods.Sync(SyncDirection.Downstream));
 			}
 		}
 		catch (Exception ex)

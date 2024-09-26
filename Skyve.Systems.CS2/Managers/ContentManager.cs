@@ -151,6 +151,20 @@ internal class ContentManager : IContentManager
 		return 0;
 	}
 
+	public IPackage? GetSaveFiles()
+	{
+		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves", _settings.FolderSettings.UserIdentifier);
+
+		var savesPackage = GetPackage(gameSavesPath, true, null);
+
+		if (savesPackage is not null)
+		{
+			savesPackage.IsBuiltIn = true;
+		}
+
+		return savesPackage;
+	}
+
 	public async Task<List<IPackage>> LoadContents()
 	{
 		var packages = new List<IPackage>();
@@ -177,13 +191,13 @@ internal class ContentManager : IContentManager
 			_logger.Warning($"Folder not found: '{gameModsPath}'");
 		}
 
-		var savedPackage = GetPackage(gameSavesPath, true, null);
+		var savesPackage = GetPackage(gameSavesPath, true, null);
 		//var mapsPackage = GetPackage(gameMapsPath, true, null);
 
-		if (savedPackage is not null)
+		if (savesPackage is not null)
 		{
-			savedPackage.IsBuiltIn = true;
-			packages.Add(savedPackage);
+			savesPackage.IsBuiltIn = true;
+			packages.Add(savesPackage);
 		}
 
 		//if (mapsPackage is not null)
