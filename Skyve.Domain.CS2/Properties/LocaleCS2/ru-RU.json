@@ -97,7 +97,7 @@
   "TotalSavesSize": "Размер сохранений",
   "TotalSubbedSize": "Размер подписок",
   "TotalOtherSize": "Размер других файлов",
-  "FreeSpace": "{0} free",
+  "FreeSpace": "{0} Не забито",
   "UsedOutOfSpace": "out of the {0} on drive {1}",
   "LowSpaceCreateJunction": {
     "Zero": "You're running out of disk space, you need to clear up some storage or get an additional hard disk.",
