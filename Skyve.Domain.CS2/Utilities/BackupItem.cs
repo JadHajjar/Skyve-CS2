@@ -1,48 +1,185 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Extensions;
+
+using Newtonsoft.Json;
+
+using Skyve.Domain.Enums;
+using Skyve.Domain.Systems;
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Skyve.Domain.CS2.Utilities;
-public abstract class BackupItem(string name) : IBackupItem
+public static class BackupItem
 {
-	public DateTime Time { get; }
-	public string Name { get; } = name;
-
-	public virtual bool CanSave()
+	public class SaveGames : IBackupItem
 	{
-		return true;
-	}
+		private readonly IAsset _save;
+		public IBackupMetaData MetaData { get; }
 
-	public abstract void Save();
-
-	public class SaveGame(IAsset save) : BackupItem(save.Name)
-	{
-		public override void Save()
+		public SaveGames(IAsset save)
 		{
-			throw new NotImplementedException();
+			_save = save;
+
+			MetaData = new BackupMetaData
+			{
+				Name = _save.Name,
+				ContentTime = _save.LocalTime,
+				Root = _save.Folder,
+				Type = nameof(SaveGames),
+				RestoreType = RestoreAction.Overwrite
+			};
+		}
+
+		public bool CanSave()
+		{
+			return true;
+		}
+
+		public void Save(IBackupSystem backupManager)
+		{
+			backupManager.Save(MetaData, [_save.FilePath, _save.FilePath + ".cid"]);
 		}
 	}
 
-	public class SettingsFiles(string[] settingsFiles, string[] modSettingFolders) : BackupItem("SettingsFiles")
+	public class SettingsFiles : IBackupItem
 	{
-		public override void Save()
+		private readonly string[] _settingsFiles;
+		private readonly string _appData;
+		public IBackupMetaData MetaData { get; }
+
+		public SettingsFiles(string[] settingsFiles, string appData)
 		{
-			throw new NotImplementedException();
+			_settingsFiles = settingsFiles;
+			_appData = appData;
+
+			MetaData = new BackupMetaData
+			{
+				Name = "SettingsFiles",
+				ContentTime = DateTime.Now,
+				Root = _appData,
+				Type = nameof(SettingsFiles),
+				RestoreType = RestoreAction.ClearRootOfSimilarFileTypes
+			};
+		}
+
+		public bool CanSave()
+		{
+			return true;
+		}
+
+		public void Save(IBackupSystem backupManager)
+		{
+			backupManager.Save(MetaData, _settingsFiles);
 		}
 	}
 
-	public class ActivePlayset(List<IPlaysetPackage> playsetPackages) : BackupItem("ActivePlayset")
+	public class ModsSettingsFiles : IBackupItem
 	{
-		public override void Save()
+		private readonly string[] _modSettingFolders;
+		private readonly string _appData;
+		public IBackupMetaData MetaData { get; }
+
+		public ModsSettingsFiles(string[] modSettingFolders, string appData)
 		{
-			throw new NotImplementedException();
+			_modSettingFolders = modSettingFolders;
+			_appData = appData;
+
+			MetaData = new BackupMetaData
+			{
+				Name = "ModsSettingsFiles",
+				ContentTime = DateTime.Now,
+				Root = _appData,
+				Type = nameof(ModsSettingsFiles),
+				RestoreType = RestoreAction.ClearRoot
+			};
+		}
+
+		public bool CanSave()
+		{
+			return true;
+		}
+
+		public void Save(IBackupSystem backupManager)
+		{
+			backupManager.Save(MetaData, _modSettingFolders);
 		}
 	}
 
-	public class LocalMods(List<IPackage> packages) : BackupItem("LocalMods")
+	public class ActivePlayset : IBackupItem
 	{
-		public override void Save()
+		private readonly object _playset;
+		public IBackupMetaData MetaData { get; }
+
+		public ActivePlayset(object playset)
 		{
-			throw new NotImplementedException();
+			_playset = playset;
+
+			MetaData = new BackupMetaData
+			{
+				Name = "ActivePlayset",
+				ContentTime = DateTime.Now,
+				Root = string.Empty,
+				Type = nameof(ActivePlayset),
+				RestoreType = RestoreAction.Playset
+			};
+		}
+
+		public bool CanSave()
+		{
+			return true;
+		}
+
+		public void Save(IBackupSystem backupManager)
+		{
+			var tempPath = CrossIO.GetTempFileName();
+
+			File.WriteAllText(tempPath, JsonConvert.SerializeObject(_playset));
+
+			backupManager.Save(MetaData, [tempPath]);
+
+			CrossIO.DeleteFile(tempPath, true);
+		}
+	}
+
+	public class LocalMods : IBackupItem
+	{
+		private readonly IPackage _package;
+		public IBackupMetaData MetaData { get; }
+
+		public LocalMods(IPackage package)
+		{
+			_package = package;
+
+			MetaData = new BackupMetaData
+			{
+				Name = package.Name,
+				ContentTime = package.LocalData!.LocalTime,
+				Root = package.LocalData!.Folder,
+				Type = nameof(LocalMods),
+				RestoreType = RestoreAction.Overwrite
+			};
+		}
+
+		public bool CanSave()
+		{
+			return true;
+		}
+
+		public void Save(IBackupSystem backupManager)
+		{
+			backupManager.Save(MetaData, Directory.GetFiles(_package.LocalData!.Folder, "*", SearchOption.AllDirectories));
+		}
+	}
+
+	public class Zip(string file, IBackupMetaData metaData) : IRestoreItem
+	{
+		public IBackupMetaData MetaData { get; } = metaData;
+		public FileInfo BackupFile => new(file);
+
+		public async Task<bool> Restore(IBackupSystem backupManager)
+		{
+			return await backupManager.Restore(MetaData, file);
 		}
 	}
 }

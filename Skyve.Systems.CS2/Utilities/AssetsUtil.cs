@@ -21,15 +21,17 @@ internal class AssetsUtil : IAssetUtil
 {
 	private Dictionary<string, IAsset> assetIndex = [];
 
-	public HashSet<string> ExcludedHashSet { get; }
+	public HashSet<string> ExcludedHashSet { get; } = [];
 
 	private readonly IPackageManager _contentManager;
 	private readonly INotifier _notifier;
+	private readonly ILogger _logger;
 
-	public AssetsUtil(IPackageManager contentManager, INotifier notifier)
+	public AssetsUtil(IPackageManager contentManager, INotifier notifier, ILogger logger)
 	{
 		_contentManager = contentManager;
 		_notifier = notifier;
+		_logger = logger;
 
 		_notifier.ContentLoaded += BuildAssetIndex;
 	}
@@ -41,7 +43,7 @@ internal class AssetsUtil : IAssetUtil
 			yield break;
 		}
 
-		var files = Directory.GetFiles(folder, $"*.cok", withSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+		var files = Directory.EnumerateDirectories(folder, $"*.cok", withSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 
 		foreach (var file in files)
 		{
@@ -50,7 +52,17 @@ internal class AssetsUtil : IAssetUtil
 				continue;
 			}
 
-			using var archive = ZipFile.OpenRead(file);
+			ZipArchive archive;
+
+			try
+			{
+				archive = ZipFile.OpenRead(file);
+			}
+			catch (Exception ex)
+			{
+				_logger.Exception(ex, "Failed to load asset: " + file);
+				continue;
+			}
 
 			if (getAsset<SaveGameMetaData>(AssetType.SaveGame, ".SaveGameMetadata", out var asset, out var saveData))
 			{

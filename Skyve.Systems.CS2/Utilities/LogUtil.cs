@@ -220,7 +220,7 @@ internal class LogUtil : ILogUtil
 		var traces = new List<ILogTrace>();
 		LogTrace? currentTrace = null;
 
-		if (!originalFile.EndsWith("Player.log") && !originalFile.EndsWith("Player-prev.log"))
+		if (!originalFile.EndsWith("Player.log") && !originalFile.EndsWith("Player-prev.log") && originalFile is not "Log.log" and not "Log_Previous.log")
 		{
 			for (var i = 0; i < lines.Length; i++)
 			{

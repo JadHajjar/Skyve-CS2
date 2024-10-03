@@ -1,5 +1,21 @@
 [
   {
+    "Stable": true,
+    "Beta": false,
+    "Version": "1.0.0",
+    "Date": "2024-08-14",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Removed Maps and Savegames from the package and asset lists.",
+          "Fixed the file-drop in the Help and Logs not displaying all logs from a log report zip file.",
+          "Improved folder cleanup."
+        ]
+      }
+    ]
+  },
+  {
     "Stable": false,
     "Beta": true,
     "Version": "0.10.2.5",
