@@ -110,6 +110,25 @@ internal class BackupSystem : IBackupSystem
 		return items;
 	}
 
+	public long GetBackupsSizeOnDisk()
+	{
+		var dir = new DirectoryInfo(_backupSettings.DestinationFolder);
+
+		if (!dir.Exists)
+		{
+			return 0;
+		}
+
+		var totalSize = 0L;
+
+		foreach (var file in dir.GetFiles("*.sbak", SearchOption.AllDirectories))
+		{
+			totalSize += file.Length;
+		}
+
+		return totalSize;
+	}
+
 	public async Task<bool> DoBackup()
 	{
 		try

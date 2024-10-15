@@ -145,5 +145,6 @@
   "SearchTime_Month": "1 Month",
   "SearchTime_Quarter": "3 Months",
   "SearchTime_SixMonths": "6 Months",
-  "SearchTime_Year": "1 Year"
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size"
 }

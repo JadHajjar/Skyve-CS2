@@ -9,12 +9,9 @@ using Skyve.Systems.CS2.Services;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Configuration;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Security.Principal;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2;
@@ -582,6 +579,11 @@ public partial class MainForm : BasePanelForm
 	private void PI_Playsets_OnClick(object sender, MouseEventArgs e)
 	{
 		SetPanel<PC_PlaysetList>(PI_Playsets);
+	}
+
+	private void PI_Backup_OnClick(object sender, MouseEventArgs e)
+	{
+		SetPanel<PC_BackupCenter>(PI_Backup);
 	}
 
 	private async void panelItem1_OnClick(object sender, MouseEventArgs e)

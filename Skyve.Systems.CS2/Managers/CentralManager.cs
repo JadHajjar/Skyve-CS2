@@ -253,8 +253,10 @@ internal class CentralManager : ICentralManager
 		var folders = new string[] {
 			"Mods/Gooee",
 			"ModsData/Gooee",
+			"Cities2Modding/Gooee",
 			"Mods/LegacyFlavour",
 			"ModsData/LegacyFlavour",
+			"Cities2Modding/LegacyFlavour",
 			"Mods/FindStuff",
 			"Mods/MapImageLayer",
 			"Mods/RealisticDensity",

@@ -552,6 +552,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SyncOngoingLaunchGame => _instance.GetText("SyncOngoingLaunchGame");
 
 	/// <summary>
+	/// Total Backups Size
+	/// </summary>
+	public static Translation TotalBackupSize => _instance.GetText("TotalBackupSize");
+
+	/// <summary>
 	/// Total C:S II User Data Stored
 	/// </summary>
 	public static Translation TotalCitiesSize => _instance.GetText("TotalCitiesSize");
