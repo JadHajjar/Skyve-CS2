@@ -21,18 +21,7 @@ internal class ServiceSystem
 
 	public async void Run()
 	{
-		try
-		{
-			await _workshopService.Initialize();
-
-			await _workshopService.Login();
-
-			_logger.Info("Update Loop Started");
-		}
-		catch (Exception ex)
-		{
-			_logger.Exception(ex, "Failed to start Update Loop");
-		}
+		_logger.Info("Update Loop Started");
 
 		while (true)
 		{
@@ -42,7 +31,13 @@ internal class ServiceSystem
 
 				try
 				{
+					await _workshopService.Initialize();
+
+					await _workshopService.Login();
+
 					await _updateSystem.RunUpdate();
+
+					await _workshopService.Shutdown();
 				}
 				catch (Exception ex)
 				{

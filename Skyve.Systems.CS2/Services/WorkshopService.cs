@@ -1143,6 +1143,14 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
+	public async Task Shutdown()
+	{
+		if (Context is not null)
+		{
+			await Context.Shutdown();
+		}
+	}
+
 	public class BaseOptionSet
 	{
 		public string DisplayName { get; set; }

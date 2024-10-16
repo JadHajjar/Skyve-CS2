@@ -43,7 +43,7 @@ internal class AssetsUtil : IAssetUtil
 			yield break;
 		}
 
-		var files = Directory.EnumerateDirectories(folder, $"*.cok", withSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+		var files = Directory.EnumerateFiles(folder, $"*.cok", withSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 
 		foreach (var file in files)
 		{
@@ -76,8 +76,29 @@ internal class AssetsUtil : IAssetUtil
 			}
 			else
 			{
-				yield return new Asset(AssetType.Generic, folder, file);
+				foreach (var entry in archive.Entries)
+				{
+					if (!entry.FullName.EndsWith(".prefab", StringComparison.InvariantCultureIgnoreCase))
+					{
+						continue;
+					}
+
+					using var stream = entry.Open();
+					using var reader = new StreamReader(stream);
+
+					if (GetTypeAndNameFromJson(reader.ReadToEnd(), out var type, out var name))
+					{
+						if (type is not "0|Game.Prefabs.RenderPrefab, Game")
+							yield return new Asset(AssetType.Generic, folder, file)
+							{
+								Name = name!
+							};
+					}
+				}
+
 			}
+
+			archive.Dispose();
 
 			bool getAsset<T>(AssetType assetType, string metaDataName, out Asset? asset, out T? data)
 			{
@@ -98,6 +119,32 @@ internal class AssetsUtil : IAssetUtil
 				return true;
 			}
 		}
+	}
+
+	public static bool GetTypeAndNameFromJson(string jsonString, out string? type, out string? name)
+	{
+		// Initialize out parameters
+		type = null;
+		name = null;
+
+		// Regular expression to match the "$type" and "name" fields
+		var typePattern = @"""\$type"":\s*""([^""]+)""";
+		var namePattern = @"""name"":\s*""([^""]+)""";
+
+		// Find matches
+		var typeMatch = Regex.Match(jsonString, typePattern);
+		var nameMatch = Regex.Match(jsonString, namePattern);
+
+		// If both type and name are found, assign them to the out parameters
+		if (typeMatch.Success && nameMatch.Success)
+		{
+			type = typeMatch.Groups[1].Value;
+			name = nameMatch.Groups[1].Value;
+			return true;
+		}
+
+		// Return false if not found
+		return false;
 	}
 
 	public bool IsIncluded(IAsset asset, int? playsetId = null)

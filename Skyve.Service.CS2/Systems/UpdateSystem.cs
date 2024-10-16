@@ -19,25 +19,25 @@ internal class UpdateSystem
 
 	internal async Task RunUpdate()
 	{
+		if (IsSkyveAppRunning())
+		{
+			_logger.Info("Sync Skipped, App Running");
+			return;
+		}
+
+		if (_citiesManager.IsRunning())
+		{
+			_logger.Info("Sync Skipped, Game Running");
+			return;
+		}
+
 		_logger.Info("UpdateSystem > RunUpdate");
 
-		if (_workshopService.IsReady)
-		{
-			if (IsSkyveAppRunning() || _citiesManager.IsRunning())
-			{
-				_logger.Info("Sync Skipped, App Running");
-				return;
-			}
+		await _workshopService.Initialize();
 
-			_logger.Info("Sync Started");
-			await _workshopService.RunSync();
-			_logger.Info("Sync Ended");
-		}
-		else
-		{
-			_logger.Info("Logging in");
-			await _workshopService.Login();
-		}
+		await _workshopService.Login();
+
+		await _workshopService.Shutdown();
 	}
 
 	private bool IsSkyveAppRunning()

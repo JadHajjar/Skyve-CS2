@@ -16,7 +16,7 @@ public class Asset : IAsset, IThumbnailObject
 	public string Folder { get; }
 	public string FilePath { get; }
 	public ulong Id => Package?.Id ?? 0;
-	public string Name { get; }
+	public string Name { get; set; }
 	public string? Url => Package?.Url;
 	public IPackage? Package { get; set; }
 	public long FileSize { get; }
@@ -34,7 +34,7 @@ public class Asset : IAsset, IThumbnailObject
 		FileSize = new FileInfo(FilePath).Length;
 		LocalTime = File.GetLastWriteTimeUtc(FilePath);
 		Name = Path.GetFileNameWithoutExtension(FilePath).FormatWords();
-		Tags = new string[0];
+		Tags = [];
 	}
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
