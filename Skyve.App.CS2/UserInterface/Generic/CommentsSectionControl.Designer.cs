@@ -106,7 +106,7 @@ partial class CommentsSectionControl
 			this.TB_Message.SelectionLength = 0;
 			this.TB_Message.SelectionStart = 0;
 			this.TB_Message.ShowLabel = false;
-			this.TB_Message.Size = new System.Drawing.Size(562, 44);
+			this.TB_Message.Size = new System.Drawing.Size(583, 44);
 			this.TB_Message.TabIndex = 1;
 			this.TB_Message.TextChanged += new System.EventHandler(this.TB_Message_TextChanged);
 			this.TB_Message.Enter += new System.EventHandler(this.TB_Message_Enter);
@@ -120,10 +120,10 @@ partial class CommentsSectionControl
 			this.B_Send.Enabled = false;
 			dynamicIcon1.Name = "Send";
 			this.B_Send.ImageName = dynamicIcon1;
-			this.B_Send.Location = new System.Drawing.Point(660, 74);
+			this.B_Send.Location = new System.Drawing.Point(681, 77);
 			this.B_Send.Name = "B_Send";
 			this.TLP_SendMessage.SetRowSpan(this.B_Send, 2);
-			this.B_Send.Size = new System.Drawing.Size(66, 26);
+			this.B_Send.Size = new System.Drawing.Size(45, 23);
 			this.B_Send.SpaceTriggersClick = true;
 			this.B_Send.TabIndex = 2;
 			this.B_Send.Text = "Send";
@@ -162,7 +162,7 @@ partial class CommentsSectionControl
 			this.FLP_FormatButtons.Controls.Add(this.B_Link);
 			this.FLP_FormatButtons.Controls.Add(this.B_List);
 			this.FLP_FormatButtons.Controls.Add(this.B_NumberedList);
-			this.FLP_FormatButtons.Location = new System.Drawing.Point(465, 0);
+			this.FLP_FormatButtons.Location = new System.Drawing.Point(486, 0);
 			this.FLP_FormatButtons.Margin = new System.Windows.Forms.Padding(0);
 			this.FLP_FormatButtons.Name = "FLP_FormatButtons";
 			this.FLP_FormatButtons.Size = new System.Drawing.Size(192, 32);

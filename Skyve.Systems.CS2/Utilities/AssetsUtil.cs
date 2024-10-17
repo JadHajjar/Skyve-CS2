@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace Skyve.Systems.CS2.Utilities;
 internal class AssetsUtil : IAssetUtil
 {
-	private Dictionary<string, IAsset> assetIndex = [];
+	//private Dictionary<string, IAsset> assetIndex = [];
 
 	public HashSet<string> ExcludedHashSet { get; } = [];
 
@@ -33,7 +33,7 @@ internal class AssetsUtil : IAssetUtil
 		_notifier = notifier;
 		_logger = logger;
 
-		_notifier.ContentLoaded += BuildAssetIndex;
+		//_notifier.ContentLoaded += BuildAssetIndex;
 	}
 
 	public IEnumerable<IAsset> GetAssets(string folder, bool withSubDirectories = true)
@@ -76,8 +76,21 @@ internal class AssetsUtil : IAssetUtil
 			}
 			else
 			{
+				var assetIconDic = new List<(Asset, string)>();
+				var entries = new Dictionary<string, string>();
+
 				foreach (var entry in archive.Entries)
 				{
+					if (entry.FullName.EndsWith(".cid", StringComparison.InvariantCultureIgnoreCase))
+					{
+						using var cidStream = entry.Open();
+						using var cidReader = new StreamReader(cidStream);
+
+						entries[cidReader.ReadToEnd()] = entry.FullName.TrimEnd(4);
+
+						continue;
+					}
+
 					if (!entry.FullName.EndsWith(".prefab", StringComparison.InvariantCultureIgnoreCase))
 					{
 						continue;
@@ -86,16 +99,41 @@ internal class AssetsUtil : IAssetUtil
 					using var stream = entry.Open();
 					using var reader = new StreamReader(stream);
 
-					if (GetTypeAndNameFromJson(reader.ReadToEnd(), out var type, out var name))
+					if (GetTypeAndNameFromJson(reader.ReadToEnd(), out var type, out var name, out var icon))
 					{
-						if (type is not "0|Game.Prefabs.RenderPrefab, Game")
-							yield return new Asset(AssetType.Generic, folder, file)
-							{
-								Name = name!
-							};
+						if (type is "0|Game.Prefabs.RenderPrefab, Game")
+						{
+							continue;
+						}
+
+						asset = new Asset(name!
+							, AssetType.Generic
+							, folder
+							, file
+							, calculateTotalSize(entry)
+							, entry.LastWriteTime.ToUniversalTime().Date
+							, [Regex.Match(type, @"\.(\w+?)(Prefab)?,").Groups[1].Value.FormatWords()]);
+
+						if (icon is not null and not "")
+						{
+							assetIconDic.Add((asset, icon));
+						}
+
+						yield return asset;
 					}
 				}
 
+				foreach (var item in assetIconDic)
+				{
+					if (entries.TryGetValue(item.Item2, out var image))
+					{
+						var tempFile = CrossIO.GetTempFileName();
+
+						archive.GetEntry(image).ExtractToFile(tempFile);
+
+						item.Item1.Thumbnail = tempFile;
+					}
+				}
 			}
 
 			archive.Dispose();
@@ -118,30 +156,48 @@ internal class AssetsUtil : IAssetUtil
 				asset = new Asset(assetType, folder, file);
 				return true;
 			}
+
+			long calculateTotalSize(ZipArchiveEntry entry)
+			{
+				var size = 0L;
+
+				var start = Path.GetFileNameWithoutExtension(entry.FullName);
+				var vtStart = "StreamingData~/VT/" + Path.GetFileNameWithoutExtension(entry.FullName);
+
+				foreach (var item in archive.Entries)
+				{
+					if (item.FullName.StartsWith(start, StringComparison.InvariantCultureIgnoreCase)
+						|| item.FullName.StartsWith(vtStart, StringComparison.InvariantCultureIgnoreCase))
+					{
+						size += item.Length;
+					}
+				}
+
+				return size;
+			}
 		}
 	}
 
-	public static bool GetTypeAndNameFromJson(string jsonString, out string? type, out string? name)
+	public static bool GetTypeAndNameFromJson(string jsonString, out string? type, out string? name, out string? icon)
 	{
-		// Initialize out parameters
-		type = null;
-		name = null;
-
-		// Regular expression to match the "$type" and "name" fields
-		var typePattern = @"""\$type"":\s*""([^""]+)""";
-		var namePattern = @"""name"":\s*""([^""]+)""";
-
 		// Find matches
-		var typeMatch = Regex.Match(jsonString, typePattern);
-		var nameMatch = Regex.Match(jsonString, namePattern);
+		var typeMatch = Regex.Match(jsonString, @"""\$type"":\s*""([^""]+)""");
+		var nameMatch = Regex.Match(jsonString, @"""name"":\s*""([^""]+)""");
+		var iconMatch = Regex.Match(jsonString, @"""assetdb://Global/(\w+)""");
 
 		// If both type and name are found, assign them to the out parameters
 		if (typeMatch.Success && nameMatch.Success)
 		{
 			type = typeMatch.Groups[1].Value;
 			name = nameMatch.Groups[1].Value;
+			icon = iconMatch.Groups[1].Value;
 			return true;
 		}
+
+		// Initialize out parameters
+		type = null;
+		name = null;
+		icon = null;
 
 		// Return false if not found
 		return false;
@@ -200,11 +256,12 @@ internal class AssetsUtil : IAssetUtil
 
 	public IAsset? GetAssetByFile(string? v)
 	{
-		return assetIndex.TryGet(v ?? string.Empty);
+		throw new NotImplementedException();
+		//return assetIndex.TryGet(v ?? string.Empty);
 	}
 
 	public void BuildAssetIndex()
 	{
-		assetIndex = _contentManager.Assets.ToDictionary(x => x.FilePath.FormatPath(), StringComparer.OrdinalIgnoreCase);
+		//assetIndex = _contentManager.Assets.ToDictionary(x => x.FilePath.FormatPath(), StringComparer.OrdinalIgnoreCase);
 	}
 }

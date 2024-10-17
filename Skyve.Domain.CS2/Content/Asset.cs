@@ -21,10 +21,11 @@ public class Asset : IAsset, IThumbnailObject
 	public IPackage? Package { get; set; }
 	public long FileSize { get; }
 	public DateTime LocalTime { get; }
-	public string[] Tags { get; }
-
+	public string[] Tags { get; set; }
 	public SaveGameMetaData? SaveGameMetaData { get; set; }
 	public MapMetaData? MapMetaData { get; set; }
+	public string? Thumbnail { get; set; }
+	public string? Type { get; set; }
 
 	public Asset(AssetType assetType, string folder, string filePath)
 	{
@@ -37,8 +38,26 @@ public class Asset : IAsset, IThumbnailObject
 		Tags = [];
 	}
 
+	public Asset(string name, AssetType assetType, string folder, string filePath, long fileSize, DateTime dateModified, string[] tags)
+	{
+		FilePath = filePath;
+		AssetType = assetType;
+		Folder = folder;
+		FileSize = fileSize;
+		LocalTime = dateModified;
+		Name = name;
+		Tags = tags;
+	}
+
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
+		if (Thumbnail is not null)
+		{
+			thumbnail = imageService.GetImage(Thumbnail, true, isFilePath: true).Result;
+			thumbnailUrl = null;
+			return true;
+		}
+
 		if (Package is IThumbnailObject thumbnailObject)
 		{
 			return thumbnailObject.GetThumbnail(imageService, out thumbnail, out thumbnailUrl);

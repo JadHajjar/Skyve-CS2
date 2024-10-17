@@ -182,7 +182,7 @@ internal class TagsService : ITagsService
 
 	public IEnumerable<ITag> GetTags(IPackageIdentity package, bool ignoreParent = false)
 	{
-		var returned = new List<string>();
+		var returned = new List<string>() { string.Empty };
 
 		if (!ignoreParent && package.GetWorkshopInfo()?.Tags?.Values is IEnumerable<string> workshopTags)
 		{
@@ -198,17 +198,26 @@ internal class TagsService : ITagsService
 
 		if (package is IAsset asset)
 		{
-			if (_assetTagsDictionary.TryGetValue(asset.FilePath, out var assetTags))
+			foreach (var item in asset.Tags)
 			{
-				foreach (var item in assetTags)
+				if (!returned.Contains(item))
 				{
-					if (!returned.Contains(item))
-					{
-						returned.Add(item);
-						yield return new TagItem(TagSource.InGame, item, item);
-					}
+					returned.Add(item);
+					yield return new TagItem(TagSource.InGame, item, item);
 				}
 			}
+
+			//if (_assetTagsDictionary.TryGetValue(asset.FilePath, out var assetTags))
+			//{
+			//	foreach (var item in assetTags)
+			//	{
+			//		if (!returned.Contains(item))
+			//		{
+			//			returned.Add(item);
+			//			yield return new TagItem(TagSource.InGame, item, item);
+			//		}
+			//	}
+			//}
 		}
 
 		var skyveTags = _skyveDataManager.TryGetPackageInfo(package.Id)?.Tags;
