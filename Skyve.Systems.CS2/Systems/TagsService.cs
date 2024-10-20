@@ -22,18 +22,19 @@ internal class TagsService : ITagsService
 	private readonly Dictionary<string, string[]> _assetTagsDictionary;
 	private readonly Dictionary<string, string[]> _customTagsDictionary;
 	private readonly Dictionary<string, HashSet<string>> _tagsCache;
-
+	private readonly IServiceProvider _serviceProvider;
 	private readonly INotifier _notifier;
 	private readonly ILogger _logger;
 	private readonly ISkyveDataManager _skyveDataManager;
 	private readonly SaveHandler _saveHandler;
 	private readonly WorkshopService _workshopService;
 
-	public TagsService(INotifier notifier, IWorkshopService workshopService, ILogger logger, SaveHandler saveHandler, ISkyveDataManager skyveDataManager)
+	public TagsService(IServiceProvider serviceProvider, INotifier notifier, IWorkshopService workshopService, ILogger logger, SaveHandler saveHandler, ISkyveDataManager skyveDataManager)
 	{
 		_assetTagsDictionary = new(new PathEqualityComparer());
 		_customTagsDictionary = new(new PathEqualityComparer());
 		_tagsCache = new(StringComparer.InvariantCultureIgnoreCase);
+		_serviceProvider = serviceProvider;
 		_notifier = notifier;
 		_logger = logger;
 		_saveHandler = saveHandler;
@@ -89,7 +90,15 @@ internal class TagsService : ITagsService
 			}
 		}
 
-		var assetDictionary = new Dictionary<string, IAsset>(StringComparer.CurrentCultureIgnoreCase);
+		foreach (var asset in _serviceProvider.GetService<IPackageManager>()!.Assets)
+		{
+			foreach (var item in asset.Tags)
+			{
+				_assetTags.Add(item);
+			}
+		}
+
+		//var assetDictionary = new Dictionary<string, IAsset>(StringComparer.CurrentCultureIgnoreCase);
 
 		//foreach (var asset in ServiceCenter.Get<IPackageManager>().Assets)
 		//{
@@ -282,9 +291,9 @@ internal class TagsService : ITagsService
 			return true;
 		}
 
-		var assetTags = identity is not null && _assetTagsDictionary.TryGetValue(identity.FilePath, out var tags1) ? tags1 : [];
+		var assetTags = package is IAsset asset ? asset.Tags ?? [] : []; // identity is not null && _assetTagsDictionary.TryGetValue(identity.FilePath, out var tags1) ? tags1 : [];
 
-		matchedTags.RemoveAll(x => assetTags.Any(x => x.Equals(x, StringComparison.InvariantCultureIgnoreCase)));
+		matchedTags.RemoveAll(y => assetTags.Any(x => x.Equals(y, StringComparison.InvariantCultureIgnoreCase)));
 
 		if (matchedTags.Count == 0)
 		{

@@ -10,7 +10,15 @@
         "Changes": [
           "Removed Maps and Savegames from the package and asset lists.",
           "Fixed the file-drop in the Help and Logs not displaying all logs from a log report zip file.",
-          "Improved folder cleanup."
+          "Replaced the log level filter with a new slider.",
+          "Immproved the performance and search of the logs list.",
+          "Improved folder cleanup.",
+          "Fixed background service sometimes locking a file and causing the Skyve app to fail to log you in.",
+          "Added support for official assets.",
+          "Improved the peformance of content list views.",
+          "Improved the performance of image-heavy views.",
+          "Fixed stutters when in image-heavy views by deferring the loading of images to be completely off the main thread.",
+          "Relocated the cached thumbnails to"
         ]
       }
     ]

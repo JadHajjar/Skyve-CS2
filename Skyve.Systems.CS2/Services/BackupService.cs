@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
+using Skyve.Systems.CS2.Systems;
 
 using System;
 using System.Linq;
@@ -41,19 +42,19 @@ internal class BackupService : IBackupService
 			var startBackup = false;
 			var currentTime = (int)DateTime.Now.TimeOfDay.TotalMinutes;
 
-			if (_backupSettings.Schedule.HasFlag(BackupSchedule.OnScheduledTimes))
+			if (_backupSettings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnScheduledTimes))
 			{
-				startBackup = _backupSettings.ScheduleTimes.Any(x => currentTime == (int)x.TotalMinutes);
+				startBackup = _backupSettings.ScheduleSettings.ScheduleTimes.Any(x => currentTime == (int)x.TotalMinutes);
 			}
 
 			if (isCitiesRunning != _citiesManager.IsRunning())
 			{
 				isCitiesRunning = !isCitiesRunning;
 
-				startBackup = !isCitiesRunning && _backupSettings.Schedule.HasFlag(BackupSchedule.OnGameClose);
+				startBackup = !isCitiesRunning && _backupSettings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnGameClose);
 			}
 
-			if (_backupSettings.Schedule.HasFlag(BackupSchedule.OnNewSaveGame))
+			if (_backupSettings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnNewSaveGame))
 			{
 				var savePackage = _contentManager.GetSaveFiles();
 
@@ -78,8 +79,8 @@ internal class BackupService : IBackupService
 		{
 			var backupSystem = _serviceProvider.GetService<IBackupSystem>()!;
 
-			backupSystem.BackupInstructions.DoSavesBackup = _backupSettings.BackupSavesOnSchedule;
-			backupSystem.BackupInstructions.DoLocalModsBackup = _backupSettings.BackupLocalModsOnSchedule;
+			backupSystem.BackupInstructions.DoSavesBackup = _backupSettings.ScheduleSettings.BackupSaves;
+			backupSystem.BackupInstructions.DoLocalModsBackup = _backupSettings.ScheduleSettings.BackupLocalMods;
 
 			return await backupSystem.DoBackup();
 		}

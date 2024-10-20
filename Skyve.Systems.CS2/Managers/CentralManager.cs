@@ -7,6 +7,7 @@ using Skyve.Systems.CS2.Utilities;
 using SlickControls;
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -34,8 +35,9 @@ internal class CentralManager : ICentralManager
 	private readonly ISkyveDataManager _skyveDataManager;
 	private readonly IDlcManager _dlcManager;
 	private readonly IInterfaceService _interfaceService;
+	private readonly IBackupService _backupService;
 
-	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager, IDlcManager dlcManager, IInterfaceService interfaceService)
+	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager, IDlcManager dlcManager, IInterfaceService interfaceService, IBackupService backupService)
 	{
 		_modLogicManager = modLogicManager;
 		_compatibilityManager = compatibilityManager;
@@ -58,6 +60,7 @@ internal class CentralManager : ICentralManager
 		_skyveDataManager = skyveDataManager;
 		_dlcManager = dlcManager;
 		_interfaceService = interfaceService;
+		_backupService = backupService;
 	}
 
 	public async void Start()
@@ -160,6 +163,9 @@ internal class CentralManager : ICentralManager
 		catch { }
 
 		_logger.Info($"Finished.");
+
+		if (Process.GetProcessesByName("Skyve.Service.CS2").Length == 0)
+			_backupService.Run();
 	}
 
 	private async Task UpdateCompatibilityCatalogue()

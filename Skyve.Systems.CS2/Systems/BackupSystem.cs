@@ -54,9 +54,17 @@ internal class BackupSystem : IBackupSystem
 			, _backupTime.ToString("MM (MMMM)")
 			, _backupTime.ToString("dd (dddd)")
 			, metaData.Type);
-		var path = CrossIO.Combine(folder, $"{metaData.Name}_{metaData.ContentTime.Ticks}_{_backupTime.Ticks}.sbak");
 
-		Directory.CreateDirectory(folder);
+		try
+		{
+			Directory.CreateDirectory(folder);
+		}
+		catch
+		{
+			return;
+		}
+
+		var path = CrossIO.Combine(folder, $"{metaData.Name}_{metaData.ContentTime.Ticks}_{_backupTime.Ticks}.sbak");
 
 		using var fileStream = File.Create(path);
 		using var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Create, false);
@@ -112,16 +120,14 @@ internal class BackupSystem : IBackupSystem
 
 	public long GetBackupsSizeOnDisk()
 	{
-		var dir = new DirectoryInfo(_backupSettings.DestinationFolder);
-
-		if (!dir.Exists)
+		if (!Directory.Exists(_backupSettings.DestinationFolder))
 		{
 			return 0;
 		}
 
 		var totalSize = 0L;
 
-		foreach (var file in dir.GetFiles("*.sbak", SearchOption.AllDirectories))
+		foreach (var file in new DirectoryInfo(_backupSettings.DestinationFolder).GetFiles("*.sbak", SearchOption.AllDirectories))
 		{
 			totalSize += file.Length;
 		}
@@ -133,6 +139,7 @@ internal class BackupSystem : IBackupSystem
 	{
 		try
 		{
+
 			var availableBackups = GetAllBackups();
 
 			SaveBackupItem(MakeSettingsBackup());
@@ -148,6 +155,8 @@ internal class BackupSystem : IBackupSystem
 			{
 				MakeLocalModsBackup(availableBackups).Foreach(SaveBackupItem);
 			}
+
+			DoCleanup();
 		}
 		catch (Exception ex)
 		{
@@ -346,7 +355,7 @@ internal class BackupSystem : IBackupSystem
 
 		availableBackups.RemoveAll(x => x.MetaData.IsArchived);
 
-		if (_backupSettings.CleanupSettings.Type.HasFlag(CleanupType.TimeBased) && _backupSettings.CleanupSettings.MaxTimespan.TotalDays >= 1)
+		if (_backupSettings.CleanupSettings.Type.HasFlag(BackupCleanupType.TimeBased) && _backupSettings.CleanupSettings.MaxTimespan.TotalDays >= 1)
 		{
 			availableBackups
 				.Where(x => DateTime.Now - x.MetaData.ContentTime > _backupSettings.CleanupSettings.MaxTimespan)
@@ -355,7 +364,7 @@ internal class BackupSystem : IBackupSystem
 
 		availableBackups.RemoveAll(x => x.MetaData.IsArchived);
 
-		if (_backupSettings.CleanupSettings.Type.HasFlag(CleanupType.CountBased) && _backupSettings.CleanupSettings.MaxBackups > 5)
+		if (_backupSettings.CleanupSettings.Type.HasFlag(BackupCleanupType.CountBased) && _backupSettings.CleanupSettings.MaxBackups > 5)
 		{
 			availableBackups
 				.Where(x => IsLarge(x.MetaData))
@@ -366,7 +375,7 @@ internal class BackupSystem : IBackupSystem
 
 		availableBackups.RemoveAll(x => x.MetaData.IsArchived);
 
-		if (_backupSettings.CleanupSettings.Type.HasFlag(CleanupType.StorageBased) && _backupSettings.CleanupSettings.MaxStorage > 10_000)
+		if (_backupSettings.CleanupSettings.Type.HasFlag(BackupCleanupType.StorageBased) && _backupSettings.CleanupSettings.MaxStorage > 10_000)
 		{
 			var totalSize = 0UL;
 
