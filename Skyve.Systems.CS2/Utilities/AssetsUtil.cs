@@ -232,10 +232,10 @@ internal class AssetsUtil : IAssetUtil
 
 	public void SaveChanges()
 	{
-		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
-		{
-			return;
-		}
+		//if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
+		//{
+		//	return;
+		//}
 
 		//_config.ExcludedAssets = ExcludedHashSet.ToList();
 

@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.Systems.CS2.Managers;
@@ -64,7 +63,7 @@ internal class ModLogicManager : IModLogicManager
 			return false;
 		}
 
-		if (Path.GetFileName(mod.Folder).ToLower() is "maps" or "saves")
+		if (mod.GetPackage()?.IsBuiltIn ?? false)
 		{
 			return true;
 		}

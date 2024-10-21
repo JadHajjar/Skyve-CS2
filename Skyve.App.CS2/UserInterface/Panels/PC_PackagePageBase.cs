@@ -126,7 +126,8 @@ public partial class PC_PackagePageBase : PanelContent
 
 		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
-		LI_Version.ValueText = localData?.Version ?? workshopInfo?.Version;
+		LI_Version.LabelText = localData?.IsCodeMod ?? true ? "Version" : "Content";
+		LI_Version.ValueText = localData?.IsCodeMod ?? true ? localData?.Version ?? workshopInfo?.Version : $"{localData.Assets.Length} {Locale.Asset.FormatPlural(localData.Assets.Length).ToLower()}";
 		LI_UpdateTime.ValueText = date == default ? null : _settings.UserSettings.ShowDatesRelatively ? date.ToLocalTime().ToRelatedString(true, false) : date.ToLocalTime().ToString("g");
 		LI_ModId.ValueText = Package.Id > 0 ? Package.Id.ToString() : null;
 		LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);

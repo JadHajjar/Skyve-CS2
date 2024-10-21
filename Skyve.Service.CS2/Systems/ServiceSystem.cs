@@ -11,12 +11,14 @@ internal class ServiceSystem
 	private readonly UpdateSystem _updateSystem;
 	private readonly IWorkshopService _workshopService;
 	private readonly ILogger _logger;
+	private readonly IBackupService _backupService;
 
-	public ServiceSystem(UpdateSystem updateSystem, IWorkshopService workshopService, ILogger logger)
+	public ServiceSystem(UpdateSystem updateSystem, IWorkshopService workshopService, ILogger logger, IBackupService backupService)
 	{
 		_updateSystem = updateSystem;
 		_workshopService = workshopService;
 		_logger = logger;
+		_backupService = backupService;
 	}
 
 	public async void Run()
@@ -48,6 +50,14 @@ internal class ServiceSystem
 			{
 				_logger.Exception(ex, "Unexpected error during Update Loop");
 			}
+		}
+	}
+
+	public async void RunBackup()
+	{
+		while (true)
+		{
+			await _backupService.Run();
 		}
 	}
 }

@@ -165,7 +165,17 @@ internal class CentralManager : ICentralManager
 		_logger.Info($"Finished.");
 
 		if (Process.GetProcessesByName("Skyve.Service.CS2").Length == 0)
-			_backupService.Run();
+		{
+			new BackgroundAction(RunBackupService);
+		}
+	}
+
+	private async void RunBackupService()
+	{
+		while (true)
+		{
+			await _backupService.Run();
+		}
 	}
 
 	private async Task UpdateCompatibilityCatalogue()
