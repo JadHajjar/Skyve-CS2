@@ -33,13 +33,7 @@ internal class ServiceSystem
 
 				try
 				{
-					await _workshopService.Initialize();
-
-					await _workshopService.Login();
-
 					await _updateSystem.RunUpdate();
-
-					await _workshopService.Shutdown();
 				}
 				catch (Exception ex)
 				{
@@ -57,7 +51,13 @@ internal class ServiceSystem
 	{
 		while (true)
 		{
+			await _workshopService.Initialize();
+
+			await _workshopService.Login();
+
 			await _backupService.Run();
+
+			await _workshopService.Shutdown();
 		}
 	}
 }

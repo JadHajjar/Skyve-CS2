@@ -29,9 +29,9 @@ public class ParadoxLoginWaitingConnectionNotification : INotificationInfo
 	public bool HasAction { get; }
 	public bool CanBeRead { get; }
 
-	public void OnClick()
+	public async void OnClick()
 	{
-		_workshopService.Login();
+		await _workshopService.Login();
 	}
 
 	public void OnRead()

@@ -35,7 +35,10 @@ internal class UpdateSystem
 
 		await _workshopService.Initialize();
 
-		await _workshopService.Login();
+		if (await _workshopService.Login())
+		{
+			await _workshopService.RunSync();
+		}
 
 		await _workshopService.Shutdown();
 	}

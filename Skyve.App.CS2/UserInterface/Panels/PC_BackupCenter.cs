@@ -1,6 +1,7 @@
 ﻿using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
@@ -200,10 +201,26 @@ public partial class PC_BackupCenter : PanelContent
 
 		B_Backup.Loading = true;
 
-		var backupSystem=ServiceCenter.Get<IBackupSystem>();
+		var result = await Task.Run(async () =>
+		{
+			var backupSystem = ServiceCenter.Get<IBackupSystem>();
 
-		await backupSystem.DoBackup();
+			return await backupSystem.DoBackup();
+		});
 
 		B_Backup.Loading = false;
+
+		if (!result)
+		{
+			ShowPrompt(Locale.CheckLogsAndTryAgain, Locale.BackupFailed, PromptButtons.OK, PromptIcons.Error);
+
+			return;
+		}
+
+		B_Backup.ImageName = "Check";
+
+		await Task.Delay(5_000);
+
+		B_Backup.ImageName = "ArrowRight";
 	}
 }

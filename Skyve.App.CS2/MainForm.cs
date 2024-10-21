@@ -94,12 +94,6 @@ public partial class MainForm : BasePanelForm
 
 		new BackgroundAction("Loading content", ServiceCenter.Get<ICentralManager>().Start).Run();
 
-		var timer = new System.Timers.Timer(1000);
-
-		timer.Elapsed += Timer_Elapsed;
-
-		timer.Start();
-
 		var citiesManager = ServiceCenter.Get<ICitiesManager>();
 
 		citiesManager.MonitorTick += CitiesManager_MonitorTick;
@@ -310,23 +304,6 @@ public partial class MainForm : BasePanelForm
 		}
 	}
 
-	private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-	{
-		if (!CrossIO.FileExists(CrossIO.Combine(App.Program.CurrentDirectory, "Wake")))
-		{
-			return;
-		}
-
-		CrossIO.DeleteFile(CrossIO.Combine(App.Program.CurrentDirectory, "Wake"));
-
-		if (isGameRunning)
-		{
-			SendKeys.SendWait("%{TAB}");
-		}
-
-		this.TryInvoke(this.ShowUp);
-	}
-
 	protected override void UIChanged()
 	{
 		base.UIChanged();
@@ -358,34 +335,33 @@ public partial class MainForm : BasePanelForm
 
 	public void LaunchStopCities()
 	{
-		if (_citiesManager.IsAvailable())
+		if (!_citiesManager.IsAvailable())
 		{
-			if (CrossIO.CurrentPlatform is Platform.Windows)
-			{
-				_citiesManager.SetLaunchingStatus(true);
-				//if (CurrentPanel is PC_MainPage mainPage)
-				//{
-				//	mainPage.B_StartStop.Loading = true;
-				//}
+			ServiceCenter.Get<ILogger>().Warning("Cities Unavailable to launch the game");
 
-				//base_PB_Icon.Loading = true;
-				base_PB_Icon.LoaderSpeed = 1;
-			}
-
-			if (_citiesManager.IsRunning())
-			{
-				buttonStateRunning = false;
-				new BackgroundAction("Stopping Cities: Skylines", _citiesManager.Kill).Run();
-			}
-			else
-			{
-				buttonStateRunning = true;
-				new BackgroundAction("Starting Cities: Skylines", _citiesManager.Launch).Run();
-			}
-
-			_startTimeoutTimer.Stop();
-			_startTimeoutTimer.Start();
+			return;
 		}
+
+		if (CrossIO.CurrentPlatform is Platform.Windows)
+		{
+			_citiesManager.SetLaunchingStatus(true);
+
+			base_PB_Icon.LoaderSpeed = 1;
+		}
+
+		if (_citiesManager.IsRunning())
+		{
+			buttonStateRunning = false;
+			new BackgroundAction("Stopping Cities: Skylines", _citiesManager.Kill).Run();
+		}
+		else
+		{
+			buttonStateRunning = true;
+			new BackgroundAction("Starting Cities: Skylines", _citiesManager.Launch).Run();
+		}
+
+		_startTimeoutTimer.Stop();
+		_startTimeoutTimer.Start();
 	}
 
 	protected override void OnCreateControl()

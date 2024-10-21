@@ -143,7 +143,10 @@ internal class CentralManager : ICentralManager
 
 		await ConnectionHandler.WhenConnected(UpdateCompatibilityCatalogue);
 
-		await _workshopService.Login();
+		if (await _workshopService.Login())
+		{
+			await _workshopService.RunSync();
+		}
 
 		await ConnectionHandler.WhenConnected(_dlcManager.UpdateDLCs);
 
@@ -153,7 +156,7 @@ internal class CentralManager : ICentralManager
 
 			await _updateManager.SendUnreadCommentsNotifications();
 
-			await UpdateSkyveVersionsInPlaysets();
+			UpdateSkyveVersionsInPlaysets();
 		}
 
 		try
@@ -164,7 +167,7 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info($"Finished.");
 
-		if (Process.GetProcessesByName("Skyve.Service.CS2").Length == 0)
+		if (Process.GetProcessesByName("Skyve.Service").Length == 0)
 		{
 			new BackgroundAction(RunBackupService);
 		}
@@ -252,7 +255,7 @@ internal class CentralManager : ICentralManager
 		return false;
 	}
 
-	public async Task UpdateSkyveVersionsInPlaysets()
+	public void UpdateSkyveVersionsInPlaysets()
 	{
 #if Stable
 		const ulong MODID = ;

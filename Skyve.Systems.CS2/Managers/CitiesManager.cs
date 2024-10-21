@@ -100,12 +100,15 @@ internal class CitiesManager : ICitiesManager
 				case System.Windows.Forms.DialogResult.Cancel:
 					return;
 				case System.Windows.Forms.DialogResult.Yes:
+					_logger.Info("Waiting for Synchronize to finish before launching the game");
 					await workshopService.WaitUntilReady();
 					break;
 			}
 		}
 		else if (_settings.UserSettings.SyncBeforeLaunching)
 		{
+			_logger.Info("Running Synchronize before launching the game");
+
 			await workshopService.RunSync();
 		}
 
@@ -255,6 +258,8 @@ internal class CitiesManager : ICitiesManager
 			{
 				KillProcess(proc);
 			}
+
+			_logger.Info("Kill C:S II successful");
 		}
 		catch (Exception ex)
 		{
