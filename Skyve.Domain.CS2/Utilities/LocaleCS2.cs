@@ -552,6 +552,31 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SyncOngoingLaunchGame => _instance.GetText("SyncOngoingLaunchGame");
 
 	/// <summary>
+	/// Asset Pack
+	/// </summary>
+	public static Translation TagAssetPack => _instance.GetText("Tag_Asset Pack");
+
+	/// <summary>
+	/// Building
+	/// </summary>
+	public static Translation TagBuilding => _instance.GetText("Tag_Building");
+
+	/// <summary>
+	/// Building Extension
+	/// </summary>
+	public static Translation TagBuildingExtension => _instance.GetText("Tag_Building Extension");
+
+	/// <summary>
+	/// Prop
+	/// </summary>
+	public static Translation TagStaticObject => _instance.GetText("Tag_Static Object");
+
+	/// <summary>
+	/// Zone
+	/// </summary>
+	public static Translation TagZone => _instance.GetText("Tag_Zone");
+
+	/// <summary>
 	/// Total Backups Size
 	/// </summary>
 	public static Translation TotalBackupSize => _instance.GetText("TotalBackupSize");

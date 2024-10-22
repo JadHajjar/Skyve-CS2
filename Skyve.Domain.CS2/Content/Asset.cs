@@ -22,9 +22,10 @@ public class Asset : IAsset, IThumbnailObject
 	public long FileSize { get; }
 	public DateTime LocalTime { get; }
 	public string[] Tags { get; set; }
+	public string AssetId { get; }
 	public SaveGameMetaData? SaveGameMetaData { get; set; }
 	public MapMetaData? MapMetaData { get; set; }
-	public string? Thumbnail { get; set; }
+	public string? Thumbnail { get; private set; }
 	public string? Type { get; set; }
 
 	public Asset(AssetType assetType, string folder, string filePath)
@@ -36,6 +37,7 @@ public class Asset : IAsset, IThumbnailObject
 		LocalTime = File.GetLastWriteTimeUtc(FilePath);
 		Name = Path.GetFileNameWithoutExtension(FilePath).FormatWords();
 		Tags = [];
+		AssetId = FilePath.Substring(Path.GetDirectoryName(Folder).Length + 1);
 	}
 
 	public Asset(string name, AssetType assetType, string folder, string filePath, long fileSize, DateTime dateModified, string[] tags)
@@ -47,13 +49,19 @@ public class Asset : IAsset, IThumbnailObject
 		LocalTime = dateModified;
 		Name = name;
 		Tags = tags;
+		AssetId = FilePath.Substring(Path.GetDirectoryName(Folder).Length + 1) + "_" + name;
+	}
+
+	public string SetThumbnail(IImageService imageService)
+	{
+		return Thumbnail = imageService.File("", AssetId.Replace('/', '_').Replace('\\', '_') + ".png").FullName;
 	}
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		if (Thumbnail is not null)
 		{
-			thumbnail = imageService.GetImage(Thumbnail, true, isFilePath: true).Result;
+			thumbnail = imageService.GetImage(Thumbnail, true, AssetId.Replace('/', '_').Replace('\\', '_') + ".png", isFilePath: true).Result;
 			thumbnailUrl = null;
 			return true;
 		}

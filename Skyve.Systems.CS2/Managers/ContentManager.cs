@@ -55,11 +55,16 @@ internal class ContentManager : IContentManager
 		_skyveDataManager = skyveDataManager;
 		_workshopService = (WorkshopService)workshopService;
 
-		_notifier.WorkshopSyncEnded += _notifier_WorkshopSyncEnded;
+		_notifier.WorkshopSyncEnded += Notifier_WorkshopSyncEnded;
 		_subscriptionsManager = subscriptionsManager;
 	}
 
-	private async void _notifier_WorkshopSyncEnded()
+	private void Notifier_WorkshopSyncEnded()
+	{
+		Task.Run(OnContentLoaded);
+	}
+
+	private async Task OnContentLoaded()
 	{
 		_packageManager.SetPackages(await LoadContents());
 

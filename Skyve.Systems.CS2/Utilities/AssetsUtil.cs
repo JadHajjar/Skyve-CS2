@@ -26,12 +26,14 @@ internal class AssetsUtil : IAssetUtil
 	private readonly IPackageManager _contentManager;
 	private readonly INotifier _notifier;
 	private readonly ILogger _logger;
+	private readonly IImageService _imageService;
 
-	public AssetsUtil(IPackageManager contentManager, INotifier notifier, ILogger logger)
+	public AssetsUtil(IPackageManager contentManager, INotifier notifier, ILogger logger, IImageService imageService)
 	{
 		_contentManager = contentManager;
 		_notifier = notifier;
 		_logger = logger;
+		_imageService = imageService;
 
 		//_notifier.ContentLoaded += BuildAssetIndex;
 	}
@@ -76,7 +78,7 @@ internal class AssetsUtil : IAssetUtil
 			}
 			else
 			{
-				var assetIconDic = new List<(Asset, string)>();
+				var assetIconDic = new List<(Asset Asset, string Entry)>();
 				var entries = new Dictionary<string, string>();
 
 				foreach (var entry in archive.Entries)
@@ -125,13 +127,12 @@ internal class AssetsUtil : IAssetUtil
 
 				foreach (var item in assetIconDic)
 				{
-					if (entries.TryGetValue(item.Item2, out var image))
+					if (entries.TryGetValue(item.Entry, out var image))
 					{
-						var tempFile = CrossIO.GetTempFileName();
-
-						archive.GetEntry(image).ExtractToFile(tempFile);
-
-						item.Item1.Thumbnail = tempFile;
+						if (!CrossIO.FileExists(item.Asset.SetThumbnail(_imageService)))
+						{
+							archive.GetEntry(image).ExtractToFile(item.Asset.Thumbnail);
+						}
 					}
 				}
 			}

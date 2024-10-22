@@ -146,5 +146,10 @@
   "SearchTime_Quarter": "3 Months",
   "SearchTime_SixMonths": "6 Months",
   "SearchTime_Year": "1 Year",
-  "TotalBackupSize": "Total Backups Size"
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack"
 }

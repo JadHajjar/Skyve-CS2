@@ -6,23 +6,41 @@
     "Date": "2024-08-14",
     "ChangeGroups": [
       {
-        "Name": "Changes",
+        "Name": "File and Asset Management",
         "Changes": [
-          "Removed Maps and Savegames from the package and asset lists.",
-          "Fixed the file-drop in the Help and Logs not displaying all logs from a log report zip file.",
-          "Replaced the log level filter with a new slider.",
-          "Immproved the performance and search of the logs list.",
-          "Improved folder cleanup.",
-          "Fixed background service sometimes locking a file and causing the Skyve app to fail to log you in.",
+          "Maps and savegames have been removed from the package and asset lists.",
           "Added support for official assets.",
-          "Improved the peformance of content list views.",
-          "Improved the performance of image-heavy views.",
-          "Fixed stutters when in image-heavy views by deferring the loading of images to be completely off the main thread.",
-          "Relocated the cached thumbnails to"
+          "Improved folder cleanup to manage files more efficiently."
+        ]
+      },
+      {
+        "Name": "Log System Improvements",
+        "Changes": [
+          "Fixed an issue where the file-drop in Help and Logs did not show all logs from a zip file.",
+          "Replaced the log level filter with a new slider to make it easier to filter logs.",
+          "Improved the performance and search function of the logs list."
+        ]
+      },
+      {
+        "Name": "Performance Enhancements",
+        "Changes": [
+          "Improved the loading speed of content list views.",
+          "Improved performance in views with lots of images.",
+          "Fixed stuttering in image-heavy views by moving image loading off the main thread.",
+          "Moved cached thumbnails to reduce the memory load on the game.",
+          "Fixed stuttering or freezing when the PDX Mods sync process finishes."
+        ]
+      },
+      {
+        "Name": "Bug Fixes",
+        "Changes": [
+          "Added the period search to the pdx mods tab",
+          "Fixed an issue where the background service sometimes locked a file and prevented Skyve from logging in."
         ]
       }
     ]
-  },
+  }
+,
   {
     "Stable": false,
     "Beta": true,
