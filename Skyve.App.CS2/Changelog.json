@@ -1,7 +1,7 @@
 [
   {
-    "Stable": true,
-    "Beta": false,
+    "Stable": false,
+    "Beta": true,
     "Version": "1.0.0",
     "Date": "2024-08-14",
     "ChangeGroups": [

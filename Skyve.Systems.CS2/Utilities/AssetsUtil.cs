@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -78,17 +79,12 @@ internal class AssetsUtil : IAssetUtil
 			}
 			else
 			{
-				var assetIconDic = new List<(Asset Asset, string Entry)>();
-				var entries = new Dictionary<string, string>();
-
 				foreach (var entry in archive.Entries)
 				{
 					if (entry.FullName.EndsWith(".cid", StringComparison.InvariantCultureIgnoreCase))
 					{
 						using var cidStream = entry.Open();
 						using var cidReader = new StreamReader(cidStream);
-
-						entries[cidReader.ReadToEnd()] = entry.FullName.TrimEnd(4);
 
 						continue;
 					}
@@ -99,41 +95,65 @@ internal class AssetsUtil : IAssetUtil
 					}
 
 					using var stream = entry.Open();
-					using var reader = new StreamReader(stream);
+					using var r = new BinaryReader(stream);
 
-					if (GetTypeAndNameFromJson(reader.ReadToEnd(), out var type, out var name, out var icon))
+					r.ReadBytes(11); // skip first bytes
+
+					var typeBuilder = new StringBuilder();
+
+					while (true)
 					{
-						if (type is "0|Game.Prefabs.RenderPrefab, Game")
+						var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
+
+						if (ch is '\0' or 'ī')
 						{
-							continue;
+							break;
 						}
 
-						asset = new Asset(name!
-							, AssetType.Generic
-							, folder
-							, file
-							, calculateTotalSize(entry)
-							, entry.LastWriteTime.ToUniversalTime().Date
-							, [Regex.Match(type, @"\.(\w+?)(Prefab)?,").Groups[1].Value.FormatWords()]);
-
-						if (icon is not null and not "")
-						{
-							assetIconDic.Add((asset, icon));
-						}
-
-						yield return asset;
+						typeBuilder.Append(ch);
 					}
-				}
 
-				foreach (var item in assetIconDic)
-				{
-					if (entries.TryGetValue(item.Entry, out var image))
+					r.ReadBytes(21); // skip extra bytes
+
+					var nameBuilder = new StringBuilder();
+
+					while (true)
 					{
-						if (!CrossIO.FileExists(item.Asset.SetThumbnail(_imageService)))
+						var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
+
+						if (ch is '\0' or 'ī')
 						{
-							archive.GetEntry(image).ExtractToFile(item.Asset.Thumbnail);
+							break;
 						}
+
+						nameBuilder.Append(ch);
 					}
+
+					var type = typeBuilder.ToString();
+					var name = nameBuilder.ToString();
+
+					if (type is "Game.Prefabs.RenderPrefab, Game")
+					{
+						continue;
+					}
+
+					asset = new Asset(name!
+						, AssetType.Generic
+						, folder
+						, file
+						, calculateTotalSize(entry)
+						, entry.LastWriteTime.ToUniversalTime().Date
+						, [Regex.Match(type, @"\.(\w+?)(Prefab)?,").Groups[1].Value.FormatWords()]);
+
+					var imageEntry = archive.GetEntry(Path.ChangeExtension(entry.FullName, "png"))
+						?? archive.GetEntry(Path.ChangeExtension(entry.FullName.Insert(entry.FullName.Length - 7, "_thumbnail"), "png"));
+
+					if (imageEntry is not null && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+					{
+						imageEntry.ExtractToFile(asset.Thumbnail);
+					}
+
+					yield return asset;
 				}
 			}
 
@@ -209,7 +229,7 @@ internal class AssetsUtil : IAssetUtil
 		return true;// !ExcludedHashSet.Contains(asset.FilePath.ToLower());
 	}
 
-	public async Task SetIncluded(IAsset asset, bool value, int? playsetId = null)
+	public Task SetIncluded(IAsset asset, bool value, int? playsetId = null)
 	{
 		if (value)
 		{
@@ -222,13 +242,15 @@ internal class AssetsUtil : IAssetUtil
 
 		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
 		{
-			return;
+			return Task.CompletedTask;
 		}
 
 		_notifier.OnInclusionUpdated();
 		_notifier.TriggerAutoSave();
 
 		SaveChanges();
+
+		return Task.CompletedTask;
 	}
 
 	public void SaveChanges()
