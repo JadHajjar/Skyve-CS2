@@ -16,6 +16,10 @@
     "One": "复制 PDX Mods 链接",
     "Plural": "复制已选插件的 PDX Mods 链接"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "复制 PDX Mods ID",
     "Plural": "复制已选插件的 PDX Mods ID"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "将日志复制到 Player.log",
   "InvalidFolderSettings": "检测到无效设置",
   "InvalidFolderSettingsInfo": "Skyve 无法找到 Cities: Skylines II 正确的数据文件夹。\n\n点击此处以手动选择数据文件夹。",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "您选择的路径不正确。请在您的 AppData 文件夹中选择 \"Cities: Skylines II\" 文件夹。",
   "DefaultLocation": "默认用户数据位置",
   "JunctionTitle": "自定义内容存储位置",
@@ -83,6 +88,7 @@
   "ResetLocation": "重置位置",
   "JunctionRestart": "在此过程中，Skyve 和 Cities: Skylines II 将会关闭。\n\n完成时，Skyve 将自动重新启动。",
   "PlaysetAlreadyImported": "此配组已经在您的列表里了。",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "无法获取模组数据",
   "NewGameUpdate": "Cities: Skylines II 最新更新",
   "NewGameUpdateInfo": "版本更新 {0} 现已发布。\n在开始游戏前，请务必检查兼容性。",
@@ -124,5 +130,26 @@
   "Sorting_Popularity": "最多订阅",
   "Sorting_DateUpdated": "最后更新",
   "Sorting_DateCreated": "最近添加",
-  "Sorting_WorkshopName": "字母序"
+  "Sorting_WorkshopName": "字母序",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack"
 }
