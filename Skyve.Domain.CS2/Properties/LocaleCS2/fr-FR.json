@@ -49,7 +49,7 @@
   "Downloading": "Téléchargement...",
   "ModsDownloadFailed": {
     "One": "Le téléchargement d'un mod a échoué",
-    "Plural": "Le téléchargement de certains mods ont échoués"
+    "Plural": "Le téléchargement de certains mods a échoué"
   },
   "LoginToParadox": "Se connecter à Paradox",
   "LoginFailed": "La connexion a échoué, vérifiez que votre email et votre mot de passe sont corrects. Ou réessayez plus tard.",
@@ -86,12 +86,12 @@
   "CouldNotRetrieveMods": "Impossible de récupérer les données des mods",
   "NewGameUpdate": "Nouvelle mise à jour de Cities: Skylines II",
   "NewGameUpdateInfo": "Le correctif {0} est maintenant disponible.\nVérifiez votre rapport de compatibilité avant de commencer votre jeu.",
-  "PdxSyncInfo": "La Synchronisation PDX télécharge et met à jour vos mods, et synchronise les paramètres et playset de votre ordinateur vers les serveurs PDX.",
+  "PdxSyncInfo": "La Synchronisation PDX télécharge et met à jour vos mods, tout en synchronisant les paramètres et playsets de votre ordinateur vers les serveurs PDX.",
   "SyncOngoing": "Synchronisation en cours",
   "PdxSync": "Synchronisation des Mods PDX",
   "RunSync": "Démarrer la Synchronisation",
   "PDXModsNew": "Nouveau sur PDX Mods",
-  "PDXModsUpdated": "Récemment mis a jour sur PDX Mods",
+  "PDXModsUpdated": "Récemment mis à jour sur PDX Mods",
   "DiskStatus": "Statut du disque",
   "TotalCitiesSize": "Total des données utilisateur C:S II stockées",
   "TotalSavesSize": "Taille des sauvegardes",
@@ -104,19 +104,19 @@
     "One": "Vous êtes à court d'espace de stockage, allez dans les options pour changer l'emplacement du contenu de jeu."
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "« {1} » a des dépendances",
+    "One": "'{1}' a des dépendances",
     "Plural": "Les paquets que vous ajoutez ont des dépendances"
   },
   "AddingDependencies": {
-    "One": "« {1} » est requis pour le(s) mod(s) que vous ajoutez.\n\nVoulez-vous également ajouter « {1} » à votre playset ?",
+    "One": "'{1}' est requis pour le(s) mod(s) que vous ajoutez.\n\nVoulez-vous également ajouter '{1}' à votre playset ?",
     "Plural": "Le(s) mod(s) que vous ajoutez ont {0} dépendances : {1}\n\nVoulez-vous également les ajouter à votre playset ?"
   },
   "Dependency_Automatic": "Ajouter automatiquement les dépendances",
   "Dependency_Ask": "Toujours demander",
   "Dependency_None": "Ne rien faire",
   "DependencyResolution": "Résolution des dépendances",
-  "DependencyResolution_Tip": "Choisissez ce qu’il se passe quand vous ajoutez un mod avec des dépendances que vous n'avez pas installées.",
-  "SyncOngoingLaunchGame": "Skyve est toujours en train de synchroniser vos mods, voulez-vous lancer le jeu une fois que vos mods sont prêts ?\nSélectionnez « Non » pour commencer le jeu quand même.",
+  "DependencyResolution_Tip": "Choisissez ce qu’il se passe quand vous ajoutez un mod avec des dépendances que vous n'avez pas installé.",
+  "SyncOngoingLaunchGame": "Skyve synchronise vos mods, voulez-vous lancer le jeu une fois que la synchronisation sera terminée ?\nSélectionnez “Non” pour lancer le jeu quand même.",
   "StartingWithNoPlayset": "Vous êtes sur le point de lancer le jeu sans playset actif.\nCela signifie qu’aucun mod ne sera activé dans le jeu.",
   "SyncBeforeLaunching": "Synchroniser les mods avant de lancer le jeu",
   "SyncBeforeLaunching_Tip": "Exécute une synchronisation des mods avant de lancer le jeu pour s'assurer que tous les mods sont à jour.",
