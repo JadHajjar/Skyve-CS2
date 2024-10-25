@@ -16,6 +16,10 @@
     "One": "PDX Mods Link kopieren",
     "Plural": "PDX Mods Links der ausgewählten Pakete kopieren"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "PDX Mods ID kopieren",
     "Plural": "PDX Mods IDs der ausgewählten Pakete kopieren"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Logs nach Player.log kopieren",
   "InvalidFolderSettings": "Ungültiges Setup erkannt",
   "InvalidFolderSettingsInfo": "Skyve konnte den  Cities:Skylines II Ordner nicht finden.\n\nKlicken Sie hier, um den Ordner manuell auszuwählen.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "Der ausgewählte Pfad ist nicht korrekt. Bitte wählen Sie den Ordner \"Städte Skylines II\" in Ihren App-Daten.",
   "DefaultLocation": "Standard Benutzerdatenort",
   "JunctionTitle": "Benutzerdefinierter Inhaltsort",
@@ -83,6 +88,7 @@
   "ResetLocation": "Standort zurücksetzen",
   "JunctionRestart": "Skyve und Cities: Skylines II wird während dieses Prozesses geschlossen.\n\nSkyve wird automatisch neu starten, sobald es beendet ist.",
   "PlaysetAlreadyImported": "Dieses Playset ist bei dir bereits  vorhanden.",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Konnte Mod-Daten nicht abrufen",
   "NewGameUpdate": "Neues Cities: Skylines II Update",
   "NewGameUpdateInfo": "Patch {0} ist jetzt verfügbar.\nBitte überprüfe deinen Kompatibilitätsbericht, bevor du dein Spiel startest.",
@@ -124,5 +130,26 @@
   "Sorting_Popularity": "Am häufigsten abonniert",
   "Sorting_DateUpdated": "Zuletzt aktualisiert",
   "Sorting_DateCreated": "Neuste",
-  "Sorting_WorkshopName": "Alphabetisch"
+  "Sorting_WorkshopName": "Alphabetisch",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack"
 }
