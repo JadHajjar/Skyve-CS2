@@ -16,6 +16,10 @@
     "One": "Copier le lien PDX Mods",
     "Plural": "Copier les liens PDX Mods des paquets sélectionnés"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "Copier l'ID PDX Mods",
     "Plural": "Copier les IDs PDX Mods des paquets sélectionnés"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Copier les logs dans le fichier Player.log",
   "InvalidFolderSettings": "Configuration non valide détectée",
   "InvalidFolderSettingsInfo": "Skyve n'as pas réussi à détecter le dossier des données de Cities: Skyines II.\n\nCliquez ici pour sélectionner le dossier des données manuellement.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "Le chemin d'accès n'est pas correct. Veuillez sélectionner le dossier 'Cities Skylines II' du dossier app data.",
   "DefaultLocation": "Emplacement par défaut des données utilisateurs",
   "JunctionTitle": "Emplacement de contenu personnalisé",
@@ -83,6 +88,7 @@
   "ResetLocation": "Réinitialiser l'emplacement",
   "JunctionRestart": "Skyve et Cities: Skylines II vont se fermer pendant ce processus.\n\nSkyve redémarrera automatiquement une fois terminé.",
   "PlaysetAlreadyImported": "Ce Playset est déjà présent dans votre liste de playsets.",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Impossible de récupérer les données des mods",
   "NewGameUpdate": "Nouvelle mise à jour de Cities: Skylines II",
   "NewGameUpdateInfo": "Le correctif {0} est maintenant disponible.\nVérifiez votre rapport de compatibilité avant de commencer votre jeu.",
@@ -124,5 +130,26 @@
   "Sorting_Popularity": "Les plus abonnés",
   "Sorting_DateUpdated": "Les derniers mis à jour",
   "Sorting_DateCreated": "Les plus récents",
-  "Sorting_WorkshopName": "Alphabétiquement"
+  "Sorting_WorkshopName": "Alphabétiquement",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack"
 }
