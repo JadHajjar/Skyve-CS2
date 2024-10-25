@@ -16,6 +16,10 @@
     "One": "PDX Mods link másolása",
     "Plural": "Másolja ki a kiválasztott csomagok műhelyhivatkozásait"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "PDX Mods link másolása",
     "Plural": "Másolja ki a kiválasztott csomagok PDX mod azonosítóit"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Másolja a naplókat a Player.logba",
   "InvalidFolderSettings": "Érvénytelen beállítás észlelve",
   "InvalidFolderSettingsInfo": "A Skyve nem tudta megfelelően észlelni a Cities: Skylines II adatmappáját.\n\nKattints ide az adatmappa manuális kiválasztásához.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "A kiválasztott útvonal nem megfelelő. Válaszd ki a „Cities Skylines II” mappát az alkalmazás adatai között.",
   "DefaultLocation": "Alapértelmezett felhasználói adatok helye",
   "JunctionTitle": "Egyéni tartalom helye",
@@ -83,6 +88,7 @@
   "ResetLocation": "Hely visszaállítása",
   "JunctionRestart": "A Skyve és a Cities: Skylines II bezár a folyamat során.\n\nA Skyve automatikusan újraindul, ha végzett.",
   "PlaysetAlreadyImported": "Ez a játékkészlet már szerepel a játékkészletek listájában.",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Nem sikerült lekérni a modok adatait",
   "NewGameUpdate": "Új városok: Skylines II frissítés",
   "NewGameUpdateInfo": "A(z) {0} javítás már elérhető.\nA játék megkezdése előtt feltétlenül ellenőrizd a kompatibilitási jelentést.",
@@ -124,5 +130,26 @@
   "Sorting_Popularity": "Legtöbb feliratkozó",
   "Sorting_DateUpdated": "Utolsó frissítés",
   "Sorting_DateCreated": "Legutóbbi",
-  "Sorting_WorkshopName": "ABC sorrend"
+  "Sorting_WorkshopName": "ABC sorrend",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack"
 }
