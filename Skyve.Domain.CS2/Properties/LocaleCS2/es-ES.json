@@ -16,6 +16,10 @@
     "One": "Copiar enlace PDX Mods",
     "Plural": "Copiar enlaces de este paquete en PDX Mods"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "Copiar enlaces PDX Mods",
     "Plural": "Copiar identificadores (ID) de este paquete PDX Mods"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Copiar registros a Player.log",
   "InvalidFolderSettings": "Se ha detectado una configuración no válida",
   "InvalidFolderSettingsInfo": "Skyve no fue capaz de detectar adecuadamente la carpeta de datos de Cities Skylines II.\n\nHaga clic aquí para seleccionar la carpeta de datos.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "La ruta seleccionada no es correcta. Por favor, seleccione la carpeta de 'Cities Skylines II' en la carpeta de datos (AppData).",
   "DefaultLocation": "Ubicación de datos de usuario predeterminada",
   "JunctionTitle": "Ubicación de contenido personalizado",
@@ -83,6 +88,7 @@
   "ResetLocation": "Restablecer ubicación",
   "JunctionRestart": "Skyve y Cities: Skylines II se cerrarán durante este proceso.\n\nSkyve se reiniciará automáticamente una vez finalizado.",
   "PlaysetAlreadyImported": "Este playset ya está presente en tu lista de playsets.",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "No se pudieron recuperar los datos de los mods",
   "NewGameUpdate": "Nueva actualización de Cities: Skylines II",
   "NewGameUpdateInfo": "El parche {0} ya está disponible.\nAsegúrese de revisar su informe de compatibilidad antes de comenzar el juego.",
@@ -124,5 +130,26 @@
   "Sorting_Popularity": "Más suscritos",
   "Sorting_DateUpdated": "Ultima actualización",
   "Sorting_DateCreated": "Más recientes",
-  "Sorting_WorkshopName": "Alfabéticamente"
+  "Sorting_WorkshopName": "Alfabéticamente",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack"
 }
