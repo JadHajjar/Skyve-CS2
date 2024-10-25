@@ -30,7 +30,7 @@ internal static class Program
 		}
 		else
 		{
-			App.Program.AppDataPath = Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II");
+			App.Program.AppDataPath = Path.Combine(GetFolderPath(SpecialFolder.UserProfile), "AppData", "LocalLow", "Colossal Order", "Cities Skylines II");
 		}
 
 		SaveHandler.AppName = "Skyve";
@@ -62,29 +62,19 @@ internal static class Program
 	{
 		try
 		{
-			if (App.Program.CurrentDirectory.PathContains(App.Program.AppDataPath))
+			HandleIncorrectLaunchLocation();
+
+			if (args.Any(x => x.StartsWith("-createJunction") || x.StartsWith("-deleteJunction")))
 			{
+				Application.EnableVisualStyles();
+				Application.SetCompatibleTextRenderingDefault(false);
+
 				if (OSVersion.Version.Major >= 6)
 				{
 					SetProcessDPIAware();
 				}
 
-				var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "Skyve Setup.exe");
-
-				if (CrossIO.FileExists(setupFile))
-				{
-					if (MessagePrompt.Show(LocaleCS2.RunSetupOrRunApp, PromptButtons.OKCancel, PromptIcons.Hand) == DialogResult.OK)
-					{
-						Process.Start(new ProcessStartInfo(setupFile)
-						{
-							Verb = WinExtensionClass.IsAdministrator ? string.Empty : "runas"
-						});
-					}
-				}
-				else
-				{
-					MessagePrompt.Show(LocaleCS2.CantRunAppFromHere, PromptButtons.OK, PromptIcons.Hand);
-				}
+				Application.Run(new PleaseWaitForm(args));
 
 				return;
 			}
@@ -94,27 +84,18 @@ internal static class Program
 				return;
 			}
 
-			try
+			if (!CommandUtil.Commands.NoWindow && !Debugger.IsAttached && IsAlreadyRunning())
 			{
-				var openTools = !CommandUtil.NoWindow && !Debugger.IsAttached && Process.GetProcessesByName(Path.GetFileNameWithoutExtension(App.Program.ExecutablePath)).Length > 1;
-
-				if (openTools && !CrossIO.FileExists(CrossIO.Combine(CurrentDirectory, "Wake")))
+				if (ServiceCenter.Provider.GetService<NamedPipelineUtil>().SendToRunningInstance(args))
 				{
-					File.WriteAllText(Path.Combine(CurrentDirectory, "Wake"), "It's time to wake up");
-
-					Thread.Sleep(2500);
-
-					if (!CrossIO.FileExists(CrossIO.Combine(CurrentDirectory, "Wake")))
-					{
-						return;
-					}
+					return;
 				}
-
-				CrossIO.DeleteFile(CrossIO.Combine(CurrentDirectory, "Wake"), true);
 			}
-			catch { }
 
 			BackgroundAction.BackgroundTaskError += BackgroundAction_BackgroundTaskError;
+			AppDomain.CurrentDomain.UnhandledException += GlobalUnhandledExceptionHandler;
+			Application.ThreadException += GlobalThreadExceptionHandler;
+
 
 			try
 			{
@@ -129,16 +110,18 @@ internal static class Program
 #if DEBUG
 				throw ex;
 #else
-				ServiceCenter.Get<ILogger>().Exception(ex, "Localization failed to Initialize");
+				ServiceCenter.Provider.GetService<ILogger>().Exception(ex, "Localization failed to Initialize");
 #endif
 			}
 
-			if (CommandUtil.NoWindow)
+			if (CommandUtil.Commands.NoWindow)
 			{
-				ServiceCenter.Get<ILogger>().Info("[Console] Running without UI window");
-				ServiceCenter.Get<ICentralManager>().Start();
+				ServiceCenter.Provider.GetService<ILogger>().Info("[Console] Running without UI window");
+				ServiceCenter.Provider.GetService<ICentralManager>().Start();
 				return;
 			}
+
+			ServiceCenter.Provider.GetService<NamedPipelineUtil>().StartNamedPipeServer();
 
 			SlickCursors.Initialize();
 			Application.EnableVisualStyles();
@@ -162,9 +145,54 @@ internal static class Program
 		}
 	}
 
+	private static void HandleIncorrectLaunchLocation()
+	{
+		if (App.Program.CurrentDirectory.PathContains(App.Program.AppDataPath))
+		{
+			if (OSVersion.Version.Major >= 6)
+			{
+				SetProcessDPIAware();
+			}
+
+			var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "Skyve Setup.exe");
+
+			if (CrossIO.FileExists(setupFile))
+			{
+				if (MessagePrompt.Show(LocaleCS2.RunSetupOrRunApp, PromptButtons.OKCancel, PromptIcons.Hand) == DialogResult.OK)
+				{
+					Process.Start(new ProcessStartInfo(setupFile)
+					{
+						Verb = WinExtensionClass.IsAdministrator ? string.Empty : "runas"
+					});
+				}
+			}
+			else
+			{
+				MessagePrompt.Show(LocaleCS2.CantRunAppFromHere, PromptButtons.OK, PromptIcons.Hand);
+			}
+
+			return;
+		}
+	}
+
+	private static bool IsAlreadyRunning()
+	{
+		return Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1;
+	}
+
 	private static void BackgroundAction_BackgroundTaskError(BackgroundAction b, Exception e)
 	{
-		ServiceCenter.Get<ILogger>().Exception(e, $"The background action ({b}) failed");
+		ServiceCenter.Provider.GetService<ILogger>().Exception(e, $"The background action ({b}) failed");
+	}
+
+	private static void GlobalThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
+	{
+		ServiceCenter.Provider.GetService<ILogger>().Exception(e.Exception, $"CRASH");
+	}
+
+	private static void GlobalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+	{
+		ServiceCenter.Provider.GetService<ILogger>().Exception((Exception)e.ExceptionObject, $"CRASH");
 	}
 
 	[System.Runtime.InteropServices.DllImport("user32.dll")]

@@ -2,11 +2,11 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-using PDX.SDK.Contracts.Enums.Errors;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
@@ -78,7 +78,7 @@ internal class ModsUtil : IModUtil
 			foreach (var item in mod.Playsets)
 			{
 				config.SetState(item.PlaysetId
-					, (ulong)mod.Id
+					, new GenericPackageIdentity { Id = (ulong)mod.Id, Name = mod.Name }
 					, item.ModIsEnabled
 					, currentPlayset == item.PlaysetId ? mod.Version : item.Version);
 			}
@@ -135,6 +135,11 @@ internal class ModsUtil : IModUtil
 	{
 		if (mod.Id <= 0)
 		{
+			if (mod is LocalPdxPackage)
+			{
+				return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Name);
+			}
+
 			return IsEnabled(mod);
 		}
 
@@ -145,6 +150,11 @@ internal class ModsUtil : IModUtil
 	{
 		if (mod.Id <= 0)
 		{
+			if (mod is LocalPdxPackage)
+			{
+				return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Name);
+			}
+
 			var folder = mod.GetLocalPackageIdentity()?.Folder;
 
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
@@ -176,7 +186,7 @@ internal class ModsUtil : IModUtil
 
 		mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
 
-		SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), value);
+		await SetLocalModIncluded(mods.AllWhere(x => x.Id <= 0 && IsIncluded(x, playset) != value), playset, value);
 
 		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) != value);
 
@@ -268,7 +278,7 @@ internal class ModsUtil : IModUtil
 
 		mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
 
-		SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), value);
+		await SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), playset, value);
 
 		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) && IsEnabled(x, playset) != value);
 
@@ -317,7 +327,7 @@ internal class ModsUtil : IModUtil
 		_notifier.OnRefreshUI(true);
 	}
 
-	private void SetLocalModEnabled(List<IPackageIdentity> mods, bool value)
+	private async Task SetLocalModIncluded(List<IPackageIdentity> mods, int playset, bool value)
 	{
 		if (mods.Count == 0)
 		{
@@ -326,6 +336,11 @@ internal class ModsUtil : IModUtil
 
 		foreach (var item in mods)
 		{
+			if (item is LocalPdxPackage)
+			{
+				continue;
+			}
+
 			var localIdentity = item.GetLocalPackageIdentity();
 
 			if (localIdentity is null)
@@ -333,21 +348,72 @@ internal class ModsUtil : IModUtil
 				continue;
 			}
 
-			try
-			{
-				var newFolder = CrossIO.Combine(Path.GetDirectoryName(localIdentity.Folder), value ? Path.GetFileName(localIdentity.Folder).TrimStart('.') : ('.' + Path.GetFileName(localIdentity.Folder).TrimStart('.')));
+			SetLocalFolderIncluded(value, item, localIdentity);
+		}
 
-				Directory.Move(localIdentity.Folder, newFolder);
+		var pdxMods = mods.Where(x => x is LocalPdxPackage).ToList(x => x.Name);
 
-				if (localIdentity.GetLocalPackage() is LocalPackageData packageData)
-				{
-					packageData.Folder = newFolder;
-				}
-			}
-			catch (Exception ex)
+		if (value)
+		{
+			await _workshopService.SubscribeBulk(pdxMods, playset);
+
+			pdxMods.ForEach(x => modConfig.SetEnabled(playset, x, true));
+		}
+		else
+		{
+			await _workshopService.UnsubscribeBulk(pdxMods, playset);
+
+			pdxMods.ForEach(x => modConfig.Remove(playset, x));
+		}
+	}
+
+	private async Task SetLocalModEnabled(List<IPackageIdentity> mods, int playset, bool value)
+	{
+		if (mods.Count == 0)
+		{
+			return;
+		}
+
+		foreach (var item in mods)
+		{
+			if (item is LocalPdxPackage)
 			{
-				_logger.Exception(ex, $"Failed to {(value ? "enable" : "disable")} the local mod {item.Name}");
+				continue;
 			}
+
+			var localIdentity = item.GetLocalPackageIdentity();
+
+			if (localIdentity is null)
+			{
+				continue;
+			}
+
+			SetLocalFolderIncluded(value, item, localIdentity);
+		}
+
+		var pdxMods = mods.Where(x => x is LocalPdxPackage).ToList(x => x.Name);
+
+		await _workshopService.SetEnableBulk(pdxMods, playset, value);
+
+		pdxMods.ForEach(x => modConfig.SetEnabled(playset, x, value));
+	}
+
+	private void SetLocalFolderIncluded(bool value, IPackageIdentity item, ILocalPackageIdentity localIdentity)
+	{
+		try
+		{
+			var newFolder = CrossIO.Combine(Path.GetDirectoryName(localIdentity.Folder), value ? Path.GetFileName(localIdentity.Folder).TrimStart('.') : ('.' + Path.GetFileName(localIdentity.Folder).TrimStart('.')));
+
+			Directory.Move(localIdentity.Folder, newFolder);
+
+			if (localIdentity.GetLocalPackage() is LocalPackageData packageData)
+			{
+				packageData.Folder = newFolder;
+			}
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, $"Failed to {(value ? "enable" : "disable")} the local mod {item.Name}");
 		}
 	}
 
@@ -368,7 +434,10 @@ internal class ModsUtil : IModUtil
 			{
 				foreach (var item in workshopInfo.Requirements)
 				{
-					if (!item.IsDlc && !mods.Any(x => x.Id == item.Id) && !list.Any(x => x.Id == item.Id) && !IsEnabled(item, playsetId))
+					if (!item.IsDlc
+						&& !mods.Any(x => x.Id == item.Id)
+						&& !list.Any(x => x.Id == item.Id)
+						&& !IsEnabled(item, playsetId))
 					{
 						list.Add(item);
 					}
@@ -616,6 +685,23 @@ internal class ModsUtil : IModUtil
 		if (result)
 		{
 			modConfig.SetVersion(playset, package.Id, version);
+
+			var mod = (await _workshopService.GetLocalPackages()).FirstOrDefault(x => (ulong)x.Id == package.Id);
+
+			if (mod != null)
+			{
+				var playsetInMod = mod.Playsets.FirstOrDefault(x => x.PlaysetId == playset);
+
+				if (playsetInMod != null)
+				{
+					playsetInMod.Version = version ?? mod.LatestVersion;
+				}
+
+				if (currentPlayset == playset)
+				{
+					mod.Version = version ?? mod.LatestVersion;
+				}
+			}
 		}
 
 		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)

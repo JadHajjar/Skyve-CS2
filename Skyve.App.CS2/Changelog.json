@@ -2,6 +2,281 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "1.0.0",
+    "Date": "2024-08-14",
+    "ChangeGroups": [
+      {
+        "Name": "File and Asset Management",
+        "Changes": [
+          "Maps and savegames have been removed from the package and asset lists.",
+          "Added support for official assets.",
+          "Improved folder cleanup to manage files more efficiently."
+        ]
+      },
+      {
+        "Name": "Log System Improvements",
+        "Changes": [
+          "Fixed an issue where the file-drop in Help and Logs did not show all logs from a zip file.",
+          "Replaced the log level filter with a new slider to make it easier to filter logs.",
+          "Improved the performance and search function of the logs list."
+        ]
+      },
+      {
+        "Name": "Performance Enhancements",
+        "Changes": [
+          "Improved the loading speed of content list views.",
+          "Improved performance in views with lots of images.",
+          "Fixed stuttering in image-heavy views by moving image loading off the main thread.",
+          "Moved cached thumbnails to reduce the memory load on the game.",
+          "Fixed stuttering or freezing when the PDX Mods sync process finishes."
+        ]
+      },
+      {
+        "Name": "Bug Fixes",
+        "Changes": [
+          "Added the period search to the pdx mods tab",
+          "Fixed an issue where the background service sometimes locked a file and prevented Skyve from logging in."
+        ]
+      }
+    ]
+  }
+,
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.2.5",
+    "Date": "2024-08-14",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added more restrictions and safeguards when changing the content location for the game to prevent users losing their data.",
+          "Added a visual window to let users know that the location change process is still ongoing.",
+          "Improved folder cleanup."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.2.4",
+    "Date": "2024-08-12",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Backend improvements to reduce repeated calls to the PDX servers."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.2.3",
+    "Date": "2024-08-11",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Moved the data cleanup to the skyve-app launch instead of game launch."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.2.2",
+    "Date": "2024-08-10",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed mods that have not yet received updates after their initial release causing an infinite reload when having their page open.",
+          "Enabled DEBUG logging during safe mode launch."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.2.1",
+    "Date": "2024-08-10",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed an issue with 'Safe Mode' not working."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.2",
+    "Date": "2024-07-30",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added a 'Safe Mode' launch option in the Utilities page.",
+          "Fixed Dev Mode and UI Dev Mode being mixed up in the playset menu.",
+          "Save-games and Maps are no longer included in log reports' playset info.",
+          "Updated translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.1",
+    "Date": "2024-07-08",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added the .cid file automatically when uploading a save-game.",
+          "Added a link button that can be sent to you using the review request replies.",
+          "Fixed getting multiple notifications about new comments during a long session.",
+          "Fixed getting a notification about new comments if it was 'you' that commented."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.10.0",
+    "Date": "2024-07-07",
+    "ChangeGroups": [
+      {
+        "Name": "Review Requests",
+        "Changes": [
+          "You can now attach a save-game directly in your review request to better help us track down an issue. *This is optional.",
+          "If you have a pending review request, it will be shown while viewing a mod's compatibility information.",
+          "Skyve managers can now contact you on Skyve about your review request, letting you know if anything changed or if more information is needed.",
+          "You will now get a notification if anything new happens with your review request, or if the mod's compatibility data is changed."
+        ]
+      },
+      {
+        "Name": "Comments",
+        "Changes": [
+          "Added a 'New' tag on comments that you haven't read yet. *This is local only, Skyve does not know if you read the comments on the PDX Forumns.",
+          "Creators that have comments on their mods will get a notification when there's new comments that they haven't read yet."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Added a button in the dashboard's new and recently updated mods sections to quickly jump to the PDX Mods tab with the selected tags and sorting.",
+          "Fixed thumbnails in the mod gallery and comments not working/showing correctly.",
+          "Fixed clicking on the attachment in the comments section not opening the image."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.5.4",
+    "Date": "2024-07-04",
+    "ChangeGroups": [
+      {
+        "Name": "Fixes",
+        "Changes": [
+          "Crash fixes."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.5.3",
+    "Date": "2024-07-03",
+    "ChangeGroups": [
+      {
+        "Name": "Changes & Fixes",
+        "Changes": [
+          "Your last selected tags in the PDX Mods page are now remembered throughout your session.",
+          "Added a 'Disable Burst Compilation' launch option to the advanced playset launch options.",
+          "Fixed being able to import a playset by dropping a log report into the designated drop section."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.5.2",
+    "Date": "2024-06-29",
+    "ChangeGroups": [
+      {
+        "Name": "Fixes",
+        "Changes": [
+          "Fixed not being able to properly update Skyve using an install location other than the default one.",
+          "Fixed the 'Unknown Publisher' popup when installing Skyve from the in-game button and in-app update button."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.5.1",
+    "Date": "2024-06-28",
+    "ChangeGroups": [
+      {
+        "Name": "Changes & Fixes",
+        "Changes": [
+          "Added a tag on comments that reflect the version number of the mod at the time of posting. The tag is shown in Green when the version is the latest one of the mod.",
+          "Added a link to the forum page of the mod if available.",
+          "Added Player-prev.log to the log report.",
+          "Fixed a case where users could not install Skyve properly.",
+          "Fixed a crash when jumping between tabs in the Mod Page.",
+          "Fixed the Skyve background service not getting installed.",
+          "Fixed compatibility info for 'Broken From Patch' not working as intended."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.9.5",
+    "Date": "2024-06-04",
+    "ChangeGroups": [
+      {
+        "Name": "New Additions",
+        "Changes": [
+          "Added a new section in the Utilities tab that shows mods with issues, for example 'Out of date' mods. This section comes with a one-click button to fix all issues instantly.",
+          "Added 'Copy PDX Mods link as Markdown' to the copy section when right-clicking on a mod.",
+          "Added a more specific error message when launching Skyve with an incomplete configuration, letting users know they need to launch the game to complete the setup.",
+          "Added custom protocols that can be access to open pages in Skyve, as well as running specific actions using web URLs. For example:\r\n• skyve-mod.com/app/mods/75804\r\n• skyve-mod.com/app/logreport/save"
+        ]
+      },
+      {
+        "Name": "Changes & Fixes",
+        "Changes": [
+          "Improved the single instance system, where launching Skyve will show up the already-running instance if available.",
+          "Log Report's Mod List now includes the mod's version.",
+          "Skyve version is now always automatically set to the latest version to keep users up to date.",
+          "Applied author colors to the dashboard mod sections.",
+          "Fixed the mod version not correctly updating after changing it.",
+          "Fixed compatibility report list showing mods that are not enabled.",
+          "Fixed image cache clearing going to the recycle bin instead of permanently getting deleted."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.9.4",
     "Date": "2024-06-04",
     "Tagline": "Author & Account Update",

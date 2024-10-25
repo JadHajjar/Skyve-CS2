@@ -13,6 +13,7 @@ public class PackageData
 	public string? FileName { get; set; }
 	public string? AuthorId { get; set; }
 	public string? Note { get; set; }
+	public string? EditNote { get; set; }
 	public DateTime ReviewDate { get; set; }
 	public string? ReviewedGameVersion { get; set; }
 	public PackageStability Stability { get; set; }

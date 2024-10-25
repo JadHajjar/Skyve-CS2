@@ -1,4 +1,5 @@
-﻿using Skyve.App.CS2.UserInterface.Content;
+﻿using Skyve.App.CS2.Installer;
+using Skyve.App.CS2.UserInterface.Content;
 using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Content;
@@ -8,12 +9,9 @@ using Skyve.Systems.CS2.Services;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Configuration;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Security.Principal;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2;
@@ -96,12 +94,6 @@ public partial class MainForm : BasePanelForm
 
 		new BackgroundAction("Loading content", ServiceCenter.Get<ICentralManager>().Start).Run();
 
-		var timer = new System.Timers.Timer(1000);
-
-		timer.Elapsed += Timer_Elapsed;
-
-		timer.Start();
-
 		var citiesManager = ServiceCenter.Get<ICitiesManager>();
 
 		citiesManager.MonitorTick += CitiesManager_MonitorTick;
@@ -144,27 +136,27 @@ public partial class MainForm : BasePanelForm
 
 	private void _updateAvailableControl_MouseClick(object sender, MouseEventArgs e)
 	{
+		var logger = ServiceCenter.Get<ILogger>();
 		var logicManager = ServiceCenter.Get<IModLogicManager>();
 		var skyveApps = logicManager.GetCollection("Skyve Mod.dll");
 		var mostRecent = skyveApps.Where(x => x.LocalData != null).OrderBy(x => File.GetLastWriteTimeUtc(x.LocalData?.FilePath)).LastOrDefault();
 
-		if (mostRecent != null)
-		{
-			try
-			{
-				Process.Start(new ProcessStartInfo(Path.Combine(mostRecent.LocalData!.Folder, "Skyve Setup.exe"))
-				{
-					Verb = WinExtensionClass.IsAdministrator ? string.Empty : "runas"
-				});
-
-				_updateAvailableControl.Hide();
-			}
-			catch { }
-		}
-		else
+		if (mostRecent == null)
 		{
 			_updateAvailableControl.Hide();
+
+			return;
 		}
+
+		try
+		{
+			var setupFile = Path.Combine(mostRecent.LocalData!.Folder, "Skyve Setup.exe");
+
+			InstallHelper.Run(setupFile);
+
+			_updateAvailableControl.Hide();
+		}
+		catch { }
 	}
 
 	private void _notifier_CompatibilityReportProcessed()
@@ -312,23 +304,6 @@ public partial class MainForm : BasePanelForm
 		}
 	}
 
-	private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-	{
-		if (!CrossIO.FileExists(CrossIO.Combine(App.Program.CurrentDirectory, "Wake")))
-		{
-			return;
-		}
-
-		CrossIO.DeleteFile(CrossIO.Combine(App.Program.CurrentDirectory, "Wake"));
-
-		if (isGameRunning)
-		{
-			SendKeys.SendWait("%{TAB}");
-		}
-
-		this.TryInvoke(this.ShowUp);
-	}
-
 	protected override void UIChanged()
 	{
 		base.UIChanged();
@@ -360,34 +335,33 @@ public partial class MainForm : BasePanelForm
 
 	public void LaunchStopCities()
 	{
-		if (_citiesManager.IsAvailable())
+		if (!_citiesManager.IsAvailable())
 		{
-			if (CrossIO.CurrentPlatform is Platform.Windows)
-			{
-				_citiesManager.SetLaunchingStatus(true);
-				//if (CurrentPanel is PC_MainPage mainPage)
-				//{
-				//	mainPage.B_StartStop.Loading = true;
-				//}
+			ServiceCenter.Get<ILogger>().Warning("Cities Unavailable to launch the game");
 
-				//base_PB_Icon.Loading = true;
-				base_PB_Icon.LoaderSpeed = 1;
-			}
-
-			if (_citiesManager.IsRunning())
-			{
-				buttonStateRunning = false;
-				new BackgroundAction("Stopping Cities: Skylines", _citiesManager.Kill).Run();
-			}
-			else
-			{
-				buttonStateRunning = true;
-				new BackgroundAction("Starting Cities: Skylines", _citiesManager.Launch).Run();
-			}
-
-			_startTimeoutTimer.Stop();
-			_startTimeoutTimer.Start();
+			return;
 		}
+
+		if (CrossIO.CurrentPlatform is Platform.Windows)
+		{
+			_citiesManager.SetLaunchingStatus(true);
+
+			base_PB_Icon.LoaderSpeed = 1;
+		}
+
+		if (_citiesManager.IsRunning())
+		{
+			buttonStateRunning = false;
+			new BackgroundAction("Stopping Cities: Skylines", _citiesManager.Kill).Run();
+		}
+		else
+		{
+			buttonStateRunning = true;
+			new BackgroundAction("Starting Cities: Skylines", _citiesManager.Launch).Run();
+		}
+
+		_startTimeoutTimer.Stop();
+		_startTimeoutTimer.Start();
 	}
 
 	protected override void OnCreateControl()
@@ -581,6 +555,11 @@ public partial class MainForm : BasePanelForm
 	private void PI_Playsets_OnClick(object sender, MouseEventArgs e)
 	{
 		SetPanel<PC_PlaysetList>(PI_Playsets);
+	}
+
+	private void PI_Backup_OnClick(object sender, MouseEventArgs e)
+	{
+		SetPanel<PC_BackupCenter>(PI_Backup);
 	}
 
 	private async void panelItem1_OnClick(object sender, MouseEventArgs e)

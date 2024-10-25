@@ -50,6 +50,7 @@ public class SkyveService : ServiceBase
 			Providers.Add(provider);
 
 			new Thread(new ThreadStart(provider.GetService<ServiceSystem>()!.Run)) { IsBackground = true }.Start();
+			new Thread(new ThreadStart(provider.GetService<ServiceSystem>()!.RunBackup)) { IsBackground = true }.Start();
 		}
 
 		foreach (var provider in Providers)

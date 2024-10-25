@@ -1,4 +1,5 @@
 ﻿using Skyve.App.Interfaces;
+using Skyve.App.UserInterface.Panels;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Threading;
@@ -101,5 +102,14 @@ internal class D_PdxModsUpdated() : D_PdxModsBase(lastTag)
 		DrawHeader(e, applyDrawing, ref preferredHeight);
 
 		Draw(e, applyDrawing, ref preferredHeight, false);
+	}
+
+	protected override void ViewMore()
+	{
+		var panel = new PC_WorkshopList();
+
+		panel.SetSettings(PackageSorting.DateUpdated, SelectedTags);
+
+		App.Program.MainForm.PushPanel(panel);
 	}
 }

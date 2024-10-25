@@ -45,6 +45,12 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation CopyWorkshopLink => _instance.GetText("CopyWorkshopLink");
 
 	/// <summary>
+	/// <para>Copy PDX Mods link as Markdown</para>
+	/// <para>Plural: Copy the selected packages' PDX Mods links as Markdown</para>
+	/// </summary>
+	public static Translation CopyWorkshopMarkdownLink => _instance.GetText("CopyWorkshopMarkdownLink");
+
+	/// <summary>
 	/// Could not retrieve the mods' data
 	/// </summary>
 	public static Translation CouldNotRetrieveMods => _instance.GetText("CouldNotRetrieveMods");
@@ -88,6 +94,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Enable Developer Mode
 	/// </summary>
 	public static Translation DeveloperMode => _instance.GetText("DeveloperMode");
+
+	/// <summary>
+	/// Disable Burst-Compilation
+	/// </summary>
+	public static Translation DisableBurstCompile => _instance.GetText("DisableBurstCompile");
 
 	/// <summary>
 	/// Disk Status
@@ -166,6 +177,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation FilterIncludedByDefaultTip => _instance.GetText("FilterIncludedByDefault_Tip");
 
 	/// <summary>
+	/// Forum Page
+	/// </summary>
+	public static Translation ForumPage => _instance.GetText("ForumPage");
+
+	/// <summary>
 	/// {0} free
 	/// </summary>
 	public static Translation FreeSpace => _instance.GetText("FreeSpace");
@@ -202,6 +218,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation IncludeThisItemInAllPlaysets => _instance.GetText("IncludeThisItemInAllPlaysets");
 
 	/// <summary>
+	/// Initial Release
+	/// </summary>
+	public static Translation InitialRelease => _instance.GetText("InitialRelease");
+
+	/// <summary>
 	/// Invalid setup detected
 	/// </summary>
 	public static Translation InvalidFolderSettings => _instance.GetText("InvalidFolderSettings");
@@ -222,6 +243,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation JunctionDescription => _instance.GetText("JunctionDescription");
 
 	/// <summary>
+	/// The selected folder is not a valid destination. Please try another one.
+	/// </summary>
+	public static Translation JunctionInvalidFolder => _instance.GetText("JunctionInvalidFolder");
+
+	/// <summary>
 	/// Skyve and Cities: Skylines II will close during this process.  Skyve will restart automatically once finished.
 	/// </summary>
 	public static Translation JunctionRestart => _instance.GetText("JunctionRestart");
@@ -230,6 +256,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Custom Content Location
 	/// </summary>
 	public static Translation JunctionTitle => _instance.GetText("JunctionTitle");
+
+	/// <summary>
+	/// Launch in Safe Mode
+	/// </summary>
+	public static Translation LaunchInSafeMode => _instance.GetText("LaunchInSafeMode");
 
 	/// <summary>
 	/// Launch through Cities2.exe
@@ -400,6 +431,61 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation RunSync => _instance.GetText("RunSync");
 
 	/// <summary>
+	/// Safe Mode
+	/// </summary>
+	public static Translation SafeMode => _instance.GetText("SafeMode");
+
+	/// <summary>
+	/// Launch the game in 'Safe Mode' to help identify issues with crashes.  It is hard to identify the source of a crash, and makes recovering a save impossible sometimes. Safe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.
+	/// </summary>
+	public static Translation SafeModeInfo => _instance.GetText("SafeModeInfo");
+
+	/// <summary>
+	/// Time Period
+	/// </summary>
+	public static Translation SearchTime => _instance.GetText("SearchTime");
+
+	/// <summary>
+	/// All Time
+	/// </summary>
+	public static Translation SearchTimeAllTime => _instance.GetText("SearchTime_AllTime");
+
+	/// <summary>
+	/// 24 hours
+	/// </summary>
+	public static Translation SearchTimeDay => _instance.GetText("SearchTime_Day");
+
+	/// <summary>
+	/// 1 Month
+	/// </summary>
+	public static Translation SearchTimeMonth => _instance.GetText("SearchTime_Month");
+
+	/// <summary>
+	/// 3 Months
+	/// </summary>
+	public static Translation SearchTimeQuarter => _instance.GetText("SearchTime_Quarter");
+
+	/// <summary>
+	/// 6 Months
+	/// </summary>
+	public static Translation SearchTimeSixMonths => _instance.GetText("SearchTime_SixMonths");
+
+	/// <summary>
+	/// 7 Days
+	/// </summary>
+	public static Translation SearchTimeWeek => _instance.GetText("SearchTime_Week");
+
+	/// <summary>
+	/// 1 Year
+	/// </summary>
+	public static Translation SearchTimeYear => _instance.GetText("SearchTime_Year");
+
+	/// <summary>
+	/// Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.  Make sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.
+	/// </summary>
+	public static Translation SkyvenotSetUpInfo => _instance.GetText("SkyvenotSetUpInfo");
+
+	/// <summary>
 	/// Most Popular
 	/// </summary>
 	public static Translation SortingBest => _instance.GetText("Sorting_Best");
@@ -466,6 +552,36 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SyncOngoingLaunchGame => _instance.GetText("SyncOngoingLaunchGame");
 
 	/// <summary>
+	/// Asset Pack
+	/// </summary>
+	public static Translation TagAssetPack => _instance.GetText("Tag_Asset Pack");
+
+	/// <summary>
+	/// Building
+	/// </summary>
+	public static Translation TagBuilding => _instance.GetText("Tag_Building");
+
+	/// <summary>
+	/// Building Extension
+	/// </summary>
+	public static Translation TagBuildingExtension => _instance.GetText("Tag_Building Extension");
+
+	/// <summary>
+	/// Prop
+	/// </summary>
+	public static Translation TagStaticObject => _instance.GetText("Tag_Static Object");
+
+	/// <summary>
+	/// Zone
+	/// </summary>
+	public static Translation TagZone => _instance.GetText("Tag_Zone");
+
+	/// <summary>
+	/// Total Backups Size
+	/// </summary>
+	public static Translation TotalBackupSize => _instance.GetText("TotalBackupSize");
+
+	/// <summary>
 	/// Total C:S II User Data Stored
 	/// </summary>
 	public static Translation TotalCitiesSize => _instance.GetText("TotalCitiesSize");
@@ -489,6 +605,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Enable UI Developer Mode
 	/// </summary>
 	public static Translation UIDeveloperMode => _instance.GetText("UIDeveloperMode");
+
+	/// <summary>
+	/// New comments on '{0}'
+	/// </summary>
+	public static Translation UnreadComment => _instance.GetText("UnreadComment");
 
 	/// <summary>
 	/// Un-Like this mod

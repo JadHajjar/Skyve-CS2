@@ -32,39 +32,30 @@
 			<Setup Include="$(ProjectDir)..\Skyve.App.CS2.Installer\bin\$(BuildType)\Skyve Setup.exe" />
 		</ItemGroup>
 
-		<SignFile
-			CertificateThumbprint="73d56ed78973d5ba0f5e98dee87b374a88a43b34"
-			SigningTarget="@(App)"
-			TargetFrameworkVersion="v4.7.2" />
+		<SignFile CertificateThumbprint="5bc34d5b184eab15be288050ead2d78a19d0a895" SigningTarget="@(App)" TargetFrameworkVersion="v4.7.2" />
 
-		<SignFile
-			CertificateThumbprint="73d56ed78973d5ba0f5e98dee87b374a88a43b34"
-			SigningTarget="@(Service)"
-			TargetFrameworkVersion="v4.7.2" />
+		<SignFile CertificateThumbprint="5bc34d5b184eab15be288050ead2d78a19d0a895" SigningTarget="@(Service)" TargetFrameworkVersion="v4.7.2" />
 
-		<SignFile
-			CertificateThumbprint="73d56ed78973d5ba0f5e98dee87b374a88a43b34"
-			SigningTarget="@(Setup)"
-			TargetFrameworkVersion="v4.7.2" />
+		<SignFile CertificateThumbprint="5bc34d5b184eab15be288050ead2d78a19d0a895" SigningTarget="@(Setup)" TargetFrameworkVersion="v4.7.2" />
 
 		<Copy SourceFiles="@(AppFiles)" DestinationFiles="@(AppFiles->'$(DeployDir)\.App\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(SetupFiles)" DestinationFolder="$(DeployDir)" />
 	</Target>
 
-	<Target Name="UpdatePublishConfiguration" BeforeTargets="Publish">
+	<Target Name="UpdatePublishConfiguration" BeforeTargets="Publish" Condition="'$(ModPublisherCommand)'=='NewVersion'">
 		<PropertyGroup>
-			<PdxPublishConfiguration>$([System.IO.Path]::GetFullPath('$(ProjectDir)\..\PdxPublishConfiguration\PdxPublishConfiguration.exe'))</PdxPublishConfiguration>
-			<ChangelogJsonFile>"$([System.IO.Path]::GetFullPath('$(ProjectDir)\..\Skyve.App.CS2\Changelog.json'))"</ChangelogJsonFile>
-			<PublishConfigurationFile>"$([System.IO.Path]::GetFullPath('$(ProjectDir)\..\Skyve.Mod.CS2\$(PublishConfigurationPath)'))"</PublishConfigurationFile>
+			<PdxPublishConfiguration>"$(SolutionDir)..\PdxPublishConfiguration\PdxPublishConfiguration.exe"</PdxPublishConfiguration>
+			<PublishConfigurationFile>"$(ProjectDir)AutoPublishConfiguration.json"</PublishConfigurationFile>
 		</PropertyGroup>
 
-		<Exec Command="$(PdxPublishConfiguration) $(PublishConfigurationFile) $(Version) $(BuildType) $(ChangelogJsonFile) $(ModPublisherCommand)" />
+		<Exec Command="$(PdxPublishConfiguration) $(Version) $(PublishConfigurationFile) $(BuildType)" />
 	</Target>
 	
 	<ItemGroup>
 		<Compile Include="..\..\Extensions\Extensions\Enums\Platform.cs" Link="Shared\Platform.cs" />
 		<Compile Include="..\..\Skyve\Skyve.Domain\Enums\GamingPlatform.cs" Link="Shared\GamingPlatform.cs" />
 		<Compile Include="..\..\Skyve\Skyve.Domain\IFolderSettings.cs" Link="Shared\IFolderSettings.cs" />
+		<Compile Include="..\Skyve.App.CS2.Installer\InstallHelper.cs" Link="InstallHelper.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -137,6 +128,10 @@
 		<None Include="UI\**">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="AutoPublishConfiguration.json" />
 	</ItemGroup>
 
 </Project>

@@ -14,12 +14,27 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 {
 	private IPackageStatusControl<StatusType, PackageStatus>? statusControl;
 	private IPackageStatusControl<InteractionType, PackageInteraction>? interactionControl;
+	private string? lastSaveUrl;
 
 	public PC_SendReviewRequest(IPackageIdentity package) : base(package)
 	{
 		InitializeComponent();
 
 		SetPackage(Package);
+
+		ServiceCenter.Get(out ILocationService locationService, out IPackageManager packageManager);
+
+		DD_SaveFile.StartingFolder = IOSelectionDialog.CustomDirectory;
+		DD_SaveFile.PinnedFolders = new()
+		{
+			["Your Save-games"] = IOSelectionDialog.CustomDirectory
+		};
+		DD_SaveFile.CustomFiles = packageManager.SaveGames.Where(x => x.IsLocal()).Select(x => new IOSelectionDialog.CustomFile
+		{
+			Name = x.Name,
+			Icon = x.GetThumbnail(),
+			Path = x.FilePath
+		}).ToList();
 	}
 
 	protected override void LocaleChanged()
@@ -43,9 +58,6 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 
 		TLP_Button.Padding = TLP_Description.Padding = P_Content.Padding = UI.Scale(new Padding(7));
 		slickSpacer2.Margin = L_Disclaimer.Margin = B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
-		B_AddInteraction.Padding = B_AddStatus.Padding = UI.Scale(new Padding(15));
-		B_AddInteraction.Font = B_AddStatus.Font = UI.Font(9.75F);
-		B_AddInteraction.Margin = B_AddStatus.Margin = UI.Scale(new Padding(50, 40, 0, 0), UI.UIScale);
 		TB_Note.MinimumSize = UI.Scale(new Size(0, 100), UI.UIScale);
 		L_Disclaimer.Font = UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
 		slickSpacer2.Height = UI.Scale(2);
@@ -122,7 +134,8 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		var postPackage = new ReviewRequest
 		{
 			PackageId = Package.Id,
-			PackageNote = TB_Note.Text
+			PackageNote = TB_Note.Text,
+			SaveUrl = lastSaveUrl
 		};
 
 		if (statusControl is not null)
@@ -172,5 +185,28 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		}
 
 		B_Apply.Loading = false;
+	}
+
+	private async void DD_SaveFile_FileSelected(string obj)
+	{
+		DD_SaveFile.SelectedFile = obj;
+		DD_SaveFile.Loading = true;
+
+		lastSaveUrl = null;
+
+		try
+		{
+			if (!string.IsNullOrEmpty(obj))
+			{
+				lastSaveUrl = await ServiceCenter.Get<GoFileApiUtil>().UploadFile(obj);
+			}
+		}
+		catch (Exception ex)
+		{
+			DD_SaveFile.SelectedFile = null;
+			ShowPrompt(ex, Locale.CouldNotUploadFile);
+		}
+
+		DD_SaveFile.Loading = false;
 	}
 }

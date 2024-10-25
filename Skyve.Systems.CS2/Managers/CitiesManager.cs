@@ -100,12 +100,15 @@ internal class CitiesManager : ICitiesManager
 				case System.Windows.Forms.DialogResult.Cancel:
 					return;
 				case System.Windows.Forms.DialogResult.Yes:
+					_logger.Info("Waiting for Synchronize to finish before launching the game");
 					await workshopService.WaitUntilReady();
 					break;
 			}
 		}
 		else if (_settings.UserSettings.SyncBeforeLaunching)
 		{
+			_logger.Info("Running Synchronize before launching the game");
+
 			await workshopService.RunSync();
 		}
 
@@ -122,7 +125,10 @@ internal class CitiesManager : ICitiesManager
 
 		try
 		{
-			CleanupData();
+			if (!_settings.UserSettings.AdvancedLaunchOptions)
+			{
+				CleanupData();
+			}
 		}
 		catch { }
 
@@ -137,22 +143,10 @@ internal class CitiesManager : ICitiesManager
 	private void CleanupData()
 	{
 		var logDir = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Logs"));
-		var dir1 = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods", "Gooee"));
-		var dir2 = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "Gooee"));
 
 		if (logDir.Exists)
 		{
 			logDir.Delete(true);
-		}
-
-		if (dir1.Exists)
-		{
-			dir1.Delete(true);
-		}
-
-		if (dir2.Exists)
-		{
-			dir2.Delete(true);
 		}
 	}
 
@@ -184,7 +178,12 @@ internal class CitiesManager : ICitiesManager
 
 		if (launchSettings.NoMods)
 		{
-			yield return "--disableCodeModding";
+			yield return "--disableModding";
+		}
+
+		if (launchSettings.DisableBurstCompile)
+		{
+			yield return "--burst-disable-compilation";
 		}
 
 		if (launchSettings.DeveloperMode)
@@ -220,7 +219,18 @@ internal class CitiesManager : ICitiesManager
 
 	public void RunStub()
 	{
-		string[] args = ["--stub", .. GetCommandArgs(null)];
+		string[] args = [.. GetCommandArgs(null), "--stub"];
+		var file = IsExeLaunch(null)
+			? _locationManager.CitiesPathWithExe
+			: _locationManager.SteamPathWithExe;
+
+		_iOUtil.Execute(file, string.Join(" ", args));
+	}
+
+	public void RunSafeMode()
+	{
+		var playsetManager = _serviceProvider.GetService<IPlaysetManager>();
+		string[] args = [.. GetCommandArgs(playsetManager), "--burst-disable-compilation", "--logsEffectiveness=DEBUG"];
 		var file = IsExeLaunch(null)
 			? _locationManager.CitiesPathWithExe
 			: _locationManager.SteamPathWithExe;
@@ -248,6 +258,8 @@ internal class CitiesManager : ICitiesManager
 			{
 				KillProcess(proc);
 			}
+
+			_logger.Info("Kill C:S II successful");
 		}
 		catch (Exception ex)
 		{

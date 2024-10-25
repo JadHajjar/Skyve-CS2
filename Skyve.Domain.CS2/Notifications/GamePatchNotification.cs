@@ -17,9 +17,15 @@ public class GamePatchNotification(DateTime time, string version) : INotificatio
 	public string Icon { get; } = "CS";
 	public Color? Color => System.Drawing.Color.FromArgb(7, 138, 247);
 	public bool HasAction { get; }
+	public bool CanBeRead { get; }
 
 	public void OnClick()
 	{
+	}
+
+	public void OnRead()
+	{
+		throw new NotImplementedException();
 	}
 
 	public void OnRightClick()

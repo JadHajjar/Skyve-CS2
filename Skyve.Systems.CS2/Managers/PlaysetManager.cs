@@ -16,6 +16,7 @@ using SlickControls;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -334,7 +335,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<IPlayset?> ImportPlayset(string fileName)
 	{
-		var playset = JsonConvert.DeserializeObject<PdxPlaysetImport>(File.ReadAllText(fileName));
+		var playset = JsonConvert.DeserializeObject<PdxPlaysetImport>(File.ReadAllText(fileName.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase) ? ExtractZipPlayset(fileName) : fileName));
 
 		if (_playsets.ContainsKey(playset.GeneralData?.Id ?? 0))
 		{
@@ -347,11 +348,29 @@ internal class PlaysetManager : IPlaysetManager
 		{
 			await _packageUtil.SetIncluded(playset.SubscribedMods.Values, true, newPlayset.Id);
 
-			await _packageUtil.SetEnabled(playset.SubscribedMods.Values.Where(x => x.IsEnabled), true, newPlayset.Id);
 			await _packageUtil.SetEnabled(playset.SubscribedMods.Values.Where(x => !x.IsEnabled), false, newPlayset.Id);
 		}
 
 		return newPlayset;
+	}
+
+	private string ExtractZipPlayset(string fileName)
+	{
+		using var stream = File.OpenRead(fileName);
+		using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read, false);
+
+		var entry = zipArchive.GetEntry("Skyve\\CurrentPlayset.json");
+
+		if (entry is null)
+		{
+			return string.Empty;
+		}
+
+		var file = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.json");
+
+		entry.ExtractToFile(file);
+
+		return file;
 	}
 
 	public Task<IPlayset?> CreateLogPlayset(string file)
@@ -461,7 +480,14 @@ internal class PlaysetManager : IPlaysetManager
 
 	public void Save(ICustomPlayset customPlayset)
 	{
-		_saveHandler.Save(customPlayset, CrossIO.Combine("Playsets", $"{customPlayset.Id}.json"));
+		try
+		{
+			_saveHandler.Save(customPlayset, CrossIO.Combine("Playsets", $"{customPlayset.Id}.json"));
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex);
+		}
 
 		lock (_playsets)
 		{
@@ -493,7 +519,7 @@ internal class PlaysetManager : IPlaysetManager
 				Id = CurrentPlayset.Id,
 				Name = CurrentPlayset.Name,
 			},
-			SubscribedMods = contents.ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Id.ToString(), new()
+			SubscribedMods = contents.Where(x => !(x.GetWorkshopInfo()?.Tags?.Any(x => x.Key is "Map" or "Savegame") ?? false)).ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Id.ToString(), new()
 			{
 				Id = (int)x.Id,
 				Name = x.Name,

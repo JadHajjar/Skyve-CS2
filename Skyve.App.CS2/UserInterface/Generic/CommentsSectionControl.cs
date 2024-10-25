@@ -7,9 +7,11 @@ namespace Skyve.App.CS2.UserInterface.Generic;
 public partial class CommentsSectionControl : SlickControl
 {
 	private IModCommentsInfo? modCommentsInfo;
+	private IModChangelog[]? changelogs;
 	private bool isLoading;
 	private int page = 1;
 	private bool noMorePages;
+	private DateTime lastRead;
 
 	public IPackageIdentity? Package { get; set; }
 
@@ -58,12 +60,20 @@ public partial class CommentsSectionControl : SlickControl
 			return;
 		}
 
-		PanelContent.GetParentPanel(this).StartLoader();
-		isLoading = true;
-		modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package, page);
-		noMorePages = !(modCommentsInfo?.HasMore ?? false);
+		try
+		{
+			App.Program.MainForm.CurrentPanel.StartLoader();
+			isLoading = true;
+			modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package, page);
+			changelogs = (await ServiceCenter.Get<IWorkshopService>().GetInfoAsync(Package))?.Changelog.OrderBy(x => x.ReleasedDate).ToArray();
+			noMorePages = !(modCommentsInfo?.HasMore ?? false);
+			App.Program.MainForm.CurrentPanel.StopLoader();
 
-		PanelContent.GetParentPanel(this).StopLoader();
+			lastRead = ServiceCenter.Get<IUpdateManager>().GetLastReadComment(Package);
+			ServiceCenter.Get<IUpdateManager>().MarkCommentAsRead(Package);
+		}
+		catch { }
+
 		this.TryInvoke(() => TLP_SendMessage.Visible = modCommentsInfo?.CanPost ?? false);
 
 		if ((modCommentsInfo?.Posts) != null)
@@ -82,7 +92,7 @@ public partial class CommentsSectionControl : SlickControl
 				g.SetUp();
 				foreach (var item in modCommentsInfo.Posts)
 				{
-					var control = new CommentControl(item, Package) { Dock = DockStyle.Top };
+					var control = new CommentControl(item, Package, changelogs?.LastOrDefault(x => item.Created >= x.ReleasedDate)?.Version, lastRead) { Dock = DockStyle.Top };
 					control.Reply += OnReply;
 					control.SetSize(g, Size);
 
@@ -130,7 +140,7 @@ public partial class CommentsSectionControl : SlickControl
 		TB_Message.Text = string.Empty;
 		TB_Message_Enter(sender, e);
 
-		var control = new CommentControl(post, Package) { Dock = DockStyle.Top };
+		var control = new CommentControl(post, Package, Package.GetWorkshopInfo()?.Version, lastRead) { Dock = DockStyle.Top };
 
 		P_Comments.Controls.Add(control);
 

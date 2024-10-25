@@ -37,13 +37,17 @@ public static class Startup
 		services.AddSingleton<ICompatibilityActionsHelper, CompatibilityActionsUtil>();
 		services.AddSingleton<SkyveApiUtil>();
 		services.AddSingleton<ISkyveDataManager, SkyveDataManager>();
+		services.AddSingleton<IBackupService, BackupService>();
 		services.AddSingleton<PdxLogUtil>();
 
 		services.AddTransient<IVersionUpdateService, VersionUpdateService>();
 		services.AddTransient<ILogUtil, LogUtil>();
 		services.AddTransient<ICentralManager, CentralManager>();
+		services.AddTransient<NamedPipelineUtil>();
 		services.AddTransient<AssemblyUtil>();
 		services.AddTransient<MacAssemblyUtil>();
+		services.AddTransient<GoFileApiUtil>();
+		services.AddTransient<IBackupSystem, BackupSystem>();
 
 		return services;
 	}

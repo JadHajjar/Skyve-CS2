@@ -8,6 +8,7 @@ using Skyve.Systems.CS2.Domain.Api.DTO;
 using Skyve.Systems.CS2.Domain.DTO;
 
 using SkyveApi.Domain.CS2;
+using SkyveApi.Domain.Generic;
 
 using System;
 using System.Collections.Generic;
@@ -113,5 +114,35 @@ public class SkyveApiUtil
 	public async Task<INotificationInfo[]?> GetAnnouncements()
 	{
 		return ConvertDto<AnnouncementData, AnnouncementNotification, AnnouncementDto>(await Get<AnnouncementData[]>("/Announcements"));
+	}
+
+	public async Task<PackageEdit[]?> GetPackageEdits(ulong packageId)
+	{
+		return ConvertDto<PackageEditData, PackageEdit, PackageEditDto>(await Get<PackageEditData[]>("/GetPackageEdits", (nameof(packageId), packageId)));
+	}
+
+	public async Task<ReviewReply[]?> GetReviewMessages()
+	{
+		return ConvertDto<ReviewReplyData, ReviewReply, ReviewReplyDto>(await Get<ReviewReplyData[]>("/GetReviewMessages"));
+	}
+
+	public async Task<ReviewReply?> GetReviewStatus(ulong packageId)
+	{
+		return ConvertDto<ReviewReplyData, ReviewReply, ReviewReplyDto>(await Get<ReviewReplyData>("/GetReviewStatus", (nameof(packageId), packageId)));
+	}
+
+	public async Task<ApiResponse> SendReviewMessage(ReviewReply reply)
+	{
+		return await Post<ReviewReplyData, ApiResponse>("/SendReviewMessage", ConvertDto<ReviewReply, ReviewReplyData, ReviewReplyDataDto>(reply)!);
+	}
+
+	public async Task<ApiResponse> DeleteReviewMessage(ulong packageId)
+	{
+		return await Delete<ApiResponse>("/DeleteReviewMessage", (nameof(packageId), packageId));
+	}
+
+	public async Task<GoFileInfo?> GetGoFileInfo()
+	{
+		return ConvertDto<GoFileInfoData, GoFileInfo, GoFileInfoDto>(await Get<GoFileInfoData>("/GetGoFileInfo"));
 	}
 }

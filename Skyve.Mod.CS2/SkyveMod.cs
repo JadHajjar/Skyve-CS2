@@ -1,11 +1,15 @@
 ﻿using Colossal.IO.AssetDatabase;
 using Colossal.Json;
 using Colossal.Logging;
+using Colossal.PSI.Common;
+using Colossal.PSI.Environment;
 
 using Game;
 using Game.Modding;
 using Game.Rendering;
 using Game.SceneFlow;
+
+using Skyve.App.CS2.Installer;
 
 using System;
 using System.Diagnostics;
@@ -29,6 +33,8 @@ namespace Skyve.Mod.CS2
 			if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
 			{
 				ModPath = Path.GetDirectoryName(asset.path);
+
+				Log.Info(ModPath);
 			}
 
 			updateSystem.UpdateAt<InstallSkyveUISystem>(SystemUpdatePhase.UIUpdate);
@@ -98,17 +104,16 @@ namespace Skyve.Mod.CS2
 
 			try
 			{
-				var isAdmin = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+				var setupFile = Path.Combine(ModPath, "Skyve Setup.exe");
 
-				Process.Start(new ProcessStartInfo(Path.Combine(ModPath, "Skyve Setup.exe"))
-				{
-					Verb = isAdmin ? string.Empty : "runas"
-				});
+				InstallHelper.Run(setupFile);
 
 				return true;
 			}
-			catch
+			catch (Exception ex)
 			{
+				Log.Error(ex, "Failed to start the setup app");
+
 				return false;
 			}
 		}

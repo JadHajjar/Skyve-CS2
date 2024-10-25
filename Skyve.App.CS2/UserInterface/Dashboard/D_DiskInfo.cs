@@ -15,6 +15,7 @@ internal class D_DiskInfo : IDashboardItem
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
 	private readonly INotifier _notifier;
+	private readonly IBackupSystem _backupSystem;
 
 	private ContentInfo? info;
 
@@ -28,6 +29,7 @@ internal class D_DiskInfo : IDashboardItem
 		internal long TotalSavesSize;
 		internal long TotalSubbedSize;
 		internal long TotalOtherSize;
+		internal long TotalBackupSize;
 		internal bool CriticalSpace;
 		internal bool LowSpace;
 		internal string? DriveLetter;
@@ -36,7 +38,7 @@ internal class D_DiskInfo : IDashboardItem
 
 	public D_DiskInfo()
 	{
-		ServiceCenter.Get(out _logger, out _settings, out _notifier);
+		ServiceCenter.Get(out _logger, out _settings, out _notifier, out _backupSystem);
 	}
 
 	protected override void OnCreateControl()
@@ -76,6 +78,7 @@ internal class D_DiskInfo : IDashboardItem
 		contentInfo.AvailableSpace = drive.AvailableFreeSpace;
 		contentInfo.TotalSpace = drive.TotalSize;
 		contentInfo.IsJunctionSet = !string.IsNullOrEmpty(junctionLocation);
+		contentInfo.TotalBackupSize = _backupSystem.GetBackupsSizeOnDisk();
 
 		if (token.IsCancellationRequested)
 		{
@@ -142,11 +145,19 @@ internal class D_DiskInfo : IDashboardItem
 		}
 
 		var fadedColor = FormDesign.Design.ForeColor.MergeColor(FormDesign.Design.BackColor, 75);
+
 		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalSubbedSize, info.TotalSubbedSize.SizeString(), applyDrawing, ref preferredHeight, "PDXMods", fadedColor, false);
 		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalSavesSize, info.TotalSavesSize.SizeString(), applyDrawing, ref preferredHeight, "City", fadedColor, false);
 		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalOtherSize, info.TotalOtherSize.SizeString(), applyDrawing, ref preferredHeight, "Folder", fadedColor, false);
+
 		preferredHeight += BorderRadius;
+
 		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalCitiesSize, info.TotalCitiesSize.SizeString(), applyDrawing, ref preferredHeight, "CS");
+
+		if (info.TotalBackupSize > 0)
+		{
+			DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalBackupSize, info.TotalBackupSize.SizeString(), applyDrawing, ref preferredHeight, "SafeShield");
+		}
 
 		preferredHeight += BorderRadius;
 

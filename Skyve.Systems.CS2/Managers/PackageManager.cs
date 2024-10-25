@@ -16,6 +16,7 @@ internal class PackageManager : IPackageManager
 	private readonly Dictionary<ulong, IPackage> indexedPackages = [];
 	private readonly Dictionary<string, List<IPackage>> indexedMods = [];
 	private readonly List<IPackage> packages = [];
+	private IPackage? saveGamesPackage;
 
 	private readonly IModLogicManager _modLogicManager;
 	private readonly ISettings _settings;
@@ -42,7 +43,7 @@ internal class PackageManager : IPackageManager
 			{
 				foreach (var package in currentPackages)
 				{
-					if (_modLogicManager.IsPseudoMod(package))
+					if (package.IsBuiltIn || _modLogicManager.IsPseudoMod(package))
 					{
 						continue;
 					}
@@ -55,6 +56,11 @@ internal class PackageManager : IPackageManager
 
 			foreach (var package in currentPackages)
 			{
+				if (package.IsBuiltIn)
+				{
+					continue;
+				}
+
 				yield return package;
 			}
 		}

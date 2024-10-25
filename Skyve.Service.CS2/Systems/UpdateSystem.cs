@@ -8,34 +8,39 @@ internal class UpdateSystem
 {
 	private readonly IWorkshopService _workshopService;
 	private readonly ILogger _logger;
+	private readonly ICitiesManager _citiesManager;
 
-	public UpdateSystem(IWorkshopService workshopService, ILogger logger)
+	public UpdateSystem(IWorkshopService workshopService, ILogger logger, ICitiesManager citiesManager)
 	{
 		_workshopService = workshopService;
 		_logger = logger;
+		_citiesManager = citiesManager;
 	}
 
 	internal async Task RunUpdate()
 	{
+		if (IsSkyveAppRunning())
+		{
+			_logger.Info("Sync Skipped, App Running");
+			return;
+		}
+
+		if (_citiesManager.IsRunning())
+		{
+			_logger.Info("Sync Skipped, Game Running");
+			return;
+		}
+
 		_logger.Info("UpdateSystem > RunUpdate");
 
-		if (_workshopService.IsReady)
-		{
-			if (IsSkyveAppRunning())
-			{
-				_logger.Info("Sync Skipped, App Running");
-				return;
-			}
+		await _workshopService.Initialize();
 
-			_logger.Info("Sync Started");
-			await _workshopService.RunSync();
-			_logger.Info("Sync Ended");
-		}
-		else
+		if (await _workshopService.Login())
 		{
-			_logger.Info("Logging in");
-			await _workshopService.Login();
+			await _workshopService.RunSync();
 		}
+
+		await _workshopService.Shutdown();
 	}
 
 	private bool IsSkyveAppRunning()

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Extensions;
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -6,13 +8,12 @@ using System.Windows.Forms;
 namespace Skyve.Systems.CS2.Utilities;
 public static class CommandUtil
 {
-	public static string? PreSelectedPlayset { get; private set; }
-	public static bool LaunchOnLoad { get; private set; }
-	public static bool CloseWhenFinished { get; private set; }
-	public static bool NoWindow { get; private set; }
+	public static Options Commands { get; set; } = new();
 
 	public static bool Parse(string[] args)
 	{
+		Commands = new();
+
 		var exit = false;
 
 		for (var i = 0; i < args.Length; i++)
@@ -64,26 +65,40 @@ public static class CommandUtil
 
 		if (isCommand("playset"))
 		{
-			PreSelectedPlayset = arguments[0];
+			Commands.PreSelectedPlayset = arguments[0];
 		}
 
 		if (isCommand("launch"))
 		{
-			LaunchOnLoad = true;
+			Commands.LaunchOnLoad = true;
 		}
 
 		if (isCommand("closeWhenFinished"))
 		{
-			CloseWhenFinished = true;
+			Commands.CloseWhenFinished = true;
 		}
 
 		if (isCommand("noWindow"))
 		{
-			NoWindow = true;
+			Commands.NoWindow = true;
+		}
+
+		if (isCommand("cmd") && arguments.Count > 0)
+		{
+			Commands.CommandActions = arguments[0].Remove("skyve://").Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries);
 		}
 
 		return false;
 
 		bool isCommand(string cmd) => command.Equals(cmd, StringComparison.InvariantCultureIgnoreCase);
+	}
+
+	public class Options
+	{
+		public string? PreSelectedPlayset { get; set; }
+		public bool LaunchOnLoad { get; set; }
+		public bool CloseWhenFinished { get; set; }
+		public bool NoWindow { get; set; }
+		public string[] CommandActions { get; set; } = [];
 	}
 }

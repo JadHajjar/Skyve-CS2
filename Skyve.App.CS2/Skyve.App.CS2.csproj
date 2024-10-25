@@ -27,6 +27,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Include="..\Skyve.App.CS2.Installer\InstallHelper.cs" Link="InstallHelper.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Markdig" Version="0.34.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Mono.Cecil" Version="0.11.3" />
@@ -65,9 +69,7 @@
 		<Compile Update="UserInterface\Dashboard\D_PdxModsUpdated.cs" />
 		<Compile Update="UserInterface\Dashboard\D_DiskInfo.cs" />
 		<Compile Update="UserInterface\Dashboard\D_Playsets.cs" />
-		<Compile Update="UserInterface\Generic\ModVersionDropDown.cs">
-		  <SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="UserInterface\Generic\ModVersionDropDown.cs" />
 		<Compile Update="UserInterface\Panels\PC_SendReviewRequest.cs" />
 		<Compile Update="UserInterface\Panels\PC_ReviewRequests.cs" />
 		<Compile Update="UserInterface\Panels\PC_ViewReviewRequest.cs" />

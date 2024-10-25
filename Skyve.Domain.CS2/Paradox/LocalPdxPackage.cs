@@ -22,7 +22,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 
 	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)), isCodeMod, version, filePath, mod.RequiredGameVersion)
 	{
-		IsLocal = false;
+		IsLocal = mod.Id <= 0;
 		Id = (ulong)mod.Id;
 		Guid = mod.Name;
 		Name = DisplayName = mod.DisplayName;
@@ -50,8 +50,8 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
-		Tags = mod.Tags;
-		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
+		Tags = mod.Tags ?? [];
+		Url = Id == 0 ? null : $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
 	public string Version { get; set; }

@@ -13,25 +13,30 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
 internal class AssetsUtil : IAssetUtil
 {
-	private Dictionary<string, IAsset> assetIndex = [];
+	//private Dictionary<string, IAsset> assetIndex = [];
 
-	public HashSet<string> ExcludedHashSet { get; }
+	public HashSet<string> ExcludedHashSet { get; } = [];
 
 	private readonly IPackageManager _contentManager;
 	private readonly INotifier _notifier;
+	private readonly ILogger _logger;
+	private readonly IImageService _imageService;
 
-	public AssetsUtil(IPackageManager contentManager, INotifier notifier)
+	public AssetsUtil(IPackageManager contentManager, INotifier notifier, ILogger logger, IImageService imageService)
 	{
 		_contentManager = contentManager;
 		_notifier = notifier;
+		_logger = logger;
+		_imageService = imageService;
 
-		_notifier.ContentLoaded += BuildAssetIndex;
+		//_notifier.ContentLoaded += BuildAssetIndex;
 	}
 
 	public IEnumerable<IAsset> GetAssets(string folder, bool withSubDirectories = true)
@@ -41,7 +46,7 @@ internal class AssetsUtil : IAssetUtil
 			yield break;
 		}
 
-		var files = Directory.GetFiles(folder, $"*.cok", withSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+		var files = Directory.EnumerateFiles(folder, $"*.cok", withSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 
 		foreach (var file in files)
 		{
@@ -50,7 +55,17 @@ internal class AssetsUtil : IAssetUtil
 				continue;
 			}
 
-			using var archive = ZipFile.OpenRead(file);
+			ZipArchive archive;
+
+			try
+			{
+				archive = ZipFile.OpenRead(file);
+			}
+			catch (Exception ex)
+			{
+				_logger.Exception(ex, "Failed to load asset: " + file);
+				continue;
+			}
 
 			if (getAsset<SaveGameMetaData>(AssetType.SaveGame, ".SaveGameMetadata", out var asset, out var saveData))
 			{
@@ -64,8 +79,85 @@ internal class AssetsUtil : IAssetUtil
 			}
 			else
 			{
-				yield return new Asset(AssetType.Generic, folder, file);
+				foreach (var entry in archive.Entries)
+				{
+					if (entry.FullName.EndsWith(".cid", StringComparison.InvariantCultureIgnoreCase))
+					{
+						using var cidStream = entry.Open();
+						using var cidReader = new StreamReader(cidStream);
+
+						continue;
+					}
+
+					if (!entry.FullName.EndsWith(".prefab", StringComparison.InvariantCultureIgnoreCase))
+					{
+						continue;
+					}
+
+					using var stream = entry.Open();
+					using var r = new BinaryReader(stream);
+
+					r.ReadBytes(11); // skip first bytes
+
+					var typeBuilder = new StringBuilder();
+
+					while (true)
+					{
+						var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
+
+						if (ch is '\0' or 'ī')
+						{
+							break;
+						}
+
+						typeBuilder.Append(ch);
+					}
+
+					r.ReadBytes(21); // skip extra bytes
+
+					var nameBuilder = new StringBuilder();
+
+					while (true)
+					{
+						var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
+
+						if (ch is '\0' or 'ī')
+						{
+							break;
+						}
+
+						nameBuilder.Append(ch);
+					}
+
+					var type = typeBuilder.ToString();
+					var name = nameBuilder.ToString();
+
+					if (type is "Game.Prefabs.RenderPrefab, Game")
+					{
+						continue;
+					}
+
+					asset = new Asset(name!
+						, AssetType.Generic
+						, folder
+						, file
+						, calculateTotalSize(entry)
+						, entry.LastWriteTime.ToUniversalTime().Date
+						, [Regex.Match(type, @"\.(\w+?)(Prefab)?,").Groups[1].Value.FormatWords()]);
+
+					var imageEntry = archive.GetEntry(Path.ChangeExtension(entry.FullName, "png"))
+						?? archive.GetEntry(Path.ChangeExtension(entry.FullName.Insert(entry.FullName.Length - 7, "_thumbnail"), "png"));
+
+					if (imageEntry is not null && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+					{
+						imageEntry.ExtractToFile(asset.Thumbnail);
+					}
+
+					yield return asset;
+				}
 			}
+
+			archive.Dispose();
 
 			bool getAsset<T>(AssetType assetType, string metaDataName, out Asset? asset, out T? data)
 			{
@@ -85,7 +177,51 @@ internal class AssetsUtil : IAssetUtil
 				asset = new Asset(assetType, folder, file);
 				return true;
 			}
+
+			long calculateTotalSize(ZipArchiveEntry entry)
+			{
+				var size = 0L;
+
+				var start = Path.GetFileNameWithoutExtension(entry.FullName);
+				var vtStart = "StreamingData~/VT/" + Path.GetFileNameWithoutExtension(entry.FullName);
+
+				foreach (var item in archive.Entries)
+				{
+					if (item.FullName.StartsWith(start, StringComparison.InvariantCultureIgnoreCase)
+						|| item.FullName.StartsWith(vtStart, StringComparison.InvariantCultureIgnoreCase))
+					{
+						size += item.Length;
+					}
+				}
+
+				return size;
+			}
 		}
+	}
+
+	public static bool GetTypeAndNameFromJson(string jsonString, out string? type, out string? name, out string? icon)
+	{
+		// Find matches
+		var typeMatch = Regex.Match(jsonString, @"""\$type"":\s*""([^""]+)""");
+		var nameMatch = Regex.Match(jsonString, @"""name"":\s*""([^""]+)""");
+		var iconMatch = Regex.Match(jsonString, @"""assetdb://Global/(\w+)""");
+
+		// If both type and name are found, assign them to the out parameters
+		if (typeMatch.Success && nameMatch.Success)
+		{
+			type = typeMatch.Groups[1].Value;
+			name = nameMatch.Groups[1].Value;
+			icon = iconMatch.Groups[1].Value;
+			return true;
+		}
+
+		// Initialize out parameters
+		type = null;
+		name = null;
+		icon = null;
+
+		// Return false if not found
+		return false;
 	}
 
 	public bool IsIncluded(IAsset asset, int? playsetId = null)
@@ -93,7 +229,7 @@ internal class AssetsUtil : IAssetUtil
 		return true;// !ExcludedHashSet.Contains(asset.FilePath.ToLower());
 	}
 
-	public async Task SetIncluded(IAsset asset, bool value, int? playsetId = null)
+	public Task SetIncluded(IAsset asset, bool value, int? playsetId = null)
 	{
 		if (value)
 		{
@@ -106,21 +242,23 @@ internal class AssetsUtil : IAssetUtil
 
 		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
 		{
-			return;
+			return Task.CompletedTask;
 		}
 
 		_notifier.OnInclusionUpdated();
 		_notifier.TriggerAutoSave();
 
 		SaveChanges();
+
+		return Task.CompletedTask;
 	}
 
 	public void SaveChanges()
 	{
-		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
-		{
-			return;
-		}
+		//if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
+		//{
+		//	return;
+		//}
 
 		//_config.ExcludedAssets = ExcludedHashSet.ToList();
 
@@ -141,11 +279,12 @@ internal class AssetsUtil : IAssetUtil
 
 	public IAsset? GetAssetByFile(string? v)
 	{
-		return assetIndex.TryGet(v ?? string.Empty);
+		throw new NotImplementedException();
+		//return assetIndex.TryGet(v ?? string.Empty);
 	}
 
 	public void BuildAssetIndex()
 	{
-		assetIndex = _contentManager.Assets.ToDictionary(x => x.FilePath.FormatPath(), StringComparer.OrdinalIgnoreCase);
+		//assetIndex = _contentManager.Assets.ToDictionary(x => x.FilePath.FormatPath(), StringComparer.OrdinalIgnoreCase);
 	}
 }

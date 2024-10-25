@@ -63,7 +63,7 @@ internal class ModLogicManager : IModLogicManager
 			return false;
 		}
 
-		if (Path.GetFileName(mod.Folder).ToLower() is "maps" or "saves")
+		if (mod.GetPackage()?.IsBuiltIn ?? false)
 		{
 			return true;
 		}

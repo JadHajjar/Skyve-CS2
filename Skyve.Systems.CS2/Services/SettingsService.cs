@@ -12,10 +12,12 @@ internal class SettingsService : ISettings
 	public SessionSettings SessionSettings { get; private set; }
 	public FolderSettings FolderSettings { get; private set; }
 	public UserSettings UserSettings { get; private set; }
+	public BackupSettings BackupSettings { get; private set; }
 
 	IUserSettings ISettings.UserSettings => UserSettings;
 	ISessionSettings ISettings.SessionSettings => SessionSettings;
 	IFolderSettings ISettings.FolderSettings => FolderSettings;
+	IBackupSettings ISettings.BackupSettings => BackupSettings;
 
 	public SettingsService(SaveHandler saveHandler)
 	{
@@ -24,6 +26,7 @@ internal class SettingsService : ISettings
 		FolderSettings = settingsSaveHandler.Load<FolderSettings>();
 		SessionSettings = settingsSaveHandler.Load<SessionSettings>();
 		UserSettings = settingsSaveHandler.Load<UserSettings>();
+		BackupSettings = settingsSaveHandler.Load<BackupSettings>();
 
 		CrossIO.CurrentPlatform = FolderSettings.Platform;
 

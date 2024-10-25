@@ -16,14 +16,14 @@ public partial class PC_Utilities : PanelContent
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly INotifier _notifier;
 	private readonly ILocationService _locationManager;
-	private readonly IPackageManager _contentManager;
+	private readonly IPackageManager _packageManager;
 	private readonly IPackageUtil _packageUtil;
 	private readonly IWorkshopService _workshopService;
 	private readonly IDownloadService _downloadService;
 
 	public PC_Utilities()
 	{
-		ServiceCenter.Get(out _settings, out _citiesManager, out _subscriptionsManager, out _notifier, out _locationManager, out _packageUtil, out _contentManager, out _workshopService, out _downloadService);
+		ServiceCenter.Get(out _settings, out _citiesManager, out _subscriptionsManager, out _notifier, out _locationManager, out _packageUtil, out _packageManager, out _workshopService, out _downloadService);
 
 		InitializeComponent();
 
@@ -35,12 +35,17 @@ public partial class PC_Utilities : PanelContent
 
 	private void Notifier_WorkshopSync()
 	{
+		var outOfDatePackages = _packageManager.Packages.AllWhere(x => _packageUtil.IsIncluded(x) && _packageUtil.GetStatus(x, out _) == DownloadStatus.OutOfDate);
+
 		this.TryInvoke(() =>
 		{
 			var ready = _workshopService.IsReady && !_notifier.IsWorkshopSyncInProgress;
 			B_RunSync.Enabled = ready;
 			L_SyncStatus.Text = ready ? Locale.Ready : LocaleCS2.SyncOngoing;
 			L_SyncStatus.ForeColor = (ready ? FormDesign.Design.GreenColor : FormDesign.Design.OrangeColor).MergeColor(FormDesign.Design.ForeColor, 75);
+
+			outOfDatePackagesControl1.SetPackages(outOfDatePackages);
+			P_Issues.Visible = outOfDatePackages.Count() > 0;
 		});
 	}
 
@@ -55,31 +60,39 @@ public partial class PC_Utilities : PanelContent
 		L_Troubleshoot.Text = Locale.TroubleshootInfo;
 		L_PdxSyncInfo.Text = LocaleCS2.PdxSyncInfo;
 		L_SyncStatusLabel.Text = LocaleCS2.CurrentStatus;
+		L_SafeMode.Text = LocaleCS2.SafeModeInfo;
 	}
 
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
-		B_Troubleshoot.Margin = B_RunSync.Margin = P_Sync.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10));
+		B_SafeMode.Margin = B_Troubleshoot.Margin = B_RunSync.Margin = P_Sync.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10));
 		B_ImportClipboard.Margin = UI.Scale(new Padding(10));
-		L_Troubleshoot.Font=L_PdxSyncInfo.Font=L_SyncStatus.Font = UI.Font(9F);
+		L_Troubleshoot.Font = L_PdxSyncInfo.Font = L_SyncStatus.Font = UI.Font(9F);
 		L_SyncStatusLabel.Font = UI.Font(9F, FontStyle.Bold);
 		L_Troubleshoot.Margin = UI.Scale(new Padding(3));
-		L_PdxSyncInfo.Margin = L_SyncStatus.Margin = UI.Scale(new Padding(3, 3, 3, 10));
+		L_SafeMode.Margin = L_PdxSyncInfo.Margin = L_SyncStatus.Margin = UI.Scale(new Padding(3, 3, 3, 10));
 		L_SyncStatusLabel.Margin = UI.Scale(new Padding(3, 3, 5, 10));
 
 		foreach (Control item in P_Reset.Controls)
 		{
 			item.Margin = UI.Scale(new Padding(5));
 		}
+
+		slickScroll1.Reset();
 	}
 
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
 
-		foreach (Control item in TLP_Main.Controls)
+		foreach (Control item in panel1.Controls)
+		{
+			item.BackColor = design.BackColor;
+		}
+
+		foreach (Control item in panel2.Controls)
 		{
 			item.BackColor = design.BackColor;
 		}
@@ -203,7 +216,8 @@ public partial class PC_Utilities : PanelContent
 
 	private async void B_Troubleshoot_Click(object sender, EventArgs e)
 	{
-		ShowPrompt("Coming soon...", icon: PromptIcons.Info);return;
+		ShowPrompt("Coming soon...", icon: PromptIcons.Info);
+		return;
 		var sys = ServiceCenter.Get<ITroubleshootSystem>();
 
 		if (sys.IsInProgress)
@@ -231,5 +245,31 @@ public partial class PC_Utilities : PanelContent
 		B_RunSync.Loading = true;
 		await _workshopService.RunSync();
 		B_RunSync.Loading = false;
+	}
+
+	private async void B_FixAllIssues_Click(object sender, EventArgs e)
+	{
+		B_FixAllIssues.Loading = true;
+		B_FixAllIssues.Enabled = false;
+		var outOfDatePackages = _packageManager.Packages.AllWhere(x => _packageUtil.IsIncluded(x) && _packageUtil.GetStatus(x, out _) == DownloadStatus.OutOfDate);
+
+		foreach (var package in outOfDatePackages)
+		{
+			await _packageUtil.SetVersion(package, null);
+		}
+
+		B_FixAllIssues.Loading = false;
+		B_FixAllIssues.Enabled = true;
+	}
+
+	private async void B_SafeMode_Click(object sender, EventArgs e)
+	{
+		B_SafeMode.Loading = true;
+
+		_citiesManager.RunSafeMode();
+
+		await Task.Delay(5000);
+
+		B_SafeMode.Loading = false;
 	}
 }

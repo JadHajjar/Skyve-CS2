@@ -5,7 +5,6 @@ using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
-using Skyve.Domain;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
@@ -63,12 +62,11 @@ public partial class PC_PackagePageBase : PanelContent
 	private async void DD_Version_SelectedItemChanged(object sender, EventArgs e)
 	{
 		var currentVersion = _packageUtil.GetSelectedVersion(Package);
-		var selectedVersion = DD_Version.SelectedItem?.VersionId;
 
-		if (currentVersion != selectedVersion && !string.IsNullOrEmpty(selectedVersion))
+		if (DD_Version.Items.Length > 1 && currentVersion != DD_Version.SelectedItem?.VersionId)
 		{
 			DD_Version.Loading = true;
-			await _packageUtil.SetVersion(Package, selectedVersion!);
+			await _packageUtil.SetVersion(Package, DD_Version.SelectedItem == DD_Version.Items.FirstOrDefault() ? null : DD_Version.SelectedItem?.VersionId);
 			await Task.Delay(1000);
 			DD_Version.Loading = false;
 		}
@@ -128,7 +126,8 @@ public partial class PC_PackagePageBase : PanelContent
 
 		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
-		LI_Version.ValueText = localData?.Version ?? workshopInfo?.Version;
+		LI_Version.LabelText = localData?.IsCodeMod ?? true ? "Version" : "Content";
+		LI_Version.ValueText = localData?.IsCodeMod ?? true ? localData?.Version ?? workshopInfo?.Version : $"{localData.Assets.Length} {Locale.Asset.FormatPlural(localData.Assets.Length).ToLower()}";
 		LI_UpdateTime.ValueText = date == default ? null : _settings.UserSettings.ShowDatesRelatively ? date.ToLocalTime().ToRelatedString(true, false) : date.ToLocalTime().ToString("g");
 		LI_ModId.ValueText = Package.Id > 0 ? Package.Id.ToString() : null;
 		LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);
@@ -148,6 +147,11 @@ public partial class PC_PackagePageBase : PanelContent
 		{
 			var links = new List<ILink>();
 
+			if (workshopInfo?.HasComments() ?? false)
+			{
+				links.Add(ServiceCenter.Get<IWorkshopService>().GetCommentsPageUrl(Package)!);
+			}
+
 			links.AddRange(workshopInfo?.Links ?? []);
 			links.AddRange(Package.GetPackageInfo()?.Links ?? []);
 
@@ -161,7 +165,10 @@ public partial class PC_PackagePageBase : PanelContent
 				FLP_Package_Links.ResumeDrawing();
 			}
 
-			TLP_Links.Visible = links.Count > 0;
+			if (TLP_Links.Visible = links.Count > 0)
+			{
+				FLP_Package_Links_SizeChanged(this, EventArgs.Empty);
+			}
 		}
 
 		// Requirements
@@ -444,5 +451,7 @@ public partial class PC_PackagePageBase : PanelContent
 		{
 			ctrl.Size = new(ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal, ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal);
 		}
+
+		FLP_Package_Links.PerformLayout();
 	}
 }

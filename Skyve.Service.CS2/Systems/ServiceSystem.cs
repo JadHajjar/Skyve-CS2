@@ -9,47 +9,21 @@ namespace Skyve.Service.CS2.Systems;
 internal class ServiceSystem
 {
 	private readonly UpdateSystem _updateSystem;
-	private readonly IModLogicManager _modLogicManager;
-	private readonly ICompatibilityManager _compatibilityManager;
-	private readonly IPlaysetManager _playsetManager;
-	private readonly ICitiesManager _citiesManager;
-	private readonly ILocationService _locationService;
-	private readonly ISubscriptionsManager _subscriptionManager;
-	private readonly IPackageManager _packageManager;
-	private readonly IContentManager _contentManager;
-	private readonly ISettings _settings;
-	private readonly ILogger _logger;
-	private readonly INotifier _notifier;
-	private readonly IModUtil _modUtil;
-	private readonly IPackageUtil _packageUtil;
-	private readonly IVersionUpdateService _versionUpdateService;
-	private readonly INotificationsService _notificationsService;
-	private readonly IUpdateManager _updateManager;
-	private readonly IAssetUtil _assetUtil;
 	private readonly IWorkshopService _workshopService;
-	private readonly ISkyveDataManager _skyveDataManager;
+	private readonly ILogger _logger;
+	private readonly IBackupService _backupService;
 
-	public ServiceSystem(UpdateSystem updateSystem, IWorkshopService workshopService, ILogger logger)
+	public ServiceSystem(UpdateSystem updateSystem, IWorkshopService workshopService, ILogger logger, IBackupService backupService)
 	{
 		_updateSystem = updateSystem;
 		_workshopService = workshopService;
 		_logger = logger;
+		_backupService = backupService;
 	}
 
 	public async void Run()
 	{
-		try
-		{
-			await _workshopService.Initialize();
-
-			await _workshopService.Login();
-
-			_logger.Info("Update Loop Started");
-		}
-		catch (Exception ex)
-		{
-			_logger.Exception(ex, "Failed to start Update Loop");
-		}
+		_logger.Info("Update Loop Started");
 
 		while (true)
 		{
@@ -70,6 +44,20 @@ internal class ServiceSystem
 			{
 				_logger.Exception(ex, "Unexpected error during Update Loop");
 			}
+		}
+	}
+
+	public async void RunBackup()
+	{
+		while (true)
+		{
+			await _workshopService.Initialize();
+
+			await _workshopService.Login();
+
+			await _backupService.Run();
+
+			await _workshopService.Shutdown();
 		}
 	}
 }

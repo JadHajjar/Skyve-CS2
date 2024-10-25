@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Enums;
@@ -20,18 +22,19 @@ internal class TagsService : ITagsService
 	private readonly Dictionary<string, string[]> _assetTagsDictionary;
 	private readonly Dictionary<string, string[]> _customTagsDictionary;
 	private readonly Dictionary<string, HashSet<string>> _tagsCache;
-
+	private readonly IServiceProvider _serviceProvider;
 	private readonly INotifier _notifier;
 	private readonly ILogger _logger;
 	private readonly ISkyveDataManager _skyveDataManager;
 	private readonly SaveHandler _saveHandler;
 	private readonly WorkshopService _workshopService;
 
-	public TagsService(INotifier notifier, IWorkshopService workshopService, ILogger logger, SaveHandler saveHandler, ISkyveDataManager skyveDataManager)
+	public TagsService(IServiceProvider serviceProvider, INotifier notifier, IWorkshopService workshopService, ILogger logger, SaveHandler saveHandler, ISkyveDataManager skyveDataManager)
 	{
 		_assetTagsDictionary = new(new PathEqualityComparer());
 		_customTagsDictionary = new(new PathEqualityComparer());
 		_tagsCache = new(StringComparer.InvariantCultureIgnoreCase);
+		_serviceProvider = serviceProvider;
 		_notifier = notifier;
 		_logger = logger;
 		_saveHandler = saveHandler;
@@ -87,7 +90,15 @@ internal class TagsService : ITagsService
 			}
 		}
 
-		var assetDictionary = new Dictionary<string, IAsset>(StringComparer.CurrentCultureIgnoreCase);
+		foreach (var asset in _serviceProvider.GetService<IPackageManager>()!.Assets)
+		{
+			foreach (var item in asset.Tags)
+			{
+				_assetTags.Add(item);
+			}
+		}
+
+		//var assetDictionary = new Dictionary<string, IAsset>(StringComparer.CurrentCultureIgnoreCase);
 
 		//foreach (var asset in ServiceCenter.Get<IPackageManager>().Assets)
 		//{
@@ -180,7 +191,7 @@ internal class TagsService : ITagsService
 
 	public IEnumerable<ITag> GetTags(IPackageIdentity package, bool ignoreParent = false)
 	{
-		var returned = new List<string>();
+		var returned = new List<string>() { string.Empty };
 
 		if (!ignoreParent && package.GetWorkshopInfo()?.Tags?.Values is IEnumerable<string> workshopTags)
 		{
@@ -196,17 +207,26 @@ internal class TagsService : ITagsService
 
 		if (package is IAsset asset)
 		{
-			if (_assetTagsDictionary.TryGetValue(asset.FilePath, out var assetTags))
+			foreach (var item in asset.Tags)
 			{
-				foreach (var item in assetTags)
+				if (!returned.Contains(item))
 				{
-					if (!returned.Contains(item))
-					{
-						returned.Add(item);
-						yield return new TagItem(TagSource.InGame, item, item);
-					}
+					returned.Add(item);
+					yield return new TagItem(TagSource.InGame, item, item);
 				}
 			}
+
+			//if (_assetTagsDictionary.TryGetValue(asset.FilePath, out var assetTags))
+			//{
+			//	foreach (var item in assetTags)
+			//	{
+			//		if (!returned.Contains(item))
+			//		{
+			//			returned.Add(item);
+			//			yield return new TagItem(TagSource.InGame, item, item);
+			//		}
+			//	}
+			//}
 		}
 
 		var skyveTags = _skyveDataManager.TryGetPackageInfo(package.Id)?.Tags;
@@ -245,7 +265,14 @@ internal class TagsService : ITagsService
 		{
 			_customTagsDictionary[lp.Folder] = value.WhereNotEmpty().ToArray();
 
-			_saveHandler.Save(_customTagsDictionary, "CustomTags.json");
+			try
+			{
+				_saveHandler.Save(_customTagsDictionary, "CustomTags.json");
+			}
+			catch (Exception ex)
+			{
+				_logger.Exception(ex);
+			}
 		}
 
 		_notifier.OnRefreshUI(true);
@@ -264,9 +291,9 @@ internal class TagsService : ITagsService
 			return true;
 		}
 
-		var assetTags = identity is not null && _assetTagsDictionary.TryGetValue(identity.FilePath, out var tags1) ? tags1 : [];
+		var assetTags = package is IAsset asset ? asset.Tags ?? [] : []; // identity is not null && _assetTagsDictionary.TryGetValue(identity.FilePath, out var tags1) ? tags1 : [];
 
-		matchedTags.RemoveAll(x => assetTags.Any(x => x.Equals(x, StringComparison.InvariantCultureIgnoreCase)));
+		matchedTags.RemoveAll(y => assetTags.Any(x => x.Equals(y, StringComparison.InvariantCultureIgnoreCase)));
 
 		if (matchedTags.Count == 0)
 		{

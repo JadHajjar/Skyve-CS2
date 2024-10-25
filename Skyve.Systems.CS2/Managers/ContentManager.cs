@@ -55,11 +55,16 @@ internal class ContentManager : IContentManager
 		_skyveDataManager = skyveDataManager;
 		_workshopService = (WorkshopService)workshopService;
 
-		_notifier.WorkshopSyncEnded += _notifier_WorkshopSyncEnded;
+		_notifier.WorkshopSyncEnded += Notifier_WorkshopSyncEnded;
 		_subscriptionsManager = subscriptionsManager;
 	}
 
-	private async void _notifier_WorkshopSyncEnded()
+	private void Notifier_WorkshopSyncEnded()
+	{
+		Task.Run(OnContentLoaded);
+	}
+
+	private async Task OnContentLoaded()
 	{
 		_packageManager.SetPackages(await LoadContents());
 
@@ -151,12 +156,26 @@ internal class ContentManager : IContentManager
 		return 0;
 	}
 
+	public IPackage? GetSaveFiles()
+	{
+		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves", _settings.FolderSettings.UserIdentifier);
+
+		var savesPackage = GetPackage(gameSavesPath, true, null);
+
+		if (savesPackage is not null)
+		{
+			savesPackage.IsBuiltIn = true;
+		}
+
+		return savesPackage;
+	}
+
 	public async Task<List<IPackage>> LoadContents()
 	{
 		var packages = new List<IPackage>();
 		var gameModsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods");
-		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves");
-		var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps");
+		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves", _settings.FolderSettings.UserIdentifier);
+		//var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps", _settings.FolderSettings.UserIdentifier);
 
 		if (Directory.Exists(gameModsPath))
 		{
@@ -177,28 +196,26 @@ internal class ContentManager : IContentManager
 			_logger.Warning($"Folder not found: '{gameModsPath}'");
 		}
 
-		var savedPackage = GetPackage(gameSavesPath, true, null);
-		var mapsPackage = GetPackage(gameMapsPath, true, null);
+		var savesPackage = GetPackage(gameSavesPath, true, null);
+		//var mapsPackage = GetPackage(gameMapsPath, true, null);
 
-		if (savedPackage is not null)
+		if (savesPackage is not null)
 		{
-			packages.Add(savedPackage);
+			savesPackage.IsBuiltIn = true;
+			packages.Add(savesPackage);
 		}
 
-		if (mapsPackage is not null)
-		{
-			packages.Add(mapsPackage);
-		}
+		//if (mapsPackage is not null)
+		//{
+		//	mapsPackage.IsBuiltIn = true;
+		//	packages.Add(mapsPackage);
+		//}
 
 		var subscribedItems = await _workshopService.GetLocalPackages();
 
-		foreach (var mod in subscribedItems.OrderBy(x => x.LocalData is null).Distinct(x => x.Id))
+		foreach (var mod in subscribedItems.Where(x => x.LocalData is not null))
 		{
-			if (mod.LocalData is null)
-			{
-				//packages.Add(new PdxPackage(mod));
-			}
-			else if (mod.LocalData.LocalType == LocalType.Subscribed)
+			if (mod.LocalData.LocalType is not LocalType.WorkInProgress)
 			{
 				var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
 
@@ -256,7 +273,7 @@ internal class ContentManager : IContentManager
 				return new LocalPdxPackage(pdxMod,
 					assets,
 					isCodeMod,
-					version?.GetString(),
+					pdxMod.UserModVersion ?? version?.ToString() ?? string.Empty,
 					modDll);
 			}
 
@@ -264,7 +281,7 @@ internal class ContentManager : IContentManager
 				assets,
 				[],
 				isCodeMod,
-				version?.GetString(),
+				version?.ToString() ?? string.Empty,
 				modDll,
 				null);
 		}
@@ -334,7 +351,7 @@ internal class ContentManager : IContentManager
 		package.RefreshData(
 			assets,
 			isCodeMod,
-			version.GetString(),
+			localPackage.Version ?? version?.ToString() ?? string.Empty,
 			modDll,
 			localPackage.LocalData?.SuggestedGameVersion);
 

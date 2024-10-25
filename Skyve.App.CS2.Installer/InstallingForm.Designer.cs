@@ -38,9 +38,9 @@ partial class InstallingForm
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.slickButton1 = new SlickControls.SlickButton();
 			this.slickButton2 = new SlickControls.SlickButton();
-			this.slickCheckbox1 = new SlickControls.SlickCheckbox();
-			this.slickPathTextBox1 = new SlickControls.SlickPathTextBox();
-			this.slickCheckbox2 = new SlickControls.SlickCheckbox();
+			this.CB_CreateShortcut = new SlickControls.SlickCheckbox();
+			this.TB_InstallPath = new SlickControls.SlickPathTextBox();
+			this.CB_InstallService = new SlickControls.SlickCheckbox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.base_P_Container.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.base_PB_Icon)).BeginInit();
@@ -81,9 +81,9 @@ partial class InstallingForm
 			this.TLP_Main.Controls.Add(this.roundedTableLayoutPanel1, 0, 0);
 			this.TLP_Main.Controls.Add(this.slickButton1, 2, 6);
 			this.TLP_Main.Controls.Add(this.slickButton2, 0, 6);
-			this.TLP_Main.Controls.Add(this.slickCheckbox1, 0, 3);
-			this.TLP_Main.Controls.Add(this.slickPathTextBox1, 0, 2);
-			this.TLP_Main.Controls.Add(this.slickCheckbox2, 0, 4);
+			this.TLP_Main.Controls.Add(this.CB_CreateShortcut, 0, 3);
+			this.TLP_Main.Controls.Add(this.TB_InstallPath, 0, 2);
+			this.TLP_Main.Controls.Add(this.CB_InstallService, 0, 4);
 			this.TLP_Main.Controls.Add(this.label3, 0, 5);
 			this.TLP_Main.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TLP_Main.Location = new System.Drawing.Point(1, 1);
@@ -150,7 +150,7 @@ partial class InstallingForm
 			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.pictureBox1.TabIndex = 0;
 			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+			this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.PB_Background_Paint);
 			this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PictureBox_MouseDown);
 			// 
 			// slickButton1
@@ -166,7 +166,7 @@ partial class InstallingForm
 			this.slickButton1.SpaceTriggersClick = true;
 			this.slickButton1.TabIndex = 3;
 			this.slickButton1.Text = "Cancel";
-			this.slickButton1.Click += new System.EventHandler(this.slickButton1_Click);
+			this.slickButton1.Click += new System.EventHandler(this.B_Cancel_Click);
 			// 
 			// slickButton2
 			// 
@@ -183,57 +183,57 @@ partial class InstallingForm
 			this.slickButton2.SpaceTriggersClick = true;
 			this.slickButton2.TabIndex = 0;
 			this.slickButton2.Text = "Install";
-			this.slickButton2.Click += new System.EventHandler(this.slickButton2_Click);
+			this.slickButton2.Click += new System.EventHandler(this.B_Install_Click);
 			// 
 			// slickCheckbox1
 			// 
-			this.slickCheckbox1.AutoSize = true;
-			this.slickCheckbox1.Checked = true;
-			this.slickCheckbox1.CheckedText = null;
-			this.slickCheckbox1.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.slickCheckbox1.DefaultValue = true;
-			this.slickCheckbox1.EnterTriggersClick = false;
-			this.slickCheckbox1.Location = new System.Drawing.Point(3, 242);
-			this.slickCheckbox1.Name = "slickCheckbox1";
-			this.slickCheckbox1.Size = new System.Drawing.Size(221, 44);
-			this.slickCheckbox1.SpaceTriggersClick = true;
-			this.slickCheckbox1.TabIndex = 5;
-			this.slickCheckbox1.Text = "Create a desktop shortcut";
-			this.slickCheckbox1.UncheckedText = null;
+			this.CB_CreateShortcut.AutoSize = true;
+			this.CB_CreateShortcut.Checked = true;
+			this.CB_CreateShortcut.CheckedText = null;
+			this.CB_CreateShortcut.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.CB_CreateShortcut.DefaultValue = true;
+			this.CB_CreateShortcut.EnterTriggersClick = false;
+			this.CB_CreateShortcut.Location = new System.Drawing.Point(3, 242);
+			this.CB_CreateShortcut.Name = "slickCheckbox1";
+			this.CB_CreateShortcut.Size = new System.Drawing.Size(221, 44);
+			this.CB_CreateShortcut.SpaceTriggersClick = true;
+			this.CB_CreateShortcut.TabIndex = 5;
+			this.CB_CreateShortcut.Text = "Create a desktop shortcut";
+			this.CB_CreateShortcut.UncheckedText = null;
 			// 
 			// slickPathTextBox1
 			// 
-			this.TLP_Main.SetColumnSpan(this.slickPathTextBox1, 3);
-			this.slickPathTextBox1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.slickPathTextBox1.Folder = true;
-			this.slickPathTextBox1.LabelText = "Installation Folder";
-			this.slickPathTextBox1.Location = new System.Drawing.Point(3, 179);
-			this.slickPathTextBox1.Name = "slickPathTextBox1";
-			this.slickPathTextBox1.Padding = new System.Windows.Forms.Padding(6, 19, 6, 6);
-			this.slickPathTextBox1.Placeholder = "Folder Path";
-			this.slickPathTextBox1.SelectedText = "";
-			this.slickPathTextBox1.SelectionLength = 0;
-			this.slickPathTextBox1.SelectionStart = 0;
-			this.slickPathTextBox1.Size = new System.Drawing.Size(701, 57);
-			this.slickPathTextBox1.TabIndex = 4;
-			this.slickPathTextBox1.Text = "C:\\Program Files (x86)\\Skyve CS-II";
-			this.slickPathTextBox1.PathSelected += new System.EventHandler(this.slickPathTextBox1_PathSelected);
+			this.TLP_Main.SetColumnSpan(this.TB_InstallPath, 3);
+			this.TB_InstallPath.Dock = System.Windows.Forms.DockStyle.Top;
+			this.TB_InstallPath.Folder = true;
+			this.TB_InstallPath.LabelText = "Installation Folder";
+			this.TB_InstallPath.Location = new System.Drawing.Point(3, 179);
+			this.TB_InstallPath.Name = "slickPathTextBox1";
+			this.TB_InstallPath.Padding = new System.Windows.Forms.Padding(6, 19, 6, 6);
+			this.TB_InstallPath.Placeholder = "Folder Path";
+			this.TB_InstallPath.SelectedText = "";
+			this.TB_InstallPath.SelectionLength = 0;
+			this.TB_InstallPath.SelectionStart = 0;
+			this.TB_InstallPath.Size = new System.Drawing.Size(701, 57);
+			this.TB_InstallPath.TabIndex = 4;
+			this.TB_InstallPath.Text = "C:\\Program Files (x86)\\Skyve CS-II";
+			this.TB_InstallPath.PathSelected += new System.EventHandler(this.TB_InstallPath_PathSelected);
 			// 
 			// slickCheckbox2
 			// 
-			this.slickCheckbox2.AutoSize = true;
-			this.slickCheckbox2.Checked = true;
-			this.slickCheckbox2.CheckedText = null;
-			this.slickCheckbox2.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.slickCheckbox2.DefaultValue = true;
-			this.slickCheckbox2.EnterTriggersClick = false;
-			this.slickCheckbox2.Location = new System.Drawing.Point(3, 292);
-			this.slickCheckbox2.Name = "slickCheckbox2";
-			this.slickCheckbox2.Size = new System.Drawing.Size(222, 44);
-			this.slickCheckbox2.SpaceTriggersClick = true;
-			this.slickCheckbox2.TabIndex = 5;
-			this.slickCheckbox2.Text = "Install background service";
-			this.slickCheckbox2.UncheckedText = null;
+			this.CB_InstallService.AutoSize = true;
+			this.CB_InstallService.Checked = true;
+			this.CB_InstallService.CheckedText = null;
+			this.CB_InstallService.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.CB_InstallService.DefaultValue = true;
+			this.CB_InstallService.EnterTriggersClick = false;
+			this.CB_InstallService.Location = new System.Drawing.Point(3, 292);
+			this.CB_InstallService.Name = "slickCheckbox2";
+			this.CB_InstallService.Size = new System.Drawing.Size(222, 44);
+			this.CB_InstallService.SpaceTriggersClick = true;
+			this.CB_InstallService.TabIndex = 5;
+			this.CB_InstallService.Text = "Install background service";
+			this.CB_InstallService.UncheckedText = null;
 			// 
 			// label3
 			// 
@@ -283,9 +283,9 @@ partial class InstallingForm
 	private SlickControls.RoundedTableLayoutPanel roundedTableLayoutPanel1;
 	private SlickControls.SlickButton slickButton1;
 	private SlickControls.SlickButton slickButton2;
-	private SlickControls.SlickCheckbox slickCheckbox1;
-	private SlickControls.SlickPathTextBox slickPathTextBox1;
-	private SlickControls.SlickCheckbox slickCheckbox2;
+	private SlickControls.SlickCheckbox CB_CreateShortcut;
+	private SlickControls.SlickPathTextBox TB_InstallPath;
+	private SlickControls.SlickCheckbox CB_InstallService;
 	private System.Windows.Forms.Label label2;
 	private System.Windows.Forms.Label label3;
 }

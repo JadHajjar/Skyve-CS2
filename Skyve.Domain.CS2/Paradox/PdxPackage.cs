@@ -97,6 +97,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	public bool HasVoted { get; set; }
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
+	public bool IsBuiltIn { get; }
 	public ILocalPackageData? LocalData { get; }
 	public ulong Id { get; private set; }
 	public string Name { get; }

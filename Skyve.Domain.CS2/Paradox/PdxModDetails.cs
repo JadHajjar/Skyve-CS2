@@ -12,7 +12,8 @@ using System.Drawing;
 using System.Linq;
 
 namespace Skyve.Domain.CS2.Paradox;
-public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
+
+public class PdxModDetails : IModDetails
 {
 	[Obsolete("", true)]
 	public PdxModDetails()
@@ -91,8 +92,8 @@ public class PdxModDetails : IPackage, IWorkshopInfo, ITimestamped
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => Changelog ?? [];
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => Images ?? [];
 	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
-
 	bool IWorkshopInfo.IsPartialInfo { get; }
+	bool IPackage.IsBuiltIn { get; }
 
 	bool IWorkshopInfo.HasComments()
 	{

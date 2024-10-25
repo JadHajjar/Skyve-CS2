@@ -1,16 +1,14 @@
 ﻿using Extensions;
 
 using Skyve.Compatibility.Domain.Interfaces;
-using Skyve.Domain;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Utilities;
-
-using SkyveApi.Domain.CS2;
 
 using SlickControls;
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
@@ -36,8 +34,10 @@ internal class CentralManager : ICentralManager
 	private readonly IWorkshopService _workshopService;
 	private readonly ISkyveDataManager _skyveDataManager;
 	private readonly IDlcManager _dlcManager;
+	private readonly IInterfaceService _interfaceService;
+	private readonly IBackupService _backupService;
 
-	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager, IDlcManager dlcManager)
+	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager, IDlcManager dlcManager, IInterfaceService interfaceService, IBackupService backupService)
 	{
 		_modLogicManager = modLogicManager;
 		_compatibilityManager = compatibilityManager;
@@ -59,6 +59,8 @@ internal class CentralManager : ICentralManager
 		_workshopService = workshopService;
 		_skyveDataManager = skyveDataManager;
 		_dlcManager = dlcManager;
+		_interfaceService = interfaceService;
+		_backupService = backupService;
 	}
 
 	public async void Start()
@@ -118,23 +120,7 @@ internal class CentralManager : ICentralManager
 
 		_notifier.OnContentLoaded();
 
-		if (_playsetManager.CurrentPlayset is not null && CommandUtil.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
-		{
-			_logger.Info($"[Command] Applying Playset ({_playsetManager.CurrentPlayset.Name})..");
-			await _playsetManager.ActivatePlayset(_playsetManager.CurrentPlayset);
-		}
-
-		if (CommandUtil.LaunchOnLoad)
-		{
-			_logger.Info($"[Command] Launching Cities..");
-			_citiesManager.Launch();
-		}
-
-		if (CommandUtil.NoWindow)
-		{
-			_logger.Info($"[Command] Closing App..");
-			return;
-		}
+		await RunCommands();
 
 		_logger.Info($"Starting Listeners..");
 
@@ -157,11 +143,42 @@ internal class CentralManager : ICentralManager
 
 		await ConnectionHandler.WhenConnected(UpdateCompatibilityCatalogue);
 
-		await _workshopService.Login();
+		if (await _workshopService.Login())
+		{
+			await _workshopService.RunSync();
+		}
 
 		await ConnectionHandler.WhenConnected(_dlcManager.UpdateDLCs);
 
+		if (_workshopService.IsLoggedIn)
+		{
+			await _updateManager.SendReviewRequestNotifications();
+
+			await _updateManager.SendUnreadCommentsNotifications();
+
+			UpdateSkyveVersionsInPlaysets();
+		}
+
+		try
+		{
+			CleanupData();
+		}
+		catch { }
+
 		_logger.Info($"Finished.");
+
+		if (Process.GetProcessesByName("Skyve.Service").Length == 0)
+		{
+			new BackgroundAction(RunBackupService);
+		}
+	}
+
+	private async void RunBackupService()
+	{
+		while (true)
+		{
+			await _backupService.Run();
+		}
 	}
 
 	private async Task UpdateCompatibilityCatalogue()
@@ -194,5 +211,85 @@ internal class CentralManager : ICentralManager
 		_settings.SessionSettings.Save();
 
 		_logger.Info("Saved Session Settings");
+	}
+
+	public async Task<bool> RunCommands()
+	{
+		if (_playsetManager.CurrentPlayset is not null && CommandUtil.Commands.PreSelectedPlayset == _playsetManager.CurrentPlayset.Name)
+		{
+			_logger.Info($"[Command] Applying Playset ({_playsetManager.CurrentPlayset.Name})..");
+			await _playsetManager.ActivatePlayset(_playsetManager.CurrentPlayset);
+		}
+
+		if (CommandUtil.Commands.LaunchOnLoad)
+		{
+			_logger.Info($"[Command] Launching Cities..");
+			_citiesManager.Launch();
+		}
+
+		if (CommandUtil.Commands.NoWindow)
+		{
+			_logger.Info($"[Command] Closing App..");
+			return true;
+		}
+
+		var actions = CommandUtil.Commands.CommandActions;
+		if (actions.Length > 0)
+		{
+			switch (actions[0].ToLower())
+			{
+				case "mods":
+				case "mod":
+					if (ulong.TryParse(actions.TryGet(1), out var id))
+					{
+						_interfaceService.OpenPackagePage(new GenericPackageIdentity(id));
+					}
+
+					break;
+				case "logreport":
+					_interfaceService.OpenLogReport(actions.TryGet(1) == "save");
+					break;
+			}
+		}
+
+		return false;
+	}
+
+	public void UpdateSkyveVersionsInPlaysets()
+	{
+#if Stable
+		const ulong MODID = ;
+#else
+		const ulong MODID = 75804;
+#endif
+		var package = new GenericPackageIdentity(MODID);
+
+		//await _packageUtil.SetVersion(package, null);
+	}
+
+	private void CleanupData()
+	{
+		var folders = new string[] {
+			"Mods/Gooee",
+			"ModsData/Gooee",
+			"Cities2Modding/Gooee",
+			"Mods/LegacyFlavour",
+			"ModsData/LegacyFlavour",
+			"Cities2Modding/LegacyFlavour",
+			"Mods/FindStuff",
+			"Mods/MapImageLayer",
+			"Mods/RealisticDensity",
+			"Mods/UltimateMonitor",
+		};
+
+		foreach (var folder in folders)
+		{
+			var dir = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, folder));
+
+			if (dir.Exists)
+			{
+				dir.Delete(true);
+			}
+		}
 	}
 }

@@ -11,11 +11,16 @@ internal class InterfaceService : IInterfaceService
 		return false;
 	}
 
+	public void OpenLogReport(bool save)
+	{
+
+	}
+
 	public void OpenOptionsPage()
 	{
 	}
 
-	public void OpenPackagePage(IPackageIdentity package, bool openCompatibilityPage)
+	public void OpenPackagePage(IPackageIdentity package, bool openCompatibilityPage, bool openCommentsPage)
 	{
 	}
 
