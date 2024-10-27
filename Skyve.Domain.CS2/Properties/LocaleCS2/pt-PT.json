@@ -98,7 +98,7 @@
   "RunSync": "Iniciar sincronização",
   "PDXModsNew": "Novo no PDX Mods",
   "PDXModsUpdated": "Atualizado recentemente no PDX Mods",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "Mods populares da semana passada",
   "DiskStatus": "Estado do disco",
   "TotalCitiesSize": "Tamanho total dos dados do utilizador do C:S II",
   "TotalSavesSize": "Tamanho dos jogos guardados",
@@ -154,15 +154,15 @@
   "Tag_Zone": "Zona",
   "Tag_Asset Pack": "Pacote de assets",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "Jogo guardado",
+    "Plural": "{0} jogos guardados"
   },
   "Backup_ActivePlayset": {
     "One": "Playset",
     "Plural": "{0} playsets"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
+    "One": "Definições dos ficheiros",
     "Plural": "{0} settings files"
   },
   "Backup_ModsSettingsFiles": {
