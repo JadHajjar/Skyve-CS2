@@ -16,6 +16,10 @@
     "One": "Скопировать ссылку PDX модов",
     "Plural": "Скопировать ссылки модов выбранных пакетов PDX"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "Копировать ID PDX модов",
     "Plural": "Скопировать ID выбранных пакетов PDX модов"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Скопировать логи в Player.log",
   "InvalidFolderSettings": "Обнаружена неверная установка",
   "InvalidFolderSettingsInfo": "Skyve не сумел определить папку с Cities: Skylines II.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "Выбранный путь некорректен. Пожалуйста, выберите папку установки 'Cities Skylines II' самостоятельно.",
   "DefaultLocation": "Расположение данных пользователя по умолчанию",
   "JunctionTitle": "Пользовательское расположение контента",
@@ -83,6 +88,7 @@
   "ResetLocation": "Сбросить расположение",
   "JunctionRestart": "Skyve и Cities Skylines II будут закрыты.\n\nSkyve перезапустится автоматически по завершению процесса.",
   "PlaysetAlreadyImported": "Этот плей-сет уже существует в вашем списке плей-сетов.",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Не удалось получить данные модов",
   "NewGameUpdate": "Обновление Cities: Skylnes II",
   "NewGameUpdateInfo": "Патч {0} теперь доступен.\nПроверьте отчёт о совместимости перед началом игры.",
@@ -124,5 +130,26 @@
   "Sorting_Popularity": "Количеству подписок",
   "Sorting_DateUpdated": "Дата последнего обновления",
   "Sorting_DateCreated": "Недавние",
-  "Sorting_WorkshopName": "В алфавитном порядке"
+  "Sorting_WorkshopName": "В алфавитном порядке",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack"
 }

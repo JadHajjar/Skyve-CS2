@@ -16,6 +16,10 @@
     "One": "PDX Modsのリンクをコピー",
     "Plural": "選択したパッケージのPDX Modsリンクをコピー"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "PDX ModsのIDをコピー",
     "Plural": "選択したパッケージのPDX Mods IDをコピー"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Player.logにログをコピー",
   "InvalidFolderSettings": "無効なセットアップが検出されました",
   "InvalidFolderSettingsInfo": "Cities: Skylines IIのデータフォルダを適切に検出できませんでした。\n\nデータフォルダを手動で選択するには、ここをクリックしてください。",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "選択したパスが正しくありません。アプリのデータから「Cities Skylines II」フォルダを選択してください。",
   "DefaultLocation": "デフォルトのユーザーデータの場所",
   "JunctionTitle": "カスタムコンテンツの場所",
@@ -83,6 +88,7 @@
   "ResetLocation": "位置を初期化",
   "JunctionRestart": "Skyve と Cities: Skylines II はこのプロセス中に終了します。\n\nSkyve は終了すると自動的に再起動します。",
   "PlaysetAlreadyImported": "このプレイセットは既にプレイセットのリストにあります。",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Modのデータを取得できませんでした",
   "NewGameUpdate": "Cities: Skylines IIアップデート",
   "NewGameUpdateInfo": "パッチ {0} が利用可能になりました。\nゲームを開始する前に必ず互換性レポートを確認してください。",
@@ -124,5 +130,26 @@
   "Sorting_Popularity": "最もサブスクライブ",
   "Sorting_DateUpdated": "最終更新日",
   "Sorting_DateCreated": "新しい順",
-  "Sorting_WorkshopName": "アルファベット順"
+  "Sorting_WorkshopName": "アルファベット順",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack"
 }
