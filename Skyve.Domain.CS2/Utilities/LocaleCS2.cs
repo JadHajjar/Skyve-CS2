@@ -23,6 +23,36 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation AddingDependencies => _instance.GetText("AddingDependencies");
 
 	/// <summary>
+	/// <para>Playset</para>
+	/// <para>Plural: {0} playsets</para>
+	/// </summary>
+	public static Translation BackupActivePlayset => _instance.GetText("Backup_ActivePlayset");
+
+	/// <summary>
+	/// <para>Local mod</para>
+	/// <para>Plural: {0} local mods</para>
+	/// </summary>
+	public static Translation BackupLocalMods => _instance.GetText("Backup_LocalMods");
+
+	/// <summary>
+	/// <para>Mod settings folder</para>
+	/// <para>Plural: {0} mod settings folders</para>
+	/// </summary>
+	public static Translation BackupModsSettingsFiles => _instance.GetText("Backup_ModsSettingsFiles");
+
+	/// <summary>
+	/// <para>Savegame</para>
+	/// <para>Plural: {0} savegames</para>
+	/// </summary>
+	public static Translation BackupSaveGames => _instance.GetText("Backup_SaveGames");
+
+	/// <summary>
+	/// <para>Settings files</para>
+	/// <para>Plural: {0} settings files</para>
+	/// </summary>
+	public static Translation BackupSettingsFiles => _instance.GetText("Backup_SettingsFiles");
+
+	/// <summary>
 	/// You can't run Skyve from this folder.  Either run the app from your Programs list, or run the Skyve Setup from the mod's folder.
 	/// </summary>
 	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
@@ -361,6 +391,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ParadoxAccount => _instance.GetText("ParadoxAccount");
 
 	/// <summary>
+	/// Paradox backend failed to load
+	/// </summary>
+	public static Translation ParadoxContextFailed => _instance.GetText("ParadoxContextFailed");
+
+	/// <summary>
+	/// Something is causing the paradox backend to fail. Click this message to try and repair it.  If the repair is not successful, ask for help on tech support forums.
+	/// </summary>
+	public static Translation ParadoxContextFailedInfo => _instance.GetText("ParadoxContextFailedInfo");
+
+	/// <summary>
 	/// Your saved username/password failed to log in. Click here to update your information.
 	/// </summary>
 	public static Translation ParadoxLoginFailedBadCredentials => _instance.GetText("ParadoxLoginFailedBadCredentials");
@@ -384,6 +424,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// New on PDX Mods
 	/// </summary>
 	public static Translation PDXModsNew => _instance.GetText("PDXModsNew");
+
+	/// <summary>
+	/// Popular during the past week on PDX Mods
+	/// </summary>
+	public static Translation PDXModsPopularWeek => _instance.GetText("PDXModsPopularWeek");
 
 	/// <summary>
 	/// Recently updated on PDX Mods

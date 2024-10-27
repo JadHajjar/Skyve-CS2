@@ -66,6 +66,9 @@
 		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs" />
 		<Compile Update="UserInterface\Dashboard\D_ContentInfo.cs" />
 		<Compile Update="UserInterface\Dashboard\D_PdxModsBase.cs" />
+		<Compile Update="UserInterface\Dashboard\D_PdxModsPopular.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 		<Compile Update="UserInterface\Dashboard\D_PdxModsUpdated.cs" />
 		<Compile Update="UserInterface\Dashboard\D_DiskInfo.cs" />
 		<Compile Update="UserInterface\Dashboard\D_Playsets.cs" />

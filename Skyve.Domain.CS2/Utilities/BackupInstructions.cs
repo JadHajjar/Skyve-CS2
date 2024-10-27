@@ -2,6 +2,6 @@
 
 public class BackupInstructions : IBackupInstructions
 {
-	public bool DoSavesBackup { get; set; }
-	public bool DoLocalModsBackup { get; set; }
+	public bool DoSavesBackup { get; set; } = true;
+	public bool DoLocalModsBackup { get; set; } = true;
 }

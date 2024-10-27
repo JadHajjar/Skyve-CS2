@@ -2,45 +2,49 @@
   {
     "Stable": false,
     "Beta": true,
-    "Version": "1.0.0",
+    "Version": "0.11.0",
     "Date": "2024-08-14",
     "ChangeGroups": [
       {
-        "Name": "File and Asset Management",
+        "Name": "Asset and Content Changes",
         "Changes": [
-          "Maps and savegames have been removed from the package and asset lists.",
           "Added support for official assets.",
-          "Improved folder cleanup to manage files more efficiently."
+          "Skyve will show the full list of assets (prefabs) that are contained within a pack in the Assets view, and in the package's page.",
+          "Maps and savegames have been removed from the package and asset lists."
         ]
       },
       {
-        "Name": "Log System Improvements",
+        "Name": "Performance Improvements",
         "Changes": [
-          "Fixed an issue where the file-drop in Help and Logs did not show all logs from a zip file.",
-          "Replaced the log level filter with a new slider to make it easier to filter logs.",
-          "Improved the performance and search function of the logs list."
-        ]
-      },
-      {
-        "Name": "Performance Enhancements",
-        "Changes": [
+          "Improved folder cleanup.",
+          "Improved the performance and search function of the logs list.",
           "Improved the loading speed of content list views.",
           "Improved performance in views with lots of images.",
           "Fixed stuttering in image-heavy views by moving image loading off the main thread.",
-          "Moved cached thumbnails to reduce the memory load on the game.",
-          "Fixed stuttering or freezing when the PDX Mods sync process finishes."
+          "Fixed stuttering or freezing when the PDX Mods sync process finishes.",
+          "Moved cached thumbnails folder to reduce the memory load on the game."
+        ]
+      },
+      {
+        "Name": "User Interface Enhancements",
+        "Changes": [
+          "Added the period search to the pdx mods tab.",
+          "Improved the default thumbnails for content views.",
+          "Added a PDX Mods Sync status widget to the dashboard.",
+          "Added a popular weekly mods from PDX Mods widget to the dashboard.",
+          "Added a missing notification when the paradox backend fails to load, as well as a one-click repair to fix the issue.",
+          "Replaced the log level filter with a new slider to make it easier to filter logs."
         ]
       },
       {
         "Name": "Bug Fixes",
         "Changes": [
-          "Added the period search to the pdx mods tab",
+          "Fixed an issue where the file-drop in Help and Logs did not show all logs from a zip file.",
           "Fixed an issue where the background service sometimes locked a file and prevented Skyve from logging in."
         ]
       }
     ]
-  }
-,
+  },
   {
     "Stable": false,
     "Beta": true,

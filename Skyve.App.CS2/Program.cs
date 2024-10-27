@@ -9,6 +9,7 @@ using Skyve.Systems.CS2.Utilities;
 
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -56,10 +57,68 @@ internal static class Program
 
 		return services.BuildServiceProvider();
 	}
+	//public static string ReadBinaryFileAsText(string filePath, Encoding encoding = null)
+	//{
+	//	// Set the default encoding to UTF-8 if not provided
+	//	encoding ??= Encoding.UTF8;
+
+	//	// Check if the file exists
+	//	if (!File.Exists(filePath))
+	//	{
+	//		throw new FileNotFoundException("File not found.", filePath);
+	//	}
+
+	//	// Read the binary file and convert to text
+	//	using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+	//	using var r = new BinaryReader(stream);
+	//	r.ReadBytes(11);
+	//	var type = new StringBuilder();
+	//	while (true)
+	//	{
+	//		var ss = encoding.GetChars(r.ReadBytes(2))[0];
+
+	//		if (ss == 0)
+	//			break;
+
+	//		type.Append(ss);
+	//	}
+
+	//	r.ReadBytes(21);
+
+	//	var name = new StringBuilder();
+	//	while (true)
+	//	{
+	//		var ss = encoding.GetChars(r.ReadBytes(2))[0];
+
+	//		if (ss == 0)
+	//			break;
+
+	//		name.Append(ss);
+	//	}
+
+	//	return "ss";
+
+
+
+	//	{
+	//		var types = new List<Type>();
+	//		var reader = new Colossal.OdinSerializer.BinaryDataReader(stream, new Colossal.OdinSerializer.DeserializationContext());
+
+	//		reader.PrepareNewSerializationSession();
+	//		reader.EnterNode(out var s);
+			
+			
+	//		while (reader.EnterNode(out var nam2e))
+	//			types.Add(nam2e);
+	//	}
+
+	//	return "";
+	//}
 
 	[STAThread]
 	private static void Main(string[] args)
 	{
+		//var s2 = ReadBinaryFileAsText("C:\\Users\\DotCa\\AppData\\LocalLow\\Colossal Order\\Cities Skylines II\\.cache\\Mods\\mods_subscribed\\91931_2\\German Pack\\GER_ResidentialMedium01_L5_2x4_LOD2 Mesh.Prefab", Encoding.Unicode);
 		try
 		{
 			HandleIncorrectLaunchLocation();

@@ -74,7 +74,7 @@ internal class BackupSystem : IBackupSystem
 		foreach (var file in files.Where(CrossIO.FileExists))
 		{
 			zipArchive.CreateEntryFromFile(file
-				, file.Substring((metaData.Root?.Length ?? -1) + 1).Replace("/", "\\")
+				, string.IsNullOrEmpty(metaData.Root) ? Path.GetFileName(file) : file.Substring((metaData.Root!.Length) + 1).Replace("/", "\\")
 				, CompressionLevel.Optimal);
 		}
 	}
@@ -258,19 +258,28 @@ internal class BackupSystem : IBackupSystem
 
 	public async Task<bool> Restore(IBackupMetaData metaData, string file)
 	{
-		RestoreDelegate method = metaData.RestoreType switch
+		try
 		{
-			RestoreAction.Playset => RestorePlayset,
-			RestoreAction.Overwrite => RestoreOverwrite,
-			RestoreAction.ClearRoot => RestoreClearRoot,
-			RestoreAction.ClearRootOfSimilarFileTypes => RestoreClearRootOfSimilarFileTypes,
-			_ => throw new NotImplementedException()
-		};
+			RestoreDelegate method = metaData.RestoreType switch
+			{
+				RestoreAction.Playset => RestorePlayset,
+				RestoreAction.Overwrite => RestoreOverwrite,
+				RestoreAction.ClearRoot => RestoreClearRoot,
+				RestoreAction.ClearRootOfSimilarFileTypes => RestoreClearRootOfSimilarFileTypes,
+				_ => throw new NotImplementedException()
+			};
 
-		using var stream = File.OpenRead(file);
-		using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read, false);
+			using var stream = File.OpenRead(file);
+			using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read, false);
 
-		return await method(zipArchive, metaData);
+			return await method(zipArchive, metaData);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, $"Failed to restore the {metaData.Type} backup ({metaData.Name}) from '{file}'");
+
+			return false;
+		}
 	}
 
 	private async Task<bool> RestorePlayset(ZipArchive zipArchive, IBackupMetaData metaData)
@@ -321,13 +330,11 @@ internal class BackupSystem : IBackupSystem
 		return Task.FromResult(true);
 	}
 
-	private Task<bool> RestoreClearRoot(ZipArchive zipArchive, IBackupMetaData metaData)
+	private async Task<bool> RestoreClearRoot(ZipArchive zipArchive, IBackupMetaData metaData)
 	{
 		new DirectoryInfo(metaData.Root).Delete(true);
 
-		RestoreOverwrite(zipArchive, metaData);
-
-		return Task.FromResult(true);
+		return await RestoreOverwrite(zipArchive, metaData);
 	}
 
 	private Task<bool> RestoreClearRootOfSimilarFileTypes(ZipArchive zipArchive, IBackupMetaData metaData)
