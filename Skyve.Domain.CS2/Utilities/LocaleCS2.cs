@@ -426,7 +426,7 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation PDXModsNew => _instance.GetText("PDXModsNew");
 
 	/// <summary>
-	/// Popular during the past week on PDX Mods
+	/// Popular mods from last week
 	/// </summary>
 	public static Translation PDXModsPopularWeek => _instance.GetText("PDXModsPopularWeek");
 

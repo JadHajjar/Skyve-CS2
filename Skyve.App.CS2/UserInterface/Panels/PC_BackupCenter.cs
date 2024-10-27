@@ -2,8 +2,6 @@
 using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 
-using SlickControls;
-
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -34,7 +32,7 @@ public partial class PC_BackupCenter : PanelContent
 		base.UIChanged();
 
 		TB_Search.Width = UI.Scale(200);
-		TB_Search.Margin = backupViewControl.Margin=UI.Scale(new Padding(3));
+		TB_Search.Margin = backupViewControl.Margin = UI.Scale(new Padding(3));
 		spacerBackup1.Height = spacerSettings.Height = spacerBackup2.Height = UI.Scale(2);
 		spacerBackup1.Margin = UI.Scale(new Padding(0, 6, 0, 0));
 		spacerBackup2.Margin = UI.Scale(new Padding(0, 0, 0, 6));
@@ -319,15 +317,10 @@ public partial class PC_BackupCenter : PanelContent
 			return;
 		}
 
-		if (backupListControl.RestorePoint)
-		{
-			e.DoNotDraw = !e.Item.RestoreItems.Any(x => TB_Search.Text.SearchCheck(x.MetaData.Name))
-				&& !TB_Search.Text.SearchCheck(e.Item.Time.ToString("d MMM yyyy - h:mm tt"));
-		}
-		else
-		{
-			e.DoNotDraw = !TB_Search.Text.SearchCheck(e.Item.Name) && !TB_Search.Text.SearchCheck(e.Item.Time.ToString("d MMM yyyy - h:mm tt"));
-		}
+		e.DoNotDraw = backupListControl.RestorePoint
+			? !e.Item.RestoreItems.Any(x => TB_Search.Text.SearchCheck(x.MetaData.Name))
+				&& !TB_Search.Text.SearchCheck(e.Item.Time.ToString("d MMM yyyy - h:mm tt"))
+			: !TB_Search.Text.SearchCheck(e.Item.Name) && !TB_Search.Text.SearchCheck(e.Item.Time.ToString("d MMM yyyy - h:mm tt"));
 	}
 
 	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -351,11 +344,11 @@ public partial class PC_BackupCenter : PanelContent
 		smartFlowPanel1.Controls.Clear(true);
 
 		var item = (BackupListControl.RestoreGroup)sender;
-		
+
 		if (backupListControl.RestorePoint)
 		{
 			foreach (var backup in item.RestoreItems)
-			{ 
+			{
 				smartFlowPanel1.Controls.Add(new SlickCheckbox
 				{
 					Text = $"{backup.MetaData.Name} - {backup.MetaData.GetTypeTranslation()}",
@@ -393,7 +386,14 @@ public partial class PC_BackupCenter : PanelContent
 		foreach (SlickCheckbox ctrl in smartFlowPanel1.Controls)
 		{
 			if (ctrl.Checked)
-		await	((IRestoreItem)ctrl.Tag).Restore(system);
+			{
+				await ((IRestoreItem)ctrl.Tag).Restore(system);
+			}
 		}
+	}
+
+	internal void SelectBackup(string restoreBackup)
+	{
+		throw new NotImplementedException();
 	}
 }

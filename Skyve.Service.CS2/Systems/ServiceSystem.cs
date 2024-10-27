@@ -1,6 +1,4 @@
-﻿using Skyve.Compatibility.Domain.Interfaces;
-using Skyve.Domain.Systems;
-using Skyve.Systems;
+﻿using Skyve.Domain.Systems;
 
 using System;
 using System.Threading.Tasks;
@@ -12,13 +10,15 @@ internal class ServiceSystem
 	private readonly IWorkshopService _workshopService;
 	private readonly ILogger _logger;
 	private readonly IBackupService _backupService;
+	private readonly ISettings _settings;
 
-	public ServiceSystem(UpdateSystem updateSystem, IWorkshopService workshopService, ILogger logger, IBackupService backupService)
+	public ServiceSystem(UpdateSystem updateSystem, IWorkshopService workshopService, ILogger logger, IBackupService backupService, ISettings settings)
 	{
 		_updateSystem = updateSystem;
 		_workshopService = workshopService;
 		_logger = logger;
 		_backupService = backupService;
+		_settings = settings;
 	}
 
 	public async void Run()
@@ -49,15 +49,24 @@ internal class ServiceSystem
 
 	public async void RunBackup()
 	{
-		while (true)
+		try
 		{
-			await _workshopService.Initialize();
+			while (true)
+			{
+				await _workshopService.Initialize();
 
-			await _workshopService.Login();
+				await _workshopService.Login();
 
-			await _backupService.Run();
+				_settings.BackupSettings.Reload();
 
-			await _workshopService.Shutdown();
+				await _backupService.Run();
+
+				await _workshopService.Shutdown();
+			}
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Unexpected error during Backup Loop");
 		}
 	}
 }

@@ -2,6 +2,7 @@
 
 using Newtonsoft.Json;
 
+using Skyve.Domain.CS2.Content;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
@@ -38,7 +39,7 @@ public static class BackupItem
 
 		public void Save(IBackupSystem backupManager)
 		{
-			backupManager.Save(MetaData, [_save.FilePath, _save.FilePath + ".cid"]);
+			backupManager.Save(MetaData, [_save.FilePath, _save.FilePath + ".cid"], ((Asset)_save).SaveGameMetaData);
 		}
 	}
 
@@ -70,7 +71,7 @@ public static class BackupItem
 
 		public void Save(IBackupSystem backupManager)
 		{
-			backupManager.Save(MetaData, _settingsFiles);
+			backupManager.Save(MetaData, _settingsFiles, null);
 		}
 	}
 
@@ -102,7 +103,7 @@ public static class BackupItem
 
 		public void Save(IBackupSystem backupManager)
 		{
-			backupManager.Save(MetaData, _modSettingFolders);
+			backupManager.Save(MetaData, _modSettingFolders, null);
 		}
 	}
 
@@ -136,7 +137,7 @@ public static class BackupItem
 
 			File.WriteAllText(tempPath, JsonConvert.SerializeObject(_playset));
 
-			backupManager.Save(MetaData, [tempPath]);
+			backupManager.Save(MetaData, [tempPath], null);
 
 			CrossIO.DeleteFile(tempPath, true);
 		}
@@ -168,13 +169,14 @@ public static class BackupItem
 
 		public void Save(IBackupSystem backupManager)
 		{
-			backupManager.Save(MetaData, Directory.GetFiles(_package.LocalData!.Folder, "*", SearchOption.AllDirectories));
+			backupManager.Save(MetaData, Directory.GetFiles(_package.LocalData!.Folder, "*", SearchOption.AllDirectories), null);
 		}
 	}
 
-	public class Zip(string file, IBackupMetaData metaData) : IRestoreItem
+	public class Zip(string file, IBackupMetaData metaData, object? itemMetaData) : IRestoreItem
 	{
 		public IBackupMetaData MetaData { get; } = metaData;
+		public object? ItemMetaData { get; } = itemMetaData;
 		public FileInfo BackupFile => new(file);
 
 		public async Task<bool> Restore(IBackupSystem backupManager)

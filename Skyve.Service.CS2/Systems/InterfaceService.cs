@@ -33,6 +33,11 @@ internal class InterfaceService : IInterfaceService
 
 	}
 
+	public void RestoreBackup(string restoreBackup)
+	{
+
+	}
+
 	public void ViewSpecificPackages(List<IPackageIdentity> packages, string title)
 	{
 	}

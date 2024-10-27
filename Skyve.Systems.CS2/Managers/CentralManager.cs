@@ -167,10 +167,10 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info($"Finished.");
 
-		//if (Process.GetProcessesByName("Skyve.Service").Length == 0)
-		//{
-		//	new BackgroundAction(RunBackupService);
-		//}
+		if (Process.GetProcessesByName("Skyve.Service").Length == 0)
+		{
+			new BackgroundAction(RunBackupService);
+		}
 	}
 
 	private async void RunBackupService()
@@ -231,6 +231,11 @@ internal class CentralManager : ICentralManager
 		{
 			_logger.Info($"[Command] Closing App..");
 			return true;
+		}
+
+		if (CrossIO.FileExists(CommandUtil.Commands.RestoreBackup))
+		{
+			_interfaceService.RestoreBackup(CommandUtil.Commands.RestoreBackup!);
 		}
 
 		var actions = CommandUtil.Commands.CommandActions;

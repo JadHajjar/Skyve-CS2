@@ -45,7 +45,7 @@ internal class BackupSystem : IBackupSystem
 		_backupTime = DateTime.Now;
 	}
 
-	public void Save(IBackupMetaData metaData, string[] files)
+	public void Save(IBackupMetaData metaData, string[] files, object? itemMetaData)
 	{
 		metaData.BackupTime = _backupTime;
 
@@ -69,12 +69,19 @@ internal class BackupSystem : IBackupSystem
 		using var fileStream = File.Create(path);
 		using var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Create, false);
 
-		CreateEntry(zipArchive, ".metaData", JsonConvert.SerializeObject(metaData));
+		if (itemMetaData is not null)
+		{
+			metaData.ItemMetaDataType = itemMetaData.GetType().AssemblyQualifiedName;
+
+			CreateEntry(zipArchive, ".backupItemMetaData", JsonConvert.SerializeObject(itemMetaData));
+		}
+
+		CreateEntry(zipArchive, ".backupMetaData", JsonConvert.SerializeObject(metaData));
 
 		foreach (var file in files.Where(CrossIO.FileExists))
 		{
 			zipArchive.CreateEntryFromFile(file
-				, string.IsNullOrEmpty(metaData.Root) ? Path.GetFileName(file) : file.Substring((metaData.Root!.Length) + 1).Replace("/", "\\")
+				, string.IsNullOrEmpty(metaData.Root) ? Path.GetFileName(file) : file.Substring(metaData.Root!.Length + 1).Replace("/", "\\")
 				, CompressionLevel.Optimal);
 		}
 	}
@@ -105,12 +112,21 @@ internal class BackupSystem : IBackupSystem
 				using var stream = File.OpenRead(file);
 				using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read, false);
 
-				using var metaDataStream = zipArchive.GetEntry(".metaData").Open();
+				using var metaDataStream = zipArchive.GetEntry(".backupMetaData").Open();
 				using var reader = new StreamReader(metaDataStream);
 
 				var metaData = JsonConvert.DeserializeObject<BackupMetaData>(reader.ReadToEnd());
+				object? itemMetaData = null;
 
-				items.Add(new BackupItem.Zip(file, metaData));
+				if (!metaData.IsArchived && metaData.ItemMetaDataType is not null and not "")
+				{
+					using var itemMetaDataStream = zipArchive.GetEntry(".backupItemMetaData").Open();
+					using var reader2 = new StreamReader(itemMetaDataStream);
+
+					itemMetaData = JsonConvert.DeserializeObject(reader2.ReadToEnd(), Type.GetType(metaData.ItemMetaDataType));
+				}
+
+				items.Add(new BackupItem.Zip(file, metaData, itemMetaData));
 			}
 			catch { }
 		}
@@ -284,7 +300,7 @@ internal class BackupSystem : IBackupSystem
 
 	private async Task<bool> RestorePlayset(ZipArchive zipArchive, IBackupMetaData metaData)
 	{
-		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".metaData");
+		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".backupMetaData");
 
 		var temp = CrossIO.GetTempFileName();
 
@@ -315,7 +331,7 @@ internal class BackupSystem : IBackupSystem
 	{
 		foreach (var item in zipArchive.Entries)
 		{
-			if (item.FullName is ".metaData")
+			if (item.FullName is ".backupMetaData")
 			{
 				continue;
 			}
@@ -339,7 +355,7 @@ internal class BackupSystem : IBackupSystem
 
 	private Task<bool> RestoreClearRootOfSimilarFileTypes(ZipArchive zipArchive, IBackupMetaData metaData)
 	{
-		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".metaData");
+		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".backupMetaData");
 
 		if (entry is null)
 		{
@@ -413,7 +429,7 @@ internal class BackupSystem : IBackupSystem
 		using var stream = File.Create(restoreItem.BackupFile.FullName);
 		using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Create, false);
 
-		CreateEntry(zipArchive, ".metaData", JsonConvert.SerializeObject(restoreItem.MetaData));
+		CreateEntry(zipArchive, ".backupMetaData", JsonConvert.SerializeObject(restoreItem.MetaData));
 	}
 
 	private bool IsLarge(IBackupMetaData metaData)

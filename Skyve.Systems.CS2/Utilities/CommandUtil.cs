@@ -83,6 +83,11 @@ public static class CommandUtil
 			Commands.NoWindow = true;
 		}
 
+		if (isCommand("restoreItem") && arguments.Count > 0)
+		{
+			Commands.RestoreBackup = arguments[0];
+		}
+
 		if (isCommand("cmd") && arguments.Count > 0)
 		{
 			Commands.CommandActions = arguments[0].Remove("skyve://").Split(['/', '\\'], StringSplitOptions.RemoveEmptyEntries);
@@ -100,5 +105,6 @@ public static class CommandUtil
 		public bool CloseWhenFinished { get; set; }
 		public bool NoWindow { get; set; }
 		public string[] CommandActions { get; set; } = [];
+		public string? RestoreBackup { get; set; }
 	}
 }
