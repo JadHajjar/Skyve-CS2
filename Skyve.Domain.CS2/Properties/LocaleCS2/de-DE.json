@@ -98,6 +98,7 @@
   "RunSync": "Synchronisierung starten",
   "PDXModsNew": "Neu bei PDX Mods",
   "PDXModsUpdated": "Kürzlich auf PDX Mods aktualisiert",
+  "PDXModsPopularWeek": "Popular mods from last week",
   "DiskStatus": "Speicherplattenstatus",
   "TotalCitiesSize": "Gespeicherte Benutzerdaten von C\nII",
   "TotalSavesSize": "Savegames-Größe",
@@ -151,5 +152,27 @@
   "Tag_Building": "Building",
   "Tag_Building Extension": "Building Extension",
   "Tag_Zone": "Zone",
-  "Tag_Asset Pack": "Asset Pack"
+  "Tag_Asset Pack": "Asset Pack",
+  "Backup_SaveGames": {
+    "One": "Savegame",
+    "Plural": "{0} savegames"
+  },
+  "Backup_ActivePlayset": {
+    "One": "Playset",
+    "Plural": "{0} playsets"
+  },
+  "Backup_SettingsFiles": {
+    "One": "Settings files",
+    "Plural": "{0} settings files"
+  },
+  "Backup_ModsSettingsFiles": {
+    "One": "Mod settings folder",
+    "Plural": "{0} mod settings folders"
+  },
+  "Backup_LocalMods": {
+    "One": "Local mod",
+    "Plural": "{0} local mods"
+  },
+  "ParadoxContextFailed": "Paradox backend failed to load",
+  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
 }
