@@ -162,17 +162,17 @@
     "Plural": "{0} playsets"
   },
   "Backup_SettingsFiles": {
-    "One": "Definições dos ficheiros",
-    "Plural": "{0} settings files"
+    "One": "Ficheiros de definições",
+    "Plural": "{0} ficheiros de definições"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folder",
-    "Plural": "{0} mod settings folders"
+    "One": "Pasta de definições do mod",
+    "Plural": "{0} pastas de definições de mods"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Mod local",
+    "Plural": "{0} mods locais"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
+  "ParadoxContextFailed": "Ocorreu um erro ao carregar a Paradox em segundo plano",
+  "ParadoxContextFailedInfo": "Algo está a fazer com que o sistema backend da Paradox falhe.\nClica nesta mensagem para tentar repará-lo.\n\nSe a reparação não for bem-sucedida, pede ajuda nos fóruns de suporte técnico."
 }
