@@ -16,6 +16,10 @@
     "One": "Copy PDX Mods link",
     "Plural": "Copy the selected packages' PDX Mods links"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "Copy PDX Mods ID",
     "Plural": "Copy the selected packages' PDX Mods IDs"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Copy logs to Player.log",
   "InvalidFolderSettings": "Invalid setup detected",
   "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
   "DefaultLocation": "Default User Data Location",
   "JunctionTitle": "Custom Content Location",
@@ -83,6 +88,7 @@
   "ResetLocation": "Reset Location",
   "JunctionRestart": "Skyve and Cities: Skylines II will close during this process.\r\n\r\nSkyve will restart automatically once finished.",
   "PlaysetAlreadyImported": "This playset is already present in your list of playsets.",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Could not retrieve the mods' data",
   "NewGameUpdate": "New Cities: Skylines II Update",
   "NewGameUpdateInfo": "Patch {0} is now available.\r\nBe sure to check your compatibility report before starting your game.",
@@ -92,6 +98,7 @@
   "RunSync": "Start Synchronization",
   "PDXModsNew": "New on PDX Mods",
   "PDXModsUpdated": "Recently updated on PDX Mods",
+  "PDXModsPopularWeek": "Popular mods from last week",
   "DiskStatus": "Disk Status",
   "TotalCitiesSize": "Total C:S II User Data Stored",
   "TotalSavesSize": "Savegames' Size",
@@ -124,5 +131,48 @@
   "Sorting_Popularity": "Most Subscribed",
   "Sorting_DateUpdated": "Last Updated",
   "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "Sorting_WorkshopName": "Alphabetical",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack",
+  "Backup_SaveGames": {
+    "One": "Savegame",
+    "Plural": "{0} savegames"
+  },
+  "Backup_ActivePlayset": {
+    "One": "Playset",
+    "Plural": "{0} playsets"
+  },
+  "Backup_SettingsFiles": {
+    "One": "Settings files",
+    "Plural": "{0} settings files"
+  },
+  "Backup_ModsSettingsFiles": {
+    "One": "Mod settings folder",
+    "Plural": "{0} mod settings folders"
+  },
+  "Backup_LocalMods": {
+    "One": "Local mod",
+    "Plural": "{0} local mods"
+  },
+  "ParadoxContextFailed": "Paradox backend failed to load",
+  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
 }

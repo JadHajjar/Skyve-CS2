@@ -16,6 +16,10 @@
     "One": "复制 PDX Mods 链接",
     "Plural": "复制已选插件的 PDX Mods 链接"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "复制 PDX Mods ID",
     "Plural": "复制已选插件的 PDX Mods ID"
@@ -49,7 +53,7 @@
   "Downloading": "正在下载...",
   "ModsDownloadFailed": {
     "One": "一个模组下载失败",
-    "Plural": "一些模组下载失败"
+    "Plural": "有多个模组下载失败"
   },
   "LoginToParadox": "登录到 Paradox",
   "LoginFailed": "登录失败，请确保您的电子邮件地址和密码是正确的。或稍后再试。",
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "将日志复制到 Player.log",
   "InvalidFolderSettings": "检测到无效设置",
   "InvalidFolderSettingsInfo": "Skyve 无法找到 Cities: Skylines II 正确的数据文件夹。\n\n点击此处以手动选择数据文件夹。",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "您选择的路径不正确。请在您的 AppData 文件夹中选择 \"Cities: Skylines II\" 文件夹。",
   "DefaultLocation": "默认用户数据位置",
   "JunctionTitle": "自定义内容存储位置",
@@ -83,6 +88,7 @@
   "ResetLocation": "重置位置",
   "JunctionRestart": "在此过程中，Skyve 和 Cities: Skylines II 将会关闭。\n\n完成时，Skyve 将自动重新启动。",
   "PlaysetAlreadyImported": "此配组已经在您的列表里了。",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "无法获取模组数据",
   "NewGameUpdate": "Cities: Skylines II 最新更新",
   "NewGameUpdateInfo": "版本更新 {0} 现已发布。\n在开始游戏前，请务必检查兼容性。",
@@ -92,6 +98,7 @@
   "RunSync": "开始同步",
   "PDXModsNew": "PDX Mods 上的新插件",
   "PDXModsUpdated": "PDX Mods 上最近更新的插件",
+  "PDXModsPopularWeek": "Popular mods from last week",
   "DiskStatus": "硬盘状态",
   "TotalCitiesSize": "C:S II 的用户数据总大小",
   "TotalSavesSize": "存档大小",
@@ -104,18 +111,18 @@
     "One": "硬盘空间不足，请前往选项页面更改游戏内容的保存位置。"
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "‘{1}’ 存在依赖",
-    "Plural": "添加的软件包存在依赖关系"
+    "One": "‘{1}’ 需要前置项目",
+    "Plural": "您正在添加的模组需要前置项目"
   },
   "AddingDependencies": {
     "One": "添加的模组需要‘{1}’才能使用。\n是否将‘{1}’添加至配组？",
-    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+    "Plural": "您正在添加的模组有 {0} 个依赖项： {1}\n\n要将它们一并添加到您的配组中吗？"
   },
-  "Dependency_Automatic": "自动添加依赖",
+  "Dependency_Automatic": "自动添加前置项目",
   "Dependency_Ask": "每次询问",
   "Dependency_None": "无需采取任何操作",
-  "DependencyResolution": "解析依赖",
-  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
+  "DependencyResolution": "选择如何处理前置项目",
+  "DependencyResolution_Tip": "当添加一个缺少前置依赖的模组时，选择你的偏好",
   "SyncOngoingLaunchGame": "Skyve正在同步你的模组，是否在同步完成后再启动？\n选择‘否’直接启动。",
   "StartingWithNoPlayset": "正在无配组的情况下启动游戏。\n这意味着不会加载任何模组。",
   "SyncBeforeLaunching": "在启动游戏前同步模组",
@@ -124,5 +131,48 @@
   "Sorting_Popularity": "最多订阅",
   "Sorting_DateUpdated": "最后更新",
   "Sorting_DateCreated": "最近添加",
-  "Sorting_WorkshopName": "字母序"
+  "Sorting_WorkshopName": "字母序",
+  "InitialRelease": "初始版本",
+  "ForumPage": "论坛页面",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "时间",
+  "SearchTime_AllTime": "全部时间",
+  "SearchTime_Day": "24 小时",
+  "SearchTime_Week": "7 天",
+  "SearchTime_Month": "1个月",
+  "SearchTime_Quarter": "3 个月",
+  "SearchTime_SixMonths": "6 个月",
+  "SearchTime_Year": "1 年",
+  "TotalBackupSize": "备份总大小",
+  "Tag_Static Object": "摆件",
+  "Tag_Building": "建筑",
+  "Tag_Building Extension": "建筑扩展",
+  "Tag_Zone": "区域",
+  "Tag_Asset Pack": "资产包",
+  "Backup_SaveGames": {
+    "One": "Savegame",
+    "Plural": "{0} savegames"
+  },
+  "Backup_ActivePlayset": {
+    "One": "Playset",
+    "Plural": "{0} playsets"
+  },
+  "Backup_SettingsFiles": {
+    "One": "Settings files",
+    "Plural": "{0} settings files"
+  },
+  "Backup_ModsSettingsFiles": {
+    "One": "Mod settings folder",
+    "Plural": "{0} mod settings folders"
+  },
+  "Backup_LocalMods": {
+    "One": "Local mod",
+    "Plural": "{0} local mods"
+  },
+  "ParadoxContextFailed": "Paradox backend failed to load",
+  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
 }

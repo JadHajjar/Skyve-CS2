@@ -16,6 +16,10 @@
     "One": "PDX Mods linkini kopyalayın",
     "Plural": "Seçili paketlerin PDX Mods linklerini kopyalayın"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "PDX Mods ID'isini kopyalayın",
     "Plural": "Seçili paketlerin PDX Mods ID'lerini kopyalayın"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Günlükleri Player.Log'a kopyala",
   "InvalidFolderSettings": "Geçersiz kurulum tespit edildi",
   "InvalidFolderSettingsInfo": "Skyve Cities: Skylines II'nin veri klasörünü bulamadı.\n\nElle seçmek için buraya tıklayın.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "Seçili yol doğru değil. Lütfen app data klasöründeki 'Cities Skylines II' klasörünü seçin.",
   "DefaultLocation": "Varsayılan Kullanıcı verisi Konumu",
   "JunctionTitle": "Özel İçerik Konumu",
@@ -83,46 +88,91 @@
   "ResetLocation": "Konumu Sıfırla",
   "JunctionRestart": "Bu işlem sırasında Skyve ve Cities: Skylines II kapanacaktır.\n\nBitince Skyve otomatik olarak yeniden başlayacak.",
   "PlaysetAlreadyImported": "Bu oyun seti zaten oyun seti listenizde bulunuyor.",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Modların verilerine ulaşılamadı",
   "NewGameUpdate": "Yeni Cities: Skylines II Güncellemesi",
   "NewGameUpdateInfo": "{0} yaması hazır.\nOyununuzu başlatmadan önce uyumluluk raporunu kontrol edin.",
-  "PdxSyncInfo": "The PDX Synchronization process handles downloading and updating your mods, as well as synchronizing the settings and playsets you have between your local computer and PDX Mods services.",
-  "SyncOngoing": "Sync is currently ongoing",
-  "PdxSync": "PDX Mods Sync",
-  "RunSync": "Start Synchronization",
-  "PDXModsNew": "New on PDX Mods",
-  "PDXModsUpdated": "Recently updated on PDX Mods",
-  "DiskStatus": "Disk Status",
-  "TotalCitiesSize": "Total C:S II User Data Stored",
-  "TotalSavesSize": "Savegames' Size",
-  "TotalSubbedSize": "Subscriptions' Size",
-  "TotalOtherSize": "Other Files' Size",
-  "FreeSpace": "{0} free",
-  "UsedOutOfSpace": "out of the {0} on drive {1}",
+  "PdxSyncInfo": "PDX senkronizasyon işlemi modlarınızın indirilmesini, güncellenmesini ve ayarlarınızla oyun setlerinizin bilgisayarınızla PDX Mods sunucuları arası eşitlenmesini sağlar.",
+  "SyncOngoing": "Senkronizasyon devam ediyor",
+  "PdxSync": "PDX Mods senkronizasyon",
+  "RunSync": "Senkronizasyonu Başlat",
+  "PDXModsNew": "PDX Mods'ta Yeni",
+  "PDXModsUpdated": "PDX Mods'ta yakın zamanda güncellenmiş",
+  "PDXModsPopularWeek": "Popular mods from last week",
+  "DiskStatus": "Disk Durumu",
+  "TotalCitiesSize": "Toplam Depolanan C:S II Kullanıcı Verisi",
+  "TotalSavesSize": "Oyun Kayıtlarının Boyutu",
+  "TotalSubbedSize": "Aboneliklerin Boyutu",
+  "TotalOtherSize": "Diğer Dosyaların Boyutu",
+  "FreeSpace": "{0} Boş",
+  "UsedOutOfSpace": "{1} sürücüsünce {0} içinden",
   "LowSpaceCreateJunction": {
-    "Zero": "You're running out of disk space, you need to clear up some storage or get an additional hard disk.",
-    "One": "You're running out of disk space, go to the options to change the location where the game's content is saved."
+    "Zero": "Depolama alanınız azalıyor, daha çok yer açmanız veya ilave bir depolama birimi bağlamanız önerilir.",
+    "One": "Depolama alanınız azalıyor, ayarlardan oyun verilerinin nereye kaydedildiğini değiştirin."
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "'{1}' has dependencies",
-    "Plural": "The packages you're adding have dependencies"
+    "One": "'{1}' bazı gereksinimlere ihtiyaç duyuyor",
+    "Plural": "Eklediğiniz paketlerin bazı gereksinimleri var"
   },
   "AddingDependencies": {
-    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
-    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+    "One": "Eklediğiniz mod/modların düzgün çalışması için '{1}' gerekiyor.\n\n'{1}' oyun setinize eklensin mi?",
+    "Plural": "Eklediğiniz mod/modların düzgün çalışması için {0} tane gereksinime ihtiyaç duyuyor: {1}\n\nBunları da oyun setinize eklemek ister misiniz?"
   },
-  "Dependency_Automatic": "Automatically add dependencies",
-  "Dependency_Ask": "Ask every time",
-  "Dependency_None": "Do nothing",
-  "DependencyResolution": "Dependency Resolution",
-  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
-  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
-  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
-  "SyncBeforeLaunching": "Synchronize mods before launching the game",
-  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
-  "Sorting_Best": "Most Popular",
-  "Sorting_Popularity": "Most Subscribed",
-  "Sorting_DateUpdated": "Last Updated",
-  "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical"
+  "Dependency_Automatic": "Otomatik olarak gereksinimleri ekle",
+  "Dependency_Ask": "Her seferinde sor",
+  "Dependency_None": "Hiçbir şey yapma",
+  "DependencyResolution": "Gereksinim Çözümü",
+  "DependencyResolution_Tip": "Gereksinimleri olan bir modu gereksinimlerini yüklemeden eklediğinizde ne olacağını seçin.",
+  "SyncOngoingLaunchGame": "Skyve modlarınızın senkronizasyon işlemini bitirmedi, hazır olduğunda oyunu başlatmak ister misiniz?\nOyunu şimdi başlatmak için 'Hayır'a basın.",
+  "StartingWithNoPlayset": "Oyunu herhangi bir oyun seti olmadan başlatıyorsunuz.\nHiçbir mod oyun içinde etkinleştirilmeyecektir.",
+  "SyncBeforeLaunching": "Oyunu başlatmadan önce modları senkronize et",
+  "SyncBeforeLaunching_Tip": "Oyunu başlatmadan önce bir mod senkronizasyonu yapar ve bu sayede tüm modlarınızın güncel olduğunu doğrular.",
+  "Sorting_Best": "En Popüler",
+  "Sorting_Popularity": "En Çok Abone Olunan",
+  "Sorting_DateUpdated": "En Son Güncellenen",
+  "Sorting_DateCreated": "En Yeni",
+  "Sorting_WorkshopName": "Alfabetik Sıralama",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack",
+  "Backup_SaveGames": {
+    "One": "Savegame",
+    "Plural": "{0} savegames"
+  },
+  "Backup_ActivePlayset": {
+    "One": "Playset",
+    "Plural": "{0} playsets"
+  },
+  "Backup_SettingsFiles": {
+    "One": "Settings files",
+    "Plural": "{0} settings files"
+  },
+  "Backup_ModsSettingsFiles": {
+    "One": "Mod settings folder",
+    "Plural": "{0} mod settings folders"
+  },
+  "Backup_LocalMods": {
+    "One": "Local mod",
+    "Plural": "{0} local mods"
+  },
+  "ParadoxContextFailed": "Paradox backend failed to load",
+  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
 }

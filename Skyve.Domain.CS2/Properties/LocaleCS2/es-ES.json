@@ -16,6 +16,10 @@
     "One": "Copiar enlace PDX Mods",
     "Plural": "Copiar enlaces de este paquete en PDX Mods"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copiar enlace de PDX Mods como Markdown",
+    "Plural": "Copia los enlaces de PDX Mods del paquete seleccionado como Markdown"
+  },
   "CopyWorkshopId": {
     "One": "Copiar enlaces PDX Mods",
     "Plural": "Copiar identificadores (ID) de este paquete PDX Mods"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Copiar registros a Player.log",
   "InvalidFolderSettings": "Se ha detectado una configuración no válida",
   "InvalidFolderSettingsInfo": "Skyve no fue capaz de detectar adecuadamente la carpeta de datos de Cities Skylines II.\n\nHaga clic aquí para seleccionar la carpeta de datos.",
+  "SkyvenotSetUpInfo": "Skyve no ha sido configurado todavía. Por favor, inicie Cities: Skylines II con Skyve habilitado para completar la configuración.\n\nAsegúrate de que los mods se cargan con éxito y, de no ser así, intenta crear un nuevo playset con solo Skyve incluido.",
   "InvalidFolderSettingsFail": "La ruta seleccionada no es correcta. Por favor, seleccione la carpeta de 'Cities Skylines II' en la carpeta de datos (AppData).",
   "DefaultLocation": "Ubicación de datos de usuario predeterminada",
   "JunctionTitle": "Ubicación de contenido personalizado",
@@ -83,6 +88,7 @@
   "ResetLocation": "Restablecer ubicación",
   "JunctionRestart": "Skyve y Cities: Skylines II se cerrarán durante este proceso.\n\nSkyve se reiniciará automáticamente una vez finalizado.",
   "PlaysetAlreadyImported": "Este playset ya está presente en tu lista de playsets.",
+  "JunctionInvalidFolder": "La carpeta seleccionada no es un destino válido. Por favor, prueba con otra.",
   "CouldNotRetrieveMods": "No se pudieron recuperar los datos de los mods",
   "NewGameUpdate": "Nueva actualización de Cities: Skylines II",
   "NewGameUpdateInfo": "El parche {0} ya está disponible.\nAsegúrese de revisar su informe de compatibilidad antes de comenzar el juego.",
@@ -92,6 +98,7 @@
   "RunSync": "Iniciar sincronización",
   "PDXModsNew": "Nuevo en PDX Mods",
   "PDXModsUpdated": "Actualizado recientemente en PDX Mods",
+  "PDXModsPopularWeek": "Popular mods from last week",
   "DiskStatus": "Estado del disco",
   "TotalCitiesSize": "Total de datos de usuario almacenados de C:S II",
   "TotalSavesSize": "Tamaño de los \"Savegames\"",
@@ -124,5 +131,48 @@
   "Sorting_Popularity": "Más suscritos",
   "Sorting_DateUpdated": "Ultima actualización",
   "Sorting_DateCreated": "Más recientes",
-  "Sorting_WorkshopName": "Alfabéticamente"
+  "Sorting_WorkshopName": "Alfabéticamente",
+  "InitialRelease": "Versión Inicial",
+  "ForumPage": "Página del Foro",
+  "DisableBurstCompile": "Desactivar compilación Burst",
+  "UnreadComment": "Nuevos comentarios en '{0}'",
+  "SafeMode": "Modo Seguro",
+  "LaunchInSafeMode": "Iniciar en Modo Seguro",
+  "SafeModeInfo": "Iniciar el juego en \"Modo Seguro\" para ayudar a identificar problemas con fallos.\n\nEs dificultoso identificar la fuente de un fallo y hace que a veces sea imposible recuperar un juego guardado.\nEl Modo Seguro, permite al juego a evitar los fallos, la mayoria de las veces, lo que permite recuperar tus partidas y registrar apropiadamente, para ser analizados por el soporte técnico.",
+  "SearchTime": "Período de Tiempo",
+  "SearchTime_AllTime": "Desde Siempre",
+  "SearchTime_Day": "24 horas",
+  "SearchTime_Week": "7 días",
+  "SearchTime_Month": "1 mes",
+  "SearchTime_Quarter": "3 meses",
+  "SearchTime_SixMonths": "6 meses",
+  "SearchTime_Year": "1 año",
+  "TotalBackupSize": "Tamaño Total de Respaldos",
+  "Tag_Static Object": "Decoración",
+  "Tag_Building": "Edificio",
+  "Tag_Building Extension": "Extensión de Edificio",
+  "Tag_Zone": "Zona",
+  "Tag_Asset Pack": "Asset Pack",
+  "Backup_SaveGames": {
+    "One": "Savegame",
+    "Plural": "{0} savegames"
+  },
+  "Backup_ActivePlayset": {
+    "One": "Playset",
+    "Plural": "{0} playsets"
+  },
+  "Backup_SettingsFiles": {
+    "One": "Settings files",
+    "Plural": "{0} settings files"
+  },
+  "Backup_ModsSettingsFiles": {
+    "One": "Mod settings folder",
+    "Plural": "{0} mod settings folders"
+  },
+  "Backup_LocalMods": {
+    "One": "Local mod",
+    "Plural": "{0} local mods"
+  },
+  "ParadoxContextFailed": "Paradox backend failed to load",
+  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
 }

@@ -16,6 +16,10 @@
     "One": "Skopiuj link PDX Mods",
     "Plural": "Skopiuj linki PDX Mods dla wybranych pakietów"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copy PDX Mods link as Markdown",
+    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+  },
   "CopyWorkshopId": {
     "One": "Skopiuj ID PDX Mods",
     "Plural": "Skopiuj ID PDX Mods dla wybranych pakietów"
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Skopiuj logi do Player.log",
   "InvalidFolderSettings": "Wykryto nieprawidłową konfigurację",
   "InvalidFolderSettingsInfo": "Skyve nie był w stanie prawidłowo wykryć folderu z grą Cities: Skylines II.\n\nKliknij tutaj, aby ręcznie wybrać folder z grą.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "Wybrana ścieżka jest niepoprawna. Proszę wybrać folder \"Cities Skylines II\" w AppData.",
   "DefaultLocation": "Domyślna lokalizacja danych użytkownika",
   "JunctionTitle": "Niestandardowa lokalizacja zawartości",
@@ -83,6 +88,7 @@
   "ResetLocation": "Przywróć lokalizację",
   "JunctionRestart": "Skyve i Cities: Skylines II zostaną wyłączone podczas tego procesu.\n\nSkyve automatycznie uruchomi się ponownie po zakończeniu.",
   "PlaysetAlreadyImported": "Ten zestaw już znajduje się na liście twoich zestawów.",
+  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Nie udało się pobrać danych modyfikacji",
   "NewGameUpdate": "Nowa aktualizacja Cities: Skylines II",
   "NewGameUpdateInfo": "Patch {0} jest teraz dostępny. Sprawdź swój raport zgodności przed rozpoczęciem gry.",
@@ -92,6 +98,7 @@
   "RunSync": "Rozpocznij synchronizację",
   "PDXModsNew": "Nowości na PDX Mods",
   "PDXModsUpdated": "Ostatnio zaktualizowane na PDX Mods",
+  "PDXModsPopularWeek": "Popular mods from last week",
   "DiskStatus": "Stan dysku",
   "TotalCitiesSize": "Łączny rozmiar C:S II",
   "TotalSavesSize": "Rozmiar plików zapisu",
@@ -124,5 +131,48 @@
   "Sorting_Popularity": "Najczęściej subskrybowane",
   "Sorting_DateUpdated": "Ostatnia aktualizacja",
   "Sorting_DateCreated": "Najnowsze",
-  "Sorting_WorkshopName": "Alfabetycznie"
+  "Sorting_WorkshopName": "Alfabetycznie",
+  "InitialRelease": "Initial Release",
+  "ForumPage": "Forum Page",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "New comments on '{0}'",
+  "SafeMode": "Safe Mode",
+  "LaunchInSafeMode": "Launch in Safe Mode",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Time Period",
+  "SearchTime_AllTime": "All Time",
+  "SearchTime_Day": "24 hours",
+  "SearchTime_Week": "7 Days",
+  "SearchTime_Month": "1 Month",
+  "SearchTime_Quarter": "3 Months",
+  "SearchTime_SixMonths": "6 Months",
+  "SearchTime_Year": "1 Year",
+  "TotalBackupSize": "Total Backups Size",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Building",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Asset Pack",
+  "Backup_SaveGames": {
+    "One": "Savegame",
+    "Plural": "{0} savegames"
+  },
+  "Backup_ActivePlayset": {
+    "One": "Playset",
+    "Plural": "{0} playsets"
+  },
+  "Backup_SettingsFiles": {
+    "One": "Settings files",
+    "Plural": "{0} settings files"
+  },
+  "Backup_ModsSettingsFiles": {
+    "One": "Mod settings folder",
+    "Plural": "{0} mod settings folders"
+  },
+  "Backup_LocalMods": {
+    "One": "Local mod",
+    "Plural": "{0} local mods"
+  },
+  "ParadoxContextFailed": "Paradox backend failed to load",
+  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
 }

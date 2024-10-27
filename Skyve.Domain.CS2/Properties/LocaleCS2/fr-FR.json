@@ -16,6 +16,10 @@
     "One": "Copier le lien PDX Mods",
     "Plural": "Copier les liens PDX Mods des paquets sélectionnés"
   },
+  "CopyWorkshopMarkdownLink": {
+    "One": "Copier le lien PDX Mods au format Markdown",
+    "Plural": "Copier les liens PDX Mods des paquets sélectionnés au format Markdown"
+  },
   "CopyWorkshopId": {
     "One": "Copier l'ID PDX Mods",
     "Plural": "Copier les IDs PDX Mods des paquets sélectionnés"
@@ -49,7 +53,7 @@
   "Downloading": "Téléchargement...",
   "ModsDownloadFailed": {
     "One": "Le téléchargement d'un mod a échoué",
-    "Plural": "Le téléchargement de certains mods ont échoués"
+    "Plural": "Le téléchargement de certains mods a échoué"
   },
   "LoginToParadox": "Se connecter à Paradox",
   "LoginFailed": "La connexion a échoué, vérifiez que votre email et votre mot de passe sont corrects. Ou réessayez plus tard.",
@@ -74,6 +78,7 @@
   "LogsToPlayerLog": "Copier les logs dans le fichier Player.log",
   "InvalidFolderSettings": "Configuration non valide détectée",
   "InvalidFolderSettingsInfo": "Skyve n'as pas réussi à détecter le dossier des données de Cities: Skyines II.\n\nCliquez ici pour sélectionner le dossier des données manuellement.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "Le chemin d'accès n'est pas correct. Veuillez sélectionner le dossier 'Cities Skylines II' du dossier app data.",
   "DefaultLocation": "Emplacement par défaut des données utilisateurs",
   "JunctionTitle": "Emplacement de contenu personnalisé",
@@ -83,15 +88,17 @@
   "ResetLocation": "Réinitialiser l'emplacement",
   "JunctionRestart": "Skyve et Cities: Skylines II vont se fermer pendant ce processus.\n\nSkyve redémarrera automatiquement une fois terminé.",
   "PlaysetAlreadyImported": "Ce Playset est déjà présent dans votre liste de playsets.",
+  "JunctionInvalidFolder": "Le dossier sélectionné n'est pas un emplacement valide. Veuillez en essayer un autre.",
   "CouldNotRetrieveMods": "Impossible de récupérer les données des mods",
   "NewGameUpdate": "Nouvelle mise à jour de Cities: Skylines II",
   "NewGameUpdateInfo": "Le correctif {0} est maintenant disponible.\nVérifiez votre rapport de compatibilité avant de commencer votre jeu.",
-  "PdxSyncInfo": "La Synchronisation PDX télécharge et met à jour vos mods, et synchronise les paramètres et playset de votre ordinateur vers les serveurs PDX.",
+  "PdxSyncInfo": "La Synchronisation PDX télécharge et met à jour vos mods, tout en synchronisant les paramètres et playsets de votre ordinateur vers les serveurs PDX.",
   "SyncOngoing": "Synchronisation en cours",
   "PdxSync": "Synchronisation des Mods PDX",
   "RunSync": "Démarrer la Synchronisation",
   "PDXModsNew": "Nouveau sur PDX Mods",
-  "PDXModsUpdated": "Récemment mis a jour sur PDX Mods",
+  "PDXModsUpdated": "Récemment mis à jour sur PDX Mods",
+  "PDXModsPopularWeek": "Popular mods from last week",
   "DiskStatus": "Statut du disque",
   "TotalCitiesSize": "Total des données utilisateur C:S II stockées",
   "TotalSavesSize": "Taille des sauvegardes",
@@ -104,19 +111,19 @@
     "One": "Vous êtes à court d'espace de stockage, allez dans les options pour changer l'emplacement du contenu de jeu."
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "« {1} » a des dépendances",
+    "One": "'{1}' a des dépendances",
     "Plural": "Les paquets que vous ajoutez ont des dépendances"
   },
   "AddingDependencies": {
-    "One": "« {1} » est requis pour le(s) mod(s) que vous ajoutez.\n\nVoulez-vous également ajouter « {1} » à votre playset ?",
+    "One": "'{1}' est requis pour le(s) mod(s) que vous ajoutez.\n\nVoulez-vous également ajouter '{1}' à votre playset ?",
     "Plural": "Le(s) mod(s) que vous ajoutez ont {0} dépendances : {1}\n\nVoulez-vous également les ajouter à votre playset ?"
   },
   "Dependency_Automatic": "Ajouter automatiquement les dépendances",
   "Dependency_Ask": "Toujours demander",
   "Dependency_None": "Ne rien faire",
   "DependencyResolution": "Résolution des dépendances",
-  "DependencyResolution_Tip": "Choisissez ce qu’il se passe quand vous ajoutez un mod avec des dépendances que vous n'avez pas installées.",
-  "SyncOngoingLaunchGame": "Skyve est toujours en train de synchroniser vos mods, voulez-vous lancer le jeu une fois que vos mods sont prêts ?\nSélectionnez « Non » pour commencer le jeu quand même.",
+  "DependencyResolution_Tip": "Choisissez ce qu’il se passe quand vous ajoutez un mod avec des dépendances que vous n'avez pas installé.",
+  "SyncOngoingLaunchGame": "Skyve synchronise vos mods, voulez-vous lancer le jeu une fois que la synchronisation sera terminée ?\nSélectionnez “Non” pour lancer le jeu quand même.",
   "StartingWithNoPlayset": "Vous êtes sur le point de lancer le jeu sans playset actif.\nCela signifie qu’aucun mod ne sera activé dans le jeu.",
   "SyncBeforeLaunching": "Synchroniser les mods avant de lancer le jeu",
   "SyncBeforeLaunching_Tip": "Exécute une synchronisation des mods avant de lancer le jeu pour s'assurer que tous les mods sont à jour.",
@@ -124,5 +131,48 @@
   "Sorting_Popularity": "Les plus abonnés",
   "Sorting_DateUpdated": "Les derniers mis à jour",
   "Sorting_DateCreated": "Les plus récents",
-  "Sorting_WorkshopName": "Alphabétiquement"
+  "Sorting_WorkshopName": "Alphabétiquement",
+  "InitialRelease": "Version Initiale",
+  "ForumPage": "Page du Forum",
+  "DisableBurstCompile": "Disable Burst-Compilation",
+  "UnreadComment": "Nouveaux commentaires sur \"{0}\"",
+  "SafeMode": "Mode sans Échec",
+  "LaunchInSafeMode": "Lancer en Mode Sans Échec",
+  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SearchTime": "Période",
+  "SearchTime_AllTime": "Depuis Toujours",
+  "SearchTime_Day": "24 heures",
+  "SearchTime_Week": "7 Jours",
+  "SearchTime_Month": "1 Mois",
+  "SearchTime_Quarter": "3 Mois",
+  "SearchTime_SixMonths": "6 Mois",
+  "SearchTime_Year": "1 An",
+  "TotalBackupSize": "Taille Total des Archives",
+  "Tag_Static Object": "Prop",
+  "Tag_Building": "Bâtiment",
+  "Tag_Building Extension": "Building Extension",
+  "Tag_Zone": "Zone",
+  "Tag_Asset Pack": "Pack d'Assets",
+  "Backup_SaveGames": {
+    "One": "Savegame",
+    "Plural": "{0} savegames"
+  },
+  "Backup_ActivePlayset": {
+    "One": "Playset",
+    "Plural": "{0} playsets"
+  },
+  "Backup_SettingsFiles": {
+    "One": "Settings files",
+    "Plural": "{0} settings files"
+  },
+  "Backup_ModsSettingsFiles": {
+    "One": "Mod settings folder",
+    "Plural": "{0} mod settings folders"
+  },
+  "Backup_LocalMods": {
+    "One": "Local mod",
+    "Plural": "{0} local mods"
+  },
+  "ParadoxContextFailed": "Paradox backend failed to load",
+  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
 }
