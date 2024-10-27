@@ -98,7 +98,7 @@
   "RunSync": "Démarrer la Synchronisation",
   "PDXModsNew": "Nouveau sur PDX Mods",
   "PDXModsUpdated": "Récemment mis à jour sur PDX Mods",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "Mods populaires de la semaine passée",
   "DiskStatus": "Statut du disque",
   "TotalCitiesSize": "Total des données utilisateur C:S II stockées",
   "TotalSavesSize": "Taille des sauvegardes",
@@ -154,24 +154,24 @@
   "Tag_Zone": "Zone",
   "Tag_Asset Pack": "Pack d'Assets",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "Sauvegarde du jeu",
+    "Plural": "{0} sauvegardes du jeu"
   },
   "Backup_ActivePlayset": {
     "One": "Playset",
     "Plural": "{0} playsets"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "Fichier de paramètres",
+    "Plural": "{0} fichiers de paramètres"
   },
   "Backup_ModsSettingsFiles": {
     "One": "Mod settings folder",
     "Plural": "{0} mod settings folders"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Mod local",
+    "Plural": "{0} mods locaux"
   },
   "ParadoxContextFailed": "Paradox backend failed to load",
   "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
