@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
 using PDX.SDK.Contracts;
@@ -24,6 +25,7 @@ using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -37,7 +39,7 @@ public class WorkshopService : IWorkshopService
 {
 	public event Action? OnLogin;
 	public event Action? OnLogout;
-	public event Action? ContextAvailable;
+	public event Action? OnContextAvailable;
 
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
@@ -142,10 +144,12 @@ public class WorkshopService : IWorkshopService
 
 			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
 
-			ContextAvailable?.Invoke();
+			OnContextAvailable?.Invoke();
 		}
 		catch (Exception ex)
 		{
+			_notificationsService.SendNotification(new ParadoxContextFailedNotification(this));
+
 			_logger.Exception(ex, "Failed to create PDX Context");
 		}
 	}
@@ -210,6 +214,8 @@ public class WorkshopService : IWorkshopService
 
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+
+			OnLogin?.Invoke();
 		}
 		finally
 		{
@@ -244,6 +250,8 @@ public class WorkshopService : IWorkshopService
 			IsLoggedIn = true;
 
 			_userService.SetLoggedInUser((await Context.Profile.Get()).Social?.DisplayName);
+
+			OnLogin?.Invoke();
 		}
 
 		return loginResult.Success;
@@ -1028,6 +1036,48 @@ public class WorkshopService : IWorkshopService
 		ProcessResult(await Context.Mods.DeactivateActivePlayset());
 	}
 
+	public async Task Shutdown()
+	{
+		if (Context is not null)
+		{
+			await Context.Shutdown();
+
+			Context = null;
+			IsLoggedIn = false;
+			IsLoginPending = false;
+		}
+	}
+
+	public async void RepairContext()
+	{
+		try
+		{
+			_notificationsService.RemoveNotificationsOfType<ParadoxContextFailedNotification>();
+
+			var playsetFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods", "playsets_metadata");
+			var tempFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk", _settings.FolderSettings.UserIdentifier, "temp");
+
+			Process.Start(new ProcessStartInfo()
+			{
+				Arguments = "/C taskkill /F /IM Skyve.Service.exe & exit",
+				WindowStyle = ProcessWindowStyle.Hidden,
+				CreateNoWindow = true,
+				WorkingDirectory = Path.GetTempPath(),
+				FileName = "cmd.exe",
+				Verb = "runas"
+			}).WaitForExit();
+
+			new DirectoryInfo(tempFolder).Delete(true);
+			new DirectoryInfo(playsetFolder).Delete(true);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to repair context");
+		}
+
+		await Initialize();
+	}
+
 	public bool IsLocal(IPackageIdentity identity)
 	{
 		return identity.Id <= 0 && identity is not LocalPdxPackage;
@@ -1114,18 +1164,6 @@ public class WorkshopService : IWorkshopService
 			{
 				File.Copy(text4, Path.Combine(text2, Path.GetFileName(text4)), true);
 			}
-		}
-	}
-
-	public async Task Shutdown()
-	{
-		if (Context is not null)
-		{
-			await Context.Shutdown();
-
-			Context = null;
-			IsLoggedIn = false;
-			IsLoginPending = false;
 		}
 	}
 

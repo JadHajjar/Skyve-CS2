@@ -42,7 +42,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		}
 		else
 		{
-			WorkshopService.ContextAvailable += LoadData;
+			WorkshopService.OnContextAvailable += LoadData;
 		}
 	}
 
@@ -50,7 +50,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 	{
 		base.Dispose(disposing);
 
-		WorkshopService.ContextAvailable -= LoadData;
+		WorkshopService.OnContextAvailable -= LoadData;
 	}
 
 	protected override Task<bool> ProcessDataLoad(CancellationToken token)

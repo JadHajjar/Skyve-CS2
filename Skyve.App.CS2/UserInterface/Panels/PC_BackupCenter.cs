@@ -1,5 +1,8 @@
-﻿using Skyve.Domain.CS2.Enums;
+﻿using Skyve.App.CS2.UserInterface.Generic;
+using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
+
+using SlickControls;
 
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +17,8 @@ public partial class PC_BackupCenter : PanelContent
 		SetUpSliderTicks();
 
 		SetCurrentSettings();
+
+		backupListControl.CanDrawItem += BackupListControl_CanDrawItem;
 	}
 
 	protected override void LocaleChanged()
@@ -21,13 +26,30 @@ public partial class PC_BackupCenter : PanelContent
 		base.LocaleChanged();
 
 		L_BackupInfo.Text = Locale.BackupDescriptionInfo;
+		L_RestoreInfo.Text = Locale.SelectRestoreInfo;
 	}
 
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
-		B_AddTime.Margin = UI.Scale(new Padding(4));
+		TB_Search.Width = UI.Scale(200);
+		TB_Search.Margin = backupViewControl.Margin=UI.Scale(new Padding(3));
+		spacerBackup1.Height = spacerSettings.Height = spacerBackup2.Height = UI.Scale(2);
+		spacerBackup1.Margin = UI.Scale(new Padding(0, 6, 0, 0));
+		spacerBackup2.Margin = UI.Scale(new Padding(0, 0, 0, 6));
+		spacerSettings.Margin = UI.Scale(new Padding(6));
+		L_BackupInfo.Margin = L_RestoreInfo.Margin = UI.Scale(new Padding(3, 3, 3, 6));
+		P_Backup.Margin = P_Restore.Margin = P_RestoreSelect.Margin = UI.Scale(new Padding(6));
+		B_AddTime.Margin = SS_Count.Margin = SS_Storage.Margin = SS_CleanupTime.Margin = UI.Scale(new Padding(32, 4, 4, 4));
+	}
+
+	protected override void DesignChanged(FormDesign design)
+	{
+		base.DesignChanged(design);
+
+		tableLayoutPanel2.BackColor = design.AccentBackColor;
+		L_BackupInfo.ForeColor = L_RestoreInfo.ForeColor = design.InfoColor;
 	}
 
 	#region Settings Tab
@@ -222,5 +244,156 @@ public partial class PC_BackupCenter : PanelContent
 		await Task.Delay(5_000);
 
 		B_Backup.ImageName = "ArrowRight";
+	}
+
+	private void T_Backups_TabSelected(object sender, EventArgs e)
+	{
+		if (backupListControl.ItemCount == 0)
+		{
+			backupListControl.Loading = true;
+		}
+
+		Task.Run(LoadBackupItems);
+	}
+
+	private void LoadBackupItems()
+	{
+		var backups = ServiceCenter.Get<IBackupSystem>().GetAllBackups();
+
+		if (backupViewControl.RestorePoint)
+		{
+			backupListControl.SetItems(backups
+				.Where(x => !x.MetaData.IsArchived)
+				.GroupBy(x => x.MetaData.BackupTime)
+				.Select(x => new BackupListControl.RestoreGroup(x.Key, new List<IRestoreItem>(x))));
+		}
+		else
+		{
+			backupListControl.SetItems(backups
+				.Where(x => !x.MetaData.IsArchived)
+				.GroupBy(x => $"{x.MetaData.Type}_{x.MetaData.Name}")
+				.Select(x => new BackupListControl.RestoreGroup(x.First().MetaData.Name ?? "", new List<IRestoreItem>(x))));
+		}
+
+		backupListControl.Loading = false;
+	}
+
+	private void IndividualItemClicked(object sender, EventArgs e)
+	{
+		backupListControl.IndividualItem = backupViewControl.IndividualItem = true;
+		backupListControl.RestorePoint = backupViewControl.RestorePoint = false;
+
+		backupListControl.Clear();
+		backupListControl.Loading = true;
+
+		Task.Run(LoadBackupItems);
+	}
+
+	private void RestorePointClicked(object sender, EventArgs e)
+	{
+		backupListControl.IndividualItem = backupViewControl.IndividualItem = false;
+		backupListControl.RestorePoint = backupViewControl.RestorePoint = true;
+
+		backupListControl.Clear();
+		backupListControl.Loading = true;
+
+		Task.Run(LoadBackupItems);
+	}
+
+	private void TB_Search_TextChanged(object sender, EventArgs e)
+	{
+		TB_Search.ImageName = string.IsNullOrWhiteSpace(TB_Search.Text) ? "Search" : "ClearSearch";
+
+		backupListControl.FilterChanged();
+	}
+
+	private void TB_Search_IconClicked(object sender, EventArgs e)
+	{
+		TB_Search.Text = string.Empty;
+	}
+
+	private void BackupListControl_CanDrawItem(object sender, CanDrawItemEventArgs<BackupListControl.RestoreGroup> e)
+	{
+		if (string.IsNullOrWhiteSpace(TB_Search.Text))
+		{
+			return;
+		}
+
+		if (backupListControl.RestorePoint)
+		{
+			e.DoNotDraw = !e.Item.RestoreItems.Any(x => TB_Search.Text.SearchCheck(x.MetaData.Name))
+				&& !TB_Search.Text.SearchCheck(e.Item.Time.ToString("d MMM yyyy - h:mm tt"));
+		}
+		else
+		{
+			e.DoNotDraw = !TB_Search.Text.SearchCheck(e.Item.Name) && !TB_Search.Text.SearchCheck(e.Item.Time.ToString("d MMM yyyy - h:mm tt"));
+		}
+	}
+
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
+		if (keyData == (Keys.Control | Keys.F))
+		{
+			TB_Search.Focus();
+			TB_Search.SelectAll();
+		}
+
+		return base.ProcessCmdKey(ref msg, keyData);
+	}
+
+	private void B_SelectRestore_Click(object sender, EventArgs e)
+	{
+		T_Backups.Selected = true;
+	}
+
+	private void BackupListControl_ItemMouseClick(object sender, MouseEventArgs e)
+	{
+		smartFlowPanel1.Controls.Clear(true);
+
+		var item = (BackupListControl.RestoreGroup)sender;
+		
+		if (backupListControl.RestorePoint)
+		{
+			foreach (var backup in item.RestoreItems)
+			{ 
+				smartFlowPanel1.Controls.Add(new SlickCheckbox
+				{
+					Text = $"{backup.MetaData.Name} - {backup.MetaData.GetTypeTranslation()}",
+					Tag = backup,
+					Checked = true,
+				});
+			}
+		}
+		else
+		{
+			foreach (var backup in item.RestoreItems.OrderByDescending(x => x.MetaData.BackupTime))
+			{
+				smartFlowPanel1.Controls.Add(new SlickRadioButton
+				{
+					Text = backup.MetaData.BackupTime.ToString("d MMM yyyy - h:mm tt"),
+					Tag = backup,
+					Checked = backup.MetaData.BackupTime == item.Time,
+				});
+			}
+		}
+
+		foreach (Control ctrl in smartFlowPanel1.Controls)
+		{
+			smartFlowPanel1.SetFlowBreak(ctrl, true);
+		}
+
+		T_BackupRestore.Selected = true;
+		P_Restore.Visible = true;
+		P_RestoreSelect.Visible = false;
+	}
+
+	private async void slickButton2_Click(object sender, EventArgs e)
+	{
+		var system = ServiceCenter.Get<IBackupSystem>();
+		foreach (SlickCheckbox ctrl in smartFlowPanel1.Controls)
+		{
+			if (ctrl.Checked)
+		await	((IRestoreItem)ctrl.Tag).Restore(system);
+		}
 	}
 }

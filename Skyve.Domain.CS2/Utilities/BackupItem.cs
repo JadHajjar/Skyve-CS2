@@ -157,7 +157,7 @@ public static class BackupItem
 				ContentTime = package.LocalData!.LocalTime,
 				Root = package.LocalData!.Folder,
 				Type = nameof(LocalMods),
-				RestoreType = RestoreAction.Overwrite
+				RestoreType = RestoreAction.ClearRoot
 			};
 		}
 

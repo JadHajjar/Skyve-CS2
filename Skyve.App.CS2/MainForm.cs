@@ -3,6 +3,7 @@ using Skyve.App.CS2.UserInterface.Content;
 using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Content;
+using Skyve.App.UserInterface.Lists;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
 using Skyve.Systems.CS2.Services;
@@ -12,6 +13,7 @@ using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2;
@@ -126,6 +128,8 @@ public partial class MainForm : BasePanelForm
 
 		base_PB_Icon.Loading = true;
 		PI_Compatibility.Loading = true;
+
+		Task.Run(ItemListControl.LoadThumbnails);
 	}
 
 	private void PlaysetChanged()
