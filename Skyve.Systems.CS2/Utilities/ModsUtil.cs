@@ -80,7 +80,7 @@ internal class ModsUtil : IModUtil
 				config.SetState(item.PlaysetId
 					, new GenericPackageIdentity { Id = (ulong)mod.Id, Name = mod.Name }
 					, item.ModIsEnabled
-					, currentPlayset == item.PlaysetId ? mod.Version : item.Version);
+					, item.Version);
 			}
 		}
 
@@ -135,15 +135,16 @@ internal class ModsUtil : IModUtil
 	{
 		if (mod.Id <= 0)
 		{
-			if (mod is LocalPdxPackage)
-			{
-				return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Name);
-			}
-
-			return IsEnabled(mod);
+			return mod is LocalPdxPackage ? modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Name) : IsEnabled(mod);
 		}
 
-		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id);
+		if (!modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id))
+		{
+			return false;
+		}
+
+		return mod.GetPackage() is not LocalPdxPackage localPdxPackage
+|| modConfig.GetVersion(playsetId ?? currentPlayset, mod.Id) == localPdxPackage.Version;
 	}
 
 	public bool IsEnabled(IPackageIdentity mod, int? playsetId = null)
@@ -160,7 +161,13 @@ internal class ModsUtil : IModUtil
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
 		}
 
-		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id);
+		if (!modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id))
+		{
+			return false;
+		}
+
+		return mod.GetPackage() is not LocalPdxPackage localPdxPackage
+|| modConfig.GetVersion(playsetId ?? currentPlayset, mod.Id) == localPdxPackage.Version;
 	}
 
 	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null)
@@ -661,7 +668,9 @@ internal class ModsUtil : IModUtil
 
 	public string? GetSelectedVersion(IPackageIdentity package, int? playsetId = null)
 	{
-		return modConfig.GetVersion(playsetId ?? currentPlayset, package.Id);
+		return package.GetPackage() is LocalPdxPackage localPdxPackage
+			? localPdxPackage.Version
+			: modConfig.GetVersion(playsetId ?? currentPlayset, package.Id);
 	}
 
 	public async Task SetVersion(IPackageIdentity package, string version, int? playsetId = null)
@@ -684,23 +693,13 @@ internal class ModsUtil : IModUtil
 
 		if (result)
 		{
-			modConfig.SetVersion(playset, package.Id, version);
+			var latestVersion = package.GetWorkshopInfo()?.VersionId;
 
-			var mod = (await _workshopService.GetLocalPackages()).FirstOrDefault(x => (ulong)x.Id == package.Id);
+			modConfig.SetVersion(playset, package.Id, version.IfEmpty(latestVersion));
 
-			if (mod != null)
+			if (package.GetPackage() is LocalPdxPackage localPdxPackage)
 			{
-				var playsetInMod = mod.Playsets.FirstOrDefault(x => x.PlaysetId == playset);
-
-				if (playsetInMod != null)
-				{
-					playsetInMod.Version = version ?? mod.LatestVersion;
-				}
-
-				if (currentPlayset == playset)
-				{
-					mod.Version = version ?? mod.LatestVersion;
-				}
+				localPdxPackage.Version = version.IfEmpty(latestVersion);
 			}
 		}
 

@@ -219,7 +219,7 @@ internal class ContentManager : IContentManager
 			{
 				var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
 
-				if (pdxPackage is not null)
+				if (pdxPackage is not null && (pdxPackage.Id == 0 || !packages.Any(x => x.Id == pdxPackage.Id && x.Version == ((IPackage)pdxPackage).Version)))
 				{
 					packages.Add(pdxPackage);
 				}
