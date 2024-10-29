@@ -137,7 +137,7 @@
   "DisableBurstCompile": "Disable Burst-Compilation",
   "UnreadComment": "New comments on '{0}'",
   "SafeMode": "安全模式",
-  "LaunchInSafeMode": "Launch in Safe Mode",
+  "LaunchInSafeMode": "在安全模式下启动",
   "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
   "SearchTime": "时间",
   "SearchTime_AllTime": "全部时间",
@@ -154,25 +154,25 @@
   "Tag_Zone": "功能区",
   "Tag_Asset Pack": "资产包",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "存档",
+    "Plural": "{0} 个存档"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
-    "Plural": "{0} playsets"
+    "One": "配组",
+    "Plural": "{0} 个配组"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "设置文件",
+    "Plural": "{0} 个设置文件"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folder",
-    "Plural": "{0} mod settings folders"
+    "One": "模组设置文件夹",
+    "Plural": "{0} 个模组设置文件夹"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "本地模组",
+    "Plural": "{0} 个本地模组"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
+  "ParadoxContextFailed": "无法加载 Paradox 后端",
   "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
 }
