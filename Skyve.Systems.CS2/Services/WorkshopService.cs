@@ -1,6 +1,5 @@
 ﻿using Extensions;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
 using PDX.SDK.Contracts;
@@ -1011,7 +1010,7 @@ public class WorkshopService : IWorkshopService
 			var result = ProcessResult(await Context.Mods.Sync());
 
 			if (result.Error != null && result.Error == Mods.PromptNeeded)
-				{
+			{
 				var conflicts = await Context.Mods.GetSyncConflicts();
 
 				ProcessResult(await Context.Mods.Sync(SyncDirection.Downstream));
@@ -1067,8 +1066,15 @@ public class WorkshopService : IWorkshopService
 				Verb = "runas"
 			}).WaitForExit();
 
-			new DirectoryInfo(tempFolder).Delete(true);
-			new DirectoryInfo(playsetFolder).Delete(true);
+			if (Directory.Exists(tempFolder))
+			{
+				new DirectoryInfo(tempFolder).Delete(true);
+			}
+
+			if (Directory.Exists(playsetFolder))
+			{
+				new DirectoryInfo(playsetFolder).Delete(true);
+			}
 		}
 		catch (Exception ex)
 		{

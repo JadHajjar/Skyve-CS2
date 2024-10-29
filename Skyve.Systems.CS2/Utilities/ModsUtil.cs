@@ -104,7 +104,7 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
-		foreach (var mod in mods)
+		foreach (var mod in mods.Distinct(x => x.Id))
 		{
 			orderedMods.Add(new ModLoadOrder
 			{
