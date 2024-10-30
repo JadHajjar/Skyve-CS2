@@ -683,7 +683,7 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await Context.Mods.GetForumThread((int)info.Id, modDetails.PdxModsVersion, int.Parse(regex.Groups[1].Value), page, limit));
+		var result = ProcessResult(await Context.Mods.GetForumThread((int)info.Id, modDetails.Version, int.Parse(regex.Groups[1].Value), page, limit));
 
 		return !result.Success
 			? null
@@ -717,7 +717,7 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await Context.Mods.CreateForumPost((int)info.Id, modDetails.PdxModsVersion, int.Parse(regex.Groups[1].Value), comment.Replace("\r", "").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\"", "'")));
+		var result = ProcessResult(await Context.Mods.CreateForumPost((int)info.Id, modDetails.Version, int.Parse(regex.Groups[1].Value), comment.Replace("\r", "").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\"", "'")));
 
 		return !result.Success ? null : (IModComment)new PdxForumPost(result.Post);
 	}

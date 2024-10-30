@@ -14,6 +14,7 @@ public class PdxBannedMod(int id) : IModDetails
 	public string Name => Id.ToString();
 	public string? Url { get; }
 	public string? Version { get; }
+	public string? VersionName { get; }
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
 	public bool IsBuiltIn { get; }
@@ -22,7 +23,6 @@ public class PdxBannedMod(int id) : IModDetails
 	public string? ThumbnailUrl { get; }
 	public string? ShortDescription { get; }
 	public string? Description { get; }
-	public string? VersionId { get; }
 	public string? SuggestedGameVersion { get; }
 	public DateTime ServerTime { get; }
 	public long ServerSize { get; }

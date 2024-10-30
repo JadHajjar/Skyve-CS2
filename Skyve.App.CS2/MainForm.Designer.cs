@@ -330,6 +330,7 @@ namespace Skyve.App.CS2
 			this.PI_Backup.IconName = dynamicIcon18;
 			this.PI_Backup.SubItems = new SlickControls.PanelItem[0];
 			this.PI_Backup.Text = "BackupCenter";
+			this.PI_Backup.Hidden = true;
 			this.PI_Backup.OnClick += new System.Windows.Forms.MouseEventHandler(this.PI_Backup_OnClick);
 			// 
 			// MainForm

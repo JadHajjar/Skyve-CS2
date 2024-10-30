@@ -25,6 +25,7 @@ public class PdxModRequirement : IPackageRequirement
 		Name = x.DisplayName;
 		IsDlc = x.Type is DependencyType.Dlc;
 		IsOptional = x.Type is DependencyType.Unknown;
+		Version = x.Version;
 	}
 
 	public bool IsDlc { get; set; }
@@ -32,4 +33,5 @@ public class PdxModRequirement : IPackageRequirement
 	public ulong Id { get; set; }
 	public string Name { get; set; }
 	public string? Url { get; set; }
+	public string? Version { get; set; }
 }

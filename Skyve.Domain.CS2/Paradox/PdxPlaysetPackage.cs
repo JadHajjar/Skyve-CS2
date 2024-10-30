@@ -18,6 +18,7 @@ public class PdxPlaysetPackage : IPlaysetPackage
 
 		Id = (ulong)subscribedMod.Id;
 		Name = subscribedMod.DisplayName;
+		Version = subscribedMod.Version;
 		IsEnabled = mod.IsEnabled;
 		LoadOrder = mod.LoadOrder;
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";

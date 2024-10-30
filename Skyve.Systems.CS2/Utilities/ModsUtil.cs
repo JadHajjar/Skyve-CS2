@@ -693,14 +693,9 @@ internal class ModsUtil : IModUtil
 
 		if (result)
 		{
-			var latestVersion = package.GetWorkshopInfo()?.VersionId;
+			var latestVersion = package.GetWorkshopInfo()?.Version;
 
 			modConfig.SetVersion(playset, package.Id, version.IfEmpty(latestVersion));
-
-			if (package.GetPackage() is LocalPdxPackage localPdxPackage)
-			{
-				localPdxPackage.Version = version.IfEmpty(latestVersion);
-			}
 		}
 
 		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)

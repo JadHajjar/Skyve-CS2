@@ -2,8 +2,23 @@
   {
     "Stable": false,
     "Beta": true,
-    "Version": "0.11.0",
+    "Version": "0.11.1",
     "Date": "2024-08-14",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed multiple mods from different playsets showing up as included and enabled at the same time.",
+          "Fixed the compatibility report warning about duplicate mods showing up even if the mods are not included and enabled."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.11.0",
+    "Date": "2024-10-27",
     "ChangeGroups": [
       {
         "Name": "Asset and Content Changes",

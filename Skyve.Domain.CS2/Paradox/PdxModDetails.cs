@@ -20,8 +20,8 @@ public class PdxModDetails : IModDetails
 	{
 		Name = string.Empty;
 		Guid = string.Empty;
-		Version = string.Empty;
-		PdxModsVersion = string.Empty;
+		Version = null;
+		VersionName = string.Empty;
 		Tags = [];
 	}
 
@@ -35,8 +35,8 @@ public class PdxModDetails : IModDetails
 		ShortDescription = mod.ShortDescription;
 		Description = mod.LongDescription;
 		ServerSize = (long)mod.Size;
-		PdxModsVersion = mod.Version;
-		Version = mod.UserModVersion.IfEmpty(mod.Version);
+		Version = mod.Version;
+		VersionName = mod.UserModVersion.IfEmpty(mod.Version);
 		SuggestedGameVersion = mod.RequiredGameVersion;
 		Subscribers = mod.SubscriptionsTotal;
 		HasVoted = hasVoted;
@@ -65,8 +65,8 @@ public class PdxModDetails : IModDetails
 	public string? Description { get; set; }
 	public long ServerSize { get; set; }
 	public string? ForumLink { get; set; }
-	public string PdxModsVersion { get; set; }
-	public string Version { get; set; }
+	public string VersionName { get; set; }
+	public string? Version { get; set; }
 	public int Subscribers { get; set; }
 	public bool IsCollection { get; set; }
 	public int VoteCount { get; set; }
@@ -83,7 +83,6 @@ public class PdxModDetails : IModDetails
 	public string? SuggestedGameVersion { get; set; }
 	bool IPackage.IsLocal { get; }
 	ILocalPackageData? IPackage.LocalData { get; }
-	string? IWorkshopInfo.VersionId => PdxModsVersion;
 	string? IPackageIdentity.Url => $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	bool IPackage.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
 	bool IWorkshopInfo.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
@@ -103,7 +102,7 @@ public class PdxModDetails : IModDetails
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, PdxModsVersion);
+		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, Version ?? "1");
 
 		return true;
 	}

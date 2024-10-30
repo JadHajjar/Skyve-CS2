@@ -88,35 +88,13 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.11.0" />
+  <ModVersion Value="0.11.1" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.11.0
-## Asset and Content Changes
-* Added support for official assets.
-* Skyve will show the full list of assets (prefabs) that are contained within a pack in the Assets view, and in the package's page.
-* Maps and savegames have been removed from the package and asset lists.
-
-## Performance Improvements
-* Improved folder cleanup.
-* Improved the performance and search function of the logs list.
-* Improved the loading speed of content list views.
-* Improved performance in views with lots of images.
-* Fixed stuttering in image-heavy views by moving image loading off the main thread.
-* Fixed stuttering or freezing when the PDX Mods sync process finishes.
-* Moved cached thumbnails folder to reduce the memory load on the game.
-
-## User Interface Enhancements
-* Added the period search to the pdx mods tab.
-* Improved the default thumbnails for content views.
-* Added a PDX Mods Sync status widget to the dashboard.
-* Added a popular weekly mods from PDX Mods widget to the dashboard.
-* Added a missing notification when the paradox backend fails to load, as well as a one-click repair to fix the issue.
-* Replaced the log level filter with a new slider to make it easier to filter logs.
-
-## Bug Fixes
-* Fixed an issue where the file-drop in Help and Logs did not show all logs from a zip file.
-* Fixed an issue where the background service sometimes locked a file and prevented Skyve from logging in.
+# v0.11.1
+## Hotfix
+* Fixed multiple mods from different playsets showing up as included and enabled at the same time.
+* Fixed the compatibility report warning about duplicate mods showing up even if the mods are not included and enabled.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />
