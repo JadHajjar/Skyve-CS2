@@ -138,13 +138,7 @@ internal class ModsUtil : IModUtil
 			return mod is LocalPdxPackage ? modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Name) : IsEnabled(mod);
 		}
 
-		if (!modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id))
-		{
-			return false;
-		}
-
-		return mod.GetPackage() is not LocalPdxPackage localPdxPackage
-|| modConfig.GetVersion(playsetId ?? currentPlayset, mod.Id) == localPdxPackage.Version;
+		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id, mod.Version ?? "1");
 	}
 
 	public bool IsEnabled(IPackageIdentity mod, int? playsetId = null)
@@ -161,13 +155,7 @@ internal class ModsUtil : IModUtil
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
 		}
 
-		if (!modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id))
-		{
-			return false;
-		}
-
-		return mod.GetPackage() is not LocalPdxPackage localPdxPackage
-|| modConfig.GetVersion(playsetId ?? currentPlayset, mod.Id) == localPdxPackage.Version;
+		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id, mod.Version ?? "1");
 	}
 
 	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null)
