@@ -88,13 +88,18 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.11.1" />
+  <ModVersion Value="0.11.2.2" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.11.1
-## Hotfix
-* Fixed multiple mods from different playsets showing up as included and enabled at the same time.
-* Fixed the compatibility report warning about duplicate mods showing up even if the mods are not included and enabled.
+# v0.11.2.2
+*Version and Cache changes*
+
+## Changes
+* Backend changes to versioning of mods.
+* Fixed the mod info cache not loading properly.
+* You might experience a some oddities at first while the cache info is getting recycled.
+* v0.11.2.1 hotfix: Fixed being unable to create log reports.
+* v0.11.2.2 hotfix: Fixed mod info cache not updating properly.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

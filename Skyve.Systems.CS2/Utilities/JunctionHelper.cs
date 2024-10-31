@@ -25,6 +25,8 @@ public static class JunctionHelper
 			FileName = "cmd.exe"
 		}).WaitForExit();
 
+		new DirectoryInfo(targetFolder).Attributes |= FileAttributes.System | FileAttributes.ReadOnly;
+
 		StartService();
 	}
 

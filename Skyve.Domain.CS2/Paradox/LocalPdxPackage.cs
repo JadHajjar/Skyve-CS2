@@ -54,7 +54,6 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		Url = Id == 0 ? null : $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
-	public string VersionName { get; set; }
 	public string DisplayName { get; set; }
 	public string Author { get; set; }
 	public string ShortDescription { get; set; }
@@ -88,8 +87,8 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
-	string PdxIMod.Version { get => Version ?? "1"; set => Version = value; }
-	string PdxIMod.UserModVersion { get => VersionName; set => VersionName = value; }
+	string PdxIMod.Version { get => Version ?? ""; set => Version = value; }
+	string PdxIMod.UserModVersion { get => VersionName ?? ""; set => VersionName = value; }
 	bool IWorkshopInfo.IsPartialInfo => true;
 	public IEnumerable<IThumbnailObject> Images => LocalData.Images;
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
@@ -104,7 +103,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version ?? "1");
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version ?? "");
 
 		return true;
 	}

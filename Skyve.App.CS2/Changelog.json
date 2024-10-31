@@ -2,6 +2,40 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.11.2.2",
+    "Date": "2024-10-31",
+    "Tagline": "Version and Cache changes",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Backend changes to versioning of mods.",
+          "Fixed the mod info cache not loading properly.",
+          "You might experience a some oddities at first while the cache info is getting recycled.",
+          "v0.11.2.1 hotfix: Fixed being unable to create log reports.",
+          "v0.11.2.2 hotfix: Fixed mod info cache not updating properly."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.11.2.1",
+    "Date": "2024-10-31",
+    "Tagline": "Version and Cache changes",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed being unable to create log reports."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.11.2",
     "Date": "2024-10-31",
     "Tagline": "Version and Cache changes",

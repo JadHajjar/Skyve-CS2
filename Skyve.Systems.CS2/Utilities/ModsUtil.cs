@@ -138,7 +138,7 @@ internal class ModsUtil : IModUtil
 			return mod is LocalPdxPackage ? modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Name) : IsEnabled(mod);
 		}
 
-		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id, mod.Version ?? "1");
+		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id, mod.Version ?? "");
 	}
 
 	public bool IsEnabled(IPackageIdentity mod, int? playsetId = null)
@@ -155,7 +155,7 @@ internal class ModsUtil : IModUtil
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
 		}
 
-		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id, mod.Version ?? "1");
+		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id, mod.Version ?? "");
 	}
 
 	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null)
@@ -676,7 +676,7 @@ internal class ModsUtil : IModUtil
 
 		foreach (var item in ids)
 		{
-			dictionary[(int)item.Id] = item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version;
+			dictionary[(int)item.Id] = item.Version == "" || item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version;
 		}
 
 		await _workshopService.WaitUntilReady();
