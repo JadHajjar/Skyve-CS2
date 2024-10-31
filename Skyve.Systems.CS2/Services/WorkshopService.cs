@@ -118,12 +118,13 @@ public class WorkshopService : IWorkshopService
 			Environment = BackendEnvironment.Live,
 			TelemetryDebugEnabled = false,
 			Ecosystem = ecoSystem,
-			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/{typeof(WorkshopService).Assembly.GetName().Version}" } },
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
 #if DEBUG
 			LogLevel = LogLevel.L1_Debug,
+			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/{typeof(WorkshopService).Assembly.GetName().Version}-test" } },
 #else
 			LogLevel = LogLevel.L2_Warning,
+			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/{typeof(WorkshopService).Assembly.GetName().Version}" } },
 #endif
 		};
 
@@ -289,7 +290,7 @@ public class WorkshopService : IWorkshopService
 		return identity.Id <= 0 ? null : await _modProcessor.Get((int)identity.Id, true);
 	}
 
-	internal async Task<IModDetails?> GetInfoAsync(int id)
+	internal async Task<PdxModDetails?> GetInfoAsync(int id)
 	{
 		if (Context is null || id <= 0 || !IsLoggedIn)
 		{

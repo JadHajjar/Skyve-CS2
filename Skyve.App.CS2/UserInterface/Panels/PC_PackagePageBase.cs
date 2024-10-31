@@ -70,8 +70,6 @@ public partial class PC_PackagePageBase : PanelContent
 			Package.Version = DD_Version.SelectedItem?.VersionId;
 			await _packageUtil.SetIncluded(Package, true);
 			await Task.Delay(1000);
-			await _workshopService.RunSync();
-			await Task.Delay(1000);
 			DD_Version.Loading = false;
 		}
 	}

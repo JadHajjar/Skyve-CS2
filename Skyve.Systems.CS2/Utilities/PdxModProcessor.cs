@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
-internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
+internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 {
 	public const string CACHE_FILE = "PdxModsCache.json";
 
@@ -30,10 +30,10 @@ internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
 		return ConnectionHandler.IsConnected;
 	}
 
-	protected override async Task<(Dictionary<int, IModDetails>, bool)> ProcessItems(List<int> entities)
+	protected override async Task<(Dictionary<int, PdxModDetails>, bool)> ProcessItems(List<int> entities)
 	{
 		var failed = false;
-		var results = new Dictionary<int, IModDetails>();
+		var results = new Dictionary<int, PdxModDetails>();
 
 		foreach (var item in entities)
 		{
@@ -59,7 +59,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
 		}
 	}
 
-	protected override void CacheItems(Dictionary<int, IModDetails> results)
+	protected override void CacheItems(Dictionary<int, PdxModDetails> results)
 	{
 		try
 		{
@@ -68,7 +68,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
 		catch { }
 	}
 
-	private static Dictionary<int, IModDetails>? GetCachedInfo(SaveHandler saveHandler)
+	private static Dictionary<int, PdxModDetails>? GetCachedInfo(SaveHandler saveHandler)
 	{
 		try
 		{
@@ -76,18 +76,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
 
 			saveHandler.Load(out Dictionary<int, PdxModDetails>? dic, CACHE_FILE);
 
-			if (dic is null)
-			{
-				return null;
-			}
-
-			var iDic = new Dictionary<int, IModDetails>();
-			foreach (var item in dic)
-			{
-				iDic[item.Key] = item.Value;
-			}
-
-			return iDic;
+			return dic;
 		}
 		catch
 		{
