@@ -1,16 +1,16 @@
 {
-  "StartCities": "Abrir Cities: Skylines",
+  "StartCities": "Abrir Cities: Skylines II",
   "StopCities": "Fechar Cities: Skylines",
   "NoWorkshop": "Desativar pacotes da oficina",
-  "ExcludeAll": "Remover todos os itens do teu playset ativo",
-  "ExcludeAllDisabled": "Remover todos os itens desativados do teu playset ativo",
-  "IncludeAll": "Adicionar todos os itens ao teu playset ativo",
-  "ExcludeAllFiltered": "Remover itens filtrados do teu playset ativo",
-  "ExcludeAllDisabledFiltered": "Remover itens filtrados e desativados do teu playset ativo",
-  "IncludeAllFiltered": "Adicionar itens filtrados ao teu playset ativo",
-  "ExcludeAllSelected": "Remover itens selecionados do teu playset ativo",
-  "ExcludeAllDisabledSelected": "Remover itens selecionados e desativados do teu playset ativo",
-  "IncludeAllSelected": "Adicionar itens selecionados ao teu playset ativo",
+  "ExcludeAll": "Remover todos os itens do teu conjunto ativo",
+  "ExcludeAllDisabled": "Remover todos os itens desativados do teu conjunto ativo",
+  "IncludeAll": "Adicionar todos os itens ao teu conjunto ativo",
+  "ExcludeAllFiltered": "Remover itens filtrados do teu conjunto ativo",
+  "ExcludeAllDisabledFiltered": "Remover itens filtrados e desativados do teu conjunto ativo",
+  "IncludeAllFiltered": "Adicionar itens filtrados ao teu conjunto ativo",
+  "ExcludeAllSelected": "Remover itens selecionados do teu conjunto ativo",
+  "ExcludeAllDisabledSelected": "Remover itens selecionados e desativados do teu conjunto ativo",
+  "IncludeAllSelected": "Adicionar itens selecionados ao teu conjunto ativo",
   "ViewOnWorkshop": "Ver no PDX Mods",
   "CopyWorkshopLink": {
     "One": "Copiar link do PDX Mods",
@@ -25,19 +25,19 @@
     "Plural": "Copiar os IDs dos pacotes selecionados do PDX Mods"
   },
   "LaunchThroughCities": "Iniciar através do Cities2.exe",
-  "IncludeItem": "Adicionar ao teu playset ativo",
-  "ExcludeItem": "Remover do teu playset ativo",
+  "IncludeItem": "Adicionar ao teu conjunto ativo",
+  "ExcludeItem": "Remover do teu conjunto ativo",
   "SubscribeToItem": {
-    "One": "Adicionar ao teu playset ativo",
-    "Plural": "Adicionar estes ao teu playset ativo"
+    "One": "Adicionar ao teu conjunto ativo",
+    "Plural": "Adicionar estes ao teu conjunto ativo"
   },
   "IncludeThisItemInAllPlaysets": {
-    "One": "Adicionar a todos os teus playsets",
-    "Plural": "Adicionar os itens selecionados a todos os teus playsets"
+    "One": "Adicionar a todos os teus conjuntos",
+    "Plural": "Adicionar os itens selecionados a todos os teus conjuntos"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Remover de todos os teus playsets",
-    "Plural": "Remover os itens selecionados de todos os teus playsets"
+    "One": "Remover de todos os teus conjuntos",
+    "Plural": "Remover os itens selecionados de todos os teus conjuntos"
   },
   "PackageIsRemoved": "'{0}' foi removido do PDX Mods",
   "PackageIsUnknown": "A informação do PDX Mods ainda não foi carregada para '{0}'",
@@ -59,9 +59,9 @@
   "LoginFailed": "Falha ao iniciar sessão, verifica se o teu email e palavra-passe estão corretos. Ou tenta novamente mais tarde.",
   "RememberMeInfo": "* As tuas credenciais serão encriptadas e guardadas no teu computador.",
   "LoginDisclaimer": "O processo de login é gerido de forma segura através dos serviços da Paradox e nenhum dado é partilhado com o Skyve.",
-  "DropNewPlayset": "Arrasta ou seleciona um ficheiro de playset aqui para o importar",
+  "DropNewPlayset": "Arrasta ou seleciona um ficheiro de conjunto aqui para o importar",
   "FilterIncludedByDefault": "Ativar filtro 'Incluído' para conteúdo local por padrão",
-  "FilterIncludedByDefault_Tip": "Mostra apenas o conteúdo local que está incluído no teu playset ativo por padrão.",
+  "FilterIncludedByDefault_Tip": "Mostra apenas o conteúdo local que está incluído no teu conjunto ativo por padrão.",
   "RunSetupOrRunApp": "Não podes executar o Skyve a partir desta pasta. Se já o instalaste, executa-o a partir da lista de Programas.\r\n\r\nCaso contrário, clica em 'Ok' para executar a instalação.",
   "CantRunAppFromHere": "Não podes executar o Skyve a partir desta pasta.\r\n\r\nExecuta a aplicação a partir da lista de Programas ou executa a instalação do Skyve a partir da pasta do mod.",
   "UpdateAvailable": "Atualização disponível",
@@ -78,7 +78,7 @@
   "LogsToPlayerLog": "Copiar logs para Player.log",
   "InvalidFolderSettings": "Configuração inválida detetada",
   "InvalidFolderSettingsInfo": "O Skyve não conseguiu detetar corretamente a pasta de dados do Cities: Skylines II.\r\n\r\nClica aqui para selecionar manualmente a pasta de dados.",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new conjunto with only Skyve included in it.",
   "InvalidFolderSettingsFail": "O caminho selecionado não é correto. Por favor, seleciona a pasta 'Cities Skylines II' no teu app data.",
   "DefaultLocation": "Localização padrão dos dados do utilizador",
   "JunctionTitle": "Localização de conteúdo personalizado",
@@ -87,12 +87,12 @@
   "ChangeLocation": "Alterar localização do conteúdo",
   "ResetLocation": "Redefinir localização",
   "JunctionRestart": "O Skyve e o Cities: Skylines II serão fechados durante este processo.\r\n\r\nO Skyve será reiniciado automaticamente após a conclusão.",
-  "PlaysetAlreadyImported": "Este playset já está presente na tua lista de playsets.",
+  "PlaysetAlreadyImported": "Este conjunto já está presente na tua lista de conjuntos.",
   "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
   "CouldNotRetrieveMods": "Não foi possível obter os dados dos mods",
   "NewGameUpdate": "Nova atualização do Cities: Skylines II",
   "NewGameUpdateInfo": "O patch {0} está agora disponível.\r\nCertifica-te de verificar o teu relatório de compatibilidade antes de iniciares o jogo.",
-  "PdxSyncInfo": "O processo de Sincronização PDX trata de descarregar e atualizar os teus mods, assim como de sincronizar as definições e playsets que tens entre o teu computador local e os serviços PDX Mods.",
+  "PdxSyncInfo": "O processo de Sincronização PDX trata de descarregar e atualizar os teus mods, assim como de sincronizar as definições e conjuntos que tens entre o teu computador local e os serviços PDX Mods.",
   "SyncOngoing": "A sincronização está em curso",
   "PdxSync": "Sincronização PDX Mods",
   "RunSync": "Iniciar sincronização",
@@ -115,8 +115,8 @@
     "Plural": "Os pacotes que estás a adicionar têm dependências"
   },
   "AddingDependencies": {
-    "One": "'{1}' é necessário para o(s) mod(s) que estás a adicionar.\r\n\r\nGostarias de também adicionar '{1}' ao teu playset?",
-    "Plural": "O(s) mod(s) que estás a adicionar têm {0} dependências: {1}\r\n\r\nGostarias de também adicioná-las ao teu playset?"
+    "One": "'{1}' é necessário para o(s) mod(s) que estás a adicionar.\r\n\r\nGostarias de também adicionar '{1}' ao teu conjunto?",
+    "Plural": "O(s) mod(s) que estás a adicionar têm {0} dependências: {1}\r\n\r\nGostarias de também adicioná-las ao teu conjunto?"
   },
   "Dependency_Automatic": "Adicionar dependências automaticamente",
   "Dependency_Ask": "Perguntar sempre",
@@ -124,7 +124,7 @@
   "DependencyResolution": "Resolução de dependências",
   "DependencyResolution_Tip": "Escolhe o que acontecerá quando adicionares um mod com dependências que não tens.",
   "SyncOngoingLaunchGame": "O Skyve ainda está a sincronizar os teus mods, gostarias de iniciar o jogo quando os mods estiverem prontos?\r\nSeleciona 'Não' para iniciar o jogo de qualquer forma.",
-  "StartingWithNoPlayset": "Estás prestes a iniciar o jogo sem um playset ativo.\r\nIsto significa que nenhum mod estará ativado no jogo.",
+  "StartingWithNoPlayset": "Estás prestes a iniciar o jogo sem um conjunto ativo.\r\nIsto significa que nenhum mod estará ativado no jogo.",
   "SyncBeforeLaunching": "Sincronizar mods antes de iniciar o jogo",
   "SyncBeforeLaunching_Tip": "Executa uma sincronização de mods antes de iniciar para garantir que todos os mods estão atualizados.",
   "Sorting_Best": "Mais popular",
@@ -158,8 +158,8 @@
     "Plural": "{0} jogos guardados"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
-    "Plural": "{0} playsets"
+    "One": "Conjunto",
+    "Plural": "{0} conjuntos"
   },
   "Backup_SettingsFiles": {
     "One": "Ficheiros de definições",
