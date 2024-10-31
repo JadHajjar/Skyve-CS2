@@ -1,9 +1,5 @@
-﻿using Skyve.Domain.Systems;
-using Skyve.Systems;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 
 namespace Skyve.Domain.CS2.Content;
@@ -18,7 +14,8 @@ public class Package : IPackage, IEquatable<Package?>
 	public bool IsBuiltIn { get; set; }
 	public LocalPackageData LocalData { get; private set; }
 	ILocalPackageData? IPackage.LocalData => LocalData;
-	public string? Version { get; protected set; }
+	public string? Version { get; set; }
+	public string? VersionName { get; set; }
 
 	public Package(string folder, IAsset[] assets, IThumbnailObject[] images, bool isCodeMod, string? version, string? versionName, string? filePath, string? suggestedGameVersion)
 	{
@@ -26,6 +23,7 @@ public class Package : IPackage, IEquatable<Package?>
 		IsCodeMod = isCodeMod;
 		IsLocal = true;
 		Version = version;
+		VersionName = versionName;
 		LocalData = new LocalPackageData(this, assets, images, folder, versionName, filePath ?? folder, suggestedGameVersion);
 	}
 
@@ -34,6 +32,7 @@ public class Package : IPackage, IEquatable<Package?>
 		IsCodeMod = isCodeMod;
 		IsLocal = true;
 		Version = version;
+		VersionName = versionName;
 		LocalData = new LocalPackageData(this, assets, LocalData.Images, LocalData.Folder, versionName, filePath ?? LocalData.Folder, suggestedGameVersion);
 	}
 

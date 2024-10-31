@@ -2,12 +2,10 @@
 
 using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Systems;
-using Skyve.Systems.CS2.Domain;
 using Skyve.Systems.CS2.Services;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
@@ -76,9 +74,20 @@ internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
 		{
 			var path = saveHandler.GetPath(CACHE_FILE);
 
-			saveHandler.Load(out Dictionary<int, IModDetails>? dic, CACHE_FILE);
+			saveHandler.Load(out Dictionary<int, PdxModDetails>? dic, CACHE_FILE);
 
-			return dic;
+			if (dic is null)
+			{
+				return null;
+			}
+
+			var iDic = new Dictionary<int, IModDetails>();
+			foreach (var item in dic)
+			{
+				iDic[item.Key] = item.Value;
+			}
+
+			return iDic;
 		}
 		catch
 		{

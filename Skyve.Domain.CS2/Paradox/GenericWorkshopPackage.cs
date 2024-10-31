@@ -32,7 +32,8 @@ public class PdxModIdentityPackage : IPackage
 	public ulong Id { get; }
 	public string Name { get; }
 	public string? Url { get; }
-	public string? Version { get; }
+	public string? Version { get; set; }
+	public string? VersionName { get; }
 
 	public override string ToString()
 	{

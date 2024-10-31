@@ -211,16 +211,11 @@ internal class ModsUtil : IModUtil
 
 		var tempConfig = modConfig.CreateFragment(playset);
 		var result = value
-			? await _subscriptionsManager.Subscribe(mods, playset)
-			: await _subscriptionsManager.UnSubscribe(mods, playset);
+			? await Subscribe(mods, playset)
+			: await UnSubscribe(mods, playset);
 
 		if (result)
 		{
-			//if (value)
-			//{
-			//	await SetEnabled(mods, !_settings.UserSettings.DisableNewModsByDefault, playsetId);
-			//}
-
 			foreach (var item in mods)
 			{
 				if (item.Id <= 0)
@@ -625,12 +620,12 @@ internal class ModsUtil : IModUtil
 
 		foreach (var grp in itemsToExclude.GroupBy(x => x.Item1))
 		{
-			await _subscriptionsManager.UnSubscribe(grp.Select(x => (IPackageIdentity)new GenericPackageIdentity(x.Item2)), grp.Key);
+			await UnSubscribe(grp.Select(x => (IPackageIdentity)new GenericPackageIdentity(x.Item2)), grp.Key);
 		}
 
 		foreach (var grp in itemsToInclude.GroupBy(x => x.Item1))
 		{
-			await _subscriptionsManager.Subscribe(grp.Select(x => (IPackageIdentity)new GenericPackageIdentity(x.Item2)), grp.Key);
+			await Subscribe(grp.Select(x => (IPackageIdentity)new GenericPackageIdentity(x.Item2)), grp.Key);
 		}
 
 		foreach (var grp in itemsToEnable.GroupBy(x => x.Item1))
@@ -656,43 +651,81 @@ internal class ModsUtil : IModUtil
 
 	public string? GetSelectedVersion(IPackageIdentity package, int? playsetId = null)
 	{
-		return package.GetPackage() is LocalPdxPackage localPdxPackage
-			? localPdxPackage.Version
-			: modConfig.GetVersion(playsetId ?? currentPlayset, package.Id);
+		return modConfig.GetVersion(playsetId ?? currentPlayset, package.Id);
 	}
 
-	public async Task SetVersion(IPackageIdentity package, string version, int? playsetId = null)
+	private async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null)
 	{
 		if (!_workshopService.IsAvailable)
 		{
-			return;
+			return false;
 		}
 
-		var playset = playsetId ?? currentPlayset;
+		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
 
-		if (playset <= 0)
+		if (currentPlayset == 0)
 		{
-			return;
+			return false;
+		}
+
+		_subscriptionsManager.AddSubscribing(ids);
+
+		_notifier.OnRefreshUI(true);
+
+		var dictionary = new Dictionary<int, string?>();
+
+		foreach (var item in ids)
+		{
+			dictionary[(int)item.Id] = item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version;
 		}
 
 		await _workshopService.WaitUntilReady();
 
-		var result = await _workshopService.SubscribeBulk([new KeyValuePair<int, string?>((int)package.Id, version)], playset);
-
-		if (result)
+		bool result;
+		using (_workshopService.Lock)
 		{
-			var latestVersion = package.GetWorkshopInfo()?.Version;
-
-			modConfig.SetVersion(playset, package.Id, version.IfEmpty(latestVersion));
+			result = await _workshopService.SubscribeBulk(dictionary, currentPlayset);
 		}
 
-		if (_notifier.IsApplyingPlayset || _notifier.IsBulkUpdating)
-		{
-			return;
-		}
+		_subscriptionsManager.RemoveSubscribing(ids);
 
-		_notifier.OnWorkshopSyncEnded();
-		_notifier.OnInclusionUpdated();
 		_notifier.OnRefreshUI(true);
+		_notifier.OnPlaysetChanged();
+
+		return result;
+	}
+
+	private async Task<bool> UnSubscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null)
+	{
+		if (!_workshopService.IsAvailable)
+		{
+			return false;
+		}
+
+		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
+
+		if (currentPlayset == 0)
+		{
+			return false;
+		}
+
+		_subscriptionsManager.AddSubscribing(ids);
+
+		_notifier.OnRefreshUI(true);
+
+		await _workshopService.WaitUntilReady();
+
+		bool result;
+		using (_workshopService.Lock)
+		{
+			result = await _workshopService.UnsubscribeBulk(ids.Select(x => (int)x.Id).Distinct(), currentPlayset);
+		}
+
+		_subscriptionsManager.RemoveSubscribing(ids);
+
+		_notifier.OnRefreshUI(true);
+		_notifier.OnPlaysetChanged();
+
+		return result;
 	}
 }

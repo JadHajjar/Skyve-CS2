@@ -13,7 +13,7 @@ public class PdxBannedMod(int id) : IModDetails
 	public ulong Id { get; } = (ulong)id;
 	public string Name => Id.ToString();
 	public string? Url { get; }
-	public string? Version { get; }
+	public string? Version { get; set; }
 	public string? VersionName { get; }
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
@@ -40,6 +40,7 @@ public class PdxBannedMod(int id) : IModDetails
 	public IEnumerable<ILink> Links { get; } = [];
 	public bool IsPartialInfo { get; }
 	public DateTime Timestamp { get; } = DateTime.Now.AddDays(15);
+	public string? LatestVersion { get; }
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{

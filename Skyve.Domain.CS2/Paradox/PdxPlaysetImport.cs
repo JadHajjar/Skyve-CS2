@@ -34,6 +34,7 @@ public class PdxPlaysetImport : ITemporaryPlayset
 		bool IPackage.IsCodeMod { get; }
 		bool IPackage.IsBuiltIn { get; }
 		bool IPackage.IsLocal => Id <= 0;
+		string? IPackage.VersionName { get; }
 		ILocalPackageData? IPackage.LocalData { get; }
 	}
 

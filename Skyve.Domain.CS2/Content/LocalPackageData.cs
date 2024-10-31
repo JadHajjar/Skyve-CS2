@@ -69,5 +69,5 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject
 	ulong IPackageIdentity.Id => Package.Id;
 	string IPackageIdentity.Name => Package.Name;
 	string? IPackageIdentity.Url => Package.Url;
-	string? IPackageIdentity.Version => Package.Version;
+	string? IPackageIdentity.Version { get => Package.Version; set => Package.Version = value; }
 }
