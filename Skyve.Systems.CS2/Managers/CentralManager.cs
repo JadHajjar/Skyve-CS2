@@ -251,6 +251,11 @@ internal class CentralManager : ICentralManager
 					}
 
 					break;
+
+				case "safemode":
+					_citiesManager.RunSafeMode();
+					break;
+
 				case "logreport":
 					_interfaceService.OpenLogReport(actions.TryGet(1) == "save");
 					break;

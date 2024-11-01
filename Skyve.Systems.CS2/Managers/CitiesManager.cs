@@ -92,9 +92,9 @@ internal class CitiesManager : ICitiesManager
 
 	public async void Launch()
 	{
-		var workshopService = _serviceProvider.GetService<IWorkshopService>();
+		var notifier = _serviceProvider.GetService<INotifier>();
 
-		if (!workshopService!.IsReady)
+		if (notifier!.IsWorkshopSyncInProgress)
 		{
 			switch (MessagePrompt.Show(LocaleCS2.SyncOngoingLaunchGame, LocaleCS2.SyncOngoing, PromptButtons.YesNoCancel, PromptIcons.Hand))
 			{
@@ -103,7 +103,7 @@ internal class CitiesManager : ICitiesManager
 				case System.Windows.Forms.DialogResult.Yes:
 					_logger.Info("Waiting for Synchronize to finish before launching the game");
 
-					while (!workshopService.IsReady)
+					while (notifier!.IsWorkshopSyncInProgress)
 					{
 						await Task.Delay(50);
 					}
@@ -114,7 +114,7 @@ internal class CitiesManager : ICitiesManager
 		{
 			_logger.Info("Running Synchronize before launching the game");
 
-			await workshopService.RunSync();
+			await _serviceProvider.GetService<IWorkshopService>()!.RunSync();
 		}
 
 		var playsetManager = _serviceProvider.GetService<IPlaysetManager>();

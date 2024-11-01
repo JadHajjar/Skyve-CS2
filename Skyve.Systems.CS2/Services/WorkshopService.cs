@@ -940,11 +940,12 @@ public class WorkshopService : IWorkshopService
 			return;
 		}
 
+		syncOccurred = true;
+
 		try
 		{
 			await _processor.Queue(async () =>
 			{
-
 				_notifier.IsWorkshopSyncInProgress = true;
 				_notifier.OnWorkshopSyncStarted();
 
