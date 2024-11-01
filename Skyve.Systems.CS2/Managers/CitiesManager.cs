@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace Skyve.Systems.CS2.Managers;
@@ -101,7 +102,11 @@ internal class CitiesManager : ICitiesManager
 					return;
 				case System.Windows.Forms.DialogResult.Yes:
 					_logger.Info("Waiting for Synchronize to finish before launching the game");
-					await workshopService.WaitUntilReady();
+
+					while (!workshopService.IsReady)
+					{
+						await Task.Delay(50);
+					}
 					break;
 			}
 		}

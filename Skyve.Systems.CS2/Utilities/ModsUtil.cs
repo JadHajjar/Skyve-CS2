@@ -24,6 +24,7 @@ internal class ModsUtil : IModUtil
 	private int currentPlayset;
 	private int currentHistoryIndex;
 	private ModStateCollection modConfig = new();
+	private Dictionary<int, int> _orderedMods = [];
 	private readonly List<ModStateCollection> _modConfigHistory = [];
 	private readonly List<ulong> _enabling = [];
 
@@ -51,7 +52,7 @@ internal class ModsUtil : IModUtil
 		_serviceProvider = serviceProvider;
 		_interfaceService = interfaceService;
 		_notifier.CompatibilityDataLoaded += BuildLoadOrder;
-		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
+		_notifier.PlaysetChanged += Notifier_PlaysetChanged;
 		_notifier.WorkshopSyncEnded += async () => await RefreshModConfig();
 	}
 
@@ -60,7 +61,7 @@ internal class ModsUtil : IModUtil
 		return _enabling.Contains(package.Id);
 	}
 
-	private void _notifier_PlaysetChanged()
+	private void Notifier_PlaysetChanged()
 	{
 		currentPlayset = _serviceProvider.GetService<IPlaysetManager>()?.CurrentPlayset?.Id ?? 0;
 	}
@@ -112,6 +113,8 @@ internal class ModsUtil : IModUtil
 				LoadOrder = index++,
 			});
 		}
+
+		_orderedMods = orderedMods.ToDictionary(x => x.Mod.Id, x => x.LoadOrder);
 
 		await _workshopService.SetLoadOrder(orderedMods, playset);
 	}
@@ -209,7 +212,7 @@ internal class ModsUtil : IModUtil
 			}
 		}
 
-		var tempConfig = modConfig.CreateFragment(playset);
+		//var tempConfig = modConfig.CreateFragment(playset);
 		var result = value
 			? await Subscribe(mods, playset)
 			: await UnSubscribe(mods, playset);
@@ -225,7 +228,8 @@ internal class ModsUtil : IModUtil
 
 				if (value)
 				{
-					modConfig.SetEnabled(playset, item.Id, !_settings.UserSettings.DisableNewModsByDefault);
+					modConfig.SetEnabled(playset, item.Id, true);
+					modConfig.SetVersion(playset, item.Id, item.Version ?? "");
 				}
 				else
 				{
@@ -283,13 +287,7 @@ internal class ModsUtil : IModUtil
 
 		var modKeys = mods.ToList(x => (int)x.Id).DistinctList();
 
-		await _workshopService.WaitUntilReady();
-
-		bool result;
-		using (_workshopService.Lock)
-		{
-			result = await _workshopService.SetEnableBulk(modKeys, playset, value);
-		}
+		var result = await _workshopService.SetEnableBulk(modKeys, playset, value);
 
 		if (result)
 		{
@@ -429,6 +427,8 @@ internal class ModsUtil : IModUtil
 						&& !list.Any(x => x.Id == item.Id)
 						&& !IsEnabled(item, playsetId))
 					{
+						item.Version = null;
+
 						list.Add(item);
 					}
 				}
@@ -442,15 +442,10 @@ internal class ModsUtil : IModUtil
 
 	public int GetLoadOrder(IPackage package)
 	{
-		//if (package.LocalData?.Folder is null)
-		//{
-		//	return 0;
-		//}
-
-		//if (modConfig.TryGetValue(package.LocalData.Folder, out var info))
-		//{
-		//	return info.LoadOrder;
-		//}
+		if (_orderedMods.TryGetValue((int)package.Id, out var order))
+		{
+			return order;
+		}
 
 		return 0;
 	}
@@ -533,8 +528,6 @@ internal class ModsUtil : IModUtil
 		var itemsToDisable = new List<(int, ulong)>();
 		var itemsToEnable = new List<(int, ulong)>();
 
-		await _workshopService.WaitUntilReady();
-
 		foreach (var key in modConfigNew.Keys)
 		{
 			if (!modConfigOld.TryGetValue(key, out var dic))
@@ -616,8 +609,6 @@ internal class ModsUtil : IModUtil
 
 		_notifier.OnRefreshUI(true);
 
-		await _workshopService.WaitUntilReady();
-
 		foreach (var grp in itemsToExclude.GroupBy(x => x.Item1))
 		{
 			await UnSubscribe(grp.Select(x => (IPackageIdentity)new GenericPackageIdentity(x.Item2)), grp.Key);
@@ -679,13 +670,7 @@ internal class ModsUtil : IModUtil
 			dictionary[(int)item.Id] = item.Version == "" || item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version;
 		}
 
-		await _workshopService.WaitUntilReady();
-
-		bool result;
-		using (_workshopService.Lock)
-		{
-			result = await _workshopService.SubscribeBulk(dictionary, currentPlayset);
-		}
+		var result = await _workshopService.SubscribeBulk(dictionary, currentPlayset);
 
 		_subscriptionsManager.RemoveSubscribing(ids);
 
@@ -713,13 +698,7 @@ internal class ModsUtil : IModUtil
 
 		_notifier.OnRefreshUI(true);
 
-		await _workshopService.WaitUntilReady();
-
-		bool result;
-		using (_workshopService.Lock)
-		{
-			result = await _workshopService.UnsubscribeBulk(ids.Select(x => (int)x.Id).Distinct(), currentPlayset);
-		}
+		var result = await _workshopService.UnsubscribeBulk(ids.Select(x => (int)x.Id).Distinct(), currentPlayset);
 
 		_subscriptionsManager.RemoveSubscribing(ids);
 

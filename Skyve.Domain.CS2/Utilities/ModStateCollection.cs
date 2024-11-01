@@ -39,7 +39,7 @@ public class ModStateCollection
 
 		return _versionConfig.TryGetValue(playset, out var versionDic)
 			&& versionDic.TryGetValue(modId, out var ver)
-			&& ver == version;
+			&& (ver == version || ver == "");
 	}
 
 	public bool IsIncluded(int playset, string modName)
@@ -85,8 +85,7 @@ public class ModStateCollection
 
 		return _versionConfig.TryGetValue(playset, out var versionDic)
 			&& versionDic.TryGetValue(modId, out var ver)
-			&& ver == version;
-		;
+			&& (ver == version || ver == "");
 	}
 
 	public bool IsEnabled(int playset, string modName)
@@ -185,27 +184,27 @@ public class ModStateCollection
 		return finalDic;
 	}
 
-	public Fragment CreateFragment(int playsetId)
-	{
-		return new Fragment(playsetId
-			, _enabledConfig.TryGetValue(playsetId, out var enabledConfig) ? enabledConfig : []
-			, _versionConfig.TryGetValue(playsetId, out var versionConfig) ? versionConfig : []);
-	}
+	//public Fragment CreateFragment(int playsetId)
+	//{
+	//	return new Fragment(playsetId
+	//		, _enabledConfig.TryGetValue(playsetId, out var enabledConfig) ? enabledConfig : []
+	//		, _versionConfig.TryGetValue(playsetId, out var versionConfig) ? versionConfig : []);
+	//}
 
-	public class Fragment
-	{
-		private readonly Dictionary<ulong, bool> _enabledConfig;
-		private readonly Dictionary<ulong, string> _versionConfig;
+	//public class Fragment
+	//{
+	//	private readonly Dictionary<ulong, bool> _enabledConfig;
+	//	private readonly Dictionary<ulong, string> _versionConfig;
 
-		public int PlaysetId { get; }
+	//	public int PlaysetId { get; }
 
-		public Fragment(int playsetId, Dictionary<ulong, bool> enabledConfig, Dictionary<ulong, string> versionConfig)
-		{
-			PlaysetId = playsetId;
-			_enabledConfig = new(enabledConfig);
-			_versionConfig = new(versionConfig);
-		}
-	}
+	//	public Fragment(int playsetId, Dictionary<ulong, bool> enabledConfig, Dictionary<ulong, string> versionConfig)
+	//	{
+	//		PlaysetId = playsetId;
+	//		_enabledConfig = new(enabledConfig);
+	//		_versionConfig = new(versionConfig);
+	//	}
+	//}
 
 	public override bool Equals(object obj)
 	{
