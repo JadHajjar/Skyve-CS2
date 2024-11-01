@@ -2,18 +2,31 @@
   {
     "Stable": false,
     "Beta": true,
-    "Version": "0.11.2.2",
-    "Date": "2024-10-31",
+    "Version": "0.11.3",
+    "Date": "2024-11-01",
     "Tagline": "Version and Cache changes",
     "ChangeGroups": [
       {
         "Name": "Changes",
         "Changes": [
-          "Backend changes to versioning of mods.",
-          "Fixed the mod info cache not loading properly.",
-          "You might experience a some oddities at first while the cache info is getting recycled.",
-          "v0.11.2.1 hotfix: Fixed being unable to create log reports.",
-          "v0.11.2.2 hotfix: Fixed mod info cache not updating properly."
+          "Backend improvements to better handle consecutive actions related to PDX Mods.",
+          "Added Safe-mode shortcut URL: https://skyve-mod.com/app/safemode",
+          "Various fixes to subscribing and enabling mods and changing versions.",
+          "Fixed not being able to export a Log Report."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.11.2.2",
+    "Date": "2024-10-31",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed mod info cache not updating properly."
         ]
       }
     ]
@@ -23,10 +36,9 @@
     "Beta": true,
     "Version": "0.11.2.1",
     "Date": "2024-10-31",
-    "Tagline": "Version and Cache changes",
     "ChangeGroups": [
       {
-        "Name": "Changes",
+        "Name": "Hotfix",
         "Changes": [
           "Fixed being unable to create log reports."
         ]

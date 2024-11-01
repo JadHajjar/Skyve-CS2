@@ -394,6 +394,5 @@ public partial class PC_BackupCenter : PanelContent
 
 	internal void SelectBackup(string restoreBackup)
 	{
-		throw new NotImplementedException();
 	}
 }
