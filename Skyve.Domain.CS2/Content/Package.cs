@@ -1,9 +1,5 @@
-﻿using Skyve.Domain.Systems;
-using Skyve.Systems;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 
 namespace Skyve.Domain.CS2.Content;
@@ -18,21 +14,26 @@ public class Package : IPackage, IEquatable<Package?>
 	public bool IsBuiltIn { get; set; }
 	public LocalPackageData LocalData { get; private set; }
 	ILocalPackageData? IPackage.LocalData => LocalData;
-	string? IPackage.Version => LocalData.Version;
+	public string? Version { get; set; }
+	public string? VersionName { get; set; }
 
-	public Package(string folder, IAsset[] assets, IThumbnailObject[] images, bool isCodeMod, string? version, string? filePath, string? suggestedGameVersion)
+	public Package(string folder, IAsset[] assets, IThumbnailObject[] images, bool isCodeMod, string? version, string? versionName, string? filePath, string? suggestedGameVersion)
 	{
 		Name = Path.GetFileName(folder).TrimStart('.');
 		IsCodeMod = isCodeMod;
 		IsLocal = true;
-		LocalData = new LocalPackageData(this, assets, images, folder, version, filePath ?? folder, suggestedGameVersion);
+		Version = version;
+		VersionName = versionName;
+		LocalData = new LocalPackageData(this, assets, images, folder, versionName, filePath ?? folder, suggestedGameVersion);
 	}
 
-	public void RefreshData(IAsset[] assets, bool isCodeMod, string version, string? filePath, string? suggestedGameVersion)
+	public void RefreshData(IAsset[] assets, bool isCodeMod, string version, string? versionName, string? filePath, string? suggestedGameVersion)
 	{
 		IsCodeMod = isCodeMod;
 		IsLocal = true;
-		LocalData = new LocalPackageData(this, assets, LocalData.Images, LocalData.Folder, version, filePath ?? LocalData.Folder, suggestedGameVersion);
+		Version = version;
+		VersionName = versionName;
+		LocalData = new LocalPackageData(this, assets, LocalData.Images, LocalData.Folder, versionName, filePath ?? LocalData.Folder, suggestedGameVersion);
 	}
 
 	#region EqualityOverrides

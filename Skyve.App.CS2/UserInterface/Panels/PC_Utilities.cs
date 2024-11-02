@@ -255,7 +255,9 @@ public partial class PC_Utilities : PanelContent
 
 		foreach (var package in outOfDatePackages)
 		{
-			await _packageUtil.SetVersion(package, null);
+			package.Version = null;
+
+			await _packageUtil.SetIncluded(package, true);
 		}
 
 		B_FixAllIssues.Loading = false;

@@ -18,6 +18,7 @@ public class Asset : IAsset, IThumbnailObject
 	public ulong Id => Package?.Id ?? 0;
 	public string Name { get; set; }
 	public string? Url => Package?.Url;
+	string? IPackageIdentity.Version { get => Package?.Version; set { if (Package is not null) Package.Version = value; } }
 	public IPackage? Package { get; set; }
 	public long FileSize { get; }
 	public DateTime LocalTime { get; }

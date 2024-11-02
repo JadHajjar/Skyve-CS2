@@ -2,14 +2,14 @@
 using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 
-using SlickControls;
-
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_BackupCenter : PanelContent
 {
+	private TableLayoutPanel? TLP_RestoreGroups;
+
 	public PC_BackupCenter()
 	{
 		InitializeComponent();
@@ -19,6 +19,7 @@ public partial class PC_BackupCenter : PanelContent
 		SetCurrentSettings();
 
 		backupListControl.CanDrawItem += BackupListControl_CanDrawItem;
+		B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder);
 	}
 
 	protected override void LocaleChanged()
@@ -26,7 +27,7 @@ public partial class PC_BackupCenter : PanelContent
 		base.LocaleChanged();
 
 		L_BackupInfo.Text = Locale.BackupDescriptionInfo;
-		L_RestoreInfo.Text = Locale.SelectRestoreInfo;
+		L_RestoreInfo.Text = Locale.RestoreDescriptionInfo;
 	}
 
 	protected override void UIChanged()
@@ -34,21 +35,21 @@ public partial class PC_BackupCenter : PanelContent
 		base.UIChanged();
 
 		TB_Search.Width = UI.Scale(200);
-		TB_Search.Margin = backupViewControl.Margin=UI.Scale(new Padding(3));
-		spacerBackup1.Height = spacerSettings.Height = spacerBackup2.Height = UI.Scale(2);
-		spacerBackup1.Margin = UI.Scale(new Padding(0, 6, 0, 0));
-		spacerBackup2.Margin = UI.Scale(new Padding(0, 0, 0, 6));
+		TB_Search.Margin = backupViewControl.Margin = UI.Scale(new Padding(3));
+		spacerSettings.Height = spacerBackup.Height = UI.Scale(2);
 		spacerSettings.Margin = UI.Scale(new Padding(6));
-		L_BackupInfo.Margin = L_RestoreInfo.Margin = UI.Scale(new Padding(3, 3, 3, 6));
-		P_Backup.Margin = P_Restore.Margin = P_RestoreSelect.Margin = UI.Scale(new Padding(6));
+		L_BackupInfo.Margin = UI.Scale(new Padding(3, 3, 3, 6));
+		panel1.Padding = P_Backup.Margin = P_RestoreSelect.Margin = TLP_General.Margin = TLP_Schedule.Margin = TLP_Cleanup.Margin = UI.Scale(new Padding(6));
 		B_AddTime.Margin = SS_Count.Margin = SS_Storage.Margin = SS_CleanupTime.Margin = UI.Scale(new Padding(32, 4, 4, 4));
+		B_Restore.Font = UI.Font(9.75F, System.Drawing.FontStyle.Bold);
+		L_RestoreInfo.Margin = B_Restore.Margin = UI.Scale(new Padding(10, 3, 10, 10));
+		B_Restore.Padding = UI.Scale(new Padding(6));
 	}
 
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
 
-		tableLayoutPanel2.BackColor = design.AccentBackColor;
 		L_BackupInfo.ForeColor = L_RestoreInfo.ForeColor = design.InfoColor;
 	}
 
@@ -57,7 +58,7 @@ public partial class PC_BackupCenter : PanelContent
 	{
 		var settings = (BackupSettings)ServiceCenter.Get<ISettings>().BackupSettings;
 
-		slickPathTextBox1.Text = settings.DestinationFolder;
+		TB_DestinationFolder.Text = settings.DestinationFolder;
 		CB_IncludeAutoSaves.Checked = !settings.IgnoreAutoSaves;
 		CB_ScheduleAtTimes.Checked = settings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnScheduledTimes);
 		CB_ScheduleOnGameClose.Checked = settings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnGameClose);
@@ -120,7 +121,7 @@ public partial class PC_BackupCenter : PanelContent
 	private void SetUpSliderTicks()
 	{
 		SS_Storage.TextConversion = x => $"{x}GB";
-		SS_Storage.Items = [1, 3, 5, 10, 15, 25, 50, 75, 100, 150, 250];
+		SS_Storage.Items = [5, 10, 15, 25, 50, 75, 100, 150, 250, 350];
 
 		SS_Count.Items = [10, 25, 50, 75, 100, 200, 300, 500, 1000];
 
@@ -167,7 +168,7 @@ public partial class PC_BackupCenter : PanelContent
 	{
 		var settings = (BackupSettings)ServiceCenter.Get<ISettings>().BackupSettings;
 
-		settings.DestinationFolder = slickPathTextBox1.Text;
+		settings.DestinationFolder = TB_DestinationFolder.Text;
 		settings.IgnoreAutoSaves = !CB_IncludeAutoSaves.Checked;
 
 		settings.ScheduleSettings.BackupSaves = CB_ScheduleIncludeSaves.Checked;
@@ -211,6 +212,8 @@ public partial class PC_BackupCenter : PanelContent
 		}
 
 		settings.Save();
+
+		B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder);
 	}
 	#endregion
 
@@ -238,6 +241,8 @@ public partial class PC_BackupCenter : PanelContent
 
 			return;
 		}
+
+		_ = Task.Run(LoadBackupItems);
 
 		B_Backup.ImageName = "Check";
 
@@ -319,20 +324,27 @@ public partial class PC_BackupCenter : PanelContent
 			return;
 		}
 
+		if (e.Item.Time.ToString("d").Contains(TB_Search.Text))
+		{
+			return;
+		}
+
 		if (backupListControl.RestorePoint)
 		{
-			e.DoNotDraw = !e.Item.RestoreItems.Any(x => TB_Search.Text.SearchCheck(x.MetaData.Name))
+			e.DoNotDraw = !e.Item.RestoreItems.Any(x => TB_Search.Text.SearchCheck(x.MetaData.Name) || TB_Search.Text.SearchCheck(x.MetaData.GetTypeTranslation()))
 				&& !TB_Search.Text.SearchCheck(e.Item.Time.ToString("d MMM yyyy - h:mm tt"));
 		}
 		else
 		{
-			e.DoNotDraw = !TB_Search.Text.SearchCheck(e.Item.Name) && !TB_Search.Text.SearchCheck(e.Item.Time.ToString("d MMM yyyy - h:mm tt"));
+			e.DoNotDraw = !TB_Search.Text.SearchCheck(e.Item.Name)
+				&& !TB_Search.Text.SearchCheck(e.Item.RestoreItems.First().MetaData.GetTypeTranslation())
+				&& !TB_Search.Text.SearchCheck(e.Item.Time.ToString("d MMM yyyy - h:mm tt"));
 		}
 	}
 
 	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 	{
-		if (keyData == (Keys.Control | Keys.F))
+		if (keyData == (Keys.Control | Keys.F) && T_BackupRestore.Selected)
 		{
 			TB_Search.Focus();
 			TB_Search.SelectAll();
@@ -341,59 +353,125 @@ public partial class PC_BackupCenter : PanelContent
 		return base.ProcessCmdKey(ref msg, keyData);
 	}
 
-	private void B_SelectRestore_Click(object sender, EventArgs e)
-	{
-		T_Backups.Selected = true;
-	}
-
 	private void BackupListControl_ItemMouseClick(object sender, MouseEventArgs e)
 	{
-		smartFlowPanel1.Controls.Clear(true);
+		TLP_RestoreGroups?.Dispose();
+		TLP_RestoreGroups = new TableLayoutPanel()
+		{
+			Dock = DockStyle.Top,
+			AutoSize = true,
+			AutoSizeMode = AutoSizeMode.GrowAndShrink
+		};
+
+		TLP_Restore.Controls.Add(TLP_RestoreGroups, 0, 1);
+		TLP_Restore.SetColumnSpan(TLP_RestoreGroups, 2);
 
 		var item = (BackupListControl.RestoreGroup)sender;
-		
-		if (backupListControl.RestorePoint)
+
+		foreach (var backupGroup in item.RestoreItems.GroupBy(x => x.MetaData.Type))
 		{
-			foreach (var backup in item.RestoreItems)
-			{ 
-				smartFlowPanel1.Controls.Add(new SlickCheckbox
-				{
-					Text = $"{backup.MetaData.Name} - {backup.MetaData.GetTypeTranslation()}",
-					Tag = backup,
-					Checked = true,
-				});
-			}
-		}
-		else
-		{
-			foreach (var backup in item.RestoreItems.OrderByDescending(x => x.MetaData.BackupTime))
+			TLP_RestoreGroups.ColumnStyles.Add(new() { SizeType = SizeType.Percent, Width = 100 });
+
+			var panel = new RoundedGroupFlowLayoutPanel
 			{
-				smartFlowPanel1.Controls.Add(new SlickRadioButton
+				Text = backupGroup.First().MetaData.GetTypeTranslation(),
+				ImageName = backupGroup.First().MetaData.GetIcon(),
+				AddShadow = true,
+				BackColor = FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? -4 : 4),
+				Dock = DockStyle.Top,
+				AutoSize = true,
+				AutoSizeMode = AutoSizeMode.GrowAndShrink
+			};
+
+			foreach (var backup in backupGroup.OrderByDescending(x => x.MetaData.BackupTime))
+			{
+				var control = new RestoreItemControl(backup, backupListControl.RestorePoint)
 				{
-					Text = backup.MetaData.BackupTime.ToString("d MMM yyyy - h:mm tt"),
-					Tag = backup,
-					Checked = backup.MetaData.BackupTime == item.Time,
-				});
+					Selected = backupListControl.RestorePoint || backup.MetaData.BackupTime == backupGroup.Max(x => x.MetaData.BackupTime)
+				};
+
+				panel.Controls.Add(control);
 			}
+
+			TLP_RestoreGroups.Controls.Add(panel, TLP_RestoreGroups.ColumnStyles.Count - 1, 0);
 		}
 
-		foreach (Control ctrl in smartFlowPanel1.Controls)
-		{
-			smartFlowPanel1.SetFlowBreak(ctrl, true);
-		}
-
-		T_BackupRestore.Selected = true;
-		P_Restore.Visible = true;
-		P_RestoreSelect.Visible = false;
+		T_Restore.Visible = true;
+		T_Restore.Selected = true;
 	}
 
-	private async void slickButton2_Click(object sender, EventArgs e)
+	public void SelectBackup(string restoreBackup)
 	{
-		var system = ServiceCenter.Get<IBackupSystem>();
-		foreach (SlickCheckbox ctrl in smartFlowPanel1.Controls)
+		var backupSystem = ServiceCenter.Get<IBackupSystem>();
+		var restoreItem = backupSystem.LoadBackupFile(restoreBackup);
+
+		if (restoreItem == null)
 		{
-			if (ctrl.Checked)
-		await	((IRestoreItem)ctrl.Tag).Restore(system);
+			return;
 		}
+
+		if (ShowPrompt(Locale.RestoreFileConfirm.Format(1, LocaleHelper.GetGlobalText("Backup_" + restoreItem.MetaData.Name, out var translation) ? translation : restoreItem.MetaData.Name)
+			, PromptButtons.YesNo
+			, PromptIcons.Question) != DialogResult.Yes)
+		{
+			return;
+		}
+
+		Task.Run(async () =>
+		{
+			var success = await restoreItem.Restore(backupSystem);
+
+			ShowPrompt(success ? Locale.RestoreSuccessful : Locale.RestoreFailed
+				, PromptButtons.OK
+				, success ? PromptIcons.Ok : PromptIcons.Error);
+		});
+	}
+
+	private void B_Restore_Click(object sender, EventArgs e)
+	{
+		var restores = TLP_RestoreGroups
+			.GetControls<RestoreItemControl>()
+			.Where(x => x.Selected)
+			.ToList(x => x.RestoreItem);
+
+		if (restores.Count == 0)
+		{
+			return;
+		}
+
+		if (ShowPrompt(Locale.RestoreFileConfirm.FormatPlural(restores.Count, LocaleHelper.GetGlobalText("Backup_" + restores[0].MetaData.Name, out var translation) ? translation : restores[0].MetaData.Name)
+			, PromptButtons.YesNo
+			, PromptIcons.Question) != DialogResult.Yes)
+		{
+			return;
+		}
+
+		TLP_RestoreGroups!.Enabled = false;
+		B_Restore.Loading = true;
+
+		Task.Run(async () =>
+		{
+			var backupSystem = ServiceCenter.Get<IBackupSystem>();
+			var success = true;
+
+			await backupSystem.DoBackup();
+
+			foreach (var restoreItem in restores)
+			{
+				success &= await restoreItem.Restore(backupSystem);
+			}
+
+			Invoke(() =>
+			{
+				B_Restore.Loading = false;
+
+				ShowPrompt(success ? Locale.RestoreSuccessful : Locale.RestoreFailed
+					, PromptButtons.OK
+					, success ? PromptIcons.Ok : PromptIcons.Error);
+
+				T_BackupRestore.Selected = true;
+				T_Restore.Visible = false;
+			});
+		});
 	}
 }

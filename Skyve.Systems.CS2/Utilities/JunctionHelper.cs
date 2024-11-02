@@ -25,6 +25,8 @@ public static class JunctionHelper
 			FileName = "cmd.exe"
 		}).WaitForExit();
 
+		new DirectoryInfo(targetFolder).Attributes |= FileAttributes.System | FileAttributes.ReadOnly;
+
 		StartService();
 	}
 
@@ -83,6 +85,11 @@ public static class JunctionHelper
 
 	public static void KillRunningApps()
 	{
+		foreach (var proc in Process.GetProcessesByName("Cities2"))
+		{
+			proc.Kill();
+		}
+
 		var service = ServiceController.GetServices().FirstOrDefault(x => x.ServiceName == "Skyve.Service");
 
 		if (service != null && service.CanShutdown)

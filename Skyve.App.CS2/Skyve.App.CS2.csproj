@@ -27,7 +27,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\SkyveBackupFile.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Compile Include="..\Skyve.App.CS2.Installer\InstallHelper.cs" Link="InstallHelper.cs" />
+	  <Content Include="SkyveBackupFile.ico">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 	<ItemGroup>

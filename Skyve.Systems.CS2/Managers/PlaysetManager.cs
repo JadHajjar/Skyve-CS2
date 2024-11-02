@@ -502,24 +502,24 @@ internal class PlaysetManager : IPlaysetManager
 		return await _workshopService.GetModsInPlayset(playset.Id, true);
 	}
 
-	public async Task<object> GetLogPlayset()
+	public async Task<object> GenerateImportPlayset(IPlayset? playset)
 	{
-		if (CurrentPlayset is null)
+		if (playset is null)
 		{
-			throw new NullReferenceException(nameof(CurrentPlayset));
+			throw new NullReferenceException(nameof(playset));
 		}
 
-		var contents = await GetPlaysetContents(CurrentPlayset!);
+		var contents = await GetPlaysetContents(playset!);
 
 		return new PdxPlaysetImport
 		{
 			ContractFormatVersion = -1,
 			GeneralData = new()
 			{
-				Id = CurrentPlayset.Id,
-				Name = CurrentPlayset.Name,
+				Id = playset.Id,
+				Name = playset.Name,
 			},
-			SubscribedMods = contents.Where(x => !(x.GetWorkshopInfo()?.Tags?.Any(x => x.Key is "Map" or "Savegame") ?? false)).ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Id.ToString(), new()
+			SubscribedMods = contents.Where(x => !(_workshopService.GetInfo(x)?.Tags?.Any(x => x.Key is "Map" or "Savegame") ?? false)).ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Id.ToString(), new()
 			{
 				Id = (int)x.Id,
 				Name = x.Name,

@@ -2,6 +2,8 @@
 
 using Newtonsoft.Json;
 
+using Skyve.Domain.CS2.Content;
+using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
@@ -38,7 +40,37 @@ public static class BackupItem
 
 		public void Save(IBackupSystem backupManager)
 		{
-			backupManager.Save(MetaData, [_save.FilePath, _save.FilePath + ".cid"]);
+			backupManager.Save(MetaData, [_save.FilePath, _save.FilePath + ".cid"], ((Asset)_save).SaveGameMetaData);
+		}
+	}
+
+	public class Maps : IBackupItem
+	{
+		private readonly IAsset _save;
+		public IBackupMetaData MetaData { get; }
+
+		public Maps(IAsset save)
+		{
+			_save = save;
+
+			MetaData = new BackupMetaData
+			{
+				Name = _save.Name,
+				ContentTime = _save.LocalTime,
+				Root = _save.Folder,
+				Type = nameof(Maps),
+				RestoreType = RestoreAction.Overwrite
+			};
+		}
+
+		public bool CanSave()
+		{
+			return true;
+		}
+
+		public void Save(IBackupSystem backupManager)
+		{
+			backupManager.Save(MetaData, [_save.FilePath, _save.FilePath + ".cid"], ((Asset)_save).MapMetaData);
 		}
 	}
 
@@ -70,7 +102,7 @@ public static class BackupItem
 
 		public void Save(IBackupSystem backupManager)
 		{
-			backupManager.Save(MetaData, _settingsFiles);
+			backupManager.Save(MetaData, _settingsFiles, null);
 		}
 	}
 
@@ -102,22 +134,24 @@ public static class BackupItem
 
 		public void Save(IBackupSystem backupManager)
 		{
-			backupManager.Save(MetaData, _modSettingFolders);
+			backupManager.Save(MetaData, _modSettingFolders, null);
 		}
 	}
 
 	public class ActivePlayset : IBackupItem
 	{
 		private readonly object _playset;
+		private readonly IPlaysetManager _playsetManager;
+
 		public IBackupMetaData MetaData { get; }
 
-		public ActivePlayset(object playset)
+		public ActivePlayset(object playset, IPlaysetManager playsetManager)
 		{
 			_playset = playset;
-
+			_playsetManager = playsetManager;
 			MetaData = new BackupMetaData
 			{
-				Name = "ActivePlayset",
+				Name = playsetManager.CurrentPlayset?.Name ?? "No Active Playset",
 				ContentTime = DateTime.Now,
 				Root = string.Empty,
 				Type = nameof(ActivePlayset),
@@ -136,7 +170,12 @@ public static class BackupItem
 
 			File.WriteAllText(tempPath, JsonConvert.SerializeObject(_playset));
 
-			backupManager.Save(MetaData, [tempPath]);
+			backupManager.Save(MetaData, [tempPath], new PlaysetMetaData
+			{
+				Name = _playsetManager.CurrentPlayset?.Name ?? "No Active Playset",
+				ModCount = _playsetManager.CurrentPlayset?.ModCount ?? 0,
+				ModSize = _playsetManager.CurrentPlayset?.ModSize ?? 0,
+			});
 
 			CrossIO.DeleteFile(tempPath, true);
 		}
@@ -168,13 +207,14 @@ public static class BackupItem
 
 		public void Save(IBackupSystem backupManager)
 		{
-			backupManager.Save(MetaData, Directory.GetFiles(_package.LocalData!.Folder, "*", SearchOption.AllDirectories));
+			backupManager.Save(MetaData, Directory.GetFiles(_package.LocalData!.Folder, "*", SearchOption.AllDirectories), null);
 		}
 	}
 
-	public class Zip(string file, IBackupMetaData metaData) : IRestoreItem
+	public class Zip(string file, IBackupMetaData metaData, object? itemMetaData) : IRestoreItem
 	{
 		public IBackupMetaData MetaData { get; } = metaData;
+		public object? ItemMetaData { get; } = itemMetaData;
 		public FileInfo BackupFile => new(file);
 
 		public async Task<bool> Restore(IBackupSystem backupManager)

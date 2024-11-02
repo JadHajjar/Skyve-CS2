@@ -85,6 +85,8 @@ public class Installer
 		catch { }
 
 		RegisterCustomProtocol("Skyve", exePath);
+
+		AssociateFileType(exePath);
 	}
 
 	public static async Task RegisterService(bool uninstall)
@@ -373,27 +375,64 @@ public class Installer
 		try
 		{
 			// Create the root key for the custom protocol
-			using (var protocolKey = Registry.ClassesRoot.CreateSubKey(protocolName))
+			using var protocolKey = Registry.ClassesRoot.CreateSubKey(protocolName);
+			if (protocolKey == null)
 			{
-				if (protocolKey == null)
-				{
-					throw new Exception("Failed to create registry key.");
-				}
-
-				protocolKey.SetValue("", $"{protocolName} Protocol");
-				protocolKey.SetValue("URL Protocol", "");
-
-				// Create the shell\open\command subkey
-				using var shellKey = protocolKey.CreateSubKey("shell");
-				using var openKey = shellKey.CreateSubKey("open");
-				using var commandKey = openKey.CreateSubKey("command") ?? throw new Exception("Failed to create command registry key.");
-
-				commandKey.SetValue("", $"\"{executablePath}\" -cmd \"%1\"");
+				throw new Exception("Failed to create registry key.");
 			}
+
+			protocolKey.SetValue("", $"{protocolName} Protocol");
+			protocolKey.SetValue("URL Protocol", "");
+
+			// Create the shell\open\command subkey
+			using var shellKey = protocolKey.CreateSubKey("shell");
+			using var openKey = shellKey.CreateSubKey("open");
+			using var commandKey = openKey.CreateSubKey("command") ?? throw new Exception("Failed to create command registry key.");
+
+			commandKey.SetValue("", $"\"{executablePath}\" -cmd \"%1\"");
 		}
 		catch
 		{
 			//throw new Exception(ex, $"Error registering protocol: {ex.Message}");
+		}
+	}
+
+	public static void AssociateFileType(string executablePath)
+	{
+		try
+		{
+			var extension = ".sbak";
+			var progId = "Skyve.sbakfile";
+
+			// Register file extension
+			using (var key = Registry.ClassesRoot.CreateSubKey(extension))
+			{
+				key?.SetValue("", progId);
+				key?.SetValue("Content Type", "application/x-zip-compressed");
+				key?.SetValue("DontCompressInPackage", "");
+				key?.SetValue("PerceivedType", "compressed");
+			}
+
+			// Register ProgID for the application
+			using (var key = Registry.ClassesRoot.CreateSubKey(progId))
+			{
+				if (key != null)
+				{
+					key.SetValue("", "Skyve Backup");
+
+					using (var iconKey = key.CreateSubKey("DefaultIcon"))
+					{
+						iconKey?.SetValue("", $"\"{Path.GetDirectoryName(executablePath)}\\SkyveBackupFile.ico\"");
+					}
+
+					using var shellKey = key.CreateSubKey(@"shell\open\command");
+					shellKey?.SetValue("", $"\"{executablePath}\" -restoreItem \"%1\"");
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			MessageBox.Show("Failed to associate file type: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 	}
 

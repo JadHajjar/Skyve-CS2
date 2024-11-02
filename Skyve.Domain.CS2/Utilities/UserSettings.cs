@@ -19,14 +19,14 @@ public class UserSettings : ConfigFile, IUserSettings
 	bool IUserSettings.DisablePackageCleanup { get; set; }
 	bool IUserSettings.OverrideGameChanges { get; set; }
 	bool IUserSettings.HidePseudoMods { get; set; }
+	bool IUserSettings.DisableNewModsByDefault { get; set; }
+	bool IUserSettings.DisableNewAssetsByDefault { get; set; }
 
 	public Dictionary<SkyvePage, SkyvePageContentSettings> PageSettings { get; set; } = [];
 
 	public bool LinkModAssets { get; set; } = true;
 	public bool FadeDisabledItems { get; set; } = true;
 	public bool ShowDatesRelatively { get; set; } = true;
-	public bool DisableNewModsByDefault { get; set; }
-	public bool DisableNewAssetsByDefault { get; set; }
 	public bool FilterOutPackagesWithOneAsset { get; set; }
 	public bool FilterOutPackagesWithMods { get; set; }
 	public bool AdvancedLaunchOptions { get; set; }

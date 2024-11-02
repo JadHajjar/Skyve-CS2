@@ -151,8 +151,6 @@ internal class UpdateManager : IUpdateManager
 
 	public async Task SendUnreadCommentsNotifications()
 	{
-		await _workshopService.WaitUntilReady();
-
 		if (_userService.User.Id is null)
 		{
 			return;
@@ -160,26 +158,23 @@ internal class UpdateManager : IUpdateManager
 
 		var dictionary = new Dictionary<IPackageIdentity, IModComment>();
 
-		using (_workshopService.Lock)
+		var mods = await _workshopService.GetWorkshopItemsByUserAsync(_userService.User.Id!, sorting: WorkshopQuerySorting.DateUpdated, limit: 99);
+
+		foreach (var mod in mods)
 		{
-			var mods = await _workshopService.GetWorkshopItemsByUserAsync(_userService.User.Id!, sorting: WorkshopQuerySorting.DateUpdated, limit: 99);
+			var comments = await _workshopService.GetComments(mod, 1, 1);
 
-			foreach (var mod in mods)
+			if (comments is not null && (comments.Posts?.Any() ?? false))
 			{
-				var comments = await _workshopService.GetComments(mod, 1, 1);
-
-				if (comments is not null && (comments.Posts?.Any() ?? false))
+				if ((!_lastViewedComments.TryGetValue(mod.Id, out var date) || date < comments.Posts[0].Created) && comments.Posts[0].Username != _userService.User.Id?.ToString())
 				{
-					if ((!_lastViewedComments.TryGetValue(mod.Id, out var date) || date < comments.Posts[0].Created) && comments.Posts[0].Username != _userService.User.Id?.ToString())
+					if (!_notificationsService.GetNotifications<UnreadCommentNotification>().Any(x => x.PackageId == mod.Id))
 					{
-						if (!_notificationsService.GetNotifications<UnreadCommentNotification>().Any(x => x.PackageId == mod.Id))
-						{
-							_notificationsService.SendNotification(new UnreadCommentNotification(mod, comments.Posts[0], this, _interfaceService, _notificationsService));
-						}
+						_notificationsService.SendNotification(new UnreadCommentNotification(mod, comments.Posts[0], this, _interfaceService, _notificationsService));
 					}
-
-					dictionary[mod] = comments.Posts[0];
 				}
+
+				dictionary[mod] = comments.Posts[0];
 			}
 		}
 	}

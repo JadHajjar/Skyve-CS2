@@ -12,8 +12,7 @@ using System.Threading.Tasks;
 namespace Skyve.Systems.CS2.Managers;
 internal class SubscriptionsManager(IWorkshopService workshopService, ISettings settings, INotifier notifier) : ISubscriptionsManager
 {
-	private readonly List<ulong> _subscribingTo = [];
-	private readonly List<ulong> _unsubscribingFrom = [];
+	private readonly List<IPackageIdentity> _subscribingTo = [];
 	private readonly WorkshopService _workshopService = (WorkshopService)workshopService;
 	private readonly ISettings _settings = settings;
 	private readonly INotifier _notifier = notifier;
@@ -27,7 +26,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 	public bool IsSubscribing(IPackageIdentity package)
 	{
-		return _subscribingTo.Contains(package.Id) || _unsubscribingFrom.Contains(package.Id);
+		return _subscribingTo.Any(x => x.Id == package.Id && x.Version == package.Version);
 	}
 
 	public void OnDownloadProgress(PackageDownloadProgress info)
@@ -85,79 +84,13 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		UpdateDisplayNotification?.Invoke();
 	}
 
-	public async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null)
+	public void AddSubscribing(IEnumerable<IPackageIdentity> ids)
 	{
-		if (!_workshopService.IsAvailable)
-		{
-			return false;
-		}
-
-		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
-
-		if (currentPlayset == 0)
-		{
-			return false;
-		}
-
-		_subscribingTo.AddRange(ids.Select(x => x.Id).Where(x => x > 0));
-
-		_notifier.OnRefreshUI(true);
-
-		await _workshopService.WaitUntilReady();
-
-		bool result;
-		using (_workshopService.Lock)
-		{
-			result = await _workshopService.SubscribeBulk(
-				ids.Distinct(x => x.Id).Select(x => new KeyValuePair<int, string?>((int)x.Id, null)),
-				currentPlayset);
-		}
-
-		foreach (var item in ids)
-		{
-			_subscribingTo.Remove(item.Id);
-		}
-
-		_notifier.OnRefreshUI(true);
-		_notifier.OnPlaysetChanged();
-
-		return result;
+		_subscribingTo.AddRange(ids);
 	}
 
-	public async Task<bool> UnSubscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null)
+	public void RemoveSubscribing(IEnumerable<IPackageIdentity> ids)
 	{
-		if (!_workshopService.IsAvailable)
-		{
-			return false;
-		}
-
-		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
-
-		if (currentPlayset == 0)
-		{
-			return false;
-		}
-
-		_unsubscribingFrom.AddRange(ids.Select(x => x.Id));
-
-		_notifier.OnRefreshUI(true);
-
-		await _workshopService.WaitUntilReady();
-
-		bool result;
-		using (_workshopService.Lock)
-		{
-			result = await _workshopService.UnsubscribeBulk(ids.Distinct(x => x.Id).Select(x => (int)x.Id), currentPlayset);
-		}
-
-		foreach (var item in ids)
-		{
-			_unsubscribingFrom.Remove(item.Id);
-		}
-
-		_notifier.OnRefreshUI(true);
-		_notifier.OnPlaysetChanged();
-
-		return result;
+		_subscribingTo.RemoveAll(x => ids.Contains(x));
 	}
 }

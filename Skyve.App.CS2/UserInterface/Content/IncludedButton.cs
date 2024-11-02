@@ -15,7 +15,10 @@ public class IncludedButton : SlickButton
 
 	public IncludedButton(IPackageIdentity package)
 	{
-		Package = package;
+		Package = new GenericPackageIdentity(package)
+		{
+			Version = null
+		};
 
 		ServiceCenter.Get(out _modLogicManager, out _modUtil, out _subscriptionsManager);
 	}

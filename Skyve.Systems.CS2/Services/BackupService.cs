@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
-using Skyve.Systems.CS2.Systems;
 
 using System;
 using System.Linq;
@@ -21,6 +20,9 @@ internal class BackupService : IBackupService
 	private readonly BackupSettings _backupSettings;
 	private bool isCitiesRunning;
 
+	public Func<Task>? PreBackupTask { get; set; }
+	public Func<Task>? PostBackupTask { get; set; }
+
 	public BackupService(IServiceProvider serviceProvider, IContentManager contentManager, ICitiesManager citiesManager, ISettings settings, ILogger logger)
 	{
 		_serviceProvider = serviceProvider;
@@ -34,7 +36,7 @@ internal class BackupService : IBackupService
 		isCitiesRunning = _citiesManager.IsRunning();
 	}
 
-	public async Task Run()
+	public async Task<bool> Run()
 	{
 		var startBackup = false;
 		var currentTime = (int)DateTime.Now.TimeOfDay.TotalMinutes;
@@ -60,13 +62,25 @@ internal class BackupService : IBackupService
 
 		if (startBackup)
 		{
+			if (PreBackupTask is not null)
+			{
+				await PreBackupTask();
+			}
+
 			if (!await DoBackup())
 			{
-				return;
+				return true;
+			}
+
+			if (PostBackupTask is not null)
+			{
+				await PostBackupTask();
 			}
 		}
 
 		await Task.Delay(59_000);
+
+		return false;
 	}
 
 	private async Task<bool> DoBackup()

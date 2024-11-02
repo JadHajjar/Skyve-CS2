@@ -170,6 +170,20 @@ internal class ContentManager : IContentManager
 		return savesPackage;
 	}
 
+	public IPackage? GetMapFiles()
+	{
+		var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps", _settings.FolderSettings.UserIdentifier);
+
+		var mapsPackage = GetPackage(gameMapsPath, true, null);
+
+		if (mapsPackage is not null)
+		{
+			mapsPackage.IsBuiltIn = true;
+		}
+
+		return mapsPackage;
+	}
+
 	public async Task<List<IPackage>> LoadContents()
 	{
 		var packages = new List<IPackage>();
@@ -219,7 +233,7 @@ internal class ContentManager : IContentManager
 			{
 				var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
 
-				if (pdxPackage is not null)
+				if (pdxPackage is not null && (pdxPackage.Id == 0 || !packages.Any(x => x.Id == pdxPackage.Id && x.Version == ((IPackage)pdxPackage).Version)))
 				{
 					packages.Add(pdxPackage);
 				}
@@ -273,6 +287,7 @@ internal class ContentManager : IContentManager
 				return new LocalPdxPackage(pdxMod,
 					assets,
 					isCodeMod,
+					pdxMod.Version,
 					pdxMod.UserModVersion ?? version?.ToString() ?? string.Empty,
 					modDll);
 			}
@@ -281,6 +296,7 @@ internal class ContentManager : IContentManager
 				assets,
 				[],
 				isCodeMod,
+				"1",
 				version?.ToString() ?? string.Empty,
 				modDll,
 				null);
@@ -351,6 +367,7 @@ internal class ContentManager : IContentManager
 		package.RefreshData(
 			assets,
 			isCodeMod,
+			"1",
 			localPackage.Version ?? version?.ToString() ?? string.Empty,
 			modDll,
 			localPackage.LocalData?.SuggestedGameVersion);

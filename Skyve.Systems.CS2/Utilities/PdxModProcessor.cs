@@ -2,16 +2,14 @@
 
 using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Systems;
-using Skyve.Systems.CS2.Domain;
 using Skyve.Systems.CS2.Services;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
-internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
+internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 {
 	public const string CACHE_FILE = "PdxModsCache.json";
 
@@ -32,10 +30,10 @@ internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
 		return ConnectionHandler.IsConnected;
 	}
 
-	protected override async Task<(Dictionary<int, IModDetails>, bool)> ProcessItems(List<int> entities)
+	protected override async Task<(Dictionary<int, PdxModDetails>, bool)> ProcessItems(List<int> entities)
 	{
 		var failed = false;
-		var results = new Dictionary<int, IModDetails>();
+		var results = new Dictionary<int, PdxModDetails>();
 
 		foreach (var item in entities)
 		{
@@ -61,7 +59,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
 		}
 	}
 
-	protected override void CacheItems(Dictionary<int, IModDetails> results)
+	protected override void CacheItems(Dictionary<int, PdxModDetails> results)
 	{
 		try
 		{
@@ -70,13 +68,13 @@ internal class PdxModProcessor : PeriodicProcessor<int, IModDetails>
 		catch { }
 	}
 
-	private static Dictionary<int, IModDetails>? GetCachedInfo(SaveHandler saveHandler)
+	private static Dictionary<int, PdxModDetails>? GetCachedInfo(SaveHandler saveHandler)
 	{
 		try
 		{
 			var path = saveHandler.GetPath(CACHE_FILE);
 
-			saveHandler.Load(out Dictionary<int, IModDetails>? dic, CACHE_FILE);
+			saveHandler.Load(out Dictionary<int, PdxModDetails>? dic, CACHE_FILE);
 
 			return dic;
 		}

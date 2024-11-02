@@ -14,7 +14,7 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject
 	public IPackage Package { get; }
 	public long FileSize { get; }
 	public DateTime LocalTime { get; }
-	public string? Version { get; }
+	public string? VersionName { get; }
 	public IAsset[] Assets { get; set; }
 	public IThumbnailObject[] Images { get; set; }
 	public string Folder { get; set; }
@@ -24,7 +24,7 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject
 	public LocalPackageData(IPackage package, IAsset[] assets, IThumbnailObject[] images, string folder, string? version, string filePath, string? suggestedGameVersion)
 	{
 		Package = package;
-		Version = version;
+		VersionName = version;
 		Assets = assets;
 		Folder = folder;
 		FilePath = filePath;
@@ -69,4 +69,5 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject
 	ulong IPackageIdentity.Id => Package.Id;
 	string IPackageIdentity.Name => Package.Name;
 	string? IPackageIdentity.Url => Package.Url;
+	string? IPackageIdentity.Version { get => Package.Version; set => Package.Version = value; }
 }

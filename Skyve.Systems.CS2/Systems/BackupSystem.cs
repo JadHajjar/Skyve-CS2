@@ -26,28 +26,30 @@ internal class BackupSystem : IBackupSystem
 	private readonly IContentManager _contentManager;
 	private readonly IPlaysetManager _playsetManager;
 	private readonly IPackageManager _packageManager;
+	private readonly IWorkshopService _workshopService;
 	private readonly BackupSettings _backupSettings;
 	private readonly DateTime _backupTime;
 
 	public IBackupInstructions BackupInstructions { get; } = new BackupInstructions();
 	public IRestoreInstructions RestoreInstructions { get; } = new RestoreInstructions();
 
-	public BackupSystem(ISettings settings, ILogger logger, IContentManager contentManager, IPlaysetManager playsetManager, IPackageManager packageManager)
+	public BackupSystem(ISettings settings, ILogger logger, IContentManager contentManager, IPlaysetManager playsetManager, IPackageManager packageManager, IWorkshopService workshopService)
 	{
 		_settings = settings;
 		_logger = logger;
 		_contentManager = contentManager;
 		_playsetManager = playsetManager;
 		_packageManager = packageManager;
-
+		_workshopService = workshopService;
 		_backupSettings = (settings.BackupSettings as BackupSettings)!;
 
 		_backupTime = DateTime.Now;
 	}
 
-	public void Save(IBackupMetaData metaData, string[] files)
+	public void Save(IBackupMetaData metaData, string[] files, object? itemMetaData)
 	{
 		metaData.BackupTime = _backupTime;
+		metaData.FileCount = files.Length;
 
 		var folder = CrossIO.Combine(_backupSettings.DestinationFolder
 			, _backupTime.ToString("yyyy")
@@ -64,17 +66,26 @@ internal class BackupSystem : IBackupSystem
 			return;
 		}
 
+		_logger.Info("[Backup] Creating backup file for: " + metaData.Name);
+
 		var path = CrossIO.Combine(folder, $"{metaData.Name}_{metaData.ContentTime.Ticks}_{_backupTime.Ticks}.sbak");
 
 		using var fileStream = File.Create(path);
 		using var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Create, false);
 
-		CreateEntry(zipArchive, ".metaData", JsonConvert.SerializeObject(metaData));
+		if (itemMetaData is not null)
+		{
+			metaData.ItemMetaDataType = itemMetaData.GetType().AssemblyQualifiedName;
+
+			CreateEntry(zipArchive, ".backupItemMetaData", JsonConvert.SerializeObject(itemMetaData));
+		}
+
+		CreateEntry(zipArchive, ".backupMetaData", JsonConvert.SerializeObject(metaData));
 
 		foreach (var file in files.Where(CrossIO.FileExists))
 		{
 			zipArchive.CreateEntryFromFile(file
-				, string.IsNullOrEmpty(metaData.Root) ? Path.GetFileName(file) : file.Substring((metaData.Root!.Length) + 1).Replace("/", "\\")
+				, string.IsNullOrEmpty(metaData.Root) ? Path.GetFileName(file) : file.Substring(metaData.Root!.Length + 1).Replace("/", "\\")
 				, CompressionLevel.Optimal);
 		}
 	}
@@ -102,20 +113,48 @@ internal class BackupSystem : IBackupSystem
 		{
 			try
 			{
-				using var stream = File.OpenRead(file);
-				using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read, false);
+				var restoreItem = LoadBackupFile(file);
 
-				using var metaDataStream = zipArchive.GetEntry(".metaData").Open();
-				using var reader = new StreamReader(metaDataStream);
-
-				var metaData = JsonConvert.DeserializeObject<BackupMetaData>(reader.ReadToEnd());
-
-				items.Add(new BackupItem.Zip(file, metaData));
+				if (restoreItem is not null)
+				{
+					items.Add(restoreItem);
+				}
 			}
 			catch { }
 		}
 
 		return items;
+	}
+
+	public IRestoreItem? LoadBackupFile(string fileName)
+	{
+		try
+		{
+			using var stream = File.OpenRead(fileName);
+			using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read, false);
+
+			using var metaDataStream = zipArchive.GetEntry(".backupMetaData").Open();
+			using var reader = new StreamReader(metaDataStream);
+
+			var metaData = JsonConvert.DeserializeObject<BackupMetaData>(reader.ReadToEnd());
+			object? itemMetaData = null;
+
+			if (!metaData.IsArchived && metaData.ItemMetaDataType is not null and not "")
+			{
+				using var itemMetaDataStream = zipArchive.GetEntry(".backupItemMetaData").Open();
+				using var reader2 = new StreamReader(itemMetaDataStream);
+
+				itemMetaData = JsonConvert.DeserializeObject(reader2.ReadToEnd(), Type.GetType(metaData.ItemMetaDataType));
+			}
+
+			return new BackupItem.Zip(fileName, metaData, itemMetaData);
+		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Failed to load backup file: " + fileName);
+
+			return null;
+		}
 	}
 
 	public long GetBackupsSizeOnDisk()
@@ -149,6 +188,11 @@ internal class BackupSystem : IBackupSystem
 			if (BackupInstructions.DoSavesBackup)
 			{
 				MakeSavesBackup(availableBackups).Foreach(SaveBackupItem);
+			}
+
+			if (BackupInstructions.DoMapsBackup)
+			{
+				MakeMapsBackup(availableBackups).Foreach(SaveBackupItem);
 			}
 
 			if (BackupInstructions.DoLocalModsBackup)
@@ -204,6 +248,27 @@ internal class BackupSystem : IBackupSystem
 		return backupItems;
 	}
 
+	private IEnumerable<IBackupItem> MakeMapsBackup(List<IRestoreItem> availableBackups)
+	{
+		var mapPackage = _contentManager.GetMapFiles();
+		var maps = mapPackage?.LocalData?.Assets ?? [];
+		var backupItems = new List<IBackupItem>();
+
+		foreach (var map in maps)
+		{
+			if (availableBackups.Any(x => x.MetaData.Type is nameof(BackupItem.Maps)
+				&& x.MetaData.Name == map.Name
+				&& x.MetaData.ContentTime == map.LocalTime))
+			{
+				continue;
+			}
+
+			backupItems.Add(new BackupItem.Maps(map));
+		}
+
+		return backupItems;
+	}
+
 	private IBackupItem MakeSettingsBackup()
 	{
 		var settingsFiles = Directory.GetFiles(_settings.FolderSettings.AppDataPath, "*.coc", SearchOption.AllDirectories);
@@ -232,9 +297,9 @@ internal class BackupSystem : IBackupSystem
 			return null;
 		}
 
-		var playset = await _playsetManager.GetLogPlayset();
+		var playset = await _playsetManager.GenerateImportPlayset(await _workshopService.GetCurrentPlayset());
 
-		return new BackupItem.ActivePlayset(playset);
+		return new BackupItem.ActivePlayset(playset, _playsetManager);
 	}
 
 	private IEnumerable<IBackupItem> MakeLocalModsBackup(List<IRestoreItem> availableBackups)
@@ -284,7 +349,7 @@ internal class BackupSystem : IBackupSystem
 
 	private async Task<bool> RestorePlayset(ZipArchive zipArchive, IBackupMetaData metaData)
 	{
-		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".metaData");
+		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".backupMetaData");
 
 		var temp = CrossIO.GetTempFileName();
 
@@ -315,7 +380,7 @@ internal class BackupSystem : IBackupSystem
 	{
 		foreach (var item in zipArchive.Entries)
 		{
-			if (item.FullName is ".metaData")
+			if (item.FullName is ".backupMetaData")
 			{
 				continue;
 			}
@@ -339,7 +404,7 @@ internal class BackupSystem : IBackupSystem
 
 	private Task<bool> RestoreClearRootOfSimilarFileTypes(ZipArchive zipArchive, IBackupMetaData metaData)
 	{
-		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".metaData");
+		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".backupMetaData");
 
 		if (entry is null)
 		{
@@ -364,8 +429,10 @@ internal class BackupSystem : IBackupSystem
 
 		if (_backupSettings.CleanupSettings.Type.HasFlag(BackupCleanupType.TimeBased) && _backupSettings.CleanupSettings.MaxTimespan.TotalDays >= 1)
 		{
+			_logger.Info("[Backup] Running Cleanup (Time)");
+
 			availableBackups
-				.Where(x => DateTime.Now - x.MetaData.ContentTime > _backupSettings.CleanupSettings.MaxTimespan)
+				.Where(x => DateTime.Now - x.MetaData.BackupTime > _backupSettings.CleanupSettings.MaxTimespan)
 				.Foreach(DoCleanup);
 		}
 
@@ -373,6 +440,8 @@ internal class BackupSystem : IBackupSystem
 
 		if (_backupSettings.CleanupSettings.Type.HasFlag(BackupCleanupType.CountBased) && _backupSettings.CleanupSettings.MaxBackups > 5)
 		{
+			_logger.Info("[Backup] Running Cleanup (Count)");
+
 			availableBackups
 				.Where(x => IsLarge(x.MetaData))
 				.OrderByDescending(x => x.MetaData.BackupTime)
@@ -384,6 +453,8 @@ internal class BackupSystem : IBackupSystem
 
 		if (_backupSettings.CleanupSettings.Type.HasFlag(BackupCleanupType.StorageBased) && _backupSettings.CleanupSettings.MaxStorage > 10_000)
 		{
+			_logger.Info("[Backup] Running Cleanup (Storage)");
+
 			var totalSize = 0UL;
 
 			foreach (var backup in availableBackups.OrderByDescending(x => x.MetaData.BackupTime))
@@ -402,6 +473,8 @@ internal class BackupSystem : IBackupSystem
 
 	private void DoCleanup(IRestoreItem restoreItem)
 	{
+		_logger.Info("[Backup] Deleting backup file for: " + restoreItem.MetaData.Name);
+
 		if (!IsLarge(restoreItem.MetaData))
 		{
 			CrossIO.DeleteFile(restoreItem.BackupFile.FullName);
@@ -413,7 +486,7 @@ internal class BackupSystem : IBackupSystem
 		using var stream = File.Create(restoreItem.BackupFile.FullName);
 		using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Create, false);
 
-		CreateEntry(zipArchive, ".metaData", JsonConvert.SerializeObject(restoreItem.MetaData));
+		CreateEntry(zipArchive, ".backupMetaData", JsonConvert.SerializeObject(restoreItem.MetaData));
 	}
 
 	private bool IsLarge(IBackupMetaData metaData)

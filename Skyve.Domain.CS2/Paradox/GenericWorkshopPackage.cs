@@ -10,6 +10,7 @@ public class PdxModIdentityPackage : IPackage
 		Id = identity.Id;
 		Name = identity.Name.IfEmpty(Id.ToString());
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
+		Version = identity.Version;
 	}
 
 	public PdxModIdentityPackage(ulong id)
@@ -31,7 +32,8 @@ public class PdxModIdentityPackage : IPackage
 	public ulong Id { get; }
 	public string Name { get; }
 	public string? Url { get; }
-	public string? Version => this.GetWorkshopInfo()?.Version;
+	public string? Version { get; set; }
+	public string? VersionName { get; }
 
 	public override string ToString()
 	{

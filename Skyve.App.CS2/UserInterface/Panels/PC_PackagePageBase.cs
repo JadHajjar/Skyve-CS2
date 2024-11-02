@@ -21,6 +21,7 @@ public partial class PC_PackagePageBase : PanelContent
 	private readonly INotifier _notifier;
 	private readonly IPackageUtil _packageUtil;
 	private readonly ISettings _settings;
+	private readonly IWorkshopService _workshopService;
 	private TagControl? addTagControl;
 	private bool refreshPending;
 	private bool isReadOnly;
@@ -39,7 +40,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 	public PC_PackagePageBase(IPackageIdentity package, bool load = false, bool autoRefresh = true) : base(load)
 	{
-		ServiceCenter.Get(out _notifier, out _packageUtil, out _settings, out IImageService imageService);
+		ServiceCenter.Get(out _notifier, out _packageUtil, out _settings, out _workshopService, out IImageService imageService);
 
 		InitializeComponent();
 
@@ -66,7 +67,8 @@ public partial class PC_PackagePageBase : PanelContent
 		if (DD_Version.Items.Length > 1 && currentVersion != DD_Version.SelectedItem?.VersionId)
 		{
 			DD_Version.Loading = true;
-			await _packageUtil.SetVersion(Package, DD_Version.SelectedItem == DD_Version.Items.FirstOrDefault() ? null : DD_Version.SelectedItem?.VersionId);
+			Package.Version = DD_Version.SelectedItem?.VersionId;
+			await _packageUtil.SetIncluded(Package, true);
 			await Task.Delay(1000);
 			DD_Version.Loading = false;
 		}
@@ -89,7 +91,7 @@ public partial class PC_PackagePageBase : PanelContent
 	{
 		if (Form?.CurrentPanel == this)
 		{
-			this.TryInvoke(() => SetPackage(Package));
+			Form.OnNextIdle(() => SetPackage(Package));
 		}
 		else
 		{
@@ -127,7 +129,7 @@ public partial class PC_PackagePageBase : PanelContent
 		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
 		LI_Version.LabelText = localData?.IsCodeMod ?? true ? "Version" : "Content";
-		LI_Version.ValueText = localData?.IsCodeMod ?? true ? localData?.Version ?? workshopInfo?.Version : $"{localData.Assets.Length} {Locale.Asset.FormatPlural(localData.Assets.Length).ToLower()}";
+		LI_Version.ValueText = localData?.IsCodeMod ?? true ? localData?.VersionName ?? workshopInfo?.VersionName : $"{localData.Assets.Length} {Locale.Asset.FormatPlural(localData.Assets.Length).ToLower()}";
 		LI_UpdateTime.ValueText = date == default ? null : _settings.UserSettings.ShowDatesRelatively ? date.ToLocalTime().ToRelatedString(true, false) : date.ToLocalTime().ToString("g");
 		LI_ModId.ValueText = Package.Id > 0 ? Package.Id.ToString() : null;
 		LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);

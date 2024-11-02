@@ -167,17 +167,18 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info($"Finished.");
 
-		//if (Process.GetProcessesByName("Skyve.Service").Length == 0)
-		//{
-		//	new BackgroundAction(RunBackupService);
-		//}
+		if (Process.GetProcessesByName("Skyve.Service").Length == 0)
+		{
+			new BackgroundAction(RunBackupService);
+		}
 	}
 
 	private async void RunBackupService()
 	{
 		while (true)
 		{
-			await _backupService.Run();
+			if (await _backupService.Run())
+				return;
 		}
 	}
 
@@ -233,6 +234,11 @@ internal class CentralManager : ICentralManager
 			return true;
 		}
 
+		if (CrossIO.FileExists(CommandUtil.Commands.RestoreBackup))
+		{
+			_interfaceService.RestoreBackup(CommandUtil.Commands.RestoreBackup!);
+		}
+
 		var actions = CommandUtil.Commands.CommandActions;
 		if (actions.Length > 0)
 		{
@@ -246,6 +252,11 @@ internal class CentralManager : ICentralManager
 					}
 
 					break;
+
+				case "safemode":
+					_citiesManager.RunSafeMode();
+					break;
+
 				case "logreport":
 					_interfaceService.OpenLogReport(actions.TryGet(1) == "save");
 					break;

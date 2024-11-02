@@ -83,4 +83,19 @@ internal class InterfaceService : IAppInterfaceService
 			}
 		});
 	}
+
+	public void RestoreBackup(string restoreBackup)
+	{
+		App.Program.MainForm.TryInvoke(() =>
+		{
+			if (App.Program.MainForm.CurrentPanel is not PC_BackupCenter backupCenter)
+			{
+				backupCenter = new();
+
+				App.Program.MainForm.PushPanel(backupCenter);
+			}
+
+			backupCenter.SelectBackup(restoreBackup);
+		});
+	}
 }

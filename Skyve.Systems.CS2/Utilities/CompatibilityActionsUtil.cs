@@ -10,10 +10,11 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
-public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager, IPackageUtil packageUtil) : ICompatibilityActionsHelper
+public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager, IPackageUtil packageUtil, IPlaysetManager playsetManager) : ICompatibilityActionsHelper
 {
 	private readonly IPackageUtil _packageUtil = packageUtil;
 	private readonly ICompatibilityManager _compatibilityManager = compatibilityManager;
+	private readonly IPlaysetManager _playsetManager = playsetManager;
 
 	public bool CanSnooze(ICompatibilityItem message)
 	{
@@ -131,9 +132,14 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 
 	private async Task ExcludeAndDisableMain(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
-		await _packageUtil.SetEnabled(message, false);
-		
-		await _packageUtil.SetIncluded(message, false);
+		if (message.IsIncluded())
+		{
+			await _packageUtil.SetIncluded(message, false);
+		}
+		else
+		{
+			await _playsetManager.SetIncludedForAll(message, false);
+		}
 	}
 
 	private async Task DisableMain(ICompatibilityItem message, IPackageIdentity? package = null)
@@ -258,14 +264,12 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 		{
 			return;
 		}
-
-		await _packageUtil.SetEnabled(message.Packages.Where(x => !x.Equals(package)), false);
 		
 		await _packageUtil.SetIncluded(message.Packages.Where(x => !x.Equals(package)), false);
 		
-		await _packageUtil.SetEnabled(package, true);
-		
 		await _packageUtil.SetIncluded(package, true);
+
+		await _packageUtil.SetEnabled(package, true);
 	}
 
 	private async Task IncludePackage(ICompatibilityItem message, IPackageIdentity? package)
@@ -274,10 +278,10 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 		{
 			return;
 		}
-
-		await _packageUtil.SetEnabled(package, true);
 		
 		await _packageUtil.SetIncluded(package, true);
+
+		await _packageUtil.SetEnabled(package, true);
 	}
 
 	private async Task EnablePackage(ICompatibilityItem message, IPackageIdentity? package)
@@ -296,14 +300,12 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 		{
 			return;
 		}
-
-		await _packageUtil.SetEnabled([message, .. message.Packages.Where(x => !x.Equals(package))], false);
 		
 		await _packageUtil.SetIncluded([message, .. message.Packages.Where(x => !x.Equals(package))], false);
 		
-		await _packageUtil.SetEnabled(package, true);
-		
 		await _packageUtil.SetIncluded(package, true);
+
+		await _packageUtil.SetEnabled(package, true);
 	}
 	#endregion
 

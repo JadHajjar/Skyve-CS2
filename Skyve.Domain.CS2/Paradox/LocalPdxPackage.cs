@@ -20,7 +20,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 {
 	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
 
-	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)), isCodeMod, version, filePath, mod.RequiredGameVersion)
+	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? versionName, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)), isCodeMod, version, versionName, filePath, mod.RequiredGameVersion)
 	{
 		IsLocal = mod.Id <= 0;
 		Id = (ulong)mod.Id;
@@ -29,7 +29,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		ShortDescription = mod.ShortDescription;
 		LongDescription = mod.LongDescription;
 		RequiredGameVersion = mod.RequiredGameVersion;
-		UserModVersion = mod.UserModVersion;
+		VersionName = mod.UserModVersion;
 		LatestVersion = mod.LatestVersion;
 		ThumbnailUrl = mod.ThumbnailPath;
 		Author = mod.Author;
@@ -54,13 +54,11 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		Url = Id == 0 ? null : $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
-	public string Version { get; set; }
 	public string DisplayName { get; set; }
 	public string Author { get; set; }
 	public string ShortDescription { get; set; }
 	public string LongDescription { get; set; }
 	public string RequiredGameVersion { get; set; }
-	public string UserModVersion { get; set; }
 	public string LatestVersion { get; set; }
 	public string? SuggestedGameVersion { get; }
 	public string ThumbnailPath { get; set; }
@@ -84,13 +82,13 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public bool IsCollection { get; set; }
 	public bool IsInvalid { get; set; }
 	public string Guid { get; set; }
-	string? IWorkshopInfo.VersionId => Version;
-	string? IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
+	public bool HasVoted { get; set; }
 	IUser? IWorkshopInfo.Author => new PdxUser(Author);
 	Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
-	public bool HasVoted { get; set; }
+	string PdxIMod.Version { get => Version ?? ""; set => Version = value; }
+	string PdxIMod.UserModVersion { get => VersionName ?? ""; set => VersionName = value; }
 	bool IWorkshopInfo.IsPartialInfo => true;
 	public IEnumerable<IThumbnailObject> Images => LocalData.Images;
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
@@ -105,7 +103,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version);
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version ?? "");
 
 		return true;
 	}

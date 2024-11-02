@@ -70,9 +70,9 @@ internal class D_PdxUser : IDashboardItem
 		}
 
 		var dotRect = new Rectangle(textRect.X, preferredHeight - (Margin.Top / 2), 0, 0);
-		using var dotBrush = new SolidBrush(string.IsNullOrWhiteSpace(_userService.User.Name) ? FormDesign.Design.RedColor : FormDesign.Design.GreenColor);
+		using var dotBrush = new SolidBrush(!_workshopService.IsLoggedIn ? FormDesign.Design.RedColor : FormDesign.Design.GreenColor);
 
-		e.Graphics.DrawStringItem(string.IsNullOrWhiteSpace(_userService.User.Name) ? LocaleCS2.NotLoggedInCheckNotification : Locale.LoggedInUser.Format(_userService.User.Name)
+		e.Graphics.DrawStringItem(!_workshopService.IsLoggedIn ? LocaleCS2.NotLoggedInCheckNotification : Locale.LoggedInUser.Format(_userService.User.Name.IfEmpty("Unknown User"))
 			, Font
 			, FormDesign.Design.ForeColor
 			, textRect.Pad(UI.Scale(16), 0, 0, 0)

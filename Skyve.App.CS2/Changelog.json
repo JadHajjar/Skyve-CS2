@@ -2,8 +2,85 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.11.3",
+    "Date": "2024-11-01",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Backend improvements to better handle consecutive actions related to PDX Mods.",
+          "Added Safe-mode shortcut URL: https://skyve-mod.com/app/safemode",
+          "Various fixes to subscribing and enabling mods and changing versions.",
+          "Fixed not being able to export a Log Report."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.11.2.2",
+    "Date": "2024-10-31",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed mod info cache not updating properly."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.11.2.1",
+    "Date": "2024-10-31",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed being unable to create log reports."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.11.2",
+    "Date": "2024-10-31",
+    "Tagline": "Version and Cache changes",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Backend changes to versioning of mods.",
+          "Fixed the mod info cache not loading properly.",
+          "You might experience a some oddities at first while the cache info is getting recycled."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.11.1",
+    "Date": "2024-10-29",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed multiple mods from different playsets showing up as included and enabled at the same time.",
+          "Fixed the compatibility report warning about duplicate mods showing up even if the mods are not included and enabled."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.11.0",
-    "Date": "2024-08-14",
+    "Date": "2024-10-27",
     "ChangeGroups": [
       {
         "Name": "Asset and Content Changes",

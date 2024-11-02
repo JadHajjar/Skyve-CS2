@@ -1,6 +1,4 @@
-﻿using Skyve.Compatibility.Domain.Interfaces;
-using Skyve.Domain.Systems;
-using Skyve.Systems;
+﻿using Skyve.Domain.Systems;
 
 using System;
 using System.Threading.Tasks;
@@ -12,13 +10,19 @@ internal class ServiceSystem
 	private readonly IWorkshopService _workshopService;
 	private readonly ILogger _logger;
 	private readonly IBackupService _backupService;
+	private readonly ISettings _settings;
+	private readonly IPlaysetManager _playsetManager;
 
-	public ServiceSystem(UpdateSystem updateSystem, IWorkshopService workshopService, ILogger logger, IBackupService backupService)
+	public ServiceSystem(UpdateSystem updateSystem, IWorkshopService workshopService, ILogger logger, IBackupService backupService, ISettings settings, IPlaysetManager playsetManager)
 	{
 		_updateSystem = updateSystem;
 		_workshopService = workshopService;
 		_logger = logger;
 		_backupService = backupService;
+		_settings = settings;
+		_playsetManager = playsetManager;
+		_backupService.PreBackupTask = PreBackupTask;
+		_backupService.PostBackupTask = PostBackupTask;
 	}
 
 	public async void Run()
@@ -49,15 +53,40 @@ internal class ServiceSystem
 
 	public async void RunBackup()
 	{
-		while (true)
+		_logger.Info("Backup Loop Started");
+
+		try
 		{
-			await _workshopService.Initialize();
+			while (true)
+			{
+				_settings.BackupSettings.Reload();
 
-			await _workshopService.Login();
-
-			await _backupService.Run();
-
-			await _workshopService.Shutdown();
+				if (await _backupService.Run())
+				{
+					_logger.Error("Backup failed, disabling backup loop");
+					return;
+				}
+			}
 		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Unexpected error during Backup Loop");
+		}
+	}
+
+	private async Task PreBackupTask()
+	{
+		_logger.Info("Starting Backup");
+
+		await _workshopService.Initialize();
+
+		await _workshopService.Login();
+	}
+
+	private async Task PostBackupTask()
+	{
+		await _workshopService.Shutdown();
+
+		_logger.Info("Backup Finished");
 	}
 }

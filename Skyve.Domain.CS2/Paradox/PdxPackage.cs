@@ -29,7 +29,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 		ShortDescription = mod.ShortDescription;
 		LongDescription = mod.LongDescription;
 		RequiredGameVersion = mod.RequiredGameVersion;
-		UserModVersion = mod.UserModVersion;
+		VersionName = mod.UserModVersion;
 		LatestVersion = mod.LatestVersion;
 		ThumbnailUrl = mod.ThumbnailPath;
 		Author = mod.Author;
@@ -64,12 +64,12 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	}
 
 	public string Version { get; set; }
+	public string VersionName { get; set; }
 	public string DisplayName { get; set; }
 	public string Author { get; set; }
 	public string ShortDescription { get; set; }
 	public string LongDescription { get; set; }
 	public string RequiredGameVersion { get; set; }
-	public string UserModVersion { get; set; }
 	public string LatestVersion { get; set; }
 	public string ThumbnailPath { get; set; }
 	public ulong Size { get; set; }
@@ -104,15 +104,13 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	public string? Url { get; }
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
-	string IPackage.Version => UserModVersion.IfEmpty(Version);
-	string? IWorkshopInfo.VersionId => Version;
-	string IWorkshopInfo.Version => UserModVersion.IfEmpty(Version);
 	string? IWorkshopInfo.SuggestedGameVersion => RequiredGameVersion;
 	bool IWorkshopInfo.IsPartialInfo => true;
 	LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => [];
 	IEnumerable<ILink> IWorkshopInfo.Links => [];
+	string PdxIMod.UserModVersion { get => VersionName; set => VersionName = value; }
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
