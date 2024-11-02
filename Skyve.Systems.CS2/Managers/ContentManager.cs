@@ -170,6 +170,20 @@ internal class ContentManager : IContentManager
 		return savesPackage;
 	}
 
+	public IPackage? GetMapFiles()
+	{
+		var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps", _settings.FolderSettings.UserIdentifier);
+
+		var mapsPackage = GetPackage(gameMapsPath, true, null);
+
+		if (mapsPackage is not null)
+		{
+			mapsPackage.IsBuiltIn = true;
+		}
+
+		return mapsPackage;
+	}
+
 	public async Task<List<IPackage>> LoadContents()
 	{
 		var packages = new List<IPackage>();

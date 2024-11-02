@@ -167,17 +167,18 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info($"Finished.");
 
-		//if (Process.GetProcessesByName("Skyve.Service").Length == 0)
-		//{
-		//	new BackgroundAction(RunBackupService);
-		//}
+		if (Process.GetProcessesByName("Skyve.Service").Length == 0)
+		{
+			new BackgroundAction(RunBackupService);
+		}
 	}
 
 	private async void RunBackupService()
 	{
 		while (true)
 		{
-			await _backupService.Run();
+			if (await _backupService.Run())
+				return;
 		}
 	}
 

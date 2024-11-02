@@ -141,7 +141,7 @@ internal class LogUtil : ILogUtil
 			CreateFileEntry(zipArchive, "Skyve\\SkyveLog_Previous.log", _logger.PreviousLogFilePath);
 		}
 
-		CreateEntry(zipArchive, "Mods List.txt", _packageManager.Packages.Where(x => _packageUtil.IsIncludedAndEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name} {x.Version}" : $"{x.Id}: {x.Name} {x.Version}", CrossIO.NewLine));
+		CreateEntry(zipArchive, "Mods List.txt", _packageManager.Packages.Where(x => _packageUtil.IsIncludedAndEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name} {x.VersionName}" : $"{x.Id}: {x.Name} {x.VersionName}", CrossIO.NewLine));
 
 		AddCompatibilityReport(zipArchive);
 	}
@@ -168,7 +168,7 @@ internal class LogUtil : ILogUtil
 			return;
 		}
 
-		CreateEntry(zipArchive, "Skyve\\CurrentPlayset.json", await _playsetManager.GetLogPlayset());
+		CreateEntry(zipArchive, "Skyve\\CurrentPlayset.json", await _playsetManager.GenerateImportPlayset(_playsetManager.CurrentPlayset));
 	}
 
 	private static void AddErrors(ZipArchive zipArchive, List<ILogTrace> logTrace)

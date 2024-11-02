@@ -4,7 +4,6 @@
     "Beta": true,
     "Version": "0.11.3",
     "Date": "2024-11-01",
-    "Tagline": "Version and Cache changes",
     "ChangeGroups": [
       {
         "Name": "Changes",

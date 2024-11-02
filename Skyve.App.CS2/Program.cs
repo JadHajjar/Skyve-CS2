@@ -57,71 +57,14 @@ internal static class Program
 
 		return services.BuildServiceProvider();
 	}
-	//public static string ReadBinaryFileAsText(string filePath, Encoding encoding = null)
-	//{
-	//	// Set the default encoding to UTF-8 if not provided
-	//	encoding ??= Encoding.UTF8;
-
-	//	// Check if the file exists
-	//	if (!File.Exists(filePath))
-	//	{
-	//		throw new FileNotFoundException("File not found.", filePath);
-	//	}
-
-	//	// Read the binary file and convert to text
-	//	using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-	//	using var r = new BinaryReader(stream);
-	//	r.ReadBytes(11);
-	//	var type = new StringBuilder();
-	//	while (true)
-	//	{
-	//		var ss = encoding.GetChars(r.ReadBytes(2))[0];
-
-	//		if (ss == 0)
-	//			break;
-
-	//		type.Append(ss);
-	//	}
-
-	//	r.ReadBytes(21);
-
-	//	var name = new StringBuilder();
-	//	while (true)
-	//	{
-	//		var ss = encoding.GetChars(r.ReadBytes(2))[0];
-
-	//		if (ss == 0)
-	//			break;
-
-	//		name.Append(ss);
-	//	}
-
-	//	return "ss";
-
-
-
-	//	{
-	//		var types = new List<Type>();
-	//		var reader = new Colossal.OdinSerializer.BinaryDataReader(stream, new Colossal.OdinSerializer.DeserializationContext());
-
-	//		reader.PrepareNewSerializationSession();
-	//		reader.EnterNode(out var s);
-			
-			
-	//		while (reader.EnterNode(out var nam2e))
-	//			types.Add(nam2e);
-	//	}
-
-	//	return "";
-	//}
 
 	[STAThread]
 	private static void Main(string[] args)
 	{
-		//var s2 = ReadBinaryFileAsText("C:\\Users\\DotCa\\AppData\\LocalLow\\Colossal Order\\Cities Skylines II\\.cache\\Mods\\mods_subscribed\\91931_2\\German Pack\\GER_ResidentialMedium01_L5_2x4_LOD2 Mesh.Prefab", Encoding.Unicode);
 		try
 		{
-			HandleIncorrectLaunchLocation();
+			if (HandleIncorrectLaunchLocation())
+				return;
 
 			if (args.Any(x => x.StartsWith("-createJunction") || x.StartsWith("-deleteJunction")))
 			{
@@ -154,7 +97,6 @@ internal static class Program
 			BackgroundAction.BackgroundTaskError += BackgroundAction_BackgroundTaskError;
 			AppDomain.CurrentDomain.UnhandledException += GlobalUnhandledExceptionHandler;
 			Application.ThreadException += GlobalThreadExceptionHandler;
-
 
 			try
 			{
@@ -204,34 +146,36 @@ internal static class Program
 		}
 	}
 
-	private static void HandleIncorrectLaunchLocation()
+	private static bool HandleIncorrectLaunchLocation()
 	{
-		if (App.Program.CurrentDirectory.PathContains(App.Program.AppDataPath))
+		if (!App.Program.CurrentDirectory.PathContains(App.Program.AppDataPath))
 		{
-			if (OSVersion.Version.Major >= 6)
-			{
-				SetProcessDPIAware();
-			}
-
-			var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "Skyve Setup.exe");
-
-			if (CrossIO.FileExists(setupFile))
-			{
-				if (MessagePrompt.Show(LocaleCS2.RunSetupOrRunApp, PromptButtons.OKCancel, PromptIcons.Hand) == DialogResult.OK)
-				{
-					Process.Start(new ProcessStartInfo(setupFile)
-					{
-						Verb = WinExtensionClass.IsAdministrator ? string.Empty : "runas"
-					});
-				}
-			}
-			else
-			{
-				MessagePrompt.Show(LocaleCS2.CantRunAppFromHere, PromptButtons.OK, PromptIcons.Hand);
-			}
-
-			return;
+			return false;
 		}
+
+		if (OSVersion.Version.Major >= 6)
+		{
+			SetProcessDPIAware();
+		}
+
+		var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "Skyve Setup.exe");
+
+		if (CrossIO.FileExists(setupFile))
+		{
+			if (MessagePrompt.Show(LocaleCS2.RunSetupOrRunApp, PromptButtons.OKCancel, PromptIcons.Hand) == DialogResult.OK)
+			{
+				Process.Start(new ProcessStartInfo(setupFile)
+				{
+					Verb = WinExtensionClass.IsAdministrator ? string.Empty : "runas"
+				});
+			}
+		}
+		else
+		{
+			MessagePrompt.Show(LocaleCS2.CantRunAppFromHere, PromptButtons.OK, PromptIcons.Hand);
+		}
+
+		return true;
 	}
 
 	private static bool IsAlreadyRunning()

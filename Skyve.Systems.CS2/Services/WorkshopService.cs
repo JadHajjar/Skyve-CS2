@@ -493,6 +493,19 @@ public class WorkshopService : IWorkshopService
 		return !playsets.Success ? (List<IPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (IPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
 	}
 
+	public async Task<IPlayset?> GetCurrentPlayset()
+	{
+		if (Context is null)
+		{
+			return null;
+		}
+
+		var playsetId = await GetActivePlaysetId();
+		var playsets = await GetPlaysets(true);
+
+		return playsets.FirstOrDefault(x => x.Id == playsetId);
+	}
+
 	public async Task<bool> ToggleVote(IPackageIdentity packageIdentity)
 	{
 		if (Context is null)
@@ -997,6 +1010,7 @@ public class WorkshopService : IWorkshopService
 			_notificationsService.RemoveNotificationsOfType<ParadoxContextFailedNotification>();
 
 			var playsetFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods", "playsets_metadata");
+			var playsetSettingsFile = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods", "PlaysetSettings");
 			var tempFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk", _settings.FolderSettings.UserIdentifier, "temp");
 
 			Process.Start(new ProcessStartInfo()
@@ -1006,12 +1020,17 @@ public class WorkshopService : IWorkshopService
 				CreateNoWindow = true,
 				WorkingDirectory = Path.GetTempPath(),
 				FileName = "cmd.exe",
-				Verb = "runas"
+				Verb = WinExtensionClass.IsAdministrator ? "" : "runas"
 			}).WaitForExit();
 
 			if (Directory.Exists(tempFolder))
 			{
 				new DirectoryInfo(tempFolder).Delete(true);
+			}
+
+			if (CrossIO.FileExists(playsetSettingsFile))
+			{
+				CrossIO.DeleteFile(playsetSettingsFile, true);
 			}
 
 			if (Directory.Exists(playsetFolder))

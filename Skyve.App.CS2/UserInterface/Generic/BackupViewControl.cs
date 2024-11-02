@@ -12,9 +12,9 @@ internal class BackupViewControl : SlickControl
 	private Rectangle IndividualItemRect;
 
 	[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	public bool RestorePoint { get; internal set; } = true;
+	public bool RestorePoint { get; internal set; }
 	[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	public bool IndividualItem { get; internal set; }
+	public bool IndividualItem { get; internal set; } = true;
 
 	public event EventHandler? RestorePointClicked;
 	public event EventHandler? IndividualItemClicked;
@@ -45,14 +45,14 @@ internal class BackupViewControl : SlickControl
 	{
 		base.OnMouseMove(e);
 
-		if (RestorePointRect.Contains(e.Location))
-		{
-			SlickTip.SetTo(this, "Switch to Compact-View");
-		}
-		else if (IndividualItemRect.Contains(e.Location))
-		{
-			SlickTip.SetTo(this, "Switch to Grid-View");
-		}
+		//if (RestorePointRect.Contains(e.Location))
+		//{
+		//	SlickTip.SetTo(this, "Switch to Compact-View");
+		//}
+		//else if (IndividualItemRect.Contains(e.Location))
+		//{
+		//	SlickTip.SetTo(this, "Switch to Grid-View");
+		//}
 	}
 
 	protected override void OnMouseClick(MouseEventArgs e)

@@ -35,7 +35,13 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation BackupLocalMods => _instance.GetText("Backup_LocalMods");
 
 	/// <summary>
-	/// <para>Mod settings folder</para>
+	/// <para>Map</para>
+	/// <para>Plural: {0} maps</para>
+	/// </summary>
+	public static Translation BackupMaps => _instance.GetText("Backup_Maps");
+
+	/// <summary>
+	/// <para>Mod settings folders</para>
 	/// <para>Plural: {0} mod settings folders</para>
 	/// </summary>
 	public static Translation BackupModsSettingsFiles => _instance.GetText("Backup_ModsSettingsFiles");
