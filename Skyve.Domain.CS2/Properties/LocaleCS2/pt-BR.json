@@ -157,6 +157,10 @@
     "One": "Jogo Salvo",
     "Plural": "{0} Jogos Salvos"
   },
+  "Backup_Maps": {
+    "One": "Map",
+    "Plural": "{0} maps"
+  },
   "Backup_ActivePlayset": {
     "One": "Modo de Jogo",
     "Plural": "{0} Modos de Jogo"
@@ -166,7 +170,7 @@
     "Plural": "{0} Arquivos de Configuração"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Pasta de configurações do mod",
+    "One": "Mod settings folders",
     "Plural": "{0} Pastas de configurações dos mods"
   },
   "Backup_LocalMods": {
