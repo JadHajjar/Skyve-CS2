@@ -157,6 +157,10 @@
     "One": "Partida guardada",
     "Plural": "{0} partridas guardadas"
   },
+  "Backup_Maps": {
+    "One": "Map",
+    "Plural": "{0} maps"
+  },
   "Backup_ActivePlayset": {
     "One": "Playset",
     "Plural": "{0} playsets"
@@ -166,7 +170,7 @@
     "Plural": "{0} archivos de configuración"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Carpeta de configuración de mod",
+    "One": "Mod settings folders",
     "Plural": "{0} carpetas de configuración de mod"
   },
   "Backup_LocalMods": {
