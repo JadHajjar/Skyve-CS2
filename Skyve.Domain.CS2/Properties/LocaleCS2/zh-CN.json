@@ -157,6 +157,10 @@
     "One": "存档",
     "Plural": "{0} 个存档"
   },
+  "Backup_Maps": {
+    "One": "Map",
+    "Plural": "{0} maps"
+  },
   "Backup_ActivePlayset": {
     "One": "配组",
     "Plural": "{0} 个配组"
@@ -166,7 +170,7 @@
     "Plural": "{0} 个设置文件"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "模组设置文件夹",
+    "One": "Mod settings folders",
     "Plural": "{0} 个模组设置文件夹"
   },
   "Backup_LocalMods": {
