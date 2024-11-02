@@ -157,6 +157,10 @@
     "One": "Savegame",
     "Plural": "{0} savegames"
   },
+  "Backup_Maps": {
+    "One": "Map",
+    "Plural": "{0} maps"
+  },
   "Backup_ActivePlayset": {
     "One": "Playset",
     "Plural": "{0} playsets"
@@ -166,7 +170,7 @@
     "Plural": "{0} settings files"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folder",
+    "One": "Mod settings folders",
     "Plural": "{0} mod settings folders"
   },
   "Backup_LocalMods": {
