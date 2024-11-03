@@ -271,7 +271,14 @@ internal class BackupSystem : IBackupSystem
 
 	private IBackupItem MakeSettingsBackup()
 	{
-		var settingsFiles = Directory.GetFiles(_settings.FolderSettings.AppDataPath, "*.coc", SearchOption.AllDirectories);
+		var settingsFiles = Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*.coc", SearchOption.AllDirectories)
+			.Where(item =>
+			{
+				var braceCount = File.ReadAllLines(item).Count(x => x.Trim().StartsWith("}") || x.Trim().EndsWith("{"));
+
+				return braceCount % 2 == 0;
+			})
+			.ToArray();
 
 		return new BackupItem.SettingsFiles(settingsFiles, _settings.FolderSettings.AppDataPath);
 	}
@@ -292,12 +299,14 @@ internal class BackupSystem : IBackupSystem
 
 	private async Task<IBackupItem?> MakePlaysetBackup()
 	{
-		if (_playsetManager.CurrentPlayset is null)
+		var currentPlayset = await _workshopService.GetCurrentPlayset();
+
+		if (currentPlayset is null)
 		{
 			return null;
 		}
 
-		var playset = await _playsetManager.GenerateImportPlayset(await _workshopService.GetCurrentPlayset());
+		var playset = await _playsetManager.GenerateImportPlayset(currentPlayset);
 
 		return new BackupItem.ActivePlayset(playset, _playsetManager);
 	}
