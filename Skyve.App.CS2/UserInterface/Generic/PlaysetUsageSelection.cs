@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -58,6 +59,12 @@ internal class PlaysetUsageSelection : SlickControl
 		if (Selected)
 		{
 			e.Graphics.FillRoundedRectangleWithShadow(ClientRectangle.Pad(Padding.Left / 2), Padding.Left / 2, Padding.Left / 2, FormDesign.Design.BackColor.MergeColor(FormDesign.Design.ActiveColor, 90), Color.FromArgb(8, FormDesign.Design.ActiveColor), true);
+
+			if (HoverState.HasFlag(HoverState.Hovered) && ClientRectangle.Pad(Padding).Contains(PointToClient(Cursor.Position)))
+			{
+				using var pen = new Pen(FormDesign.Design.IsDarkTheme ? Color.FromArgb(150, 255, 255, 255) : Color.FromArgb(150, FormDesign.Design.AccentColor), UI.Scale(1.5f)) { Alignment = PenAlignment.Center };
+				e.Graphics.DrawRoundedRectangle(pen, ClientRectangle.Pad(Padding.Left / 2), Padding.Left / 2);
+			}
 		}
 		else if (HoverState.HasFlag(HoverState.Hovered) && ClientRectangle.Pad(Padding).Contains(PointToClient(Cursor.Position)))
 		{

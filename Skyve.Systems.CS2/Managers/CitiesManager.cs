@@ -26,6 +26,7 @@ internal class CitiesManager : ICitiesManager
 {
 	private readonly ISettings _settings;
 	private readonly ILogger _logger;
+	private readonly INotifier _notifier;
 	private readonly IIOUtil _iOUtil;
 	private readonly ILocationService _locationManager;
 	private readonly IServiceProvider _serviceProvider;
@@ -36,9 +37,10 @@ internal class CitiesManager : ICitiesManager
 
 	public string GameVersion { get; }
 
-	public CitiesManager(ILogger logger, ILocationService locationManager, ISettings settings, IIOUtil iOUtil, IServiceProvider serviceProvider, INotificationsService notificationsService)
+	public CitiesManager(ILogger logger, INotifier notifier, ILocationService locationManager, ISettings settings, IIOUtil iOUtil, IServiceProvider serviceProvider, INotificationsService notificationsService)
 	{
 		_logger = logger;
+		_notifier = notifier;
 		_locationManager = locationManager;
 		_iOUtil = iOUtil;
 		_serviceProvider = serviceProvider;
@@ -82,6 +84,11 @@ internal class CitiesManager : ICitiesManager
 
 	public bool IsAvailable()
 	{
+		if (_notifier.IsBackingUp)
+		{
+			return false;
+		}
+
 		var playsetManager = _serviceProvider.GetService<IPlaysetManager>();
 		var file = IsExeLaunch((playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings)
 			? _locationManager.CitiesPathWithExe
@@ -107,6 +114,7 @@ internal class CitiesManager : ICitiesManager
 					{
 						await Task.Delay(50);
 					}
+
 					break;
 			}
 		}

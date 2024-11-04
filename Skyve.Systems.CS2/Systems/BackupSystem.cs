@@ -22,6 +22,7 @@ internal class BackupSystem : IBackupSystem
 	private delegate Task<bool> RestoreDelegate(ZipArchive zipArchive, IBackupMetaData metaData);
 
 	private readonly ISettings _settings;
+	private readonly INotifier _notifier;
 	private readonly ILogger _logger;
 	private readonly IContentManager _contentManager;
 	private readonly IPlaysetManager _playsetManager;
@@ -33,9 +34,10 @@ internal class BackupSystem : IBackupSystem
 	public IBackupInstructions BackupInstructions { get; } = new BackupInstructions();
 	public IRestoreInstructions RestoreInstructions { get; } = new RestoreInstructions();
 
-	public BackupSystem(ISettings settings, ILogger logger, IContentManager contentManager, IPlaysetManager playsetManager, IPackageManager packageManager, IWorkshopService workshopService)
+	public BackupSystem(ISettings settings, INotifier notifier, ILogger logger, IContentManager contentManager, IPlaysetManager playsetManager, IPackageManager packageManager, IWorkshopService workshopService)
 	{
 		_settings = settings;
+		_notifier = notifier;
 		_logger = logger;
 		_contentManager = contentManager;
 		_playsetManager = playsetManager;
@@ -44,6 +46,18 @@ internal class BackupSystem : IBackupSystem
 		_backupSettings = (settings.BackupSettings as BackupSettings)!;
 
 		_backupTime = DateTime.Now;
+	}
+
+	public string[] GetBackupTypes()
+	{
+		return [
+			nameof(BackupItem.ActivePlayset),
+			nameof(BackupItem.SettingsFiles),
+			nameof(BackupItem.ModsSettingsFiles),
+			nameof(BackupItem.SaveGames),
+			nameof(BackupItem.Maps),
+			nameof(BackupItem.LocalMods),
+		];
 	}
 
 	public void Save(IBackupMetaData metaData, string[] files, object? itemMetaData)
@@ -178,6 +192,7 @@ internal class BackupSystem : IBackupSystem
 	{
 		try
 		{
+			_notifier.IsBackingUp = true;
 
 			var availableBackups = GetAllBackups();
 
@@ -207,6 +222,10 @@ internal class BackupSystem : IBackupSystem
 			_logger.Exception(ex, "Failed to do backup");
 
 			return false;
+		}
+		finally
+		{
+			_notifier.IsBackingUp = false;
 		}
 
 		return true;

@@ -19,7 +19,7 @@ public partial class PC_BackupCenter : PanelContent
 		SetCurrentSettings();
 
 		backupListControl.CanDrawItem += BackupListControl_CanDrawItem;
-		B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder);
+		L_FinishSetup.Visible = !(B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder));
 	}
 
 	protected override void LocaleChanged()
@@ -28,6 +28,8 @@ public partial class PC_BackupCenter : PanelContent
 
 		L_BackupInfo.Text = Locale.BackupDescriptionInfo;
 		L_RestoreInfo.Text = Locale.RestoreDescriptionInfo;
+		L_ContentInfo.Text = Locale.BackupContentInfo;
+		L_FinishSetup.Text = Locale.SetupSettingsFirst;
 	}
 
 	protected override void UIChanged()
@@ -35,22 +37,24 @@ public partial class PC_BackupCenter : PanelContent
 		base.UIChanged();
 
 		TB_Search.Width = UI.Scale(200);
-		TB_Search.Margin = backupViewControl.Margin = UI.Scale(new Padding(3));
+		L_FinishSetup.Margin = TB_Search.Margin = DD_BackupType.Margin = backupViewControl.Margin = UI.Scale(new Padding(3));
 		spacerSettings.Height = spacerBackup.Height = UI.Scale(2);
 		spacerSettings.Margin = UI.Scale(new Padding(6));
 		L_BackupInfo.Margin = UI.Scale(new Padding(3, 3, 3, 6));
-		panel1.Padding = P_Backup.Margin = P_RestoreSelect.Margin = TLP_General.Margin = TLP_Schedule.Margin = TLP_Cleanup.Margin = UI.Scale(new Padding(6));
+		panel1.Padding = P_Backup.Margin = P_RestoreSelect.Margin = TLP_ContentTypes.Margin = TLP_General.Margin = TLP_Schedule.Margin = TLP_Cleanup.Margin = UI.Scale(new Padding(6));
 		B_AddTime.Margin = SS_Count.Margin = SS_Storage.Margin = SS_CleanupTime.Margin = UI.Scale(new Padding(32, 4, 4, 4));
 		B_Restore.Font = UI.Font(9.75F, System.Drawing.FontStyle.Bold);
-		L_RestoreInfo.Margin = B_Restore.Margin = UI.Scale(new Padding(10, 3, 10, 10));
-		B_Restore.Padding = UI.Scale(new Padding(6));
+		L_ContentInfo.Margin = L_RestoreInfo.Margin = B_Restore.Margin = UI.Scale(new Padding(10, 3, 10, 10));
+		TB_DestinationFolder.Margin = B_Restore.Padding = UI.Scale(new Padding(6));
+		L_FinishSetup.Font = UI.Font(7f, System.Drawing.FontStyle.Italic);
 	}
 
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
 
-		L_BackupInfo.ForeColor = L_RestoreInfo.ForeColor = design.InfoColor;
+		L_FinishSetup.ForeColor = design.InfoColor.MergeColor(design.OrangeColor, 25);
+		L_BackupInfo.ForeColor = L_RestoreInfo.ForeColor = L_ContentInfo.ForeColor = design.InfoColor;
 	}
 
 	#region Settings Tab
@@ -77,6 +81,23 @@ public partial class PC_BackupCenter : PanelContent
 		foreach (var item in settings.ScheduleSettings.ScheduleTimes)
 		{
 			AddTime(item);
+		}
+
+		var backupSystem = ServiceCenter.Get<IBackupSystem>();
+
+		P_ContentTypes.Controls.Clear(true);
+
+		foreach (var item in backupSystem.GetBackupTypes())
+		{
+			var meta = new BackupMetaData { Type = item };
+
+			P_ContentTypes.Controls.Add(new SlickToggleTile
+			{
+				Text = meta.GetTypeTranslation(),
+				Tag = item,
+				ImageName = meta.GetIcon(),
+				Selected = settings.ContentTypes is null || settings.ContentTypes.Contains(item)
+			});
 		}
 	}
 
@@ -171,6 +192,8 @@ public partial class PC_BackupCenter : PanelContent
 		settings.DestinationFolder = TB_DestinationFolder.Text;
 		settings.IgnoreAutoSaves = !CB_IncludeAutoSaves.Checked;
 
+		settings.ContentTypes = P_ContentTypes.Controls.OfType<SlickToggleTile>().Where(x => x.Selected).Select(x => x.Tag.ToString()).ToArray();
+
 		settings.ScheduleSettings.BackupSaves = CB_ScheduleIncludeSaves.Checked;
 		settings.ScheduleSettings.BackupLocalMods = CB_ScheduleIncludeLocalMods.Checked;
 		settings.ScheduleSettings.ScheduleTimes = FLP_Times.Controls.OfType<SlickDateTime>().Select(x => x.Value.TimeOfDay).ToArray();
@@ -213,7 +236,7 @@ public partial class PC_BackupCenter : PanelContent
 
 		settings.Save();
 
-		B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder);
+		L_FinishSetup.Visible = !(B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder));
 	}
 	#endregion
 
@@ -319,6 +342,11 @@ public partial class PC_BackupCenter : PanelContent
 
 	private void BackupListControl_CanDrawItem(object sender, CanDrawItemEventArgs<BackupListControl.RestoreGroup> e)
 	{
+		if (DD_BackupType.SelectedItem is not null)
+		{
+			e.DoNotDraw = !e.Item.RestoreItems.Any(x => x.MetaData.Type == DD_BackupType.SelectedItem);
+		}
+
 		if (string.IsNullOrWhiteSpace(TB_Search.Text))
 		{
 			return;

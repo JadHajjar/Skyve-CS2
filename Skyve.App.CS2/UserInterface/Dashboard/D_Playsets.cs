@@ -10,8 +10,9 @@ internal class D_Playsets : IDashboardItem
 	private readonly IPlaysetManager _playsetManager;
 	private readonly INotifier _notifier;
 	private readonly ICitiesManager _citiesManager;
-	private bool isRunning;
+	private bool isCitiesRunning;
 	private bool loadingFromGameLaunch;
+	private bool isCitiesAvailable;
 
 	public D_Playsets()
 	{
@@ -20,8 +21,8 @@ internal class D_Playsets : IDashboardItem
 		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
 		_notifier.PlaysetUpdated += _notifier_PlaysetUpdated;
 
-		_citiesManager.MonitorTick += _citiesManager_MonitorTick;
-		_citiesManager.LaunchingStatusChanged += _citiesManager_LaunchingStatusChanged;
+		_citiesManager.MonitorTick += CitiesManager_MonitorTick;
+		_citiesManager.LaunchingStatusChanged += CitiesManager_LaunchingStatusChanged;
 
 		Loading = !_notifier.IsPlaysetsLoaded;
 	}
@@ -30,13 +31,13 @@ internal class D_Playsets : IDashboardItem
 	{
 		_notifier.PlaysetChanged -= _notifier_PlaysetChanged;
 		_notifier.PlaysetUpdated -= _notifier_PlaysetUpdated;
-		_citiesManager.MonitorTick -= _citiesManager_MonitorTick;
-		_citiesManager.LaunchingStatusChanged -= _citiesManager_LaunchingStatusChanged;
+		_citiesManager.MonitorTick -= CitiesManager_MonitorTick;
+		_citiesManager.LaunchingStatusChanged -= CitiesManager_LaunchingStatusChanged;
 
 		base.Dispose(disposing);
 	}
 
-	private void _citiesManager_LaunchingStatusChanged(bool obj)
+	private void CitiesManager_LaunchingStatusChanged(bool obj)
 	{
 		this.TryInvoke(() =>
 		{
@@ -46,11 +47,13 @@ internal class D_Playsets : IDashboardItem
 		});
 	}
 
-	private void _citiesManager_MonitorTick(bool isAvailable, bool isRunning)
+	private void CitiesManager_MonitorTick(bool isAvailable, bool isRunning)
 	{
-		if (this.isRunning != isRunning)
+		isCitiesAvailable = isAvailable;
+
+		if (isCitiesRunning != isRunning)
 		{
-			this.isRunning = isRunning;
+			isCitiesRunning = isRunning;
 
 			OnResizeRequested();
 		}
@@ -128,13 +131,13 @@ internal class D_Playsets : IDashboardItem
 
 		_buttonRightClickActions[headerRectangle] = () => RightClick(_playsetManager.CurrentPlayset);
 
-		DrawButton(e, applyDrawing, ref preferredHeight, (App.Program.MainForm as MainForm)!.LaunchStopCities, new ButtonDrawArgs
+		DrawButton(e, applyDrawing, ref preferredHeight, !isCitiesAvailable ? null : (App.Program.MainForm as MainForm)!.LaunchStopCities, new ButtonDrawArgs
 		{
-			Text = LocaleHelper.GetGlobalText(isRunning ? "StopCities" : "StartCities"),
+			Text = LocaleHelper.GetGlobalText(isCitiesRunning ? "StopCities" : "StartCities"),
 			Rectangle = e.ClipRectangle.Pad(Margin),
-			Icon = isRunning ? "Stop" : "CS",
+			Icon = isCitiesRunning ? "Stop" : "CS",
 			Padding = UI.Scale(new Padding(2)),
-			Enabled = Enabled,
+			Enabled = Enabled && isCitiesAvailable,
 			Control = this
 		});
 

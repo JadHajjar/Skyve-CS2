@@ -584,7 +584,7 @@ partial class PC_Utilities
 			this.slickScroll1.TabStop = false;
 			this.slickScroll1.TargetAnimationValue = 8;
 			this.slickScroll1.Text = "slickScroll1";
-			this.slickScroll1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.slickScroll1_Scroll);
+			this.slickScroll1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.SlickScroll_Scroll);
 			// 
 			// PC_Utilities
 			// 
