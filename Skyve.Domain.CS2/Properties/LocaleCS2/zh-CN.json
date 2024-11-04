@@ -17,8 +17,8 @@
     "Plural": "复制已选插件的 PDX Mods 链接"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "Copy PDX Mods link as Markdown",
-    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+    "One": "以Markdown形式复制PDX Mods链接",
+    "Plural": "以Markdown形式复制已选插件的PDX Mods链接"
   },
   "CopyWorkshopId": {
     "One": "复制 PDX Mods ID",
@@ -78,7 +78,7 @@
   "LogsToPlayerLog": "将日志复制到 Player.log",
   "InvalidFolderSettings": "检测到无效设置",
   "InvalidFolderSettingsInfo": "Skyve 无法找到 Cities: Skylines II 正确的数据文件夹。\n\n点击此处以手动选择数据文件夹。",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "Skyve 应用程序尚未设置好。请启用 Skyve 模组，并启动 Cities: Skylines II，以便完成设置。\n\n请确保模组能够成功加载。如果加载失败，请尝试新建一个 playset，并且只将 Skyve 添加到其中。",
   "InvalidFolderSettingsFail": "您选择的路径不正确。请在您的 AppData 文件夹中选择 \"Cities: Skylines II\" 文件夹。",
   "DefaultLocation": "默认用户数据位置",
   "JunctionTitle": "自定义内容存储位置",
@@ -88,7 +88,7 @@
   "ResetLocation": "重置位置",
   "JunctionRestart": "在此过程中，Skyve 和 Cities: Skylines II 将会关闭。\n\n完成时，Skyve 将自动重新启动。",
   "PlaysetAlreadyImported": "此配组已经在您的列表里了。",
-  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
+  "JunctionInvalidFolder": "所选的文件夹无效，请更改为另一个。",
   "CouldNotRetrieveMods": "无法获取模组数据",
   "NewGameUpdate": "Cities: Skylines II 最新更新",
   "NewGameUpdateInfo": "版本更新 {0} 现已发布。\n在开始游戏前，请务必检查兼容性。",
@@ -98,7 +98,7 @@
   "RunSync": "开始同步",
   "PDXModsNew": "PDX Mods 上的新插件",
   "PDXModsUpdated": "PDX Mods 上最近更新的插件",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "上周热门模组",
   "DiskStatus": "硬盘状态",
   "TotalCitiesSize": "C:S II 的用户数据总大小",
   "TotalSavesSize": "存档大小",
@@ -134,11 +134,11 @@
   "Sorting_WorkshopName": "字母序",
   "InitialRelease": "初始版本",
   "ForumPage": "论坛页面",
-  "DisableBurstCompile": "Disable Burst-Compilation",
-  "UnreadComment": "New comments on '{0}'",
+  "DisableBurstCompile": "禁用 Burst 编译器",
+  "UnreadComment": "'{0}' 的新评论",
   "SafeMode": "安全模式",
   "LaunchInSafeMode": "在安全模式下启动",
-  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SafeModeInfo": "以“安全模式”启动游戏，以便帮助诊断崩溃问题。\n实际上，崩溃的原因难以确定，有时也导致存档无法恢复。\n安全模式能让游戏在大多数情况下避免崩溃，从而让你能够恢复存档，并且会正确地记录错误日志，以供技术支持分析。",
   "SearchTime": "时间",
   "SearchTime_AllTime": "全部时间",
   "SearchTime_Day": "24 小时",
@@ -158,8 +158,8 @@
     "Plural": "{0} 个存档"
   },
   "Backup_Maps": {
-    "One": "Map",
-    "Plural": "{0} maps"
+    "One": "地图",
+    "Plural": "{0} 张地图"
   },
   "Backup_ActivePlayset": {
     "One": "配组",
@@ -170,7 +170,7 @@
     "Plural": "{0} 个设置文件"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
+    "One": "模组设置文件夹",
     "Plural": "{0} 个模组设置文件夹"
   },
   "Backup_LocalMods": {
@@ -178,5 +178,5 @@
     "Plural": "{0} 个本地模组"
   },
   "ParadoxContextFailed": "无法加载 Paradox 后端",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
+  "ParadoxContextFailedInfo": "一些问题导致 Paradox 的后端出错。\n点击此消息来尝试修复。\n\n如果修复失败，请在技术支持论坛上寻求帮助。"
 }
