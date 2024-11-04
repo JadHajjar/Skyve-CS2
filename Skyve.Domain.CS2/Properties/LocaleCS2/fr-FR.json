@@ -158,8 +158,8 @@
     "Plural": "{0} sauvegardes du jeu"
   },
   "Backup_Maps": {
-    "One": "Map",
-    "Plural": "{0} maps"
+    "One": "Carte",
+    "Plural": "{0} cartes"
   },
   "Backup_ActivePlayset": {
     "One": "Playset",
