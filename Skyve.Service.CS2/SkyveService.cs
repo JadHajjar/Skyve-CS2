@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Service.CS2.Systems;
 using Skyve.Systems;
@@ -46,6 +47,8 @@ public class SkyveService : ServiceBase
 			services.AddTransient<UpdateSystem>();
 
 			var provider = services.BuildServiceProvider();
+
+			provider.GetService<INotifier>()!.Context = SkyveContext.Service;
 
 			Providers.Add(provider);
 

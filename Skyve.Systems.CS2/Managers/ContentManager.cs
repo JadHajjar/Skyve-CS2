@@ -240,9 +240,11 @@ internal class ContentManager : IContentManager
 			}
 		}
 
+		if (_notifier.Context is Skyve.Domain.Enums.SkyveContext.Service)
+			return packages;
+
 		try
 		{
-
 			_logger.Info($"Analyzing packages..");
 
 			await AnalyzePackages(packages);

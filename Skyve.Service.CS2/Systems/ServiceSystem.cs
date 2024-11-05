@@ -21,6 +21,7 @@ internal class ServiceSystem
 		_backupService = backupService;
 		_settings = settings;
 		_playsetManager = playsetManager;
+
 		_backupService.PreBackupTask = PreBackupTask;
 		_backupService.PostBackupTask = PostBackupTask;
 	}
@@ -29,25 +30,20 @@ internal class ServiceSystem
 	{
 		_logger.Info("Update Loop Started");
 
+		await Task.Delay(TimeSpan.FromMinutes(5));
+
 		while (true)
 		{
 			try
 			{
-				await Task.Delay(TimeSpan.FromMinutes(15));
-
-				try
-				{
-					await _updateSystem.RunUpdate();
-				}
-				catch (Exception ex)
-				{
-					_logger.Exception(ex, "Error during Update cycle");
-				}
+				await _updateSystem.RunUpdate();
 			}
 			catch (Exception ex)
 			{
 				_logger.Exception(ex, "Unexpected error during Update Loop");
 			}
+
+			await Task.Delay(TimeSpan.FromMinutes(30));
 		}
 	}
 
