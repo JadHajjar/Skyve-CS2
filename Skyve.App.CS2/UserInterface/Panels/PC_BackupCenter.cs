@@ -1,9 +1,13 @@
 ﻿using Skyve.App.CS2.UserInterface.Generic;
+using Skyve.App.UserInterface.Panels;
 using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using static Skyve.App.UserInterface.Panels.DashboardPanelControl;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_BackupCenter : PanelContent
@@ -13,6 +17,8 @@ public partial class PC_BackupCenter : PanelContent
 	public PC_BackupCenter()
 	{
 		InitializeComponent();
+
+		T_Dashboard.LinkedControl = new DashboardPanelControl("BackupCenter", GetDefaultLayout);
 
 		SetUpSliderTicks();
 
@@ -43,6 +49,7 @@ public partial class PC_BackupCenter : PanelContent
 		L_BackupInfo.Margin = UI.Scale(new Padding(3, 3, 3, 6));
 		panel1.Padding = P_Backup.Margin = P_RestoreSelect.Margin = TLP_ContentTypes.Margin = TLP_General.Margin = TLP_Schedule.Margin = TLP_Cleanup.Margin = UI.Scale(new Padding(6));
 		B_AddTime.Margin = SS_Count.Margin = SS_Storage.Margin = SS_CleanupTime.Margin = UI.Scale(new Padding(32, 4, 4, 4));
+		SS_Count.Height = SS_Storage.Height = SS_CleanupTime.Height = UI.Scale(32);
 		B_Restore.Font = UI.Font(9.75F, System.Drawing.FontStyle.Bold);
 		L_ContentInfo.Margin = L_RestoreInfo.Margin = B_Restore.Margin = UI.Scale(new Padding(10, 3, 10, 10));
 		TB_DestinationFolder.Margin = B_Restore.Padding = UI.Scale(new Padding(6));
@@ -55,7 +62,31 @@ public partial class PC_BackupCenter : PanelContent
 
 		L_FinishSetup.ForeColor = design.InfoColor.MergeColor(design.OrangeColor, 25);
 		L_BackupInfo.ForeColor = L_RestoreInfo.ForeColor = L_ContentInfo.ForeColor = design.InfoColor;
+		P_Backup.BackColor = P_RestoreSelect.BackColor = TLP_ContentTypes.BackColor = TLP_General.BackColor = TLP_Schedule.BackColor = TLP_Cleanup.BackColor = design.BackColor;
 	}
+
+	public override Color GetTopBarColor()
+	{
+		return FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? 2 : -5);
+	}
+
+	#region Dashboard
+
+	private Dictionary<string, DashboardSetting> GetDefaultLayout()
+	{
+		return new()
+		{
+		  { "D_CompatibilityInfo", new(new(0, 0, 4500, 100), false) },
+		  { "D_ContentInfo",  new(new(0, 100, 2250, 100), false) },
+		  { "D_DiskInfo",  new(new(2250, 100, 2250, 100), false) },
+		  { "D_PdxModsNew",  new(new(4500, 0, 3500, 100), false) },
+		  { "D_PdxUser",  new(new(8000, 0, 2000, 100), false) },
+		  { "D_Playsets",  new(new(8000, 100, 2000, 100), false) },
+		  { "D_NotificationCenter",  new(new(8000, 200, 2000, 100), false) },
+		};
+	}
+
+	#endregion
 
 	#region Settings Tab
 	private void SetCurrentSettings()
@@ -78,7 +109,7 @@ public partial class PC_BackupCenter : PanelContent
 
 		FLP_Times.Controls.Clear(true);
 
-		foreach (var item in settings.ScheduleSettings.ScheduleTimes)
+		foreach (var item in settings.ScheduleSettings.ScheduleTimes.OrderBy(x => x.Ticks))
 		{
 			AddTime(item);
 		}
@@ -143,11 +174,14 @@ public partial class PC_BackupCenter : PanelContent
 	{
 		SS_Storage.TextConversion = x => $"{x}GB";
 		SS_Storage.Items = [5, 10, 15, 25, 50, 75, 100, 150, 250, 350];
+		SS_Storage.SetDefaultProgressiveColorPoints();
 
 		SS_Count.Items = [10, 25, 50, 75, 100, 200, 300, 500, 1000];
+		SS_Count.SetDefaultProgressiveColorPoints();
 
 		SS_CleanupTime.TextConversion = x => TimeSpan.FromDays((int)x).ToReadableBigString();
 		SS_CleanupTime.Items = [7, 14, 30, 30 * 2, 30 * 3, 30 * 6, 365];
+		SS_CleanupTime.SetDefaultProgressiveColorPoints();
 	}
 
 	private void CB_ScheduleAtTimes_CheckChanged(object sender, EventArgs e)
@@ -240,6 +274,7 @@ public partial class PC_BackupCenter : PanelContent
 	}
 	#endregion
 
+	#region Backup & Restore
 	private async void B_Backup_Click(object sender, EventArgs e)
 	{
 		if (B_Backup.Loading)
@@ -256,17 +291,18 @@ public partial class PC_BackupCenter : PanelContent
 			return await backupSystem.DoBackup();
 		});
 
-		B_Backup.Loading = false;
-
 		if (!result)
 		{
+			B_Backup.Loading = false;
+
 			ShowPrompt(Locale.CheckLogsAndTryAgain, Locale.BackupFailed, PromptButtons.OK, PromptIcons.Error);
 
 			return;
 		}
 
-		_ = Task.Run(LoadBackupItems);
+		await Task.Run(LoadBackupItems);
 
+		B_Backup.Loading = false;
 		B_Backup.ImageName = "Check";
 
 		await Task.Delay(5_000);
@@ -502,4 +538,13 @@ public partial class PC_BackupCenter : PanelContent
 			});
 		});
 	}
+
+	internal void DoBackup()
+	{
+		T_BackupRestore.Selected = true;
+
+		B_Backup_Click(this, EventArgs.Empty);
+	}
+
+	#endregion
 }

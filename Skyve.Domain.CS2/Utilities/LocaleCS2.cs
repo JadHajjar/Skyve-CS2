@@ -59,6 +59,21 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation BackupSettingsFiles => _instance.GetText("Backup_SettingsFiles");
 
 	/// <summary>
+	/// Skyve service online
+	/// </summary>
+	public static Translation BackupServiceAvailable => _instance.GetText("BackupServiceAvailable");
+
+	/// <summary>
+	/// The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.
+	/// </summary>
+	public static Translation BackupServiceUnavailable => _instance.GetText("BackupServiceUnavailable");
+
+	/// <summary>
+	/// Automatic backup starting now...
+	/// </summary>
+	public static Translation BackupStartingNow => _instance.GetText("BackupStartingNow");
+
+	/// <summary>
 	/// You can't run Skyve from this folder.  Either run the app from your Programs list, or run the Skyve Setup from the mod's folder.
 	/// </summary>
 	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
@@ -360,6 +375,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Patch {0} is now available. Be sure to check your compatibility report before starting your game.
 	/// </summary>
 	public static Translation NewGameUpdateInfo => _instance.GetText("NewGameUpdateInfo");
+
+	/// <summary>
+	/// Next scheduled backup is {0}
+	/// </summary>
+	public static Translation NextScheduledBackup => _instance.GetText("NextScheduledBackup");
 
 	/// <summary>
 	/// You're not logged in to Paradox, check your notifications for more information.

@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
 using PDX.SDK.Contracts;
@@ -1043,7 +1044,7 @@ public class WorkshopService : IWorkshopService
 			_logger.Exception(ex, "Failed to repair context");
 		}
 
-		await Initialize();
+		await _serviceProvider.GetService<ICentralManager>()!.Initialize();
 	}
 
 	public bool IsLocal(IPackageIdentity identity)

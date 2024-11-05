@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
-internal class D_DiskInfo : IDashboardItem
+[DashboardItem("BackupCenter")]
+internal class BD_DiskInfo : IDashboardItem
 {
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
@@ -18,27 +19,25 @@ internal class D_DiskInfo : IDashboardItem
 	private readonly IBackupSystem _backupSystem;
 
 	private ContentInfo? info;
+	private readonly BackupSettings _backupSettings;
 
 	private class ContentInfo
 	{
-		internal bool Error;
 		internal long AvailableSpace;
 		internal long TotalSpace;
-		internal bool IsJunctionSet;
-		internal long TotalCitiesSize;
-		internal long TotalSavesSize;
-		internal long TotalSubbedSize;
-		internal long TotalOtherSize;
 		internal long TotalBackupSize;
 		internal bool CriticalSpace;
 		internal bool LowSpace;
 		internal string? DriveLetter;
-		internal bool HasMultipleDrives;
+		internal long ArchivedBackupSize;
+		internal Dictionary<IBackupMetaData, long> BackupTypeSizes = [];
 	}
 
-	public D_DiskInfo()
+	public BD_DiskInfo()
 	{
 		ServiceCenter.Get(out _logger, out _settings, out _notifier, out _backupSystem);
+
+		_backupSettings = (BackupSettings)_settings.BackupSettings;
 	}
 
 	protected override void OnCreateControl()
@@ -59,52 +58,28 @@ internal class D_DiskInfo : IDashboardItem
 
 	protected override void OnDataLoadError(Exception ex)
 	{
-		info = new ContentInfo { Error = true };
-		Loading = false;
-
 		OnResizeRequested();
-
-		_logger.Exception(ex, "Failed to get Disk Info Summary");
 	}
 
 	protected override Task<bool> ProcessDataLoad(CancellationToken token)
 	{
-		var contentInfo = new ContentInfo();
-		var junctionLocation = JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath);
-		var drive = new DriveInfo(junctionLocation.IfEmpty(_settings.FolderSettings.AppDataPath).Substring(0, 1));
+		if (string.IsNullOrWhiteSpace(_backupSettings.DestinationFolder))
+			return base.ProcessDataLoad(token);
 
-		contentInfo.HasMultipleDrives = DriveInfo.GetDrives().Count(x => x.DriveType is DriveType.Removable or DriveType.Fixed && x.TotalSize > 150 * 1024L * 1024L * 1024L) > 1;
+		var contentInfo = new ContentInfo();
+		var drive = new DriveInfo(_backupSettings.DestinationFolder?.Substring(0, 1));
+
 		contentInfo.DriveLetter = drive.Name;
 		contentInfo.AvailableSpace = drive.AvailableFreeSpace;
 		contentInfo.TotalSpace = drive.TotalSize;
-		contentInfo.IsJunctionSet = !string.IsNullOrEmpty(junctionLocation);
-		contentInfo.TotalBackupSize = _backupSystem.GetBackupsSizeOnDisk();
+		contentInfo.CriticalSpace = contentInfo.AvailableSpace < 15L * 1024L * 1024L * 1024L;
+		contentInfo.LowSpace = contentInfo.AvailableSpace < 75L * 1024L * 1024L * 1024L;
 
-		if (token.IsCancellationRequested)
-		{
-			return Task.FromResult(false);
-		}
+		var backups = _backupSystem.GetAllBackups();
 
-		var savesFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves");
-		var subbedFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods", "mods_subscribed");
-
-		foreach (var item in new DirectoryInfo(_settings.FolderSettings.AppDataPath).EnumerateFiles("*", SearchOption.AllDirectories))
-		{
-			contentInfo.TotalCitiesSize += item.Length;
-
-			if (item.FullName.PathContains(savesFolder))
-			{
-				contentInfo.TotalSavesSize += item.Length;
-			}
-			else if (item.FullName.PathContains(subbedFolder))
-			{
-				contentInfo.TotalSubbedSize += item.Length;
-			}
-		}
-
-		contentInfo.TotalOtherSize = contentInfo.TotalCitiesSize - contentInfo.TotalSavesSize - contentInfo.TotalSubbedSize;
-		contentInfo.CriticalSpace = contentInfo.AvailableSpace < 10L * 1024L * 1024L * 1024L;
-		contentInfo.LowSpace = contentInfo.AvailableSpace < 50L * 1024L * 1024L * 1024L;
+		contentInfo.TotalBackupSize = backups.Sum(x => x.BackupFile.Length);
+		contentInfo.ArchivedBackupSize = backups.Where(x => x.MetaData.IsArchived).Sum(x => x.BackupFile.Length);
+		contentInfo.BackupTypeSizes = backups.Where(x => !x.MetaData.IsArchived).GroupBy(x => x.MetaData.Type).ToDictionary(x => x.First().MetaData, x=> x.Sum(x => x.BackupFile.Length));
 
 		if (token.IsCancellationRequested)
 		{
@@ -125,11 +100,6 @@ internal class D_DiskInfo : IDashboardItem
 
 	protected override void DrawHeader(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.DiskStatus, "Drive");
-	}
-
-	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
-	{
 		if (Loading)
 		{
 			DrawLoadingSection(e, applyDrawing, ref preferredHeight, LocaleCS2.DiskStatus);
@@ -138,27 +108,42 @@ internal class D_DiskInfo : IDashboardItem
 		{
 			DrawSection(e, applyDrawing, ref preferredHeight, LocaleCS2.DiskStatus, "Drive");
 		}
+	}
+
+	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
+	{
+		DrawHeader(e, applyDrawing, ref preferredHeight);
 
 		if (info is null)
 		{
+			if (!Loading)
+			{
+				e.Graphics.DrawStringItem(Locale.SetupSettingsFirst
+					, Font
+					, FormDesign.Design.OrangeColor
+					, e.ClipRectangle.Pad(Padding)
+					, ref preferredHeight
+					, applyDrawing);
+
+				preferredHeight += BorderRadius;
+			}
+
 			return;
 		}
 
 		var fadedColor = FormDesign.Design.ForeColor.MergeColor(FormDesign.Design.BackColor, 75);
 
-		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalSubbedSize, info.TotalSubbedSize.SizeString(), applyDrawing, ref preferredHeight, "PDXMods", fadedColor, false);
-		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalSavesSize, info.TotalSavesSize.SizeString(), applyDrawing, ref preferredHeight, "City", fadedColor, false);
-		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalOtherSize, info.TotalOtherSize.SizeString(), applyDrawing, ref preferredHeight, "Folder", fadedColor, false);
+		foreach (var item in info.BackupTypeSizes)
+		{
+			DrawValue(e, e.ClipRectangle.Pad(Margin), item.Key.GetTypeTranslation(), item.Value.SizeString(), applyDrawing, ref preferredHeight, item.Key.GetIcon(), fadedColor, false);
+		}
+
+		DrawValue(e, e.ClipRectangle.Pad(Margin), Locale.Archived, info.ArchivedBackupSize.SizeString(), applyDrawing, ref preferredHeight, "Archived", fadedColor, false);
 
 		preferredHeight += BorderRadius;
 
-		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalCitiesSize, info.TotalCitiesSize.SizeString(), applyDrawing, ref preferredHeight, "CS");
-
-		if (info.TotalBackupSize > 0)
-		{
-			DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalBackupSize, info.TotalBackupSize.SizeString(), applyDrawing, ref preferredHeight, "SafeShield");
-		}
-
+		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalBackupSize, info.TotalBackupSize.SizeString(), applyDrawing, ref preferredHeight, "SafeShield");
+		
 		preferredHeight += BorderRadius;
 
 		var graphSize = Math.Min((e.ClipRectangle.Width / 2) - (Margin.Horizontal * 2), UI.Scale(60));
@@ -198,27 +183,6 @@ internal class D_DiskInfo : IDashboardItem
 		e.Graphics.DrawString(text2, smallFont, brush2, sideRect);
 
 		preferredHeight += BorderRadius + graphSize + (int)pen.Width;
-
-		if (info.CriticalSpace && !info.IsJunctionSet)
-		{
-			using var font = UI.Font(7.5F);
-
-			e.Graphics.DrawStringItem(info.HasMultipleDrives ? LocaleCS2.LowSpaceCreateJunction.One : LocaleCS2.LowSpaceCreateJunction.Zero, font, ForeColor, e.ClipRectangle.Pad(Margin), ref preferredHeight, applyDrawing, "Info");
-
-			if (info.HasMultipleDrives)
-			{
-				DrawButton(e, applyDrawing, ref preferredHeight, OpenOptionsPanel, new ButtonDrawArgs
-				{
-					Icon = "Cog",
-					Font = font,
-					Size = new Size(0, UI.Scale(20)),
-					Text = LocaleCS2.ChangeLocation,
-					Rectangle = e.ClipRectangle.Pad(BorderRadius)
-				});
-			}
-
-			preferredHeight += BorderRadius / 2;
-		}
 	}
 
 	private void OpenOptionsPanel()

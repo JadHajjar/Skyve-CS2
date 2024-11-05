@@ -17,6 +17,7 @@ internal class D_PdxUser : IDashboardItem
 		ServiceCenter.Get(out _userService, out _workshopService, out _notificationsService);
 
 		_userService.UserInfoUpdated += Invalidate;
+		_workshopService.OnLogin += Invalidate;
 	}
 
 	protected override void Dispose(bool disposing)
