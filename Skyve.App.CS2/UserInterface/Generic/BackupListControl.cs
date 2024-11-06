@@ -47,8 +47,9 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 		using var brush2 = new SolidBrush(e.BackColor.GetTextColor().MergeColor(e.BackColor, 70));
 		using var fontTitle = UI.Font(9.75F, FontStyle.Bold);
 		using var fontSubTitle = UI.Font(7.5F);
+		using var format = new StringFormat { LineAlignment = StringAlignment.Far };
 
-		var rectangle = e.ClipRectangle.Pad(8, 0, 8, 0);
+		var rectangle = e.ClipRectangle.Pad(UI.Scale(new Padding(8, 0, 8, 0)));
 
 		var icon = RestorePoint ? "Clock" : e.Item.RestoreItems.First().MetaData.GetIcon();
 
@@ -62,7 +63,7 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 		}
 
 		e.Graphics.DrawString(title, fontTitle, brush, rectangle);
-		e.Graphics.DrawString(subTitle, fontSubTitle, brush2, rectangle, new StringFormat { LineAlignment = StringAlignment.Far });
+		e.Graphics.DrawString(subTitle, fontSubTitle, brush2, rectangle, format);
 
 		var titleSize = e.Graphics.Measure(title, fontTitle).ToSize();
 

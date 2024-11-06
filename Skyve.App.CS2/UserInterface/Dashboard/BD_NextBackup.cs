@@ -29,6 +29,7 @@ internal class BD_NextBackup : IDashboardItem
 	{
 		base.OnCreateControl();
 
+		_notifier.BackupStarted += Invalidate;
 		_notifier.BackupEnded += Invalidate;
 	}
 
@@ -36,6 +37,7 @@ internal class BD_NextBackup : IDashboardItem
 	{
 		base.Dispose(disposing);
 
+		_notifier.BackupStarted -= Invalidate;
 		_notifier.BackupEnded -= Invalidate;
 	}
 
@@ -112,7 +114,7 @@ internal class BD_NextBackup : IDashboardItem
 			var nextBackup = _backupSettings.ScheduleSettings.ScheduleTimes.OrderBy(x => x.Ticks).Cast<TimeSpan?>().FirstOrDefault(x => currentTime < (int)x!.Value.TotalMinutes);
 			var time = nextBackup is null ? DateTime.Today.AddDays(1).Add(_backupSettings.ScheduleSettings.ScheduleTimes[0]) : DateTime.Today.Add(nextBackup.Value);
 
-			e.Graphics.DrawStringItem(LocaleCS2.NextScheduledBackup.Format(time.ToRelatedString().ToLower())
+			e.Graphics.DrawStringItem(LocaleCS2.NextScheduledBackup.Format(time.ToRelatedString(true).ToLower())
 				, Font
 				, FormDesign.Design.ForeColor
 				, textRect

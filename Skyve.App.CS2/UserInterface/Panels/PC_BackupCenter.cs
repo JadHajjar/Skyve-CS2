@@ -50,10 +50,10 @@ public partial class PC_BackupCenter : PanelContent
 		panel1.Padding = P_Backup.Margin = P_RestoreSelect.Margin = TLP_ContentTypes.Margin = TLP_General.Margin = TLP_Schedule.Margin = TLP_Cleanup.Margin = UI.Scale(new Padding(6));
 		B_AddTime.Margin = SS_Count.Margin = SS_Storage.Margin = SS_CleanupTime.Margin = UI.Scale(new Padding(32, 4, 4, 4));
 		SS_Count.Height = SS_Storage.Height = SS_CleanupTime.Height = UI.Scale(32);
-		B_Restore.Font = UI.Font(9.75F, System.Drawing.FontStyle.Bold);
+		B_Restore.Font = UI.Font(9.75F, FontStyle.Bold);
 		L_ContentInfo.Margin = L_RestoreInfo.Margin = B_Restore.Margin = UI.Scale(new Padding(10, 3, 10, 10));
 		TB_DestinationFolder.Margin = B_Restore.Padding = UI.Scale(new Padding(6));
-		L_FinishSetup.Font = UI.Font(7f, System.Drawing.FontStyle.Italic);
+		L_FinishSetup.Font = UI.Font(7f, FontStyle.Italic);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -100,6 +100,7 @@ public partial class PC_BackupCenter : PanelContent
 		CB_ScheduleOnNewSave.Checked = settings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnNewSaveGame);
 		CB_ScheduleIncludeSaves.Checked = settings.ScheduleSettings.BackupSaves;
 		CB_ScheduleIncludeLocalMods.Checked = settings.ScheduleSettings.BackupLocalMods;
+		CB_ScheduleIncludeMaps.Checked = settings.ScheduleSettings.BackupMaps;
 		CB_CleanupTime.Checked = settings.CleanupSettings.Type.HasFlag(BackupCleanupType.TimeBased);
 		CB_CleanupStorage.Checked = settings.CleanupSettings.Type.HasFlag(BackupCleanupType.StorageBased);
 		CB_CleanupCount.Checked = settings.CleanupSettings.Type.HasFlag(BackupCleanupType.CountBased);
@@ -230,6 +231,7 @@ public partial class PC_BackupCenter : PanelContent
 
 		settings.ScheduleSettings.BackupSaves = CB_ScheduleIncludeSaves.Checked;
 		settings.ScheduleSettings.BackupLocalMods = CB_ScheduleIncludeLocalMods.Checked;
+		settings.ScheduleSettings.BackupMaps = CB_ScheduleIncludeMaps.Checked;
 		settings.ScheduleSettings.ScheduleTimes = FLP_Times.Controls.OfType<SlickDateTime>().Select(x => x.Value.TimeOfDay).ToArray();
 		settings.ScheduleSettings.Type = BackupScheduleType.None;
 
@@ -284,7 +286,10 @@ public partial class PC_BackupCenter : PanelContent
 
 		B_Backup.Loading = true;
 
-		Notification.Create(Locale.FirstBackup, Locale.FirstBackupDescription, PromptIcons.Info, size: new Size(325, 125)).Show(Form, 20);
+		if (ServiceCenter.Get<IBackupSystem>().GetBackupsSizeOnDisk() == 0)
+		{
+			Notification.Create(Locale.FirstBackup, Locale.FirstBackupDescription, PromptIcons.Info, size: new Size(325, 125)).Show(Form, 20);
+		}
 
 		var result = await Task.Run(async () =>
 		{
@@ -421,6 +426,13 @@ public partial class PC_BackupCenter : PanelContent
 
 	private void BackupListControl_ItemMouseClick(object sender, MouseEventArgs e)
 	{
+		var item = (BackupListControl.RestoreGroup)sender;
+
+		SelectRestoreGroup(item);
+	}
+
+	internal void SelectRestoreGroup(BackupListControl.RestoreGroup item)
+	{
 		TLP_RestoreGroups?.Dispose();
 		TLP_RestoreGroups = new TableLayoutPanel()
 		{
@@ -431,8 +443,6 @@ public partial class PC_BackupCenter : PanelContent
 
 		TLP_Restore.Controls.Add(TLP_RestoreGroups, 0, 1);
 		TLP_Restore.SetColumnSpan(TLP_RestoreGroups, 2);
-
-		var item = (BackupListControl.RestoreGroup)sender;
 
 		foreach (var backupGroup in item.RestoreItems.GroupBy(x => x.MetaData.Type))
 		{
@@ -466,7 +476,9 @@ public partial class PC_BackupCenter : PanelContent
 		T_Restore.Selected = true;
 	}
 
-	public void SelectBackup(string restoreBackup)
+	public void SelectBackup(string restoreBackup) => SelectBackup(restoreBackup, true);
+
+	public void SelectBackup(string restoreBackup, bool prompt)
 	{
 		var backupSystem = ServiceCenter.Get<IBackupSystem>();
 		var restoreItem = backupSystem.LoadBackupFile(restoreBackup);
@@ -476,7 +488,7 @@ public partial class PC_BackupCenter : PanelContent
 			return;
 		}
 
-		if (ShowPrompt(Locale.RestoreFileConfirm.Format(1, LocaleHelper.GetGlobalText("Backup_" + restoreItem.MetaData.Name, out var translation) ? translation : restoreItem.MetaData.Name)
+		if (prompt && ShowPrompt(Locale.RestoreFileConfirm.Format(1, LocaleHelper.GetGlobalText("Backup_" + restoreItem.MetaData.Name, out var translation) ? translation : restoreItem.MetaData.Name)
 			, PromptButtons.YesNo
 			, PromptIcons.Question) != DialogResult.Yes)
 		{

@@ -1,14 +1,18 @@
 ﻿using Extensions;
 
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
+using Skyve.Systems.CS2.Systems;
 using Skyve.Systems.CS2.Utilities;
 
 using SlickControls;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
@@ -36,12 +40,13 @@ internal class CentralManager : ICentralManager
 	private readonly IDlcManager _dlcManager;
 	private readonly IInterfaceService _interfaceService;
 	private readonly IBackupService _backupService;
+	private readonly IBackupSystem _backupSystem;
 
-	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager profileManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager, IDlcManager dlcManager, IInterfaceService interfaceService, IBackupService backupService)
+	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager playsetManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager, IDlcManager dlcManager, IInterfaceService interfaceService, IBackupService backupService, IBackupSystem backupSystem)
 	{
 		_modLogicManager = modLogicManager;
 		_compatibilityManager = compatibilityManager;
-		_playsetManager = profileManager;
+		_playsetManager = playsetManager;
 		_citiesManager = citiesManager;
 		_locationService = locationManager;
 		_subscriptionManager = subscriptionManager;
@@ -61,6 +66,7 @@ internal class CentralManager : ICentralManager
 		_dlcManager = dlcManager;
 		_interfaceService = interfaceService;
 		_backupService = backupService;
+		_backupSystem = backupSystem;
 	}
 
 	public async void Start()
@@ -103,6 +109,11 @@ internal class CentralManager : ICentralManager
 		await _modUtil.Initialize();
 
 		await _playsetManager.Initialize();
+
+		_ = Task.Run(CheckCorruptedSettingsFiles);
+
+		_citiesManager.GameClosed -= CitiesManager_GameClosed;
+		_citiesManager.GameClosed += CitiesManager_GameClosed;
 
 		_logger.Info("Loading packages..");
 
@@ -173,12 +184,53 @@ internal class CentralManager : ICentralManager
 		}
 	}
 
+	private void CitiesManager_GameClosed()
+	{
+		Task.Run(CheckCorruptedSettingsFiles);
+	}
+
+	private void CheckCorruptedSettingsFiles()
+	{
+		var corruptedFiles = new List<string>();
+
+		foreach (var item in Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*.coc", SearchOption.AllDirectories))
+		{
+			var lines = File.ReadAllLines(item);
+
+			if (lines.Length == 0)
+			{
+				CrossIO.DeleteFile(item, true);
+
+				continue;
+			}
+
+			var valid = lines.Length > 2
+					&& lines[1] == "{"
+					&& lines[lines.Length - 1] == "}"
+					&& !lines.Any(x => x.Contains('\0'))
+					&& lines.Count(x => x.Trim().StartsWith("}") || x.Trim().EndsWith("{")) % 2 == 0;
+
+			if (!valid)
+			{
+				corruptedFiles.Add(item);
+			}
+		}
+
+		if (corruptedFiles.Count > 0)
+		{
+			_notificationsService.RemoveNotificationsOfType<CorruptedSettingsFilesNotification>();
+			_notificationsService.SendNotification(new CorruptedSettingsFilesNotification(corruptedFiles, _backupSystem, _notificationsService));
+		}
+	}
+
 	private async void RunBackupService()
 	{
 		while (true)
 		{
 			if (await _backupService.Run())
+			{
 				return;
+			}
 		}
 	}
 

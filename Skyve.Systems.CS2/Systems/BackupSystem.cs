@@ -31,6 +31,10 @@ internal class BackupSystem : IBackupSystem
 	private readonly BackupSettings _backupSettings;
 	private readonly DateTime _backupTime;
 
+	private static readonly object _lock = new();
+	private static DateTime lastCacheTime;
+	private static List<IRestoreItem>? restoreItemsCache;
+
 	public IBackupInstructions BackupInstructions { get; } = new BackupInstructions();
 	public IRestoreInstructions RestoreInstructions { get; } = new RestoreInstructions();
 
@@ -120,24 +124,34 @@ internal class BackupSystem : IBackupSystem
 			return [];
 		}
 
-		var files = Directory.GetFiles(_backupSettings.DestinationFolder, "*.sbak", SearchOption.AllDirectories);
-		var items = new List<IRestoreItem>(files.Length);
-
-		foreach (var file in files)
+		lock (_lock)
 		{
-			try
+			if (lastCacheTime > DateTime.Now.AddMinutes(-1) && restoreItemsCache is not null)
 			{
-				var restoreItem = LoadBackupFile(file);
-
-				if (restoreItem is not null)
-				{
-					items.Add(restoreItem);
-				}
+				return restoreItemsCache;
 			}
-			catch { }
-		}
 
-		return items;
+			var files = Directory.GetFiles(_backupSettings.DestinationFolder, "*.sbak", SearchOption.AllDirectories);
+			var items = new List<IRestoreItem>(files.Length);
+
+			foreach (var file in files)
+			{
+				try
+				{
+					var restoreItem = LoadBackupFile(file);
+
+					if (restoreItem is not null)
+					{
+						items.Add(restoreItem);
+					}
+				}
+				catch { }
+			}
+
+			lastCacheTime = DateTime.Now;
+
+			return restoreItemsCache = items;
+		}
 	}
 
 	public IRestoreItem? LoadBackupFile(string fileName)
@@ -296,9 +310,13 @@ internal class BackupSystem : IBackupSystem
 		var settingsFiles = Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*.coc", SearchOption.AllDirectories)
 			.Where(item =>
 			{
-				var braceCount = File.ReadAllLines(item).Count(x => x.Trim().StartsWith("}") || x.Trim().EndsWith("{"));
+				var lines = File.ReadAllLines(item);
 
-				return braceCount % 2 == 0;
+				return lines.Length > 2
+					&& lines[1] == "{"
+					&& lines[lines.Length - 1] == "}"
+					&& !lines.Any(x => x.Contains('\0'))
+					&& lines.Count(x => x.Trim().StartsWith("}") || x.Trim().EndsWith("{")) % 2 == 0;
 			})
 			.ToArray();
 
@@ -360,6 +378,7 @@ internal class BackupSystem : IBackupSystem
 			{
 				RestoreAction.Playset => RestorePlayset,
 				RestoreAction.Overwrite => RestoreOverwrite,
+				RestoreAction.RestoreIfMissing => RestoreIfMissing,
 				RestoreAction.ClearRoot => RestoreClearRoot,
 				RestoreAction.ClearRootOfSimilarFileTypes => RestoreClearRootOfSimilarFileTypes,
 				_ => throw new NotImplementedException()
@@ -380,7 +399,7 @@ internal class BackupSystem : IBackupSystem
 
 	private async Task<bool> RestorePlayset(ZipArchive zipArchive, IBackupMetaData metaData)
 	{
-		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".backupMetaData");
+		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".backupMetaData" and not ".backupItemMetaData");
 
 		var temp = CrossIO.GetTempFileName();
 
@@ -411,12 +430,36 @@ internal class BackupSystem : IBackupSystem
 	{
 		foreach (var item in zipArchive.Entries)
 		{
-			if (item.FullName is ".backupMetaData")
+			if (item.FullName is ".backupMetaData" or ".backupItemMetaData")
 			{
 				continue;
 			}
 
 			var path = CrossIO.Combine(metaData.Root, item.FullName);
+
+			Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+			item.ExtractToFile(path, true);
+		}
+
+		return Task.FromResult(true);
+	}
+
+	private Task<bool> RestoreIfMissing(ZipArchive zipArchive, IBackupMetaData metaData)
+	{
+		foreach (var item in zipArchive.Entries)
+		{
+			if (item.FullName is ".backupMetaData" or ".backupItemMetaData")
+			{
+				continue;
+			}
+
+			var path = CrossIO.Combine(metaData.Root, item.FullName);
+
+			if (CrossIO.FileExists(path))
+			{
+				continue;
+			}
 
 			Directory.CreateDirectory(Path.GetDirectoryName(path));
 
@@ -435,7 +478,7 @@ internal class BackupSystem : IBackupSystem
 
 	private Task<bool> RestoreClearRootOfSimilarFileTypes(ZipArchive zipArchive, IBackupMetaData metaData)
 	{
-		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".backupMetaData");
+		var entry = zipArchive.Entries.FirstOrDefault(x => x.FullName is not ".backupMetaData" and not ".backupItemMetaData");
 
 		if (entry is null)
 		{
@@ -518,6 +561,26 @@ internal class BackupSystem : IBackupSystem
 		using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Create, false);
 
 		CreateEntry(zipArchive, ".backupMetaData", JsonConvert.SerializeObject(restoreItem.MetaData));
+	}
+
+	public List<string> ListAllFilesInBackup(IRestoreItem restoreItem)
+	{
+		using var stream = File.OpenRead(restoreItem.BackupFile.FullName);
+		using var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read, false);
+
+		var files = new List<string>();
+
+		foreach (var item in zipArchive.Entries)
+		{
+			if (item.FullName is ".backupMetaData" or ".backupItemMetaData")
+			{
+				continue;
+			}
+
+			files.Add(CrossIO.Combine(restoreItem.MetaData.Root, item.FullName));
+		}
+
+		return files;
 	}
 
 	private bool IsLarge(IBackupMetaData metaData)

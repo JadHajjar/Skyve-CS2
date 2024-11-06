@@ -31,8 +31,10 @@ internal class CitiesManager : ICitiesManager
 	private readonly ILocationService _locationManager;
 	private readonly IServiceProvider _serviceProvider;
 
-	public event MonitorTickDelegate? MonitorTick;
+	private bool lastRunningState;
 
+	public event MonitorTickDelegate? MonitorTick;
+	public event Action? GameClosed;
 	public event Action<bool>? LaunchingStatusChanged;
 
 	public string GameVersion { get; }
@@ -79,7 +81,15 @@ internal class CitiesManager : ICitiesManager
 
 	private void CitiesMonitorTimer_Elapsed(object sender, ElapsedEventArgs e)
 	{
-		MonitorTick?.Invoke(IsAvailable(), IsRunning());
+		var isAvailable = IsAvailable();
+		var isRunning = IsRunning();
+
+		if (lastRunningState && !isRunning)
+		{
+			GameClosed?.Invoke();
+		}
+
+		MonitorTick?.Invoke(isAvailable, lastRunningState = isRunning);
 	}
 
 	public bool IsAvailable()

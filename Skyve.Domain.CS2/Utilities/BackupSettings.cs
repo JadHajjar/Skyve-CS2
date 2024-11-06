@@ -19,7 +19,8 @@ public class BackupSettings : ConfigFile, IBackupSettings
 		public BackupScheduleType Type { get; set; } = BackupScheduleType.OnScheduledTimes;
 		public TimeSpan[] ScheduleTimes { get; set; } = [TimeSpan.FromHours(18)];
 		public bool BackupSaves { get; set; } = true;
-		public bool BackupLocalMods { get; set; } = true;
+		public bool BackupLocalMods { get; set; }
+		public bool BackupMaps { get; set; }
 	}
 
 	public class Cleanup

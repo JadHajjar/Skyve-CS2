@@ -1,7 +1,7 @@
-﻿using Skyve.App.CS2.UserInterface.Panels;
+﻿using Skyve.App.CS2.UserInterface.Generic;
+using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.UserInterface.Dashboard;
 using Skyve.Domain.CS2.Utilities;
-using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
 using System.IO;
@@ -64,7 +64,9 @@ internal class BD_DiskInfo : IDashboardItem
 	protected override Task<bool> ProcessDataLoad(CancellationToken token)
 	{
 		if (string.IsNullOrWhiteSpace(_backupSettings.DestinationFolder))
+		{
 			return base.ProcessDataLoad(token);
+		}
 
 		var contentInfo = new ContentInfo();
 		var drive = new DriveInfo(_backupSettings.DestinationFolder?.Substring(0, 1));
@@ -79,7 +81,7 @@ internal class BD_DiskInfo : IDashboardItem
 
 		contentInfo.TotalBackupSize = backups.Sum(x => x.BackupFile.Length);
 		contentInfo.ArchivedBackupSize = backups.Where(x => x.MetaData.IsArchived).Sum(x => x.BackupFile.Length);
-		contentInfo.BackupTypeSizes = backups.Where(x => !x.MetaData.IsArchived).GroupBy(x => x.MetaData.Type).ToDictionary(x => x.First().MetaData, x=> x.Sum(x => x.BackupFile.Length));
+		contentInfo.BackupTypeSizes = backups.Where(x => !x.MetaData.IsArchived).GroupBy(x => x.MetaData.Type).ToDictionary(x => x.First().MetaData, x => x.Sum(x => x.BackupFile.Length));
 
 		if (token.IsCancellationRequested)
 		{
@@ -95,6 +97,11 @@ internal class BD_DiskInfo : IDashboardItem
 
 	protected override DrawingDelegate GetDrawingMethod(int width)
 	{
+		if (width > 500 * UI.FontScale)
+		{
+			return DrawLandscape;
+		}
+
 		return Draw;
 	}
 
@@ -132,23 +139,28 @@ internal class BD_DiskInfo : IDashboardItem
 		}
 
 		var fadedColor = FormDesign.Design.ForeColor.MergeColor(FormDesign.Design.BackColor, 75);
+		var valueRect = e.ClipRectangle.Pad(Margin);
 
-		foreach (var item in info.BackupTypeSizes)
+		foreach (var item in info.BackupTypeSizes.OrderByDescending(x => x.Value))
 		{
-			DrawValue(e, e.ClipRectangle.Pad(Margin), item.Key.GetTypeTranslation(), item.Value.SizeString(), applyDrawing, ref preferredHeight, item.Key.GetIcon(), fadedColor, false);
+			DrawValue(e, valueRect, item.Key.GetTypeTranslation(), item.Value.SizeString(), applyDrawing, ref preferredHeight, item.Key.GetIcon(), fadedColor, false);
 		}
 
-		DrawValue(e, e.ClipRectangle.Pad(Margin), Locale.Archived, info.ArchivedBackupSize.SizeString(), applyDrawing, ref preferredHeight, "Archived", fadedColor, false);
+		DrawValue(e, valueRect, Locale.Archived, info.ArchivedBackupSize.SizeString(), applyDrawing, ref preferredHeight, "Archived", fadedColor, false);
 
 		preferredHeight += BorderRadius;
 
-		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalBackupSize, info.TotalBackupSize.SizeString(), applyDrawing, ref preferredHeight, "SafeShield");
-		
+		DrawValue(e, valueRect, LocaleCS2.TotalBackupSize, info.TotalBackupSize.SizeString(), applyDrawing, ref preferredHeight, "SafeShield");
+
 		preferredHeight += BorderRadius;
 
 		var graphSize = Math.Min((e.ClipRectangle.Width / 2) - (Margin.Horizontal * 2), UI.Scale(60));
 		using var pen = new Pen(FormDesign.Design.AccentColor, graphSize / 5f);
-		using var activePen = new Pen(info.CriticalSpace ? FormDesign.Design.RedColor : info.LowSpace ? FormDesign.Design.OrangeColor : FormDesign.Design.ActiveColor, graphSize / 5f) { StartCap = System.Drawing.Drawing2D.LineCap.Round, EndCap = System.Drawing.Drawing2D.LineCap.Round };
+		using var activePen = new Pen(info.CriticalSpace ? FormDesign.Design.RedColor : info.LowSpace ? FormDesign.Design.OrangeColor : FormDesign.Design.ActiveColor, graphSize / 5f)
+		{
+			StartCap = info.LowSpace ? default : System.Drawing.Drawing2D.LineCap.Round,
+			EndCap = info.LowSpace ? default : System.Drawing.Drawing2D.LineCap.Round
+		};
 
 		preferredHeight += (int)pen.Width;
 
@@ -185,8 +197,93 @@ internal class BD_DiskInfo : IDashboardItem
 		preferredHeight += BorderRadius + graphSize + (int)pen.Width;
 	}
 
-	private void OpenOptionsPanel()
+	private void DrawLandscape(PaintEventArgs e, bool applyDrawing, ref int preferredHeight)
 	{
-		App.Program.MainForm.PushPanel<PC_Options>((App.Program.MainForm as MainForm)!.PI_Options);
+		DrawHeader(e, applyDrawing, ref preferredHeight);
+
+		if (info is null)
+		{
+			if (!Loading)
+			{
+				e.Graphics.DrawStringItem(Locale.SetupSettingsFirst
+					, Font
+					, FormDesign.Design.OrangeColor
+					, e.ClipRectangle.Pad(Padding)
+					, ref preferredHeight
+					, applyDrawing);
+
+				preferredHeight += BorderRadius;
+			}
+
+			return;
+		}
+
+		var startingY = preferredHeight;
+		var fadedColor = FormDesign.Design.ForeColor.MergeColor(FormDesign.Design.BackColor, 75);
+		var valueRect = e.ClipRectangle.Pad(Margin);
+
+		valueRect.Width -= e.ClipRectangle.Width / 2;
+
+		foreach (var item in info.BackupTypeSizes.OrderByDescending(x => x.Value))
+		{
+			DrawValue(e, valueRect, item.Key.GetTypeTranslation(), item.Value.SizeString(), applyDrawing, ref preferredHeight, item.Key.GetIcon(), fadedColor, false);
+
+			preferredHeight += BorderRadius / 2;
+		}
+
+		DrawValue(e, valueRect, Locale.Archived, info.ArchivedBackupSize.SizeString(), applyDrawing, ref preferredHeight, "Archived", fadedColor, false);
+
+		preferredHeight += BorderRadius;
+
+		DrawValue(e, valueRect, LocaleCS2.TotalBackupSize, info.TotalBackupSize.SizeString(), applyDrawing, ref preferredHeight, "SafeShield");
+
+		preferredHeight += BorderRadius;
+
+		var graphSize = Math.Min((e.ClipRectangle.Width / 2) - (Margin.Horizontal * 2), UI.Scale(60));
+		using var pen = new Pen(FormDesign.Design.AccentColor, graphSize / 5f);
+		using var activePen = new Pen(info.CriticalSpace ? FormDesign.Design.RedColor : info.LowSpace ? FormDesign.Design.OrangeColor : FormDesign.Design.ActiveColor, graphSize / 5f)
+		{
+			StartCap = info.LowSpace ? default : System.Drawing.Drawing2D.LineCap.Round,
+			EndCap = info.LowSpace ? default : System.Drawing.Drawing2D.LineCap.Round
+		};
+
+		var leftHeight = preferredHeight;
+		preferredHeight = startingY;
+
+		var graphRect = new Rectangle(valueRect.Right + ((e.ClipRectangle.Right - valueRect.Right - graphSize) / 2), preferredHeight, graphSize, graphSize);
+
+		e.Graphics.DrawEllipse(pen, graphRect);
+		e.Graphics.DrawArc(activePen, graphRect, -90F, 360f - (360f * (float)((double)info.AvailableSpace / info.TotalSpace)));
+
+		if (info.LowSpace)
+		{
+			using var warning = IconManager.GetIcon("Warning", graphSize / 2).Color(activePen.Color);
+
+			e.Graphics.DrawImage(warning, graphRect.CenterR(warning.Size));
+		}
+
+		preferredHeight += graphRect.Height + Padding.Vertical;
+
+		var sideRect = new Rectangle(valueRect.Right + Padding.Horizontal, preferredHeight, e.ClipRectangle.Right - valueRect.Right - (Padding.Horizontal * 2), graphSize / 2);
+		var text1 = LocaleCS2.FreeSpace.Format(info.AvailableSpace.SizeString(0));
+		var text2 = LocaleCS2.UsedOutOfSpace.Format(info.TotalSpace.SizeString(0), info.DriveLetter);
+
+		using var bigFont = UI.Font(10.5F, FontStyle.Bold).FitToWidth(text1, sideRect, e.Graphics);
+		using var brush1 = new SolidBrush(info.CriticalSpace ? FormDesign.Design.RedColor : info.LowSpace ? FormDesign.Design.OrangeColor : FormDesign.Design.ForeColor);
+		using var format1 = new StringFormat { LineAlignment = StringAlignment.Far };
+
+		e.Graphics.DrawString(text1, bigFont, brush1, sideRect, format1);
+
+		sideRect.Y += sideRect.Height;
+		sideRect.Height -= BorderRadius / 2;
+
+		using var smallFont = UI.Font(8.5F).FitTo(text2, sideRect, e.Graphics);
+		using var brush2 = new SolidBrush(FormDesign.Design.ForeColor.MergeColor(FormDesign.Design.BackColor));
+
+		e.Graphics.DrawString(text2, smallFont, brush2, sideRect);
+
+		preferredHeight += BorderRadius + graphSize + (int)pen.Width;
+
+		preferredHeight = Math.Max(preferredHeight, leftHeight);
 	}
 }
