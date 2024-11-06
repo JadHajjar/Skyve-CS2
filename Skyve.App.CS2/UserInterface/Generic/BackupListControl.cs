@@ -47,8 +47,9 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 		using var brush2 = new SolidBrush(e.BackColor.GetTextColor().MergeColor(e.BackColor, 70));
 		using var fontTitle = UI.Font(9.75F, FontStyle.Bold);
 		using var fontSubTitle = UI.Font(7.5F);
+		using var format = new StringFormat { LineAlignment = StringAlignment.Far };
 
-		var rectangle = e.ClipRectangle.Pad(8, 0, 8, 0);
+		var rectangle = e.ClipRectangle.Pad(UI.Scale(new Padding(8, 0, 8, 0)));
 
 		var icon = RestorePoint ? "Clock" : e.Item.RestoreItems.First().MetaData.GetIcon();
 
@@ -62,20 +63,23 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 		}
 
 		e.Graphics.DrawString(title, fontTitle, brush, rectangle);
-		e.Graphics.DrawString(subTitle, fontSubTitle, brush2, rectangle, new StringFormat { LineAlignment = StringAlignment.Far });
+		e.Graphics.DrawString(subTitle, fontSubTitle, brush2, rectangle, format);
+
+		var titleSize = e.Graphics.Measure(title, fontTitle).ToSize();
 
 		if (IndividualItem)
 		{
 			var text = e.Item.RestoreItems.First().MetaData.GetTypeTranslation();
-			var titleSize = e.Graphics.Measure(title, fontTitle).ToSize();
 
 			if (text != e.Item.Name)
 			{
-				e.Graphics.DrawLabel(text
+				var rect = e.Graphics.DrawLabel(text
 					, null
 					, Color.FromArgb(50, FormDesign.Design.ActiveColor)
 					, new Rectangle(rectangle.X + titleSize.Width, rectangle.Y, rectangle.Width - titleSize.Width, titleSize.Height)
 					, ContentAlignment.MiddleLeft);
+
+				rectangle = rectangle.Pad(rect.Width + Padding.Horizontal, 0, 0, 0);
 			}
 
 			SlickButton.AlignAndDraw(e.Graphics, rectangle, ContentAlignment.MiddleRight, new ButtonDrawArgs
@@ -112,6 +116,12 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 				}
 			}
 		}
+
+		e.Graphics.DrawLabel(e.Item.TotalSize.SizeString(0)
+			, null
+			, Color.FromArgb(100, FormDesign.Design.RedColor.MergeColor(FormDesign.Design.GreenColor, ((int)(100 * e.Item.TotalSize / (500 * 1024 * 1024))).Between(0, 100)))
+			, new Rectangle(rectangle.X + titleSize.Width, rectangle.Y, rectangle.Width - titleSize.Width, titleSize.Height)
+			, ContentAlignment.MiddleLeft);
 	}
 
 	internal class RestoreGroup
@@ -119,12 +129,14 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 		public DateTime Time { get; }
 		public string Name { get; }
 		public IEnumerable<IRestoreItem> RestoreItems { get; }
+		public long TotalSize { get; }
 
 		public RestoreGroup(DateTime time, IEnumerable<IRestoreItem> restoreItems)
 		{
 			Time = time;
 			Name = string.Empty;
 			RestoreItems = restoreItems;
+			TotalSize = restoreItems.Sum(x => x.BackupFile.Length);
 		}
 
 		public RestoreGroup(string name, IEnumerable<IRestoreItem> restoreItems)
@@ -132,6 +144,7 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 			Time = restoreItems.Max(x => x.MetaData.BackupTime);
 			Name = LocaleHelper.GetGlobalText("Backup_" + name, out var translation) ? translation : name;
 			RestoreItems = restoreItems;
+			TotalSize = restoreItems.Sum(x => x.BackupFile.Length);
 		}
 	}
 }

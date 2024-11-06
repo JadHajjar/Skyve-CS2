@@ -104,7 +104,7 @@ internal class D_DiskInfo : IDashboardItem
 
 		contentInfo.TotalOtherSize = contentInfo.TotalCitiesSize - contentInfo.TotalSavesSize - contentInfo.TotalSubbedSize;
 		contentInfo.CriticalSpace = contentInfo.AvailableSpace < 10L * 1024L * 1024L * 1024L;
-		contentInfo.LowSpace = contentInfo.AvailableSpace < 20L * 1024L * 1024L * 1024L;
+		contentInfo.LowSpace = contentInfo.AvailableSpace < 50L * 1024L * 1024L * 1024L;
 
 		if (token.IsCancellationRequested)
 		{
@@ -163,7 +163,11 @@ internal class D_DiskInfo : IDashboardItem
 
 		var graphSize = Math.Min((e.ClipRectangle.Width / 2) - (Margin.Horizontal * 2), UI.Scale(60));
 		using var pen = new Pen(FormDesign.Design.AccentColor, graphSize / 5f);
-		using var activePen = new Pen(info.CriticalSpace ? FormDesign.Design.RedColor : info.LowSpace ? FormDesign.Design.OrangeColor : FormDesign.Design.ActiveColor, graphSize / 5f) { StartCap = System.Drawing.Drawing2D.LineCap.Round, EndCap = System.Drawing.Drawing2D.LineCap.Round };
+		using var activePen = new Pen(info.CriticalSpace ? FormDesign.Design.RedColor : info.LowSpace ? FormDesign.Design.OrangeColor : FormDesign.Design.ActiveColor, graphSize / 5f)
+		{
+			StartCap = info.LowSpace ? default : System.Drawing.Drawing2D.LineCap.Round, 
+			EndCap = info.LowSpace ? default : System.Drawing.Drawing2D.LineCap.Round
+		};
 
 		preferredHeight += (int)pen.Width;
 

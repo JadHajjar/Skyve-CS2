@@ -9,7 +9,6 @@ using Skyve.Systems.CS2.Utilities;
 
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -38,6 +37,8 @@ internal static class Program
 
 		ServiceCenter.Provider = BuildServices();
 
+		ServiceCenter.Provider.GetService<INotifier>()!.Context = SkyveContext.Application;
+
 		SystemExtensions.Initialize(ServiceCenter.Provider);
 	}
 
@@ -64,7 +65,9 @@ internal static class Program
 		try
 		{
 			if (HandleIncorrectLaunchLocation())
+			{
 				return;
+			}
 
 			if (args.Any(x => x.StartsWith("-createJunction") || x.StartsWith("-deleteJunction")))
 			{

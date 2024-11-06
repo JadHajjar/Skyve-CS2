@@ -1,9 +1,13 @@
 ﻿using Skyve.App.CS2.UserInterface.Generic;
+using Skyve.App.UserInterface.Panels;
 using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using static Skyve.App.UserInterface.Panels.DashboardPanelControl;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_BackupCenter : PanelContent
@@ -14,12 +18,14 @@ public partial class PC_BackupCenter : PanelContent
 	{
 		InitializeComponent();
 
+		T_Dashboard.LinkedControl = new DashboardPanelControl("BackupCenter", GetDefaultLayout);
+
 		SetUpSliderTicks();
 
 		SetCurrentSettings();
 
 		backupListControl.CanDrawItem += BackupListControl_CanDrawItem;
-		B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder);
+		L_FinishSetup.Visible = !(B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder));
 	}
 
 	protected override void LocaleChanged()
@@ -28,6 +34,8 @@ public partial class PC_BackupCenter : PanelContent
 
 		L_BackupInfo.Text = Locale.BackupDescriptionInfo;
 		L_RestoreInfo.Text = Locale.RestoreDescriptionInfo;
+		L_ContentInfo.Text = Locale.BackupContentInfo;
+		L_FinishSetup.Text = Locale.SetupSettingsFirst;
 	}
 
 	protected override void UIChanged()
@@ -35,23 +43,50 @@ public partial class PC_BackupCenter : PanelContent
 		base.UIChanged();
 
 		TB_Search.Width = UI.Scale(200);
-		TB_Search.Margin = backupViewControl.Margin = UI.Scale(new Padding(3));
+		L_FinishSetup.Margin = TB_Search.Margin = DD_BackupType.Margin = backupViewControl.Margin = UI.Scale(new Padding(3));
 		spacerSettings.Height = spacerBackup.Height = UI.Scale(2);
 		spacerSettings.Margin = UI.Scale(new Padding(6));
 		L_BackupInfo.Margin = UI.Scale(new Padding(3, 3, 3, 6));
-		panel1.Padding = P_Backup.Margin = P_RestoreSelect.Margin = TLP_General.Margin = TLP_Schedule.Margin = TLP_Cleanup.Margin = UI.Scale(new Padding(6));
+		panel1.Padding = P_Backup.Margin = P_RestoreSelect.Margin = TLP_ContentTypes.Margin = TLP_General.Margin = TLP_Schedule.Margin = TLP_Cleanup.Margin = UI.Scale(new Padding(6));
 		B_AddTime.Margin = SS_Count.Margin = SS_Storage.Margin = SS_CleanupTime.Margin = UI.Scale(new Padding(32, 4, 4, 4));
-		B_Restore.Font = UI.Font(9.75F, System.Drawing.FontStyle.Bold);
-		L_RestoreInfo.Margin = B_Restore.Margin = UI.Scale(new Padding(10, 3, 10, 10));
-		B_Restore.Padding = UI.Scale(new Padding(6));
+		SS_Count.Height = SS_Storage.Height = SS_CleanupTime.Height = UI.Scale(32);
+		B_Restore.Font = UI.Font(9.75F, FontStyle.Bold);
+		L_ContentInfo.Margin = L_RestoreInfo.Margin = B_Restore.Margin = UI.Scale(new Padding(10, 3, 10, 10));
+		TB_DestinationFolder.Margin = B_Restore.Padding = UI.Scale(new Padding(6));
+		L_FinishSetup.Font = UI.Font(7f, FontStyle.Italic);
 	}
 
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
 
-		L_BackupInfo.ForeColor = L_RestoreInfo.ForeColor = design.InfoColor;
+		L_FinishSetup.ForeColor = design.InfoColor.MergeColor(design.OrangeColor, 25);
+		L_BackupInfo.ForeColor = L_RestoreInfo.ForeColor = L_ContentInfo.ForeColor = design.InfoColor;
+		P_Backup.BackColor = P_RestoreSelect.BackColor = TLP_ContentTypes.BackColor = TLP_General.BackColor = TLP_Schedule.BackColor = TLP_Cleanup.BackColor = design.BackColor;
 	}
+
+	public override Color GetTopBarColor()
+	{
+		return FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? 2 : -5);
+	}
+
+	#region Dashboard
+
+	private Dictionary<string, DashboardSetting> GetDefaultLayout()
+	{
+		return new()
+		{
+		  { "D_CompatibilityInfo", new(new(0, 0, 4500, 100), false) },
+		  { "D_ContentInfo",  new(new(0, 100, 2250, 100), false) },
+		  { "D_DiskInfo",  new(new(2250, 100, 2250, 100), false) },
+		  { "D_PdxModsNew",  new(new(4500, 0, 3500, 100), false) },
+		  { "D_PdxUser",  new(new(8000, 0, 2000, 100), false) },
+		  { "D_Playsets",  new(new(8000, 100, 2000, 100), false) },
+		  { "D_NotificationCenter",  new(new(8000, 200, 2000, 100), false) },
+		};
+	}
+
+	#endregion
 
 	#region Settings Tab
 	private void SetCurrentSettings()
@@ -65,6 +100,7 @@ public partial class PC_BackupCenter : PanelContent
 		CB_ScheduleOnNewSave.Checked = settings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnNewSaveGame);
 		CB_ScheduleIncludeSaves.Checked = settings.ScheduleSettings.BackupSaves;
 		CB_ScheduleIncludeLocalMods.Checked = settings.ScheduleSettings.BackupLocalMods;
+		CB_ScheduleIncludeMaps.Checked = settings.ScheduleSettings.BackupMaps;
 		CB_CleanupTime.Checked = settings.CleanupSettings.Type.HasFlag(BackupCleanupType.TimeBased);
 		CB_CleanupStorage.Checked = settings.CleanupSettings.Type.HasFlag(BackupCleanupType.StorageBased);
 		CB_CleanupCount.Checked = settings.CleanupSettings.Type.HasFlag(BackupCleanupType.CountBased);
@@ -74,9 +110,26 @@ public partial class PC_BackupCenter : PanelContent
 
 		FLP_Times.Controls.Clear(true);
 
-		foreach (var item in settings.ScheduleSettings.ScheduleTimes)
+		foreach (var item in settings.ScheduleSettings.ScheduleTimes.OrderBy(x => x.Ticks))
 		{
 			AddTime(item);
+		}
+
+		var backupSystem = ServiceCenter.Get<IBackupSystem>();
+
+		P_ContentTypes.Controls.Clear(true);
+
+		foreach (var item in backupSystem.GetBackupTypes())
+		{
+			var meta = new BackupMetaData { Type = item };
+
+			P_ContentTypes.Controls.Add(new SlickToggleTile
+			{
+				Text = meta.GetTypeTranslation(),
+				Tag = item,
+				ImageName = meta.GetIcon(),
+				Selected = settings.ContentTypes is null || settings.ContentTypes.Contains(item)
+			});
 		}
 	}
 
@@ -122,11 +175,14 @@ public partial class PC_BackupCenter : PanelContent
 	{
 		SS_Storage.TextConversion = x => $"{x}GB";
 		SS_Storage.Items = [5, 10, 15, 25, 50, 75, 100, 150, 250, 350];
+		SS_Storage.SetDefaultProgressiveColorPoints();
 
 		SS_Count.Items = [10, 25, 50, 75, 100, 200, 300, 500, 1000];
+		SS_Count.SetDefaultProgressiveColorPoints();
 
 		SS_CleanupTime.TextConversion = x => TimeSpan.FromDays((int)x).ToReadableBigString();
 		SS_CleanupTime.Items = [7, 14, 30, 30 * 2, 30 * 3, 30 * 6, 365];
+		SS_CleanupTime.SetDefaultProgressiveColorPoints();
 	}
 
 	private void CB_ScheduleAtTimes_CheckChanged(object sender, EventArgs e)
@@ -171,8 +227,11 @@ public partial class PC_BackupCenter : PanelContent
 		settings.DestinationFolder = TB_DestinationFolder.Text;
 		settings.IgnoreAutoSaves = !CB_IncludeAutoSaves.Checked;
 
+		settings.ContentTypes = P_ContentTypes.Controls.OfType<SlickToggleTile>().Where(x => x.Selected).Select(x => x.Tag.ToString()).ToArray();
+
 		settings.ScheduleSettings.BackupSaves = CB_ScheduleIncludeSaves.Checked;
 		settings.ScheduleSettings.BackupLocalMods = CB_ScheduleIncludeLocalMods.Checked;
+		settings.ScheduleSettings.BackupMaps = CB_ScheduleIncludeMaps.Checked;
 		settings.ScheduleSettings.ScheduleTimes = FLP_Times.Controls.OfType<SlickDateTime>().Select(x => x.Value.TimeOfDay).ToArray();
 		settings.ScheduleSettings.Type = BackupScheduleType.None;
 
@@ -213,10 +272,11 @@ public partial class PC_BackupCenter : PanelContent
 
 		settings.Save();
 
-		B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder);
+		L_FinishSetup.Visible = !(B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder));
 	}
 	#endregion
 
+	#region Backup & Restore
 	private async void B_Backup_Click(object sender, EventArgs e)
 	{
 		if (B_Backup.Loading)
@@ -226,6 +286,11 @@ public partial class PC_BackupCenter : PanelContent
 
 		B_Backup.Loading = true;
 
+		if (ServiceCenter.Get<IBackupSystem>().GetBackupsSizeOnDisk() == 0)
+		{
+			Notification.Create(Locale.FirstBackup, Locale.FirstBackupDescription, PromptIcons.Info, size: new Size(325, 125)).Show(Form, 20);
+		}
+
 		var result = await Task.Run(async () =>
 		{
 			var backupSystem = ServiceCenter.Get<IBackupSystem>();
@@ -233,17 +298,18 @@ public partial class PC_BackupCenter : PanelContent
 			return await backupSystem.DoBackup();
 		});
 
-		B_Backup.Loading = false;
-
 		if (!result)
 		{
+			B_Backup.Loading = false;
+
 			ShowPrompt(Locale.CheckLogsAndTryAgain, Locale.BackupFailed, PromptButtons.OK, PromptIcons.Error);
 
 			return;
 		}
 
-		_ = Task.Run(LoadBackupItems);
+		await Task.Run(LoadBackupItems);
 
+		B_Backup.Loading = false;
 		B_Backup.ImageName = "Check";
 
 		await Task.Delay(5_000);
@@ -319,6 +385,11 @@ public partial class PC_BackupCenter : PanelContent
 
 	private void BackupListControl_CanDrawItem(object sender, CanDrawItemEventArgs<BackupListControl.RestoreGroup> e)
 	{
+		if (DD_BackupType.SelectedItem is not null)
+		{
+			e.DoNotDraw = !e.Item.RestoreItems.Any(x => x.MetaData.Type == DD_BackupType.SelectedItem);
+		}
+
 		if (string.IsNullOrWhiteSpace(TB_Search.Text))
 		{
 			return;
@@ -355,6 +426,13 @@ public partial class PC_BackupCenter : PanelContent
 
 	private void BackupListControl_ItemMouseClick(object sender, MouseEventArgs e)
 	{
+		var item = (BackupListControl.RestoreGroup)sender;
+
+		SelectRestoreGroup(item);
+	}
+
+	internal void SelectRestoreGroup(BackupListControl.RestoreGroup item)
+	{
 		TLP_RestoreGroups?.Dispose();
 		TLP_RestoreGroups = new TableLayoutPanel()
 		{
@@ -365,8 +443,6 @@ public partial class PC_BackupCenter : PanelContent
 
 		TLP_Restore.Controls.Add(TLP_RestoreGroups, 0, 1);
 		TLP_Restore.SetColumnSpan(TLP_RestoreGroups, 2);
-
-		var item = (BackupListControl.RestoreGroup)sender;
 
 		foreach (var backupGroup in item.RestoreItems.GroupBy(x => x.MetaData.Type))
 		{
@@ -400,7 +476,9 @@ public partial class PC_BackupCenter : PanelContent
 		T_Restore.Selected = true;
 	}
 
-	public void SelectBackup(string restoreBackup)
+	public void SelectBackup(string restoreBackup) => SelectBackup(restoreBackup, true);
+
+	public void SelectBackup(string restoreBackup, bool prompt)
 	{
 		var backupSystem = ServiceCenter.Get<IBackupSystem>();
 		var restoreItem = backupSystem.LoadBackupFile(restoreBackup);
@@ -410,7 +488,7 @@ public partial class PC_BackupCenter : PanelContent
 			return;
 		}
 
-		if (ShowPrompt(Locale.RestoreFileConfirm.Format(1, LocaleHelper.GetGlobalText("Backup_" + restoreItem.MetaData.Name, out var translation) ? translation : restoreItem.MetaData.Name)
+		if (prompt && ShowPrompt(Locale.RestoreFileConfirm.Format(1, LocaleHelper.GetGlobalText("Backup_" + restoreItem.MetaData.Name, out var translation) ? translation : restoreItem.MetaData.Name)
 			, PromptButtons.YesNo
 			, PromptIcons.Question) != DialogResult.Yes)
 		{
@@ -474,4 +552,13 @@ public partial class PC_BackupCenter : PanelContent
 			});
 		});
 	}
+
+	internal void DoBackup()
+	{
+		T_BackupRestore.Selected = true;
+
+		B_Backup_Click(this, EventArgs.Empty);
+	}
+
+	#endregion
 }

@@ -105,18 +105,7 @@ public partial class PC_Utilities : PanelContent
 
 	private void DD_TextImport_FileSelected(string obj)
 	{
-		var matches = Regex.Matches(File.ReadAllText(obj), "(\\d{5,6})");
-		var assets = new List<IPackageIdentity>();
-
-		foreach (Match item in matches)
-		{
-			if (ulong.TryParse(item.Groups[1].Value, out var id) && !assets.Any(x => x.Id == id))
-			{
-				assets.Add(new GenericPackageIdentity(id));
-			}
-		}
-
-		Form.PushPanel(new PC_GenericPackageList(assets, true) { Text = LocaleHelper.GetGlobalText(P_Text.Text) });
+		LoadModsFromText(File.ReadAllText(obj), P_Text.Text);
 	}
 
 	private void B_ImportClipboard_Click(object sender, EventArgs e)
@@ -126,21 +115,26 @@ public partial class PC_Utilities : PanelContent
 			return;
 		}
 
-		var matches = Regex.Matches(Clipboard.GetText(), "(\\d{5,6})");
-		var assets = new List<IPackageIdentity>();
+		LoadModsFromText(Clipboard.GetText(), B_ImportClipboard.Text);
+	}
+
+	private void LoadModsFromText(string text, string title)
+	{
+		var matches = Regex.Matches(text, @"(?<!\.)\b(\d{5,6})\b(?:\: (.+?) (?:[\d\.]))?");
+		var packages = new List<IPackageIdentity>();
 
 		foreach (Match item in matches)
 		{
-			if (ulong.TryParse(item.Groups[1].Value, out var id) && !assets.Any(x => x.Id == id))
+			if (ulong.TryParse(item.Groups[1].Value, out var id) && !packages.Any(x => x.Id == id))
 			{
-				assets.Add(new GenericPackageIdentity(id));
+				packages.Add(new GenericPackageIdentity(id, item.Groups[2].Value));
 			}
 		}
 
-		Form.PushPanel(new PC_GenericPackageList(assets, true) { Text = LocaleHelper.GetGlobalText(B_ImportClipboard.Text) });
+		Form.PushPanel(new PC_GenericPackageList(packages, true) { Text = LocaleHelper.GetGlobalText(title) });
 	}
 
-	private void slickScroll1_Scroll(object sender, ScrollEventArgs e)
+	private void SlickScroll_Scroll(object sender, ScrollEventArgs e)
 	{
 		slickSpacer1.Visible = slickScroll1.Percentage != 0;
 	}

@@ -59,6 +59,21 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation BackupSettingsFiles => _instance.GetText("Backup_SettingsFiles");
 
 	/// <summary>
+	/// Skyve service online
+	/// </summary>
+	public static Translation BackupServiceAvailable => _instance.GetText("BackupServiceAvailable");
+
+	/// <summary>
+	/// The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.
+	/// </summary>
+	public static Translation BackupServiceUnavailable => _instance.GetText("BackupServiceUnavailable");
+
+	/// <summary>
+	/// Automatic backup starting now...
+	/// </summary>
+	public static Translation BackupStartingNow => _instance.GetText("BackupStartingNow");
+
+	/// <summary>
 	/// You can't run Skyve from this folder.  Either run the app from your Programs list, or run the Skyve Setup from the mod's folder.
 	/// </summary>
 	public static Translation CantRunAppFromHere => _instance.GetText("CantRunAppFromHere");
@@ -85,6 +100,22 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// <para>Plural: Copy the selected packages' PDX Mods links as Markdown</para>
 	/// </summary>
 	public static Translation CopyWorkshopMarkdownLink => _instance.GetText("CopyWorkshopMarkdownLink");
+
+	/// <summary>
+	/// <para>Corrupted Settings File Detected</para>
+	/// <para>Plural: {0} Corrupted Settings Files Detected</para>
+	/// </summary>
+	public static Translation CorruptedSettingsFiles => _instance.GetText("CorruptedSettingsFiles");
+
+	/// <summary>
+	/// Skyve has found available backups to restore your settings to their previous state.  Click here to restore them now.
+	/// </summary>
+	public static Translation CorruptedSettingsFilesBackupAvailable => _instance.GetText("CorruptedSettingsFilesBackupAvailable");
+
+	/// <summary>
+	/// No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.  Click here to delete the corrupted files.
+	/// </summary>
+	public static Translation CorruptedSettingsFilesNoBackup => _instance.GetText("CorruptedSettingsFilesNoBackup");
 
 	/// <summary>
 	/// Could not retrieve the mods' data
@@ -294,6 +325,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation JunctionTitle => _instance.GetText("JunctionTitle");
 
 	/// <summary>
+	/// Last settings backup was {0}
+	/// </summary>
+	public static Translation LastSettingsBackup => _instance.GetText("LastSettingsBackup");
+
+	/// <summary>
 	/// Launch in Safe Mode
 	/// </summary>
 	public static Translation LaunchInSafeMode => _instance.GetText("LaunchInSafeMode");
@@ -360,6 +396,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Patch {0} is now available. Be sure to check your compatibility report before starting your game.
 	/// </summary>
 	public static Translation NewGameUpdateInfo => _instance.GetText("NewGameUpdateInfo");
+
+	/// <summary>
+	/// Next scheduled backup is {0}
+	/// </summary>
+	public static Translation NextScheduledBackup => _instance.GetText("NextScheduledBackup");
+
+	/// <summary>
+	/// No available settings backup available
+	/// </summary>
+	public static Translation NoSettingsBackup => _instance.GetText("NoSettingsBackup");
 
 	/// <summary>
 	/// You're not logged in to Paradox, check your notifications for more information.
@@ -470,6 +516,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Clear PDX Mods cache
 	/// </summary>
 	public static Translation ResetSteamCache => _instance.GetText("ResetSteamCache");
+
+	/// <summary>
+	/// Restore latest settings backup
+	/// </summary>
+	public static Translation RestoreLatestSettings => _instance.GetText("RestoreLatestSettings");
 
 	/// <summary>
 	/// You can't run Skyve from this folder. If you've installed it already, run it from your Programs list.  If not, click on 'Ok' to run the setup.

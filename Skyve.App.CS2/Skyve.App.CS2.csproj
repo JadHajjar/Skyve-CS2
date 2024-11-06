@@ -61,6 +61,7 @@
 		<Reference Include="System.Management" />
 		<Reference Include="System.Net" />
 		<Reference Include="System.Net.Http" />
+		<Reference Include="System.ServiceProcess" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -72,6 +73,9 @@
 		</Compile>
 		<Compile Update="UserInterface\Content\DownloadsInfoControl.cs" />
 		<Compile Update="UserInterface\Dashboard\D_ContentInfo.cs" />
+		<Compile Update="UserInterface\Dashboard\BD_DiskInfo.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 		<Compile Update="UserInterface\Dashboard\D_PdxModsBase.cs" />
 		<Compile Update="UserInterface\Dashboard\D_PdxModsPopular.cs">
 		  <SubType>UserControl</SubType>

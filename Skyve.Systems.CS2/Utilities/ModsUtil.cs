@@ -134,17 +134,17 @@ internal class ModsUtil : IModUtil
 		//_config.Save();
 	}
 
-	public bool IsIncluded(IPackageIdentity mod, int? playsetId = null)
+	public bool IsIncluded(IPackageIdentity mod, int? playsetId = null, bool withVersion = true)
 	{
 		if (mod.Id <= 0)
 		{
 			return mod is LocalPdxPackage ? modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Name) : IsEnabled(mod);
 		}
 
-		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id, mod.Version ?? "");
+		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id, withVersion ? mod.Version : null);
 	}
 
-	public bool IsEnabled(IPackageIdentity mod, int? playsetId = null)
+	public bool IsEnabled(IPackageIdentity mod, int? playsetId = null, bool withVersion = true)
 	{
 		if (mod.Id <= 0)
 		{
@@ -158,15 +158,15 @@ internal class ModsUtil : IModUtil
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
 		}
 
-		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id, mod.Version ?? "");
+		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id, withVersion ? mod.Version : null);
 	}
 
-	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null)
+	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null, bool withVersion = true)
 	{
-		await SetIncluded([mod], value, playsetId);
+		await SetIncluded([mod], value, playsetId, withVersion);
 	}
 
-	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null)
+	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null, bool withVersion = true)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -214,7 +214,7 @@ internal class ModsUtil : IModUtil
 
 		//var tempConfig = modConfig.CreateFragment(playset);
 		var result = value
-			? await Subscribe(mods, playset)
+			? await Subscribe(mods, playset, withVersion)
 			: await UnSubscribe(mods, playset);
 
 		if (result)
@@ -249,12 +249,12 @@ internal class ModsUtil : IModUtil
 		_notifier.OnRefreshUI(true);
 	}
 
-	public async Task SetEnabled(IPackageIdentity mod, bool value, int? playsetId = null)
+	public async Task SetEnabled(IPackageIdentity mod, bool value, int? playsetId = null, bool withVersion = true)
 	{
-		await SetEnabled([mod], value, playsetId);
+		await SetEnabled([mod], value, playsetId, withVersion);
 	}
 
-	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null)
+	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null, bool withVersion = true)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -645,7 +645,7 @@ internal class ModsUtil : IModUtil
 		return modConfig.GetVersion(playsetId ?? currentPlayset, package.Id);
 	}
 
-	private async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null)
+	private async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null, bool withVersion = true)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -667,7 +667,7 @@ internal class ModsUtil : IModUtil
 
 		foreach (var item in ids)
 		{
-			dictionary[(int)item.Id] = item.Version == "" || item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version;
+			dictionary[(int)item.Id] = withVersion ? item.Version == "" || item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version : null;
 		}
 
 		var result = await _workshopService.SubscribeBulk(dictionary, currentPlayset);

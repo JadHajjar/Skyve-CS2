@@ -10,33 +10,44 @@ internal class D_Playsets : IDashboardItem
 	private readonly IPlaysetManager _playsetManager;
 	private readonly INotifier _notifier;
 	private readonly ICitiesManager _citiesManager;
-	private bool isRunning;
+	private bool isCitiesRunning;
 	private bool loadingFromGameLaunch;
+	private bool isCitiesAvailable;
 
 	public D_Playsets()
 	{
 		ServiceCenter.Get(out _playsetManager, out _notifier, out _citiesManager);
 
+		_notifier.BackupStarted += BackupStartedEnded;
+		_notifier.BackupEnded += BackupStartedEnded;
+
 		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
 		_notifier.PlaysetUpdated += _notifier_PlaysetUpdated;
 
-		_citiesManager.MonitorTick += _citiesManager_MonitorTick;
-		_citiesManager.LaunchingStatusChanged += _citiesManager_LaunchingStatusChanged;
+		_citiesManager.MonitorTick += CitiesManager_MonitorTick;
+		_citiesManager.LaunchingStatusChanged += CitiesManager_LaunchingStatusChanged;
 
 		Loading = !_notifier.IsPlaysetsLoaded;
 	}
 
 	protected override void Dispose(bool disposing)
 	{
+		_notifier.BackupStarted += BackupStartedEnded;
+		_notifier.BackupEnded += BackupStartedEnded;
 		_notifier.PlaysetChanged -= _notifier_PlaysetChanged;
 		_notifier.PlaysetUpdated -= _notifier_PlaysetUpdated;
-		_citiesManager.MonitorTick -= _citiesManager_MonitorTick;
-		_citiesManager.LaunchingStatusChanged -= _citiesManager_LaunchingStatusChanged;
+		_citiesManager.MonitorTick -= CitiesManager_MonitorTick;
+		_citiesManager.LaunchingStatusChanged -= CitiesManager_LaunchingStatusChanged;
 
 		base.Dispose(disposing);
 	}
 
-	private void _citiesManager_LaunchingStatusChanged(bool obj)
+	private void BackupStartedEnded()
+	{
+		OnResizeRequested();
+	}
+
+	private void CitiesManager_LaunchingStatusChanged(bool obj)
 	{
 		this.TryInvoke(() =>
 		{
@@ -46,11 +57,13 @@ internal class D_Playsets : IDashboardItem
 		});
 	}
 
-	private void _citiesManager_MonitorTick(bool isAvailable, bool isRunning)
+	private void CitiesManager_MonitorTick(bool isAvailable, bool isRunning)
 	{
-		if (this.isRunning != isRunning)
+		isCitiesAvailable = isAvailable;
+
+		if (isCitiesRunning != isRunning)
 		{
-			this.isRunning = isRunning;
+			isCitiesRunning = isRunning;
 
 			OnResizeRequested();
 		}
@@ -128,13 +141,20 @@ internal class D_Playsets : IDashboardItem
 
 		_buttonRightClickActions[headerRectangle] = () => RightClick(_playsetManager.CurrentPlayset);
 
-		DrawButton(e, applyDrawing, ref preferredHeight, (App.Program.MainForm as MainForm)!.LaunchStopCities, new ButtonDrawArgs
+		using var fontSmall = UI.Font(6.75F);
+
+		if (_notifier.IsBackingUp)
 		{
-			Text = LocaleHelper.GetGlobalText(isRunning ? "StopCities" : "StartCities"),
+			e.Graphics.DrawStringItem(Locale.BackupInProgress, fontSmall, Color.FromArgb(200, FormDesign.Design.OrangeColor), e.ClipRectangle.Pad(Margin), ref preferredHeight, applyDrawing);
+		}
+
+		DrawButton(e, applyDrawing, ref preferredHeight, !isCitiesAvailable ? null : (App.Program.MainForm as MainForm)!.LaunchStopCities, new ButtonDrawArgs
+		{
+			Text = LocaleHelper.GetGlobalText(isCitiesRunning ? "StopCities" : "StartCities"),
 			Rectangle = e.ClipRectangle.Pad(Margin),
-			Icon = isRunning ? "Stop" : "CS",
+			Icon = isCitiesRunning ? "Stop" : "CS",
 			Padding = UI.Scale(new Padding(2)),
-			Enabled = Enabled,
+			Enabled = Enabled && isCitiesAvailable,
 			Control = this
 		});
 
@@ -159,8 +179,6 @@ internal class D_Playsets : IDashboardItem
 		}
 
 		preferredHeight += Margin.Top;
-
-		using var fontSmall = UI.Font(6.75F);
 
 		e.Graphics.DrawStringItem(Locale.FavoritePlaysets, fontSmall, Color.FromArgb(150, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad(UI.Scale(2), 0, 0, 0), ref preferredHeight, applyDrawing);
 

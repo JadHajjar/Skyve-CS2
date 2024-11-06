@@ -12,13 +12,15 @@ public class BackupSettings : ConfigFile, IBackupSettings
 	public Schedule ScheduleSettings { get; set; } = new();
 	public Cleanup CleanupSettings { get; set; } = new();
 	public bool IgnoreAutoSaves { get; set; } = true;
+	public string[]? ContentTypes { get; set; }
 
 	public class Schedule
 	{
 		public BackupScheduleType Type { get; set; } = BackupScheduleType.OnScheduledTimes;
 		public TimeSpan[] ScheduleTimes { get; set; } = [TimeSpan.FromHours(18)];
 		public bool BackupSaves { get; set; } = true;
-		public bool BackupLocalMods { get; set; } = true;
+		public bool BackupLocalMods { get; set; }
+		public bool BackupMaps { get; set; }
 	}
 
 	public class Cleanup

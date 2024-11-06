@@ -39,6 +39,10 @@ internal class UpdateSystem
 		{
 			await _workshopService.RunSync();
 		}
+		else
+		{
+			_logger.Warning("Login failed, Sync not started");
+		}
 
 		await _workshopService.Shutdown();
 	}

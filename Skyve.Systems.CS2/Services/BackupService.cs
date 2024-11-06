@@ -91,6 +91,7 @@ internal class BackupService : IBackupService
 
 			backupSystem.BackupInstructions.DoSavesBackup = _backupSettings.ScheduleSettings.BackupSaves;
 			backupSystem.BackupInstructions.DoLocalModsBackup = _backupSettings.ScheduleSettings.BackupLocalMods;
+			backupSystem.BackupInstructions.DoMapsBackup = _backupSettings.ScheduleSettings.BackupMaps;
 
 			return await backupSystem.DoBackup();
 		}

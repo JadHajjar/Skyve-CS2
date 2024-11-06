@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
 using PDX.SDK.Contracts;
@@ -488,7 +489,7 @@ public class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(!localOnly));
+		var playsets = ProcessResult(await _processor.Queue(async () => await Context.Mods.ListAllPlaysets(!localOnly)));
 
 		return !playsets.Success ? (List<IPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (IPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
 	}
@@ -501,7 +502,7 @@ public class WorkshopService : IWorkshopService
 		}
 
 		var playsetId = await GetActivePlaysetId();
-		var playsets = await GetPlaysets(true);
+		var playsets = await GetPlaysets(false);
 
 		return playsets.FirstOrDefault(x => x.Id == playsetId);
 	}
@@ -1043,7 +1044,7 @@ public class WorkshopService : IWorkshopService
 			_logger.Exception(ex, "Failed to repair context");
 		}
 
-		await Initialize();
+		await _serviceProvider.GetService<ICentralManager>()!.Initialize();
 	}
 
 	public bool IsLocal(IPackageIdentity identity)
