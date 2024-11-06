@@ -25,6 +25,20 @@ internal class BD_NextBackup : IDashboardItem
 		_serviceUnavailable = ServiceController.GetServices().FirstOrDefault(x => x.ServiceName == "Skyve.Service")?.StartType is null or ServiceStartMode.Disabled;
 	}
 
+	protected override void OnCreateControl()
+	{
+		base.OnCreateControl();
+
+		_notifier.BackupEnded += Invalidate;
+	}
+
+	protected override void Dispose(bool disposing)
+	{
+		base.Dispose(disposing);
+
+		_notifier.BackupEnded -= Invalidate;
+	}
+
 	protected override DrawingDelegate GetDrawingMethod(int width)
 	{
 		return Draw;

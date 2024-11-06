@@ -193,6 +193,7 @@ internal class BackupSystem : IBackupSystem
 		try
 		{
 			_notifier.IsBackingUp = true;
+			_notifier.OnBackupStarted();
 
 			var availableBackups = GetAllBackups();
 
@@ -226,6 +227,8 @@ internal class BackupSystem : IBackupSystem
 		finally
 		{
 			_notifier.IsBackingUp = false;
+
+			_notifier.OnBackupEnded();
 		}
 
 		return true;

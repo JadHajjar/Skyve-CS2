@@ -24,7 +24,7 @@ public class ModStateCollection
 
 	public bool IsEmpty => _enabledConfig.Count == 0 && _versionConfig.Count == 0;
 
-	public bool IsIncluded(int playset, ulong modId, string version)
+	public bool IsIncluded(int playset, ulong modId, string? version)
 	{
 		if (!_enabledConfig.TryGetValue(playset, out var dic)
 			|| !dic.ContainsKey(modId))
@@ -69,7 +69,7 @@ public class ModStateCollection
 		}
 	}
 
-	public bool IsEnabled(int playset, ulong modId, string version)
+	public bool IsEnabled(int playset, ulong modId, string? version)
 	{
 		if (!_enabledConfig.TryGetValue(playset, out var dic)
 			|| !dic.TryGetValue(modId, out var enabled)

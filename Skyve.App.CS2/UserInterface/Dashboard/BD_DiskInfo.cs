@@ -44,7 +44,7 @@ internal class BD_DiskInfo : IDashboardItem
 	{
 		base.OnCreateControl();
 
-		_notifier.WorkshopSyncEnded += LoadData;
+		_notifier.BackupEnded += LoadData;
 
 		LoadData();
 	}
@@ -53,7 +53,7 @@ internal class BD_DiskInfo : IDashboardItem
 	{
 		base.Dispose(disposing);
 
-		_notifier.WorkshopSyncEnded -= LoadData;
+		_notifier.BackupEnded -= LoadData;
 	}
 
 	protected override void OnDataLoadError(Exception ex)

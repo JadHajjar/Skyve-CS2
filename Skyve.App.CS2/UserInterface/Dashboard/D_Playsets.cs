@@ -18,6 +18,9 @@ internal class D_Playsets : IDashboardItem
 	{
 		ServiceCenter.Get(out _playsetManager, out _notifier, out _citiesManager);
 
+		_notifier.BackupStarted += BackupStartedEnded;
+		_notifier.BackupEnded += BackupStartedEnded;
+
 		_notifier.PlaysetChanged += _notifier_PlaysetChanged;
 		_notifier.PlaysetUpdated += _notifier_PlaysetUpdated;
 
@@ -29,12 +32,19 @@ internal class D_Playsets : IDashboardItem
 
 	protected override void Dispose(bool disposing)
 	{
+		_notifier.BackupStarted += BackupStartedEnded;
+		_notifier.BackupEnded += BackupStartedEnded;
 		_notifier.PlaysetChanged -= _notifier_PlaysetChanged;
 		_notifier.PlaysetUpdated -= _notifier_PlaysetUpdated;
 		_citiesManager.MonitorTick -= CitiesManager_MonitorTick;
 		_citiesManager.LaunchingStatusChanged -= CitiesManager_LaunchingStatusChanged;
 
 		base.Dispose(disposing);
+	}
+
+	private void BackupStartedEnded()
+	{
+		OnResizeRequested();
 	}
 
 	private void CitiesManager_LaunchingStatusChanged(bool obj)
@@ -131,6 +141,13 @@ internal class D_Playsets : IDashboardItem
 
 		_buttonRightClickActions[headerRectangle] = () => RightClick(_playsetManager.CurrentPlayset);
 
+		using var fontSmall = UI.Font(6.75F);
+
+		if (_notifier.IsBackingUp)
+		{
+			e.Graphics.DrawStringItem(Locale.BackupInProgress, fontSmall, Color.FromArgb(200, FormDesign.Design.OrangeColor), e.ClipRectangle.Pad(Margin), ref preferredHeight, applyDrawing);
+		}
+
 		DrawButton(e, applyDrawing, ref preferredHeight, !isCitiesAvailable ? null : (App.Program.MainForm as MainForm)!.LaunchStopCities, new ButtonDrawArgs
 		{
 			Text = LocaleHelper.GetGlobalText(isCitiesRunning ? "StopCities" : "StartCities"),
@@ -162,8 +179,6 @@ internal class D_Playsets : IDashboardItem
 		}
 
 		preferredHeight += Margin.Top;
-
-		using var fontSmall = UI.Font(6.75F);
 
 		e.Graphics.DrawStringItem(Locale.FavoritePlaysets, fontSmall, Color.FromArgb(150, FormDesign.Design.ForeColor), e.ClipRectangle.Pad(Margin).Pad(UI.Scale(2), 0, 0, 0), ref preferredHeight, applyDrawing);
 

@@ -284,6 +284,8 @@ public partial class PC_BackupCenter : PanelContent
 
 		B_Backup.Loading = true;
 
+		Notification.Create(Locale.FirstBackup, Locale.FirstBackupDescription, PromptIcons.Info, size: new Size(325, 125)).Show(Form, 20);
+
 		var result = await Task.Run(async () =>
 		{
 			var backupSystem = ServiceCenter.Get<IBackupSystem>();

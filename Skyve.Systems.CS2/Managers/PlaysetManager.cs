@@ -389,7 +389,7 @@ internal class PlaysetManager : IPlaysetManager
 		{
 			foreach (var playset in Playsets)
 			{
-				await _packageUtil.SetIncluded(packages, value, playset.Id);
+				await _packageUtil.SetIncluded(packages, value, playset.Id, false);
 			}
 		}
 		catch (Exception ex)
@@ -411,12 +411,11 @@ internal class PlaysetManager : IPlaysetManager
 			{
 				if (value)
 				{
-					await _packageUtil.SetIncluded(packages, true, playset.Id);
-					await _packageUtil.SetEnabled(packages, true, playset.Id);
+					await _packageUtil.SetEnabled(packages, true, playset.Id, false);
 				}
 				else
 				{
-					await _packageUtil.SetEnabled(packages, false, playset.Id);
+					await _packageUtil.SetEnabled(packages, false, playset.Id, false);
 				}
 			}
 		}
