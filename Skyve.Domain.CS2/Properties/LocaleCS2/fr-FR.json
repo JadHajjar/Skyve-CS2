@@ -179,18 +179,18 @@
   },
   "ParadoxContextFailed": "Paradox backend failed to load",
   "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
-  "BackupStartingNow": "Automatic backup starting now...",
+  "BackupStartingNow": "L'archivage automatique commence...",
   "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
   "BackupServiceAvailable": "Skyve service online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
-  "NoSettingsBackup": "No available settings backup available",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "NextScheduledBackup": "Le prochain archivage est planifié le {0}",
+  "LastSettingsBackup": "Le dernier archivage des paramètres était le {0}",
+  "NoSettingsBackup": "Aucune archive des paramètres n'est disponible",
+  "RestoreLatestSettings": "Restaurer la dernière archive des paramètres",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "One": "Fichier de Paramètres Corrompu Détecté",
+    "Plural": "{0} Fichiers de Paramètres Corrompus Détectés"
   },
   "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
   "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups"
+  "RecentBackups": "Archives Récentes"
 }
