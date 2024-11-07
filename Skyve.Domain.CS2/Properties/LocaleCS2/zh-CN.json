@@ -179,18 +179,18 @@
   },
   "ParadoxContextFailed": "无法加载 Paradox 后端",
   "ParadoxContextFailedInfo": "一些问题导致 Paradox 的后端出错。\n点击此消息来尝试修复。\n\n如果修复失败，请在技术支持论坛上寻求帮助。",
-  "BackupStartingNow": "Automatic backup starting now...",
-  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
-  "NoSettingsBackup": "No available settings backup available",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "BackupStartingNow": "正在开始自动备份……",
+  "BackupServiceUnavailable": "没有安装 Skyve 服务程序。自动备份仅在 Skyve 应用程序打开时才会工作。",
+  "BackupServiceAvailable": "Skyve 服务程序已启用",
+  "NextScheduledBackup": "下次计划的备份是 {0}",
+  "LastSettingsBackup": "上次备份设置是 {0}",
+  "NoSettingsBackup": "没有可用的设置备份",
+  "RestoreLatestSettings": "恢复到上次备份的设置",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "One": "发现损坏的设置文件",
+    "Plural": "发现 {0} 个损坏的设置文件"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups"
+  "CorruptedSettingsFilesBackupAvailable": "Skyve 已找到可用的备份，可以将您的设置恢复到之前的状态。 \n点击此处开始恢复。",
+  "CorruptedSettingsFilesNoBackup": "没有可用的备份来恢复您的设置。请启用备份，以保护您的设置。\n点击此处删除损坏的文件。",
+  "RecentBackups": "最近备份"
 }
