@@ -333,11 +333,11 @@ internal class PlaysetManager : IPlaysetManager
 		return newPlayset;
 	}
 
-	public async Task<IPlayset?> ImportPlayset(string fileName)
+	public async Task<IPlayset?> ImportPlayset(string fileName, bool createNew = false)
 	{
 		var playset = JsonConvert.DeserializeObject<PdxPlaysetImport>(File.ReadAllText(fileName.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase) ? ExtractZipPlayset(fileName) : fileName));
 
-		if (_playsets.ContainsKey(playset.GeneralData?.Id ?? 0))
+		if (!createNew && _playsets.ContainsKey(playset.GeneralData?.Id ?? 0))
 		{
 			throw new Exception(LocaleCS2.PlaysetAlreadyImported);
 		}
@@ -349,6 +349,13 @@ internal class PlaysetManager : IPlaysetManager
 			await _packageUtil.SetIncluded(playset.SubscribedMods.Values, true, newPlayset.Id);
 
 			await _packageUtil.SetEnabled(playset.SubscribedMods.Values.Where(x => !x.IsEnabled), false, newPlayset.Id);
+		}
+
+		if (playset.LocalMods is not null)
+		{
+			await _packageUtil.SetIncluded(playset.LocalMods.Values, true, newPlayset.Id);
+
+			await _packageUtil.SetEnabled(playset.LocalMods.Values.Where(x => !x.IsEnabled), false, newPlayset.Id);
 		}
 
 		return newPlayset;
@@ -533,5 +540,10 @@ internal class PlaysetManager : IPlaysetManager
 				Version = x.Version,
 			}))
 		};
+	}
+
+	public Task<IPlayset?> ImportPlayset(string fileName)
+	{
+		throw new NotImplementedException();
 	}
 }

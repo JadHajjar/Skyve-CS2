@@ -213,7 +213,8 @@ internal class BackupSystem : IBackupSystem
 
 			SaveBackupItem(MakeSettingsBackup());
 			SaveBackupItem(MakeModsSettingsBackup());
-			SaveBackupItem(await MakePlaysetBackup());
+
+			(await MakePlaysetBackup()).Foreach(SaveBackupItem);
 
 			if (BackupInstructions.DoSavesBackup)
 			{
@@ -339,18 +340,25 @@ internal class BackupSystem : IBackupSystem
 		return null;
 	}
 
-	private async Task<IBackupItem?> MakePlaysetBackup()
+	private async Task<IEnumerable<IBackupItem>> MakePlaysetBackup()
 	{
-		var currentPlayset = await _workshopService.GetCurrentPlayset();
+		var playsets = await _workshopService.GetPlaysets(false);
 
-		if (currentPlayset is null)
+		if (playsets is null)
 		{
-			return null;
+			return [];
 		}
 
-		var playset = await _playsetManager.GenerateImportPlayset(currentPlayset);
+		var backups = new List<IBackupItem>();
 
-		return new BackupItem.ActivePlayset(playset, _playsetManager);
+		foreach (var item in playsets)
+		{
+			var playset = await _playsetManager.GenerateImportPlayset(item);
+
+			backups.Add(new BackupItem.ActivePlayset(playset, item, _playsetManager));
+		}
+
+		return backups;
 	}
 
 	private IEnumerable<IBackupItem> MakeLocalModsBackup(List<IRestoreItem> availableBackups)
@@ -409,7 +417,7 @@ internal class BackupSystem : IBackupSystem
 		{
 			entry.ExtractToFile(temp);
 
-			var playset = await _playsetManager.ImportPlayset(temp);
+			var playset = await _playsetManager.ImportPlayset(temp, true);
 
 			if (playset is null)
 			{
@@ -519,7 +527,7 @@ internal class BackupSystem : IBackupSystem
 			_logger.Info("[Backup] Running Cleanup (Count)");
 
 			availableBackups
-				.GroupBy(x=>x.MetaData.BackupTime)
+				.GroupBy(x => x.MetaData.BackupTime)
 				.OrderByDescending(x => x.Key)
 				.Skip(_backupSettings.CleanupSettings.MaxBackups)
 				.Foreach(x => x.Foreach(DoCleanup));

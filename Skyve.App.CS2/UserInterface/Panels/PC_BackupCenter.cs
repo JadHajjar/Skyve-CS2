@@ -1,5 +1,6 @@
 ﻿using Skyve.App.CS2.UserInterface.Generic;
 using Skyve.App.UserInterface.Panels;
+using Skyve.App.Utilities;
 using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 
@@ -445,7 +446,23 @@ public partial class PC_BackupCenter : PanelContent
 	{
 		var item = (BackupListControl.RestoreGroup)sender;
 
-		SelectRestoreGroup(item);
+		if (e.Button == MouseButtons.Left)
+		{
+			SelectRestoreGroup(item);
+		}
+		else if (e.Button == MouseButtons.Middle)
+		{
+			DeleteBackups(item);
+		}
+		else if (e.Button == MouseButtons.Right)
+		{
+			SlickToolStrip.Show(Form,
+			[
+				new(Locale.RestoreBackup, "RestoreBackup", () => SelectRestoreGroup(item)),
+				new(LocaleSlickUI.OpenFolderLocation, "Folder", () => OpenFolder(item)),
+				new(Locale.DeleteBackup, "Trash", () => DeleteBackups(item)),
+			]);
+		}
 	}
 
 	internal void SelectRestoreGroup(BackupListControl.RestoreGroup item)
@@ -491,6 +508,26 @@ public partial class PC_BackupCenter : PanelContent
 
 		T_Restore.Visible = true;
 		T_Restore.Selected = true;
+	}
+
+	private void OpenFolder(BackupListControl.RestoreGroup item)
+	{
+		PlatformUtil.OpenFolder(item.RestoreItems.OrderBy(x => x.MetaData.BackupTime).Last().BackupFile.FullName);
+	}
+
+	private void DeleteBackups(BackupListControl.RestoreGroup item)
+	{
+		if (ShowPrompt(Locale.AreYouSure, PromptButtons.YesNo, PromptIcons.Hand) != DialogResult.Yes)
+		{
+			return;
+		}
+
+		foreach (var file in item.RestoreItems)
+		{
+			CrossIO.DeleteFile(file.BackupFile.FullName);
+		}
+
+		Task.Run(LoadBackupItems);
 	}
 
 	public void SelectBackup(string restoreBackup)

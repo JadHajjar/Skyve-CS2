@@ -870,9 +870,19 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await _processor.Queue(async () => await Context.Mods.CreatePlayset(playsetName)));
+		var result = await _processor.Queue(async () =>
+		{
+			if (!ProcessResult(await Context.Mods.CreatePlayset(playsetName)).Success)
+			{
+				return null; 
+			}
 
-		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) : (IPlayset?)null;
+			var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(true));
+
+			return playsets.AllPlaysets?.OrderBy(x => x.PlaysetId).LastOrDefault();
+		});
+
+		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);
 	}
 
 	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, int playset)
@@ -942,9 +952,19 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await _processor.Queue(async () => await Context.Mods.ClonePlayset(id)));
+		var result = await _processor.Queue(async () =>
+		{
+			if (!ProcessResult(await Context.Mods.ClonePlayset(id)).Success)
+			{
+				return null;
+			}
 
-		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) : (IPlayset?)null;
+			var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(true));
+
+			return playsets.AllPlaysets?.OrderBy(x => x.PlaysetId).LastOrDefault();
+		});
+
+		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);
 	}
 
 	public async Task RunSync()

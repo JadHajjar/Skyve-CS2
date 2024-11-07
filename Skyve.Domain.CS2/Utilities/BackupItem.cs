@@ -140,18 +140,20 @@ public static class BackupItem
 
 	public class ActivePlayset : IBackupItem
 	{
-		private readonly object _playset;
+		private readonly IPlayset _playset;
+		private readonly object _playsetData;
 		private readonly IPlaysetManager _playsetManager;
 
 		public IBackupMetaData MetaData { get; }
 
-		public ActivePlayset(object playset, IPlaysetManager playsetManager)
+		public ActivePlayset(object playsetData, IPlayset playset, IPlaysetManager playsetManager)
 		{
 			_playset = playset;
+			_playsetData = playsetData;
 			_playsetManager = playsetManager;
 			MetaData = new BackupMetaData
 			{
-				Name = playsetManager.CurrentPlayset?.Name ?? "No Active Playset",
+				Name = $"{_playset.Name} #{_playset.Id}",
 				ContentTime = DateTime.Now,
 				Root = string.Empty,
 				Type = nameof(ActivePlayset),
@@ -168,13 +170,13 @@ public static class BackupItem
 		{
 			var tempPath = CrossIO.GetTempFileName();
 
-			File.WriteAllText(tempPath, JsonConvert.SerializeObject(_playset));
+			File.WriteAllText(tempPath, JsonConvert.SerializeObject(_playsetData));
 
 			backupManager.Save(MetaData, [tempPath], new PlaysetMetaData
 			{
-				Name = _playsetManager.CurrentPlayset?.Name ?? "No Active Playset",
-				ModCount = _playsetManager.CurrentPlayset?.ModCount ?? 0,
-				ModSize = _playsetManager.CurrentPlayset?.ModSize ?? 0,
+				Name = _playset.Name,
+				ModCount = _playset.ModCount,
+				ModSize = _playset.ModSize
 			});
 
 			CrossIO.DeleteFile(tempPath, true);

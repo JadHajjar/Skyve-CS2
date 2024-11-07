@@ -8,16 +8,17 @@ using System.ServiceProcess;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
-
 [DashboardItem("BackupCenter")]
-internal class BD_NextBackup : IDashboardItem
+internal class BD_NextBackup : B_NextBackup { }
+
+internal class B_NextBackup : IDashboardItem
 {
 	private readonly ISettings _settings;
 	private readonly INotifier _notifier;
 	private readonly BackupSettings _backupSettings;
 	private readonly bool _serviceUnavailable;
 
-	public BD_NextBackup()
+	public B_NextBackup()
 	{
 		ServiceCenter.Get(out _settings, out _notifier);
 
@@ -54,7 +55,7 @@ internal class BD_NextBackup : IDashboardItem
 		}
 		else
 		{
-			DrawSection(e, applyDrawing, ref preferredHeight, Locale.BackupSchedule, "Clock");
+			DrawSection(e, applyDrawing, ref preferredHeight, Locale.BackupSchedule, this is BD_NextBackup ? "Clock" : "SafeShield");
 		}
 	}
 
