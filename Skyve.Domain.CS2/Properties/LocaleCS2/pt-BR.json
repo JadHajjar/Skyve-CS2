@@ -158,8 +158,8 @@
     "Plural": "{0} Jogos Salvos"
   },
   "Backup_Maps": {
-    "One": "Map",
-    "Plural": "{0} maps"
+    "One": "Mapa",
+    "Plural": "{0} Mapas"
   },
   "Backup_ActivePlayset": {
     "One": "Modo de Jogo",
@@ -170,7 +170,7 @@
     "Plural": "{0} Arquivos de Configuração"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
+    "One": "Pastas de configurações dos mods",
     "Plural": "{0} Pastas de configurações dos mods"
   },
   "Backup_LocalMods": {
@@ -179,18 +179,18 @@
   },
   "ParadoxContextFailed": "Falha ao carregar o backend do Paradox",
   "ParadoxContextFailedInfo": "Algo está causando a falha do backend da Paradox.\nClique nesta mensagem para tentar repará-lo.\n\nSe o reparo não for bem-sucedido, peça ajuda nos fóruns de suporte técnico.",
-  "BackupStartingNow": "Automatic backup starting now...",
-  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
-  "NoSettingsBackup": "No available settings backup available",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "BackupStartingNow": "Backup automático iniciando agora...",
+  "BackupServiceUnavailable": "O serviço do Skyve não está instalado. Os backups automáticos só funcionarão enquanto o aplicativo Skyve estiver aberto.",
+  "BackupServiceAvailable": "Serviço Skyve online",
+  "NextScheduledBackup": "Próximo backup agendado é {0}",
+  "LastSettingsBackup": "Último backup de configurações foi {0}",
+  "NoSettingsBackup": "Nenhum backup de configurações disponível",
+  "RestoreLatestSettings": "Restaurar último backup de configurações",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "One": "Arquivo de configurações corrompido detectado",
+    "Plural": "{0} arquivos de configurações corrompidos detectados"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups"
+  "CorruptedSettingsFilesBackupAvailable": "Skyve encontrou backups disponíveis para restaurar suas configurações para o estado anterior.",
+  "CorruptedSettingsFilesNoBackup": "Não há backups disponíveis para restaurar suas configurações. Defina suas configurações de backup para proteger suas configurações no futuro.\n\nClique aqui para excluir os arquivos corrompidos.",
+  "RecentBackups": "Backups Recentes"
 }
