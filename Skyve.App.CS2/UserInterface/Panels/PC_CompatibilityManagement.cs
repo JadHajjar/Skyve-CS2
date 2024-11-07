@@ -74,6 +74,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		packageCrList.CanDrawItem += PackageCrList_CanDrawItem;
 
+		P_Tags.Enabled = _userService.User.Manager;
 		DD_Stability.Enabled = _userService.User.Manager;
 		TB_Note.Enabled = _userService.User.Manager;
 		CB_BlackListId.Visible = _userService.User.Manager;

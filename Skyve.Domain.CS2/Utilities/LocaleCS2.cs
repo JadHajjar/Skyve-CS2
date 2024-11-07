@@ -503,6 +503,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation PlaysetAlreadyImported => _instance.GetText("PlaysetAlreadyImported");
 
 	/// <summary>
+	/// Recent Backups
+	/// </summary>
+	public static Translation RecentBackups => _instance.GetText("RecentBackups");
+
+	/// <summary>
 	/// * Your credentials will be encrypted and saved to your computer.
 	/// </summary>
 	public static Translation RememberMeInfo => _instance.GetText("RememberMeInfo");

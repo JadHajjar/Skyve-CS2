@@ -159,7 +159,6 @@ partial class PC_BackupCenter
 			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel4.Controls.Add(this.P_RestoreSelect, 0, 1);
 			this.tableLayoutPanel4.Controls.Add(this.P_Backup, 0, 0);
-			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
 			this.tableLayoutPanel4.RowCount = 2;
@@ -581,7 +580,7 @@ partial class PC_BackupCenter
 			this.CB_CleanupTime.Location = new System.Drawing.Point(19, 19);
 			this.CB_CleanupTime.Name = "CB_CleanupTime";
 			this.CB_CleanupTime.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_CleanupTime.Size = new System.Drawing.Size(208, 34);
+			this.CB_CleanupTime.Size = new System.Drawing.Size(150, 34);
 			this.CB_CleanupTime.SpaceTriggersClick = true;
 			this.CB_CleanupTime.TabIndex = 0;
 			this.CB_CleanupTime.Tag = "";
@@ -600,7 +599,7 @@ partial class PC_BackupCenter
 			this.CB_CleanupStorage.Location = new System.Drawing.Point(19, 99);
 			this.CB_CleanupStorage.Name = "CB_CleanupStorage";
 			this.CB_CleanupStorage.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_CleanupStorage.Size = new System.Drawing.Size(336, 34);
+			this.CB_CleanupStorage.Size = new System.Drawing.Size(165, 34);
 			this.CB_CleanupStorage.SpaceTriggersClick = true;
 			this.CB_CleanupStorage.TabIndex = 2;
 			this.CB_CleanupStorage.Tag = "";
@@ -619,7 +618,7 @@ partial class PC_BackupCenter
 			this.CB_CleanupCount.Location = new System.Drawing.Point(19, 179);
 			this.CB_CleanupCount.Name = "CB_CleanupCount";
 			this.CB_CleanupCount.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_CleanupCount.Size = new System.Drawing.Size(368, 34);
+			this.CB_CleanupCount.Size = new System.Drawing.Size(156, 34);
 			this.CB_CleanupCount.SpaceTriggersClick = true;
 			this.CB_CleanupCount.TabIndex = 4;
 			this.CB_CleanupCount.Tag = "";
@@ -725,7 +724,7 @@ partial class PC_BackupCenter
 			this.CB_ScheduleAtTimes.Location = new System.Drawing.Point(19, 19);
 			this.CB_ScheduleAtTimes.Name = "CB_ScheduleAtTimes";
 			this.CB_ScheduleAtTimes.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleAtTimes.Size = new System.Drawing.Size(227, 34);
+			this.CB_ScheduleAtTimes.Size = new System.Drawing.Size(183, 34);
 			this.CB_ScheduleAtTimes.SpaceTriggersClick = true;
 			this.CB_ScheduleAtTimes.TabIndex = 0;
 			this.CB_ScheduleAtTimes.Tag = "";
@@ -766,7 +765,7 @@ partial class PC_BackupCenter
 			this.CB_ScheduleOnGameClose.Location = new System.Drawing.Point(19, 91);
 			this.CB_ScheduleOnGameClose.Name = "CB_ScheduleOnGameClose";
 			this.CB_ScheduleOnGameClose.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleOnGameClose.Size = new System.Drawing.Size(266, 34);
+			this.CB_ScheduleOnGameClose.Size = new System.Drawing.Size(172, 34);
 			this.CB_ScheduleOnGameClose.SpaceTriggersClick = true;
 			this.CB_ScheduleOnGameClose.TabIndex = 3;
 			this.CB_ScheduleOnGameClose.Tag = "";
@@ -785,7 +784,7 @@ partial class PC_BackupCenter
 			this.CB_ScheduleOnNewSave.Location = new System.Drawing.Point(19, 131);
 			this.CB_ScheduleOnNewSave.Name = "CB_ScheduleOnNewSave";
 			this.CB_ScheduleOnNewSave.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleOnNewSave.Size = new System.Drawing.Size(242, 34);
+			this.CB_ScheduleOnNewSave.Size = new System.Drawing.Size(161, 34);
 			this.CB_ScheduleOnNewSave.SpaceTriggersClick = true;
 			this.CB_ScheduleOnNewSave.TabIndex = 4;
 			this.CB_ScheduleOnNewSave.Tag = "";
@@ -804,7 +803,7 @@ partial class PC_BackupCenter
 			this.CB_ScheduleIncludeSaves.Location = new System.Drawing.Point(19, 178);
 			this.CB_ScheduleIncludeSaves.Name = "CB_ScheduleIncludeSaves";
 			this.CB_ScheduleIncludeSaves.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleIncludeSaves.Size = new System.Drawing.Size(278, 34);
+			this.CB_ScheduleIncludeSaves.Size = new System.Drawing.Size(185, 34);
 			this.CB_ScheduleIncludeSaves.SpaceTriggersClick = true;
 			this.CB_ScheduleIncludeSaves.TabIndex = 5;
 			this.CB_ScheduleIncludeSaves.Tag = "";
@@ -823,7 +822,7 @@ partial class PC_BackupCenter
 			this.CB_ScheduleIncludeLocalMods.Location = new System.Drawing.Point(19, 218);
 			this.CB_ScheduleIncludeLocalMods.Name = "CB_ScheduleIncludeLocalMods";
 			this.CB_ScheduleIncludeLocalMods.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleIncludeLocalMods.Size = new System.Drawing.Size(259, 34);
+			this.CB_ScheduleIncludeLocalMods.Size = new System.Drawing.Size(182, 34);
 			this.CB_ScheduleIncludeLocalMods.SpaceTriggersClick = true;
 			this.CB_ScheduleIncludeLocalMods.TabIndex = 6;
 			this.CB_ScheduleIncludeLocalMods.Tag = "";
@@ -868,6 +867,7 @@ partial class PC_BackupCenter
 			this.TB_DestinationFolder.SelectionStart = 0;
 			this.TB_DestinationFolder.Size = new System.Drawing.Size(248, 44);
 			this.TB_DestinationFolder.TabIndex = 0;
+			this.TB_DestinationFolder.Leave += new System.EventHandler(this.TB_DestinationFolder_Leave);
 			// 
 			// CB_IncludeAutoSaves
 			// 
@@ -881,7 +881,7 @@ partial class PC_BackupCenter
 			this.CB_IncludeAutoSaves.Location = new System.Drawing.Point(19, 69);
 			this.CB_IncludeAutoSaves.Name = "CB_IncludeAutoSaves";
 			this.CB_IncludeAutoSaves.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_IncludeAutoSaves.Size = new System.Drawing.Size(368, 34);
+			this.CB_IncludeAutoSaves.Size = new System.Drawing.Size(180, 34);
 			this.CB_IncludeAutoSaves.SpaceTriggersClick = true;
 			this.CB_IncludeAutoSaves.TabIndex = 1;
 			this.CB_IncludeAutoSaves.Tag = "";

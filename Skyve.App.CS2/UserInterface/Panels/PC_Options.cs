@@ -173,7 +173,7 @@ public partial class PC_Options : PanelContent
 	{
 		try
 		{
-			PlatformUtil.OpenUrl("https://crowdin.com/project/load-order-mod-2");
+			PlatformUtil.OpenUrl("https://skyve-mod.com/translate");
 		}
 		catch { }
 	}
@@ -182,7 +182,7 @@ public partial class PC_Options : PanelContent
 	{
 		try
 		{
-			PlatformUtil.OpenUrl("https://discord.gg/E4k8ZEtRxd");
+			PlatformUtil.OpenUrl("https://skyve-mod.com/discord");
 		}
 		catch { }
 	}
@@ -191,7 +191,7 @@ public partial class PC_Options : PanelContent
 	{
 		try
 		{
-			PlatformUtil.OpenUrl("https://bit.ly/40x93vk");
+			PlatformUtil.OpenUrl("https://skyve-mod.com/guide");
 		}
 		catch { }
 	}
@@ -231,7 +231,7 @@ public partial class PC_Options : PanelContent
 
 	private void B_CreateJunction_Click(object sender, EventArgs e)
 	{
-		var dialog = new IOSelectionDialog();
+		var dialog = new IOSelectionDialog() { StartingFolder = string.Empty };
 
 		if (dialog.PromptFolder(Form) == DialogResult.OK)
 		{

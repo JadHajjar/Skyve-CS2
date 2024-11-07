@@ -186,7 +186,7 @@ internal class ModsUtil : IModUtil
 
 		await SetLocalModIncluded(mods.AllWhere(x => x.Id <= 0 && IsIncluded(x, playset) != value), playset, value);
 
-		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) != value);
+		mods = mods.AllWhere(x => x.Id > 0);
 
 		if (!mods.Any())
 		{
@@ -274,7 +274,7 @@ internal class ModsUtil : IModUtil
 
 		await SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), playset, value);
 
-		mods = mods.AllWhere(x => x.Id > 0 && IsIncluded(x, playset) && IsEnabled(x, playset) != value);
+		mods = mods.AllWhere(x => x.Id > 0);
 
 		if (!mods.Any())
 		{

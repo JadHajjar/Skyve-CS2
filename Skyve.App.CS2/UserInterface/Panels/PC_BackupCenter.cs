@@ -4,6 +4,7 @@ using Skyve.Domain.CS2.Enums;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -24,6 +25,7 @@ public partial class PC_BackupCenter : PanelContent
 
 		SetCurrentSettings();
 
+		TB_DestinationFolder.StartingFolder = string.Empty;
 		backupListControl.CanDrawItem += BackupListControl_CanDrawItem;
 		L_FinishSetup.Visible = !(B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder));
 	}
@@ -76,13 +78,10 @@ public partial class PC_BackupCenter : PanelContent
 	{
 		return new()
 		{
-		  { "D_CompatibilityInfo", new(new(0, 0, 4500, 100), false) },
-		  { "D_ContentInfo",  new(new(0, 100, 2250, 100), false) },
-		  { "D_DiskInfo",  new(new(2250, 100, 2250, 100), false) },
-		  { "D_PdxModsNew",  new(new(4500, 0, 3500, 100), false) },
-		  { "D_PdxUser",  new(new(8000, 0, 2000, 100), false) },
-		  { "D_Playsets",  new(new(8000, 100, 2000, 100), false) },
-		  { "D_NotificationCenter",  new(new(8000, 200, 2000, 100), false) },
+		  { "BD_NextBackup",  new(new(0, 0, 2000, 100), false) },
+		  { "BD_QuickRestore",  new(new(0, 100, 2000, 100), false) },
+		  { "BD_LatestBackups",  new(new(2000, 0, 4000, 100), false) },
+		  { "BD_DiskInfo", new(new(6000, 0, 4000, 100), false) },
 		};
 	}
 
@@ -273,6 +272,24 @@ public partial class PC_BackupCenter : PanelContent
 		settings.Save();
 
 		L_FinishSetup.Visible = !(B_Backup.Enabled = !string.IsNullOrWhiteSpace(ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder));
+	}
+
+	private void TB_DestinationFolder_Leave(object sender, EventArgs e)
+	{
+		if (TB_DestinationFolder.Text.PathContains(Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))))
+		{
+			TB_DestinationFolder.Text = string.Empty;
+
+			ShowPrompt(Locale.ChooseDifferentBackupLocation, Locale.InvalidFolder, icon: PromptIcons.Error);
+
+			BeginInvoke(() =>
+			{
+				if (!T_Settings.Selected)
+				{
+					T_Settings.Selected = true;
+				}
+			});
+		}
 	}
 	#endregion
 
@@ -476,7 +493,10 @@ public partial class PC_BackupCenter : PanelContent
 		T_Restore.Selected = true;
 	}
 
-	public void SelectBackup(string restoreBackup) => SelectBackup(restoreBackup, true);
+	public void SelectBackup(string restoreBackup)
+	{
+		SelectBackup(restoreBackup, true);
+	}
 
 	public void SelectBackup(string restoreBackup, bool prompt)
 	{

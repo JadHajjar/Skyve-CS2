@@ -121,12 +121,35 @@ internal class BD_LatestBackups : IDashboardItem
 			return;
 		}
 
+		if (info.LastBackups[0].Time < DateTime.Now.AddDays(-7))
+		{
+			e.Graphics.DrawStringItem($"{LocaleCS2.LastSettingsBackup.Format(info.LastBackups[0].Time.ToRelatedString(true).ToLower())}!\r\n{Locale.DoBackupNow}."
+				, Font
+				, FormDesign.Design.RedColor
+				, e.ClipRectangle.Pad(Padding)
+				, ref preferredHeight
+				, applyDrawing
+				, "Warning");
+		}
+		else
+		{
+			e.Graphics.DrawStringItem(LocaleCS2.LastSettingsBackup.Format(info.LastBackups[0].Time.ToRelatedString(true).ToLower())
+				, Font
+				, FormDesign.Design.OrangeColor.MergeColor(FormDesign.Design.GreenColor, (int)((DateTime.Now - info.LastBackups[0].Time).TotalDays * 100 / 7))
+				, e.ClipRectangle.Pad(Padding)
+				, ref preferredHeight
+				, applyDrawing
+				, "Check");
+		}
+
+		preferredHeight += BorderRadius;
+
 		foreach (var item in info.LastBackups)
 		{
 			var title = item.Time.ToString("d MMM yyyy - h:mm tt");
 			var subTitle = $"{item.TotalSize.SizeString(0)} • {item.RestoreItems.GroupBy(x => x.MetaData.Type).ListStrings(x => x.First().MetaData.GetTypeTranslation().FormatPlural(x.Count()), ", ")}";
 
-			var rectangle = new Rectangle(e.ClipRectangle.X + Margin.Left, preferredHeight, e.ClipRectangle.Width - Margin.Horizontal, UI.Scale(32));
+			var rectangle = new Rectangle(e.ClipRectangle.X + Margin.Left, preferredHeight + (int)UI.Scale(1f) + BorderRadius / 2, e.ClipRectangle.Width - Margin.Horizontal, UI.Scale(32));
 			var backColor = rectangle.Contains(CursorLocation) ? HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveColor : HoverState.HasFlag(HoverState.Hovered) ? Color.FromArgb(50, FormDesign.Design.ActiveColor) : Color.Empty : Color.Empty;
 			var foreColor = rectangle.Contains(CursorLocation) ? HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveForeColor : FormDesign.Design.ForeColor : FormDesign.Design.ForeColor;
 
@@ -136,17 +159,22 @@ internal class BD_LatestBackups : IDashboardItem
 			using var fontTitle = UI.Font(8.75F, FontStyle.Bold);
 			using var fontSubTitle = UI.Font(7.5F);
 			using var format = new StringFormat { LineAlignment = StringAlignment.Far, Trimming = StringTrimming.EllipsisCharacter };
+			using var pen = new Pen(FormDesign.Design.AccentColor, UI.Scale(1f));
+
+			e.Graphics.DrawLine(pen, rectangle.X, preferredHeight, rectangle.Right, preferredHeight);
+
+			preferredHeight = rectangle.Y;
 
 			e.Graphics.FillRoundedRectangle(backBrush, rectangle.Pad(-BorderRadius / 4), BorderRadius / 2);
 			e.Graphics.DrawString(title, fontTitle, brush, rectangle);
 			e.Graphics.DrawString(subTitle, fontSubTitle, brush2, rectangle.Pad(0, rectangle.Height / 2, 0, 0), format);
 
-			preferredHeight += rectangle.Height + BorderRadius;
+			preferredHeight += rectangle.Height + BorderRadius / 2;
 
 			_buttonActions[rectangle] = () => SelectBackup(item);
 		}
 
-		preferredHeight += BorderRadius / 2;
+		preferredHeight += BorderRadius;
 	}
 
 	private void SelectBackup(BackupListControl.RestoreGroup item)

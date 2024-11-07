@@ -126,7 +126,7 @@ internal class BackupSystem : IBackupSystem
 
 		lock (_lock)
 		{
-			if (lastCacheTime > DateTime.Now.AddMinutes(-1) && restoreItemsCache is not null)
+			if (lastCacheTime > DateTime.Now.AddSeconds(-10) && restoreItemsCache is not null)
 			{
 				return restoreItemsCache;
 			}
@@ -231,6 +231,8 @@ internal class BackupSystem : IBackupSystem
 			}
 
 			DoCleanup();
+
+			restoreItemsCache = null;
 		}
 		catch (Exception ex)
 		{
@@ -517,10 +519,10 @@ internal class BackupSystem : IBackupSystem
 			_logger.Info("[Backup] Running Cleanup (Count)");
 
 			availableBackups
-				.Where(x => IsLarge(x.MetaData))
-				.OrderByDescending(x => x.MetaData.BackupTime)
+				.GroupBy(x=>x.MetaData.BackupTime)
+				.OrderByDescending(x => x.Key)
 				.Skip(_backupSettings.CleanupSettings.MaxBackups)
-				.Foreach(DoCleanup);
+				.Foreach(x => x.Foreach(DoCleanup));
 		}
 
 		availableBackups.RemoveAll(x => x.MetaData.IsArchived);
@@ -585,6 +587,6 @@ internal class BackupSystem : IBackupSystem
 
 	private bool IsLarge(IBackupMetaData metaData)
 	{
-		return metaData.Type is nameof(BackupItem.SaveGames) or nameof(BackupItem.LocalMods);
+		return metaData.Type is nameof(BackupItem.SaveGames) or nameof(BackupItem.LocalMods) or nameof(BackupItem.Maps);
 	}
 }
