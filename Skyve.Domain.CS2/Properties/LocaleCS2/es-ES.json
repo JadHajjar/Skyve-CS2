@@ -179,18 +179,18 @@
   },
   "ParadoxContextFailed": "Error al cargar el backend de Paradox",
   "ParadoxContextFailedInfo": "Algo está causando el error con el backend de Paradox. \nHaz clic en este mensaje para intentar de nuevo. \n\nSi no logras repararlo, pide ayuda el los foros de soporte técnico.",
-  "BackupStartingNow": "Automatic backup starting now...",
-  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
-  "NoSettingsBackup": "No available settings backup available",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "BackupStartingNow": "Respaldo automático iniciando ahora...",
+  "BackupServiceUnavailable": "El servicio Skyve no está instalado. Los respaldos automáticos solo funcionarán mientras la aplicación Skyve esté abierta.",
+  "BackupServiceAvailable": "Servicio de Skyve en ejecución",
+  "NextScheduledBackup": "El próximo respaldo programado es {0}",
+  "LastSettingsBackup": "El último respaldo de configuración fue {0}",
+  "NoSettingsBackup": "No hay respaldos de configuración disponibles",
+  "RestoreLatestSettings": "Restaurar el último respaldo de configuración",
   "CorruptedSettingsFiles": {
     "One": "Archivo de Configuración Corrupto Detectado",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "Plural": "{0} Archivos de Configuración Corruptos Detectados"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
+  "CorruptedSettingsFilesBackupAvailable": "Skyve ha encontrado respaldos disponibles para restaurar su configuración a su estado anterior.\n\nHaga clic aquí para restaurarlos ahora.",
+  "CorruptedSettingsFilesNoBackup": "No hay respaldos disponibles para restaurar sus ajustes. Configure los respaldos para proteger sus ajustes del juego en el futuro.\n\nHaga clic aquí para eliminar los archivos corruptos.",
   "RecentBackups": "Respaldos Recientes"
 }
