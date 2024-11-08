@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Generic;
@@ -40,7 +41,8 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 	{
 		base.OnPaintItemList(e);
 
-		var title = RestorePoint ? e.Item.Time.ToString("d MMM yyyy - h:mm tt") : e.Item.Name;
+		var title = RestorePoint ? e.Item.Time.ToString("d MMM yyyy - h:mm tt") : e.Item.Name.RegexRemove(@"#\w+$");
+		var subText = RestorePoint ? string.Empty : Regex.Match(e.Item.Name, @"#\w+$").Value;
 		var subTitle = RestorePoint ? $"{e.Item.Time.ToRelatedString(true)} • {e.Item.RestoreItems.GroupBy(x => x.MetaData.Type).ListStrings(x => x.First().MetaData.GetTypeTranslation().FormatPlural(x.Count()), ", ")}" : Locale.RestorePoint.FormatPlural(e.Item.RestoreItems.Count(), e.Item.Time.ToRelatedString(true).ToLower());
 
 		using var brush = new SolidBrush(e.BackColor.GetTextColor());
@@ -70,6 +72,17 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 		if (IndividualItem)
 		{
 			var text = e.Item.RestoreItems.First().MetaData.GetTypeTranslation();
+
+			if (subText != string.Empty)
+			{
+				var rect = e.Graphics.DrawLabel(subText
+					, null
+					, Color.FromArgb(50, FormDesign.Design.AccentColor)
+					, new Rectangle(rectangle.X + titleSize.Width, rectangle.Y, rectangle.Width - titleSize.Width, titleSize.Height)
+					, ContentAlignment.MiddleLeft);
+
+				rectangle = rectangle.Pad(rect.Width + Padding.Horizontal, 0, 0, 0);
+			}
 
 			if (text != e.Item.Name)
 			{

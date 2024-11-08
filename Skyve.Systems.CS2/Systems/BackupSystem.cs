@@ -32,8 +32,6 @@ internal class BackupSystem : IBackupSystem
 	private readonly DateTime _backupTime;
 
 	private static readonly object _lock = new();
-	private static DateTime lastCacheTime;
-	private static List<IRestoreItem>? restoreItemsCache;
 
 	public IBackupInstructions BackupInstructions { get; } = new BackupInstructions();
 	public IRestoreInstructions RestoreInstructions { get; } = new RestoreInstructions();
@@ -126,11 +124,6 @@ internal class BackupSystem : IBackupSystem
 
 		lock (_lock)
 		{
-			if (lastCacheTime > DateTime.Now.AddSeconds(-10) && restoreItemsCache is not null)
-			{
-				return restoreItemsCache;
-			}
-
 			var files = Directory.GetFiles(_backupSettings.DestinationFolder, "*.sbak", SearchOption.AllDirectories);
 			var items = new List<IRestoreItem>(files.Length);
 
@@ -148,9 +141,7 @@ internal class BackupSystem : IBackupSystem
 				catch { }
 			}
 
-			lastCacheTime = DateTime.Now;
-
-			return restoreItemsCache = items;
+			return items;
 		}
 	}
 
@@ -211,29 +202,37 @@ internal class BackupSystem : IBackupSystem
 
 			var availableBackups = GetAllBackups();
 
-			SaveBackupItem(MakeSettingsBackup());
-			SaveBackupItem(MakeModsSettingsBackup());
+			if (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.SettingsFiles)) ?? true)
+			{
+				SaveBackupItem(MakeSettingsBackup());
+			}
 
-			(await MakePlaysetBackup()).Foreach(SaveBackupItem);
+			if (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.ModsSettingsFiles)) ?? true)
+			{
+				SaveBackupItem(MakeModsSettingsBackup());
+			}
 
-			if (BackupInstructions.DoSavesBackup)
+			if (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.ActivePlayset)) ?? true)
+			{
+				(await MakePlaysetBackup()).Foreach(SaveBackupItem);
+			}
+
+			if (BackupInstructions.DoSavesBackup && (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.SaveGames)) ?? true))
 			{
 				MakeSavesBackup(availableBackups).Foreach(SaveBackupItem);
 			}
 
-			if (BackupInstructions.DoMapsBackup)
+			if (BackupInstructions.DoMapsBackup && (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.Maps)) ?? true))
 			{
 				MakeMapsBackup(availableBackups).Foreach(SaveBackupItem);
 			}
 
-			if (BackupInstructions.DoLocalModsBackup)
+			if (BackupInstructions.DoLocalModsBackup && (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.LocalMods)) ?? true))
 			{
 				MakeLocalModsBackup(availableBackups).Foreach(SaveBackupItem);
 			}
 
 			DoCleanup();
-
-			restoreItemsCache = null;
 		}
 		catch (Exception ex)
 		{

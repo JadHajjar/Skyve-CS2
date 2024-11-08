@@ -20,7 +20,7 @@ internal class D_PdxModsPopular() : D_PdxModsBase(lastTag)
 
 	protected override async Task<bool> ProcessDataLoad(CancellationToken token)
 	{
-		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.Best, WorkshopSearchTime.Week, requiredTags: SelectedTags, limit: 8)).ToList();
+		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.Best, WorkshopSearchTime.Week, requiredTags: SelectedTags, limit: 16)).ToList();
 
 		if (token.IsCancellationRequested)
 		{
@@ -104,7 +104,7 @@ internal class D_PdxModsPopular() : D_PdxModsBase(lastTag)
 	{
 		var panel = new PC_WorkshopList();
 
-		panel.SetSettings(PackageSorting.Popularity, SelectedTags);
+		panel.SetSettings(PackageSorting.Best, SelectedTags, WorkshopSearchTime.Week);
 
 		App.Program.MainForm.PushPanel(panel);
 	}

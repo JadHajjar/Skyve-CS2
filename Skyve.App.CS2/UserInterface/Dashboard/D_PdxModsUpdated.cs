@@ -20,10 +20,10 @@ internal class D_PdxModsUpdated() : D_PdxModsBase(lastTag)
 
 	protected override async Task<bool> ProcessDataLoad(CancellationToken token)
 	{
-		var newMods = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 8)).ToList();
-		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: SelectedTags, limit: 16))
+		var newMods = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateCreated, requiredTags: SelectedTags, limit: 16)).ToList();
+		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: SelectedTags, limit: 32))
 			.Where(x => !newMods.Any(y => y.Id == x.Id))
-			.Take(8)
+			.Take(16)
 			.ToList();
 
 		if (token.IsCancellationRequested)
