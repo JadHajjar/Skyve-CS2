@@ -1,43 +1,43 @@
 {
-  "StartCities": "Abrir Cities: Skylines",
-  "StopCities": "Fechar Cities: Skylines",
-  "NoWorkshop": "Desativar pacotes da oficina",
-  "ExcludeAll": "Remover todos os itens do teu playset ativo",
-  "ExcludeAllDisabled": "Remover todos os itens desativados do teu playset ativo",
-  "IncludeAll": "Adicionar todos os itens ao teu playset ativo",
-  "ExcludeAllFiltered": "Remover itens filtrados do teu playset ativo",
-  "ExcludeAllDisabledFiltered": "Remover itens filtrados e desativados do teu playset ativo",
-  "IncludeAllFiltered": "Adicionar itens filtrados ao teu playset ativo",
-  "ExcludeAllSelected": "Remover itens selecionados do teu playset ativo",
-  "ExcludeAllDisabledSelected": "Remover itens selecionados e desativados do teu playset ativo",
-  "IncludeAllSelected": "Adicionar itens selecionados ao teu playset ativo",
+  "StartCities": "Abrir Cities: Skylines II",
+  "StopCities": "Fechar Cities: Skylines II",
+  "NoWorkshop": "Desativar pacotes do workshop",
+  "ExcludeAll": "Remover todos os itens do teu conjunto ativo",
+  "ExcludeAllDisabled": "Remover todos os itens desativados do teu conjunto ativo",
+  "IncludeAll": "Adicionar todos os itens ao teu conjunto ativo",
+  "ExcludeAllFiltered": "Remover itens filtrados do teu conjunto ativo",
+  "ExcludeAllDisabledFiltered": "Remover itens filtrados e desativados do teu conjunto ativo",
+  "IncludeAllFiltered": "Adicionar itens filtrados ao teu conjunto ativo",
+  "ExcludeAllSelected": "Remover itens selecionados do teu conjunto ativo",
+  "ExcludeAllDisabledSelected": "Remover itens selecionados e desativados do teu conjunto ativo",
+  "IncludeAllSelected": "Adicionar itens selecionados ao teu conjunto ativo",
   "ViewOnWorkshop": "Ver no PDX Mods",
   "CopyWorkshopLink": {
-    "One": "Copiar link do PDX Mods",
-    "Plural": "Copiar os links dos pacotes selecionados do PDX Mods"
+    "One": "Copiar ligação do PDX Mods",
+    "Plural": "Copiar as ligações dos pacotes selecionados do PDX Mods"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "Copy PDX Mods link as Markdown",
-    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+    "One": "Copiar a ligação dos Mods PDX como Markdown",
+    "Plural": "Copiar as ligações dos pacotes selecionados do PDX Mods"
   },
   "CopyWorkshopId": {
     "One": "Copiar ID do PDX Mods",
     "Plural": "Copiar os IDs dos pacotes selecionados do PDX Mods"
   },
   "LaunchThroughCities": "Iniciar através do Cities2.exe",
-  "IncludeItem": "Adicionar ao teu playset ativo",
-  "ExcludeItem": "Remover do teu playset ativo",
+  "IncludeItem": "Adicionar ao teu conjunto ativo",
+  "ExcludeItem": "Remover do teu conjunto ativo",
   "SubscribeToItem": {
-    "One": "Adicionar ao teu playset ativo",
-    "Plural": "Adicionar estes ao teu playset ativo"
+    "One": "Adicionar ao teu conjunto ativo",
+    "Plural": "Adicionar estes ao teu conjunto ativo"
   },
   "IncludeThisItemInAllPlaysets": {
-    "One": "Adicionar a todos os teus playsets",
-    "Plural": "Adicionar os itens selecionados a todos os teus playsets"
+    "One": "Adicionar a todos os teus conjuntos",
+    "Plural": "Adicionar os itens selecionados a todos os teus conjuntos"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Remover de todos os teus playsets",
-    "Plural": "Remover os itens selecionados de todos os teus playsets"
+    "One": "Remover de todos os teus conjuntos",
+    "Plural": "Remover os itens selecionados de todos os teus conjuntos"
   },
   "PackageIsRemoved": "'{0}' foi removido do PDX Mods",
   "PackageIsUnknown": "A informação do PDX Mods ainda não foi carregada para '{0}'",
@@ -45,7 +45,7 @@
   "OpenCitiesAppData": "Abrir a pasta AppData do C:S II",
   "ResetSteamCache": "Limpar cache do PDX Mods",
   "ParadoxLoginFailedTitle": "Não foi possível iniciar sessão no PDX Mods",
-  "ParadoxLoginFailedNoConnection": "Não estás conectado à internet, verifica a tua conexão e clica aqui para tentar novamente.",
+  "ParadoxLoginFailedNoConnection": "Não estás ligado à internet, verifica a tua ligação e clica aqui para tentar novamente.",
   "ParadoxLoginFailedBadCredentials": "O teu nome de utilizador/palavra-passe falhou ao iniciar sessão. Clica aqui para atualizar a tua informação.",
   "ParadoxLoginFailedEmpty": "A tua sessão provavelmente expirou. Tenta iniciar o jogo para iniciar sessão novamente ou clica aqui para iniciar sessão pelo Skyve.",
   "DownloadComplete": "Transferência concluída",
@@ -55,13 +55,13 @@
     "One": "Falha ao descarregar um mod",
     "Plural": "Falha ao descarregar alguns mods"
   },
-  "LoginToParadox": "Iniciar sessão no Paradox",
+  "LoginToParadox": "Iniciar sessão na Paradox",
   "LoginFailed": "Falha ao iniciar sessão, verifica se o teu email e palavra-passe estão corretos. Ou tenta novamente mais tarde.",
   "RememberMeInfo": "* As tuas credenciais serão encriptadas e guardadas no teu computador.",
-  "LoginDisclaimer": "O processo de login é gerido de forma segura através dos serviços da Paradox e nenhum dado é partilhado com o Skyve.",
-  "DropNewPlayset": "Arrasta ou seleciona um ficheiro de playset aqui para o importar",
+  "LoginDisclaimer": "O processo de inicio de sessão é gerido de forma segura através dos serviços da Paradox e nenhum dado é partilhado com o Skyve.",
+  "DropNewPlayset": "Arrasta ou seleciona um ficheiro de conjunto aqui para o importar",
   "FilterIncludedByDefault": "Ativar filtro 'Incluído' para conteúdo local por padrão",
-  "FilterIncludedByDefault_Tip": "Mostra apenas o conteúdo local que está incluído no teu playset ativo por padrão.",
+  "FilterIncludedByDefault_Tip": "Mostra apenas o conteúdo local que está incluído no teu conjunto ativo por padrão.",
   "RunSetupOrRunApp": "Não podes executar o Skyve a partir desta pasta. Se já o instalaste, executa-o a partir da lista de Programas.\r\n\r\nCaso contrário, clica em 'Ok' para executar a instalação.",
   "CantRunAppFromHere": "Não podes executar o Skyve a partir desta pasta.\r\n\r\nExecuta a aplicação a partir da lista de Programas ou executa a instalação do Skyve a partir da pasta do mod.",
   "UpdateAvailable": "Atualização disponível",
@@ -71,37 +71,37 @@
   "LogLevel": "Nível de log",
   "ParadoxAccount": "Conta Paradox",
   "LoggingIn": "A iniciar sessão...",
-  "NotLoggedInCheckNotification": "Não estás com sessão iniciada no Paradox, verifica as tuas notificações para mais informações.",
+  "NotLoggedInCheckNotification": "Não estás com sessão iniciada na Paradox, verifica as tuas notificações para mais informações.",
   "HideUserSection": "Ocultar o teu perfil no menu principal",
   "DeveloperMode": "Ativar Modo de Desenvolvedor",
   "UIDeveloperMode": "Ativar Modo de Desenvolvedor da UI",
   "LogsToPlayerLog": "Copiar logs para Player.log",
   "InvalidFolderSettings": "Configuração inválida detetada",
   "InvalidFolderSettingsInfo": "O Skyve não conseguiu detetar corretamente a pasta de dados do Cities: Skylines II.\r\n\r\nClica aqui para selecionar manualmente a pasta de dados.",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "O Skyve ainda não foi configurado. Por favor, inicia Cities: Skylines II com Skyve ativado para completar a configuração.\n\nCertifica-te de que os mods sejam carregados com sucesso e, caso contrário, tenta criar um novo conjunto com apenas o Skyve incluído.",
   "InvalidFolderSettingsFail": "O caminho selecionado não é correto. Por favor, seleciona a pasta 'Cities Skylines II' no teu app data.",
   "DefaultLocation": "Localização padrão dos dados do utilizador",
   "JunctionTitle": "Localização de conteúdo personalizado",
-  "JunctionDescription": "Alterar a localização onde o jogo armazena o seu conteúdo. Isto inclui mods, recursos e definições.\r\n\r\nO Skyve criará um link entre o local desejado e a pasta de app data padrão durante este processo.",
+  "JunctionDescription": "Alterar a localização onde o jogo armazena o seu conteúdo. Isto inclui mods, recursos e definições.\n\nO Skyve criará um ligação entre o local desejado e a pasta de App data padrão durante este processo.",
   "CurrentStatus": "Estado atual:",
   "ChangeLocation": "Alterar localização do conteúdo",
-  "ResetLocation": "Redefinir localização",
+  "ResetLocation": "Repor localização",
   "JunctionRestart": "O Skyve e o Cities: Skylines II serão fechados durante este processo.\r\n\r\nO Skyve será reiniciado automaticamente após a conclusão.",
-  "PlaysetAlreadyImported": "Este playset já está presente na tua lista de playsets.",
-  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
+  "PlaysetAlreadyImported": "Este conjunto já está presente na tua lista de conjuntos.",
+  "JunctionInvalidFolder": "A pasta selecionada não é um destino válido. Por favor, tenta outro.",
   "CouldNotRetrieveMods": "Não foi possível obter os dados dos mods",
   "NewGameUpdate": "Nova atualização do Cities: Skylines II",
-  "NewGameUpdateInfo": "O patch {0} está agora disponível.\r\nCertifica-te de verificar o teu relatório de compatibilidade antes de iniciares o jogo.",
-  "PdxSyncInfo": "O processo de Sincronização PDX trata de descarregar e atualizar os teus mods, assim como de sincronizar as definições e playsets que tens entre o teu computador local e os serviços PDX Mods.",
-  "SyncOngoing": "A sincronização está em curso",
+  "NewGameUpdateInfo": "O patch {0} está disponível.\nCertifica-te de verificar o teu relatório de compatibilidade antes de iniciares o jogo.",
+  "PdxSyncInfo": "O processo de Sincronização PDX trata de descarregar e atualizar os teus mods, assim como de sincronizar as definições e conjuntos que tens entre o teu computador local e os serviços PDX Mods.",
+  "SyncOngoing": "A sincronizar",
   "PdxSync": "Sincronização PDX Mods",
   "RunSync": "Iniciar sincronização",
   "PDXModsNew": "Novo no PDX Mods",
   "PDXModsUpdated": "Atualizado recentemente no PDX Mods",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "Mods populares da semana passada",
   "DiskStatus": "Estado do disco",
   "TotalCitiesSize": "Tamanho total dos dados do utilizador do C:S II",
-  "TotalSavesSize": "Tamanho dos jogos guardados",
+  "TotalSavesSize": "Tamanho das gravações",
   "TotalSubbedSize": "Tamanho das subscrições",
   "TotalOtherSize": "Tamanho de outros ficheiros",
   "FreeSpace": "{0} livres",
@@ -115,8 +115,8 @@
     "Plural": "Os pacotes que estás a adicionar têm dependências"
   },
   "AddingDependencies": {
-    "One": "'{1}' é necessário para o(s) mod(s) que estás a adicionar.\r\n\r\nGostarias de também adicionar '{1}' ao teu playset?",
-    "Plural": "O(s) mod(s) que estás a adicionar têm {0} dependências: {1}\r\n\r\nGostarias de também adicioná-las ao teu playset?"
+    "One": "'{1}' é necessário para o(s) mod(s) que estás a adicionar.\r\n\r\nGostarias de também adicionar '{1}' ao teu conjunto?",
+    "Plural": "O(s) mod(s) que estás a adicionar têm {0} dependências: {1}\r\n\r\nGostarias de também adicioná-las ao teu conjunto?"
   },
   "Dependency_Automatic": "Adicionar dependências automaticamente",
   "Dependency_Ask": "Perguntar sempre",
@@ -124,7 +124,7 @@
   "DependencyResolution": "Resolução de dependências",
   "DependencyResolution_Tip": "Escolhe o que acontecerá quando adicionares um mod com dependências que não tens.",
   "SyncOngoingLaunchGame": "O Skyve ainda está a sincronizar os teus mods, gostarias de iniciar o jogo quando os mods estiverem prontos?\r\nSeleciona 'Não' para iniciar o jogo de qualquer forma.",
-  "StartingWithNoPlayset": "Estás prestes a iniciar o jogo sem um playset ativo.\r\nIsto significa que nenhum mod estará ativado no jogo.",
+  "StartingWithNoPlayset": "Estás prestes a iniciar o jogo sem um conjunto ativo.\r\nIsto significa que nenhum mod estará ativado no jogo.",
   "SyncBeforeLaunching": "Sincronizar mods antes de iniciar o jogo",
   "SyncBeforeLaunching_Tip": "Executa uma sincronização de mods antes de iniciar para garantir que todos os mods estão atualizados.",
   "Sorting_Best": "Mais popular",
@@ -140,7 +140,7 @@
   "LaunchInSafeMode": "Iniciar em modo de segurança",
   "SafeModeInfo": "Inicia o jogo em 'modo de segurança' para ajudar a identificar problemas com falhas.\r\n\r\nÉ difícil identificar a origem de uma falha, o que por vezes torna impossível recuperar um jogo guardado.\r\nO modo de segurança permite ao jogo evitar falhas na maioria dos casos, o que te deixa recuperar o jogo guardado e regista corretamente os erros para serem analisados pelo suporte técnico.",
   "SearchTime": "Período de pesquisa",
-  "SearchTime_AllTime": "Todo o tempo",
+  "SearchTime_AllTime": "Desde sempre",
   "SearchTime_Day": "24 horas",
   "SearchTime_Week": "7 dias",
   "SearchTime_Month": "1 mês",
@@ -152,27 +152,45 @@
   "Tag_Building": "Edifício",
   "Tag_Building Extension": "Extensão de edifício",
   "Tag_Zone": "Zona",
-  "Tag_Asset Pack": "Pacote de assets",
+  "Tag_Asset Pack": "Pacote de recursos",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "Gravação",
+    "Plural": "{0} gravações"
+  },
+  "Backup_Maps": {
+    "One": "Mapa",
+    "Plural": "{0} mapas"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
-    "Plural": "{0} playsets"
+    "One": "Conjunto",
+    "Plural": "{0} conjuntos"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "Ficheiros de definições",
+    "Plural": "{0} ficheiros de definições"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folder",
-    "Plural": "{0} mod settings folders"
+    "One": "Pastas de definições de mods",
+    "Plural": "{0} pastas de definições de mods"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Mod local",
+    "Plural": "{0} mods locais"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
+  "ParadoxContextFailed": "Ocorreu um erro ao carregar a Paradox em segundo plano",
+  "ParadoxContextFailedInfo": "Algo está a fazer com que o sistema backend da Paradox falhe.\nClica nesta mensagem para tentar repará-lo.\n\nSe a reparação não for bem-sucedida, pede ajuda nos fóruns de suporte técnico.",
+  "BackupStartingNow": "Automatic backup starting now...",
+  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
+  "BackupServiceAvailable": "Skyve service online",
+  "NextScheduledBackup": "Next scheduled backup is {0}",
+  "LastSettingsBackup": "Last settings backup was {0}",
+  "NoSettingsBackup": "No available settings backup available",
+  "RestoreLatestSettings": "Restore latest settings backup",
+  "CorruptedSettingsFiles": {
+    "One": "Corrupted Settings File Detected",
+    "Plural": "{0} Corrupted Settings Files Detected"
+  },
+  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
+  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
+  "RecentBackups": "Recent Backups"
 }

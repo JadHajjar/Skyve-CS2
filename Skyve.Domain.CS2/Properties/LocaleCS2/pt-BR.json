@@ -17,8 +17,8 @@
     "Plural": "Copiar os links dos PDX Mods dos pacotes selecionados"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "Copy PDX Mods link as Markdown",
-    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+    "One": "Copie o link do PDX Mods como Markdown",
+    "Plural": "Copie os links dos pacotes selecionados do PDX Mods como Markdown"
   },
   "CopyWorkshopId": {
     "One": "Copiar ID dos Mods PDX",
@@ -49,7 +49,7 @@
   "ParadoxLoginFailedBadCredentials": "Não foi possível acessar seu usuário/senha salvos. Clique aqui para atualizar seus dados.",
   "ParadoxLoginFailedEmpty": "A sua sessão provavelmente expirou. Tente iniciar o jogo para entrar novamente, ou clique aqui para entrar pelo Skyve.",
   "DownloadComplete": "Baixado com sucesso",
-  "DownloadFailed": "Download failed",
+  "DownloadFailed": "Falha no download",
   "Downloading": "Baixando...",
   "ModsDownloadFailed": {
     "One": "Não foi possível baixar um Mod",
@@ -78,7 +78,7 @@
   "LogsToPlayerLog": "Copiar registros para Player.log",
   "InvalidFolderSettings": "Instalação inválida detectada",
   "InvalidFolderSettingsInfo": "Skyve não conseguiu encontrar a pasta de Cities: Skylines II em APPData.\nClique aqui para selecionar a pasta em APPData manualmente.",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "Skyve ainda não foi configurado. Por favor, inicie Cities: Skylines II com o Skyve ativado para completar a configuração.\n\nCertifique-se de que os mods sejam carregados com sucesso; se isso não acontecer, tente criar um novo conjunto de jogo incluindo apenas o Skyve.",
   "InvalidFolderSettingsFail": "O caminho selecionado não está correto, por favor selecione a pasta 'Cities Skylines II' em APPData.",
   "DefaultLocation": "Localização Padrão dos Dados do Usuário",
   "JunctionTitle": "Localização Personalizada do Conteúdo",
@@ -88,7 +88,7 @@
   "ResetLocation": "Redefinir Local",
   "JunctionRestart": "Skyve and Cities: Skylines II será fechado durante este processo.\n\nSkyve irá reiniciar automaticamente quando terminar.",
   "PlaysetAlreadyImported": "Este Perfil já está presente em sua lista de Perfis.",
-  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
+  "JunctionInvalidFolder": "A pasta selecionada não é um destino válido. Por favor, tente outra.",
   "CouldNotRetrieveMods": "Não foi possível recuperar os dados do mod",
   "NewGameUpdate": "Nova Atualização para Cities: Skylines II",
   "NewGameUpdateInfo": "O Patch {0} está disponível.\nCertifique-se de verificar seu relatório de compatibilidade antes de iniciar o seu jogo.",
@@ -98,7 +98,7 @@
   "RunSync": "Iniciar a sincronização",
   "PDXModsNew": "Novidades nos mods PDX",
   "PDXModsUpdated": "Recentemente atualizados em mods PDX",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "Mods populares da última semana",
   "DiskStatus": "Status do disco",
   "TotalCitiesSize": "Dados de usuários de C:S II totais armazenados",
   "TotalSavesSize": "Tamanho do Salvamento",
@@ -111,68 +111,86 @@
     "One": "Você está ficando sem espaço em disco, vá para as opções para alterar o local onde o conteúdo do jogo é salvo."
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "'{1}' has dependencies",
-    "Plural": "The packages you're adding have dependencies"
+    "One": "'{1}' tem dependências",
+    "Plural": "Os pacotes que você está adicionando têm dependências"
   },
   "AddingDependencies": {
-    "One": "'{1}' is required for the mod(s) you're adding.\r\n\r\nWould you like to also add '{1}' to your playset?",
-    "Plural": "The mod(s) you're adding have {0} dependencies: {1}\r\n\r\nWould you like to also add them to your playset?"
+    "One": "'{1}' é necessário para o(s) mod(s) que você está adicionando.\n\nVocê também gostaria de adicionar '{1}' ao seu modo de jogo?",
+    "Plural": "O(s) mod(s) que você está adicionando têm {0} dependências: {1}.\n\nGostaria de adicioná-las também ao seu modo de jogo?"
   },
-  "Dependency_Automatic": "Automatically add dependencies",
-  "Dependency_Ask": "Ask every time",
-  "Dependency_None": "Do nothing",
-  "DependencyResolution": "Dependency Resolution",
-  "DependencyResolution_Tip": "Choose what will happen when you add a mod with dependencies that you do not have.",
-  "SyncOngoingLaunchGame": "Skyve is still synchronizing your mods, would you like to launch the game once your mods are ready?\r\nSelect 'No' to start the game anyway.",
-  "StartingWithNoPlayset": "You're about to launch the game with no active playset.\r\nThis means that no mods will be enabled in the game.",
-  "SyncBeforeLaunching": "Synchronize mods before launching the game",
-  "SyncBeforeLaunching_Tip": "Runs a mod sync before launching to make sure all mods are up to date.",
-  "Sorting_Best": "Most Popular",
-  "Sorting_Popularity": "Most Subscribed",
-  "Sorting_DateUpdated": "Last Updated",
-  "Sorting_DateCreated": "Most Recent",
-  "Sorting_WorkshopName": "Alphabetical",
-  "InitialRelease": "Initial Release",
-  "ForumPage": "Forum Page",
-  "DisableBurstCompile": "Disable Burst-Compilation",
-  "UnreadComment": "New comments on '{0}'",
-  "SafeMode": "Safe Mode",
-  "LaunchInSafeMode": "Launch in Safe Mode",
-  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
-  "SearchTime": "Time Period",
-  "SearchTime_AllTime": "All Time",
-  "SearchTime_Day": "24 hours",
-  "SearchTime_Week": "7 Days",
-  "SearchTime_Month": "1 Month",
-  "SearchTime_Quarter": "3 Months",
-  "SearchTime_SixMonths": "6 Months",
-  "SearchTime_Year": "1 Year",
-  "TotalBackupSize": "Total Backups Size",
-  "Tag_Static Object": "Prop",
-  "Tag_Building": "Building",
-  "Tag_Building Extension": "Building Extension",
-  "Tag_Zone": "Zone",
-  "Tag_Asset Pack": "Asset Pack",
+  "Dependency_Automatic": "Adicionar dependências automaticamente",
+  "Dependency_Ask": "Sempre perguntar",
+  "Dependency_None": "Não fazer nada",
+  "DependencyResolution": "Resolução de Dependência",
+  "DependencyResolution_Tip": "Escolha o que acontecerá quando você adicionar um mod com dependências que você não tem.",
+  "SyncOngoingLaunchGame": "O Skyve ainda está sincronizando seus mods. Gostaria de iniciar o jogo assim que os mods estiverem prontos?\nSelecione 'Não' para iniciar o jogo mesmo assim.",
+  "StartingWithNoPlayset": "Você está prestes a iniciar o jogo sem um modo de jogo ativo.\nIsso significa que nenhum mod estará habilitado no jogo.",
+  "SyncBeforeLaunching": "Sincronizar mods antes de iniciar o jogo",
+  "SyncBeforeLaunching_Tip": "Executa uma sincronização de mods antes de iniciar para certificar-se de que todos os mods estão atualizados.",
+  "Sorting_Best": "Mais popular",
+  "Sorting_Popularity": "Mais Inscritos",
+  "Sorting_DateUpdated": "Última Atualização",
+  "Sorting_DateCreated": "Mais Recente",
+  "Sorting_WorkshopName": "Ordem Alfabética",
+  "InitialRelease": "Lançamento Inicial",
+  "ForumPage": "Página do Forum",
+  "DisableBurstCompile": "Desativar a Compilação Rápida",
+  "UnreadComment": "Novos comentários sobre '{0}'",
+  "SafeMode": "Modo de Segurança",
+  "LaunchInSafeMode": "Iniciar no Modo Seguro",
+  "SafeModeInfo": "Inicie o jogo em 'Modo Seguro' para ajudar a identificar problemas com travamentos.\n\nÉ difícil identificar a origem de um travamento, e isso pode tornar impossível a recuperação de um salvamento. O modo seguro permite que o jogo evite travamentos na maioria dos casos, permitindo que você recupere um salvamento e registra erros corretamente para serem analisados pelo suporte técnico.",
+  "SearchTime": "Intervalo de tempo",
+  "SearchTime_AllTime": "Desde o Inicio",
+  "SearchTime_Day": "24 horas",
+  "SearchTime_Week": "7 Dias",
+  "SearchTime_Month": "1 Mês",
+  "SearchTime_Quarter": "3 Meses",
+  "SearchTime_SixMonths": "6 Meses",
+  "SearchTime_Year": "1 Ano",
+  "TotalBackupSize": "Tamanho total de backups",
+  "Tag_Static Object": "Objeto",
+  "Tag_Building": "Construção",
+  "Tag_Building Extension": "Extensão de Construção",
+  "Tag_Zone": "Zona",
+  "Tag_Asset Pack": "Pacote de Recursos",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "Jogo Salvo",
+    "Plural": "{0} Jogos Salvos"
+  },
+  "Backup_Maps": {
+    "One": "Mapa",
+    "Plural": "{0} Mapas"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
-    "Plural": "{0} playsets"
+    "One": "Modo de Jogo",
+    "Plural": "{0} Modos de Jogo"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "Arquivos de Configuração",
+    "Plural": "{0} Arquivos de Configuração"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folder",
-    "Plural": "{0} mod settings folders"
+    "One": "Pastas de configurações dos mods",
+    "Plural": "{0} Pastas de configurações dos mods"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Mod local",
+    "Plural": "{0} Mods Locais"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
+  "ParadoxContextFailed": "Falha ao carregar o backend do Paradox",
+  "ParadoxContextFailedInfo": "Algo está causando a falha do backend da Paradox.\nClique nesta mensagem para tentar repará-lo.\n\nSe o reparo não for bem-sucedido, peça ajuda nos fóruns de suporte técnico.",
+  "BackupStartingNow": "Backup automático iniciando agora...",
+  "BackupServiceUnavailable": "O serviço do Skyve não está instalado. Os backups automáticos só funcionarão enquanto o aplicativo Skyve estiver aberto.",
+  "BackupServiceAvailable": "Serviço Skyve online",
+  "NextScheduledBackup": "Próximo backup agendado é {0}",
+  "LastSettingsBackup": "Último backup de configurações foi {0}",
+  "NoSettingsBackup": "Nenhum backup de configurações disponível",
+  "RestoreLatestSettings": "Restaurar último backup de configurações",
+  "CorruptedSettingsFiles": {
+    "One": "Arquivo de configurações corrompido detectado",
+    "Plural": "{0} arquivos de configurações corrompidos detectados"
+  },
+  "CorruptedSettingsFilesBackupAvailable": "Skyve encontrou backups disponíveis para restaurar suas configurações para o estado anterior.",
+  "CorruptedSettingsFilesNoBackup": "Não há backups disponíveis para restaurar suas configurações. Defina suas configurações de backup para proteger suas configurações no futuro.\n\nClique aqui para excluir os arquivos corrompidos.",
+  "RecentBackups": "Backups Recentes"
 }
