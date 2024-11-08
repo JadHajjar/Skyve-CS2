@@ -98,7 +98,7 @@
   "RunSync": "Démarrer la Synchronisation",
   "PDXModsNew": "Nouveau sur PDX Mods",
   "PDXModsUpdated": "Récemment mis à jour sur PDX Mods",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "Mods populaires de la semaine passée",
   "DiskStatus": "Statut du disque",
   "TotalCitiesSize": "Total des données utilisateur C:S II stockées",
   "TotalSavesSize": "Taille des sauvegardes",
@@ -154,25 +154,43 @@
   "Tag_Zone": "Zone",
   "Tag_Asset Pack": "Pack d'Assets",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "Sauvegarde du jeu",
+    "Plural": "{0} sauvegardes du jeu"
+  },
+  "Backup_Maps": {
+    "One": "Carte",
+    "Plural": "{0} cartes"
   },
   "Backup_ActivePlayset": {
     "One": "Playset",
     "Plural": "{0} playsets"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "Fichier de paramètres",
+    "Plural": "{0} fichiers de paramètres"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folder",
+    "One": "Mod settings folders",
     "Plural": "{0} mod settings folders"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Mod local",
+    "Plural": "{0} mods locaux"
   },
   "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
+  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
+  "BackupStartingNow": "L'archivage automatique commence...",
+  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
+  "BackupServiceAvailable": "Skyve service online",
+  "NextScheduledBackup": "Le prochain archivage est planifié le {0}",
+  "LastSettingsBackup": "Le dernier archivage des paramètres était le {0}",
+  "NoSettingsBackup": "Aucune archive des paramètres n'est disponible",
+  "RestoreLatestSettings": "Restaurer la dernière archive des paramètres",
+  "CorruptedSettingsFiles": {
+    "One": "Fichier de Paramètres Corrompu Détecté",
+    "Plural": "{0} Fichiers de Paramètres Corrompus Détectés"
+  },
+  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
+  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
+  "RecentBackups": "Archives Récentes"
 }

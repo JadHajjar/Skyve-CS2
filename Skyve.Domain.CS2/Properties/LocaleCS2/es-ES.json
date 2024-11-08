@@ -98,7 +98,7 @@
   "RunSync": "Iniciar sincronización",
   "PDXModsNew": "Nuevo en PDX Mods",
   "PDXModsUpdated": "Actualizado recientemente en PDX Mods",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "Mods populares de la semana pasada",
   "DiskStatus": "Estado del disco",
   "TotalCitiesSize": "Total de datos de usuario almacenados de C:S II",
   "TotalSavesSize": "Tamaño de los \"Savegames\"",
@@ -154,25 +154,43 @@
   "Tag_Zone": "Zona",
   "Tag_Asset Pack": "Asset Pack",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "Partida guardada",
+    "Plural": "{0} partridas guardadas"
+  },
+  "Backup_Maps": {
+    "One": "Mapa",
+    "Plural": "{0} mapas"
   },
   "Backup_ActivePlayset": {
     "One": "Playset",
     "Plural": "{0} playsets"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "Archivos de configuración",
+    "Plural": "{0} archivos de configuración"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folder",
-    "Plural": "{0} mod settings folders"
+    "One": "Carpetas de configuraciones de mod",
+    "Plural": "{0} carpetas de configuración de mod"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Mod local",
+    "Plural": "{0} mods locales"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums."
+  "ParadoxContextFailed": "Error al cargar el backend de Paradox",
+  "ParadoxContextFailedInfo": "Algo está causando el error con el backend de Paradox. \nHaz clic en este mensaje para intentar de nuevo. \n\nSi no logras repararlo, pide ayuda el los foros de soporte técnico.",
+  "BackupStartingNow": "Respaldo automático iniciando ahora...",
+  "BackupServiceUnavailable": "El servicio Skyve no está instalado. Los respaldos automáticos solo funcionarán mientras la aplicación Skyve esté abierta.",
+  "BackupServiceAvailable": "Servicio de Skyve en ejecución",
+  "NextScheduledBackup": "El próximo respaldo programado es {0}",
+  "LastSettingsBackup": "El último respaldo de configuración fue {0}",
+  "NoSettingsBackup": "No hay respaldos de configuración disponibles",
+  "RestoreLatestSettings": "Restaurar el último respaldo de configuración",
+  "CorruptedSettingsFiles": {
+    "One": "Archivo de Configuración Corrupto Detectado",
+    "Plural": "{0} Archivos de Configuración Corruptos Detectados"
+  },
+  "CorruptedSettingsFilesBackupAvailable": "Skyve ha encontrado respaldos disponibles para restaurar su configuración a su estado anterior.\n\nHaga clic aquí para restaurarlos ahora.",
+  "CorruptedSettingsFilesNoBackup": "No hay respaldos disponibles para restaurar sus ajustes. Configure los respaldos para proteger sus ajustes del juego en el futuro.\n\nHaga clic aquí para eliminar los archivos corruptos.",
+  "RecentBackups": "Respaldos Recientes"
 }
