@@ -98,7 +98,7 @@
   "RunSync": "Rozpocznij synchronizację",
   "PDXModsNew": "Nowości na PDX Mods",
   "PDXModsUpdated": "Ostatnio zaktualizowane na PDX Mods",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "Popularne mody z ostatniego tygodnia",
   "DiskStatus": "Stan dysku",
   "TotalCitiesSize": "Łączny rozmiar C:S II",
   "TotalSavesSize": "Rozmiar plików zapisu",
@@ -133,7 +133,7 @@
   "Sorting_DateCreated": "Najnowsze",
   "Sorting_WorkshopName": "Alfabetycznie",
   "InitialRelease": "Initial Release",
-  "ForumPage": "Forum Page",
+  "ForumPage": "Strona na forum",
   "DisableBurstCompile": "Disable Burst-Compilation",
   "UnreadComment": "New comments on '{0}'",
   "SafeMode": "Safe Mode",
@@ -174,8 +174,8 @@
     "Plural": "{0} mod settings folders"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Lokalny mod",
+    "Plural": "{0} lokalnych modów"
   },
   "ParadoxContextFailed": "Paradox backend failed to load",
   "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
