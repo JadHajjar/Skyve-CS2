@@ -133,40 +133,40 @@
   "Sorting_DateCreated": "新しい順",
   "Sorting_WorkshopName": "アルファベット順",
   "InitialRelease": "初回リリース",
-  "ForumPage": "Forum Page",
-  "DisableBurstCompile": "Disable Burst-Compilation",
-  "UnreadComment": "New comments on '{0}'",
-  "SafeMode": "Safe Mode",
-  "LaunchInSafeMode": "Launch in Safe Mode",
-  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
-  "SearchTime": "Time Period",
-  "SearchTime_AllTime": "All Time",
-  "SearchTime_Day": "24 hours",
-  "SearchTime_Week": "7 Days",
-  "SearchTime_Month": "1 Month",
-  "SearchTime_Quarter": "3 Months",
-  "SearchTime_SixMonths": "6 Months",
-  "SearchTime_Year": "1 Year",
-  "TotalBackupSize": "Total Backups Size",
-  "Tag_Static Object": "Prop",
-  "Tag_Building": "Building",
-  "Tag_Building Extension": "Building Extension",
-  "Tag_Zone": "Zone",
-  "Tag_Asset Pack": "Asset Pack",
+  "ForumPage": "フォーラムページ",
+  "DisableBurstCompile": "Burst-Compilation を無効化",
+  "UnreadComment": "'{0}' への新しいコメント",
+  "SafeMode": "セーフモード",
+  "LaunchInSafeMode": "セーフモードで起動する",
+  "SafeModeInfo": "セーフモードでゲームを起動すると、クラッシュの問題を特定しやすくなります。 \n\nクラッシュの原因を特定するのが難しく、セーブの復元が不可能になることがあります。 \nセーフモードでは、ほとんどの場合クラッシュが回避され、セーブの復旧が可能になります。また、エラーを適切にログに記録し、テクニカルサポートなどで分析することができます。",
+  "SearchTime": "期間",
+  "SearchTime_AllTime": "全期間",
+  "SearchTime_Day": "24 時間",
+  "SearchTime_Week": "7 日間",
+  "SearchTime_Month": "1 ヶ月",
+  "SearchTime_Quarter": "3 ヶ月",
+  "SearchTime_SixMonths": "6 ヶ月",
+  "SearchTime_Year": "1 年",
+  "TotalBackupSize": "バックアップの合計容量",
+  "Tag_Static Object": "プロップ",
+  "Tag_Building": "建物",
+  "Tag_Building Extension": "建物の拡張",
+  "Tag_Zone": "ゾーン",
+  "Tag_Asset Pack": "アセットパック",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "セーブデータ",
+    "Plural": "{0} セーブデータ"
   },
   "Backup_Maps": {
-    "One": "Map",
-    "Plural": "{0} maps"
+    "One": "マップ",
+    "Plural": "{0} マップ"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
-    "Plural": "{0} playsets"
+    "One": "プレイリスト",
+    "Plural": "{0} プレイリスト"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
+    "One": "設定ファイル",
     "Plural": "{0} 設定ファイル"
   },
   "Backup_ModsSettingsFiles": {
