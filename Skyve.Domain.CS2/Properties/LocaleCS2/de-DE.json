@@ -182,9 +182,9 @@
   "BackupStartingNow": "Automatische Sicherung wird gestartet...",
   "BackupServiceUnavailable": "Der Skyve-Dienst ist nicht installiert. Automatische Sicherungen funktionieren nur, wenn die Skyve-App geöffnet ist.",
   "BackupServiceAvailable": "Skyve-Dienst online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
+  "NextScheduledBackup": "Nächste geplante Sicherung ist {0}",
   "LastSettingsBackup": "Last settings backup was {0}",
-  "NoSettingsBackup": "No available settings backup available",
+  "NoSettingsBackup": "Keine verfügbaren Einstellungen zum Sichern verfügbar",
   "RestoreLatestSettings": "Restore latest settings backup",
   "CorruptedSettingsFiles": {
     "One": "Corrupted Settings File Detected",
