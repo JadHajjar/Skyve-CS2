@@ -162,8 +162,8 @@
     "Plural": "{0} マップ"
   },
   "Backup_ActivePlayset": {
-    "One": "プレイリスト",
-    "Plural": "{0} プレイリスト"
+    "One": "プレイセット",
+    "Plural": "{0} プレイセット"
   },
   "Backup_SettingsFiles": {
     "One": "設定ファイル",
