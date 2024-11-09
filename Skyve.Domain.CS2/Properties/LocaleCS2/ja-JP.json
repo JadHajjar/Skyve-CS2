@@ -17,8 +17,8 @@
     "Plural": "選択したパッケージのPDX Modsリンクをコピー"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "Copy PDX Mods link as Markdown",
-    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+    "One": "PDXModのLinkをMarkdown形式でコピー",
+    "Plural": "選択したパッケージの中のModLinkをMarkdown形式でコピー"
   },
   "CopyWorkshopId": {
     "One": "PDX ModsのIDをコピー",
@@ -78,7 +78,7 @@
   "LogsToPlayerLog": "Player.logにログをコピー",
   "InvalidFolderSettings": "無効なセットアップが検出されました",
   "InvalidFolderSettingsInfo": "Cities: Skylines IIのデータフォルダを適切に検出できませんでした。\n\nデータフォルダを手動で選択するには、ここをクリックしてください。",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "Skyveはまだセットアップされていません。セットアップを完了するためにCities: Skylines IIを起動させてください。\n\nModが正常にロードされていることを確認し、されてない場合はSkyveだけの新しいプレイセットを作成してみてください。",
   "InvalidFolderSettingsFail": "選択したパスが正しくありません。アプリのデータから「Cities Skylines II」フォルダを選択してください。",
   "DefaultLocation": "デフォルトのユーザーデータの場所",
   "JunctionTitle": "カスタムコンテンツの場所",
@@ -88,7 +88,7 @@
   "ResetLocation": "位置を初期化",
   "JunctionRestart": "Skyve と Cities: Skylines II はこのプロセス中に終了します。\n\nSkyve は終了すると自動的に再起動します。",
   "PlaysetAlreadyImported": "このプレイセットは既にプレイセットのリストにあります。",
-  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
+  "JunctionInvalidFolder": "選択したフォルダは有効なアドレスではありません。別のフォルダでもう一度お試しください。",
   "CouldNotRetrieveMods": "Modのデータを取得できませんでした",
   "NewGameUpdate": "Cities: Skylines IIアップデート",
   "NewGameUpdateInfo": "パッチ {0} が利用可能になりました。\nゲームを開始する前に必ず互換性レポートを確認してください。",
@@ -98,7 +98,7 @@
   "RunSync": "同期を開始",
   "PDXModsNew": "PDX Modsの新機能",
   "PDXModsUpdated": "PDX Modsで最近更新",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "先週の人気Mod",
   "DiskStatus": "ディスクの状態",
   "TotalCitiesSize": "合計C:S II ユーザーデータ",
   "TotalSavesSize": "セーブデータのサイズ",
@@ -132,7 +132,7 @@
   "Sorting_DateUpdated": "最終更新日",
   "Sorting_DateCreated": "新しい順",
   "Sorting_WorkshopName": "アルファベット順",
-  "InitialRelease": "Initial Release",
+  "InitialRelease": "初回リリース",
   "ForumPage": "Forum Page",
   "DisableBurstCompile": "Disable Burst-Compilation",
   "UnreadComment": "New comments on '{0}'",
@@ -167,30 +167,30 @@
   },
   "Backup_SettingsFiles": {
     "One": "Settings files",
-    "Plural": "{0} settings files"
+    "Plural": "{0} 設定ファイル"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
-    "Plural": "{0} mod settings folders"
+    "One": "Mod設定フォルダ",
+    "Plural": "{0} 設定フォルダ"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "ローカルMod",
+    "Plural": "{0} ローカルMod"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
-  "BackupStartingNow": "Automatic backup starting now...",
-  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
-  "NoSettingsBackup": "No available settings backup available",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "ParadoxContextFailed": "Paradoxのバックエンドでのロードに失敗しました。",
+  "ParadoxContextFailedInfo": "Paradoxのバックエンドに障害が発生しています。\n このメッセージをクリックして修復を試みてください。 \n\n修復がうまくいかない場合は、技術サポートフォーラムで助言を求めてください。",
+  "BackupStartingNow": "自動バックアップを開始中...",
+  "BackupServiceUnavailable": "Skyveがインストールされていません。Skyveアプリが開いていないと、自動バックアップは行われません。",
+  "BackupServiceAvailable": "Skybe オンライン",
+  "NextScheduledBackup": "次回のスケジュールバックアップは {0} です。",
+  "LastSettingsBackup": "最後の設定のバックアップは {0} です。",
+  "NoSettingsBackup": "利用可能なバックアップの設定はありません",
+  "RestoreLatestSettings": "最新のバックアップを復元する",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "One": "破損した設定ファイルが検出されました",
+    "Plural": "{0} 破損した設定ファイルが検出されました"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups"
+  "CorruptedSettingsFilesBackupAvailable": "Skyveは利用可能なバックアップを見つけ、設定を以前の状態に復元します。 \n\n今すぐ復元するには、こちらをクリックしてください。",
+  "CorruptedSettingsFilesNoBackup": "復元するバックアップはありません。データを保護するためにバックアップを設定してください。\n\n破損したファイルを削除するには、ここをクリックしてください。",
+  "RecentBackups": "最近のバックアップ"
 }
