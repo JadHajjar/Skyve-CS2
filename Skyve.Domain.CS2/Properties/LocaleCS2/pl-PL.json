@@ -134,14 +134,14 @@
   "Sorting_WorkshopName": "Alfabetycznie",
   "InitialRelease": "Initial Release",
   "ForumPage": "Strona na forum",
-  "DisableBurstCompile": "Disable Burst-Compilation",
+  "DisableBurstCompile": "Wyłącz Burst-Compilation",
   "UnreadComment": "Nowe komentarze do '{0}'",
   "SafeMode": "Tryb bezpieczny",
   "LaunchInSafeMode": "Uruchom w trybie bezpiecznym",
   "SafeModeInfo": "Uruchom grę w \"Trybie bezpiecznym\", aby pomóc zidentyfikować problemy z nieoczekiwanym zamknięciem gry (crash).\n\nTrudno jest zidentyfikować przyczynę nieoczekiwanego zamknięcia gry, przez co czasami niemożliwe jest odzyskanie zapisu gry.\nTryb bezpieczny pozwala grze uniknąć nieoczekiwanego zamknięcia w większości przypadków, co pozwala odzyskać zapis, i odpowiednio rejestruje błędy do analizy przez wsparcie techniczne.",
-  "SearchTime": "Time Period",
-  "SearchTime_AllTime": "All Time",
-  "SearchTime_Day": "24 godz.",
+  "SearchTime": "Czas",
+  "SearchTime_AllTime": "Cały czas",
+  "SearchTime_Day": "24 godziny",
   "SearchTime_Week": "7 dni",
   "SearchTime_Month": "1 miesiąc",
   "SearchTime_Quarter": "3 miesiące",
@@ -150,7 +150,7 @@
   "TotalBackupSize": "Łączny rozmiar kopii zapasowej",
   "Tag_Static Object": "Rekwizyt",
   "Tag_Building": "Budynek",
-  "Tag_Building Extension": "Building Extension",
+  "Tag_Building Extension": "Rozszerzenia budynków",
   "Tag_Zone": "Strefa",
   "Tag_Asset Pack": "Pakiet zasobów",
   "Backup_SaveGames": {
@@ -190,7 +190,7 @@
     "One": "Wykryto uszkodzony plik ustawień",
     "Plural": "Wykryto {0} uszkodzonych plików ustawień"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
+  "CorruptedSettingsFilesBackupAvailable": "Skyve znalazł dostępne kopie zapasowe, aby przywrócić ustawienia do poprzedniego stanu.\n\nKliknij tutaj, aby je teraz przywrócić.",
+  "CorruptedSettingsFilesNoBackup": "Brak dostępnej kopii zapasowej do przywrócenia ustawień. Ustaw ustawienia kopii zapasowej, aby zabezpieczyć swoje ustawienia w przyszłości.\n\nKliknij tutaj, aby usunąć uszkodzone pliki.",
   "RecentBackups": "Ostatnie kopie zapasowe"
 }
