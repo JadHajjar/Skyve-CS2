@@ -3,14 +3,14 @@
   "StopCities": "关闭 Cities: Skylines II",
   "NoWorkshop": "禁用创意工坊插件",
   "ExcludeAll": "移除当前配组中的所有项目",
-  "ExcludeAllDisabled": "从当前播放集中移除所有已禁用项目",
+  "ExcludeAllDisabled": "从当前配组中移除所有已禁用的项目",
   "IncludeAll": "全部添加到当前配组",
-  "ExcludeAllFiltered": "从当前播放集中移除所有筛选出的项目",
-  "ExcludeAllDisabledFiltered": "从当前播放集中移除所有已禁用和筛选出的项目",
-  "IncludeAllFiltered": "将筛选出的项目添加到当前播放集",
-  "ExcludeAllSelected": "从当前播放集中移除选中项目",
-  "ExcludeAllDisabledSelected": "从当前播放集中移除所有选中和已禁用的项目",
-  "IncludeAllSelected": "将选中项目添加到当前播放集",
+  "ExcludeAllFiltered": "从当前配组中移除所有筛选出的项目",
+  "ExcludeAllDisabledFiltered": "从当前配组中移除所有已禁用和筛选出的项目",
+  "IncludeAllFiltered": "将筛选出的项目添加到当前配组中",
+  "ExcludeAllSelected": "从当前配组中移除选中的项目",
+  "ExcludeAllDisabledSelected": "从当前配组中移除所有选中和已禁用的项目",
+  "IncludeAllSelected": "将选中项目添加到当前配组中",
   "ViewOnWorkshop": "在 PDX Mods 上查看",
   "CopyWorkshopLink": {
     "One": "复制 PDX Mods 链接",
@@ -25,19 +25,19 @@
     "Plural": "复制已选插件的 PDX Mods ID"
   },
   "LaunchThroughCities": "通过 Cities2.exe 启动游戏",
-  "IncludeItem": "添加到当前播放集",
-  "ExcludeItem": "从当前播放集中移除",
+  "IncludeItem": "添加到当前配组",
+  "ExcludeItem": "从当前配组中移除",
   "SubscribeToItem": {
-    "One": "添加到当前播放集",
-    "Plural": "添加到当前播放集"
+    "One": "添加到当前配组",
+    "Plural": "添加到当前配组"
   },
   "IncludeThisItemInAllPlaysets": {
-    "One": "添加到所有播放集中",
+    "One": "添加到所有配组中",
     "Plural": "将所有选中项添加到所有播放集中"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "从所有播放集中移除",
-    "Plural": "从所有播放集中移除选中项目"
+    "One": "从所有配组中移除",
+    "Plural": "从所有配组中移除选中项目"
   },
   "PackageIsRemoved": "插件 '{0}' 已从 Paradox Mods 移除",
   "PackageIsUnknown": "无法从PDX Mods 获取“{0}”的信息",
