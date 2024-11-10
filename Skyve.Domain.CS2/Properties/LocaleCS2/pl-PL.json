@@ -17,8 +17,8 @@
     "Plural": "Skopiuj linki PDX Mods dla wybranych pakietów"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "Copy PDX Mods link as Markdown",
-    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+    "One": "Skopiuj link PDX Mods jako Markdown",
+    "Plural": "Skopiuj linki PDX Mods dla wybranych pakietów jako Markdown"
   },
   "CopyWorkshopId": {
     "One": "Skopiuj ID PDX Mods",
@@ -78,7 +78,7 @@
   "LogsToPlayerLog": "Skopiuj logi do Player.log",
   "InvalidFolderSettings": "Wykryto nieprawidłową konfigurację",
   "InvalidFolderSettingsInfo": "Skyve nie był w stanie prawidłowo wykryć folderu z grą Cities: Skylines II.\n\nKliknij tutaj, aby ręcznie wybrać folder z grą.",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "Skyve nie został jeszcze skonfigurowany. Proszę uruchomić Cities: Skylines II z włączonym Skyve, aby ukończyć konfigurację.\n\nUpewnij się, że mody zostały załadowane, a jeśli nie, spróbuj utworzyć nowy zestaw tylko z dołączonym w nim Skyve.",
   "InvalidFolderSettingsFail": "Wybrana ścieżka jest niepoprawna. Proszę wybrać folder \"Cities Skylines II\" w AppData.",
   "DefaultLocation": "Domyślna lokalizacja danych użytkownika",
   "JunctionTitle": "Niestandardowa lokalizacja zawartości",
@@ -88,7 +88,7 @@
   "ResetLocation": "Przywróć lokalizację",
   "JunctionRestart": "Skyve i Cities: Skylines II zostaną wyłączone podczas tego procesu.\n\nSkyve automatycznie uruchomi się ponownie po zakończeniu.",
   "PlaysetAlreadyImported": "Ten zestaw już znajduje się na liście twoich zestawów.",
-  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
+  "JunctionInvalidFolder": "Wybrany folder nie jest prawidłowym miejscem docelowym. Proszę wybrać inny.",
   "CouldNotRetrieveMods": "Nie udało się pobrać danych modyfikacji",
   "NewGameUpdate": "Nowa aktualizacja Cities: Skylines II",
   "NewGameUpdateInfo": "Patch {0} jest teraz dostępny. Sprawdź swój raport zgodności przed rozpoczęciem gry.",
@@ -135,7 +135,7 @@
   "InitialRelease": "Initial Release",
   "ForumPage": "Strona na forum",
   "DisableBurstCompile": "Disable Burst-Compilation",
-  "UnreadComment": "New comments on '{0}'",
+  "UnreadComment": "Nowe komentarze do '{0}'",
   "SafeMode": "Tryb bezpieczny",
   "LaunchInSafeMode": "Uruchom w trybie bezpiecznym",
   "SafeModeInfo": "Uruchom grę w \"Trybie bezpiecznym\", aby pomóc zidentyfikować problemy z nieoczekiwanym zamknięciem gry (crash).\n\nTrudno jest zidentyfikować przyczynę nieoczekiwanego zamknięcia gry, przez co czasami niemożliwe jest odzyskanie zapisu gry.\nTryb bezpieczny pozwala grze uniknąć nieoczekiwanego zamknięcia w większości przypadków, co pozwala odzyskać zapis, i odpowiednio rejestruje błędy do analizy przez wsparcie techniczne.",
@@ -148,30 +148,30 @@
   "SearchTime_SixMonths": "6 miesięcy",
   "SearchTime_Year": "1 rok",
   "TotalBackupSize": "Łączny rozmiar kopii zapasowej",
-  "Tag_Static Object": "Prop",
-  "Tag_Building": "Building",
+  "Tag_Static Object": "Rekwizyt",
+  "Tag_Building": "Budynek",
   "Tag_Building Extension": "Building Extension",
-  "Tag_Zone": "Zone",
+  "Tag_Zone": "Strefa",
   "Tag_Asset Pack": "Asset Pack",
   "Backup_SaveGames": {
     "One": "Savegame",
     "Plural": "{0} savegames"
   },
   "Backup_Maps": {
-    "One": "Map",
-    "Plural": "{0} maps"
+    "One": "Mapa",
+    "Plural": "{0} map"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
-    "Plural": "{0} playsets"
+    "One": "Zestaw",
+    "Plural": "{0} zestawów"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "Pliki ustawień",
+    "Plural": "{0} plików ustawień"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
-    "Plural": "{0} mod settings folders"
+    "One": "Foldery ustawień moda",
+    "Plural": "{0} folderów ustawień modów"
   },
   "Backup_LocalMods": {
     "One": "Lokalny mod",
@@ -181,7 +181,7 @@
   "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
   "BackupStartingNow": "Automatic backup starting now...",
   "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
+  "BackupServiceAvailable": "Usługa Skyve online",
   "NextScheduledBackup": "Next scheduled backup is {0}",
   "LastSettingsBackup": "Last settings backup was {0}",
   "NoSettingsBackup": "No available settings backup available",
@@ -192,5 +192,5 @@
   },
   "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
   "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups"
+  "RecentBackups": "Ostatnie kopie zapasowe"
 }
