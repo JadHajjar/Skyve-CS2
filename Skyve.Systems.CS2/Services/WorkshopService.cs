@@ -1032,6 +1032,8 @@ public class WorkshopService : IWorkshopService
 
 			var playsetFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods", "playsets_metadata");
 			var playsetSettingsFile = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods", "PlaysetSettings");
+			var databaseFile = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk", _settings.FolderSettings.UserIdentifier, "database.json");
+			var cacheJournalFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk", _settings.FolderSettings.UserIdentifier, "cache_journal");
 			var tempFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk", _settings.FolderSettings.UserIdentifier, "temp");
 
 			Process.Start(new ProcessStartInfo()
@@ -1057,6 +1059,16 @@ public class WorkshopService : IWorkshopService
 			if (Directory.Exists(playsetFolder))
 			{
 				new DirectoryInfo(playsetFolder).Delete(true);
+			}
+
+			if (CrossIO.FileExists(databaseFile))
+			{
+				CrossIO.DeleteFile(databaseFile, true);
+			}
+
+			if (Directory.Exists(cacheJournalFolder))
+			{
+				new DirectoryInfo(cacheJournalFolder).Delete(true);
 			}
 		}
 		catch (Exception ex)
