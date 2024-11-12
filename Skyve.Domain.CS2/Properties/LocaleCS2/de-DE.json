@@ -17,8 +17,8 @@
     "Plural": "PDX Mods Links der ausgewählten Pakete kopieren"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "Copy PDX Mods link as Markdown",
-    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+    "One": "PDX-Mods Link als Markdown kopieren",
+    "Plural": "Kopiere die PDX-Mods Links der ausgewählten Pakete als Markdown"
   },
   "CopyWorkshopId": {
     "One": "PDX Mods ID kopieren",
@@ -183,14 +183,14 @@
   "BackupServiceUnavailable": "Der Skyve-Dienst ist nicht installiert. Automatische Sicherungen funktionieren nur, wenn die Skyve-App geöffnet ist.",
   "BackupServiceAvailable": "Skyve-Dienst online",
   "NextScheduledBackup": "Nächste geplante Sicherung ist {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
+  "LastSettingsBackup": "Letzte Einstellungs-Sicherung war {0}",
   "NoSettingsBackup": "Keine verfügbaren Einstellungen zum Sichern verfügbar",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "RestoreLatestSettings": "Letzte Einstellungs-Sicherung wiederherstellen",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "One": "Beschädigte Einstellungs-Datei erkannt",
+    "Plural": "{0} Beschädigte Einstellungs-Dateien erkannt"
   },
   "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups"
+  "CorruptedSettingsFilesNoBackup": "Es sind keine Sicherungen verfügbar, um Ihre Einstellungen wiederherzustellen. Richten Sie Ihre Einstellungs-Sicherungen ein, um Ihre Einstellungen in Zukunft zu sichern.\n\nKlicken Sie hier, um die beschädigten Dateien zu löschen.",
+  "RecentBackups": "Neueste Sicherungen"
 }
