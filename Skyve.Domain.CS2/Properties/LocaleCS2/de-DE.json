@@ -134,7 +134,7 @@
   "Sorting_WorkshopName": "Alphabetisch",
   "InitialRelease": "Erstveröffentlichung",
   "ForumPage": "Forumseite",
-  "DisableBurstCompile": "Disable Burst-Compilation",
+  "DisableBurstCompile": "Burst-Kompilierung deaktivieren",
   "UnreadComment": "Neue Kommentare zu '{0}'",
   "SafeMode": "Abgesicherter Modus",
   "LaunchInSafeMode": "Im abgesicherten Modus starten",
@@ -190,7 +190,7 @@
     "One": "Beschädigte Einstellungs-Datei erkannt",
     "Plural": "{0} Beschädigte Einstellungs-Dateien erkannt"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
+  "CorruptedSettingsFilesBackupAvailable": "Skyve hat verfügbare Sicherungen gefunden, um deine Einstellungen in ihrem vorherigen Zustand wiederherzustellen.\n\nKlicke hier, um sie jetzt wiederherzustellen.",
   "CorruptedSettingsFilesNoBackup": "Es sind keine Sicherungen verfügbar, um Ihre Einstellungen wiederherzustellen. Richten Sie Ihre Einstellungs-Sicherungen ein, um Ihre Einstellungen in Zukunft zu sichern.\n\nKlicken Sie hier, um die beschädigten Dateien zu löschen.",
   "RecentBackups": "Neueste Sicherungen"
 }
