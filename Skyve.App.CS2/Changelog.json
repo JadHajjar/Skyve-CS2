@@ -2,6 +2,21 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.12.1",
+    "Date": "2024-11-01",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Changed the restriction on the backup folder location. Skyve now checks if the folder can be used, instead of just not allowing user folders.",
+          "Improved the restore UI's performance and added a Clear button to deselect everything."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.12.0",
     "Date": "2024-11-08",
     "Tagline": "Automatic Backups - Skyve Backup Center",

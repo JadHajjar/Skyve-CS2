@@ -97,7 +97,12 @@ internal class AssetsUtil : IAssetUtil
 					using var stream = entry.Open();
 					using var r = new BinaryReader(stream);
 
-					r.ReadBytes(11); // skip first bytes
+					if (r.ReadByte() != 2)
+					{
+						continue;
+					}
+
+					r.ReadBytes(10); // skip first bytes
 
 					var typeBuilder = new StringBuilder();
 

@@ -282,7 +282,10 @@ internal class ContentManager : IContentManager
 #endif
 
 			var isCodeMod = _modUtil.GetModInfo(folder, out var modDll, out var version);
-			var assets = _assetUtil.GetAssets(folder, withSubDirectories).ToArray();
+			IAsset[] assets;
+
+			try { assets = _assetUtil.GetAssets(folder, withSubDirectories).ToArray(); }
+			catch { assets = []; }
 
 			if (pdxMod is not null)
 			{

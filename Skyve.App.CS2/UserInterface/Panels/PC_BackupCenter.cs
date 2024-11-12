@@ -6,6 +6,8 @@ using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
 using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -277,7 +279,13 @@ public partial class PC_BackupCenter : PanelContent
 
 	private void TB_DestinationFolder_Leave(object sender, EventArgs e)
 	{
-		if (TB_DestinationFolder.Text.PathContains(Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))))
+		if (string.IsNullOrWhiteSpace(TB_DestinationFolder.Text))
+		{
+			return;
+		}
+
+		if (TB_DestinationFolder.Text.PathContains(ServiceCenter.Get<ISettings>().FolderSettings.AppDataPath)
+			|| !HasLocalSystemWriteAccess(TB_DestinationFolder.Text))
 		{
 			TB_DestinationFolder.Text = string.Empty;
 
@@ -290,6 +298,46 @@ public partial class PC_BackupCenter : PanelContent
 					T_Settings.Selected = true;
 				}
 			});
+		}
+	}
+
+	public static bool HasLocalSystemWriteAccess(string folderPath)
+	{
+		try
+		{
+			if (!Directory.Exists(folderPath))
+			{
+				return false;
+			}
+
+			var directorySecurity = new DirectoryInfo(folderPath).GetAccessControl();
+
+			var localSystemAccount = "NT AUTHORITY\\SYSTEM";
+			var hasAccess = false;
+			var isDenied = false;
+
+			foreach (FileSystemAccessRule rule in directorySecurity.GetAccessRules(true, true, typeof(NTAccount)))
+			{
+				if (!rule.IdentityReference.Value.Equals(localSystemAccount, StringComparison.OrdinalIgnoreCase) || !rule.FileSystemRights.HasFlag(FileSystemRights.Write))
+				{
+					continue;
+				}
+
+				if (rule.AccessControlType == AccessControlType.Allow)
+				{
+					hasAccess = true;
+				}
+				else if (rule.AccessControlType == AccessControlType.Deny)
+				{
+					isDenied = true;
+				}
+			}
+
+			return hasAccess && !isDenied;
+		}
+		catch
+		{
+			return false;
 		}
 	}
 	#endregion
@@ -470,10 +518,10 @@ public partial class PC_BackupCenter : PanelContent
 		TLP_RestoreGroups?.Dispose();
 		TLP_RestoreGroups = new TableLayoutPanel()
 		{
-			Dock = DockStyle.Top,
-			AutoSize = true,
-			AutoSizeMode = AutoSizeMode.GrowAndShrink
+			Dock = DockStyle.Fill,
 		};
+
+		TLP_RestoreGroups.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
 		TLP_Restore.Controls.Add(TLP_RestoreGroups, 0, 1);
 		TLP_Restore.SetColumnSpan(TLP_RestoreGroups, 2);
@@ -482,32 +530,57 @@ public partial class PC_BackupCenter : PanelContent
 		{
 			TLP_RestoreGroups.ColumnStyles.Add(new() { SizeType = SizeType.Percent, Width = 100 });
 
-			var panel = new RoundedGroupFlowLayoutPanel
+			var panel = new RoundedGroupTableLayoutPanel
 			{
 				Text = backupGroup.First().MetaData.GetTypeTranslation(),
 				ImageName = backupGroup.First().MetaData.GetIcon(),
 				AddShadow = true,
 				BackColor = FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? -4 : 4),
-				Dock = DockStyle.Top,
-				AutoSize = true,
-				AutoSizeMode = AutoSizeMode.GrowAndShrink
+				Dock = DockStyle.Fill,
+				UseFirstRowForPadding = true
 			};
 
-			foreach (var backup in backupGroup.OrderByDescending(x => x.MetaData.BackupTime))
+			panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+			panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 10));
+			panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+
+			var control = new RestoreListControl(backupListControl.RestorePoint) { Dock = DockStyle.Fill };
+
+			control.SetItems(backupGroup
+				.OrderByDescending(x => x.MetaData.BackupTime)
+				.Select(x => new RestoreListControl.RestoreItem(x, backupListControl.RestorePoint || x.MetaData.BackupTime == backupGroup.Max(y => y.MetaData.BackupTime))));
+
+			if (backupListControl.RestorePoint)
 			{
-				var control = new RestoreItemControl(backup, backupListControl.RestorePoint)
+				var clearButton = new SlickButton
 				{
-					Selected = backupListControl.RestorePoint || backup.MetaData.BackupTime == backupGroup.Max(x => x.MetaData.BackupTime)
+					Text = LocaleSlickUI.Clear,
+					Font = UI.Font(7.5f),
+					Anchor = AnchorStyles.Right,
+					Padding = UI.Scale(new Padding(3)),
+					ButtonType = ButtonType.Dimmed
 				};
 
-				panel.Controls.Add(control);
+				clearButton.Click += ClearButton_Click;
+
+				panel.Controls.Add(clearButton, 0, 0);
 			}
+
+			panel.Controls.Add(control, 0, 1);
 
 			TLP_RestoreGroups.Controls.Add(panel, TLP_RestoreGroups.ColumnStyles.Count - 1, 0);
 		}
 
 		T_Restore.Visible = true;
 		T_Restore.Selected = true;
+	}
+
+	private void ClearButton_Click(object sender, EventArgs e)
+	{
+		var control = ((Control)sender).Parent.Controls.OfType<RestoreListControl>().First();
+
+		control.Items.Foreach(x => x.Selected = false);
+		control.Invalidate();
 	}
 
 	private void OpenFolder(BackupListControl.RestoreGroup item)
@@ -565,9 +638,10 @@ public partial class PC_BackupCenter : PanelContent
 	private void B_Restore_Click(object sender, EventArgs e)
 	{
 		var restores = TLP_RestoreGroups
-			.GetControls<RestoreItemControl>()
+			.GetControls<RestoreListControl>().First()
+			.Items
 			.Where(x => x.Selected)
-			.ToList(x => x.RestoreItem);
+			.ToList(x => x.Item);
 
 		if (restores.Count == 0)
 		{
