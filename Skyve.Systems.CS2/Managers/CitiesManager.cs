@@ -148,7 +148,7 @@ internal class CitiesManager : ICitiesManager
 
 		try
 		{
-			if (!_settings.UserSettings.AdvancedLaunchOptions)
+			if (!_settings.UserSettings.DisableLogCleanup)
 			{
 				CleanupData();
 			}

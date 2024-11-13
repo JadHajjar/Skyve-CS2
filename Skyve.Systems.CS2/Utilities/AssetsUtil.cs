@@ -27,13 +27,15 @@ internal class AssetsUtil : IAssetUtil
 	private readonly IPackageManager _contentManager;
 	private readonly INotifier _notifier;
 	private readonly ILogger _logger;
+	private readonly ISettings _settings;
 	private readonly IImageService _imageService;
 
-	public AssetsUtil(IPackageManager contentManager, INotifier notifier, ILogger logger, IImageService imageService)
+	public AssetsUtil(IPackageManager contentManager, INotifier notifier, ILogger logger, ISettings settings, IImageService imageService)
 	{
 		_contentManager = contentManager;
 		_notifier = notifier;
 		_logger = logger;
+		_settings = settings;
 		_imageService = imageService;
 
 		//_notifier.ContentLoaded += BuildAssetIndex;
@@ -97,7 +99,7 @@ internal class AssetsUtil : IAssetUtil
 					using var stream = entry.Open();
 					using var r = new BinaryReader(stream);
 
-					if (r.ReadByte() != 2)
+					if ((ushort)stream.ReadByte() == 123)
 					{
 						continue;
 					}
@@ -156,6 +158,20 @@ internal class AssetsUtil : IAssetUtil
 					if (imageEntry is not null && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
 					{
 						imageEntry.ExtractToFile(asset.Thumbnail);
+					}
+					else
+					{
+						var ailThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "Thumbnails", name + ".png");
+						var ailCThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "CustomThumbnails", name + ".png");
+
+						if (CrossIO.FileExists(ailThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+						{
+							File.Copy(ailThumbnail, asset.Thumbnail, true);
+						}
+						else if (CrossIO.FileExists(ailCThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+						{
+							File.Copy(ailCThumbnail, asset.Thumbnail, true);
+						}
 					}
 
 					yield return asset;

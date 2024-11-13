@@ -168,6 +168,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation DisableBurstCompile => _instance.GetText("DisableBurstCompile");
 
 	/// <summary>
+	/// Disable logs cleanup when launching the game
+	/// </summary>
+	public static Translation DisableLogCleanup => _instance.GetText("DisableLogCleanup");
+
+	/// <summary>
+	/// Skips the deletion of the Logs folder when launching the game through Skyve.
+	/// </summary>
+	public static Translation DisableLogCleanupTip => _instance.GetText("DisableLogCleanup_Tip");
+
+	/// <summary>
 	/// Disk Status
 	/// </summary>
 	public static Translation DiskStatus => _instance.GetText("DiskStatus");

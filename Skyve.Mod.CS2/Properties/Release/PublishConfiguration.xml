@@ -88,32 +88,17 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.12.0" />
+  <ModVersion Value="0.12.2" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.12.0
-*Automatic Backups - Skyve Backup Center*
-
-## New Backup Features
-* Skyve can now backup your important game files so that you never have to worry about lost progress ever again.
-* Skyve can automatically backup and manage your savegames, settings files, mod files, playsets, maps, and local mods.
-* Configure the backup system to your needs, with customizable update times, triggers, and cleanup options.
-* Easily and quickly restore any backup using the new Backup Center tab.
-* Conveniently glance, search, and manage your backups in the backup history section, all inside the Backup Center.
-
+# v0.12.2
 ## Changes
-* Skyve now automatically detects if you have any broken settings files and lets you know with a notification on your dashboard.
-- If you have your backup settings configured, Skyve will automatically try to find the right backup to restore for a one-click solution to settings files getting corrupted after a crash.
-* Increased the limit on PDX Mods dashboard widgets and improved the design to fix text overlaps.
-* Improved the folder and file selection dialogs.
-* Various improvements to UI elements throughout the app.
-* Adding custom tags will correctly pre-select the mod's existing tags.
-
-## Fixes
-* Fixed mods showing as missing dependencies / required.
-* Fixed mods not correctly showing as included in your playset in various places.
-* Fixed changing mod versions and removing/adding mods to all playsets not working in some cases.
-* Fixed creating, importing, and cloning playsets sometimes using an existing one instead of the newly created one.
+* Changed the restriction on the backup folder location. Skyve now checks if the folder can be used, instead of just not allowing user folders.
+* Improved the restore UI's performance and added a Clear button to deselect everything.
+* Improved the options screen with an updated UI.
+* Added support for Asset Icon Library thumbnails inside Skyve.
+* Added an option to disable log cleanup on launch.
+* Fixed some asset mods not showing up in the mod list.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

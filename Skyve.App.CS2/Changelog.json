@@ -2,14 +2,18 @@
   {
     "Stable": false,
     "Beta": true,
-    "Version": "0.12.1",
-    "Date": "2024-11-01",
+    "Version": "0.12.2",
+    "Date": "2024-11-13",
     "ChangeGroups": [
       {
         "Name": "Changes",
         "Changes": [
           "Changed the restriction on the backup folder location. Skyve now checks if the folder can be used, instead of just not allowing user folders.",
-          "Improved the restore UI's performance and added a Clear button to deselect everything."
+          "Improved the restore UI's performance and added a Clear button to deselect everything.",
+          "Improved the options screen with an updated UI.",
+          "Added support for Asset Icon Library thumbnails inside Skyve.",
+          "Added an option to disable log cleanup on launch.",
+          "Fixed some asset mods not showing up in the mod list."
         ]
       }
     ]
