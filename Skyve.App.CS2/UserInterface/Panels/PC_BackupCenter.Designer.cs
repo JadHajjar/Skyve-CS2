@@ -88,6 +88,7 @@ partial class PC_BackupCenter
 			this.TLP_General = new SlickControls.RoundedGroupTableLayoutPanel();
 			this.TB_DestinationFolder = new SlickControls.SlickPathTextBox();
 			this.CB_IncludeAutoSaves = new SlickControls.SlickCheckbox();
+			this.CB_BackupAllPlaysets = new SlickControls.SlickCheckbox();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel4.SuspendLayout();
 			this.P_RestoreSelect.SuspendLayout();
@@ -131,7 +132,7 @@ partial class PC_BackupCenter
 			this.T_Dashboard.LinkedControl = null;
 			this.T_Dashboard.Location = new System.Drawing.Point(0, 5);
 			this.T_Dashboard.Name = "T_Dashboard";
-			this.T_Dashboard.Size = new System.Drawing.Size(154, 67);
+			this.T_Dashboard.Size = new System.Drawing.Size(148, 64);
 			this.T_Dashboard.TabIndex = 2;
 			this.T_Dashboard.TabStop = false;
 			this.T_Dashboard.Text = "Dashboard";
@@ -144,9 +145,9 @@ partial class PC_BackupCenter
 			dynamicIcon2.Name = "SafeShield";
 			this.T_BackupRestore.IconName = dynamicIcon2;
 			this.T_BackupRestore.LinkedControl = this.tableLayoutPanel4;
-			this.T_BackupRestore.Location = new System.Drawing.Point(154, 5);
+			this.T_BackupRestore.Location = new System.Drawing.Point(148, 5);
 			this.T_BackupRestore.Name = "T_BackupRestore";
-			this.T_BackupRestore.Size = new System.Drawing.Size(154, 67);
+			this.T_BackupRestore.Size = new System.Drawing.Size(148, 64);
 			this.T_BackupRestore.TabIndex = 1;
 			this.T_BackupRestore.TabStop = false;
 			this.T_BackupRestore.Text = "BackupRestore";
@@ -159,14 +160,13 @@ partial class PC_BackupCenter
 			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel4.Controls.Add(this.P_RestoreSelect, 0, 1);
 			this.tableLayoutPanel4.Controls.Add(this.P_Backup, 0, 0);
-			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
 			this.tableLayoutPanel4.RowCount = 2;
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(931, 766);
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(931, 769);
 			this.tableLayoutPanel4.TabIndex = 28;
 			// 
 			// P_RestoreSelect
@@ -195,7 +195,7 @@ partial class PC_BackupCenter
 			this.P_RestoreSelect.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.P_RestoreSelect.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.P_RestoreSelect.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.P_RestoreSelect.Size = new System.Drawing.Size(925, 640);
+			this.P_RestoreSelect.Size = new System.Drawing.Size(925, 643);
 			this.P_RestoreSelect.TabIndex = 27;
 			this.P_RestoreSelect.Text = "BackupHistory";
 			// 
@@ -207,11 +207,11 @@ partial class PC_BackupCenter
 			this.backupListControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.backupListControl.HighlightOnHover = true;
 			this.backupListControl.ItemHeight = 40;
-			this.backupListControl.Location = new System.Drawing.Point(16, 56);
+			this.backupListControl.Location = new System.Drawing.Point(16, 55);
 			this.backupListControl.Margin = new System.Windows.Forms.Padding(0);
 			this.backupListControl.Name = "backupListControl";
 			this.backupListControl.SeparateWithLines = true;
-			this.backupListControl.Size = new System.Drawing.Size(893, 568);
+			this.backupListControl.Size = new System.Drawing.Size(893, 572);
 			this.backupListControl.TabIndex = 27;
 			this.backupListControl.ItemMouseClick += new System.EventHandler<System.Windows.Forms.MouseEventArgs>(this.BackupListControl_ItemMouseClick);
 			// 
@@ -233,7 +233,7 @@ partial class PC_BackupCenter
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 1;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(893, 39);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(893, 38);
 			this.tableLayoutPanel2.TabIndex = 30;
 			// 
 			// DD_BackupType
@@ -242,7 +242,7 @@ partial class PC_BackupCenter
 			this.DD_BackupType.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.DD_BackupType.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.DD_BackupType.ItemHeight = 24;
-			this.DD_BackupType.Location = new System.Drawing.Point(277, 4);
+			this.DD_BackupType.Location = new System.Drawing.Point(277, 3);
 			this.DD_BackupType.Name = "DD_BackupType";
 			this.DD_BackupType.Size = new System.Drawing.Size(350, 31);
 			this.DD_BackupType.TabIndex = 3;
@@ -262,7 +262,7 @@ partial class PC_BackupCenter
 			this.TB_Search.SelectionLength = 0;
 			this.TB_Search.SelectionStart = 0;
 			this.TB_Search.ShowLabel = false;
-			this.TB_Search.Size = new System.Drawing.Size(268, 33);
+			this.TB_Search.Size = new System.Drawing.Size(268, 32);
 			this.TB_Search.TabIndex = 4;
 			this.TB_Search.TextChanged += new System.EventHandler(this.TB_Search_TextChanged);
 			this.TB_Search.IconClicked += new System.EventHandler(this.TB_Search_IconClicked);
@@ -282,7 +282,7 @@ partial class PC_BackupCenter
 			// 
 			this.P_RestoreSelect.SetColumnSpan(this.spacerBackup, 2);
 			this.spacerBackup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.spacerBackup.Location = new System.Drawing.Point(16, 55);
+			this.spacerBackup.Location = new System.Drawing.Point(16, 54);
 			this.spacerBackup.Margin = new System.Windows.Forms.Padding(0);
 			this.spacerBackup.Name = "spacerBackup";
 			this.spacerBackup.Size = new System.Drawing.Size(893, 1);
@@ -337,9 +337,9 @@ partial class PC_BackupCenter
 			this.B_Backup.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon5.Name = "ArrowRight";
 			this.B_Backup.ImageName = dynamicIcon5;
-			this.B_Backup.Location = new System.Drawing.Point(776, 69);
+			this.B_Backup.Location = new System.Drawing.Point(792, 69);
 			this.B_Backup.Name = "B_Backup";
-			this.B_Backup.Size = new System.Drawing.Size(130, 26);
+			this.B_Backup.Size = new System.Drawing.Size(114, 26);
 			this.B_Backup.SpaceTriggersClick = true;
 			this.B_Backup.TabIndex = 14;
 			this.B_Backup.Text = "DoBackupNow";
@@ -359,12 +359,13 @@ partial class PC_BackupCenter
 			// 
 			this.T_Restore.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Restore.Dock = System.Windows.Forms.DockStyle.Left;
+			this.T_Restore.FillTab = true;
 			dynamicIcon7.Name = "RestoreBackup";
 			this.T_Restore.IconName = dynamicIcon7;
 			this.T_Restore.LinkedControl = this.panel1;
-			this.T_Restore.Location = new System.Drawing.Point(308, 5);
+			this.T_Restore.Location = new System.Drawing.Point(296, 5);
 			this.T_Restore.Name = "T_Restore";
-			this.T_Restore.Size = new System.Drawing.Size(154, 67);
+			this.T_Restore.Size = new System.Drawing.Size(148, 64);
 			this.T_Restore.TabIndex = 1;
 			this.T_Restore.TabStop = false;
 			this.T_Restore.Text = "Restore";
@@ -377,22 +378,20 @@ partial class PC_BackupCenter
 			this.panel1.Controls.Add(this.TLP_Restore);
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(0, 64);
+			this.panel1.Size = new System.Drawing.Size(931, 769);
 			this.panel1.TabIndex = 3;
 			// 
 			// TLP_Restore
 			// 
 			this.TLP_Restore.AddOutline = true;
 			this.TLP_Restore.AddShadow = true;
-			this.TLP_Restore.AutoSize = true;
-			this.TLP_Restore.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.TLP_Restore.ColorStyle = Extensions.ColorStyle.Active;
 			this.TLP_Restore.ColumnCount = 2;
 			this.TLP_Restore.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.TLP_Restore.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.TLP_Restore.Controls.Add(this.B_Restore, 1, 0);
 			this.TLP_Restore.Controls.Add(this.L_RestoreInfo, 0, 0);
-			this.TLP_Restore.Dock = System.Windows.Forms.DockStyle.Top;
+			this.TLP_Restore.Dock = System.Windows.Forms.DockStyle.Fill;
 			dynamicIcon9.Name = "RestoreBackup";
 			this.TLP_Restore.ImageName = dynamicIcon9;
 			this.TLP_Restore.Info = "";
@@ -401,8 +400,8 @@ partial class PC_BackupCenter
 			this.TLP_Restore.Padding = new System.Windows.Forms.Padding(16);
 			this.TLP_Restore.RowCount = 2;
 			this.TLP_Restore.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Restore.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Restore.Size = new System.Drawing.Size(0, 64);
+			this.TLP_Restore.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.TLP_Restore.Size = new System.Drawing.Size(931, 769);
 			this.TLP_Restore.TabIndex = 3;
 			this.TLP_Restore.Text = "Restore";
 			// 
@@ -414,9 +413,9 @@ partial class PC_BackupCenter
 			this.B_Restore.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon8.Name = "ArrowRight";
 			this.B_Restore.ImageName = dynamicIcon8;
-			this.B_Restore.Location = new System.Drawing.Point(-136, 19);
+			this.B_Restore.Location = new System.Drawing.Point(809, 19);
 			this.B_Restore.Name = "B_Restore";
-			this.B_Restore.Size = new System.Drawing.Size(150, 26);
+			this.B_Restore.Size = new System.Drawing.Size(103, 26);
 			this.B_Restore.SpaceTriggersClick = true;
 			this.B_Restore.TabIndex = 0;
 			this.B_Restore.Text = "StartRestore";
@@ -428,7 +427,7 @@ partial class PC_BackupCenter
 			this.L_RestoreInfo.AutoSize = true;
 			this.L_RestoreInfo.Location = new System.Drawing.Point(19, 25);
 			this.L_RestoreInfo.Name = "L_RestoreInfo";
-			this.L_RestoreInfo.Size = new System.Drawing.Size(1, 13);
+			this.L_RestoreInfo.Size = new System.Drawing.Size(35, 13);
 			this.L_RestoreInfo.TabIndex = 1;
 			this.L_RestoreInfo.Text = "label1";
 			// 
@@ -439,9 +438,9 @@ partial class PC_BackupCenter
 			dynamicIcon10.Name = "Cog";
 			this.T_Settings.IconName = dynamicIcon10;
 			this.T_Settings.LinkedControl = this.TLP_Settings;
-			this.T_Settings.Location = new System.Drawing.Point(462, 5);
+			this.T_Settings.Location = new System.Drawing.Point(444, 5);
 			this.T_Settings.Name = "T_Settings";
-			this.T_Settings.Size = new System.Drawing.Size(154, 67);
+			this.T_Settings.Size = new System.Drawing.Size(148, 64);
 			this.T_Settings.TabIndex = 0;
 			this.T_Settings.TabStop = false;
 			this.T_Settings.Text = "Settings";
@@ -464,7 +463,7 @@ partial class PC_BackupCenter
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Settings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Settings.Size = new System.Drawing.Size(600, 723);
+			this.TLP_Settings.Size = new System.Drawing.Size(600, 762);
 			this.TLP_Settings.TabIndex = 3;
 			// 
 			// TLP_ContentTypes
@@ -530,7 +529,7 @@ partial class PC_BackupCenter
 			this.TLP_Cleanup.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon12.Name = "Broom";
 			this.TLP_Cleanup.ImageName = dynamicIcon12;
-			this.TLP_Cleanup.Location = new System.Drawing.Point(3, 448);
+			this.TLP_Cleanup.Location = new System.Drawing.Point(3, 487);
 			this.TLP_Cleanup.Name = "TLP_Cleanup";
 			this.TLP_Cleanup.Padding = new System.Windows.Forms.Padding(16);
 			this.TLP_Cleanup.RowCount = 6;
@@ -574,57 +573,48 @@ partial class PC_BackupCenter
 			// 
 			this.CB_CleanupTime.AutoSize = true;
 			this.CB_CleanupTime.Checked = false;
-			this.CB_CleanupTime.CheckedText = null;
 			this.CB_CleanupTime.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_CleanupTime.DefaultValue = false;
 			this.CB_CleanupTime.EnterTriggersClick = false;
 			this.CB_CleanupTime.Location = new System.Drawing.Point(19, 19);
 			this.CB_CleanupTime.Name = "CB_CleanupTime";
 			this.CB_CleanupTime.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_CleanupTime.Size = new System.Drawing.Size(208, 34);
+			this.CB_CleanupTime.Size = new System.Drawing.Size(150, 34);
 			this.CB_CleanupTime.SpaceTriggersClick = true;
 			this.CB_CleanupTime.TabIndex = 0;
 			this.CB_CleanupTime.Tag = "";
 			this.CB_CleanupTime.Text = "CleanupTimeBased";
-			this.CB_CleanupTime.UncheckedText = null;
 			this.CB_CleanupTime.CheckChanged += new System.EventHandler(this.CB_CleanupTime_CheckChanged);
 			// 
 			// CB_CleanupStorage
 			// 
 			this.CB_CleanupStorage.AutoSize = true;
 			this.CB_CleanupStorage.Checked = false;
-			this.CB_CleanupStorage.CheckedText = null;
 			this.CB_CleanupStorage.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_CleanupStorage.DefaultValue = false;
 			this.CB_CleanupStorage.EnterTriggersClick = false;
 			this.CB_CleanupStorage.Location = new System.Drawing.Point(19, 99);
 			this.CB_CleanupStorage.Name = "CB_CleanupStorage";
 			this.CB_CleanupStorage.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_CleanupStorage.Size = new System.Drawing.Size(336, 34);
+			this.CB_CleanupStorage.Size = new System.Drawing.Size(165, 34);
 			this.CB_CleanupStorage.SpaceTriggersClick = true;
 			this.CB_CleanupStorage.TabIndex = 2;
 			this.CB_CleanupStorage.Tag = "";
 			this.CB_CleanupStorage.Text = "CleanupStorageBased";
-			this.CB_CleanupStorage.UncheckedText = null;
 			this.CB_CleanupStorage.CheckChanged += new System.EventHandler(this.CB_CleanupStorage_CheckChanged);
 			// 
 			// CB_CleanupCount
 			// 
 			this.CB_CleanupCount.AutoSize = true;
 			this.CB_CleanupCount.Checked = false;
-			this.CB_CleanupCount.CheckedText = null;
 			this.CB_CleanupCount.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_CleanupCount.DefaultValue = false;
 			this.CB_CleanupCount.EnterTriggersClick = false;
 			this.CB_CleanupCount.Location = new System.Drawing.Point(19, 179);
 			this.CB_CleanupCount.Name = "CB_CleanupCount";
 			this.CB_CleanupCount.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_CleanupCount.Size = new System.Drawing.Size(368, 34);
+			this.CB_CleanupCount.Size = new System.Drawing.Size(156, 34);
 			this.CB_CleanupCount.SpaceTriggersClick = true;
 			this.CB_CleanupCount.TabIndex = 4;
 			this.CB_CleanupCount.Tag = "";
 			this.CB_CleanupCount.Text = "CleanupCountBased";
-			this.CB_CleanupCount.UncheckedText = null;
 			this.CB_CleanupCount.CheckChanged += new System.EventHandler(this.CB_CleanupCount_CheckChanged);
 			// 
 			// SS_CleanupTime
@@ -662,7 +652,7 @@ partial class PC_BackupCenter
 			this.TLP_Schedule.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon14.Name = "ClockSettings";
 			this.TLP_Schedule.ImageName = dynamicIcon14;
-			this.TLP_Schedule.Location = new System.Drawing.Point(3, 131);
+			this.TLP_Schedule.Location = new System.Drawing.Point(3, 170);
 			this.TLP_Schedule.Name = "TLP_Schedule";
 			this.TLP_Schedule.Padding = new System.Windows.Forms.Padding(16);
 			this.TLP_Schedule.RowCount = 8;
@@ -682,10 +672,8 @@ partial class PC_BackupCenter
 			// 
 			this.CB_ScheduleIncludeMaps.AutoSize = true;
 			this.CB_ScheduleIncludeMaps.Checked = false;
-			this.CB_ScheduleIncludeMaps.CheckedText = null;
 			this.TLP_Schedule.SetColumnSpan(this.CB_ScheduleIncludeMaps, 2);
 			this.CB_ScheduleIncludeMaps.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_ScheduleIncludeMaps.DefaultValue = false;
 			this.CB_ScheduleIncludeMaps.EnterTriggersClick = false;
 			this.CB_ScheduleIncludeMaps.Location = new System.Drawing.Point(19, 258);
 			this.CB_ScheduleIncludeMaps.Name = "CB_ScheduleIncludeMaps";
@@ -695,7 +683,6 @@ partial class PC_BackupCenter
 			this.CB_ScheduleIncludeMaps.TabIndex = 7;
 			this.CB_ScheduleIncludeMaps.Tag = "";
 			this.CB_ScheduleIncludeMaps.Text = "BackupIncludeMaps";
-			this.CB_ScheduleIncludeMaps.UncheckedText = null;
 			// 
 			// B_AddTime
 			// 
@@ -717,20 +704,17 @@ partial class PC_BackupCenter
 			// 
 			this.CB_ScheduleAtTimes.AutoSize = true;
 			this.CB_ScheduleAtTimes.Checked = false;
-			this.CB_ScheduleAtTimes.CheckedText = null;
 			this.TLP_Schedule.SetColumnSpan(this.CB_ScheduleAtTimes, 2);
 			this.CB_ScheduleAtTimes.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_ScheduleAtTimes.DefaultValue = false;
 			this.CB_ScheduleAtTimes.EnterTriggersClick = false;
 			this.CB_ScheduleAtTimes.Location = new System.Drawing.Point(19, 19);
 			this.CB_ScheduleAtTimes.Name = "CB_ScheduleAtTimes";
 			this.CB_ScheduleAtTimes.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleAtTimes.Size = new System.Drawing.Size(227, 34);
+			this.CB_ScheduleAtTimes.Size = new System.Drawing.Size(183, 34);
 			this.CB_ScheduleAtTimes.SpaceTriggersClick = true;
 			this.CB_ScheduleAtTimes.TabIndex = 0;
 			this.CB_ScheduleAtTimes.Tag = "";
 			this.CB_ScheduleAtTimes.Text = "ScheduleOnSpecificTimes";
-			this.CB_ScheduleAtTimes.UncheckedText = null;
 			this.CB_ScheduleAtTimes.CheckChanged += new System.EventHandler(this.CB_ScheduleAtTimes_CheckChanged);
 			// 
 			// spacerSettings
@@ -758,77 +742,65 @@ partial class PC_BackupCenter
 			// 
 			this.CB_ScheduleOnGameClose.AutoSize = true;
 			this.CB_ScheduleOnGameClose.Checked = false;
-			this.CB_ScheduleOnGameClose.CheckedText = null;
 			this.TLP_Schedule.SetColumnSpan(this.CB_ScheduleOnGameClose, 2);
 			this.CB_ScheduleOnGameClose.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_ScheduleOnGameClose.DefaultValue = false;
 			this.CB_ScheduleOnGameClose.EnterTriggersClick = false;
 			this.CB_ScheduleOnGameClose.Location = new System.Drawing.Point(19, 91);
 			this.CB_ScheduleOnGameClose.Name = "CB_ScheduleOnGameClose";
 			this.CB_ScheduleOnGameClose.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleOnGameClose.Size = new System.Drawing.Size(266, 34);
+			this.CB_ScheduleOnGameClose.Size = new System.Drawing.Size(172, 34);
 			this.CB_ScheduleOnGameClose.SpaceTriggersClick = true;
 			this.CB_ScheduleOnGameClose.TabIndex = 3;
 			this.CB_ScheduleOnGameClose.Tag = "";
 			this.CB_ScheduleOnGameClose.Text = "ScheduleOnGameClose";
-			this.CB_ScheduleOnGameClose.UncheckedText = null;
 			// 
 			// CB_ScheduleOnNewSave
 			// 
 			this.CB_ScheduleOnNewSave.AutoSize = true;
 			this.CB_ScheduleOnNewSave.Checked = false;
-			this.CB_ScheduleOnNewSave.CheckedText = null;
 			this.TLP_Schedule.SetColumnSpan(this.CB_ScheduleOnNewSave, 2);
 			this.CB_ScheduleOnNewSave.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_ScheduleOnNewSave.DefaultValue = false;
 			this.CB_ScheduleOnNewSave.EnterTriggersClick = false;
 			this.CB_ScheduleOnNewSave.Location = new System.Drawing.Point(19, 131);
 			this.CB_ScheduleOnNewSave.Name = "CB_ScheduleOnNewSave";
 			this.CB_ScheduleOnNewSave.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleOnNewSave.Size = new System.Drawing.Size(242, 34);
+			this.CB_ScheduleOnNewSave.Size = new System.Drawing.Size(161, 34);
 			this.CB_ScheduleOnNewSave.SpaceTriggersClick = true;
 			this.CB_ScheduleOnNewSave.TabIndex = 4;
 			this.CB_ScheduleOnNewSave.Tag = "";
 			this.CB_ScheduleOnNewSave.Text = "ScheduleOnNewSave";
-			this.CB_ScheduleOnNewSave.UncheckedText = null;
 			// 
 			// CB_ScheduleIncludeSaves
 			// 
 			this.CB_ScheduleIncludeSaves.AutoSize = true;
 			this.CB_ScheduleIncludeSaves.Checked = false;
-			this.CB_ScheduleIncludeSaves.CheckedText = null;
 			this.TLP_Schedule.SetColumnSpan(this.CB_ScheduleIncludeSaves, 2);
 			this.CB_ScheduleIncludeSaves.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_ScheduleIncludeSaves.DefaultValue = false;
 			this.CB_ScheduleIncludeSaves.EnterTriggersClick = false;
 			this.CB_ScheduleIncludeSaves.Location = new System.Drawing.Point(19, 178);
 			this.CB_ScheduleIncludeSaves.Name = "CB_ScheduleIncludeSaves";
 			this.CB_ScheduleIncludeSaves.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleIncludeSaves.Size = new System.Drawing.Size(278, 34);
+			this.CB_ScheduleIncludeSaves.Size = new System.Drawing.Size(185, 34);
 			this.CB_ScheduleIncludeSaves.SpaceTriggersClick = true;
 			this.CB_ScheduleIncludeSaves.TabIndex = 5;
 			this.CB_ScheduleIncludeSaves.Tag = "";
 			this.CB_ScheduleIncludeSaves.Text = "BackupIncludeSaveGames";
-			this.CB_ScheduleIncludeSaves.UncheckedText = null;
 			// 
 			// CB_ScheduleIncludeLocalMods
 			// 
 			this.CB_ScheduleIncludeLocalMods.AutoSize = true;
 			this.CB_ScheduleIncludeLocalMods.Checked = false;
-			this.CB_ScheduleIncludeLocalMods.CheckedText = null;
 			this.TLP_Schedule.SetColumnSpan(this.CB_ScheduleIncludeLocalMods, 2);
 			this.CB_ScheduleIncludeLocalMods.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_ScheduleIncludeLocalMods.DefaultValue = false;
 			this.CB_ScheduleIncludeLocalMods.EnterTriggersClick = false;
 			this.CB_ScheduleIncludeLocalMods.Location = new System.Drawing.Point(19, 218);
 			this.CB_ScheduleIncludeLocalMods.Name = "CB_ScheduleIncludeLocalMods";
 			this.CB_ScheduleIncludeLocalMods.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_ScheduleIncludeLocalMods.Size = new System.Drawing.Size(259, 34);
+			this.CB_ScheduleIncludeLocalMods.Size = new System.Drawing.Size(182, 34);
 			this.CB_ScheduleIncludeLocalMods.SpaceTriggersClick = true;
 			this.CB_ScheduleIncludeLocalMods.TabIndex = 6;
 			this.CB_ScheduleIncludeLocalMods.Tag = "";
 			this.CB_ScheduleIncludeLocalMods.Text = "BackupIncludeLocalMods";
-			this.CB_ScheduleIncludeLocalMods.UncheckedText = null;
 			// 
 			// TLP_General
 			// 
@@ -840,17 +812,19 @@ partial class PC_BackupCenter
 			this.TLP_General.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 66.66666F));
 			this.TLP_General.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
 			this.TLP_General.Controls.Add(this.TB_DestinationFolder, 0, 0);
-			this.TLP_General.Controls.Add(this.CB_IncludeAutoSaves, 0, 1);
+			this.TLP_General.Controls.Add(this.CB_IncludeAutoSaves, 0, 2);
+			this.TLP_General.Controls.Add(this.CB_BackupAllPlaysets, 0, 1);
 			this.TLP_General.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon15.Name = "Preferences";
 			this.TLP_General.ImageName = dynamicIcon15;
 			this.TLP_General.Location = new System.Drawing.Point(3, 3);
 			this.TLP_General.Name = "TLP_General";
 			this.TLP_General.Padding = new System.Windows.Forms.Padding(16);
-			this.TLP_General.RowCount = 2;
+			this.TLP_General.RowCount = 3;
 			this.TLP_General.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_General.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_General.Size = new System.Drawing.Size(414, 122);
+			this.TLP_General.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_General.Size = new System.Drawing.Size(414, 161);
 			this.TLP_General.TabIndex = 0;
 			this.TLP_General.Text = "BasicSettings";
 			// 
@@ -866,27 +840,41 @@ partial class PC_BackupCenter
 			this.TB_DestinationFolder.SelectedText = "";
 			this.TB_DestinationFolder.SelectionLength = 0;
 			this.TB_DestinationFolder.SelectionStart = 0;
-			this.TB_DestinationFolder.Size = new System.Drawing.Size(248, 44);
+			this.TB_DestinationFolder.Size = new System.Drawing.Size(248, 43);
 			this.TB_DestinationFolder.TabIndex = 0;
+			this.TB_DestinationFolder.Leave += new System.EventHandler(this.TB_DestinationFolder_Leave);
 			// 
 			// CB_IncludeAutoSaves
 			// 
 			this.CB_IncludeAutoSaves.AutoSize = true;
 			this.CB_IncludeAutoSaves.Checked = false;
-			this.CB_IncludeAutoSaves.CheckedText = null;
 			this.TLP_General.SetColumnSpan(this.CB_IncludeAutoSaves, 2);
 			this.CB_IncludeAutoSaves.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_IncludeAutoSaves.DefaultValue = false;
 			this.CB_IncludeAutoSaves.EnterTriggersClick = false;
-			this.CB_IncludeAutoSaves.Location = new System.Drawing.Point(19, 69);
+			this.CB_IncludeAutoSaves.Location = new System.Drawing.Point(19, 108);
 			this.CB_IncludeAutoSaves.Name = "CB_IncludeAutoSaves";
 			this.CB_IncludeAutoSaves.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.CB_IncludeAutoSaves.Size = new System.Drawing.Size(368, 34);
+			this.CB_IncludeAutoSaves.Size = new System.Drawing.Size(180, 34);
 			this.CB_IncludeAutoSaves.SpaceTriggersClick = true;
 			this.CB_IncludeAutoSaves.TabIndex = 1;
 			this.CB_IncludeAutoSaves.Tag = "";
 			this.CB_IncludeAutoSaves.Text = "IncludeAutoSavesBackup";
-			this.CB_IncludeAutoSaves.UncheckedText = null;
+			// 
+			// CB_BackupAllPlaysets
+			// 
+			this.CB_BackupAllPlaysets.AutoSize = true;
+			this.CB_BackupAllPlaysets.Checked = false;
+			this.TLP_General.SetColumnSpan(this.CB_BackupAllPlaysets, 2);
+			this.CB_BackupAllPlaysets.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.CB_BackupAllPlaysets.EnterTriggersClick = false;
+			this.CB_BackupAllPlaysets.Location = new System.Drawing.Point(19, 68);
+			this.CB_BackupAllPlaysets.Name = "CB_BackupAllPlaysets";
+			this.CB_BackupAllPlaysets.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
+			this.CB_BackupAllPlaysets.Size = new System.Drawing.Size(144, 34);
+			this.CB_BackupAllPlaysets.SpaceTriggersClick = true;
+			this.CB_BackupAllPlaysets.TabIndex = 1;
+			this.CB_BackupAllPlaysets.Tag = "";
+			this.CB_BackupAllPlaysets.Text = "BackupAllPlaysets";
 			// 
 			// tableLayoutPanel1
 			// 
@@ -923,7 +911,6 @@ partial class PC_BackupCenter
 			this.P_Backup.ResumeLayout(false);
 			this.P_Backup.PerformLayout();
 			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
 			this.TLP_Restore.ResumeLayout(false);
 			this.TLP_Restore.PerformLayout();
 			this.TLP_Settings.ResumeLayout(false);
@@ -989,4 +976,5 @@ partial class PC_BackupCenter
 	private System.Windows.Forms.Label L_FinishSetup;
 	private Generic.BackupTypeDropdown DD_BackupType;
 	private SlickCheckbox CB_ScheduleIncludeMaps;
+	private SlickCheckbox CB_BackupAllPlaysets;
 }

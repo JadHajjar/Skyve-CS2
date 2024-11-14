@@ -55,6 +55,11 @@ internal class InterfaceService : IAppInterfaceService
 		return new PC_SendReviewRequest(package);
 	}
 
+	PanelContent IAppInterfaceService.CompatibilityManagementPanel(IPackageIdentity package)
+	{
+		return new PC_CompatibilityManagement([package]);
+	}
+
 	void IInterfaceService.OpenPlaysetPage(IPlayset playset, bool settingsTab)
 	{
 		App.Program.MainForm.TryInvoke(() => App.Program.MainForm.PushPanel(new PC_PlaysetPage(playset, settingsTab)));

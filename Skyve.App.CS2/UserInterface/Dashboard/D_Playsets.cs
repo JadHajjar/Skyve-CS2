@@ -235,7 +235,7 @@ internal class D_Playsets : IDashboardItem
 		}
 		else
 		{
-			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(5));
+			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(5), backColor);
 		}
 
 		if (HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))

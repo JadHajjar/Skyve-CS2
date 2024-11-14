@@ -67,7 +67,7 @@ public partial class PackageChangelogControl : SlickControl
 	public void SetChangelogs(string currentVersionId, IEnumerable<IModChangelog> changelogs)
 	{
 		_modChangelogs = changelogs.ToArray();
-		_current = _modChangelogs.FirstOrDefault(x => x.Version == currentVersionId);
+		_current = _modChangelogs.FirstOrDefault(x => x.VersionId == currentVersionId);
 
 		base_P_Tabs.Clear();
 

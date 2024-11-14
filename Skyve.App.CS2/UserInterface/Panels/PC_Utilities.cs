@@ -249,10 +249,10 @@ public partial class PC_Utilities : PanelContent
 
 		foreach (var package in outOfDatePackages)
 		{
-			package.Version = null;
-
-			await _packageUtil.SetIncluded(package, true);
+			await _packageUtil.SetIncluded(package, true, withVersion: false);
 		}
+
+		await _workshopService.RunSync();
 
 		B_FixAllIssues.Loading = false;
 		B_FixAllIssues.Enabled = true;

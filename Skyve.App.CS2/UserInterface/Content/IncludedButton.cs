@@ -15,10 +15,7 @@ public class IncludedButton : SlickButton
 
 	public IncludedButton(IPackageIdentity package)
 	{
-		Package = new GenericPackageIdentity(package)
-		{
-			Version = null
-		};
+		Package = package;
 
 		ServiceCenter.Get(out _modLogicManager, out _modUtil, out _subscriptionsManager);
 	}
@@ -39,13 +36,13 @@ public class IncludedButton : SlickButton
 
 		if (e.Button == MouseButtons.Left)
 		{
-			var isIncluded = Package.IsIncluded(out var partialIncluded) && !partialIncluded;
+			var isIncluded = Package.IsIncluded(out var partialIncluded, withVersion: false) && !partialIncluded;
 
 			Loading = true;
 
 			if (!isIncluded || ModifierKeys.HasFlag(Keys.Alt))
 			{
-				await _modUtil.SetIncluded(Package, !isIncluded);
+				await _modUtil.SetIncluded(Package, !isIncluded, withVersion: false);
 			}
 			else
 			{
@@ -71,8 +68,8 @@ public class IncludedButton : SlickButton
 		e.Graphics.SetUp(Parent?.BackColor ?? BackColor);
 
 		var localIdentity = Package.GetLocalPackageIdentity();
-		var isIncluded = Package.IsIncluded(out var isPartialIncluded);
-		var isEnabled = Package.IsEnabled();
+		var isIncluded = Package.IsIncluded(out var isPartialIncluded, withVersion: false);
+		var isEnabled = Package.IsEnabled(withVersion: false);
 		Color activeColor = default;
 		string text;
 

@@ -13,6 +13,7 @@ public class BackupSettings : ConfigFile, IBackupSettings
 	public Cleanup CleanupSettings { get; set; } = new();
 	public bool IgnoreAutoSaves { get; set; } = true;
 	public string[]? ContentTypes { get; set; }
+	public bool BackupAllPlaysets { get; set; }
 
 	public class Schedule
 	{

@@ -32,8 +32,6 @@ internal class BackupSystem : IBackupSystem
 	private readonly DateTime _backupTime;
 
 	private static readonly object _lock = new();
-	private static DateTime lastCacheTime;
-	private static List<IRestoreItem>? restoreItemsCache;
 
 	public IBackupInstructions BackupInstructions { get; } = new BackupInstructions();
 	public IRestoreInstructions RestoreInstructions { get; } = new RestoreInstructions();
@@ -126,11 +124,6 @@ internal class BackupSystem : IBackupSystem
 
 		lock (_lock)
 		{
-			if (lastCacheTime > DateTime.Now.AddMinutes(-1) && restoreItemsCache is not null)
-			{
-				return restoreItemsCache;
-			}
-
 			var files = Directory.GetFiles(_backupSettings.DestinationFolder, "*.sbak", SearchOption.AllDirectories);
 			var items = new List<IRestoreItem>(files.Length);
 
@@ -148,9 +141,7 @@ internal class BackupSystem : IBackupSystem
 				catch { }
 			}
 
-			lastCacheTime = DateTime.Now;
-
-			return restoreItemsCache = items;
+			return items;
 		}
 	}
 
@@ -211,21 +202,32 @@ internal class BackupSystem : IBackupSystem
 
 			var availableBackups = GetAllBackups();
 
-			SaveBackupItem(MakeSettingsBackup());
-			SaveBackupItem(MakeModsSettingsBackup());
-			SaveBackupItem(await MakePlaysetBackup());
+			if (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.SettingsFiles)) ?? true)
+			{
+				SaveBackupItem(MakeSettingsBackup());
+			}
 
-			if (BackupInstructions.DoSavesBackup)
+			if (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.ModsSettingsFiles)) ?? true)
+			{
+				SaveBackupItem(MakeModsSettingsBackup());
+			}
+
+			if (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.ActivePlayset)) ?? true)
+			{
+				(await MakePlaysetBackup()).Foreach(SaveBackupItem);
+			}
+
+			if (BackupInstructions.DoSavesBackup && (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.SaveGames)) ?? true))
 			{
 				MakeSavesBackup(availableBackups).Foreach(SaveBackupItem);
 			}
 
-			if (BackupInstructions.DoMapsBackup)
+			if (BackupInstructions.DoMapsBackup && (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.Maps)) ?? true))
 			{
 				MakeMapsBackup(availableBackups).Foreach(SaveBackupItem);
 			}
 
-			if (BackupInstructions.DoLocalModsBackup)
+			if (BackupInstructions.DoLocalModsBackup && (_backupSettings.ContentTypes?.Contains(nameof(BackupItem.LocalMods)) ?? true))
 			{
 				MakeLocalModsBackup(availableBackups).Foreach(SaveBackupItem);
 			}
@@ -337,18 +339,32 @@ internal class BackupSystem : IBackupSystem
 		return null;
 	}
 
-	private async Task<IBackupItem?> MakePlaysetBackup()
+	private async Task<IEnumerable<IBackupItem>> MakePlaysetBackup()
 	{
-		var currentPlayset = await _workshopService.GetCurrentPlayset();
+		var playsets = await _workshopService.GetPlaysets(false);
 
-		if (currentPlayset is null)
+		if (playsets is null)
 		{
-			return null;
+			return [];
 		}
 
-		var playset = await _playsetManager.GenerateImportPlayset(currentPlayset);
+		var activePlayset = await _workshopService.GetActivePlaysetId();
 
-		return new BackupItem.ActivePlayset(playset, _playsetManager);
+		var backups = new List<IBackupItem>();
+
+		foreach (var item in playsets)
+		{
+			if (!_backupSettings.BackupAllPlaysets && item.Id != activePlayset)
+			{
+				continue;
+			}
+
+			var playset = await _playsetManager.GenerateImportPlayset(item);
+
+			backups.Add(new BackupItem.ActivePlayset(playset, item, _playsetManager));
+		}
+
+		return backups;
 	}
 
 	private IEnumerable<IBackupItem> MakeLocalModsBackup(List<IRestoreItem> availableBackups)
@@ -407,7 +423,7 @@ internal class BackupSystem : IBackupSystem
 		{
 			entry.ExtractToFile(temp);
 
-			var playset = await _playsetManager.ImportPlayset(temp);
+			var playset = await _playsetManager.ImportPlayset(temp, true);
 
 			if (playset is null)
 			{
@@ -517,10 +533,10 @@ internal class BackupSystem : IBackupSystem
 			_logger.Info("[Backup] Running Cleanup (Count)");
 
 			availableBackups
-				.Where(x => IsLarge(x.MetaData))
-				.OrderByDescending(x => x.MetaData.BackupTime)
+				.GroupBy(x => x.MetaData.BackupTime)
+				.OrderByDescending(x => x.Key)
 				.Skip(_backupSettings.CleanupSettings.MaxBackups)
-				.Foreach(DoCleanup);
+				.Foreach(x => x.Foreach(DoCleanup));
 		}
 
 		availableBackups.RemoveAll(x => x.MetaData.IsArchived);
@@ -585,6 +601,6 @@ internal class BackupSystem : IBackupSystem
 
 	private bool IsLarge(IBackupMetaData metaData)
 	{
-		return metaData.Type is nameof(BackupItem.SaveGames) or nameof(BackupItem.LocalMods);
+		return metaData.Type is nameof(BackupItem.SaveGames) or nameof(BackupItem.LocalMods) or nameof(BackupItem.Maps);
 	}
 }

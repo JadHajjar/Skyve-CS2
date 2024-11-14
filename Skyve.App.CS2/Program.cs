@@ -39,6 +39,10 @@ internal static class Program
 
 		ServiceCenter.Provider.GetService<INotifier>()!.Context = SkyveContext.Application;
 
+		var folderSettings = ServiceCenter.Provider.GetService<ISettings>().FolderSettings;
+
+		folderSettings.AppDataPath = folderSettings.AppDataPath.IfEmpty(App.Program.AppDataPath);
+
 		SystemExtensions.Initialize(ServiceCenter.Provider);
 	}
 

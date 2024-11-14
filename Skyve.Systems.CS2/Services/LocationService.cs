@@ -63,13 +63,15 @@ internal class LocationService : ILocationService
 
 			_logger.Info("Folder Settings:\r\n" +
 				$"Platform: {CrossIO.CurrentPlatform}\r\n" +
+				$"UserIdType: {_settings.FolderSettings.UserIdType}\r\n" +
+				$"UserIdentifier: {_settings.FolderSettings.UserIdentifier}\r\n" +
 				$"GamingPlatform: {_settings.FolderSettings.GamingPlatform}\r\n" +
 				$"GamePath: {_settings.FolderSettings.GamePath}\r\n" +
 				$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
 				$"SteamPath: {_settings.FolderSettings.SteamPath}");
 		}
 
-		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
+		if (!Directory.Exists(_settings.FolderSettings.AppDataPath) || string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier))
 		{
 			if (Directory.Exists(Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II")))
 			{
@@ -138,10 +140,23 @@ internal class LocationService : ILocationService
 	{
 		_logger.Info("First time setup Folder settings:\r\n" +
 			$"Platform: {_settings.FolderSettings.Platform}\r\n" +
+			$"UserIdType: {_settings.FolderSettings.UserIdType}\r\n" +
+			$"UserIdentifier: {_settings.FolderSettings.UserIdentifier}\r\n" +
 			$"GamingPlatform: {_settings.FolderSettings.GamingPlatform}\r\n" +
 			$"GamePath: {_settings.FolderSettings.GamePath}\r\n" +
 			$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
 			$"SteamPath: {_settings.FolderSettings.SteamPath}");
+
+		if (string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier) && Directory.Exists(_settings.FolderSettings.AppDataPath))
+		{
+			var folders = Directory.GetDirectories(CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk")).AllWhere(x => ulong.TryParse(x, out var val) && val > 1000000000000);
+
+			if (folders.Count == 1)
+			{
+				_settings.FolderSettings.UserIdentifier = Path.GetFileName(folders[0]);
+				_settings.FolderSettings.UserIdType = "steam";
+			}
+		}
 
 		try
 		{

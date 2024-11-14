@@ -110,6 +110,10 @@ public class WorkshopService : IWorkshopService
 		{
 			pdxSdkPath = CrossIO.Combine(pdxSdkPath, _settings.FolderSettings.UserIdentifier);
 		}
+		else
+		{
+			return;
+		}
 
 		var config = new Config
 		{
@@ -870,9 +874,19 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await _processor.Queue(async () => await Context.Mods.CreatePlayset(playsetName)));
+		var result = await _processor.Queue(async () =>
+		{
+			if (!ProcessResult(await Context.Mods.CreatePlayset(playsetName)).Success)
+			{
+				return null; 
+			}
 
-		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) : (IPlayset?)null;
+			var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(true));
+
+			return playsets.AllPlaysets?.OrderBy(x => x.PlaysetId).LastOrDefault();
+		});
+
+		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);
 	}
 
 	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, int playset)
@@ -942,9 +956,19 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await _processor.Queue(async () => await Context.Mods.ClonePlayset(id)));
+		var result = await _processor.Queue(async () =>
+		{
+			if (!ProcessResult(await Context.Mods.ClonePlayset(id)).Success)
+			{
+				return null;
+			}
 
-		return result.Success ? new Skyve.Domain.CS2.Content.Playset(result) : (IPlayset?)null;
+			var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(true));
+
+			return playsets.AllPlaysets?.OrderBy(x => x.PlaysetId).LastOrDefault();
+		});
+
+		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);
 	}
 
 	public async Task RunSync()
@@ -1012,6 +1036,8 @@ public class WorkshopService : IWorkshopService
 
 			var playsetFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods", "playsets_metadata");
 			var playsetSettingsFile = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods", "PlaysetSettings");
+			var databaseFile = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk", _settings.FolderSettings.UserIdentifier, "database.json");
+			var cacheJournalFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk", _settings.FolderSettings.UserIdentifier, "cache_journal");
 			var tempFolder = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk", _settings.FolderSettings.UserIdentifier, "temp");
 
 			Process.Start(new ProcessStartInfo()
@@ -1037,6 +1063,16 @@ public class WorkshopService : IWorkshopService
 			if (Directory.Exists(playsetFolder))
 			{
 				new DirectoryInfo(playsetFolder).Delete(true);
+			}
+
+			if (CrossIO.FileExists(databaseFile))
+			{
+				CrossIO.DeleteFile(databaseFile, true);
+			}
+
+			if (Directory.Exists(cacheJournalFolder))
+			{
+				new DirectoryInfo(cacheJournalFolder).Delete(true);
 			}
 		}
 		catch (Exception ex)

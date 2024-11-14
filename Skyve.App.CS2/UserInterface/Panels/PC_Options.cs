@@ -6,6 +6,8 @@ using Skyve.Systems.CS2.Utilities;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -27,7 +29,7 @@ public partial class PC_Options : PanelContent
 			}
 		}
 
-		SlickTip.SetTo(DD_Dependency, LocaleHelper.GetGlobalText($"{DD_Dependency.Text}_Tip"));
+		DD_Dependency.Options = Enum.GetValues(typeof(DependencyResolveBehavior)).Cast<DependencyResolveBehavior>().ToArray(x=> $"Dependency_{x}");
 
 		B_CreateShortcut.Visible = CrossIO.CurrentPlatform is not Platform.Windows;
 
@@ -43,21 +45,26 @@ public partial class PC_Options : PanelContent
 
 	private void ApplyCurrentSettings()
 	{
-		foreach (var cb in this.GetControls<SlickCheckbox>())
+		foreach (var cb in this.GetControls<SlickOptionControl>())
 		{
-			if (!string.IsNullOrWhiteSpace(cb.Tag?.ToString()))
+			if (!string.IsNullOrWhiteSpace(cb.OptionName))
 			{
 				cb.Checked = (bool)_settings.UserSettings.GetType()
-					.GetProperty(cb.Tag!.ToString(), BindingFlags.Instance | BindingFlags.Public)
+					.GetProperty(cb.OptionName, BindingFlags.Instance | BindingFlags.Public)
 					.GetValue(_settings.UserSettings);
-
-				SlickTip.SetTo(cb, LocaleHelper.GetGlobalText($"{cb.Text}_Tip"));
 
 				if (!IsHandleCreated)
 				{
-					cb.CheckChanged += CB_CheckChanged;
+					cb.ValueChanged += CB_CheckChanged;
 				}
 			}
+		}
+
+		DD_Dependency.SelectedOption = (int)_settings.UserSettings.DependencyResolution;
+
+		if (!IsHandleCreated)
+		{
+			DD_Dependency.ValueChanged += DD_Dependency_SelectedItemChanged;
 		}
 	}
 
@@ -131,10 +138,10 @@ public partial class PC_Options : PanelContent
 				return;
 			}
 
-			var cb = (sender as SlickCheckbox)!;
+			var cb = (sender as SlickOptionControl)!;
 
 			_settings.UserSettings.GetType()
-				.GetProperty(cb.Tag!.ToString(), BindingFlags.Instance | BindingFlags.Public)
+				.GetProperty(cb.OptionName, BindingFlags.Instance | BindingFlags.Public)
 				.SetValue(_settings.UserSettings, cb.Checked);
 
 			_settings.UserSettings.Save();
@@ -173,7 +180,7 @@ public partial class PC_Options : PanelContent
 	{
 		try
 		{
-			PlatformUtil.OpenUrl("https://crowdin.com/project/load-order-mod-2");
+			PlatformUtil.OpenUrl("https://skyve-mod.com/translate");
 		}
 		catch { }
 	}
@@ -182,7 +189,7 @@ public partial class PC_Options : PanelContent
 	{
 		try
 		{
-			PlatformUtil.OpenUrl("https://discord.gg/E4k8ZEtRxd");
+			PlatformUtil.OpenUrl("https://skyve-mod.com/discord");
 		}
 		catch { }
 	}
@@ -191,7 +198,7 @@ public partial class PC_Options : PanelContent
 	{
 		try
 		{
-			PlatformUtil.OpenUrl("https://bit.ly/40x93vk");
+			PlatformUtil.OpenUrl("https://skyve-mod.com/guide");
 		}
 		catch { }
 	}
@@ -231,7 +238,7 @@ public partial class PC_Options : PanelContent
 
 	private void B_CreateJunction_Click(object sender, EventArgs e)
 	{
-		var dialog = new IOSelectionDialog();
+		var dialog = new IOSelectionDialog() { StartingFolder = string.Empty };
 
 		if (dialog.PromptFolder(Form) == DialogResult.OK)
 		{
@@ -247,7 +254,8 @@ public partial class PC_Options : PanelContent
 
 				if (dialog.SelectedPath.Length < 5
 					|| new DirectoryInfo(dialog.SelectedPath).Attributes.HasAnyFlag(FileAttributes.System, FileAttributes.ReadOnly, FileAttributes.Temporary)
-					|| invalidPaths.Any(x => dialog.SelectedPath.PathContains(x)))
+					|| invalidPaths.Any(dialog.SelectedPath.PathContains)
+					|| !(HasLocalSystemWriteAccess(dialog.SelectedPath, "BUILTIN\\Users") || HasLocalSystemWriteAccess(dialog.SelectedPath, "BUILTIN\\Administrators")))
 				{
 					ShowPrompt(LocaleCS2.JunctionInvalidFolder, PromptButtons.OK, PromptIcons.Hand);
 					return;
@@ -284,6 +292,45 @@ public partial class PC_Options : PanelContent
 		}
 	}
 
+	public static bool HasLocalSystemWriteAccess(string folderPath, string localSystemAccount)
+	{
+		try
+		{
+			if (!Directory.Exists(folderPath))
+			{
+				return false;
+			}
+
+			var directorySecurity = new DirectoryInfo(folderPath).GetAccessControl();
+
+			var hasAccess = false;
+			var isDenied = false;
+
+			foreach (FileSystemAccessRule rule in directorySecurity.GetAccessRules(true, true, typeof(NTAccount)))
+			{
+				if (!rule.IdentityReference.Value.Equals(localSystemAccount, StringComparison.OrdinalIgnoreCase) || !rule.FileSystemRights.HasFlag(FileSystemRights.Write))
+				{
+					continue;
+				}
+
+				if (rule.AccessControlType == AccessControlType.Allow)
+				{
+					hasAccess = true;
+				}
+				else if (rule.AccessControlType == AccessControlType.Deny)
+				{
+					isDenied = true;
+				}
+			}
+
+			return hasAccess && !isDenied;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
 	private void B_DeleteJunction_Click(object sender, EventArgs e)
 	{
 		if (ShowPrompt(LocaleCS2.JunctionRestart, Locale.RestartRequired, PromptButtons.OKCancel, PromptIcons.Info) != DialogResult.OK)
@@ -298,7 +345,7 @@ public partial class PC_Options : PanelContent
 
 	private void DD_Dependency_SelectedItemChanged(object sender, EventArgs e)
 	{
-		_settings.UserSettings.DependencyResolution = DD_Dependency.SelectedItem;
+		_settings.UserSettings.DependencyResolution = (DependencyResolveBehavior)DD_Dependency.SelectedOption;
 
 		_settings.UserSettings.Save();
 	}

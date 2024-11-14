@@ -88,17 +88,17 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.11.3" />
+  <ModVersion Value="0.12.2" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.11.3
-*Version and Cache changes*
-
+# v0.12.2
 ## Changes
-* Backend improvements to better handle consecutive actions related to PDX Mods.
-* Added Safe-mode shortcut URL: https://skyve-mod.com/app/safemode
-* Various fixes to subscribing and enabling mods and changing versions.
-* Fixed not being able to export a Log Report.
+* Changed the restriction on the backup folder location. Skyve now checks if the folder can be used, instead of just not allowing user folders.
+* Improved the restore UI's performance and added a Clear button to deselect everything.
+* Improved the options screen with an updated UI.
+* Added support for Asset Icon Library thumbnails inside Skyve.
+* Added an option to disable log cleanup on launch.
+* Fixed some asset mods not showing up in the mod list.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

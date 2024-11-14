@@ -35,7 +35,7 @@ public partial class CommentControl : SlickControl
 		L_Time.Text = _comment.Created.ToLocalTime().ToRelatedString();
 		L_AuthorLabel.Visible = _comment.Username == packageIdentity.GetWorkshopInfo()?.Author?.Id?.ToString();
 		L_Version.Text = versionNumber is null ? LocaleCS2.InitialRelease : $"v{versionNumber}";
-		L_Version.CustomBackColor = versionNumber == packageIdentity.GetWorkshopInfo()?.Version ? FormDesign.Design.GreenColor : FormDesign.Design.InfoColor.MergeColor(FormDesign.Design.BackColor);
+		L_Version.CustomBackColor = versionNumber == packageIdentity.GetWorkshopInfo()?.VersionName ? FormDesign.Design.GreenColor : FormDesign.Design.InfoColor.MergeColor(FormDesign.Design.BackColor);
 		L_Unread.Visible = lastRead != default && lastRead < _comment.Created;
 		L_Unread.CustomBackColor = FormDesign.Design.RedColor;
 

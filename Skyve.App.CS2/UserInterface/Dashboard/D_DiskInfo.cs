@@ -15,7 +15,6 @@ internal class D_DiskInfo : IDashboardItem
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
 	private readonly INotifier _notifier;
-	private readonly IBackupSystem _backupSystem;
 
 	private ContentInfo? info;
 
@@ -29,7 +28,6 @@ internal class D_DiskInfo : IDashboardItem
 		internal long TotalSavesSize;
 		internal long TotalSubbedSize;
 		internal long TotalOtherSize;
-		internal long TotalBackupSize;
 		internal bool CriticalSpace;
 		internal bool LowSpace;
 		internal string? DriveLetter;
@@ -38,7 +36,7 @@ internal class D_DiskInfo : IDashboardItem
 
 	public D_DiskInfo()
 	{
-		ServiceCenter.Get(out _logger, out _settings, out _notifier, out _backupSystem);
+		ServiceCenter.Get(out _logger, out _settings, out _notifier);
 	}
 
 	protected override void OnCreateControl()
@@ -78,7 +76,6 @@ internal class D_DiskInfo : IDashboardItem
 		contentInfo.AvailableSpace = drive.AvailableFreeSpace;
 		contentInfo.TotalSpace = drive.TotalSize;
 		contentInfo.IsJunctionSet = !string.IsNullOrEmpty(junctionLocation);
-		contentInfo.TotalBackupSize = _backupSystem.GetBackupsSizeOnDisk();
 
 		if (token.IsCancellationRequested)
 		{
@@ -153,11 +150,6 @@ internal class D_DiskInfo : IDashboardItem
 		preferredHeight += BorderRadius;
 
 		DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalCitiesSize, info.TotalCitiesSize.SizeString(), applyDrawing, ref preferredHeight, "CS");
-
-		if (info.TotalBackupSize > 0)
-		{
-			DrawValue(e, e.ClipRectangle.Pad(Margin), LocaleCS2.TotalBackupSize, info.TotalBackupSize.SizeString(), applyDrawing, ref preferredHeight, "SafeShield");
-		}
 
 		preferredHeight += BorderRadius;
 
