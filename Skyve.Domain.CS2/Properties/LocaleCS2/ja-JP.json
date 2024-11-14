@@ -192,5 +192,7 @@
   },
   "CorruptedSettingsFilesBackupAvailable": "Skyveは利用可能なバックアップを見つけ、設定を以前の状態に復元します。 \n\n今すぐ復元するには、こちらをクリックしてください。",
   "CorruptedSettingsFilesNoBackup": "復元するバックアップはありません。データを保護するためにバックアップを設定してください。\n\n破損したファイルを削除するには、ここをクリックしてください。",
-  "RecentBackups": "最近のバックアップ"
+  "RecentBackups": "最近のバックアップ",
+  "DisableLogCleanup": "Disable logs cleanup when launching the game",
+  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
 }
