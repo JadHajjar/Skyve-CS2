@@ -193,6 +193,6 @@
   "CorruptedSettingsFilesBackupAvailable": "O Skyve encontrou cópias de segurança disponíveis para restaurar as tuas definições para o estado anterior.",
   "CorruptedSettingsFilesNoBackup": "Nehuma cópia de segurança está disponível para restaurar as tuas definições. Define as tuas cópias de segurança de definições para guardar as tuas definições no futuro.",
   "RecentBackups": "Cópias de segurança recentes",
-  "DisableLogCleanup": "Disable logs cleanup when launching the game",
-  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
+  "DisableLogCleanup": "Desativar limpeza de logs ao iniciar o jogo",
+  "DisableLogCleanup_Tip": "Salta a eliminação da pasta de logs quando inicias o jogo através do Skyve."
 }
