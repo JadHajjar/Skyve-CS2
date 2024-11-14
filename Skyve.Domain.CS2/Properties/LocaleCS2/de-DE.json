@@ -192,5 +192,7 @@
   },
   "CorruptedSettingsFilesBackupAvailable": "Skyve hat verfügbare Sicherungen gefunden, um deine Einstellungen in ihrem vorherigen Zustand wiederherzustellen.\n\nKlicke hier, um sie jetzt wiederherzustellen.",
   "CorruptedSettingsFilesNoBackup": "Es sind keine Sicherungen verfügbar, um Ihre Einstellungen wiederherzustellen. Richten Sie Ihre Einstellungs-Sicherungen ein, um Ihre Einstellungen in Zukunft zu sichern.\n\nKlicken Sie hier, um die beschädigten Dateien zu löschen.",
-  "RecentBackups": "Neueste Sicherungen"
+  "RecentBackups": "Neueste Sicherungen",
+  "DisableLogCleanup": "Disable logs cleanup when launching the game",
+  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
 }
