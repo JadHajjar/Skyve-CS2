@@ -97,6 +97,7 @@ public partial class PC_BackupCenter : PanelContent
 
 		TB_DestinationFolder.Text = settings.DestinationFolder;
 		CB_IncludeAutoSaves.Checked = !settings.IgnoreAutoSaves;
+		CB_BackupAllPlaysets.Checked = settings.BackupAllPlaysets;
 		CB_ScheduleAtTimes.Checked = settings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnScheduledTimes);
 		CB_ScheduleOnGameClose.Checked = settings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnGameClose);
 		CB_ScheduleOnNewSave.Checked = settings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnNewSaveGame);
@@ -228,6 +229,7 @@ public partial class PC_BackupCenter : PanelContent
 
 		settings.DestinationFolder = TB_DestinationFolder.Text;
 		settings.IgnoreAutoSaves = !CB_IncludeAutoSaves.Checked;
+		settings.BackupAllPlaysets = CB_BackupAllPlaysets.Checked;
 
 		settings.ContentTypes = P_ContentTypes.Controls.OfType<SlickToggleTile>().Where(x => x.Selected).Select(x => x.Tag.ToString()).ToArray();
 

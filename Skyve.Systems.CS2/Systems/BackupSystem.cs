@@ -348,10 +348,17 @@ internal class BackupSystem : IBackupSystem
 			return [];
 		}
 
+		var activePlayset = await _workshopService.GetActivePlaysetId();
+
 		var backups = new List<IBackupItem>();
 
 		foreach (var item in playsets)
 		{
+			if (!_backupSettings.BackupAllPlaysets && item.Id != activePlayset)
+			{
+				continue;
+			}
+
 			var playset = await _playsetManager.GenerateImportPlayset(item);
 
 			backups.Add(new BackupItem.ActivePlayset(playset, item, _playsetManager));
