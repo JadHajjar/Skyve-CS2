@@ -2,15 +2,15 @@
   "StartCities": "Abrir Cities: Skylines II",
   "StopCities": "Fechar Cities: Skylines II",
   "NoWorkshop": "Desativar pacotes do workshop",
-  "ExcludeAll": "Remover todos os itens do teu conjunto ativo",
-  "ExcludeAllDisabled": "Remover todos os itens desativados do teu conjunto ativo",
-  "IncludeAll": "Adicionar todos os itens ao teu conjunto ativo",
-  "ExcludeAllFiltered": "Remover itens filtrados do teu conjunto ativo",
-  "ExcludeAllDisabledFiltered": "Remover itens filtrados e desativados do teu conjunto ativo",
-  "IncludeAllFiltered": "Adicionar itens filtrados ao teu conjunto ativo",
-  "ExcludeAllSelected": "Remover itens selecionados do teu conjunto ativo",
-  "ExcludeAllDisabledSelected": "Remover itens selecionados e desativados do teu conjunto ativo",
-  "IncludeAllSelected": "Adicionar itens selecionados ao teu conjunto ativo",
+  "ExcludeAll": "Remover todos os elementos do teu conjunto ativo",
+  "ExcludeAllDisabled": "Remover todos os elementos desativados do teu conjunto ativo",
+  "IncludeAll": "Adicionar todos os elementos ao teu conjunto ativo",
+  "ExcludeAllFiltered": "Remover elementos filtrados do teu conjunto ativo",
+  "ExcludeAllDisabledFiltered": "Remover elementos filtrados e desativados do teu conjunto ativo",
+  "IncludeAllFiltered": "Adicionar elementos filtrados ao teu conjunto ativo",
+  "ExcludeAllSelected": "Remover elementos selecionados do teu conjunto ativo",
+  "ExcludeAllDisabledSelected": "Remover elementos selecionados e desativados do teu conjunto ativo",
+  "IncludeAllSelected": "Adicionar elementos selecionados ao teu conjunto ativo",
   "ViewOnWorkshop": "Ver no PDX Mods",
   "CopyWorkshopLink": {
     "One": "Copiar ligação do PDX Mods",
@@ -33,11 +33,11 @@
   },
   "IncludeThisItemInAllPlaysets": {
     "One": "Adicionar a todos os teus conjuntos",
-    "Plural": "Adicionar os itens selecionados a todos os teus conjuntos"
+    "Plural": "Adicionar os elementos selecionados a todos os teus conjuntos"
   },
   "ExcludeThisItemInAllPlaysets": {
     "One": "Remover de todos os teus conjuntos",
-    "Plural": "Remover os itens selecionados de todos os teus conjuntos"
+    "Plural": "Remover os elementos selecionados de todos os teus conjuntos"
   },
   "PackageIsRemoved": "'{0}' foi removido do PDX Mods",
   "PackageIsUnknown": "A informação do PDX Mods ainda não foi carregada para '{0}'",
@@ -192,5 +192,7 @@
   },
   "CorruptedSettingsFilesBackupAvailable": "O Skyve encontrou cópias de segurança disponíveis para restaurar as tuas definições para o estado anterior.",
   "CorruptedSettingsFilesNoBackup": "Nehuma cópia de segurança está disponível para restaurar as tuas definições. Define as tuas cópias de segurança de definições para guardar as tuas definições no futuro.",
-  "RecentBackups": "Cópias de segurança recentes"
+  "RecentBackups": "Cópias de segurança recentes",
+  "DisableLogCleanup": "Disable logs cleanup when launching the game",
+  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
 }
