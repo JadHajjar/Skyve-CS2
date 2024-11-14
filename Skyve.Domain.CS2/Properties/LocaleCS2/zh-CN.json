@@ -192,5 +192,7 @@
   },
   "CorruptedSettingsFilesBackupAvailable": "Skyve 已找到可用的备份，可以将您的设置恢复到之前的状态。 \n点击此处开始恢复。",
   "CorruptedSettingsFilesNoBackup": "没有可用的备份来恢复您的设置。请启用备份，以保护您的设置。\n点击此处删除损坏的文件。",
-  "RecentBackups": "最近备份"
+  "RecentBackups": "最近备份",
+  "DisableLogCleanup": "Disable logs cleanup when launching the game",
+  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
 }
