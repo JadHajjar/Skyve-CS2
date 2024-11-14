@@ -192,5 +192,7 @@
   },
   "CorruptedSettingsFilesBackupAvailable": "Skyve znalazł dostępne kopie zapasowe, aby przywrócić ustawienia do poprzedniego stanu.\n\nKliknij tutaj, aby je teraz przywrócić.",
   "CorruptedSettingsFilesNoBackup": "Brak dostępnej kopii zapasowej do przywrócenia ustawień. Ustaw ustawienia kopii zapasowej, aby zabezpieczyć swoje ustawienia w przyszłości.\n\nKliknij tutaj, aby usunąć uszkodzone pliki.",
-  "RecentBackups": "Ostatnie kopie zapasowe"
+  "RecentBackups": "Ostatnie kopie zapasowe",
+  "DisableLogCleanup": "Disable logs cleanup when launching the game",
+  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
 }
