@@ -289,9 +289,12 @@ public partial class PC_BackupCenter : PanelContent
 		if (TB_DestinationFolder.Text.PathContains(ServiceCenter.Get<ISettings>().FolderSettings.AppDataPath)
 			|| !HasLocalSystemWriteAccess(TB_DestinationFolder.Text))
 		{
-			TB_DestinationFolder.Text = string.Empty;
+			if (ShowPrompt(Locale.ChooseDifferentBackupLocation, Locale.InvalidFolder, PromptButtons.OKIgnore, PromptIcons.Error) == DialogResult.Ignore)
+			{
+				return;
+			}
 
-			ShowPrompt(Locale.ChooseDifferentBackupLocation, Locale.InvalidFolder, icon: PromptIcons.Error);
+			TB_DestinationFolder.Text = string.Empty;
 
 			BeginInvoke(() =>
 			{

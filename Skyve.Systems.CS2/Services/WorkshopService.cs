@@ -110,6 +110,10 @@ public class WorkshopService : IWorkshopService
 		{
 			pdxSdkPath = CrossIO.Combine(pdxSdkPath, _settings.FolderSettings.UserIdentifier);
 		}
+		else
+		{
+			return;
+		}
 
 		var config = new Config
 		{
