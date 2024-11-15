@@ -193,6 +193,6 @@
   "CorruptedSettingsFilesBackupAvailable": "Skyve našla dostupné zálohy, aby obnovila vaše nastavení na jejich předchozí stav.\n\nKlikněte zde pro jejich obnovení.",
   "CorruptedSettingsFilesNoBackup": "K obnovení nastavení nejsou k dispozici žádné zálohy. Nastavte si zálohu nastavení, abyste zajistili vaše nastavení v budoucnu.\n\nKlikněte zde pro odstranění poškozených souborů.",
   "RecentBackups": "Nedávné zálohy",
-  "DisableLogCleanup": "Disable logs cleanup when launching the game",
-  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
+  "DisableLogCleanup": "Zakázat odstranění logů při spuštění hry",
+  "DisableLogCleanup_Tip": "Přeskočí smazání složky Logs při spuštění hry přes Skyve."
 }
