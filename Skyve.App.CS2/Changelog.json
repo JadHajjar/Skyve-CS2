@@ -2,7 +2,52 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.12.4",
+    "Date": "2024-11-16",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added a restriction when changing content locations to prevent accidental loss of data."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.12.3",
+    "Date": "2024-11-15",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added an option to choose between backing up all your playsets or just your active playset.",
+          "Added an automatic setup when selecting a backup location which should help with invalid folders, in some cases.",
+          "Made the warning about 'Invalid Folder' when selecting a backup location by-passable.",
+          "Updated translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.12.2",
+    "Date": "2024-11-13",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added support for Asset Icon Library thumbnails inside Skyve."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.12.1",
     "Date": "2024-11-13",
     "ChangeGroups": [
       {
@@ -11,7 +56,6 @@
           "Changed the restriction on the backup folder location. Skyve now checks if the folder can be used, instead of just not allowing user folders.",
           "Improved the restore UI's performance and added a Clear button to deselect everything.",
           "Improved the options screen with an updated UI.",
-          "Added support for Asset Icon Library thumbnails inside Skyve.",
           "Added an option to disable log cleanup on launch.",
           "Fixed some asset mods not showing up in the mod list."
         ]

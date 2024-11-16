@@ -246,6 +246,7 @@ public partial class PC_Options : PanelContent
 			{
 				var invalidPaths = new[]
 				{
+					App.Program.CurrentDirectory,
 					Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
 					Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
 					"C:/windows" +

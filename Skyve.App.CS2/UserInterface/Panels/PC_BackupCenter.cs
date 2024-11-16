@@ -286,8 +286,7 @@ public partial class PC_BackupCenter : PanelContent
 			return;
 		}
 
-		if (TB_DestinationFolder.Text.PathContains(ServiceCenter.Get<ISettings>().FolderSettings.AppDataPath)
-			|| !HasLocalSystemWriteAccess(TB_DestinationFolder.Text))
+		if (IsInvalidPath(TB_DestinationFolder.Text))
 		{
 			if (ShowPrompt(Locale.ChooseDifferentBackupLocation, Locale.InvalidFolder, PromptButtons.OKIgnore, PromptIcons.Error) == DialogResult.Ignore)
 			{
@@ -304,6 +303,53 @@ public partial class PC_BackupCenter : PanelContent
 				}
 			});
 		}
+	}
+
+	private bool IsInvalidPath(string path)
+	{
+		if (path.PathContains(ServiceCenter.Get<ISettings>().FolderSettings.AppDataPath))
+		{
+			return true;
+		}
+
+		if (HasLocalSystemWriteAccess(path))
+		{
+			return false;
+		}
+
+		try
+		{
+			GiveLocalSystemAccess(path);
+		}
+		catch { }
+
+		return !HasLocalSystemWriteAccess(path);
+	}
+
+	private void GiveLocalSystemAccess(string folderPath)
+	{
+		var directoryInfo = new DirectoryInfo(folderPath);
+		var directorySecurity = directoryInfo.GetAccessControl();
+		var accessRule = new FileSystemAccessRule(
+			"SYSTEM",
+			FileSystemRights.Read | FileSystemRights.Write | FileSystemRights.Modify,
+			InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+			PropagationFlags.None,
+			AccessControlType.Allow
+		);
+
+		var denyRule = new FileSystemAccessRule(
+			"SYSTEM",
+			FileSystemRights.Read | FileSystemRights.Write | FileSystemRights.Modify,
+			InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+			PropagationFlags.None,
+			AccessControlType.Deny
+		);
+
+		directorySecurity.AddAccessRule(accessRule);
+		directorySecurity.RemoveAccessRule(denyRule);
+
+		directoryInfo.SetAccessControl(directorySecurity);
 	}
 
 	public static bool HasLocalSystemWriteAccess(string folderPath)

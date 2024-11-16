@@ -35,7 +35,10 @@ public class Installer
 
 		try
 		{
-			targetFolder.Delete(true);
+			if (!Directory.Exists(Path.Combine(INSTALL_PATH, "Cities Skylines II")))
+			{
+				targetFolder.Delete(true);
+			}
 		}
 		catch { }
 
