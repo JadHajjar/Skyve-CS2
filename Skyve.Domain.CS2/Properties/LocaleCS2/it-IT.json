@@ -98,11 +98,11 @@
   "RunSync": "Avvia Sincronizzazione",
   "PDXModsNew": "Novità su PDX Mods",
   "PDXModsUpdated": "Aggiornato di recente su PDX Mod",
-  "PDXModsPopularWeek": "Popular mods from last week",
-  "DiskStatus": "Stato Del Disco",
-  "TotalCitiesSize": "Totale Dati Utente C:S II Archiviati",
+  "PDXModsPopularWeek": "Mod popolari della scorsa settimana",
+  "DiskStatus": "Stato del disco",
+  "TotalCitiesSize": "Totale dati utente C:S II Archiviati",
   "TotalSavesSize": "Dimensione salvataggi",
-  "TotalSubbedSize": "Dimensioni Sottoscrizioni",
+  "TotalSubbedSize": "Dimensioni sottoscrizioni",
   "TotalOtherSize": "Dimensione Altri File",
   "FreeSpace": "{0} liberi",
   "UsedOutOfSpace": "fuori dall' {0} sul disco {1}",
@@ -152,47 +152,47 @@
   "Tag_Building": "Edificio",
   "Tag_Building Extension": "Estensione dell'edificio",
   "Tag_Zone": "Zona",
-  "Tag_Asset Pack": "Asset Pack",
+  "Tag_Asset Pack": "Pacchetto asset",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "Salvataggio",
+    "Plural": "{0} salvataggi"
   },
   "Backup_Maps": {
-    "One": "Map",
-    "Plural": "{0} maps"
+    "One": "Mappa",
+    "Plural": "{0} mappe"
   },
   "Backup_ActivePlayset": {
     "One": "Playset",
-    "Plural": "{0} playsets"
+    "Plural": "{0} playset"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "File di impostazioni",
+    "Plural": "{0} file di impostazioni"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
-    "Plural": "{0} mod settings folders"
+    "One": "Cartelle delle impostazioni delle mod",
+    "Plural": "{0} cartelle delle impostazioni delle mod"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Mod locale",
+    "Plural": "{0} mod locali"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
-  "BackupStartingNow": "Automatic backup starting now...",
-  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
-  "NoSettingsBackup": "No available settings backup available",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "ParadoxContextFailed": "Caricamento dell'interfaccia di Paradox non riuscito",
+  "ParadoxContextFailedInfo": "Qualcosa sta causando il fallimento dell'interfaccia di Paradox.  \nClicca su questo messaggio per tentare di ripararlo.  \n\nSe la riparazione non ha successo, chiedi aiuto nei forum di supporto tecnico.",
+  "BackupStartingNow": "Avvio del backup automatico in corso...",
+  "BackupServiceUnavailable": "Il servizio Skyve non è installato. I backup automatici funzioneranno solo quando l'app Skyve è aperta.",
+  "BackupServiceAvailable": "Servizio Skyve online",
+  "NextScheduledBackup": "Il prossimo backup programmato è {0}",
+  "LastSettingsBackup": "L'ultimo backup delle impostazioni è stato {0}",
+  "NoSettingsBackup": "Nessun backup delle impostazioni disponibile",
+  "RestoreLatestSettings": "Ripristina l'ultimo backup delle impostazioni",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "One": "Rilevato file delle impostazioni corrotto",
+    "Plural": "Rilevati {0} file delle impostazioni corrotti"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups",
-  "DisableLogCleanup": "Disable logs cleanup when launching the game",
-  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
+  "CorruptedSettingsFilesBackupAvailable": "Skyve ha trovato backup disponibili per ripristinare le impostazioni allo stato precedente.  \n\nClicca qui per ripristinarle ora.",
+  "CorruptedSettingsFilesNoBackup": "Nessun backup disponibile per ripristinare le impostazioni. Configura le impostazioni di backup per proteggere le tue impostazioni in futuro.  \n\nClicca qui per eliminare i file corrotti.",
+  "RecentBackups": "Backup recenti",
+  "DisableLogCleanup": "Disabilita la pulizia dei log all'avvio del gioco",
+  "DisableLogCleanup_Tip": "Salta l'eliminazione della cartella Logs durante l'avvio del gioco tramite Skyve."
 }
