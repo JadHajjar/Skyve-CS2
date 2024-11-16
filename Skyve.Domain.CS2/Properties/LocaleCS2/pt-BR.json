@@ -193,6 +193,6 @@
   "CorruptedSettingsFilesBackupAvailable": "Skyve encontrou backups disponíveis para restaurar suas configurações para o estado anterior.",
   "CorruptedSettingsFilesNoBackup": "Não há backups disponíveis para restaurar suas configurações. Defina suas configurações de backup para proteger suas configurações no futuro.\n\nClique aqui para excluir os arquivos corrompidos.",
   "RecentBackups": "Backups Recentes",
-  "DisableLogCleanup": "Disable logs cleanup when launching the game",
-  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
+  "DisableLogCleanup": "Desativar limpeza de logs ao iniciar o jogo",
+  "DisableLogCleanup_Tip": "Pula a exclusão da pasta Logs ao iniciar o jogo pelo Skyve."
 }
