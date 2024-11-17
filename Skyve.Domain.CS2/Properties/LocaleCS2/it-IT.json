@@ -21,7 +21,7 @@
     "Plural": "Copia i link PDX Mods dei pacchetti selezionati come Markdown"
   },
   "CopyWorkshopId": {
-    "One": "Copia ID di PDX Mods",
+    "One": "Copia l'ID di PDX Mods",
     "Plural": "Copia gli ID dei pacchetti PDX Mods selezionati"
   },
   "LaunchThroughCities": "Avvia tramite Cities2.exe",
@@ -46,7 +46,7 @@
   "ResetSteamCache": "Svuota le cache del PDX Mods",
   "ParadoxLoginFailedTitle": "Impossibile effettuare il login del PDX Mods",
   "ParadoxLoginFailedNoConnection": "Non sei connesso a internet, controlla la tua connessione e riprova.",
-  "ParadoxLoginFailedBadCredentials": "Il tuo username/password salvati sono errati. Clicca qui per aggiornare le tue informazioni.",
+  "ParadoxLoginFailedBadCredentials": "I tuoi username/password salvati sono errati. Clicca qui per aggiornare le tue informazioni.",
   "ParadoxLoginFailedEmpty": "Probabilmente la tua sessione è scaduta. Prova ad avviare il gioco per accedere di nuovo, o clicca qui per accedere tramite Skyve.",
   "DownloadComplete": "Download completato",
   "DownloadFailed": "Download non riuscito",
