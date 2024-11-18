@@ -132,7 +132,7 @@
   "Sorting_DateUpdated": "Ostatnia aktualizacja",
   "Sorting_DateCreated": "Najnowsze",
   "Sorting_WorkshopName": "Alfabetycznie",
-  "InitialRelease": "Initial Release",
+  "InitialRelease": "Pierwsze wydanie",
   "ForumPage": "Strona na forum",
   "DisableBurstCompile": "Wyłącz Burst-Compilation",
   "UnreadComment": "Nowe komentarze do '{0}'",
@@ -194,5 +194,5 @@
   "CorruptedSettingsFilesNoBackup": "Brak dostępnej kopii zapasowej do przywrócenia ustawień. Ustaw ustawienia kopii zapasowej, aby zabezpieczyć swoje ustawienia w przyszłości.\n\nKliknij tutaj, aby usunąć uszkodzone pliki.",
   "RecentBackups": "Ostatnie kopie zapasowe",
   "DisableLogCleanup": "Wyłącz czyszczenie logów przy uruchomianiu gry",
-  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
+  "DisableLogCleanup_Tip": "Pomija usuwanie folderu logów przy uruchamianiu gry przez Skyve."
 }
