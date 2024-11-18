@@ -2,15 +2,15 @@
   "StartCities": "Starte Cities: Skylines II",
   "StopCities": "Schließe Cities: Skylines II",
   "NoWorkshop": "Workshop-Pakete deaktivieren",
-  "ExcludeAll": "Entferne alle Elemente aus deinem aktiven Playset",
-  "ExcludeAllDisabled": "Entferne alle deaktivierten Elemente aus deinem aktiven Playset",
-  "IncludeAll": "Füge alle Elemente zum aktiven playset hinzu",
-  "ExcludeAllFiltered": "Entferne gefilterte Elemente aus dem aktiven Playset",
-  "ExcludeAllDisabledFiltered": "Entferne gefilterte und deaktivierte Items aus den aktiven Playset",
-  "IncludeAllFiltered": "Gefilterte Elemente zum aktiven Playset hinzufügen",
-  "ExcludeAllSelected": "Entferne ausgewählte Elemente aus dem aktiven Playset",
-  "ExcludeAllDisabledSelected": "Entferne ausgewählte & deaktivierte Elemente aus dem aktiven Playset",
-  "IncludeAllSelected": "Ausgewählte Elemente zu aktiven Playset hinzufügen",
+  "ExcludeAll": "Entferne alle Elemente aus deinem aktiven Spielset",
+  "ExcludeAllDisabled": "Entferne alle deaktivierten Elemente aus deinem aktiven Spielset",
+  "IncludeAll": "Füge alle Elemente zum aktiven Spielset hinzu",
+  "ExcludeAllFiltered": "Entferne gefilterte Elemente aus dem aktiven Spielset",
+  "ExcludeAllDisabledFiltered": "Entferne gefilterte & deaktivierte Elemente aus dem aktiven Spielset",
+  "IncludeAllFiltered": "Gefilterte Elemente zum aktiven Spielset hinzufügen",
+  "ExcludeAllSelected": "Entferne ausgewählte Elemente aus dem aktiven Spielset",
+  "ExcludeAllDisabledSelected": "Entferne ausgewählte & deaktivierte Elemente aus dem aktiven Spielset",
+  "IncludeAllSelected": "Ausgewählte Elemente zum aktiven Spielset hinzufügen",
   "ViewOnWorkshop": "Auf PDX Mods anzeigen",
   "CopyWorkshopLink": {
     "One": "PDX Mods Link kopieren",
@@ -25,19 +25,19 @@
     "Plural": "PDX Mods IDs der ausgewählten Pakete kopieren"
   },
   "LaunchThroughCities": "Start durch Cities2.exe",
-  "IncludeItem": "Zum aktiven Playset hinzufügen",
-  "ExcludeItem": "Aus aktiven Playset entfernen",
+  "IncludeItem": "Zum aktiven Spielset hinzufügen",
+  "ExcludeItem": "Aus aktivem Spielset entfernen",
   "SubscribeToItem": {
-    "One": "Zum aktiven Playset hinzufügen",
-    "Plural": "Füge diese zu deinem aktiven Playset hinzu"
+    "One": "Zum aktiven Spielset hinzufügen",
+    "Plural": "Füge diese zu deinem Spielset Playset hinzu"
   },
   "IncludeThisItemInAllPlaysets": {
-    "One": "Zu allen Playsets hinzufügen",
-    "Plural": "Ausgewählt Elemente zu allen Playsets hinzufügen"
+    "One": "Zu allen Spielsets hinzufügen",
+    "Plural": "Ausgewählte Elemente zu allen Spielsets hinzufügen"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Entferne von allen deinen Playsets",
-    "Plural": "Ausgewählte Elemente aus allen Playsets entfernen"
+    "One": "Entferne von all deinen Spielsets",
+    "Plural": "Ausgewählte Elemente aus allen Spielsets entfernen"
   },
   "PackageIsRemoved": "'{0}' ist auf PDX Mods nicht mehr verfügbar",
   "PackageIsUnknown": "Die Informationen von PDX Mods für '{0}' wurden noch nicht geladen",
@@ -46,8 +46,8 @@
   "ResetSteamCache": "PDX Mods Cache leeren",
   "ParadoxLoginFailedTitle": "Konnte dich nicht bei PDX Mods anmelden",
   "ParadoxLoginFailedNoConnection": "Du musst mit dem Internet verbunden sein, um dich anzumelden. Bitte überprüfe deine Internetverbindung und versuche es erneut.",
-  "ParadoxLoginFailedBadCredentials": "Ihr gespeicherter Benutzername/Passwort konnte sich nicht einloggen. Klicken Sie hier, um Ihre Daten zu aktualisieren.",
-  "ParadoxLoginFailedEmpty": "Ihre Sitzung ist wahrscheinlich abgelaufen. Versuchen Sie, das Spiel zu starten, um sich erneut anzumelden, oder klicken Sie hier, um sich über Skyve anzumelden.",
+  "ParadoxLoginFailedBadCredentials": "Dein gespeicherter Benutzername/Passwort konnte sich nicht einloggen. Klicke hier, um Deine Daten zu aktualisieren.",
+  "ParadoxLoginFailedEmpty": "Deine Sitzung ist wahrscheinlich abgelaufen. Versuche, das Spiel zu starten, um dich erneut anzumelden, oder klicke hier, um dich über Skyve anzumelden.",
   "DownloadComplete": "Herunterladen abgeschlossen",
   "DownloadFailed": "Download fehlgeschlagen",
   "Downloading": "Wird heruntergeladen...",
@@ -56,14 +56,14 @@
     "Plural": "Einige Mods konnten nicht heruntergeladen werden"
   },
   "LoginToParadox": "Bei Paradox anmelden",
-  "LoginFailed": "Anmeldung fehlgeschlagen, stellen Sie sicher, dass Ihre E-Mail und Ihr Passwort korrekt sind. Oder versuchen Sie es später erneut.",
-  "RememberMeInfo": "* Ihre Zugangsdaten werden verschlüsselt und auf Ihrem Computer gespeichert.",
+  "LoginFailed": "Anmeldung fehlgeschlagen, stelle sicher, dass Deine E-Mail und Dein Passwort korrekt sind. Oder versuche es später erneut.",
+  "RememberMeInfo": "* Deine Zugangsdaten werden verschlüsselt und auf Deinem Computer gespeichert.",
   "LoginDisclaimer": "Der Login-Prozess wird sicher über Paradox-Dienste abgewickelt und keine Daten werden an Skyve weitergegeben.",
-  "DropNewPlayset": "Zum Importieren eine Playset datei hier ablegen oder auswählen",
+  "DropNewPlayset": "Zum Importieren, eine Spielsetdatei hier ablegen oder auswählen",
   "FilterIncludedByDefault": "Aktiviere standardmäßig den 'Inbegriffen'-Filter für lokale Inhalte",
-  "FilterIncludedByDefault_Tip": "Nur lokale Inhalte anzeigen, die standardmäßig in Ihrem aktiven Playset enthalten sind.",
-  "RunSetupOrRunApp": "Sie können Skyve nicht in diesem Ordner ausführen. Wenn Sie es bereits installiert haben, führen Sie es aus Ihrer Programmeliste aus.\n\nWenn nicht, klicke auf 'Ok', um das Setup auszuführen.",
-  "CantRunAppFromHere": "Sie können Skyve nicht von diesem Ordner aus starten.\n\nFühren Sie entweder die App aus Ihrer Programmliste aus oder führen Sie das Skyve Setup aus dem Mod Ordner aus.",
+  "FilterIncludedByDefault_Tip": "Nur lokale Inhalte anzeigen, die standardmäßig in Deinem aktiven Spielset enthalten sind.",
+  "RunSetupOrRunApp": "Du kannst Skyve nicht in diesem Ordner ausführen. Wenn Du es bereits installiert hast, führe es aus Deiner Programmliste aus.\n\nWenn nicht, klicke auf 'Ok', um das Setup auszuführen.",
+  "CantRunAppFromHere": "Du kannst Skyve nicht von diesem Ordner aus starten.\n\nFühre entweder die App aus Deiner Programmliste aus oder führe das Skyve-Setup aus dem Mod Ordner aus.",
   "UpdateAvailable": "Neue Version verfügbar",
   "UpdateAvailableInfo": "Zum Aktualisieren hier anklicken",
   "VoteMod": "Gefällt mir",
@@ -71,15 +71,15 @@
   "LogLevel": "Log-Level",
   "ParadoxAccount": "Paradox-Konto",
   "LoggingIn": "Anmelden...",
-  "NotLoggedInCheckNotification": "Sie sind nicht bei Paradox angemeldet, überprüfen Sie Ihre Benachrichtigungen auf weitere Informationen.",
+  "NotLoggedInCheckNotification": "Du bist nicht bei Paradox angemeldet, überprüfe Deine Benachrichtigungen auf weitere Informationen.",
   "HideUserSection": "Profil im Hauptmenü ausblenden",
   "DeveloperMode": "Entwicklermodus aktivieren",
   "UIDeveloperMode": "UI-Entwicklermodus aktivieren",
   "LogsToPlayerLog": "Logs nach Player.log kopieren",
   "InvalidFolderSettings": "Ungültiges Setup erkannt",
-  "InvalidFolderSettingsInfo": "Skyve konnte den  Cities:Skylines II Ordner nicht finden.\n\nKlicken Sie hier, um den Ordner manuell auszuwählen.",
+  "InvalidFolderSettingsInfo": "Skyve konnte den Cities: Skylines II Ordner nicht finden.\n\nKlicke hier, um den Ordner manuell auszuwählen.",
   "SkyvenotSetUpInfo": "Skyve wurde noch nicht eingerichtet. Bitte starte Cities: Skylines II mit aktiviertem Skyve, um die Einrichtung abzuschließen.\n\nStelle dann sicher, dass die Mods erfolgreich geladen wurden und wenn nicht, versuche ein neues Spielset zu erstellen, das nur Skyve enthält.",
-  "InvalidFolderSettingsFail": "Der ausgewählte Pfad ist nicht korrekt. Bitte wählen Sie den Ordner \"Städte Skylines II\" in Ihren App-Daten.",
+  "InvalidFolderSettingsFail": "Der ausgewählte Pfad ist nicht korrekt. Bitte wähle den \"Cities Skylines II\"-Ordner unter App-Data aus.",
   "DefaultLocation": "Standard Benutzerdatenort",
   "JunctionTitle": "Benutzerdefinierter Inhaltsort",
   "JunctionDescription": "Ändere den Speicherort an dem Spielinhalte gespeichert werden. Das beinhaltet Mods, Assets und Einstellungen.\n\nSkyve erstellt dafür eine Verknüpfung zwischen dem gewünschten Speicherort und dem normalen Speicherort.",
@@ -87,7 +87,7 @@
   "ChangeLocation": "Inhaltsort ändern",
   "ResetLocation": "Standort zurücksetzen",
   "JunctionRestart": "Skyve und Cities: Skylines II wird während dieses Prozesses geschlossen.\n\nSkyve wird automatisch neu starten, sobald es beendet ist.",
-  "PlaysetAlreadyImported": "Dieses Playset ist bei dir bereits  vorhanden.",
+  "PlaysetAlreadyImported": "Dieses Spielset ist bei dir bereits vorhanden.",
   "JunctionInvalidFolder": "Der ausgewählte Ordner ist kein gültiges Ziel. Bitte wähle einen anderen.",
   "CouldNotRetrieveMods": "Konnte Mod-Daten nicht abrufen",
   "NewGameUpdate": "Neues Cities: Skylines II Update",
@@ -100,30 +100,30 @@
   "PDXModsUpdated": "Kürzlich auf PDX Mods aktualisiert",
   "PDXModsPopularWeek": "Beliebte Mods der letzten Woche",
   "DiskStatus": "Speicherplattenstatus",
-  "TotalCitiesSize": "Gespeicherte Benutzerdaten von C\nII",
-  "TotalSavesSize": "Savegames-Größe",
+  "TotalCitiesSize": "Gespeicherte Benutzerdaten\nvon C:S II",
+  "TotalSavesSize": "Größe von Spielständen",
   "TotalSubbedSize": "Größe von Abonnements",
   "TotalOtherSize": "Größe der anderen Dateien",
   "FreeSpace": "{0} frei",
   "UsedOutOfSpace": "von insgesamt {0} auf Laufwerk {1}",
   "LowSpaceCreateJunction": {
-    "Zero": "Ihre Festplatte hat keinen Speicherplatz mehr. Schaffen Sie entweder mehr Platz durch das Löschen nicht benötigter Dateien, oder nutzen sie eine andere Festplatte.",
-    "One": "Ihre Festplatte hat keinen Speicherplatz mehr. In den Optionen können Sie einstellen, wo das Spiel seine Dateien speichert."
+    "Zero": "Deine Festplatte hat kaum noch freien Speicherplatz. Schaffe entweder mehr Platz durch das Löschen nicht benötigter Dateien, oder nutze eine andere Festplatte.",
+    "One": "Deine Festplatte hat kaum noch freien Speicherplatz. In den Optionen kannst du einstellen, wo das Spiel seine Dateien speichert."
   },
   "ModsYouAreAddingRequireDependencies": {
     "One": "'{1}' hat Abhängigkeiten",
-    "Plural": "Das Paket, das Sie hinzufügen möchten, hat Abhängigkeiten"
+    "Plural": "Die Pakete, die Du hinzufügen möchtest, haben Abhängigkeiten"
   },
   "AddingDependencies": {
-    "One": "\"{1}\" wird für die Mod(s) benötigt.\n\nMöchten Sie \"{1}\" dem aktuellen Playset hinzufügen?",
-    "Plural": "Die Mod(s), die sie hinzufügen wollen hat {0} Abhängigkeiten: {1}\n\nMöchten Sie diese dem aktuellen Playset hinzufügen?"
+    "One": "\"{1}\" wird für die Mod(s) benötigt.\n\nMöchtest Du \"{1}\" dem aktuellen Spielset hinzufügen?",
+    "Plural": "Die Mod(s), die du hinzufügen möchtest haben {0} Abhängigkeiten: {1}\n\nMöchtest du diese dem aktuellen Spielset hinzufügen?"
   },
   "Dependency_Automatic": "Abhängigkeiten automatisch hinzufügen",
   "Dependency_Ask": "Immer nachfragen",
   "Dependency_None": "Nichts tun",
   "DependencyResolution": "Handhabung von Abhängigkeiten",
-  "DependencyResolution_Tip": "Was soll passieren, wenn Sie eine Mod hinzufügen, die von anderen, nicht installierten Mods, abhängt.",
-  "SyncOngoingLaunchGame": "Skyve synchronisiert deine Mods noch. Möchtest du das Spiel starten, sobald alle Mods bereit wurden?\nWähle \"Nein\", um das Spiel sofort zu starten.",
+  "DependencyResolution_Tip": "Was soll passieren, wenn Du eine Mod hinzufügen, die von anderen, nicht installierten Mods, abhängt?",
+  "SyncOngoingLaunchGame": "Skyve synchronisiert deine Mods noch. Möchtest du das Spiel starten, sobald alle Mods bereit sind?\nWähle \"Nein\", um das Spiel sofort zu starten.",
   "StartingWithNoPlayset": "Du bist dabei das Spiel ohne aktiven Spielset zu starten.\nDas bedeutet, dass keine Mods im Spiel aktiviert werden.",
   "SyncBeforeLaunching": "Mods synchronisieren, bevor das Spiel gestartet wird",
   "SyncBeforeLaunching_Tip": "Führt vor dem Start eine Mod-Sync aus, um sicherzustellen, dass alle Mods auf dem neuesten Stand sind.",
@@ -170,7 +170,7 @@
     "Plural": "{0} Einstellungsdateien"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod-Einstellung",
+    "One": "Mod-Einstellungen",
     "Plural": "{0} Mod-Einstellungen"
   },
   "Backup_LocalMods": {
@@ -193,6 +193,6 @@
   "CorruptedSettingsFilesBackupAvailable": "Skyve hat verfügbare Sicherungen gefunden, um deine Einstellungen in ihrem vorherigen Zustand wiederherzustellen.\n\nKlicke hier, um sie jetzt wiederherzustellen.",
   "CorruptedSettingsFilesNoBackup": "Es sind keine Sicherungen verfügbar, um Ihre Einstellungen wiederherzustellen. Richten Sie Ihre Einstellungs-Sicherungen ein, um Ihre Einstellungen in Zukunft zu sichern.\n\nKlicken Sie hier, um die beschädigten Dateien zu löschen.",
   "RecentBackups": "Neueste Sicherungen",
-  "DisableLogCleanup": "Disable logs cleanup when launching the game",
-  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
+  "DisableLogCleanup": "Aufräumen der Logs beim Starten des Spiels deaktivieren",
+  "DisableLogCleanup_Tip": "Überspringt die Löschung des Log-Ordners, wenn das Spiel über Skyve gestartet wird."
 }
