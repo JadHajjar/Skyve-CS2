@@ -22,12 +22,12 @@ internal class LastVersionNotification : INotificationInfo
 
 		if (currentChangelog is null)
 		{
-			Title = $"v{currentVersion.GetString()} Update";
+			Title = $"Skyve v{currentVersion.GetString()} Update";
 			Icon = "Question";
 			return;
 		}
 
-		Title = $"v{currentVersion.GetString()} Update";
+		Title = $"Skyve v{currentVersion.GetString()} Update";
 		Description = LocaleHelper.GetGlobalText(currentChangelog.Tagline.IfEmpty(currentChangelog.ChangeGroups[0].Name));
 		Icon = "Versions";
 		Time = currentChangelog.Date ?? DateTime.Now;

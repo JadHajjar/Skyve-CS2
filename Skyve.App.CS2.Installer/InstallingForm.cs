@@ -111,7 +111,7 @@ public partial class InstallingForm : SlickForm
 		{
 			Invoke(Hide);
 
-			MessageBox.Show("Something unexpected went wrong while un-installing Skyve:\r\n\r\n" + ex.ToString());
+			MessagePrompt.Show(ex, "Something unexpected went wrong while un-installing Skyve:");
 		}
 		finally
 		{
@@ -139,8 +139,7 @@ public partial class InstallingForm : SlickForm
 		label2.Margin = UI.Scale(new Padding(5, 20, 0, 5));
 		label3.Margin = UI.Scale(new Padding(5, 5, 0, 0));
 		TB_InstallPath.Margin = UI.Scale(new Padding(0, 0, 0, 15));
-		label2.Font =
-		label3.Font = UI.Font(7.5F, FontStyle.Italic);
+		label2.Font =		label3.Font = UI.Font(7.5F, FontStyle.Italic);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -179,6 +178,12 @@ public partial class InstallingForm : SlickForm
 
 	private void B_Install_Click(object sender, EventArgs e)
 	{
+		if (TB_InstallPath.Text.PathContains(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)))
+		{
+			MessagePrompt.Show("You can not install Skyve in this folder. Please choose another one.", "Invalid Folder", PromptButtons.OK, PromptIcons.Hand, this);
+			return;
+		}
+
 		Installer.SetInstallSettings(TB_InstallPath.Text, CB_CreateShortcut.Checked, CB_InstallService.Checked);
 		StartInstall();
 		TLP_Main.Visible = false;

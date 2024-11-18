@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using static Skyve.App.UserInterface.Panels.DashboardPanelControl;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_BackupCenter : PanelContent
@@ -307,7 +308,18 @@ public partial class PC_BackupCenter : PanelContent
 
 	private bool IsInvalidPath(string path)
 	{
-		if (path.PathContains(ServiceCenter.Get<ISettings>().FolderSettings.AppDataPath))
+		var invalidPaths = new[]
+		{
+			App.Program.CurrentDirectory,
+			App.Program.CurrentDirectory,
+			Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+			Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+			"C:/temp" +
+			"C:/windows" +
+			"C:/program files"
+		};
+
+		if (invalidPaths.Any(path.PathContains))
 		{
 			return true;
 		}

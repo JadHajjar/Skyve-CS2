@@ -29,7 +29,7 @@ public partial class PC_Options : PanelContent
 			}
 		}
 
-		DD_Dependency.Options = Enum.GetValues(typeof(DependencyResolveBehavior)).Cast<DependencyResolveBehavior>().ToArray(x=> $"Dependency_{x}");
+		DD_Dependency.Options = Enum.GetValues(typeof(DependencyResolveBehavior)).Cast<DependencyResolveBehavior>().ToArray(x => $"Dependency_{x}");
 
 		B_CreateShortcut.Visible = CrossIO.CurrentPlatform is not Platform.Windows;
 
@@ -238,58 +238,64 @@ public partial class PC_Options : PanelContent
 
 	private void B_CreateJunction_Click(object sender, EventArgs e)
 	{
-		var dialog = new IOSelectionDialog() { StartingFolder = string.Empty };
-
-		if (dialog.PromptFolder(Form) == DialogResult.OK)
+		try
 		{
-			if (Directory.Exists(dialog.SelectedPath))
+			var dialog = new IOSelectionDialog() { StartingFolder = string.Empty };
+
+			if (dialog.PromptFolder(Form) != DialogResult.OK || !Directory.Exists(dialog.SelectedPath))
 			{
-				var invalidPaths = new[]
-				{
-					App.Program.CurrentDirectory,
-					Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-					Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-					"C:/windows" +
-					"C:/program files"
-				};
-
-				if (dialog.SelectedPath.Length < 5
-					|| new DirectoryInfo(dialog.SelectedPath).Attributes.HasAnyFlag(FileAttributes.System, FileAttributes.ReadOnly, FileAttributes.Temporary)
-					|| invalidPaths.Any(dialog.SelectedPath.PathContains)
-					|| !(HasLocalSystemWriteAccess(dialog.SelectedPath, "BUILTIN\\Users") || HasLocalSystemWriteAccess(dialog.SelectedPath, "BUILTIN\\Administrators")))
-				{
-					ShowPrompt(LocaleCS2.JunctionInvalidFolder, PromptButtons.OK, PromptIcons.Hand);
-					return;
-				}
-
-				try
-				{
-					var targetFolder = new DirectoryInfo(Path.Combine(dialog.SelectedPath, "Cities Skylines II"));
-
-					if (targetFolder.Exists)
-					{
-						ShowPrompt(LocaleCS2.JunctionInvalidFolder, PromptButtons.OK, PromptIcons.Hand);
-						return;
-					}
-
-					targetFolder.Create();
-					targetFolder.Delete();
-				}
-				catch
-				{
-					ShowPrompt(LocaleCS2.JunctionInvalidFolder, PromptButtons.OK, PromptIcons.Hand);
-					return;
-				}
-
-				if (ShowPrompt(LocaleCS2.JunctionRestart, Locale.RestartRequired, PromptButtons.OKCancel, PromptIcons.Info) != DialogResult.OK)
-				{
-					return;
-				}
-
-				ServiceCenter.Get<ICitiesManager>().Kill();
-				Application.Exit();
-				ServiceCenter.Get<IIOUtil>().Execute(App.Program.ExecutablePath, $"-createJunction \"{_settings.FolderSettings.AppDataPath}\" \"{dialog.SelectedPath}\" -stub", administrator: true);
+				return;
 			}
+
+			var invalidPaths = new[]
+			{
+				App.Program.CurrentDirectory,
+				Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+				Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+				"C:/temp" +
+				"C:/windows" +
+				"C:/program files"
+			};
+
+			if (dialog.SelectedPath.Length < 5
+				|| new DirectoryInfo(dialog.SelectedPath).Attributes.HasAnyFlag(FileAttributes.System, FileAttributes.ReadOnly, FileAttributes.Temporary)
+				|| invalidPaths.Any(dialog.SelectedPath.PathContains))
+			{
+				ShowPrompt(LocaleCS2.JunctionInvalidFolder, Locale.InvalidFolder, PromptButtons.OK, PromptIcons.Hand);
+				return;
+			}
+
+			try
+			{
+				var targetFolder = new DirectoryInfo(Path.Combine(dialog.SelectedPath, "Cities Skylines II"));
+
+				if (targetFolder.Exists)
+				{
+					ShowPrompt(LocaleCS2.JunctionInvalidFolder, PromptButtons.OK, PromptIcons.Hand);
+					return;
+				}
+
+				targetFolder.Create();
+				targetFolder.Delete();
+			}
+			catch
+			{
+				ShowPrompt(LocaleCS2.JunctionInvalidFolder, PromptButtons.OK, PromptIcons.Hand);
+				return;
+			}
+
+			if (ShowPrompt(LocaleCS2.JunctionRestart, Locale.RestartRequired, PromptButtons.OKCancel, PromptIcons.Info) != DialogResult.OK)
+			{
+				return;
+			}
+
+			ServiceCenter.Get<ICitiesManager>().Kill();
+			Application.Exit();
+			ServiceCenter.Get<IIOUtil>().Execute(App.Program.ExecutablePath, $"-createJunction \"{_settings.FolderSettings.AppDataPath}\" \"{dialog.SelectedPath}\" -stub", administrator: true);
+		}
+		catch (Exception ex)
+		{
+			ShowPrompt(ex, LocaleSlickUI.UnexpectedError);
 		}
 	}
 

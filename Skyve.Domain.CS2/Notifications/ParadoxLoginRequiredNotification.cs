@@ -14,7 +14,7 @@ public class ParadoxLoginRequiredNotification : INotificationInfo
 	public ParadoxLoginRequiredNotification(bool badLogin, IInterfaceService interfaceService)
 	{
 		_interfaceService = interfaceService;
-		Time = DateTime.MaxValue;
+		Time = DateTime.Now;
 		Title = LocaleCS2.ParadoxLoginFailedTitle;
 		Description = badLogin ? LocaleCS2.ParadoxLoginFailedBadCredentials : LocaleCS2.ParadoxLoginFailedEmpty;
 		Icon = "Paradox";

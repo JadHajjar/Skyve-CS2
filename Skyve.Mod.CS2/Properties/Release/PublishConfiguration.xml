@@ -88,15 +88,17 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.12.4" />
+  <ModVersion Value="0.12.5" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.12.4
+# v0.12.5
 ## Changes
-* Added a restriction when changing content locations to prevent accidental loss of data.
+* Updated the Notifications widget in the dashboard. Notifications are now grouped by time period and show their time.
+* Notifications can all be dismissed now so you don't have to see them again.
+* Improved restrictions and interactions with the Install, Backup, and Data folder selections.
+* Updated translations.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />
-  <ExternalLink Type="buymeacoffee" Url="https://www.buymeacoffee.com/tdwsvillage" />
   <ExternalLink Type="crowdin" Url="https://crowdin.com/project/load-order-mod-2" />
 </Publish>

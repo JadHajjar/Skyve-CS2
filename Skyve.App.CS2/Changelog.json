@@ -2,6 +2,23 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.12.5",
+    "Date": "2024-11-18",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Updated the Notifications widget in the dashboard. Notifications are now grouped by time period and show their time.",
+          "Notifications can all be dismissed now so you don't have to see them again.",
+          "Improved restrictions and interactions with the Install, Backup, and Data folder selections.",
+          "Updated translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.12.4",
     "Date": "2024-11-16",
     "ChangeGroups": [
