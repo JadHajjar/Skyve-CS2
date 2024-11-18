@@ -78,7 +78,7 @@
   "LogsToPlayerLog": "Copier les logs dans le fichier Player.log",
   "InvalidFolderSettings": "Configuration non valide détectée",
   "InvalidFolderSettingsInfo": "Skyve n'as pas réussi à détecter le dossier des données de Cities: Skyines II.\n\nCliquez ici pour sélectionner le dossier des données manuellement.",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "Skyve n'a pas encore été mis en place. Veuillez lancer Cities : Skylines II avec Skyve activé pour terminer la configuration.\n\nAssurez-vous que les mods se chargent correctement, et si ce n'est pas le cas, essayez de créer un nouveau playset avec uniquement Skyve.",
   "InvalidFolderSettingsFail": "Le chemin d'accès n'est pas correct. Veuillez sélectionner le dossier 'Cities Skylines II' du dossier app data.",
   "DefaultLocation": "Emplacement par défaut des données utilisateurs",
   "JunctionTitle": "Emplacement de contenu personnalisé",
@@ -134,11 +134,11 @@
   "Sorting_WorkshopName": "Alphabétiquement",
   "InitialRelease": "Version Initiale",
   "ForumPage": "Page du Forum",
-  "DisableBurstCompile": "Disable Burst-Compilation",
+  "DisableBurstCompile": "Désactiver la Burst-Compilation",
   "UnreadComment": "Nouveaux commentaires sur \"{0}\"",
   "SafeMode": "Mode sans Échec",
   "LaunchInSafeMode": "Lancer en Mode Sans Échec",
-  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SafeModeInfo": "Lancez le jeu en « mode sans échec » pour aider à identifier les problèmes de plantage.\n\nIl est difficile d'identifier la source d'un plantage et il est parfois impossible de récupérer une sauvegarde.\nLe mode sans échec permet au jeu d'éviter les plantages dans la plupart des cas, ce qui vous permet de récupérer une sauvegarde et d'enregistrer correctement les erreurs pour qu'elles soient analysées par l'assistance technique.",
   "SearchTime": "Période",
   "SearchTime_AllTime": "Depuis Toujours",
   "SearchTime_Day": "24 heures",
@@ -148,9 +148,9 @@
   "SearchTime_SixMonths": "6 Mois",
   "SearchTime_Year": "1 An",
   "TotalBackupSize": "Taille Total des Archives",
-  "Tag_Static Object": "Prop",
+  "Tag_Static Object": "Accessoire",
   "Tag_Building": "Bâtiment",
-  "Tag_Building Extension": "Building Extension",
+  "Tag_Building Extension": "Extension du bâtiment",
   "Tag_Zone": "Zone",
   "Tag_Asset Pack": "Pack d'Assets",
   "Backup_SaveGames": {
@@ -170,18 +170,18 @@
     "Plural": "{0} fichiers de paramètres"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
-    "Plural": "{0} mod settings folders"
+    "One": "Dossiers des paramètres de mods",
+    "Plural": "{0} dossiers de paramètres des mods"
   },
   "Backup_LocalMods": {
     "One": "Mod local",
     "Plural": "{0} mods locaux"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
+  "ParadoxContextFailed": "Le chargement du backend Paradox a échoué",
+  "ParadoxContextFailedInfo": "Quelque chose provoque l'échec du backend Paradox .\nCliquez sur ce message pour essayer de le réparer.\n\nSi la réparation échoue, demandez de l'aide sur les forums d'assistance technique.",
   "BackupStartingNow": "L'archivage automatique commence...",
-  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
+  "BackupServiceUnavailable": "Le service Skyve n'est pas installé. Les sauvegardes automatiques ne fonctionneront que si l'application Skyve est ouverte.",
+  "BackupServiceAvailable": "Service Skyve en ligne",
   "NextScheduledBackup": "Le prochain archivage est planifié le {0}",
   "LastSettingsBackup": "Le dernier archivage des paramètres était le {0}",
   "NoSettingsBackup": "Aucune archive des paramètres n'est disponible",
@@ -190,8 +190,8 @@
     "One": "Fichier de Paramètres Corrompu Détecté",
     "Plural": "{0} Fichiers de Paramètres Corrompus Détectés"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
+  "CorruptedSettingsFilesBackupAvailable": "Skyve a trouvé des sauvegardes disponibles pour restaurer vos paramètres à leur état précédent.\n\nCliquez ici pour les restaurer maintenant.",
+  "CorruptedSettingsFilesNoBackup": "Aucune sauvegarde n'est disponible pour restaurer vos paramètres. Configurez vos paramètres de sauvegarde pour sauvegarder vos paramètres à l'avenir.\n\nCliquez ici pour supprimer les fichiers corrompus.",
   "RecentBackups": "Archives Récentes",
   "DisableLogCleanup": "Désactiver le nettoyage des logs au lancement du jeu",
   "DisableLogCleanup_Tip": "Ignore la suppression du dossier Logs au lancement du jeu via Skyve."
