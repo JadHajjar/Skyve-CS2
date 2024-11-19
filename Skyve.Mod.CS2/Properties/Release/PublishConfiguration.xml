@@ -88,15 +88,12 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.12.5" />
+  <ModVersion Value="0.12.6" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.12.5
-## Changes
-* Updated the Notifications widget in the dashboard. Notifications are now grouped by time period and show their time.
-* Notifications can all be dismissed now so you don't have to see them again.
-* Improved restrictions and interactions with the Install, Backup, and Data folder selections.
-* Updated translations.
+# v0.12.6
+## Hotfix
+* Fixed backups getting created without a valid backup folder.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

@@ -2,6 +2,20 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.12.6",
+    "Date": "2024-11-18",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed backups getting created without a valid backup folder."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.12.5",
     "Date": "2024-11-18",
     "ChangeGroups": [
