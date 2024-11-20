@@ -99,9 +99,9 @@
   "PDXModsNew": "新增至 PDX Mods 上",
   "PDXModsUpdated": "PDX Mods 最近更新",
   "PDXModsPopularWeek": "自上周以來最受歡迎的模組",
-  "DiskStatus": "Disk Status",
+  "DiskStatus": "硬碟狀態",
   "TotalCitiesSize": "Total C:S II User Data Stored",
-  "TotalSavesSize": "Savegames' Size",
+  "TotalSavesSize": "存檔大小",
   "TotalSubbedSize": "Subscriptions' Size",
   "TotalOtherSize": "Other Files' Size",
   "FreeSpace": "{0} free",
@@ -138,7 +138,7 @@
   "UnreadComment": "New comments on '{0}'",
   "SafeMode": "Safe Mode",
   "LaunchInSafeMode": "Launch in Safe Mode",
-  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
+  "SafeModeInfo": "以「安全模式」啟動遊戲以協助辨識崩潰問題。\n\n崩潰的來源通常難以確認，有時甚至無法恢復存檔。\n安全模式能讓遊戲在大多數情況下避免崩潰，從而幫助你恢復存檔，並正確記錄錯誤以供技術支援分析。",
   "SearchTime": "Time Period",
   "SearchTime_AllTime": "所有時間",
   "SearchTime_Day": "24 小時",
@@ -183,7 +183,7 @@
   "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
   "BackupServiceAvailable": "Skyve service online",
   "NextScheduledBackup": "Next scheduled backup is {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
+  "LastSettingsBackup": "上次設定備份時間為 {0}",
   "NoSettingsBackup": "No available settings backup available",
   "RestoreLatestSettings": "Restore latest settings backup",
   "CorruptedSettingsFiles": {
@@ -191,8 +191,8 @@
     "Plural": "{0} Corrupted Settings Files Detected"
   },
   "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups",
+  "CorruptedSettingsFilesNoBackup": "沒有可用的備份來恢復您的設定。請設定您的備份選項，以便未來保護您的設定。",
+  "RecentBackups": "近期備份",
   "DisableLogCleanup": "Disable logs cleanup when launching the game",
   "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
 }
