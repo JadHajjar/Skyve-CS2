@@ -154,8 +154,8 @@
   "Tag_Zone": "Zone",
   "Tag_Asset Pack": "Asset Pack",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "存檔",
+    "Plural": "{0} 儲存遊戲"
   },
   "Backup_Maps": {
     "One": "Map",
@@ -166,12 +166,12 @@
     "Plural": "{0} playsets"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "設定檔",
+    "Plural": "{0} 個設定檔案"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
-    "Plural": "{0} mod settings folders"
+    "One": "模組設定資料夾",
+    "Plural": "{0} 個模組設定資料夾"
   },
   "Backup_LocalMods": {
     "One": "Local mod",
@@ -187,10 +187,10 @@
   "NoSettingsBackup": "No available settings backup available",
   "RestoreLatestSettings": "Restore latest settings backup",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "One": "偵測到損壞的設定檔案",
+    "Plural": "偵測到 {0} 個損壞的設定檔案"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
+  "CorruptedSettingsFilesBackupAvailable": "Skyve 已找到可用的備份，將您的設定恢復至先前狀態。",
   "CorruptedSettingsFilesNoBackup": "沒有可用的備份來恢復您的設定。請設定您的備份選項，以便未來保護您的設定。",
   "RecentBackups": "近期備份",
   "DisableLogCleanup": "Disable logs cleanup when launching the game",
