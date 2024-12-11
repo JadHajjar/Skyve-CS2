@@ -78,7 +78,7 @@
   "LogsToPlayerLog": "將日誌複製到 Player.log",
   "InvalidFolderSettings": "檢查到無效設定",
   "InvalidFolderSettingsInfo": "Skyve 無法找到 Cities: Skylines II 正確的數據資料夾。\n\n點擊此處以手動選擇數據資料夾。",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "Skyve 應用程式尚未設定完成。請啟用 Skyve 模組，並啟動 Cities: Skylines II，以便完成設定。\n\n請確定模組能夠成功加載。如果加載失敗，請嘗試新建一格 playset，並且只將 Skyve 加入其中。",
   "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
   "DefaultLocation": "Default User Data Location",
   "JunctionTitle": "Custom Content Location",
