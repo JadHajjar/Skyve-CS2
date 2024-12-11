@@ -68,16 +68,16 @@
   "UpdateAvailableInfo": "點擊此處更新到新版本",
   "VoteMod": "給這個模組點讚",
   "UnVoteMod": "取消這個模組的讚",
-  "LogLevel": "Log Level",
-  "ParadoxAccount": "Paradox Account",
-  "LoggingIn": "Logging in...",
-  "NotLoggedInCheckNotification": "You're not logged in to Paradox, check your notifications for more information.",
-  "HideUserSection": "Hide your profile in the main menu",
-  "DeveloperMode": "Enable Developer Mode",
-  "UIDeveloperMode": "Enable UI Developer Mode",
-  "LogsToPlayerLog": "Copy logs to Player.log",
-  "InvalidFolderSettings": "Invalid setup detected",
-  "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
+  "LogLevel": "記錄等級",
+  "ParadoxAccount": "Paradox 帳號",
+  "LoggingIn": "登入中…",
+  "NotLoggedInCheckNotification": "你沒有登錄 Paradox 帳號，請檢查您的通知來了解更多消息。",
+  "HideUserSection": "在主菜單中隱藏帳號的資訊。",
+  "DeveloperMode": "開啟開發者模式",
+  "UIDeveloperMode": "開啟開發者模式",
+  "LogsToPlayerLog": "將日誌複製到 Player.log",
+  "InvalidFolderSettings": "檢查到無效設定",
+  "InvalidFolderSettingsInfo": "Skyve 無法找到 Cities: Skylines II 正確的數據資料夾。\n\n點擊此處以手動選擇數據資料夾。",
   "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "The selected path is not correct. Please select the 'Cities Skylines II' folder in your app data.",
   "DefaultLocation": "Default User Data Location",
@@ -102,7 +102,7 @@
   "DiskStatus": "硬碟狀態",
   "TotalCitiesSize": "Total C:S II User Data Stored",
   "TotalSavesSize": "存檔大小",
-  "TotalSubbedSize": "Subscriptions' Size",
+  "TotalSubbedSize": "",
   "TotalOtherSize": "Other Files' Size",
   "FreeSpace": "{0} free",
   "UsedOutOfSpace": "out of the {0} on drive {1}",
@@ -137,7 +137,7 @@
   "DisableBurstCompile": "Disable Burst-Compilation",
   "UnreadComment": "New comments on '{0}'",
   "SafeMode": "Safe Mode",
-  "LaunchInSafeMode": "Launch in Safe Mode",
+  "LaunchInSafeMode": "在安全模式下啟動",
   "SafeModeInfo": "以「安全模式」啟動遊戲以協助辨識崩潰問題。\n\n崩潰的來源通常難以確認，有時甚至無法恢復存檔。\n安全模式能讓遊戲在大多數情況下避免崩潰，從而幫助你恢復存檔，並正確記錄錯誤以供技術支援分析。",
   "SearchTime": "Time Period",
   "SearchTime_AllTime": "所有時間",
@@ -152,13 +152,13 @@
   "Tag_Building": "Building",
   "Tag_Building Extension": "Building Extension",
   "Tag_Zone": "Zone",
-  "Tag_Asset Pack": "Asset Pack",
+  "Tag_Asset Pack": "資產包",
   "Backup_SaveGames": {
     "One": "存檔",
     "Plural": "{0} 儲存遊戲"
   },
   "Backup_Maps": {
-    "One": "Map",
+    "One": "地圖",
     "Plural": "{0} maps"
   },
   "Backup_ActivePlayset": {
@@ -174,18 +174,18 @@
     "Plural": "{0} 個模組設定資料夾"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "本地模組",
+    "Plural": "{0} 個本地模組"
   },
   "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
-  "BackupStartingNow": "Automatic backup starting now...",
-  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
+  "ParadoxContextFailedInfo": "一些問題導致 Paradox 的後臺出錯。\n點擊此消息來嘗試修復。\n\n如果修復失敗，請在技術支持論壇上尋求幫助。",
+  "BackupStartingNow": "正在開始自動備份……",
+  "BackupServiceUnavailable": "沒有安裝 Skyve 服務程式。自動備份僅在 Skyve 應用程式打開時才會工作。",
+  "BackupServiceAvailable": "Skyve 服務程式已啟動",
+  "NextScheduledBackup": "下次計畫的備份是 {0}",
   "LastSettingsBackup": "上次設定備份時間為 {0}",
-  "NoSettingsBackup": "No available settings backup available",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "NoSettingsBackup": "沒有可用的設定備份",
+  "RestoreLatestSettings": "恢復到上次備份的設定",
   "CorruptedSettingsFiles": {
     "One": "偵測到損壞的設定檔案",
     "Plural": "偵測到 {0} 個損壞的設定檔案"
@@ -193,6 +193,6 @@
   "CorruptedSettingsFilesBackupAvailable": "Skyve 已找到可用的備份，將您的設定恢復至先前狀態。",
   "CorruptedSettingsFilesNoBackup": "沒有可用的備份來恢復您的設定。請設定您的備份選項，以便未來保護您的設定。",
   "RecentBackups": "近期備份",
-  "DisableLogCleanup": "Disable logs cleanup when launching the game",
-  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
+  "DisableLogCleanup": "關閉啟動遊戲時的日誌清除程序",
+  "DisableLogCleanup_Tip": "通過 Skyve 啟動遊戲時，跳過清除日誌文件夾的程序。"
 }
