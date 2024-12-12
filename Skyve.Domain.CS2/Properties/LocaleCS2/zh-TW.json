@@ -136,10 +136,10 @@
   "ForumPage": "Forum Page",
   "DisableBurstCompile": "Disable Burst-Compilation",
   "UnreadComment": "New comments on '{0}'",
-  "SafeMode": "Safe Mode",
+  "SafeMode": "安全模式",
   "LaunchInSafeMode": "在安全模式下啟動",
   "SafeModeInfo": "以「安全模式」啟動遊戲以協助辨識崩潰問題。\n\n崩潰的來源通常難以確認，有時甚至無法恢復存檔。\n安全模式能讓遊戲在大多數情況下避免崩潰，從而幫助你恢復存檔，並正確記錄錯誤以供技術支援分析。",
-  "SearchTime": "Time Period",
+  "SearchTime": "時間",
   "SearchTime_AllTime": "所有時間",
   "SearchTime_Day": "24 小時",
   "SearchTime_Week": "7 天",
@@ -147,11 +147,11 @@
   "SearchTime_Quarter": "3 個月",
   "SearchTime_SixMonths": "6 個月",
   "SearchTime_Year": "1 年",
-  "TotalBackupSize": "Total Backups Size",
-  "Tag_Static Object": "Prop",
-  "Tag_Building": "Building",
-  "Tag_Building Extension": "Building Extension",
-  "Tag_Zone": "Zone",
+  "TotalBackupSize": "備份總大小",
+  "Tag_Static Object": "物件",
+  "Tag_Building": "建築",
+  "Tag_Building Extension": "擴張建築",
+  "Tag_Zone": "功能區",
   "Tag_Asset Pack": "資產包",
   "Backup_SaveGames": {
     "One": "存檔",
@@ -159,7 +159,7 @@
   },
   "Backup_Maps": {
     "One": "地圖",
-    "Plural": "{0} maps"
+    "Plural": "{0} 張地圖"
   },
   "Backup_ActivePlayset": {
     "One": "Playset",
@@ -177,7 +177,7 @@
     "One": "本地模組",
     "Plural": "{0} 個本地模組"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
+  "ParadoxContextFailed": "無法載入 Paradox 後台",
   "ParadoxContextFailedInfo": "一些問題導致 Paradox 的後臺出錯。\n點擊此消息來嘗試修復。\n\n如果修復失敗，請在技術支持論壇上尋求幫助。",
   "BackupStartingNow": "正在開始自動備份……",
   "BackupServiceUnavailable": "沒有安裝 Skyve 服務程式。自動備份僅在 Skyve 應用程式打開時才會工作。",
