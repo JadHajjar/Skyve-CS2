@@ -1,20 +1,15 @@
 ﻿using Colossal.IO.AssetDatabase;
 using Colossal.Json;
 using Colossal.Logging;
-using Colossal.PSI.Common;
-using Colossal.PSI.Environment;
 
 using Game;
 using Game.Modding;
-using Game.Rendering;
 using Game.SceneFlow;
 
 using Skyve.App.CS2.Installer;
 
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Security.Principal;
 
 namespace Skyve.Mod.CS2
 {
@@ -37,6 +32,8 @@ namespace Skyve.Mod.CS2
 				Log.Info(ModPath);
 			}
 
+			GameManager.instance.RegisterUpdater(ListMods);
+
 			updateSystem.UpdateAt<InstallSkyveUISystem>(SystemUpdatePhase.UIUpdate);
 
 			Settings = new SkyveModSettings(this);
@@ -54,11 +51,22 @@ namespace Skyve.Mod.CS2
 			{
 				if (File.Exists(FolderSettings.FolderSettingsPath))
 				{
-					var folderSettings = JSON.MakeInto<FolderSettings>(JSON.Load(File.ReadAllText(FolderSettings.FolderSettingsPath)));
+					try
+					{
+						var folderSettings = JSON.MakeInto<FolderSettings>(JSON.Load(File.ReadAllText(FolderSettings.FolderSettingsPath)));
 
-					folderSettings.Save();
+						folderSettings.Save();
 
-					Log.Info("Folder settings updated");
+						Log.Info("Folder settings updated");
+					}
+					catch
+					{
+						new FolderSettings().Save();
+
+						Log.Info("Folder settings created [RECOVERY]");
+
+						throw;
+					}
 				}
 				else
 				{
@@ -96,6 +104,11 @@ namespace Skyve.Mod.CS2
 			//{
 			//	Log.Info("  " + item.Key + "  " + item.Value);
 			//}
+		}
+
+		private void ListMods()
+		{
+			Log.Info("\n======= Enabled Mods =======\n\t" + string.Join("\n\t", GameManager.instance.modManager.ListModsEnabled()) + "\n============================");
 		}
 
 		public static bool InstallApp()

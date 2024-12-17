@@ -98,4 +98,5 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />
   <ExternalLink Type="crowdin" Url="https://crowdin.com/project/load-order-mod-2" />
+  <ExternalLink Type="patreon" Url="https://www.patreon.com/tdwsvillage" />
 </Publish>

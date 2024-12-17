@@ -13,6 +13,7 @@
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
 
 	<PropertyGroup>
+		<DebugType>portable</DebugType> <!--Temp fix for modPP-->
 		<CustomInstallationPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II</CustomInstallationPath>
 		<PublishConfigurationPath>Properties\$(BuildType)\PublishConfiguration.xml</PublishConfigurationPath>
 	</PropertyGroup>
