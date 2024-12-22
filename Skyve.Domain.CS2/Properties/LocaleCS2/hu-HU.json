@@ -163,7 +163,7 @@
   },
   "Backup_ActivePlayset": {
     "One": "Playset",
-    "Plural": "{0} playsets"
+    "Plural": ""
   },
   "Backup_SettingsFiles": {
     "One": "Settings files",
