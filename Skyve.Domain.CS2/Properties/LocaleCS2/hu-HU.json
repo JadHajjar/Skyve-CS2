@@ -17,8 +17,8 @@
     "Plural": "Másolja ki a kiválasztott csomagok műhelyhivatkozásait"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "Copy PDX Mods link as Markdown",
-    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+    "One": "Másolja a PDX Mods hivatkozást Markdown néven",
+    "Plural": "Másolja ki a kiválasztott csomagok PDX Mods hivatkozásait Markdown néven"
   },
   "CopyWorkshopId": {
     "One": "PDX Mods link másolása",
@@ -78,7 +78,7 @@
   "LogsToPlayerLog": "Másolja a naplókat a Player.logba",
   "InvalidFolderSettings": "Érvénytelen beállítás észlelve",
   "InvalidFolderSettingsInfo": "A Skyve nem tudta megfelelően észlelni a Cities: Skylines II adatmappáját.\n\nKattints ide az adatmappa manuális kiválasztásához.",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "A Skyve még nincs beállítva. A beállítás befejezéséhez indítsd el a Cities: Skylines II-t a Skyve engedélyezésével.\n\nGyőződj meg arról, hogy a modok sikeresen betöltődnek, és ha nem, próbálj meg új játékkészletet létrehozni, amelyben csak a Skyve szerepel.",
   "InvalidFolderSettingsFail": "A kiválasztott útvonal nem megfelelő. Válaszd ki a „Cities Skylines II” mappát az alkalmazás adatai között.",
   "DefaultLocation": "Alapértelmezett felhasználói adatok helye",
   "JunctionTitle": "Egyéni tartalom helye",
@@ -88,7 +88,7 @@
   "ResetLocation": "Hely visszaállítása",
   "JunctionRestart": "A Skyve és a Cities: Skylines II bezár a folyamat során.\n\nA Skyve automatikusan újraindul, ha végzett.",
   "PlaysetAlreadyImported": "Ez a játékkészlet már szerepel a játékkészletek listájában.",
-  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
+  "JunctionInvalidFolder": "A kiválasztott mappa nem érvényes cél. Kérjük, próbálkozz másikkal.",
   "CouldNotRetrieveMods": "Nem sikerült lekérni a modok adatait",
   "NewGameUpdate": "Új városok: Skylines II frissítés",
   "NewGameUpdateInfo": "A(z) {0} javítás már elérhető.\nA játék megkezdése előtt feltétlenül ellenőrizd a kompatibilitási jelentést.",
@@ -98,7 +98,7 @@
   "RunSync": "Mehet a szinkronizálás",
   "PDXModsNew": "Újdonság a PDX modokon",
   "PDXModsUpdated": "Nemrég frissítve a PDX Mods-on",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "Népszerű modok a múlt hétről",
   "DiskStatus": "Lemez állapota",
   "TotalCitiesSize": "Összes tárolt C:S II felhasználói adat",
   "TotalSavesSize": "A játékmentés mérete",
@@ -132,67 +132,67 @@
   "Sorting_DateUpdated": "Utolsó frissítés",
   "Sorting_DateCreated": "Legutóbbi",
   "Sorting_WorkshopName": "ABC sorrend",
-  "InitialRelease": "Initial Release",
-  "ForumPage": "Forum Page",
-  "DisableBurstCompile": "Disable Burst-Compilation",
-  "UnreadComment": "New comments on '{0}'",
-  "SafeMode": "Safe Mode",
-  "LaunchInSafeMode": "Launch in Safe Mode",
-  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
-  "SearchTime": "Time Period",
-  "SearchTime_AllTime": "All Time",
-  "SearchTime_Day": "24 hours",
-  "SearchTime_Week": "7 Days",
-  "SearchTime_Month": "1 Month",
-  "SearchTime_Quarter": "3 Months",
-  "SearchTime_SixMonths": "6 Months",
-  "SearchTime_Year": "1 Year",
-  "TotalBackupSize": "Total Backups Size",
+  "InitialRelease": "Eredeti kiadás",
+  "ForumPage": "Fórum oldal",
+  "DisableBurstCompile": "Burst-Compilation letiltása",
+  "UnreadComment": "Új megjegyzések a következőhöz: \"{0}\"",
+  "SafeMode": "Csökkentett mód",
+  "LaunchInSafeMode": "Indítsd el csökkentett módban",
+  "SafeModeInfo": "Indítsd el a játékot „Csökkentett módban”, hogy segítsen azonosítani az összeomlással kapcsolatos problémákat.\n\nNehéz azonosítani az összeomlás forrását, és néha lehetetlenné teszi a mentés helyreállítását. A csökkentett mód lehetővé teszi, hogy a játék a legtöbb esetben elkerüld az összeomlásokat, így helyreállíthatja a mentést, és megfelelően naplózza a hibákat a műszaki támogatás elemzéséhez.",
+  "SearchTime": "Időszak",
+  "SearchTime_AllTime": "Összes",
+  "SearchTime_Day": "24 óra",
+  "SearchTime_Week": "7 nap",
+  "SearchTime_Month": "1 hónap",
+  "SearchTime_Quarter": "3 hónap",
+  "SearchTime_SixMonths": "6 hónap",
+  "SearchTime_Year": "1 év",
+  "TotalBackupSize": "Teljes biztonsági másolat mérete",
   "Tag_Static Object": "Prop",
-  "Tag_Building": "Building",
-  "Tag_Building Extension": "Building Extension",
-  "Tag_Zone": "Zone",
-  "Tag_Asset Pack": "Asset Pack",
+  "Tag_Building": "Épület",
+  "Tag_Building Extension": "Épületbővítés",
+  "Tag_Zone": "Zóna",
+  "Tag_Asset Pack": "Asset csomag",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "Játékmentés",
+    "Plural": "{0} játékmentés"
   },
   "Backup_Maps": {
-    "One": "Map",
-    "Plural": "{0} maps"
+    "One": "Térkép",
+    "Plural": "{0} térkép"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
+    "One": "Profil",
     "Plural": ""
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "Beállítási fájl",
+    "Plural": "{0} beállítási fájl"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
-    "Plural": "{0} mod settings folders"
+    "One": "Mod beállítási mappák",
+    "Plural": "{0} mod beállítási mappa"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Helyi mod",
+    "Plural": "{0} helyi mod"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
-  "BackupStartingNow": "Automatic backup starting now...",
-  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
-  "NoSettingsBackup": "No available settings backup available",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "ParadoxContextFailed": "A Paradox háttérrendszer betöltése nem sikerült",
+  "ParadoxContextFailedInfo": "Valami a paradox háttérrendszer meghibásodását okozza.\nKattints erre az üzenetre a javítás kipróbálásához.\n\nHa a javítás nem sikeres, kérj segítséget a technikai támogatási fórumokon.",
+  "BackupStartingNow": "Az automatikus biztonsági mentés most kezdődik...",
+  "BackupServiceUnavailable": "A Skyve szolgáltatás nincs telepítve. Az automatikus biztonsági mentés csak akkor működik, ha a Skyve alkalmazás nyitva van.",
+  "BackupServiceAvailable": "Skyve online szolgáltatás",
+  "NextScheduledBackup": "A következő ütemezett biztonsági mentés: {0}",
+  "LastSettingsBackup": "A beállítások utolsó biztonsági mentése: {0}",
+  "NoSettingsBackup": "Nem érhető el biztonsági mentés a beállításokról",
+  "RestoreLatestSettings": "Állítsa vissza a legfrissebb beállítások biztonsági másolatát",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "One": "Sérült beállítási fájl észlelve",
+    "Plural": "{0} Sérült beállítási fájl észlelve"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups",
-  "DisableLogCleanup": "Disable logs cleanup when launching the game",
-  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
+  "CorruptedSettingsFilesBackupAvailable": "A Skyve talált elérhető biztonsági másolatokat a beállítások korábbi állapotának visszaállításához.\n\nKattints ide a visszaállításhoz.",
+  "CorruptedSettingsFilesNoBackup": "Nem állnak rendelkezésre biztonsági másolatok a beállítások visszaállításához. Állítsd be a biztonsági mentés beállításait, hogy megőrizd beállításokat a jövőben.\n\nKattints ide a sérült fájlok törléséhez.",
+  "RecentBackups": "Legutóbbi biztonsági mentések",
+  "DisableLogCleanup": "A játék indításakor tiltsa le a naplók tisztítását",
+  "DisableLogCleanup_Tip": "Kihagyja a Naplók mappa törlését, amikor elindítja a játékot a Skyve-on keresztül."
 }
