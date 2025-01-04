@@ -29,7 +29,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 		ShortDescription = mod.ShortDescription;
 		LongDescription = mod.LongDescription;
 		RequiredGameVersion = mod.RequiredGameVersion;
-		VersionName = mod.UserModVersion;
+		VersionName = mod.UserModVersion.IfEmpty(versionName);
 		LatestVersion = mod.LatestVersion;
 		ThumbnailUrl = mod.ThumbnailPath;
 		Author = mod.Author;

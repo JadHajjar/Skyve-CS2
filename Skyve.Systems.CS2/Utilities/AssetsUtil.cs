@@ -162,15 +162,36 @@ internal class AssetsUtil : IAssetUtil
 					else
 					{
 						var ailThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "Thumbnails", name + ".png");
-						var ailCThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "CustomThumbnails", name + ".png");
+						var ailColoredThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "Thumbnails", "Colored", name + ".png");
+						var ailCustomThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "CustomThumbnails");
+
+						if (CrossIO.FileExists(ailColoredThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+						{
+							File.Copy(ailColoredThumbnail, asset.Thumbnail, true);
+
+							yield return asset;
+							continue;
+						}
 
 						if (CrossIO.FileExists(ailThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
 						{
 							File.Copy(ailThumbnail, asset.Thumbnail, true);
+
+							yield return asset;
+							continue;
 						}
-						else if (CrossIO.FileExists(ailCThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+
+						if (Directory.Exists(ailCustomThumbnail))
 						{
-							File.Copy(ailCThumbnail, asset.Thumbnail, true);
+							ailCustomThumbnail = Directory.GetFiles(ailCustomThumbnail, $"{name}.png", SearchOption.AllDirectories).FirstOrDefault();
+
+							if (CrossIO.FileExists(ailCustomThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+							{
+								File.Copy(ailCustomThumbnail, asset.Thumbnail, true);
+
+								yield return asset;
+								continue;
+							}
 						}
 					}
 

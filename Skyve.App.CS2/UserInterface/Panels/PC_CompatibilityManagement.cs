@@ -14,6 +14,7 @@ using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -683,6 +684,20 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	private void TB_Search_TextChanged(object sender, EventArgs e)
 	{
+#if CS2
+		if (Regex.IsMatch(TB_Search.Text, @"/mods/(\d+)"))
+		{
+			TB_Search.Text = Regex.Match(TB_Search.Text, @"/mods/(\d+)").Groups[1].Value;
+			return;
+		}
+#else
+		if (Regex.IsMatch(TB_Search.Text, @"filedetails/\?id=(\d+)"))
+		{
+			TB_Search.Text = Regex.Match(TB_Search.Text, @"filedetails/\?id=(\d+)").Groups[1].Value;
+			return;
+		}
+#endif
+
 		TB_Search.ImageName = string.IsNullOrWhiteSpace(TB_Search.Text) ? "Search" : "ClearSearch";
 
 		packageCrList.FilterChanged();

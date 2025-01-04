@@ -201,7 +201,7 @@ internal class CitiesManager : ICitiesManager
 
 		if (launchSettings.NoMods)
 		{
-			yield return "--disableModding";
+			yield return "--disableCodeModding";
 		}
 
 		if (launchSettings.DisableBurstCompile)

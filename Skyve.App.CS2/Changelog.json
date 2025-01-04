@@ -2,6 +2,28 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.12.7",
+    "Date": "2025-01-04",
+    "ChangeGroups": [
+      {
+        "Name": "Minor Changes",
+        "Changes": [
+          "Changed the 'No Mods' launch option from --disableModding to --disableCodeModding",
+          "Added settings (.coc) files to the log report.",
+          "Renamed some files in the log report.",
+          "Fixed the errors list in the log report only showing errors from Player.log",
+          "Fixed mods list in the log report not showing the version of mods.",
+          "Fixed the Skyve Mod not updating the folder settings file in case it was corrupted.",
+          "Fixed the screenshots carousel not properly displaying wide images.",
+          "Fixed assets not matching their thumbnails from the newer AIL versions.",
+          "Updated Translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.12.6",
     "Date": "2024-11-18",
     "ChangeGroups": [
