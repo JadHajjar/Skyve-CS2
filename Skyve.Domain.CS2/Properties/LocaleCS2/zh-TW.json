@@ -93,7 +93,7 @@
   "NewGameUpdate": "New Cities: Skylines II Update",
   "NewGameUpdateInfo": "Patch {0} is now available.\r\nBe sure to check your compatibility report before starting your game.",
   "PdxSyncInfo": "PDX 同步程序會處理下載和更新您的 Mods，並且在本機電腦和 PDX Mods 服務之間同步您的設定和遊戲集。",
-  "SyncOngoing": "Sync is currently ongoing",
+  "SyncOngoing": "Skyve 正在同步您的模組",
   "PdxSync": "PDX Mods 同步",
   "RunSync": "Start Synchronization",
   "PDXModsNew": "新增至 PDX Mods 上",
