@@ -78,7 +78,11 @@ internal class LogUtil : ILogUtil
 
 		AddLogFilesToZip(zipArchive, mainLogDate, ref logTrace);
 
-		await AddProfileToZip(zipArchive);
+		try
+		{
+			await AddProfileToZip(zipArchive);
+		}
+		catch { }
 
 		AddSettingsFilesToZip(zipArchive);
 
@@ -170,6 +174,8 @@ internal class LogUtil : ILogUtil
 		}
 
 		CreateEntry(zipArchive, "ModsList.txt", _packageManager.Packages.Where(x => _packageUtil.IsEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name} {x.VersionName}" : $"{x.Id}: {x.Name} {x.VersionName}", CrossIO.NewLine));
+
+		CreateEntry(zipArchive, "FileSystem.txt", string.Join("\r\n", Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*", SearchOption.AllDirectories)));
 
 		AddCompatibilityReport(zipArchive);
 	}
