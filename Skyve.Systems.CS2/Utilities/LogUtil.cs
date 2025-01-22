@@ -175,7 +175,8 @@ internal class LogUtil : ILogUtil
 
 		CreateEntry(zipArchive, "ModsList.txt", _packageManager.Packages.Where(x => _packageUtil.IsEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name} {x.VersionName}" : $"{x.Id}: {x.Name} {x.VersionName}", CrossIO.NewLine));
 
-		CreateEntry(zipArchive, "FileSystem.txt", string.Join("\r\n", Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*", SearchOption.AllDirectories)));
+		var startFolderLength = _settings.FolderSettings.AppDataPath.Length;
+		CreateEntry(zipArchive, "FileSystem.txt", _settings.FolderSettings.AppDataPath + "\r\n\r\n" + string.Join("\r\n", Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*", SearchOption.AllDirectories).Select(x => x.Substring(startFolderLength))));
 
 		AddCompatibilityReport(zipArchive);
 	}
@@ -404,6 +405,9 @@ internal class LogUtil : ILogUtil
 		var profileEntry = zipArchive.CreateEntry(entry);
 		using var writer = new StreamWriter(profileEntry.Open());
 
-		writer.Write(content.RegexReplace(@"(users[/\\]).+?([/\\])", x => $"{x.Groups[1].Value}%username%{x.Groups[2].Value}"));
+		var regex = Regex.Escape(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)).Replace(@"\\", @"[/\\]").RegexReplace(@"[^/\\\]]+$", @"[^/\\]+");
+		var replacement = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).RegexReplace(@"[^/\\]+$", "%username%");
+
+		writer.Write(content.RegexReplace(regex, replacement));
 	}
 }
