@@ -134,6 +134,7 @@ public class WorkshopService : IWorkshopService
 #endif
 		};
 
+		config.Mods.UsePatching = true;
 		config.Mods.RootPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods");
 
 		//if (Enum.TryParse<Language>(LocaleHelper.CurrentCulture.IetfLanguageTag.Substring(0, 2).ToLower(), out var lang))

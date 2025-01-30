@@ -407,37 +407,48 @@ internal class ModsUtil : IModUtil
 
 	private async Task<List<IPackageIdentity>> ResolveDependencies(List<IPackageIdentity> mods, int? playsetId)
 	{
-		if (mods.Count == 0)
+		var dependencies = await Resolve(mods, playsetId);
+
+		dependencies.RemoveAll(x => mods.Any(y => x.Id == y.Id));
+		
+		return dependencies.Distinct(x => x.Id).ToList();
+
+		async Task<List<IPackageIdentity>> Resolve(List<IPackageIdentity> mods, int? playsetId)
 		{
-			return [];
-		}
-
-		var list = new List<IPackageIdentity>();
-
-		foreach (var mod in mods)
-		{
-			var workshopInfo = await _workshopService.GetInfoAsync(mod);
-
-			if (workshopInfo is not null)
+			if (mods.Count == 0)
 			{
-				foreach (var item in workshopInfo.Requirements)
-				{
-					if (!item.IsDlc
-						&& !mods.Any(x => x.Id == item.Id)
-						&& !list.Any(x => x.Id == item.Id)
-						&& !IsEnabled(item, playsetId))
-					{
-						item.Version = null;
+				return [];
+			}
 
-						list.Add(item);
+			var list = new List<IPackageIdentity>(mods);
+
+			foreach (var mod in mods)
+			{
+				var workshopInfo = await _workshopService.GetInfoAsync(mod);
+
+				if (workshopInfo is not null)
+				{
+					foreach (var item in workshopInfo.Requirements)
+					{
+						if (!item.IsDlc
+							&& !list.Any(x => x.Id == item.Id)
+							&& !IsEnabled(item, playsetId))
+						{
+							item.Version = null;
+
+							list.Add(item);
+						}
 					}
 				}
 			}
+
+			if (list.Count != mods.Count)
+			{
+				list.AddRange(await Resolve(list, playsetId));
+			}
+
+			return list;
 		}
-
-		list.AddRange(await ResolveDependencies(list, playsetId));
-
-		return list;
 	}
 
 	public int GetLoadOrder(IPackage package)

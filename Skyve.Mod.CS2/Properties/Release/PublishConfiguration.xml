@@ -88,20 +88,14 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.12.7" />
+  <ModVersion Value="0.13.0" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.12.7
-## Minor Changes
-* Changed the 'No Mods' launch option from --disableModding to --disableCodeModding
-* Added settings (.coc) files to the log report.
-* Renamed some files in the log report.
-* Fixed the errors list in the log report only showing errors from Player.log
-* Fixed mods list in the log report not showing the version of mods.
-* Fixed the Skyve Mod not updating the folder settings file in case it was corrupted.
-* Fixed the screenshots carousel not properly displaying wide images.
-* Fixed assets not matching their thumbnails from the newer AIL versions.
-* Updated Translations.
+# v0.13.0
+## Framework Update
+* Updated to the latest PDX Mods SDK.
+* Updated the framework version from .NET 4.7.2 to .NET 4.8 to match the PDX Mods SDK's target framework.
+* Added a 'Filesystem' file in the log report which represents a full list of the files in the user's CS2 appdata folder.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

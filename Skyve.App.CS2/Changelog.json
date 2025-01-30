@@ -2,6 +2,36 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.13.0",
+    "Date": "2025-01-25",
+    "ChangeGroups": [
+      {
+        "Name": "Framework Update",
+        "Changes": [
+          "Updated to the latest PDX Mods SDK.",
+          "Updated the framework version from .NET 4.7.2 to .NET 4.8 to match the PDX Mods SDK's target framework.",
+          "Added a 'Filesystem' file in the log report which represents a full list of the files in the user's CS2 appdata folder."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.12.8",
+    "Date": "2025-01-14",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed a crash when adding some mods to your playset."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.12.7",
     "Date": "2025-01-04",
     "ChangeGroups": [
