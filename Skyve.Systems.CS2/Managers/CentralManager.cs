@@ -143,9 +143,11 @@ internal class CentralManager : ICentralManager
 
 		_updateManager.SendUpdateNotifications();
 
-		_logger.Info($"Compatibility report cached");
+		_logger.Info($"Caching compatibility report..");
 
 		_compatibilityManager.DoFirstCache();
+
+		_logger.Info($"Compatibility report cached");
 
 		if (!ConnectionHandler.CheckConnection())
 		{
@@ -167,7 +169,7 @@ internal class CentralManager : ICentralManager
 
 			await _updateManager.SendUnreadCommentsNotifications();
 
-			UpdateSkyveVersionsInPlaysets();
+			await UpdateSkyveVersionsInPlaysets();
 		}
 
 		try
@@ -318,7 +320,7 @@ internal class CentralManager : ICentralManager
 		return false;
 	}
 
-	public void UpdateSkyveVersionsInPlaysets()
+	public async Task UpdateSkyveVersionsInPlaysets()
 	{
 #if Stable
 		const ulong MODID = ;
@@ -327,7 +329,7 @@ internal class CentralManager : ICentralManager
 #endif
 		var package = new GenericPackageIdentity(MODID);
 
-		//await _packageUtil.SetVersion(package, null);
+		await _modUtil.SetIncluded(package, true);
 	}
 
 	private void CleanupData()

@@ -158,9 +158,9 @@ internal class UpdateManager : IUpdateManager
 
 		var dictionary = new Dictionary<IPackageIdentity, IModComment>();
 
-		var mods = await _workshopService.GetWorkshopItemsByUserAsync(_userService.User.Id!, sorting: WorkshopQuerySorting.DateUpdated, limit: 99);
+		var result = await _workshopService.GetWorkshopItemsByUserAsync(_userService.User.Id!, sorting: WorkshopQuerySorting.DateUpdated, limit: 99);
 
-		foreach (var mod in mods)
+		foreach (var mod in result.Mods)
 		{
 			var comments = await _workshopService.GetComments(mod, 1, 1);
 

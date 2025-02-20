@@ -88,14 +88,23 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.13.0" />
+  <ModVersion Value="0.13.1" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.13.0
-## Framework Update
-* Updated to the latest PDX Mods SDK.
-* Updated the framework version from .NET 4.7.2 to .NET 4.8 to match the PDX Mods SDK's target framework.
-* Added a 'Filesystem' file in the log report which represents a full list of the files in the user's CS2 appdata folder.
+# v0.13.1
+## PDX Mods Tab Changes
+* Changed the PDX Mods tab to a paged browsing experience instead of an infinite scroll.
+* Added a 'Tags' panel on the right of the PDX Mods tab for easier tag filtering.
+* Removed the 'Recently Updated' effect in the PDX Mods tab.
+* Improved the 'Search the workshop instead' prompts when no results match your filters in the local content. It now properly selects the tags and search both in-app and in the browser.
+
+## Other Changes
+* Fixed not being able to download a large mod if you changed content locations and your main drive was full.
+* Increased the severity of disabled mods with a 'Broken from Patch/Version' compatibility state to 'Warning'. This will mark the mod even when it's not in your playset.
+* Added a tooltip on the version and update time labels in the mod page to show the version ID and raw update time respectively.
+* Fixed the mod version using the version ID instead of the actual version number in some parts of the app.
+* Temporarily disabled asset icons.
+* Updated Translations.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

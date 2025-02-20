@@ -102,7 +102,9 @@ public class WorkshopService : IWorkshopService
 			throw new Exception("FolderSettings AppData folder does not exist");
 		}
 
-		var pdxSdkPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk");
+		var junction = JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath).IfEmpty(_settings.FolderSettings.AppDataPath);
+
+		var pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
 		var ecoSystem = _settings.FolderSettings.GamingPlatform switch { GamingPlatform.Epic => Ecosystem.Epic, GamingPlatform.Microsoft => Ecosystem.Microsoft_Store, _ => Ecosystem.Steam };
 
@@ -135,7 +137,7 @@ public class WorkshopService : IWorkshopService
 		};
 
 		config.Mods.UsePatching = true;
-		config.Mods.RootPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods");
+		config.Mods.RootPath = CrossIO.Combine(junction, ".cache", "Mods");
 
 		//if (Enum.TryParse<Language>(LocaleHelper.CurrentCulture.IetfLanguageTag.Substring(0, 2).ToLower(), out var lang))
 		//{
@@ -169,6 +171,8 @@ public class WorkshopService : IWorkshopService
 			{
 				return false;
 			}
+
+			_logger.Info("Logging in...");
 
 			var startupResult = ProcessResult(await Context.Account.Startup());
 
@@ -217,7 +221,11 @@ public class WorkshopService : IWorkshopService
 
 			IsLoggedIn = true;
 
-			_userService.SetLoggedInUser((await Context.Profile.Get()).Social?.DisplayName);
+			var userName = (await Context.Profile.Get()).Social?.DisplayName ?? "N/A";
+
+			_userService.SetLoggedInUser(userName);
+
+			_logger.Info("Logged in with " + userName);
 
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
@@ -362,11 +370,11 @@ public class WorkshopService : IWorkshopService
 		return string.IsNullOrWhiteSpace(authorId?.ToString()) ? null : (IUser)new PdxUser(authorId!.ToString());
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> GetWorkshopItemsByUserAsync(object userId, WorkshopQuerySorting sorting = WorkshopQuerySorting.DateCreated, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
+	public async Task<(IEnumerable<IWorkshopInfo> Mods, int TotalCount)> GetWorkshopItemsByUserAsync(object userId, WorkshopQuerySorting sorting = WorkshopQuerySorting.DateCreated, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
 	{
 		if (Context is null)
 		{
-			return [];
+			return ([], 0);
 		}
 
 		if (all)
@@ -387,14 +395,14 @@ public class WorkshopService : IWorkshopService
 
 		ProcessResult(result);
 
-		return result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]);
+		return (result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]), result.TotalCount);
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, WorkshopSearchTime searchTime = WorkshopSearchTime.AllTime, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
+	public async Task<(IEnumerable<IWorkshopInfo> Mods, int TotalCount)> QueryFilesAsync(WorkshopQuerySorting sorting, WorkshopSearchTime searchTime = WorkshopSearchTime.AllTime, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
 	{
 		if (Context is null)
 		{
-			return [];
+			return ([], 0);
 		}
 
 		if (all)
@@ -415,14 +423,14 @@ public class WorkshopService : IWorkshopService
 
 		ProcessResult(result);
 
-		return result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]);
+		return (result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]), result.TotalCount);
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> GetAllFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, object? userId = null)
+	public async Task<(IEnumerable<IWorkshopInfo> Mods, int TotalCount)> GetAllFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, object? userId = null)
 	{
 		if (Context is null)
 		{
-			return [];
+			return ([], 0);
 		}
 
 		var items = new List<IWorkshopInfo>();
@@ -444,16 +452,16 @@ public class WorkshopService : IWorkshopService
 
 			if (!result.Success)
 			{
-				return items;
+				return (items, items.Count);
 			}
 
 			var mods = result.Mods?.ToList(x => new PdxPackage(x)) ?? [];
 
 			items.AddRange(mods);
 
-			if (mods.Count < 100)
+			if ((page + 1) * 100 >= result.TotalCount)
 			{
-				return items;
+				return (items, items.Count);
 			}
 		}
 	}
@@ -565,18 +573,17 @@ public class WorkshopService : IWorkshopService
 		return await _processor.Queue(async () =>
 		{
 			var list = new List<PdxPlaysetPackage>();
-			var page = 1;
 
-			while (true)
+			for (var page = 1; ; page++)
 			{
-				var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, page++, includeOnline: includeOnline));
+				var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, page, includeOnline: includeOnline));
 
 				if (result.Mods is not null)
 				{
 					list.AddRange(result.Mods.Select(x => new PdxPlaysetPackage(x)).Distinct(x => x.Id));
 				}
 
-				if (!result.Success || result.Mods?.Count < 100)
+				if (!result.Success || (page * 100 >= result.TotalCount))
 				{
 					break;
 				}

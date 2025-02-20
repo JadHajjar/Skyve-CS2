@@ -227,11 +227,11 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 	{
 		PB_Loading.Loading = true;
 
-		var mods = _userService.User.Manager ?
+		var result = _userService.User.Manager ?
 			await _workshopService.QueryFilesAsync(WorkshopQuerySorting.DateUpdated, requiredTags: ["Code Mod"], all: true) :
 			await _workshopService.GetWorkshopItemsByUserAsync(_userService.User.Id ?? 0);
 
-		packageCrList.SetItems(mods);
+		packageCrList.SetItems(result.Mods);
 
 		return true;
 	}

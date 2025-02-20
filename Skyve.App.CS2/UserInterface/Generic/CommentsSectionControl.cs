@@ -140,7 +140,7 @@ public partial class CommentsSectionControl : SlickControl
 		TB_Message.Text = string.Empty;
 		TB_Message_Enter(sender, e);
 
-		var control = new CommentControl(post, Package, Package.GetWorkshopInfo()?.Version, lastRead) { Dock = DockStyle.Top };
+		var control = new CommentControl(post, Package, Package.GetWorkshopInfo()?.VersionName, lastRead) { Dock = DockStyle.Top };
 
 		P_Comments.Controls.Add(control);
 

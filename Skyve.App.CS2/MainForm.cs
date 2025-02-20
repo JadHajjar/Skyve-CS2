@@ -507,9 +507,9 @@ public partial class MainForm : BasePanelForm
 		{
 			var results = await ServiceCenter.Get<IWorkshopService>().GetWorkshopItemsByUserAsync(_userService.User.Id ?? string.Empty);
 
-			if (results != null)
+			if (results.Mods != null)
 			{
-				Invoke(() => PushPanel(PI_ManageYourPackages, new PC_CompatibilityManagement(results)));
+				Invoke(() => PushPanel(PI_ManageYourPackages, new PC_CompatibilityManagement(results.Mods)));
 			}
 		}
 		catch (Exception ex)
