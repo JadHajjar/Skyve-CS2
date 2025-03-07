@@ -102,8 +102,11 @@ internal class PlaysetManager : IPlaysetManager
 		return false;
 	}
 
-	public async Task<bool> DeletePlayset(IPlayset playset)
+	public async Task<bool> DeletePlayset(IPlayset? playset)
 	{
+		if (playset is null)
+			return false;
+
 		if (await _workshopService.DeletePlayset(playset.Id))
 		{
 			lock (_playsets)
@@ -333,7 +336,7 @@ internal class PlaysetManager : IPlaysetManager
 		return newPlayset;
 	}
 
-	public async Task<IPlayset?> ImportPlayset(string fileName, bool createNew = false)
+	public async Task<IPlayset?> ImportPlayset(string fileName, bool createNew = true)
 	{
 		var playset = JsonConvert.DeserializeObject<PdxPlaysetImport>(File.ReadAllText(fileName.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase) ? ExtractZipPlayset(fileName) : fileName));
 
@@ -342,7 +345,7 @@ internal class PlaysetManager : IPlaysetManager
 			throw new Exception(LocaleCS2.PlaysetAlreadyImported);
 		}
 
-		var newPlayset = await CreateNewPlayset(playset.GeneralData?.Name ?? "New Playset") ?? throw new Exception(Locale.CouldNotCreatePlayset);
+		var newPlayset = (createNew ? await CreateNewPlayset(playset.GeneralData?.Name ?? "New Playset") : CurrentPlayset) ?? throw new Exception(Locale.CouldNotCreatePlayset);
 
 		if (playset.SubscribedMods is not null)
 		{

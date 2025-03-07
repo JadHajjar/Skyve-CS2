@@ -86,7 +86,7 @@ public partial class PC_PlaysetAdd : PanelContent
 		{
 			DAD_NewPlayset.Loading = true;
 
-			var newPlayset = await _playsetManager.ImportPlayset(obj);
+			var newPlayset = await _playsetManager.ImportPlayset(obj, true);
 
 			if (newPlayset is not null)
 			{
