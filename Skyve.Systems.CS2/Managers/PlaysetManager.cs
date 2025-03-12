@@ -152,44 +152,7 @@ internal class PlaysetManager : IPlaysetManager
 		CurrentPlayset = playset;
 		CurrentCustomPlayset = GetCustomPlayset(playset);
 
-		if (playset.Temporary)
-		{
-			_notifier.OnPlaysetChanged();
-
-			_settings.SessionSettings.CurrentPlayset = null;
-			_settings.SessionSettings.Save();
-
-			return;
-		}
-
-		if (SystemsProgram.MainForm as SlickForm is null)
-		{
-			ApplyPlayset(playset);
-		}
-		else
-		{
-			new BackgroundAction("Applying playset", () => ApplyPlayset(playset)).Run();
-		}
-	}
-
-	internal async void ApplyPlayset(IPlayset playset)
-	{
-		try
-		{
-			await _workshopService.ActivatePlayset(playset.Id);
-
-			_notifier.OnPlaysetChanged();
-		}
-		catch (Exception ex)
-		{
-			MessagePrompt.Show(ex, "Failed to apply your playset", form: SystemsProgram.MainForm as SlickForm);
-
-			_notifier.OnPlaysetChanged();
-		}
-		finally
-		{
-			_notifier.IsApplyingPlayset = false;
-		}
+		_notifier.OnPlaysetChanged();
 	}
 
 	public void OnAutoSave()
@@ -267,7 +230,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<bool> RenamePlayset(IPlayset playset, string text)
 	{
-		if (playset == null || playset.Temporary)
+		if (playset == null)
 		{
 			return false;
 		}
@@ -421,11 +384,11 @@ internal class PlaysetManager : IPlaysetManager
 			{
 				if (value)
 				{
-					await _packageUtil.SetEnabled(packages, true, playset.Id, false);
+					await _packageUtil.SetEnabled(packages, true, playset.Id);
 				}
 				else
 				{
-					await _packageUtil.SetEnabled(packages, false, playset.Id, false);
+					await _packageUtil.SetEnabled(packages, false, playset.Id);
 				}
 			}
 		}

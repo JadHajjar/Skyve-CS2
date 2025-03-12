@@ -161,12 +161,12 @@ internal class ModsUtil : IModUtil
 		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id, withVersion ? mod.Version : null);
 	}
 
-	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null, bool withVersion = true)
+	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null, bool withVersion = true, bool promptForDependencies = true)
 	{
-		await SetIncluded([mod], value, playsetId, withVersion);
+		await SetIncluded([mod], value, playsetId, withVersion, promptForDependencies);
 	}
 
-	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null, bool withVersion = true)
+	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null, bool withVersion = true, bool promptForDependencies = true)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -193,7 +193,7 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
-		if (value && mods is List<IPackageIdentity> modList)
+		if (value && promptForDependencies && mods is List<IPackageIdentity> modList)
 		{
 			switch (_settings.UserSettings.DependencyResolution)
 			{
@@ -249,12 +249,12 @@ internal class ModsUtil : IModUtil
 		_notifier.OnRefreshUI(true);
 	}
 
-	public async Task SetEnabled(IPackageIdentity mod, bool value, int? playsetId = null, bool withVersion = true)
+	public async Task SetEnabled(IPackageIdentity mod, bool value, int? playsetId = null)
 	{
-		await SetEnabled([mod], value, playsetId, withVersion);
+		await SetEnabled([mod], value, playsetId);
 	}
 
-	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null, bool withVersion = true)
+	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -410,7 +410,7 @@ internal class ModsUtil : IModUtil
 		var dependencies = await Resolve(mods, playsetId);
 
 		dependencies.RemoveAll(x => mods.Any(y => x.Id == y.Id));
-		
+
 		return dependencies.Distinct(x => x.Id).ToList();
 
 		async Task<List<IPackageIdentity>> Resolve(List<IPackageIdentity> mods, int? playsetId)

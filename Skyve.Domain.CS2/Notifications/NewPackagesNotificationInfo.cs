@@ -16,7 +16,7 @@ public class NewPackagesNotificationInfo : INotificationInfo
 	{
 		_interfaceService = interfaceService;
 		_packages = newPackages;
-		Time = newPackages.Max(x => x.LocalTime);
+		Time = newPackages.Max(x => x.LocalTime).ToLocalTime();
 		Title = Locale.NewPackages;
 		Description = Locale.NewPackagesSinceSession.FormatPlural(newPackages.Count, newPackages[0].CleanName());
 		Icon = "New";

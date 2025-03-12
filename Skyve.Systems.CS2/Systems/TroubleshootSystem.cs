@@ -2,6 +2,7 @@
 
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Domain;
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Managers;
 
@@ -17,6 +18,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 {
 	private const string FILE_NAME = "TroubleshootState.json";
 
+	private bool busy;
 	private TroubleshootState? currentState;
 	private readonly IPackageManager _packageManager;
 	private readonly IModLogicManager _modLogicManager;
@@ -33,7 +35,8 @@ internal class TroubleshootSystem : ITroubleshootSystem
 	public event Action<IEnumerable<ILocalPackageIdentity>>? PromptResult;
 
 	public bool IsInProgress => currentState is not null;
-	public string CurrentAction => LocaleHelper.GetGlobalText(currentState?.Stage.ToString());
+	public bool IsBusy => busy && currentState is not null;
+	public string CurrentAction => currentState is not null ? LocaleHelper.GetGlobalText((currentState.Stage & ~ActionStage.Primary & ~ActionStage.Secondary).ToString()) : string.Empty;
 	public bool WaitingForGameLaunch => currentState?.Stage.HasFlag(ActionStage.WaitingForGameLaunch) ?? false;
 	public bool WaitingForGameClose => currentState?.Stage.HasFlag(ActionStage.WaitingForGameClose) ?? false;
 	public bool WaitingForPrompt => currentState?.Stage.HasFlag(ActionStage.WaitingForConfirmation) ?? false;
@@ -43,7 +46,9 @@ internal class TroubleshootSystem : ITroubleshootSystem
 	public TroubleshootSystem(ILogger logger, IPackageManager packageManager, IPlaysetManager playsetManager, ISettings settings, INotifier notifier, ICitiesManager citiesManager, IPackageUtil packageUtil, IModLogicManager modLogicManager, IModUtil modUtil, SaveHandler saveHandler)
 	{
 		try
-		{ saveHandler.Load(out currentState, FILE_NAME); }
+		{
+			saveHandler.Load(out currentState, FILE_NAME);
+		}
 		catch { }
 
 		_packageManager = packageManager;
@@ -59,16 +64,21 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		citiesManager.MonitorTick += CitiesManager_MonitorTick;
 	}
 
-	public async Task<bool> Start(ITroubleshootSettings settings)
+	public async Task<TroubleshootResult> Start(ITroubleshootSettings settings)
 	{
+		if (busy)
+		{
+			return TroubleshootResult.Busy;
+		}
+
 		if (_playsetManager.CurrentPlayset is null)
 		{
-			return false;
+			return TroubleshootResult.NoActivePlayset;
 		}
 
 		currentState = new()
 		{
-			Stage = ActionStage.Primary | ActionStage.WaitingForConfirmation,
+			Stage = ActionStage.Secondary | ActionStage.WaitingForConfirmation,
 			OriginalPlaysetId = _playsetManager.CurrentPlayset.Id,
 			Mods = settings.Mods,
 			ItemIsCausingIssues = settings.ItemIsCausingIssues,
@@ -86,9 +96,9 @@ internal class TroubleshootSystem : ITroubleshootSystem
 				|| (localIdentity is not null && _modLogicManager.IsRequired(localIdentity, _modUtil))
 				|| (item.GetPackageInfo()?.Statuses?.Any(x => x.Type is StatusType.StandardMod) == true))
 			{
-				if (_packageUtil.IsIncluded(item, currentState.OriginalPlaysetId, false))
+				if (localIdentity is not null && _packageUtil.IsIncludedAndEnabled(item, currentState.OriginalPlaysetId, false))
 				{
-					currentState.UnprocessedItems.Add(new(item));
+					currentState.UnprocessedItems.Add(new(localIdentity));
 				}
 			}
 			else
@@ -97,42 +107,46 @@ internal class TroubleshootSystem : ITroubleshootSystem
 			}
 		}
 
-		var group = SplitGroup(GetItemGroups(packageToProcess));
-
-		currentState.LeftProcessingItems = group.Left;
-		currentState.RightProcessingItems = group.Right;
+		currentState.LeftProcessingItems = [];
+		currentState.RightProcessingItems = GetItemGroups(packageToProcess);
 
 		if (TotalStages <= 1)
 		{
-			if (packageToProcess.Any())
-			{
-				PromptResult?.Invoke((IEnumerable<ILocalPackageIdentity>)currentState.UnprocessedItems);
-			}
-
 			currentState = null;
 
-			return false;
+			Save();
+
+			if (packageToProcess.Any())
+			{
+				PromptResult?.Invoke(packageToProcess);
+
+				return TroubleshootResult.Success;
+			}
+
+			return TroubleshootResult.NoPacakgesToProcess;
 		}
 
-		var playset = await _playsetManager.CreateNewPlayset("[Troubleshoot] " + _playsetManager.CurrentPlayset);
+		var playset = await _playsetManager.CreateNewPlayset("[Troubleshoot] " + _playsetManager.CurrentPlayset.Name);
 
 		if (playset == null)
 		{
 			currentState = null;
 
-			return false;
+			return TroubleshootResult.CouldNotCreatePlayset;
 		}
+
+		currentState.TroubleshootingPlaysetId = playset.Id;
 
 		await _playsetManager.ActivatePlayset(playset);
 
-		await _packageUtil.SetIncluded(currentState.ProcessedItems, true, playset.Id, false);
+		await _packageUtil.SetIncluded(currentState.UnprocessedItems, true, playset.Id, true, false);
 
 		return await ApplyConfirmation(true);
 	}
 
-	private static int ComputeStageCount(int totalItems)
+	private int ComputeStageCount(int totalItems)
 	{
-		return (int)Math.Ceiling(2 * Math.Log(2 * Math.Ceiling(totalItems / 2D), 2));
+		return Math.Max(currentState?.CurrentStage ?? 0, 2 * (int)Math.Ceiling(Math.Log(2 * Math.Ceiling(totalItems / 2D), 2)));
 	}
 
 	private bool CheckPackageValidity(IPackageIdentity item, out ILocalPackageIdentity? localPackageIdentity)
@@ -158,7 +172,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 		if (currentState.ItemIsMissing)
 		{
-			return !_packageUtil.IsIncludedAndEnabled(item, currentState.OriginalPlaysetId, false);
+			return _packageUtil.IsIncludedAndEnabled(item, currentState.OriginalPlaysetId, false);
 		}
 
 		if (currentState.NewItemCausingIssues)
@@ -168,78 +182,114 @@ internal class TroubleshootSystem : ITroubleshootSystem
 				return false;
 			}
 
-			if (item.GetLocalPackageIdentity()?.LocalTime > DateTime.Today.AddDays(-10))
-			{
-				return true;
-			}
+			return localIdentity.LocalTime > DateTime.UtcNow.AddDays(-10);
 		}
 
 		return false;
 	}
 
-	public async Task<bool> Stop(bool keepSettings)
+	public async Task<TroubleshootResult> Stop(bool keepSettings)
 	{
 		if (currentState is null)
 		{
-			return false;
+			return TroubleshootResult.InvalidState;
 		}
 
-		if (!keepSettings)
+		try
 		{
-			var originalPlayset = _playsetManager.GetPlayset(currentState.OriginalPlaysetId);
+			busy = true;
 
-			if (originalPlayset != null)
+			if (!keepSettings)
 			{
-				_playsetManager.ApplyPlayset(originalPlayset);
+				var originalPlayset = _playsetManager.GetPlayset(currentState.OriginalPlaysetId);
 
-				await _playsetManager.DeletePlayset(_playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId));
+				if (originalPlayset != null)
+				{
+					await _playsetManager.ActivatePlayset(originalPlayset);
+
+					await _playsetManager.DeletePlayset(_playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId));
+				}
+				else
+				{
+					_logger.Warning("Trying to go stop troubleshooting while the original playset is no longer available");
+
+					currentState = null;
+
+					Save();
+
+					StageChanged?.Invoke();
+
+					return TroubleshootResult.InvalidState;
+				}
 			}
-			else
-			{
-				currentState = null;
 
-				Save();
+			currentState = null;
 
-				StageChanged?.Invoke();
+			Save();
 
-				return false;
-			}
+			StageChanged?.Invoke();
+
+			return TroubleshootResult.Success;
 		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, $"Unexpected error in {nameof(TroubleshootSystem)}.{nameof(ApplyConfirmation)}");
 
-		currentState = null;
-
-		Save();
-
-		StageChanged?.Invoke();
-
-		return true;
+			return TroubleshootResult.Error;
+		}
+		finally
+		{
+			busy = false;
+		}
 	}
 
-	public async Task<bool> ApplyConfirmation(bool issuePersists)
+	public async Task<TroubleshootResult> ApplyConfirmation(bool issuePersists)
 	{
 		if (currentState is null || !currentState.Stage.HasFlag(ActionStage.WaitingForConfirmation))
 		{
-			return false;
+			return TroubleshootResult.InvalidState;
 		}
 
-		var stage = currentState.Stage;
-
-		GoToNextStage();
-
-		if (await ApplyNextSettings(issuePersists))
+		if (busy)
 		{
+			return TroubleshootResult.Busy;
+		}
+
+		try
+		{
+			busy = true;
+
+			var stage = currentState.Stage;
+
 			GoToNextStage();
 
-			return true;
+			var applyResult = await ApplyNextSettings(issuePersists);
+
+			if (applyResult < TroubleshootResult.Error)
+			{
+				GoToNextStage();
+
+				return TroubleshootResult.Success;
+			}
+
+			currentState.Stage = stage;
+
+			Save();
+
+			StageChanged?.Invoke();
+
+			return applyResult;
 		}
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, $"Unexpected error in {nameof(TroubleshootSystem)}.{nameof(ApplyConfirmation)}");
 
-		currentState.Stage = stage;
-
-		Save();
-
-		StageChanged?.Invoke();
-
-		return false;
+			return TroubleshootResult.Error;
+		}
+		finally
+		{
+			busy = false;
+		}
 	}
 
 	public void GoToNextStage()
@@ -249,7 +299,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 			return;
 		}
 
-		var subStage = currentState.Stage & ActionStage.Primary & ActionStage.Secondary;
+		var subStage = currentState.Stage & (ActionStage.Primary | ActionStage.Secondary);
 
 		switch (currentState.Stage & ~subStage)
 		{
@@ -277,11 +327,11 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		}
 	}
 
-	private async Task<bool> ApplyNextSettings(bool issuePersists)
+	private async Task<TroubleshootResult> ApplyNextSettings(bool issuePersists)
 	{
 		if (currentState is null)
 		{
-			return false;
+			return TroubleshootResult.InvalidState;
 		}
 
 		if (_playsetManager.CurrentPlayset?.Id != currentState.TroubleshootingPlaysetId)
@@ -294,7 +344,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 				await Stop(true);
 
-				return false;
+				return TroubleshootResult.InvalidState;
 			}
 
 			await _playsetManager.ActivatePlayset(playset);
@@ -302,12 +352,14 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 		if (currentState.Stage.HasFlag(ActionStage.Primary))
 		{
-			await _packageUtil.SetIncluded((IEnumerable<IPackageIdentity>)(currentState.LeftProcessingItems ?? []), false, currentState.TroubleshootingPlaysetId, false);
-			await _packageUtil.SetIncluded((IEnumerable<IPackageIdentity>)(currentState.RightProcessingItems ?? []), true, currentState.TroubleshootingPlaysetId, false);
+			await _packageUtil.SetIncluded(currentState.LeftProcessingItems?.AsLocalPackageIdentity() ?? [], false, currentState.TroubleshootingPlaysetId, true, false);
+			await _packageUtil.SetIncluded(currentState.RightProcessingItems?.AsLocalPackageIdentity() ?? [], true, currentState.TroubleshootingPlaysetId, true, false);
 
 			currentState.LastResult = issuePersists;
 
-			return true;
+			currentState.CurrentStage++;
+
+			return TroubleshootResult.Success;
 		}
 
 		if (issuePersists == currentState.LastResult) // Both groups resulted in the same thing, issue is likely unrelated to mods
@@ -319,37 +371,30 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 		(PackageList Left, PackageList Right) group;
 
-		if (issuePersists)
-		{
-			group = SplitGroup(currentState.RightProcessingItems ?? []);
+		var itemsToSplit = (issuePersists ? currentState.RightProcessingItems : currentState.LeftProcessingItems) ?? [];
+		var processedItems = (issuePersists ? currentState.LeftProcessingItems : currentState.RightProcessingItems) ?? [];
 
-			await _packageUtil.SetIncluded((IEnumerable<IPackageIdentity>)(currentState.LeftProcessingItems ?? []).Concat(group.Left), true, currentState.TroubleshootingPlaysetId, false);
-			await _packageUtil.SetIncluded((IEnumerable<IPackageIdentity>)(group.Right), false, currentState.TroubleshootingPlaysetId, false);
-		}
-		else
-		{
-			group = SplitGroup(currentState.LeftProcessingItems ?? []);
+		group = SplitGroup(itemsToSplit);
 
-			await _packageUtil.SetIncluded((IEnumerable<IPackageIdentity>)(currentState.RightProcessingItems ?? []).Concat(group.Right), true, currentState.TroubleshootingPlaysetId, false);
-			await _packageUtil.SetIncluded((IEnumerable<IPackageIdentity>)(group.Left), false, currentState.TroubleshootingPlaysetId, false);
-		}
-
-		if (group.Right.Count == 0) // Last Stage Reached
-		{
-			PromptResult?.Invoke((IEnumerable<ILocalPackageIdentity>)group.Left);
-
-			return await Stop(true);
-		}
+		await _packageUtil.SetIncluded(group.Left.AsLocalPackageIdentity().Concat(processedItems.AsLocalPackageIdentity()), true, currentState.TroubleshootingPlaysetId, true, false);
+		await _packageUtil.SetIncluded(group.Right.AsLocalPackageIdentity(), false, currentState.TroubleshootingPlaysetId, true, false);
 
 		currentState.LeftProcessingItems = group.Left;
 		currentState.RightProcessingItems = group.Right;
 
 		currentState.ProcessedItems ??= [];
-		currentState.ProcessedItems.AddRange((IEnumerable<GenericLocalPackageIdentity>)((issuePersists ? currentState.LeftProcessingItems : currentState.RightProcessingItems) ?? []));
+		currentState.ProcessedItems.AddRange(processedItems.SelectMany(x => x));
+
+		if (group.Right.Count == 0 || group.Left.Count == 0) // Last Stage Reached
+		{
+			PromptResult?.Invoke(group.Left.AsLocalPackageIdentity().Concat(group.Right.AsLocalPackageIdentity()));
+
+			return await Stop(true);
+		}
 
 		currentState.CurrentStage++;
 
-		return true;
+		return TroubleshootResult.Success;
 	}
 
 	private (PackageList Left, PackageList Right) SplitGroup(PackageList list)
@@ -387,7 +432,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 			groups.Add(group);
 
-			remainingItems.RemoveAll(x => group.Contains(x));
+			remainingItems.RemoveAll(group.Contains);
 		}
 
 		return groups;
@@ -458,7 +503,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		public string? PlaysetName { get; set; }
 		public int OriginalPlaysetId { get; set; }
 		public int TroubleshootingPlaysetId { get; set; }
-		public List<GenericPackageIdentity>? UnprocessedItems { get; set; }
+		public List<GenericLocalPackageIdentity>? UnprocessedItems { get; set; }
 		public PackageList? LeftProcessingItems { get; set; }
 		public PackageList? RightProcessingItems { get; set; }
 		public List<GenericLocalPackageIdentity>? ProcessedItems { get; set; }
@@ -474,6 +519,16 @@ internal class TroubleshootSystem : ITroubleshootSystem
 	public class PackageList : List<PackageGroup>
 	{
 		public int TotalCount => this.Sum(x => x.Count);
+
+		public IEnumerable<ILocalPackageIdentity> AsLocalPackageIdentity()
+		{
+			return this.SelectMany(x => x);
+		}
+
+		public IEnumerable<IPackageIdentity> AsPackageIdentity()
+		{
+			return this.SelectMany(x => x);
+		}
 
 		public static implicit operator List<GenericLocalPackageIdentity>(PackageList packageList)
 		{

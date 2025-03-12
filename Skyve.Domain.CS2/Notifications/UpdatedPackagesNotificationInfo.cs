@@ -16,7 +16,7 @@ public class UpdatedPackagesNotificationInfo : INotificationInfo
 	{
 		_interfaceService = interfaceService;
 		_packages = updatedPackages;
-		Time = updatedPackages.Max(x => x.LocalTime);
+		Time = updatedPackages.Max(x => x.LocalTime).ToLocalTime();
 		Title = Locale.PackageUpdates;
 		Description = Locale.PackagesUpdatedSinceSession.FormatPlural(updatedPackages.Count, updatedPackages[0].CleanName());
 		Icon = "ReDownload";
