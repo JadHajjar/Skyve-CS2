@@ -17,8 +17,8 @@
     "Plural": "Seçili paketlerin PDX Mods linklerini kopyalayın"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "Copy PDX Mods link as Markdown",
-    "Plural": "Copy the selected packages' PDX Mods links as Markdown"
+    "One": "PDX Mods bağlantısını Markdown formatında kopyala",
+    "Plural": "Seçilen paketlerin PDX Mods bağlantılarını Markdown formatında kopyala"
   },
   "CopyWorkshopId": {
     "One": "PDX Mods ID'isini kopyalayın",
@@ -78,7 +78,7 @@
   "LogsToPlayerLog": "Günlükleri Player.Log'a kopyala",
   "InvalidFolderSettings": "Geçersiz kurulum tespit edildi",
   "InvalidFolderSettingsInfo": "Skyve Cities: Skylines II'nin veri klasörünü bulamadı.\n\nElle seçmek için buraya tıklayın.",
-  "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
+  "SkyvenotSetUpInfo": "Skyve henüz kurulmadı. Kurulumu tamamlamak için lütfen Cities: Skylines II oyununu Skyve etkin şekilde başlatarak açın.\n\nModların sorunsuz yüklendiğinden emin olun. Eğer yüklenmezlerse, yalnızca Skyve içeren yeni bir oyun profili oluşturmayı deneyin.",
   "InvalidFolderSettingsFail": "Seçili yol doğru değil. Lütfen app data klasöründeki 'Cities Skylines II' klasörünü seçin.",
   "DefaultLocation": "Varsayılan Kullanıcı verisi Konumu",
   "JunctionTitle": "Özel İçerik Konumu",
@@ -88,7 +88,7 @@
   "ResetLocation": "Konumu Sıfırla",
   "JunctionRestart": "Bu işlem sırasında Skyve ve Cities: Skylines II kapanacaktır.\n\nBitince Skyve otomatik olarak yeniden başlayacak.",
   "PlaysetAlreadyImported": "Bu oyun seti zaten oyun seti listenizde bulunuyor.",
-  "JunctionInvalidFolder": "The selected folder is not a valid destination. Please try another one.",
+  "JunctionInvalidFolder": "Seçilen klasör geçerli bir hedef değil. Lütfen başka bir klasör deneyin.",
   "CouldNotRetrieveMods": "Modların verilerine ulaşılamadı",
   "NewGameUpdate": "Yeni Cities: Skylines II Güncellemesi",
   "NewGameUpdateInfo": "{0} yaması hazır.\nOyununuzu başlatmadan önce uyumluluk raporunu kontrol edin.",
@@ -98,7 +98,7 @@
   "RunSync": "Senkronizasyonu Başlat",
   "PDXModsNew": "PDX Mods'ta Yeni",
   "PDXModsUpdated": "PDX Mods'ta yakın zamanda güncellenmiş",
-  "PDXModsPopularWeek": "Popular mods from last week",
+  "PDXModsPopularWeek": "Geçen haftanın popüler modlar",
   "DiskStatus": "Disk Durumu",
   "TotalCitiesSize": "Toplam Depolanan C:S II Kullanıcı Verisi",
   "TotalSavesSize": "Oyun Kayıtlarının Boyutu",
