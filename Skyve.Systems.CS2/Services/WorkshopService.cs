@@ -151,6 +151,8 @@ public class WorkshopService : IWorkshopService
 				@namespace: "cities_skylines_2",
 				config: config);
 
+			_logger.Info("SDK Created");
+
 			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
 
 			OnContextAvailable?.Invoke();
@@ -178,12 +180,16 @@ public class WorkshopService : IWorkshopService
 
 			if (!startupResult.IsLoggedIn)
 			{
+				_logger.Info("Existing session failed to log in.");
+
 				if (!ConnectionHandler.IsConnected)
 				{
 					if (loginWaitingConnection)
 					{
 						return false;
 					}
+
+					_logger.Info("Waiting for internet connection to log in...");
 
 					loginWaitingConnection = true;
 
@@ -200,6 +206,8 @@ public class WorkshopService : IWorkshopService
 
 				if (!TryGetCredentials(out var credentials))
 				{
+					_logger.Info("No existing credentials to log in with.");
+
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 					_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false, _interfaceService));
@@ -211,6 +219,8 @@ public class WorkshopService : IWorkshopService
 
 				if (!loginResult.Success)
 				{
+					_logger.Info("Login attempt with existing credentials failed.");
+
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 					_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(true, _interfaceService));
@@ -1123,7 +1133,11 @@ public class WorkshopService : IWorkshopService
 	{
 		if (result.Error is not null)
 		{
-			_logger.Error($"[PDX] [{result.Error.Category}] [{result.Error.SubCategory}] {result.Error.Details}");
+			_logger.Error($"[PDX] [{result.Error.Category}] [{result.Error.SubCategory}] {result.Error.Details}"
+#if DEBUG
+				+ $"\r\n{new StackTrace()}"
+#endif
+				);
 		}
 
 		return result;

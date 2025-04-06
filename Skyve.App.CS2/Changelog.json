@@ -2,6 +2,29 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "0.14.0",
+    "Date": "2025-03-18",
+    "Tagline": "Troubleshoot Mode",
+    "ChangeGroups": [
+      {
+        "Name": "Re-introducing Troubleshoot Mode",
+        "Changes": [
+          "Troubleshoot mode from the C:S1 days is back, giving you a conveniant way to troubleshoot what mod is causing issues.",
+          "This mode will automatically group, enable and disable specific mods, in a series of stages, allowing you to find the mod causing issues at the end.",
+          "Troubleshoot mode can be accessed from the Utilities, and Help tabs."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Updated to the PDX SDK v1.31"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.13.1",
     "Date": "2025-02-21",
     "ChangeGroups": [
@@ -11,7 +34,7 @@
           "Changed the PDX Mods tab to a paged browsing experience instead of an infinite scroll.",
           "Added a 'Tags' panel on the right of the PDX Mods tab for easier tag filtering.",
           "Removed the 'Recently Updated' effect in the PDX Mods tab.",
-          "Improved the 'Search the workshop instead' prompts when no results match your filters in the local content. It now properly selects the tags and search both in-app and in the browser.",
+          "Improved the 'Search the workshop instead' prompts when no results match your filters in the local content. It now properly selects the tags and search both in-app and in the browser."
         ]
       },
       {

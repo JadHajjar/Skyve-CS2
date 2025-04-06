@@ -151,7 +151,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 	private bool CheckPackageValidity(IPackageIdentity item, out ILocalPackageIdentity? localPackageIdentity)
 	{
-		if (currentState is null)
+		if (currentState is null || item.IsLocal())
 		{
 			localPackageIdentity = null;
 			return false;
@@ -376,6 +376,16 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 		group = SplitGroup(itemsToSplit);
 
+		if (group.Right.Count == 0) // Last Stage Reached
+		{
+			await _packageUtil.SetIncluded(processedItems.AsLocalPackageIdentity(), true, currentState.TroubleshootingPlaysetId, true, false);
+			await _packageUtil.SetIncluded(group.Left.AsLocalPackageIdentity(), false, currentState.TroubleshootingPlaysetId, true, false);
+
+			PromptResult?.Invoke(group.Left.AsLocalPackageIdentity());
+
+			return await Stop(true);
+		}
+
 		await _packageUtil.SetIncluded(group.Left.AsLocalPackageIdentity().Concat(processedItems.AsLocalPackageIdentity()), true, currentState.TroubleshootingPlaysetId, true, false);
 		await _packageUtil.SetIncluded(group.Right.AsLocalPackageIdentity(), false, currentState.TroubleshootingPlaysetId, true, false);
 
@@ -384,13 +394,6 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 		currentState.ProcessedItems ??= [];
 		currentState.ProcessedItems.AddRange(processedItems.SelectMany(x => x));
-
-		if (group.Right.Count == 0 || group.Left.Count == 0) // Last Stage Reached
-		{
-			PromptResult?.Invoke(group.Left.AsLocalPackageIdentity().Concat(group.Right.AsLocalPackageIdentity()));
-
-			return await Stop(true);
-		}
 
 		currentState.CurrentStage++;
 
@@ -488,11 +491,11 @@ internal class TroubleshootSystem : ITroubleshootSystem
 			return;
 		}
 
-		if (currentState.Stage == ActionStage.WaitingForGameLaunch && isRunning)
+		if (currentState.Stage.HasFlag(ActionStage.WaitingForGameLaunch) && isRunning)
 		{
 			GoToNextStage();
 		}
-		else if (currentState.Stage == ActionStage.WaitingForGameClose && !isRunning && isAvailable)
+		else if (currentState.Stage.HasFlag(ActionStage.WaitingForGameClose) && !isRunning && isAvailable)
 		{
 			GoToNextStage();
 		}
