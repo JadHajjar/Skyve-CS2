@@ -1,12 +1,14 @@
 ﻿using Colossal.IO.AssetDatabase;
 using Colossal.Json;
 using Colossal.Logging;
+using Colossal.PSI.Common;
 
 using Game;
 using Game.Modding;
 using Game.SceneFlow;
 
 using Skyve.App.CS2.Installer;
+using Skyve.Domain.CS2.Utilities;
 
 using System;
 using System.IO;
@@ -47,6 +49,38 @@ namespace Skyve.Mod.CS2
 
 			AssetDatabase.global.LoadSettings(nameof(SkyveMod), Settings, new SkyveModSettings(this));
 
+			UpdateFolderSettings();
+
+			UpdateDlcInfo();
+
+			//var assets = AssetDatabase.global.GetAssets<AssetData>();
+
+			//Log.Info("ASSETS " + assets.Count());
+
+			//var dic = new Dictionary<string, int>();
+
+			//foreach (var item in assets)
+			//{
+			//	var name = item.GetType().Name;
+
+			//	if (dic.ContainsKey(name))
+			//	{
+			//		dic[name]++;
+			//	}
+			//	else
+			//	{
+			//		dic[name] = 1;
+			//	}
+			//}
+
+			//foreach (var item in dic)
+			//{
+			//	Log.Info("  " + item.Key + "  " + item.Value);
+			//}
+		}
+
+		private static void UpdateFolderSettings()
+		{
 			try
 			{
 				if (File.Exists(FolderSettings.FolderSettingsPath))
@@ -79,31 +113,44 @@ namespace Skyve.Mod.CS2
 			{
 				Log.Error(ex);
 			}
+		}
 
-			//var assets = AssetDatabase.global.GetAssets<AssetData>();
+		private static void UpdateDlcInfo()
+		{
+			try
+			{
+				var config = new DlcConfig();
 
-			//Log.Info("ASSETS " + assets.Count());
+				try
+				{
+					if (File.Exists(FolderSettings.DlcConfigPath))
+					{
+						config = JSON.MakeInto<DlcConfig>(JSON.Load(File.ReadAllText(FolderSettings.DlcConfigPath)));
+					}
+				}
+				catch (Exception ex)
+				{
+					Log.Error(ex);
+				}
 
-			//var dic = new Dictionary<string, int>();
+				config.AvailableDLCs.Clear();
 
-			//foreach (var item in assets)
-			//{
-			//	var name = item.GetType().Name;
+				foreach (var item in PlatformManager.instance.EnumerateDLCs())
+				{
+					if (PlatformManager.instance.IsDlcOwned(item) && uint.TryParse(item.backendId, out var id))
+					{
+						config.AvailableDLCs.Add(id);
+					}
+				}
 
-			//	if (dic.ContainsKey(name))
-			//	{
-			//		dic[name]++;
-			//	}
-			//	else
-			//	{
-			//		dic[name] = 1;
-			//	}
-			//}
+				Log.Info(JSON.Dump(config));
 
-			//foreach (var item in dic)
-			//{
-			//	Log.Info("  " + item.Key + "  " + item.Value);
-			//}
+				File.WriteAllText(FolderSettings.DlcConfigPath, JSON.Dump(config));
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
 		}
 
 		private void ListMods()

@@ -163,7 +163,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 			{
 				if (grp.Key.IsDlc)
 				{
-					info.RequiredDLCs.AddRange(grp.Select(x => (uint)x.Id));
+					info.RequiredDLCs.AddRange(grp.Select(x => x.Id));
 				}
 				else
 				{

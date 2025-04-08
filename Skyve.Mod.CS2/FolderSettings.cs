@@ -5,6 +5,7 @@ using Colossal.PSI.Environment;
 using Extensions;
 
 using Skyve.Domain;
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Enums;
 
 using System.IO;
@@ -18,6 +19,7 @@ namespace Skyve.Mod.CS2
 		public static string ContentFolder { get; }
 		public static string SettingsFolder { get; }
 		public static string FolderSettingsPath { get; }
+		public static string DlcConfigPath { get; }
 
 		public string AppDataPath { get; set; }
 		public string GamePath { get; set; }
@@ -34,6 +36,8 @@ namespace Skyve.Mod.CS2
 			SettingsFolder = Path.Combine(EnvPath.kUserDataPath, "ModsSettings", nameof(Skyve));
 
 			FolderSettingsPath = Path.Combine(SettingsFolder, $"{nameof(FolderSettings)}.json");
+
+			DlcConfigPath = Path.Combine(ContentFolder, $"{nameof(DlcConfig)}.json");
 
 			Directory.CreateDirectory(ContentFolder);
 			Directory.CreateDirectory(SettingsFolder);

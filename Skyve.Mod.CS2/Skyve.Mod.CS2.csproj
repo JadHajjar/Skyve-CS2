@@ -57,7 +57,8 @@
 		<Compile Include="..\..\Extensions\Extensions\Enums\Platform.cs" Link="Shared\Platform.cs" />
 		<Compile Include="..\..\Skyve\Skyve.Domain\Enums\GamingPlatform.cs" Link="Shared\GamingPlatform.cs" />
 		<Compile Include="..\..\Skyve\Skyve.Domain\IFolderSettings.cs" Link="Shared\IFolderSettings.cs" />
-		<Compile Include="..\Skyve.App.CS2.Installer\InstallHelper.cs" Link="InstallHelper.cs" />
+		<Compile Include="..\Skyve.Domain.CS2\Utilities\SkyveConfig.cs" Link="Shared\SkyveConfig.cs" />
+		<Compile Include="..\Skyve.App.CS2.Installer\InstallHelper.cs" Link="Shared\InstallHelper.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

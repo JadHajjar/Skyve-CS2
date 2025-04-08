@@ -48,6 +48,7 @@ public class WorkshopService : IWorkshopService
 	private readonly INotificationsService _notificationsService;
 	private readonly IInterfaceService _interfaceService;
 	private readonly IServiceProvider _serviceProvider;
+	private readonly IDlcManager _dlcManager;
 	private readonly UserService _userService;
 	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
@@ -64,7 +65,7 @@ public class WorkshopService : IWorkshopService
 	public bool IsAvailable => Context is not null;
 	public bool IsReady => Context is not null && IsLoggedIn && !Context.Mods.SyncOngoing();
 
-	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler)
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler, IDlcManager dlcManager)
 	{
 		_logger = logger;
 		_settings = settings;
@@ -79,6 +80,7 @@ public class WorkshopService : IWorkshopService
 		_userProcessor = new PdxUserProcessor(this, saveHandler, _notifier);
 
 		_processor.TasksCompleted += Processor_TasksCompleted;
+		_dlcManager = dlcManager;
 	}
 
 	private void Processor_TasksCompleted()
@@ -331,7 +333,11 @@ public class WorkshopService : IWorkshopService
 		{
 			var ratingResult = await Context.Mods.GetUserRating(id);
 
-			return new PdxModDetails(result.Mod, ratingResult.Rating != 0);
+			return new PdxModDetails(result.Mod, ratingResult.Rating != 0)
+			{
+				Requirements = result.Mod.Dependencies?.Where(x => x.Type is not DependencyType.Dlc).ToArray(x => new PdxModsRequirement(x)) ?? [],
+				DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc).ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
+			};
 		}
 		else if (result?.Error.Category is BaseCategory.NotFound)
 		{
@@ -896,7 +902,7 @@ public class WorkshopService : IWorkshopService
 		{
 			if (!ProcessResult(await Context.Mods.CreatePlayset(playsetName)).Success)
 			{
-				return null; 
+				return null;
 			}
 
 			var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(true));
@@ -1021,7 +1027,6 @@ public class WorkshopService : IWorkshopService
 		{
 			_logger.Exception(ex, "Failed to sync mods");
 		}
-
 	}
 
 	public async Task DeactivateActivePlayset()

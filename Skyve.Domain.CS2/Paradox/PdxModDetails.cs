@@ -47,7 +47,6 @@ public class PdxModDetails : IModDetails
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
 		ForumLink = mod.ForumLinks?.FirstOrDefault();
 		Tags = mod.Tags.ToDictionary(x => x.Id, x => x.DisplayName);
-		Requirements = mod.Dependencies?.ToArray(x => new PdxModRequirement(x)) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
 		ServerTime = mod.LatestUpdate ?? Changelog.Max(x => x.ReleasedDate) ?? default;
 		Images = mod.Screenshots.ToArray(x => new ParadoxScreenshot(x.Image, Id, mod.Version, false));
@@ -76,7 +75,8 @@ public class PdxModDetails : IModDetails
 	public bool IsBanned { get; set; }
 	public bool IsInvalid { get; set; }
 	public bool HasVoted { get; set; }
-	public PdxModRequirement[]? Requirements { get; set; }
+	public PdxModsRequirement[]? Requirements { get; set; }
+	public PdxModsDlcRequirement[]? DlcRequirements { get; set; }
 	public ModChangelog[]? Changelog { get; set; }
 	public Dictionary<string, string> Tags { get; set; }
 	public ParadoxScreenshot[]? Images { get; set; }
@@ -88,13 +88,27 @@ public class PdxModDetails : IModDetails
 	bool IPackage.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
 	bool IWorkshopInfo.IsCodeMod => Tags.Any(x => x.Key == "Code Mod");
 	IUser? IWorkshopInfo.Author => string.IsNullOrWhiteSpace(AuthorId) ? null : new PdxUser(AuthorId!);
-	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => Requirements ?? [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => Changelog ?? [];
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => Images ?? [];
 	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
 	bool IWorkshopInfo.IsPartialInfo { get; }
 	bool IPackage.IsBuiltIn { get; }
 	public string? LatestVersion { get; }
+	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements
+	{
+		get
+		{
+			foreach (var item in Requirements ?? [])
+			{
+				yield return item;
+			}
+
+			foreach (var item in DlcRequirements ?? [])
+			{
+				yield return item;
+			}
+		}
+	}
 
 	bool IWorkshopInfo.HasComments()
 	{

@@ -359,8 +359,14 @@ public class Installer
 
 				InstallService = !bool.TryParse(key.GetValue("InstallBackgroundService")?.ToString(), out var install) || install;
 
-				var path = Path.GetDirectoryName(path!.Trim('"').Replace("\\\\", "\\"));
-				return INSTALL_PATH = path;
+				path = Path.GetDirectoryName(path!.Trim('"').Replace("\\\\", "\\"));
+
+				if (Directory.Exists(path))
+				{
+					return INSTALL_PATH = path;
+				}
+
+				return null;
 			}
 			finally
 			{
