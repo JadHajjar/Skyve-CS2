@@ -356,7 +356,7 @@ public partial class CommentControl : SlickControl
 
 						location.Y += diff;
 
-						DrawQuote((diff * 2) + UI.Scale(2), nesting - 1);
+						DrawQuote((diff * 2) + UI.Scale(4), nesting - 1);
 					}
 				}
 

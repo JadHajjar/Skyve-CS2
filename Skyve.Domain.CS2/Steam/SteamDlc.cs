@@ -11,6 +11,7 @@ public class SteamDlc : IDlcInfo
 	public DateTime ReleaseDate { get; set; }
 	public string? Price { get; set; }
 	public string? OriginalPrice { get; set; }
+	public string[]? Creators { get; set; }
 	public float Discount { get; set; }
 	public DateTime Timestamp { get; set; }
 	[JsonIgnore] public string ThumbnailUrl => $"https://cdn.akamai.steamstatic.com/steam/apps/{Id}/header.jpg";

@@ -15,6 +15,7 @@ namespace Skyve.Systems.CS2.Managers;
 internal class DlcManager : IDlcManager
 {
 	private const string DLC_CACHE_FILE = "DlcCache.json";
+
 	private readonly DlcConfig _config;
 	private readonly ILogger _logger;
 	private readonly SaveHandler _saveHandler;
@@ -27,10 +28,16 @@ internal class DlcManager : IDlcManager
 
 	public DlcManager(ILogger logger, SaveHandler saveHandler, ApiUtil apiUtil)
 	{
-		_config = saveHandler.Load<DlcConfig>();
 		_logger = logger;
 		_saveHandler = saveHandler;
 		_apiUtil = apiUtil;
+
+		try
+		{
+			_config = _saveHandler.Load<DlcConfig>();
+			_saveHandler.Load(out dlcs, DLC_CACHE_FILE); 
+		}
+		catch { _config = new(); }
 	}
 
 	public bool IsAvailable(uint dlcId)
@@ -102,6 +109,7 @@ internal class DlcManager : IDlcManager
 					Price = info.price_overview?.final_formatted,
 					OriginalPrice = info.price_overview?.initial_formatted,
 					Discount = info.price_overview?.discount_percent ?? 0F,
+					Creators = info.developers?.Where(x => x != "Colossal Order Ltd." && x != "Paradox Interactive").ToArray(),
 					ReleaseDate = DateTime.TryParseExact(info.release_date?.date, "dd MMM, yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ? dt : DateTime.MinValue
 				});
 			}
@@ -120,7 +128,7 @@ internal class DlcManager : IDlcManager
 		{
 			const string url = "https://store.steampowered.com/api/appdetails";
 
-			return await _apiUtil.Get<Dictionary<string, SteamAppInfo>>(url, ("appids", steamId), ("l", "english")) ?? [];
+			 return await _apiUtil.Get<Dictionary<string, SteamAppInfo>>(url, ("appids", steamId), ("l", "english")) ?? [];
 		}
 		catch (Exception ex)
 		{
