@@ -101,44 +101,44 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	private async Task SwitchToPackages(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		await _packageUtil.SetEnabled(message.Packages, true);
-		
-		await _packageUtil.SetIncluded(message.Packages, true);
-		
+
+		await _packageUtil.SetIncluded(message.Packages, true, withVersion: false, promptForDependencies: false);
+
 		await _packageUtil.SetEnabled(message, false);
-		
-		await _packageUtil.SetIncluded(message, false);
+
+		await _packageUtil.SetIncluded(message, false, withVersion: false, promptForDependencies: false);
 	}
 
 	private async Task IncludeAndEnablePackages(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		await _packageUtil.SetEnabled(message.Packages, true);
-		
-		await _packageUtil.SetIncluded(message.Packages, true);
+
+		await _packageUtil.SetIncluded(message.Packages, true, withVersion: false, promptForDependencies: false);
 	}
 
 	private async Task ExcludeAndDisablePackages(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		await _packageUtil.SetEnabled(message.Packages, false);
-		
-		await _packageUtil.SetIncluded(message.Packages, false);
+
+		await _packageUtil.SetIncluded(message.Packages, false, withVersion: false, promptForDependencies: false);
 	}
 
 	private async Task IncludeAndEnableMain(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		await _packageUtil.SetEnabled(message, true);
-		
-		await _packageUtil.SetIncluded(message, true);
+
+		await _packageUtil.SetIncluded(message, true, withVersion: false, promptForDependencies: false);
 	}
 
 	private async Task ExcludeAndDisableMain(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		if (message.IsIncluded())
 		{
-			await _packageUtil.SetIncluded(message, false);
+			await _packageUtil.SetIncluded(message, false, withVersion: false, promptForDependencies: false);
 		}
 		else
 		{
-			await _playsetManager.SetIncludedForAll(message, false);
+			await _playsetManager.SetIncludedForAll(message, false, withVersion: false, promptForDependencies: false);
 		}
 	}
 
@@ -264,10 +264,10 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 		{
 			return;
 		}
-		
-		await _packageUtil.SetIncluded(message.Packages.Where(x => !x.Equals(package)), false);
-		
-		await _packageUtil.SetIncluded(package, true);
+
+		await _packageUtil.SetIncluded(message.Packages.Where(x => !x.Equals(package)), false, withVersion: false, promptForDependencies: false);
+
+		await _packageUtil.SetIncluded(package, true, withVersion: false, promptForDependencies: false);
 
 		await _packageUtil.SetEnabled(package, true);
 	}
@@ -278,8 +278,8 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 		{
 			return;
 		}
-		
-		await _packageUtil.SetIncluded(package, true);
+
+		await _packageUtil.SetIncluded(package, true, withVersion: false, promptForDependencies: false);
 
 		await _packageUtil.SetEnabled(package, true);
 	}
@@ -300,10 +300,10 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 		{
 			return;
 		}
-		
-		await _packageUtil.SetIncluded([message, .. message.Packages.Where(x => !x.Equals(package))], false);
-		
-		await _packageUtil.SetIncluded(package, true);
+
+		await _packageUtil.SetIncluded([message, .. message.Packages.Where(x => !x.Equals(package))], false, withVersion: false, promptForDependencies: false);
+
+		await _packageUtil.SetIncluded(package, true, withVersion: false, promptForDependencies: false);
 
 		await _packageUtil.SetEnabled(package, true);
 	}

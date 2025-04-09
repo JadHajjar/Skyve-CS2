@@ -105,7 +105,9 @@ internal class PlaysetManager : IPlaysetManager
 	public async Task<bool> DeletePlayset(IPlayset? playset)
 	{
 		if (playset is null)
+		{
 			return false;
+		}
 
 		if (await _workshopService.DeletePlayset(playset.Id))
 		{
@@ -351,18 +353,18 @@ internal class PlaysetManager : IPlaysetManager
 		return Task.FromResult((IPlayset?)JsonConvert.DeserializeObject<PdxPlaysetImport>(CrossIO.FileExists(file) ? File.ReadAllText(file) : file));
 	}
 
-	public async Task SetIncludedForAll(IPackageIdentity package, bool value)
+	public async Task SetIncludedForAll(IPackageIdentity package, bool value, bool withVersion = true, bool promptForDependencies = true)
 	{
-		await SetIncludedForAll([package], value);
+		await SetIncludedForAll([package], value, withVersion, promptForDependencies);
 	}
 
-	public async Task SetIncludedForAll(IEnumerable<IPackageIdentity> packages, bool value)
+	public async Task SetIncludedForAll(IEnumerable<IPackageIdentity> packages, bool value, bool withVersion = true, bool promptForDependencies = true)
 	{
 		try
 		{
 			foreach (var playset in Playsets)
 			{
-				await _packageUtil.SetIncluded(packages, value, playset.Id, false);
+				await _packageUtil.SetIncluded(packages, value, playset.Id, withVersion, promptForDependencies);
 			}
 		}
 		catch (Exception ex)
