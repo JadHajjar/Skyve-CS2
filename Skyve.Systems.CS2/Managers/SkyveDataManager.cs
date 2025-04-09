@@ -157,25 +157,25 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 			Tags = []
 		};
 
-		if (workshopInfo?.Requirements.Any() ?? false)
-		{
-			foreach (var grp in workshopInfo.Requirements.GroupBy(x => (x.IsDlc, x.IsOptional)))
-			{
-				if (grp.Key.IsDlc)
-				{
-					info.RequiredDLCs.AddRange(grp.Select(x => x.Id));
-				}
-				else
-				{
-					info.Interactions.Add(new PackageInteraction
-					{
-						Type = grp.Key.IsOptional ? InteractionType.OptionalPackages : InteractionType.RequiredPackages,
-						Action = StatusAction.SubscribeToPackages,
-						Packages = grp.ToArray(x => x.Id)
-					});
-				}
-			}
-		}
+		//if (workshopInfo?.Requirements.Any() ?? false)
+		//{
+		//	foreach (var grp in workshopInfo.Requirements.GroupBy(x => (x.IsDlc, x.IsOptional)))
+		//	{
+		//		if (grp.Key.IsDlc)
+		//		{
+		//			info.RequiredDLCs.AddRange(grp.Select(x => x.Id));
+		//		}
+		//		else
+		//		{
+		//			info.Interactions.Add(new PackageInteraction
+		//			{
+		//				Type = grp.Key.IsOptional ? InteractionType.OptionalPackages : InteractionType.RequiredPackages,
+		//				Action = StatusAction.SubscribeToPackages,
+		//				Packages = grp.ToArray(x => x.Id)
+		//			});
+		//		}
+		//	}
+		//}
 
 		var tagMatches = _bracketsRegex.Matches(workshopInfo?.Name ?? string.Empty);
 

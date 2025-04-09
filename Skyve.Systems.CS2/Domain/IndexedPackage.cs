@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
@@ -92,7 +93,12 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 
 		if (IndexedStatuses.ContainsKey(StatusType.Deprecated) && IndexedStatuses[StatusType.Deprecated].Any(x => x.Packages.Any()))
 		{
-			SucceededBy = new IndexedPackageInteraction(new() { Type = InteractionType.SucceededBy, Action = StatusAction.Switch, Packages = IndexedStatuses[StatusType.Deprecated].SelectMany(x => x.Packages.Keys).ToArray() }, packages);
+			SucceededBy = new IndexedPackageInteraction(new() 
+			{
+				Type = InteractionType.SucceededBy,
+				Action = StatusAction.Switch,
+				Packages = IndexedStatuses[StatusType.Deprecated].SelectMany(x => x.Packages.Values.Select(y => new CompatibilityPackageReference(y))).ToList()
+			}, packages);
 
 			//if (!Interactions.ContainsKey(InteractionType.SucceededBy))
 			//{
@@ -160,7 +166,7 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 					Type = InteractionType.SucceededBy,
 					Action = item.Status.Action,
 					Note = item.Status.Note,
-					Packages = [Package.Id]
+					Packages = [new(new GenericPackageIdentity(Package.Id))]
 				}, new() { [Package.Id] = this });
 
 				if (package.IndexedInteractions.ContainsKey(InteractionType.Successor))
@@ -183,7 +189,7 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 
 	#region IPackageCompatibilityInfo
 	public ulong Id => Package.Id;
-	public string? Name => Package.Name;
+	public string Name => Package.Name ?? string.Empty;
 	public string? FileName => Package.FileName;
 	public string? AuthorId => Package.AuthorId;
 	public string? Note => Package.Note;
@@ -197,5 +203,7 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 	public List<ILink>? Links => Package.Links.ToList(x => (ILink)x);
 	List<IPackageStatus<InteractionType>> IPackageCompatibilityInfo.Interactions => Package.Interactions.ToList(x => (IPackageStatus<InteractionType>)x);
 	List<IPackageStatus<StatusType>> IPackageCompatibilityInfo.Statuses => Package.Statuses.ToList(x => (IPackageStatus<StatusType>)x);
+	string? IPackageIdentity.Url => $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
+	string? IPackageIdentity.Version { get; set; }
 	#endregion
 }

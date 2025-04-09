@@ -413,7 +413,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 				Action = (StatusAction)_request.StatusAction,
 				IntType = _request.StatusType,
 				Note = _request.StatusNote,
-				Packages = _request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ulong.Parse).ToArray(),
+				Packages = _request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList(StringToPackageReference),
 			});
 		}
 
@@ -424,7 +424,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 				Action = (StatusAction)_request.StatusAction,
 				IntType = _request.StatusType,
 				Note = _request.StatusNote,
-				Packages = _request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ulong.Parse).ToArray(),
+				Packages = _request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList(StringToPackageReference),
 			});
 		}
 
@@ -453,6 +453,11 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			FLP_Interactions.Controls.Add(control);
 			B_AddInteraction.SendToBack();
 		}
+	}
+
+	private CompatibilityPackageReference StringToPackageReference(string arg)
+	{
+		return new CompatibilityPackageReference(new GenericPackageIdentity(ulong.Parse(arg)));
 	}
 
 	private void B_Skip_Click(object sender, EventArgs e)

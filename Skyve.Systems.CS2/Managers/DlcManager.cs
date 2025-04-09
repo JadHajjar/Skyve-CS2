@@ -164,4 +164,17 @@ internal class DlcManager : IDlcManager
 
 		return new SteamDlc { Name = displayName };
 	}
+
+	public IDlcInfo TryGetDlc(ulong dlc)
+	{
+		foreach (var item in Dlcs)
+		{
+			if (item.Id == item.Id)
+			{
+				return item;
+			}
+		}
+
+		return new SteamDlc { Id = dlc, Name = dlc.ToString() };
+	}
 }

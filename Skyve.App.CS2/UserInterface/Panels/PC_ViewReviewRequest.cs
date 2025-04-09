@@ -66,7 +66,7 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 				Action = (StatusAction)request.StatusAction,
 				IntType = request.StatusType,
 				Note = request.StatusNote,
-				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ulong.Parse).ToArray(),
+				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList(StringToPackageReference),
 			})
 			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 6);
 		}
@@ -77,7 +77,7 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 				Action = (StatusAction)request.StatusAction,
 				IntType = request.StatusType,
 				Note = request.StatusNote,
-				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ulong.Parse).ToArray(),
+				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList(StringToPackageReference),
 			})
 			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 6);
 		}
@@ -92,6 +92,11 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 		}
 
 		SetPackage(Package);
+	}
+
+	private CompatibilityPackageReference StringToPackageReference(string arg)
+	{
+		return new CompatibilityPackageReference(new GenericPackageIdentity(ulong.Parse(arg)));
 	}
 
 	protected override void SetPackage(IPackageIdentity package)

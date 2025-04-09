@@ -46,7 +46,7 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 		{
 			Type = (int)data.Type,
 			Action = (int)data.Action,
-			Packages = data.Packages,
+			Packages = data.Packages?.Select(x => x.Id).ToArray(),
 			Note = data.Note
 		};
 	}
@@ -57,7 +57,7 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 		{
 			Type = (int)data.Type,
 			Action = (int)data.Action,
-			Packages = data.Packages,
+			Packages = data.Packages?.Select(x => x.Id).ToArray(),
 			Note = data.Note
 		};
 	}

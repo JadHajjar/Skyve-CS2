@@ -20,9 +20,9 @@ public class IndexedPackageStatus : IIndexedPackageStatus<StatusType>
 		{
 			foreach (var item in status.Packages)
 			{
-				if (packages.ContainsKey(item))
+				if (packages.ContainsKey(item.Id))
 				{
-					Packages[item] = packages[item];
+					Packages[item.Id] = packages[item.Id];
 				}
 			}
 		}

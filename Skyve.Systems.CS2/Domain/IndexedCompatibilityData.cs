@@ -45,7 +45,7 @@ public class IndexedCompatibilityData
 		if (nonTest is not null)
 		{
 			var id = nonTest.Packages![0];
-			var stable = packages.FirstOrDefault(x => x.Id == id);
+			var stable = packages.FirstOrDefault(x => x.Id == id.Id);
 
 			if (stable is not null)
 			{
