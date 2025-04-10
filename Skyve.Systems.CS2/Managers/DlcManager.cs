@@ -118,11 +118,13 @@ internal class DlcManager : IDlcManager
 					Id = dlc,
 					Name = info.name!,
 					Description = info.short_description!,
+					IsFree = info.is_free,
 					Price = info.price_overview?.final_formatted,
 					OriginalPrice = info.price_overview?.initial_formatted,
 					Discount = info.price_overview?.discount_percent ?? 0F,
 					Creators = info.developers?.Where(x => x is not "Colossal Order Ltd." and not "Paradox Interactive").ToArray(),
-					ReleaseDate = DateTime.TryParseExact(info.release_date?.date, "dd MMM, yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ? dt : DateTime.MinValue
+					ExpectedRelease = ((info.release_date?.coming_soon ?? true) ? info.release_date?.date : string.Empty) ?? "TBD",
+					ReleaseDate = DateTime.TryParseExact(info.release_date?.date, "d MMM, yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ? dt : DateTime.MinValue
 				};
 			}
 		}
@@ -152,6 +154,11 @@ internal class DlcManager : IDlcManager
 
 	public IDlcInfo TryGetDlc(string displayName)
 	{
+		if (displayName == "San Fransisco Set")
+		{
+			displayName = "San Francisco Set";
+		}
+
 		foreach (var item in Dlcs)
 		{
 			var text = item.Name.RegexRemove("^.+?- ").RegexRemove("(Content )?Creator Pack: ");

@@ -10,11 +10,14 @@ public class SteamDlc : IDlcInfo, IThumbnailObject
 	public string Name { get; set; } = string.Empty;
 	public string Description { get; set; } = string.Empty;
 	public DateTime ReleaseDate { get; set; }
+	public string? ExpectedRelease { get; set; }
+	public bool IsFree { get; set; }
 	public string? Price { get; set; }
 	public string? OriginalPrice { get; set; }
 	public string[]? Creators { get; set; }
 	public float Discount { get; set; }
 	public DateTime Timestamp { get; set; }
+
 	string? IDlcInfo.Url => Id > 10 ? $"https://store.steampowered.com/app/{Id}" : null;
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)

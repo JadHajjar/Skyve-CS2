@@ -336,7 +336,7 @@ public class WorkshopService : IWorkshopService
 			return new PdxModDetails(result.Mod, ratingResult.Rating != 0)
 			{
 				Requirements = result.Mod.Dependencies?.Where(x => x.Type is not DependencyType.Dlc).ToArray(x => new PdxModsRequirement(x)) ?? [],
-				DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc).ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
+				DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc && x.DisplayName != "Beach Properties").ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
 			};
 		}
 		else if (result?.Error.Category is BaseCategory.NotFound)

@@ -19,6 +19,8 @@ public class PdxModsDlcRequirement : IPackageRequirement, IDlcInfo, IThumbnailOb
 		Url = x.Url;
 		Name = x.Name;
 		IsDlc = true;
+		IsFree = x.IsFree;
+		ExpectedRelease = x.ExpectedRelease;
 		ReleaseDate = x.ReleaseDate;
 		Description = x.Description;
 		Price = x.Price;
@@ -37,6 +39,8 @@ public class PdxModsDlcRequirement : IPackageRequirement, IDlcInfo, IThumbnailOb
 	public string? Price { get; set; }
 	public float Discount { get; set; }
 	public string[]? Creators { get; set; }
+	public bool IsFree { get; set; }
+	public string? ExpectedRelease { get; set; }
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
