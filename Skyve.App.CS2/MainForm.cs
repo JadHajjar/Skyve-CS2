@@ -94,7 +94,9 @@ public partial class MainForm : BasePanelForm
 			OnNextIdle(() => MessagePrompt.Show(ex, "Failed to load the dashboard", form: this));
 		}
 
-		new BackgroundAction("Loading content", ServiceCenter.Get<ICentralManager>().Start).Run();
+		Task.Run(ItemListControl.LoadThumbnails);
+
+		new BackgroundAction("Central Startup", ServiceCenter.Get<ICentralManager>().Start).Run();
 
 		var citiesManager = ServiceCenter.Get<ICitiesManager>();
 
@@ -112,7 +114,6 @@ public partial class MainForm : BasePanelForm
 		_notifier.WorkshopInfoUpdated += RefreshUI;
 		_notifier.WorkshopUsersInfoLoaded += RefreshUI;
 		_notifier.ContentLoaded += _userService_UserInfoUpdated;
-		_notifier.CompatibilityReportProcessed += _notifier_CompatibilityReportProcessed;
 		_notifier.SkyveUpdateAvailable += () => Invoke(_updateAvailableControl.Show);
 
 		ConnectionHandler.ConnectionChanged += ConnectionHandler_ConnectionChanged;
@@ -127,9 +128,6 @@ public partial class MainForm : BasePanelForm
 		}
 
 		base_PB_Icon.Loading = true;
-		PI_Compatibility.Loading = true;
-
-		Task.Run(ItemListControl.LoadThumbnails);
 	}
 
 	private void PlaysetChanged()
@@ -161,13 +159,6 @@ public partial class MainForm : BasePanelForm
 			_updateAvailableControl.Hide();
 		}
 		catch { }
-	}
-
-	private void _notifier_CompatibilityReportProcessed()
-	{
-		_notifier.CompatibilityReportProcessed -= _notifier_CompatibilityReportProcessed;
-
-		PI_Compatibility.Loading = false;
 	}
 
 	private void _userService_UserInfoUpdated()
@@ -568,20 +559,23 @@ public partial class MainForm : BasePanelForm
 
 	private async void panelItem1_OnClick(object sender, MouseEventArgs e)
 	{
-		var io=new IOSelectionDialog();
+		var io = new IOSelectionDialog();
 		io.PromptFolder(this);
 
 		if (!Directory.Exists(io.SelectedPath))
+		{
 			return;
+		}
+
 		var folder = io.SelectedPath;
 
 		io.PromptFile(this);
 		var thumb = io.SelectedPath;
 
-var res = (await		ServiceCenter.Get<IWorkshopService, WorkshopService>().CreateCollection(folder,
-			MessagePrompt.ShowInput("Name of the asset").Input,
-			MessagePrompt.ShowInput("Description of the asset").Input,
-			thumb));
+		var res = await ServiceCenter.Get<IWorkshopService, WorkshopService>().CreateCollection(folder,
+					MessagePrompt.ShowInput("Name of the asset").Input,
+					MessagePrompt.ShowInput("Description of the asset").Input,
+					thumb);
 
 		if (res != 0)
 		{

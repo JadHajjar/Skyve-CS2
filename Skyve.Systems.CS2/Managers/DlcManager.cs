@@ -6,6 +6,7 @@ using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -97,15 +98,14 @@ internal class DlcManager : IDlcManager
 			return;
 		}
 
-		var newDlcs = new Dictionary<ulong, SteamDlc>(dlcs);
+		var newDlcs = new ConcurrentDictionary<ulong, SteamDlc>(dlcs);
 
-		foreach (var dlc in steamAppInfo["949230"].data?.dlc ?? [])
+		var allDlcs = steamAppInfo["949230"].data?.dlc.ToList() ?? [];
+
+		allDlcs.RemoveAll(dlc => dlcs.TryGetValue(dlc, out var dlcInfo) && dlcInfo.Timestamp < DateTime.Now.AddDays(-7));
+
+		await Task.WhenAll(allDlcs.Select(new Func<ulong, Task>(async (dlc) =>
 		{
-			if (dlcs.TryGetValue(dlc, out var dlcInfo) && dlcInfo.Timestamp > DateTime.Now.AddDays(-7))
-			{
-				continue;
-			}
-
 			var data = await GetSteamAppInfoAsync(dlc);
 
 			if (data.ContainsKey(dlc.ToString()))
@@ -127,13 +127,33 @@ internal class DlcManager : IDlcManager
 					ReleaseDate = DateTime.TryParseExact(info.release_date?.date, "d MMM, yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ? dt : DateTime.MinValue
 				};
 			}
-		}
+		})).ToArray());
+
+		newDlcs[2427731] = GetLandmarkDlc();
 
 		_logger.Info($"DLCs ({newDlcs.Count}) loaded..");
 
-		_saveHandler.Save(dlcs = newDlcs, DLC_CACHE_FILE);
+		_saveHandler.Save(dlcs = new(newDlcs), DLC_CACHE_FILE);
 
 		DlcsLoaded?.Invoke();
+	}
+
+	private SteamDlc GetLandmarkDlc()
+	{
+		return new SteamDlc
+		{
+			Timestamp = DateTime.MaxValue,
+			Id = 2427731,
+			Name = "Cities: Skylines II - Landmark Buildings",
+			Description = "The Cities: Skylines II Pre-Order Pack contains nine Unique Landmark Buildings and also a map based on the geography of Tampere, home of Colossal Order."!,
+			IsFree = false,
+			Price = null,
+			OriginalPrice = null,
+			Discount = 0f,
+			Creators = [],
+			ExpectedRelease = string.Empty,
+			ReleaseDate = new DateTime(2023, 10, 24)
+		};
 	}
 
 	public async Task<Dictionary<string, SteamAppInfo>> GetSteamAppInfoAsync(ulong steamId)

@@ -2,6 +2,67 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "1.0.0",
+    "Date": "2025-04-12",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed DLCs not loading properly."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.15.1",
+    "Date": "2025-04-12",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed DLCs not loading properly."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.15.0",
+    "Date": "2025-04-11",
+    "Tagline": "DLCs and CCPs",
+    "ChangeGroups": [
+      {
+        "Name": "Re-introducing the DLCs and CCPs tab",
+        "Changes": [
+          "Easily see what DLCs you have and all available DLCs at a glance in the dedicated tab.",
+          "Matching DLC requirements on PDX Mods to the DLCs that you have for better a compatibility report.",
+          "DLCs are currently expected to only work for steam users, if you're using the game on the Microsoft store and wish to help get this feature implemented for you and other Microsoft users, let me know on the discord server!"
+        ]
+      },
+      {
+        "Name": "Filter Changes",
+        "Changes": [
+          "Author dropdown now shows all authors that you've ever seen on the app, rather than just authors of your subscribed mods.",
+          "Author dropdown now uses the same color-coding as the rest of the app and also includes authors' avatars.",
+          "Fixed the Tags dropdown not working in the PDX Mods tab.",
+          "Fixed the Code/Asset toggle not taking assets like decals, asset packs, themes, etc. in consideration."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Moved cached images location to the Skyve installation folder instead of the ModsData folder.",
+          "Fixed applying actions in the compatibility report asking to subscribe to dependencies."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.14.0",
     "Date": "2025-03-18",
     "Tagline": "Troubleshoot Mode",

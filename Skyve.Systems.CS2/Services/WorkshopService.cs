@@ -371,6 +371,11 @@ public class WorkshopService : IWorkshopService
 		return result?.CreatorProfile is not null ? new PdxUser(result.CreatorProfile) : new PdxUser(username);
 	}
 
+	public IEnumerable<IUser> GetKnownUsers()
+	{
+		return _userProcessor.GetCache();
+	}
+
 	public IPackage GetPackage(IPackageIdentity identity)
 	{
 		return GetInfo(identity) as IPackage ?? new PdxModIdentityPackage(identity);

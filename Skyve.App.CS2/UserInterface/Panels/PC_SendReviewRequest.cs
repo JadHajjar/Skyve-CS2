@@ -143,7 +143,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 			postPackage.IsStatus = true;
 			postPackage.StatusNote = statusControl.PackageStatus.Note;
 			postPackage.StatusAction = (int)statusControl.PackageStatus.Action;
-			postPackage.StatusPackages = statusControl.PackageStatus.Packages!.ListStrings(",");
+			postPackage.StatusPackages = statusControl.PackageStatus.Packages!.ListStrings(x => x.Id.ToString(), ",");
 			postPackage.StatusType = (int)statusControl.PackageStatus.Type;
 		}
 		else if (interactionControl is not null)
@@ -151,7 +151,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 			postPackage.IsInteraction = true;
 			postPackage.StatusNote = interactionControl.PackageStatus.Note;
 			postPackage.StatusAction = (int)interactionControl.PackageStatus.Action;
-			postPackage.StatusPackages = interactionControl.PackageStatus.Packages!.ListStrings(",");
+			postPackage.StatusPackages = interactionControl.PackageStatus.Packages!.ListStrings(x => x.Id.ToString(), ",");
 			postPackage.StatusType = (int)interactionControl.PackageStatus.Type;
 		}
 		else
@@ -159,7 +159,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 			postPackage.PackageStability = (int)DD_Stability.SelectedItem;
 			postPackage.PackageType = (int)DD_PackageType.SelectedItem;
 			postPackage.PackageUsage = (int)DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next);
-			postPackage.RequiredDLCs = DD_DLCs.SelectedItems.Select(x => x.Id).ListStrings(",");
+			postPackage.RequiredDLCs = DD_DLCs.SelectedItems.ListStrings(x => x.Id.ToString(), ",");
 		}
 
 		postPackage.LogFile = await Task.Run(async () =>

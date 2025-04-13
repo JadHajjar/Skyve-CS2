@@ -88,19 +88,12 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.14.0" />
+  <ModVersion Value="0.15.1" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.14.0
-*Troubleshoot Mode*
-
-## Re-introducing Troubleshoot Mode
-* Troubleshoot mode from the C:S1 days is back, giving you a conveniant way to troubleshoot what mod is causing issues.
-* This mode will automatically group, enable and disable specific mods, in a series of stages, allowing you to find the mod causing issues at the end.
-* Troubleshoot mode can be accessed from the Utilities, and Help tabs.
-
-## Other Changes
-* Updated to the PDX SDK v1.31
+# v0.15.1
+## Hotfix
+* Fixed DLCs not loading properly.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

@@ -432,7 +432,7 @@ internal class ModsUtil : IModUtil
 					{
 						if (!item.IsDlc
 							&& !list.Any(x => x.Id == item.Id)
-							&& !IsEnabled(item, playsetId))
+							&& !IsEnabled(item, playsetId, false))
 						{
 							item.Version = null;
 

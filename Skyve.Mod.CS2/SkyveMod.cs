@@ -137,6 +137,7 @@ namespace Skyve.Mod.CS2
 
 				foreach (var item in PlatformManager.instance.EnumerateDLCs())
 				{
+					Log.Info($"{item.backendId} {item.backendName}");
 					if (PlatformManager.instance.IsDlcOwned(item) && uint.TryParse(item.backendId, out var id))
 					{
 						config.AvailableDLCs.Add(id);

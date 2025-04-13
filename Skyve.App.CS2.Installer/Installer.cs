@@ -35,9 +35,12 @@ public class Installer
 
 		try
 		{
-			if (!Directory.Exists(Path.Combine(INSTALL_PATH, "Cities Skylines II")))
+			if (targetFolder.Exists)
 			{
-				targetFolder.Delete(true);
+				foreach (var item in targetFolder.GetFiles())
+				{
+					item.Delete();
+				}
 			}
 		}
 		catch { }
@@ -191,7 +194,7 @@ public class Installer
 
 		File.Delete(shortcutPath);
 
-		foreach (var item in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "*.lnk"))
+		foreach (var item in Directory.GetFiles(GetFolderPath(SpecialFolder.Desktop), "*.lnk"))
 		{
 			if (ExtensionClass.GetShortcutPath(item).PathEquals(Application.ExecutablePath))
 			{
