@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace Skyve.Domain.CS2.Paradox;
 
-public class PdxModDetails : IModDetails
+public class PdxModDetails : IModDetails, IFullThumbnailObject
 {
 	[Obsolete("", true)]
 	public PdxModDetails()
@@ -119,6 +119,14 @@ public class PdxModDetails : IModDetails
 	{
 		thumbnailUrl = ThumbnailUrl;
 		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, Version ?? "");
+
+		return true;
+	}
+
+	public bool GetFullThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		thumbnailUrl = ThumbnailUrl;
+		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, Version ?? "", false);
 
 		return true;
 	}

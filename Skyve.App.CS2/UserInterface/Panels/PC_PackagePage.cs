@@ -6,7 +6,6 @@ using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
-using Skyve.Domain.Systems;
 
 using System.Drawing;
 using System.Text.RegularExpressions;
@@ -105,6 +104,15 @@ public partial class PC_PackagePage : PC_PackagePageBase
 		// Images
 		{
 			var images = localData?.Images ?? workshopInfo?.Images ?? [];
+
+			if (workshopInfo is IFullThumbnailObject fullThumbnailObject)
+			{
+				images = images.Append(new FullThumbnailObject(fullThumbnailObject));
+			}
+			else if (Package is IFullThumbnailObject fullThumbnailObject2)
+			{
+				images = images.Append(new FullThumbnailObject(fullThumbnailObject2));
+			}
 
 			T_Gallery.Visible = images.Any();
 
@@ -214,5 +222,13 @@ public partial class PC_PackagePage : PC_PackagePageBase
 
 			e.Graphics.FillEllipse(brush, rect);
 		}
+	}
+}
+
+internal class FullThumbnailObject(IFullThumbnailObject workshopInfo) : IThumbnailObject
+{
+	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		return workshopInfo.GetFullThumbnail(imageService, out thumbnail, out thumbnailUrl);
 	}
 }

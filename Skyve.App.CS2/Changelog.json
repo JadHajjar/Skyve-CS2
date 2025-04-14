@@ -8,7 +8,10 @@
       {
         "Name": "Hotfix",
         "Changes": [
-          "Fixed DLCs not loading properly."
+
+          "Moved the compatibility groups to the right side of the screen.",
+
+          "Added the mod's thumbnail to the gallery tab."
         ]
       }
     ]

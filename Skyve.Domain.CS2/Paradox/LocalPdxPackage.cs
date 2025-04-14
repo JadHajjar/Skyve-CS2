@@ -16,7 +16,7 @@ using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
 namespace Skyve.Domain.CS2.Paradox;
 
-public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
+public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailObject
 {
 	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
 
@@ -104,6 +104,14 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo
 	{
 		thumbnailUrl = ThumbnailUrl;
 		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version ?? "");
+
+		return true;
+	}
+
+	public bool GetFullThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		thumbnailUrl = ThumbnailUrl;
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version ?? "", false);
 
 		return true;
 	}

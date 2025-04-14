@@ -10,16 +10,16 @@ using System.IO;
 namespace Skyve.Domain.CS2.Utilities;
 internal static class DomainUtils
 {
-	internal static Bitmap? GetThumbnail(IImageService imageService, string? thumbnailPath, string? thumbnailUrl, ulong id, string version)
+	internal static Bitmap? GetThumbnail(IImageService imageService, string? thumbnailPath, string? thumbnailUrl, ulong id, string version, bool downscale = true)
 	{
-		var size = UI.Scale(new Size(200, 200));
+		var size = downscale ? UI.Scale(new Size(200, 200)) : (Size?)null;
 
 		if (CrossIO.FileExists(thumbnailPath))
 		{
-			return imageService.GetImage(thumbnailPath, true, $"{id}_{version}{Path.GetExtension(thumbnailPath)}", isFilePath: true, downscaleTo: size).Result;
+			return imageService.GetImage(thumbnailPath, true, $"{id}_{version}{(downscale ? string.Empty : "_full")}{Path.GetExtension(thumbnailPath)}", isFilePath: true, downscaleTo: size).Result;
 		}
 
-		var thumbnail = imageService.GetImage(thumbnailUrl, true, $"{id}_{version}{Path.GetExtension(thumbnailUrl)}", downscaleTo: size).Result;
+		var thumbnail = imageService.GetImage(thumbnailUrl, true, $"{id}_{version}{(downscale ? string.Empty : "_full")}{Path.GetExtension(thumbnailUrl)}", downscaleTo: size).Result;
 
 		if (thumbnail is not null)
 		{
