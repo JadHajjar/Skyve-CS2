@@ -48,7 +48,7 @@
   "ParadoxLoginFailedNoConnection": "Anda tidak terhubung ke internet, silakan periksa koneksi Anda dan klik di sini untuk mencoba lagi.",
   "ParadoxLoginFailedBadCredentials": "Nama pengguna/kata sandi yang disimpan gagal untuk masuk. Klik di sini untuk memperbarui informasi Anda.",
   "ParadoxLoginFailedEmpty": "Sesi Anda kemungkinan telah kedaluwarsa. Coba jalankan game untuk masuk kembali, atau klik di sini untuk masuk melalui Skyve.",
-  "DownloadComplete": "Pengunduhan selesai",
+  "DownloadComplete": "Unduhan selesai",
   "DownloadFailed": "Gagal mengunduh",
   "Downloading": "Mengunduh...",
   "ModsDownloadFailed": {
