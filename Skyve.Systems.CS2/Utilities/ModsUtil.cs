@@ -182,7 +182,10 @@ internal class ModsUtil : IModUtil
 
 		SaveHistory();
 
-		mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+		if (!value)
+		{
+			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+		}
 
 		await SetLocalModIncluded(mods.AllWhere(x => x.Id <= 0 && IsIncluded(x, playset) != value), playset, value);
 
@@ -270,7 +273,10 @@ internal class ModsUtil : IModUtil
 
 		SaveHistory();
 
-		mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+		if (!value)
+		{
+			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+		}
 
 		await SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), playset, value);
 

@@ -198,6 +198,8 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 	public PackageStability Stability => Package.Stability;
 	public PackageUsage Usage => Package.Usage;
 	public PackageType Type => Package.Type;
+	public SavegameEffect SavegameEffect => Package.SavegameEffect;
+	public string? RemovalSteps => Package.RemovalSteps;
 	public int ActiveReports => Package.ActiveReports;
 	public List<ulong>? RequiredDLCs => Package.RequiredDLCs;
 	public List<string>? Tags => Package.Tags;

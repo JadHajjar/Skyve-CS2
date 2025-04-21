@@ -13,6 +13,8 @@ namespace Skyve.Systems.CS2.Systems;
 internal class CompatibilityUtil : ICompatibilityUtil
 {
 	private const ulong MUSIC_MOD_ID = 75862;
+	private const ulong EAI_MOD_ID = 80529;
+	private const ulong APM_MOD_ID = 78903;
 
 	public CompatibilityUtil()
 	{
@@ -22,11 +24,16 @@ internal class CompatibilityUtil : ICompatibilityUtil
 
 	public void PopulateAutomaticPackageInfo(PackageData info, IPackageIdentity package, IWorkshopInfo? workshopInfo)
 	{
-		if (workshopInfo?.Requirements?.Any(x => x.Id == MUSIC_MOD_ID) ?? false)
+		if (workshopInfo?.Requirements?.Any(x => x.Id is MUSIC_MOD_ID) ?? false)
 		{
 			info.Type = PackageType.MusicPack;
 
 			info.Statuses!.Add(new PackageStatus(StatusType.MusicCanBeCopyrighted));
+		}
+		else if (workshopInfo?.Requirements?.Any(x => x.Id is EAI_MOD_ID or APM_MOD_ID) ?? false)
+		{
+			info.Type = PackageType.ContentPackage;
+			info.SavegameEffect = SavegameEffect.AssetsRemain;
 		}
 	}
 

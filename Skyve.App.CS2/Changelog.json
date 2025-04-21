@@ -2,16 +2,38 @@
   {
     "Stable": false,
     "Beta": true,
-    "Version": "1.0.0",
-    "Date": "2025-04-12",
+    "Version": "0.15.3",
+    "Date": "2025-04-18",
     "ChangeGroups": [
       {
         "Name": "Hotfix",
         "Changes": [
-
+          "Fixed mod not loading."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "0.15.2",
+    "Date": "2025-04-18",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
           "Moved the compatibility groups to the right side of the screen.",
-
-          "Added the mod's thumbnail to the gallery tab."
+          "Small UI improvements related to the compatibility report, including an updated visual of the last review date and how many active reports a mod has.",
+          "Added a new caution stability; 'Multiple Active Reports' when a mod has 5 or more reports.",
+          "Fixed the sorting order button being missing from the compatibility report.",
+          "Fixed some filter options not working properly in the compatibility report."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Added the mod's thumbnail to the gallery tab.",
+          "Fixed images not loading properly."
         ]
       }
     ]

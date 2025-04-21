@@ -126,7 +126,6 @@ public class WorkshopService : IWorkshopService
 			Logger = _pdxLogUtil,
 			DiskIORoot = pdxSdkPath,
 			Environment = BackendEnvironment.Live,
-			TelemetryDebugEnabled = false,
 			Ecosystem = ecoSystem,
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
 #if DEBUG

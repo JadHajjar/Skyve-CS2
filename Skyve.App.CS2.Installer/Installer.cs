@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,6 +52,21 @@ public class Installer
 		try
 		{
 			originalPath.CopyAll(targetFolder);
+
+			var thumbsFolder = new DirectoryInfo(Path.Combine(targetFolder.FullName, "Thumbs"));
+
+			thumbsFolder.Create();
+
+			var dirSecurity = thumbsFolder.GetAccessControl();
+
+			dirSecurity.AddAccessRule(new FileSystemAccessRule(
+				new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+				FileSystemRights.Read | FileSystemRights.Write | FileSystemRights.Modify,
+				InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+				PropagationFlags.None,
+				AccessControlType.Allow));
+
+			thumbsFolder.SetAccessControl(dirSecurity);
 		}
 		catch (Exception ex)
 		{

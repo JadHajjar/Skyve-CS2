@@ -24,30 +24,13 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	#region RecommendedAction
 	public bool HasRecommendedAction(ICompatibilityItem message)
 	{
-		var actionRecommended = message.Status.Action switch
+		return message.Status.Action switch
 		{
 			StatusAction.SubscribeToPackages or StatusAction.IncludeOther or StatusAction.ExcludeOther or StatusAction.UnsubscribeOther => message.Packages.Any(),
 			StatusAction.IncludeThis or StatusAction.UnsubscribeThis or StatusAction.ExcludeThis => true,
 			StatusAction.Switch => message.Packages.Count() == 1,
 			_ => false
 		};
-
-		if (actionRecommended)
-		{
-			return true;
-		}
-
-		if (message.Status.Notification is NotificationType.Unsubscribe && _packageUtil.IsIncluded(message))
-		{
-			return true;
-		}
-
-		if (message.Status.Notification is NotificationType.Exclude && _packageUtil.IsEnabled(message))
-		{
-			return true;
-		}
-
-		return false;
 	}
 
 	public ICompatibilityActionInfo? GetRecommendedAction(ICompatibilityItem message)
@@ -83,16 +66,6 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 				}
 
 				break;
-		}
-
-		if (message.Status.Notification is NotificationType.Unsubscribe && _packageUtil.IsIncluded(message))
-		{
-			return new ActionInfo(ExcludeAndDisableMain, Locale.Exclude, "X");
-		}
-
-		if (message.Status.Notification is NotificationType.Exclude && _packageUtil.IsEnabled(message))
-		{
-			return new ActionInfo(DisableMain, Locale.DisableItem, "X");
 		}
 
 		return null;

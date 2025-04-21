@@ -146,9 +146,9 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		base.UIChanged();
 
 		slickSpacer3.Margin = B_Previous.Margin = B_Skip.Margin = B_Previous.Padding = B_Skip.Padding
-			= TLP_Bottom.Padding = P_Tags.Margin = P_Links.Margin
+			= TLP_Bottom.Padding = P_Tags.Margin = P_Links.Margin = DD_SavegameEffect.Margin
 			= DD_DLCs.Margin = DD_PackageType.Margin = DD_Stability.Margin = DD_Usage.Margin
-			= B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = UI.Scale(new Padding(5));
+			= B_ReuseData.Margin = B_Apply.Margin = slickSpacer2.Margin = TB_RemovalInfo.Margin = UI.Scale(new Padding(5));
 		slickSpacer2.Height = UI.Scale(2);
 		slickSpacer3.Height = slickSpacer4.Height = slickSpacer5.Height = UI.Scale(1);
 		B_AddInteraction.Size = B_AddStatus.Size = UI.Scale(new Size(105, 70));
@@ -159,6 +159,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		TB_EditNote.Margin = UI.Scale(new Padding(20, 5, 10, 5));
 		TB_Note.Margin = UI.Scale(new Padding(5, 20, 5, 5));
 		TB_Note.Height = UI.Scale(200);
+		TB_RemovalInfo.Height = UI.Scale(100);
 		TB_EditNote.Height = UI.Scale(32);
 		PB_Loading.Size = UI.Scale(new Size(32, 32));
 		CB_BlackListId.Font = CB_BlackListName.Font = UI.Font(7.5F);
@@ -369,15 +370,17 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		{
 			DD_Stability.SelectedItem = (PackageStability)_request.PackageStability;
 			DD_PackageType.SelectedItem = (PackageType)_request.PackageType;
-			DD_DLCs.SelectedItems = ServiceCenter.Get<IDlcManager>().Dlcs.Where(x => _request.RequiredDLCs?.Contains(x.Id.ToString()) ?? false);
-			DD_Usage.SelectedItems = Enum.GetValues(typeof(PackageUsage)).Cast<PackageUsage>().Where(x => ((PackageUsage)_request.PackageUsage).HasFlag(x));
+			DD_DLCs.SelectedItems = DD_DLCs.Items.Where(x => _request.RequiredDLCs?.Contains(x.Id.ToString()) ?? false);
+			DD_Usage.SelectedItems = DD_Usage.Items.Where(x => ((PackageUsage)_request.PackageUsage).HasFlag(x));
 		}
 		else
 		{
 			DD_Stability.SelectedItem = postPackage.Stability;
 			DD_PackageType.SelectedItem = postPackage.Type;
-			DD_DLCs.SelectedItems = ServiceCenter.Get<IDlcManager>().Dlcs.Where(x => postPackage.RequiredDLCs?.Contains(x.Id) ?? false);
-			DD_Usage.SelectedItems = Enum.GetValues(typeof(PackageUsage)).Cast<PackageUsage>().Where(x => postPackage.Usage.HasFlag(x));
+			DD_SavegameEffect.SelectedItem = postPackage.SavegameEffect;
+			TB_RemovalInfo.Text = postPackage.RemovalSteps;
+			DD_DLCs.SelectedItems = DD_DLCs.Items.Where(x => postPackage.RequiredDLCs?.Contains(x.Id) ?? false);
+			DD_Usage.SelectedItems = DD_Usage.Items.Where(x => postPackage.Usage.HasFlag(x));
 		}
 
 		if (DD_Stability.SelectedItem is PackageStability.NotReviewed && !DD_Stability.Enabled)
@@ -599,6 +602,8 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		postPackage.IsBlackListedByName = CB_BlackListName.Checked;
 		postPackage.Stability = DD_Stability.SelectedItem;
 		postPackage.Type = DD_PackageType.SelectedItem;
+		postPackage.SavegameEffect = DD_SavegameEffect.SelectedItem;
+		postPackage.RemovalSteps = TB_RemovalInfo.Text;
 		postPackage.Usage = DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next);
 		postPackage.RequiredDLCs = DD_DLCs.SelectedItems.Select(x => x.Id).ToList();
 		postPackage.Note = TB_Note.Text;
@@ -767,5 +772,10 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		}
 
 		return base.ProcessCmdKey(ref msg, keyData);
+	}
+
+	private void DD_SavegameEffect_SelectedItemChanged(object sender, EventArgs e)
+	{
+		TB_RemovalInfo.Visible = DD_SavegameEffect.SelectedItem is not SavegameEffect.None;
 	}
 }

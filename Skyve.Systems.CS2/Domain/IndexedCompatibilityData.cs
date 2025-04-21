@@ -55,6 +55,8 @@ public class IndexedCompatibilityData
 				package.Note = stable.Note;
 				package.Usage = stable.Usage;
 				package.Type = stable.Type;
+				package.SavegameEffect = stable.SavegameEffect;
+				package.RemovalSteps = stable.RemovalSteps;
 				package.Statuses ??= [];
 				package.Statuses.AddRange(stable.Statuses ?? []);
 				package.Interactions ??= [];

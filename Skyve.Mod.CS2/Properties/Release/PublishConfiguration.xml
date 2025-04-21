@@ -47,7 +47,7 @@ Skyve will show you these warning while you're browsing mods, so you can know if
 You'll also have a dedicated compatibility report page that lists all the issues with your mods, and provides you with **one-click** button to fix them all at once.
 
 
-### Management from outside of the game
+## Management from outside of the game
 Skyve is made to be used before you even open the game, and will update your mods without needing to open the game.
 
 That way you **do not need** to wait for the updates to finish downloading in-game, then restart the game to start playing.
@@ -88,12 +88,12 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.15.1" />
+  <ModVersion Value="0.15.3" />
   <GameVersion Value="1.*" />
   <ChangeLog>
-# v0.15.1
+# v0.15.3
 ## Hotfix
-* Fixed DLCs not loading properly.
+* Fixed mod not loading.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

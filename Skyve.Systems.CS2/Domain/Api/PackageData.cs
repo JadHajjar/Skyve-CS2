@@ -19,6 +19,8 @@ public class PackageData
 	public PackageStability Stability { get; set; }
 	public PackageUsage Usage { get; set; } = (PackageUsage)(-1);
 	public PackageType Type { get; set; }
+	public SavegameEffect SavegameEffect { get; set; }
+	public string? RemovalSteps { get; set; }
 	public int ActiveReports { get; set; }
 	public List<ulong> RequiredDLCs { get; set; }
 	public List<string> Tags { get; set; }
