@@ -64,11 +64,11 @@ partial class PC_CompatibilityManagement
 			this.L_NoTags = new System.Windows.Forms.Label();
 			this.DD_Stability = new Skyve.App.UserInterface.Dropdowns.PackageStabilityDropDown();
 			this.DD_PackageType = new Skyve.App.UserInterface.Dropdowns.PackageTypeDropDown();
-			this.CB_BlackListName = new SlickControls.SlickCheckbox();
-			this.CB_BlackListId = new SlickControls.SlickCheckbox();
 			this.DD_Usage = new Skyve.App.UserInterface.Dropdowns.PackageUsageDropDown();
 			this.DD_DLCs = new Skyve.App.UserInterface.Dropdowns.DlcDropDown();
 			this.DD_SavegameEffect = new Skyve.App.UserInterface.Dropdowns.SavegameEffectDropDown();
+			this.CB_BlackListName = new SlickControls.SlickCheckbox();
+			this.CB_BlackListId = new SlickControls.SlickCheckbox();
 			this.T_Statuses = new SlickControls.SlickTabControl.Tab();
 			this.FLP_Statuses = new System.Windows.Forms.FlowLayoutPanel();
 			this.B_AddStatus = new Skyve.App.UserInterface.Content.IconTopButton();
@@ -175,7 +175,7 @@ partial class PC_CompatibilityManagement
 			this.TLP_MainInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_MainInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_MainInfo.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_MainInfo.Size = new System.Drawing.Size(600, 406);
+			this.TLP_MainInfo.Size = new System.Drawing.Size(600, 408);
 			this.TLP_MainInfo.TabIndex = 18;
 			// 
 			// TB_RemovalInfo
@@ -191,7 +191,7 @@ partial class PC_CompatibilityManagement
 			this.TB_RemovalInfo.SelectedText = "";
 			this.TB_RemovalInfo.SelectionLength = 0;
 			this.TB_RemovalInfo.SelectionStart = 0;
-			this.TB_RemovalInfo.Size = new System.Drawing.Size(174, 41);
+			this.TB_RemovalInfo.Size = new System.Drawing.Size(174, 45);
 			this.TB_RemovalInfo.TabIndex = 18;
 			this.TB_RemovalInfo.Visible = false;
 			// 
@@ -208,7 +208,7 @@ partial class PC_CompatibilityManagement
 			this.TB_Note.SelectedText = "";
 			this.TB_Note.SelectionLength = 0;
 			this.TB_Note.SelectionStart = 0;
-			this.TB_Note.Size = new System.Drawing.Size(354, 41);
+			this.TB_Note.Size = new System.Drawing.Size(354, 93);
 			this.TB_Note.TabIndex = 7;
 			// 
 			// tableLayoutPanel1
@@ -265,10 +265,10 @@ partial class PC_CompatibilityManagement
 			this.B_NewLink.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon2.Name = "Edit";
 			this.B_NewLink.ImageName = dynamicIcon2;
-			this.B_NewLink.Location = new System.Drawing.Point(231, 24);
+			this.B_NewLink.Location = new System.Drawing.Point(136, 24);
 			this.B_NewLink.MatchBackgroundColor = true;
 			this.B_NewLink.Name = "B_NewLink";
-			this.B_NewLink.Size = new System.Drawing.Size(99, 32);
+			this.B_NewLink.Size = new System.Drawing.Size(194, 32);
 			this.B_NewLink.SpaceTriggersClick = true;
 			this.B_NewLink.TabIndex = 0;
 			this.B_NewLink.Text = "EditLinks";
@@ -338,10 +338,10 @@ partial class PC_CompatibilityManagement
 			this.B_NewTag.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon4.Name = "Edit";
 			this.B_NewTag.ImageName = dynamicIcon4;
-			this.B_NewTag.Location = new System.Drawing.Point(233, 24);
+			this.B_NewTag.Location = new System.Drawing.Point(138, 24);
 			this.B_NewTag.MatchBackgroundColor = true;
 			this.B_NewTag.Name = "B_NewTag";
-			this.B_NewTag.Size = new System.Drawing.Size(97, 32);
+			this.B_NewTag.Size = new System.Drawing.Size(192, 32);
 			this.B_NewTag.SpaceTriggersClick = true;
 			this.B_NewTag.TabIndex = 0;
 			this.B_NewTag.Text = "EditTags";
@@ -397,34 +397,6 @@ partial class PC_CompatibilityManagement
 			this.DD_PackageType.TabIndex = 1;
 			this.DD_PackageType.Text = "PackageType";
 			// 
-			// CB_BlackListName
-			// 
-			this.CB_BlackListName.AutoSize = true;
-			this.CB_BlackListName.Checked = false;
-			this.CB_BlackListName.ColorStyle = Extensions.ColorStyle.Red;
-			this.CB_BlackListName.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_BlackListName.EnterTriggersClick = false;
-			this.CB_BlackListName.Location = new System.Drawing.Point(3, 359);
-			this.CB_BlackListName.Name = "CB_BlackListName";
-			this.CB_BlackListName.Size = new System.Drawing.Size(174, 44);
-			this.CB_BlackListName.SpaceTriggersClick = true;
-			this.CB_BlackListName.TabIndex = 6;
-			this.CB_BlackListName.Text = "BlackListName";
-			// 
-			// CB_BlackListId
-			// 
-			this.CB_BlackListId.AutoSize = true;
-			this.CB_BlackListId.Checked = false;
-			this.CB_BlackListId.ColorStyle = Extensions.ColorStyle.Red;
-			this.CB_BlackListId.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_BlackListId.EnterTriggersClick = false;
-			this.CB_BlackListId.Location = new System.Drawing.Point(3, 309);
-			this.CB_BlackListId.Name = "CB_BlackListId";
-			this.CB_BlackListId.Size = new System.Drawing.Size(152, 44);
-			this.CB_BlackListId.SpaceTriggersClick = true;
-			this.CB_BlackListId.TabIndex = 5;
-			this.CB_BlackListId.Text = "BlackListId";
-			// 
 			// DD_Usage
 			// 
 			this.DD_Usage.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -458,6 +430,34 @@ partial class PC_CompatibilityManagement
 			this.DD_SavegameEffect.TabIndex = 2;
 			this.DD_SavegameEffect.Text = "SavegameEffect";
 			this.DD_SavegameEffect.SelectedItemChanged += new System.EventHandler(this.DD_SavegameEffect_SelectedItemChanged);
+			// 
+			// CB_BlackListName
+			// 
+			this.CB_BlackListName.AutoSize = true;
+			this.CB_BlackListName.Checked = false;
+			this.CB_BlackListName.ColorStyle = Extensions.ColorStyle.Red;
+			this.CB_BlackListName.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.CB_BlackListName.EnterTriggersClick = false;
+			this.CB_BlackListName.Location = new System.Drawing.Point(3, 361);
+			this.CB_BlackListName.Name = "CB_BlackListName";
+			this.CB_BlackListName.Size = new System.Drawing.Size(174, 44);
+			this.CB_BlackListName.SpaceTriggersClick = true;
+			this.CB_BlackListName.TabIndex = 6;
+			this.CB_BlackListName.Text = "BlackListName";
+			// 
+			// CB_BlackListId
+			// 
+			this.CB_BlackListId.AutoSize = true;
+			this.CB_BlackListId.Checked = false;
+			this.CB_BlackListId.ColorStyle = Extensions.ColorStyle.Red;
+			this.CB_BlackListId.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.CB_BlackListId.EnterTriggersClick = false;
+			this.CB_BlackListId.Location = new System.Drawing.Point(3, 311);
+			this.CB_BlackListId.Name = "CB_BlackListId";
+			this.CB_BlackListId.Size = new System.Drawing.Size(152, 44);
+			this.CB_BlackListId.SpaceTriggersClick = true;
+			this.CB_BlackListId.TabIndex = 5;
+			this.CB_BlackListId.Text = "BlackListId";
 			// 
 			// T_Statuses
 			// 
@@ -651,9 +651,9 @@ partial class PC_CompatibilityManagement
 			this.B_ReuseData.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon13.Name = "Refresh";
 			this.B_ReuseData.ImageName = dynamicIcon13;
-			this.B_ReuseData.Location = new System.Drawing.Point(716, 38);
+			this.B_ReuseData.Location = new System.Drawing.Point(650, 38);
 			this.B_ReuseData.Name = "B_ReuseData";
-			this.B_ReuseData.Size = new System.Drawing.Size(111, 32);
+			this.B_ReuseData.Size = new System.Drawing.Size(177, 32);
 			this.B_ReuseData.SpaceTriggersClick = true;
 			this.B_ReuseData.TabIndex = 19;
 			this.B_ReuseData.Text = "ReuseData";
@@ -669,7 +669,7 @@ partial class PC_CompatibilityManagement
 			this.CB_HideReviewedPackages.EnterTriggersClick = false;
 			this.CB_HideReviewedPackages.Location = new System.Drawing.Point(3, 32);
 			this.CB_HideReviewedPackages.Name = "CB_HideReviewedPackages";
-			this.CB_HideReviewedPackages.Size = new System.Drawing.Size(206, 44);
+			this.CB_HideReviewedPackages.Size = new System.Drawing.Size(188, 44);
 			this.CB_HideReviewedPackages.SpaceTriggersClick = true;
 			this.CB_HideReviewedPackages.TabIndex = 17;
 			this.CB_HideReviewedPackages.Text = "HideReviewedPackages";

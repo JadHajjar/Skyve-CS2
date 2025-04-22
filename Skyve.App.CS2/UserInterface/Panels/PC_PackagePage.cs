@@ -103,15 +103,20 @@ public partial class PC_PackagePage : PC_PackagePageBase
 
 		// Images
 		{
-			var images = localData?.Images ?? workshopInfo?.Images ?? [];
+			var images = localData?.Images.ToList() ?? [];
+
+			if (images.Count == 0)
+			{
+				images = workshopInfo?.Images.ToList() ?? [];
+			}
 
 			if (workshopInfo is IFullThumbnailObject fullThumbnailObject)
 			{
-				images = images.Append(new FullThumbnailObject(fullThumbnailObject));
+				images.Add(new FullThumbnailObject(fullThumbnailObject));
 			}
 			else if (Package is IFullThumbnailObject fullThumbnailObject2)
 			{
-				images = images.Append(new FullThumbnailObject(fullThumbnailObject2));
+				images.Add(new FullThumbnailObject(fullThumbnailObject2));
 			}
 
 			T_Gallery.Visible = images.Any();

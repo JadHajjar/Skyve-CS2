@@ -776,6 +776,6 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	private void DD_SavegameEffect_SelectedItemChanged(object sender, EventArgs e)
 	{
-		TB_RemovalInfo.Visible = DD_SavegameEffect.SelectedItem is not SavegameEffect.None;
+		TB_RemovalInfo.Visible = DD_SavegameEffect.SelectedItem > SavegameEffect.None;
 	}
 }

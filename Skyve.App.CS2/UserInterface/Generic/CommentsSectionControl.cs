@@ -64,8 +64,8 @@ public partial class CommentsSectionControl : SlickControl
 		{
 			App.Program.MainForm.CurrentPanel.StartLoader();
 			isLoading = true;
-			modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package, page);
-			changelogs = (await ServiceCenter.Get<IWorkshopService>().GetInfoAsync(Package))?.Changelog.OrderBy(x => x.ReleasedDate).ToArray();
+			modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package.GetWorkshopInfo() ?? Package, page);
+			changelogs = (Package.IsLocal() ? Package.GetWorkshopInfo() : await ServiceCenter.Get<IWorkshopService>().GetInfoAsync(Package))?.Changelog.OrderBy(x => x.ReleasedDate).ToArray();
 			noMorePages = !(modCommentsInfo?.HasMore ?? false);
 			App.Program.MainForm.CurrentPanel.StopLoader();
 

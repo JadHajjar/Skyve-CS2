@@ -153,7 +153,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 			if (workshopInfo?.HasComments() ?? false)
 			{
-				links.Add(ServiceCenter.Get<IWorkshopService>().GetCommentsPageUrl(Package)!);
+				links.AddIfNotNull(ServiceCenter.Get<IWorkshopService>().GetCommentsPageUrl(workshopInfo ?? Package)!);
 			}
 
 			links.AddRange(workshopInfo?.Links ?? []);

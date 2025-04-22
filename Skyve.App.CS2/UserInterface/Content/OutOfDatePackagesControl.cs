@@ -34,7 +34,7 @@ internal class OutOfDatePackagesControl : SlickControl
 			{
 				if (item!.IsLocal())
 				{
-					using var unsatImg = new Bitmap(image, imageRect.Size).Tint(Sat: 0);
+					using var unsatImg = image.ToGrayscale();
 					e.Graphics.DrawRoundImage(unsatImg, imageRect);
 				}
 				else
