@@ -1,4 +1,5 @@
-﻿using Skyve.Domain.Systems;
+﻿using Skyve.Domain.CS2.Steam;
+using Skyve.Domain.Systems;
 
 using System;
 using System.Drawing;
@@ -46,6 +47,8 @@ public class PdxModsDlcRequirement : IPackageRequirement, IDlcInfo, IThumbnailOb
 	{
 		thumbnailUrl = Id > 10 ? $"https://cdn.akamai.steamstatic.com/steam/apps/{Id}/header.jpg" : null;
 		thumbnail = thumbnailUrl is null or "" ? null : imageService.GetImage(thumbnailUrl, true, $"Dlc_{Id}.png", false).Result;
+
+		thumbnail ??= Id == 2427731 ? SteamDlc.Cities2Landmark : SteamDlc.Cities2Dlc;
 
 		return true;
 	}

@@ -196,7 +196,7 @@ internal class DlcManager : IDlcManager
 	{
 		foreach (var item in Dlcs)
 		{
-			if (item.Id == item.Id)
+			if (item.Id == dlc)
 			{
 				return item;
 			}

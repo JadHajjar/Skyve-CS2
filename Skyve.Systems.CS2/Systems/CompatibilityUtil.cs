@@ -24,13 +24,22 @@ internal class CompatibilityUtil : ICompatibilityUtil
 
 	public void PopulateAutomaticPackageInfo(PackageData info, IPackageIdentity package, IWorkshopInfo? workshopInfo)
 	{
-		if (workshopInfo?.Requirements?.Any(x => x.Id is MUSIC_MOD_ID) ?? false)
+		if (workshopInfo is null)
+		{
+			return;
+		}
+
+		if (workshopInfo.Tags.ContainsKey("Savegame") || workshopInfo.Tags.ContainsKey("Map"))
+		{
+			info.Type = PackageType.MapSavegame;
+		}
+		else if (workshopInfo.Requirements?.Any(x => x.Id is MUSIC_MOD_ID) ?? false)
 		{
 			info.Type = PackageType.MusicPack;
 
 			info.Statuses!.Add(new PackageStatus(StatusType.MusicCanBeCopyrighted));
 		}
-		else if (workshopInfo?.Requirements?.Any(x => x.Id is EAI_MOD_ID or APM_MOD_ID) ?? false)
+		else if (workshopInfo.Requirements?.Any(x => x.Id is EAI_MOD_ID or APM_MOD_ID) ?? false)
 		{
 			info.Type = PackageType.ContentPackage;
 			info.SavegameEffect = SavegameEffect.AssetsRemain;

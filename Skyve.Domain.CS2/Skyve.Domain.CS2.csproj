@@ -25,6 +25,16 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <None Remove="Steam\Cities2Dlc.png" />
+	  <None Remove="Steam\Cities2Landmark.png" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <EmbeddedResource Include="Steam\Cities2Dlc.png" />
+	  <EmbeddedResource Include="Steam\Cities2Landmark.png" />
+	</ItemGroup>
+	
+	<ItemGroup>
 	  <None Include="Content\_Playset.cs" />
 	</ItemGroup>
 	

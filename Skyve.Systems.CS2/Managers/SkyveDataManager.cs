@@ -1,6 +1,5 @@
 ﻿using Extensions;
 
-using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
@@ -14,7 +13,6 @@ using Skyve.Systems.CS2.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -146,9 +144,11 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 	public PackageData GetAutomatedReport(IPackageIdentity package)
 	{
 		var workshopInfo = package.GetWorkshopInfo();
+		var isCodeMod = (workshopInfo?.IsCodeMod ?? package.GetLocalPackage()?.IsCodeMod ?? false);
+
 		var info = new PackageData
 		{
-			Stability = package.IsCodeMod() ? PackageStability.NotReviewed : PackageStability.AssetNotReviewed,
+			Stability = isCodeMod ? PackageStability.NotReviewed : PackageStability.AssetNotReviewed,
 			Id = package.Id,
 			Name = package.Name,
 			AuthorId = workshopInfo?.Author?.Id?.ToString() ?? string.Empty,
