@@ -176,6 +176,8 @@ public class Installer
 		}
 
 		service.Start();
+
+		AddFirewallRule(servicePath);
 	}
 
 	private static void Run(string command)
