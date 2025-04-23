@@ -21,6 +21,17 @@
 		<AssemblyName>Skyve.App.CS2.Setup</AssemblyName>
 		<TargetName>Skyve Setup</TargetName>
 	</PropertyGroup>
+	<ItemGroup>
+	  <COMReference Include="NetFwTypeLib">
+	    <VersionMinor>0</VersionMinor>
+	    <VersionMajor>1</VersionMajor>
+	    <Guid>58fbcf7c-e7a9-467c-80b3-fc65e8fcca08</Guid>
+	    <Lcid>0</Lcid>
+	    <WrapperTool>tlbimp</WrapperTool>
+	    <Isolated>false</Isolated>
+	    <EmbedInteropTypes>true</EmbedInteropTypes>
+	  </COMReference>
+	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Update="Properties\Resources.resx">

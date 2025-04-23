@@ -2,6 +2,8 @@
 
 using Microsoft.Win32;
 
+using NetFwTypeLib;
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -106,6 +108,8 @@ public class Installer
 			await RegisterService(!InstallService);
 		}
 		catch { }
+
+		AddFirewallRule(exePath);
 
 		RegisterCustomProtocol("Skyve", exePath);
 
@@ -400,6 +404,54 @@ public class Installer
 		}
 	}
 
+	public static void SetInstallSettings(string path, bool desktopShortcut, bool installService)
+	{
+		INSTALL_PATH = path;
+		DesktopShortcut = desktopShortcut;
+		InstallService = installService;
+	}
+
+	public static void AddFirewallRule(string exePath)
+	{
+		try
+		{
+			var ruleName = Path.GetFileNameWithoutExtension(exePath);
+
+			// Get the firewall policy
+			var firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(
+				Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+
+			// Add Inbound Rule
+			var inboundRule = (INetFwRule)Activator.CreateInstance(
+				Type.GetTypeFromProgID("HNetCfg.FWRule"));
+
+			inboundRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+			inboundRule.Description = "Inbound rule for " + ruleName;
+			inboundRule.ApplicationName = exePath;
+			inboundRule.Enabled = true;
+			inboundRule.InterfaceTypes = "All";
+			inboundRule.Name = ruleName + " (Inbound)";
+			inboundRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN;
+
+			firewallPolicy.Rules.Add(inboundRule);
+
+			// Add Outbound Rule
+			var outboundRule = (INetFwRule)Activator.CreateInstance(
+				Type.GetTypeFromProgID("HNetCfg.FWRule"));
+
+			outboundRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+			outboundRule.Description = "Outbound rule for " + ruleName;
+			outboundRule.ApplicationName = exePath;
+			outboundRule.Enabled = true;
+			outboundRule.InterfaceTypes = "All";
+			outboundRule.Name = ruleName + " (Outbound)";
+			outboundRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
+
+			firewallPolicy.Rules.Add(outboundRule);
+		}
+		catch { }
+	}
+
 	public static void RegisterCustomProtocol(string protocolName, string executablePath)
 	{
 		try
@@ -464,13 +516,6 @@ public class Installer
 		{
 			MessageBox.Show("Failed to associate file type: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
-	}
-
-	public static void SetInstallSettings(string path, bool desktopShortcut, bool installService)
-	{
-		INSTALL_PATH = path;
-		DesktopShortcut = desktopShortcut;
-		InstallService = installService;
 	}
 
 	private static string FormatPath(string path)

@@ -1,4 +1,5 @@
 ﻿using Skyve.App.UserInterface.CompatibilityReport;
+using Skyve.App.UserInterface.Generic;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Systems.CS2.Utilities;
@@ -42,8 +43,9 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		base.LocaleChanged();
 
 		Text = LocaleCR.RequestReview;
+		L_Title.Text = LocaleCR.ChooseWhatToRequest;
 		L_Disclaimer.Text = LocaleCR.RequestReviewDisclaimer;
-		B_Apply.Text = Locale.SendReview + "*";
+		bigSelectionOptionControl1 .ButtonText = B_Apply.Text = Locale.SendReview + "*";
 		L_English.Text = Locale.UseEnglishPlease;
 	}
 
@@ -57,18 +59,20 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		}
 
 		TLP_Button.Padding = TLP_Description.Padding = P_Content.Padding = UI.Scale(new Padding(7));
-		slickSpacer2.Margin = L_Disclaimer.Margin = B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
+		slickSpacer2.Margin = L_Disclaimer.Margin = L_Disclaimer2.Margin = B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
 		TB_Note.MinimumSize = UI.Scale(new Size(0, 100), UI.UIScale);
-		L_Disclaimer.Font = UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
+		L_Disclaimer.Font = L_Disclaimer2.Font = UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
 		slickSpacer2.Height = UI.Scale(2);
+		L_Title.Font = UI.Font(12.75F, System.Drawing.FontStyle.Bold);
+		L_Title.Margin = UI.Scale(new Padding(6));
 	}
 
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
 
-		L_Disclaimer.ForeColor = design.InfoColor;
-		L_English.ForeColor = design.YellowColor;
+		 L_Disclaimer2.ForeColor = design.InfoColor;
+		L_Disclaimer.ForeColor = L_English.ForeColor = design.YellowColor;
 	}
 
 	private void B_ReportIssue_Click(object sender, EventArgs e)

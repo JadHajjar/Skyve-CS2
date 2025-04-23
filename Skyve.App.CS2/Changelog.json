@@ -31,8 +31,10 @@
       {
         "Name": "Other Changes",
         "Changes": [
-          "Added the mod's thumbnail to the gallery tab.",
-          "Fixed images not loading properly."
+          "Updated choice-selection screens' interface design.",
+          "Local mods are now matched to their workshop counterpart and will show the proper thumbnail, mod info, and compatibility report.",
+          "Potentially fixed some users not being able to login with the app.",
+          "Fixed not being able to select a different version of Skyve from the version dropdown."
         ]
       }
     ]

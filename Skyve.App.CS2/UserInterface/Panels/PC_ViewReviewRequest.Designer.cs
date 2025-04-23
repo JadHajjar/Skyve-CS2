@@ -451,7 +451,6 @@ partial class PC_ViewReviewRequest
 			// B_LetUserKnowIsFixed
 			// 
 			this.B_LetUserKnowIsFixed.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.B_LetUserKnowIsFixed.FromScratch = false;
 			dynamicIcon6.Name = "Ok";
 			this.B_LetUserKnowIsFixed.ImageName = dynamicIcon6;
 			this.B_LetUserKnowIsFixed.Location = new System.Drawing.Point(464, 3);
@@ -465,7 +464,6 @@ partial class PC_ViewReviewRequest
 			// B_LetUserKnowSaveFileNeeded
 			// 
 			this.B_LetUserKnowSaveFileNeeded.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.B_LetUserKnowSaveFileNeeded.FromScratch = false;
 			dynamicIcon7.Name = "SaveGame";
 			this.B_LetUserKnowSaveFileNeeded.ImageName = dynamicIcon7;
 			this.B_LetUserKnowSaveFileNeeded.Location = new System.Drawing.Point(464, 110);

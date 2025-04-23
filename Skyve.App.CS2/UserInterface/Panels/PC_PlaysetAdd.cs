@@ -26,10 +26,19 @@ public partial class PC_PlaysetAdd : PanelContent
 		}
 	}
 
+	protected override void LocaleChanged()
+	{
+		base.LocaleChanged();
+
+		L_Title.Text = Locale.NewPlaysetTip;
+	}
+
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
+		L_Title.Font = UI.Font(12.75F, System.Drawing.FontStyle.Bold);
+		L_Title.Margin = UI.Scale(new Padding(6));
 		B_Cancel.Font = UI.Font(9.75F);
 		DAD_NewPlayset.Margin = B_Cancel.Margin = UI.Scale(new Padding(10), UI.UIScale);
 	}
