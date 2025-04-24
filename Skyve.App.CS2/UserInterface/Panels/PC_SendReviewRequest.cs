@@ -20,6 +20,8 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 
 		ServiceCenter.Get(out ILocationService locationService, out IPackageManager packageManager);
 
+		logReportControl.Text = $"Log Report {DateTime.Now:yy-MM-dd_HH-mm}.zip";
+
 		DD_SaveFile.StartingFolder = IOSelectionDialog.CustomDirectory;
 		DD_SaveFile.PinnedFolders = new()
 		{
@@ -40,7 +42,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		Text = LocaleCR.RequestReview;
 		L_Title.Text = LocaleCR.ChooseWhatToRequest;
 		L_Disclaimer.Text = LocaleCR.RequestReviewDisclaimer;
-		B_ReportIssue.ButtonText = B_Apply.Text = Locale.SendReview + "*";
+		B_Apply.Text = Locale.SendReview + "*";
 		L_English.Text = Locale.UseEnglishPlease;
 	}
 
@@ -48,15 +50,15 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 	{
 		base.UIChanged();
 
-		foreach (Control item in TLP_Info.Controls)
+		foreach (Control item in TLP_Changes.Controls)
 		{
 			item.Margin = UI.Scale(new Padding(5));
 		}
 
-		TLP_Form.Padding = TLP_Description.Padding = UI.Scale(new Padding(7));
-		slickSpacer2.Margin = L_Disclaimer.Margin = L_Disclaimer2.Margin = B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
-		TB_Note.MinimumSize = UI.Scale(new Size(0, 100), UI.UIScale);
-		L_Disclaimer.Font = L_Disclaimer2.Font = UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
+		TLP_Form.Padding = TB_Note.Margin = L_English.Margin = UI.Scale(new Padding(7));
+		slickSpacer2.Margin = L_Disclaimer.Margin =  B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
+		TB_Note.Height = UI.Scale(250);
+		L_Disclaimer.Font =  UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
 		slickSpacer2.Height = UI.Scale(2);
 		L_Title.Font = UI.Font(12.75F, FontStyle.Bold);
 		L_Title.Margin = UI.Scale(new Padding(6));
@@ -66,7 +68,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 	{
 		base.DesignChanged(design);
 
-		L_Disclaimer2.ForeColor = design.InfoColor;
+		L_Disclaimer.ForeColor = design.InfoColor;
 		L_Disclaimer.ForeColor = L_English.ForeColor = design.YellowColor;
 	}
 
@@ -74,11 +76,13 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 	{
 		TLP_Actions.Hide();
 		TLP_Form.Show();
+		TLP_Changes.Show();
 
 		var data = Package.GetPackageInfo();
 		DD_Stability.SelectedItem = data?.Stability ?? PackageStability.NotReviewed;
 		DD_PackageType.SelectedItem = data?.Type ?? PackageType.GenericPackage;
-		DD_DLCs.SelectedItems = data is null ? Enumerable.Empty<IDlcInfo>() : ServiceCenter.Get<IDlcManager>().Dlcs.Where(x => data.RequiredDLCs?.Contains(x.Id) ?? false);
+		DD_SavegameEffect.SelectedItem = data?.SavegameEffect ?? SavegameEffect.Unknown;
+		DD_DLCs.SelectedItems = data is null ? [] : ServiceCenter.Get<IDlcManager>().Dlcs.Where(x => data.RequiredDLCs?.Contains(x.Id) ?? false);
 		DD_Usage.SelectedItems = Enum.GetValues(typeof(PackageUsage)).Cast<PackageUsage>().Where(x => data?.Usage.HasFlag(x) ?? true);
 	}
 
@@ -86,7 +90,6 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 	{
 		TLP_Actions.Hide();
 		TLP_Form.Show();
-		TLP_Info.Show();
 	}
 
 	private async void B_Apply_Click(object sender, EventArgs e)
@@ -111,7 +114,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 			SaveUrl = lastSaveUrl,
 			PackageStability = (int)DD_Stability.SelectedItem,
 			PackageType = (int)DD_PackageType.SelectedItem,
-			PackageUsage = (int)DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next),
+			PackageUsage = DD_Usage.SelectedItems.Any() ? (int)DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next) : 0,
 			RequiredDLCs = DD_DLCs.SelectedItems.ListStrings(x => x.Id.ToString(), ","),
 			SavegameEffect = (int)DD_SavegameEffect.SelectedItem,
 			IsMissingInfo = false,

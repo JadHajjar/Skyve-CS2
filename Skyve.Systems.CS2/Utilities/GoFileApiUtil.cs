@@ -1,4 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Extensions;
+
+using Newtonsoft.Json;
+
+using Skyve.Domain;
 
 using System;
 using System.IO;
@@ -12,9 +16,6 @@ public class GoFileApiUtil
 	private readonly ApiUtil _apiUtil;
 	private readonly SkyveApiUtil _skyveApiUtil;
 
-	private string? Token;
-	private string? RootFolder;
-
 	public GoFileApiUtil(ApiUtil apiUtil, SkyveApiUtil skyveApiUtil)
 	{
 		_apiUtil = apiUtil;
@@ -23,20 +24,23 @@ public class GoFileApiUtil
 
 	public async Task<string> UploadFile(string filePath)
 	{
-		await ValidateToken();
+		var uploadInfo = await GetUploadData(filePath);
 
-		var folderId = await CreateFolder(filePath);
-		var server = await GetServer();
-
-		if (File.Exists(filePath + ".cid"))
+		if (CrossIO.FileExists(filePath + ".cid"))
 		{
-			await UploadFile(filePath + ".cid", folderId, server);
+			await UploadFile(filePath + ".cid", uploadInfo);
 		}
 
-		return await UploadFile(filePath, folderId, server);
+		return await UploadFile(filePath, uploadInfo);
 	}
 
-	private async Task<string> UploadFile(string filePath, string folderId, string server)
+	private async Task<GoFileUploadInfo> GetUploadData(string filePath)
+	{
+		return await _skyveApiUtil.GetGoFileUploadInfo(Path.GetFileNameWithoutExtension(filePath) + "-" + Guid.NewGuid())
+			?? throw new Exception("Could not get the required information to upload your file. Please try again later.");
+	}
+
+	private async Task<string> UploadFile(string filePath, GoFileUploadInfo uploadInfo)
 	{
 		using var httpClient = new HttpClient();
 		using var form = new MultipartFormDataContent();
@@ -47,79 +51,14 @@ public class GoFileApiUtil
 
 		form.Add(fileContent, "file", Path.GetFileName(filePath));
 
-		form.Add(new StringContent(folderId), "folderId");
+		form.Add(new StringContent(uploadInfo.FolderId), "folderId");
 
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", uploadInfo.Token);
 
-		var response = await httpClient.PostAsync($"https://{server}.gofile.io/contents/uploadfile", form);
+		var response = await httpClient.PostAsync($"https://{uploadInfo.ServerId}.gofile.io/contents/uploadfile", form);
 		var responseContent = JsonConvert.DeserializeObject<CreateFileResult>(await response.Content.ReadAsStringAsync());
 
 		return responseContent!.data!.downloadPage!;
-	}
-
-	private async Task ValidateToken()
-	{
-		if (Token is not null)
-		{
-			return;
-		}
-
-		var info = await _skyveApiUtil.GetGoFileInfo();
-
-		Token = info.Token;
-		RootFolder = info.RootFolder;
-	}
-
-	private async Task<string> CreateFolder(string filePath)
-	{
-		var folder = new CreateFolderPayload
-		{
-			parentFolderId = RootFolder!,
-			folderName = Path.GetFileNameWithoutExtension(filePath) + "-" + Guid.NewGuid()
-		};
-
-		var result = await _apiUtil.Post<CreateFolderPayload, CreateFolderPayload.Result>("https://api.gofile.io/contents/createFolder", folder, headers: [("Authorization", "Bearer " + Token)]);
-
-		return result!.data!.folderId!;
-	}
-
-	private async Task<string> GetServer()
-	{
-		var servers = await _apiUtil.Get<ServerPayload>("https://api.gofile.io/servers");
-
-		return servers!.data!.servers![0].name!;
-	}
-
-	private class ServerPayload
-	{
-		public Data? data { get; set; }
-
-		public class Data
-		{
-			public Server[]? servers { get; set; }
-		}
-
-		public class Server
-		{
-			public string? name { get; set; }
-		}
-	}
-
-	private class CreateFolderPayload
-	{
-		public string? parentFolderId { get; set; }
-		public string? folderName { get; set; }
-
-
-		public class Result
-		{
-			public Data? data { get; set; }
-
-			public class Data
-			{
-				public string? folderId { get; set; }
-			}
-		}
 	}
 
 	private class CreateFileResult

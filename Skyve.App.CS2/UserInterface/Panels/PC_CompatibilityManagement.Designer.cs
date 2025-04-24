@@ -192,7 +192,7 @@ partial class PC_CompatibilityManagement
 			this.TB_RemovalInfo.SelectionLength = 0;
 			this.TB_RemovalInfo.SelectionStart = 0;
 			this.TB_RemovalInfo.Size = new System.Drawing.Size(174, 45);
-			this.TB_RemovalInfo.TabIndex = 18;
+			this.TB_RemovalInfo.TabIndex = 5;
 			this.TB_RemovalInfo.Visible = false;
 			// 
 			// TB_Note
@@ -209,7 +209,7 @@ partial class PC_CompatibilityManagement
 			this.TB_Note.SelectionLength = 0;
 			this.TB_Note.SelectionStart = 0;
 			this.TB_Note.Size = new System.Drawing.Size(354, 93);
-			this.TB_Note.TabIndex = 7;
+			this.TB_Note.TabIndex = 8;
 			// 
 			// tableLayoutPanel1
 			// 
@@ -228,7 +228,7 @@ partial class PC_CompatibilityManagement
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(360, 282);
-			this.tableLayoutPanel1.TabIndex = 17;
+			this.tableLayoutPanel1.TabIndex = 9;
 			// 
 			// P_Links
 			// 
@@ -405,7 +405,7 @@ partial class PC_CompatibilityManagement
 			this.DD_Usage.Location = new System.Drawing.Point(3, 80);
 			this.DD_Usage.Name = "DD_Usage";
 			this.DD_Usage.Size = new System.Drawing.Size(174, 30);
-			this.DD_Usage.TabIndex = 3;
+			this.DD_Usage.TabIndex = 2;
 			this.DD_Usage.Text = "Usage";
 			// 
 			// DD_DLCs
@@ -416,7 +416,7 @@ partial class PC_CompatibilityManagement
 			this.DD_DLCs.Location = new System.Drawing.Point(3, 116);
 			this.DD_DLCs.Name = "DD_DLCs";
 			this.DD_DLCs.Size = new System.Drawing.Size(174, 35);
-			this.DD_DLCs.TabIndex = 4;
+			this.DD_DLCs.TabIndex = 3;
 			this.DD_DLCs.Text = "RequiredDLCs";
 			// 
 			// DD_SavegameEffect
@@ -427,7 +427,7 @@ partial class PC_CompatibilityManagement
 			this.DD_SavegameEffect.Location = new System.Drawing.Point(3, 157);
 			this.DD_SavegameEffect.Name = "DD_SavegameEffect";
 			this.DD_SavegameEffect.Size = new System.Drawing.Size(174, 30);
-			this.DD_SavegameEffect.TabIndex = 2;
+			this.DD_SavegameEffect.TabIndex = 4;
 			this.DD_SavegameEffect.Text = "SavegameEffect";
 			this.DD_SavegameEffect.SelectedItemChanged += new System.EventHandler(this.DD_SavegameEffect_SelectedItemChanged);
 			// 
@@ -442,7 +442,7 @@ partial class PC_CompatibilityManagement
 			this.CB_BlackListName.Name = "CB_BlackListName";
 			this.CB_BlackListName.Size = new System.Drawing.Size(174, 44);
 			this.CB_BlackListName.SpaceTriggersClick = true;
-			this.CB_BlackListName.TabIndex = 6;
+			this.CB_BlackListName.TabIndex = 7;
 			this.CB_BlackListName.Text = "BlackListName";
 			// 
 			// CB_BlackListId
@@ -456,7 +456,7 @@ partial class PC_CompatibilityManagement
 			this.CB_BlackListId.Name = "CB_BlackListId";
 			this.CB_BlackListId.Size = new System.Drawing.Size(152, 44);
 			this.CB_BlackListId.SpaceTriggersClick = true;
-			this.CB_BlackListId.TabIndex = 5;
+			this.CB_BlackListId.TabIndex = 6;
 			this.CB_BlackListId.Text = "BlackListId";
 			// 
 			// T_Statuses
@@ -605,7 +605,7 @@ partial class PC_CompatibilityManagement
 			// 
 			this.TB_EditNote.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TB_EditNote.LabelText = "EditNote";
-			this.TB_EditNote.Location = new System.Drawing.Point(976, 32);
+			this.TB_EditNote.Location = new System.Drawing.Point(975, 32);
 			this.TB_EditNote.MaxLength = 250;
 			this.TB_EditNote.MultiLine = true;
 			this.TB_EditNote.Name = "TB_EditNote";
@@ -614,7 +614,7 @@ partial class PC_CompatibilityManagement
 			this.TB_EditNote.SelectedText = "";
 			this.TB_EditNote.SelectionLength = 0;
 			this.TB_EditNote.SelectionStart = 0;
-			this.TB_EditNote.Size = new System.Drawing.Size(194, 44);
+			this.TB_EditNote.Size = new System.Drawing.Size(195, 44);
 			this.TB_EditNote.TabIndex = 21;
 			// 
 			// slickSpacer2
@@ -636,9 +636,9 @@ partial class PC_CompatibilityManagement
 			this.B_Apply.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon12.Name = "Ok";
 			this.B_Apply.ImageName = dynamicIcon12;
-			this.B_Apply.Location = new System.Drawing.Point(833, 38);
+			this.B_Apply.Location = new System.Drawing.Point(813, 38);
 			this.B_Apply.Name = "B_Apply";
-			this.B_Apply.Size = new System.Drawing.Size(137, 32);
+			this.B_Apply.Size = new System.Drawing.Size(156, 32);
 			this.B_Apply.SpaceTriggersClick = true;
 			this.B_Apply.TabIndex = 18;
 			this.B_Apply.Text = "ApplyContinue";
@@ -651,7 +651,7 @@ partial class PC_CompatibilityManagement
 			this.B_ReuseData.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon13.Name = "Refresh";
 			this.B_ReuseData.ImageName = dynamicIcon13;
-			this.B_ReuseData.Location = new System.Drawing.Point(650, 38);
+			this.B_ReuseData.Location = new System.Drawing.Point(630, 38);
 			this.B_ReuseData.Name = "B_ReuseData";
 			this.B_ReuseData.Size = new System.Drawing.Size(177, 32);
 			this.B_ReuseData.SpaceTriggersClick = true;
@@ -748,7 +748,6 @@ partial class PC_CompatibilityManagement
 			// 
 			// B_Previous
 			// 
-			this.B_Previous.ActiveColor = null;
 			this.B_Previous.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.B_Previous.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon15.Name = "ArrowUp";
@@ -762,7 +761,6 @@ partial class PC_CompatibilityManagement
 			// 
 			// B_Skip
 			// 
-			this.B_Skip.ActiveColor = null;
 			this.B_Skip.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon16.Name = "ArrowDown";
 			this.B_Skip.ImageName = dynamicIcon16;

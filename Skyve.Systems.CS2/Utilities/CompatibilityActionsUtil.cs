@@ -77,8 +77,6 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 
 		await _packageUtil.SetIncluded(message.Packages, true, withVersion: false, promptForDependencies: false);
 
-		await _packageUtil.SetEnabled(message, false);
-
 		await _packageUtil.SetIncluded(message, false, withVersion: false, promptForDependencies: false);
 	}
 

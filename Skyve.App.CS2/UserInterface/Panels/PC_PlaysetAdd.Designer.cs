@@ -37,12 +37,12 @@ partial class PC_PlaysetAdd
 			SlickControls.DynamicIcon dynamicIcon4 = new SlickControls.DynamicIcon();
 			this.TLP_New = new System.Windows.Forms.TableLayoutPanel();
 			this.B_Cancel = new SlickControls.SlickButton();
-			this.L_Title = new System.Windows.Forms.Label();
-			this.slickSpacer1 = new SlickControls.SlickSpacer();
 			this.B_NewPlayset = new Skyve.App.UserInterface.Generic.BigSelectionOptionControl();
 			this.DAD_NewPlayset = new Skyve.App.UserInterface.Generic.DragAndDropControl();
 			this.B_ClonePlayset = new Skyve.App.UserInterface.Generic.BigSelectionOptionControl();
 			this.B_ImportById = new Skyve.App.UserInterface.Generic.BigSelectionOptionControl();
+			this.L_Title = new System.Windows.Forms.Label();
+			this.slickSpacer1 = new SlickControls.SlickSpacer();
 			this.TLP_New.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -87,44 +87,22 @@ partial class PC_PlaysetAdd
 			this.B_Cancel.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon1.Name = "Disposable";
 			this.B_Cancel.ImageName = dynamicIcon1;
-			this.B_Cancel.Location = new System.Drawing.Point(1107, 760);
+			this.B_Cancel.Location = new System.Drawing.Point(1094, 754);
 			this.B_Cancel.Name = "B_Cancel";
-			this.B_Cancel.Size = new System.Drawing.Size(72, 26);
+			this.B_Cancel.Size = new System.Drawing.Size(85, 32);
 			this.B_Cancel.SpaceTriggersClick = true;
 			this.B_Cancel.TabIndex = 3;
 			this.B_Cancel.Text = "Cancel";
 			this.B_Cancel.Click += new System.EventHandler(this.B_Cancel_Click);
 			// 
-			// L_Title
-			// 
-			this.L_Title.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.L_Title.AutoSize = true;
-			this.TLP_New.SetColumnSpan(this.L_Title, 5);
-			this.L_Title.Location = new System.Drawing.Point(572, 96);
-			this.L_Title.Name = "L_Title";
-			this.L_Title.Size = new System.Drawing.Size(38, 13);
-			this.L_Title.TabIndex = 4;
-			this.L_Title.Text = "label1";
-			// 
-			// slickSpacer1
-			// 
-			this.TLP_New.SetColumnSpan(this.slickSpacer1, 3);
-			this.slickSpacer1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.slickSpacer1.Location = new System.Drawing.Point(360, 112);
-			this.slickSpacer1.Name = "slickSpacer1";
-			this.slickSpacer1.Size = new System.Drawing.Size(462, 2);
-			this.slickSpacer1.TabIndex = 5;
-			this.slickSpacer1.TabStop = false;
-			this.slickSpacer1.Text = "slickSpacer1";
-			// 
 			// B_NewPlayset
 			// 
 			this.B_NewPlayset.ButtonText = "Continue";
-			this.B_NewPlayset.ColorStyle = Extensions.ColorStyle.Active;
+			this.B_NewPlayset.ColorStyle = Extensions.ColorStyle.Green;
 			this.B_NewPlayset.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon2.Name = "New";
 			this.B_NewPlayset.ImageName = dynamicIcon2;
-			this.B_NewPlayset.Location = new System.Drawing.Point(360, 216);
+			this.B_NewPlayset.Location = new System.Drawing.Point(360, 220);
 			this.B_NewPlayset.Name = "B_NewPlayset";
 			this.B_NewPlayset.Size = new System.Drawing.Size(150, 278);
 			this.B_NewPlayset.TabIndex = 0;
@@ -150,11 +128,10 @@ partial class PC_PlaysetAdd
 			// B_ClonePlayset
 			// 
 			this.B_ClonePlayset.ButtonText = "Continue";
-			this.B_ClonePlayset.ColorStyle = Extensions.ColorStyle.Active;
 			this.B_ClonePlayset.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon3.Name = "Playsets";
 			this.B_ClonePlayset.ImageName = dynamicIcon3;
-			this.B_ClonePlayset.Location = new System.Drawing.Point(516, 216);
+			this.B_ClonePlayset.Location = new System.Drawing.Point(516, 220);
 			this.B_ClonePlayset.Name = "B_ClonePlayset";
 			this.B_ClonePlayset.Size = new System.Drawing.Size(150, 278);
 			this.B_ClonePlayset.TabIndex = 1;
@@ -165,11 +142,11 @@ partial class PC_PlaysetAdd
 			// B_ImportById
 			// 
 			this.B_ImportById.ButtonText = "Continue";
-			this.B_ImportById.ColorStyle = Extensions.ColorStyle.Active;
+			this.B_ImportById.ColorStyle = Extensions.ColorStyle.Text;
 			this.B_ImportById.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon4.Name = "LinkChain";
 			this.B_ImportById.ImageName = dynamicIcon4;
-			this.B_ImportById.Location = new System.Drawing.Point(672, 216);
+			this.B_ImportById.Location = new System.Drawing.Point(672, 220);
 			this.B_ImportById.Name = "B_ImportById";
 			this.B_ImportById.Size = new System.Drawing.Size(150, 278);
 			this.B_ImportById.TabIndex = 2;
@@ -177,6 +154,28 @@ partial class PC_PlaysetAdd
 			this.B_ImportById.Title = "Import";
 			this.B_ImportById.Visible = false;
 			this.B_ImportById.Click += new System.EventHandler(this.B_ImportLink_Click);
+			// 
+			// L_Title
+			// 
+			this.L_Title.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.L_Title.AutoSize = true;
+			this.TLP_New.SetColumnSpan(this.L_Title, 5);
+			this.L_Title.Location = new System.Drawing.Point(568, 95);
+			this.L_Title.Name = "L_Title";
+			this.L_Title.Size = new System.Drawing.Size(45, 19);
+			this.L_Title.TabIndex = 4;
+			this.L_Title.Text = "label1";
+			// 
+			// slickSpacer1
+			// 
+			this.TLP_New.SetColumnSpan(this.slickSpacer1, 3);
+			this.slickSpacer1.Dock = System.Windows.Forms.DockStyle.Top;
+			this.slickSpacer1.Location = new System.Drawing.Point(360, 117);
+			this.slickSpacer1.Name = "slickSpacer1";
+			this.slickSpacer1.Size = new System.Drawing.Size(462, 2);
+			this.slickSpacer1.TabIndex = 5;
+			this.slickSpacer1.TabStop = false;
+			this.slickSpacer1.Text = "slickSpacer1";
 			// 
 			// PC_PlaysetAdd
 			// 

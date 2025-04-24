@@ -4,19 +4,20 @@ using SkyveApi.Domain.Generic;
 
 namespace Skyve.Systems.CS2.Domain.Api.DTO;
 
-internal class GoFileInfoDto : IDTO<GoFileInfoData, GoFileInfo>
+internal class GoFileInfoDto : IDTO<GoFileUploadData, GoFileUploadInfo>
 {
-	public GoFileInfo Convert(GoFileInfoData? data)
+	public GoFileUploadInfo Convert(GoFileUploadData? data)
 	{
 		if (data == null)
 		{
 			return new();
 		}
 
-		return new GoFileInfo
+		return new GoFileUploadInfo
 		{
-			RootFolder = data.RootFolder,
 			Token = data.Token,
+			FolderId = data.FolderId,
+			ServerId = data.ServerId,
 		};
 	}
 }
