@@ -14,8 +14,7 @@ internal class ReviewRequestDto : IDTO<ReviewRequestData, ReviewRequest>, IDTO<R
 
 		return new ReviewRequestData
 		{
-			IsInteraction = data.IsInteraction,
-			IsStatus = data.IsStatus,
+			IsMissingInfo = data.IsMissingInfo,
 			LogFile = data.LogFile,
 			PackageId = data.PackageId,
 			PackageNote = data.PackageNote,
@@ -23,10 +22,7 @@ internal class ReviewRequestDto : IDTO<ReviewRequestData, ReviewRequest>, IDTO<R
 			PackageType = data.PackageType,
 			PackageUsage = data.PackageUsage,
 			RequiredDLCs = data.RequiredDLCs,
-			StatusAction = data.StatusAction,
-			StatusNote = data.StatusNote,
-			StatusType = data.StatusType,
-			StatusPackages = data.StatusPackages,
+			SavegameEffect = data.SavegameEffect,
 			Timestamp = data.Timestamp,
 			UserId = data.UserId,
 			SaveUrl = data.SaveUrl
@@ -42,8 +38,7 @@ internal class ReviewRequestDto : IDTO<ReviewRequestData, ReviewRequest>, IDTO<R
 
 		return new ReviewRequest
 		{
-			IsInteraction = data.IsInteraction,
-			IsStatus = data.IsStatus,
+			IsMissingInfo = data.IsMissingInfo,
 			LogFile = data.LogFile,
 			PackageId = data.PackageId,
 			PackageNote = data.PackageNote,
@@ -51,10 +46,7 @@ internal class ReviewRequestDto : IDTO<ReviewRequestData, ReviewRequest>, IDTO<R
 			PackageType = data.PackageType,
 			PackageUsage = data.PackageUsage,
 			RequiredDLCs = data.RequiredDLCs,
-			StatusAction = data.StatusAction,
-			StatusNote = data.StatusNote,
-			StatusType = data.StatusType,
-			StatusPackages = data.StatusPackages,
+			SavegameEffect = data.SavegameEffect,
 			Timestamp = data.Timestamp,
 			UserId = data.UserId,
 			SaveUrl = data.SaveUrl

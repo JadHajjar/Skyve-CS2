@@ -1,7 +1,4 @@
-﻿using Skyve.App.UserInterface.CompatibilityReport;
-using Skyve.App.UserInterface.Generic;
-using Skyve.Compatibility.Domain;
-using Skyve.Compatibility.Domain.Enums;
+﻿using Skyve.Compatibility.Domain.Enums;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
@@ -43,7 +40,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		Text = LocaleCR.RequestReview;
 		L_Title.Text = LocaleCR.ChooseWhatToRequest;
 		L_Disclaimer.Text = LocaleCR.RequestReviewDisclaimer;
-		B_ReportIssue .ButtonText = B_Apply.Text = Locale.SendReview + "*";
+		B_ReportIssue.ButtonText = B_Apply.Text = Locale.SendReview + "*";
 		L_English.Text = Locale.UseEnglishPlease;
 	}
 
@@ -69,7 +66,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 	{
 		base.DesignChanged(design);
 
-		 L_Disclaimer2.ForeColor = design.InfoColor;
+		L_Disclaimer2.ForeColor = design.InfoColor;
 		L_Disclaimer.ForeColor = L_English.ForeColor = design.YellowColor;
 	}
 
@@ -111,22 +108,23 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		{
 			PackageId = Package.Id,
 			PackageNote = TB_Note.Text,
-			SaveUrl = lastSaveUrl
+			SaveUrl = lastSaveUrl,
+			PackageStability = (int)DD_Stability.SelectedItem,
+			PackageType = (int)DD_PackageType.SelectedItem,
+			PackageUsage = (int)DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next),
+			RequiredDLCs = DD_DLCs.SelectedItems.ListStrings(x => x.Id.ToString(), ","),
+			SavegameEffect = (int)DD_SavegameEffect.SelectedItem,
+			IsMissingInfo = false,
+
+			LogFile = await Task.Run(async () =>
+			{
+				using var stream = new MemoryStream();
+
+				await ServiceCenter.Get<ILogUtil>().CreateZipToStream(stream);
+
+				return stream.ToArray();
+			})
 		};
-
-		postPackage.PackageStability = (int)DD_Stability.SelectedItem;
-		postPackage.PackageType = (int)DD_PackageType.SelectedItem;
-		postPackage.PackageUsage = (int)DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next);
-		postPackage.RequiredDLCs = DD_DLCs.SelectedItems.ListStrings(x => x.Id.ToString(), ",");
-
-		postPackage.LogFile = await Task.Run(async () =>
-		{
-			using var stream = new MemoryStream();
-
-			await ServiceCenter.Get<ILogUtil>().CreateZipToStream(stream);
-
-			return stream.ToArray();
-		});
 
 		var response = await ServiceCenter.Get<SkyveApiUtil>().SendReviewRequest(postPackage);
 

@@ -366,12 +366,14 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		CB_BlackListId.Checked = postPackage.IsBlackListedById;
 		CB_BlackListName.Checked = postPackage.IsBlackListedByName;
 
-		if (_request is not null && !_request.IsStatus && !_request.IsInteraction)
+		if (_request is not null)
 		{
-			DD_Stability.SelectedItem = (PackageStability)_request.PackageStability;
-			DD_PackageType.SelectedItem = (PackageType)_request.PackageType;
+			DD_Stability.SelectedItem = _request.PackageStability.TryCast<PackageStability>();
+			DD_PackageType.SelectedItem = _request.PackageType.TryCast<PackageType>();
 			DD_DLCs.SelectedItems = DD_DLCs.Items.Where(x => _request.RequiredDLCs?.Contains(x.Id.ToString()) ?? false);
-			DD_Usage.SelectedItems = DD_Usage.Items.Where(x => ((PackageUsage)_request.PackageUsage).HasFlag(x));
+			DD_Usage.SelectedItems = DD_Usage.Items.Where(x => (_request.PackageUsage.TryCast<PackageUsage>()).HasFlag(x));
+			DD_SavegameEffect.SelectedItem = _request.SavegameEffect.TryCast<SavegameEffect>();
+			TB_RemovalInfo.Text = postPackage.RemovalSteps;
 		}
 		else
 		{
@@ -408,28 +410,6 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		postPackage.Statuses ??= [];
 		postPackage.Interactions ??= [];
-
-		if (_request?.IsInteraction ?? false)
-		{
-			postPackage.Interactions.Add(new()
-			{
-				Action = (StatusAction)_request.StatusAction,
-				IntType = _request.StatusType,
-				Note = _request.StatusNote,
-				Packages = _request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList(StringToPackageReference),
-			});
-		}
-
-		if (_request?.IsStatus ?? false)
-		{
-			postPackage.Statuses.Add(new()
-			{
-				Action = (StatusAction)_request.StatusAction,
-				IntType = _request.StatusType,
-				Note = _request.StatusNote,
-				Packages = _request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList(StringToPackageReference),
-			});
-		}
 
 		foreach (var item in postPackage.Statuses)
 		{

@@ -1,4 +1,6 @@
-﻿using Skyve.App.UserInterface.CompatibilityReport;
+﻿using Newtonsoft.Json.Linq;
+
+using Skyve.App.UserInterface.Content;
 using Skyve.App.Utilities;
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
@@ -26,9 +28,9 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 		InitializeComponent();
 		_request = request;
 
-		//TLP_Info.Controls.Add(new SteamUserControl(request.UserId) { InfoText = "Requested by", Dock = DockStyle.Top, Margin = UI.Scale(new Padding(5)) }, 0, 1);
+		P_Info.Controls.Add(new UserDescriptionControl(userService.TryGetUser(request.UserId)) { Dock = DockStyle.Left });
 
-		if (L_Savegame.Visible = !string.IsNullOrEmpty(request.SaveUrl))
+		if (TLP_Savegame.Visible = !string.IsNullOrEmpty(request.SaveUrl))
 		{
 			saveGameControl = new SlickControl
 			{
@@ -41,7 +43,12 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 			saveGameControl.Paint += SaveGameControl_Paint;
 			saveGameControl.Click += SaveGameControl_Click;
 
-			TLP_Main.Controls.Add(saveGameControl, 1, 3);
+			TLP_Savegame.Controls.Add(saveGameControl);
+		}
+		else
+		{
+			TLP_Main.ColumnStyles[0].Width *= 2f;
+			TLP_Main.ColumnStyles[1].Width = 0f;
 		}
 
 		logControl = new SlickControl
@@ -49,55 +56,48 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 			Cursor = Cursors.Hand,
 			Text = $"RequestBy_{userService.TryGetUser(_request.UserId)?.Name}_{DateTime.Now:yy-MM-dd_HH-mm}",
 			Size = UI.Scale(new Size(150, 75), UI.UIScale),
+			Dock = DockStyle.Top,
 			Margin = UI.Scale(new Padding(5))
 		};
 
 		logControl.Paint += LogControl_Paint;
 		logControl.Click += LogControl_Click;
 
-		TLP_Main.Controls.Add(logControl, 0, 3);
+		TLP_LogReport.Controls.Add(logControl);
 
 		L_Note.Text = request.PackageNote.IfEmpty("No description given");
 
-		if (request.IsInteraction)
+		if (!(TLP_Changes.Visible = !request.IsMissingInfo))
 		{
-			TLP_Main.Controls.Add(new IPackageStatusControl<InteractionType, PackageInteraction>(_workshopService.GetPackage(new GenericPackageIdentity(request.PackageId)), new PackageInteraction
-			{
-				Action = (StatusAction)request.StatusAction,
-				IntType = request.StatusType,
-				Note = request.StatusNote,
-				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList(StringToPackageReference),
-			})
-			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 6);
+			TLP_Main.ColumnStyles[2].Width = 0f;
 		}
-		else if (request.IsStatus)
-		{
-			TLP_Main.Controls.Add(new IPackageStatusControl<StatusType, PackageStatus>(_workshopService.GetPackage(new GenericPackageIdentity(request.PackageId)), new PackageStatus
-			{
-				Action = (StatusAction)request.StatusAction,
-				IntType = request.StatusType,
-				Note = request.StatusNote,
-				Packages = request.StatusPackages?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList(StringToPackageReference),
-			})
-			{ BackColor = FormDesign.Design.AccentBackColor, Enabled = false }, 0, 6);
-		}
-		else
-		{
-			DD_Stability.SelectedItem = (PackageStability)_request.PackageStability;
-			DD_PackageType.SelectedItem = (PackageType)_request.PackageType;
-			DD_DLCs.SelectedItems = _dlcManager.Dlcs.Where(x => _request.RequiredDLCs?.Contains(x.Id.ToString()) ?? false);
-			DD_Usage.SelectedItems = Enum.GetValues(typeof(PackageUsage)).Cast<PackageUsage>().Where(x => ((PackageUsage)_request.PackageUsage).HasFlag(x));
 
-			tableLayoutPanel3.Visible = true;
-		}
+		SlickTip.SetTo(B_Copy, "Copy to clipboard");
+		SlickTip.SetTo(B_Translate, "Translate to English");
 
 		SetPackage(Package);
 	}
 
+	protected override void OnCreateControl()
+	{
+		base.OnCreateControl();
+
+		if (TLP_Changes.Visible)
+		{
+			DD_Stability.SelectedItem = _request.PackageStability.TryCast<PackageStability>();
+			DD_PackageType.SelectedItem = _request.PackageType.TryCast<PackageType>();
+			DD_DLCs.SelectedItems = ServiceCenter.Get<IDlcManager>().Dlcs.Where(x => _request.RequiredDLCs?.Contains(x.Id.ToString()) ?? false);
+			DD_Usage.SelectedItems = Enum.GetValues(typeof(PackageUsage)).Cast<PackageUsage>().Where(x => (_request.PackageUsage.TryCast<PackageUsage>()).HasFlag(x));
+			DD_SavegameEffect.SelectedItem = _request.SavegameEffect.TryCast<SavegameEffect>();
+		}
+	}
+
 	private CompatibilityPackageReference StringToPackageReference(string arg)
 	{
-		if(ulong.TryParse(arg,out var id))
-		return new CompatibilityPackageReference(new GenericPackageIdentity(id));
+		if (ulong.TryParse(arg, out var id))
+		{
+			return new CompatibilityPackageReference(new GenericPackageIdentity(id));
+		}
 
 		return new(new GenericPackageIdentity(0));
 	}
@@ -147,17 +147,12 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 	{
 		base.UIChanged();
 
-		L_ProposedChanges.Font = L_Desc.Font = L_LogReport.Font = L_Savegame.Font = UI.Font(9.75F, FontStyle.Bold);
-		L_Note.Font = UI.Font(9.25F);
-		L_LogReport.Margin = L_Savegame.Margin = slickSpacer3.Margin = UI.Scale(new Padding(3, 15, 3, 3));
 		slickSpacer4.Margin = slickSpacer1.Margin = TB_Note.Margin = B_SendReply.Margin = UI.Scale(new Padding(5));
-		L_ProposedChanges.Margin = UI.Scale(new Padding(3, 15, 3, 7));
 		TLP_Main.Padding = UI.Scale(new Padding(10, 5, 10, 0));
-		I_Copy.Size = UI.Scale(new Size(32, 32));
-		I_Copy.Padding = UI.Scale(new Padding(4));
-		slickSpacer3.Height = slickSpacer4.Height = slickSpacer1.Height = UI.Scale(1);
+		B_Copy.Size = UI.Scale(new Size(32, 32));
+		B_Copy.Padding = UI.Scale(new Padding(4));
+		slickSpacer4.Height = slickSpacer1.Height = UI.Scale(2);
 		slickSpacer2.Height = UI.Scale(2);
-		L_Desc.Margin = L_Note.Margin = UI.Scale(new Padding(3));
 		B_DeleteRequest.Margin = B_ApplyChanges.Margin = B_ManagePackage.Margin = B_Reply.Margin = UI.Scale(new Padding(5));
 		TB_Note.Height = UI.Scale(200);
 		tableLayoutPanel4.Margin = TLP_Actions.Margin = UI.Scale(new Padding(10));
@@ -334,5 +329,27 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 			P_Reply.Visible = false;
 			P_Info.Visible = true;
 		}
+	}
+
+	private async void B_Translate_Click(object sender, EventArgs e)
+	{
+		B_Translate.Enabled = false;
+		B_Translate.Loading = true;
+
+		L_Note.Text = await TranslateToEnglishAsync(L_Note.Text);
+		L_Note.Invalidate();
+
+		B_Translate.Loading = false;
+	}
+
+	public async Task<string?> TranslateToEnglishAsync(string inputText)
+	{
+		try
+		{
+			var result = await ServiceCenter.Get<ApiUtil>().Get<dynamic>("https://translate.googleapis.com/translate_a/single", ("client", "gtx"), ("sl", "auto"), ("tl", "en"), ("dt", "t"), ("q", inputText.Replace("\r\n", " _ ")));
+
+			return ((JValue)((JContainer)((JContainer)(result as JArray)!.First).First).First).Value.ToString().Replace("_", "\r\n");
+		}
+		catch { return inputText; }
 	}
 }
