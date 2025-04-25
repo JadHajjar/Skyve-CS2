@@ -257,6 +257,7 @@ partial class InstallingForm
 			this.MaximizedBounds = new System.Drawing.Rectangle(0, 0, 2560, 1380);
 			this.Name = "InstallingForm";
 			this.Text = "Skyve";
+			this.TopMost = true;
 			this.Controls.SetChildIndex(this.base_P_Container, 0);
 			this.Controls.SetChildIndex(this.pictureBox, 0);
 			this.base_P_Container.ResumeLayout(false);

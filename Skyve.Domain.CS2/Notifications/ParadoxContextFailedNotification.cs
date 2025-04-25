@@ -16,7 +16,7 @@ public class ParadoxContextFailedNotification : INotificationInfo
 	public ParadoxContextFailedNotification(IWorkshopService workshopService)
 	{
 		_workshopService = workshopService;
-		Time = DateTime.MaxValue;
+		Time = DateTime.Now;
 		Title = LocaleCS2.ParadoxContextFailed;
 		Description = LocaleCS2.ParadoxContextFailedInfo;
 		Icon = "Paradox";

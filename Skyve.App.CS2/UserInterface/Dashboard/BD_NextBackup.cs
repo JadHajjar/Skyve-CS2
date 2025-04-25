@@ -133,6 +133,7 @@ internal class B_NextBackup : IDashboardItem
 			Font = font,
 			Size = new Size(0, UI.Scale(20)),
 			Text = Locale.DoBackupNow,
+			ButtonType = ButtonType.Dimmed,
 			Enabled = !_notifier.IsBackingUp && !string.IsNullOrWhiteSpace(_backupSettings.DestinationFolder),
 			Rectangle = e.ClipRectangle.Pad(BorderRadius)
 		});

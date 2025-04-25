@@ -33,7 +33,10 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 			Stability = (int)data.Stability,
 			Usage = (int)data.Usage,
 			Type = (int)data.Type,
+			SavegameEffect = (int)data.SavegameEffect,
+			RemovalSteps = data.RemovalSteps,
 			Tags = data.Tags,
+			ActiveReports = data.ActiveReports,
 			Links = data.Links.ToList(Convert),
 			Statuses = data.Statuses.ToList(Convert),
 			Interactions = data.Interactions.ToList(Convert),
@@ -46,7 +49,7 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 		{
 			Type = (int)data.Type,
 			Action = (int)data.Action,
-			Packages = data.Packages,
+			Packages = data.Packages?.Select(x => x.Id).ToArray(),
 			Note = data.Note
 		};
 	}
@@ -57,7 +60,7 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 		{
 			Type = (int)data.Type,
 			Action = (int)data.Action,
-			Packages = data.Packages,
+			Packages = data.Packages?.Select(x => x.Id).ToArray(),
 			Note = data.Note
 		};
 	}

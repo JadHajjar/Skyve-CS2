@@ -7,7 +7,6 @@ namespace Skyve.Domain.CS2.Utilities;
 public class SessionSettings : ConfigFile, ISessionSettings
 {
 	public bool FirstTimeSetupCompleted { get; set; }
-	public string? CurrentPlayset { get; set; }
 	public Rectangle? LastWindowsBounds { get; set; }
 	public bool WindowWasMaximized { get; set; }
 	public bool SubscribeFirstTimeShown { get; set; }

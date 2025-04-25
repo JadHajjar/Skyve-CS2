@@ -2,8 +2,6 @@
 
 using Skyve.Domain.Enums;
 
-using System.IO;
-
 #nullable disable
 
 namespace Skyve.Domain.CS2.Utilities;

@@ -43,7 +43,6 @@ public class PdxPlaysetImport : ITemporaryPlayset
 	DateTime IPlayset.DateUpdated { get; } = DateTime.Now;
 	int IPlayset.ModCount => SubscribedMods?.Count ?? 0;
 	ulong IPlayset.ModSize { get; }
-	bool IPlayset.Temporary => true;
 
 	bool IThumbnailObject.GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{

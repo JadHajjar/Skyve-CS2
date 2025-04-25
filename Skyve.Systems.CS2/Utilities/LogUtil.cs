@@ -76,14 +76,46 @@ internal class LogUtil : ILogUtil
 
 		AddMainFilesToZip(zipArchive, out var mainLogDate, out var logTrace);
 
+		AddLogFilesToZip(zipArchive, mainLogDate, ref logTrace);
+
+		try
+		{
+			await AddProfileToZip(zipArchive);
+		}
+		catch { }
+
+		AddSettingsFilesToZip(zipArchive);
+
+		AddErrorsToZip(zipArchive, logTrace);
+	}
+
+	private void AddLogFilesToZip(ZipArchive zipArchive, DateTime mainLogDate, ref List<ILogTrace> logTrace)
+	{
 		foreach (var filePath in GetLogFilesForZip(mainLogDate))
 		{
-			CreateFileEntry(zipArchive, $"Logs\\{Path.GetFileName(filePath)}", filePath);
+			if (!CrossIO.FileExists(filePath))
+			{
+				continue;
+			}
+
+			var tempFile = CrossIO.GetTempFileName();
+
+			CrossIO.CopyFile(filePath, tempFile, true);
+
+			logTrace.AddRange(ExtractTrace(filePath, tempFile));
+
+			CreateEntry(zipArchive, $"Logs\\{Path.GetFileName(filePath)}", File.ReadAllText(tempFile));
+
+			CrossIO.DeleteFile(tempFile, true);
 		}
+	}
 
-		await AddProfile(zipArchive);
-
-		AddErrors(zipArchive, logTrace);
+	private void AddSettingsFilesToZip(ZipArchive zipArchive)
+	{
+		foreach (var filePath in Directory.GetFiles(_settings.FolderSettings.AppDataPath, "*.coc", SearchOption.AllDirectories))
+		{
+			CreateFileEntry(zipArchive, $"Settings\\{filePath.Substring(_settings.FolderSettings.AppDataPath.Length).TrimStart('/', '\\')}", filePath);
+		}
 	}
 
 	private IEnumerable<string> GetLogFilesForZip(DateTime mainLogDate)
@@ -112,7 +144,7 @@ internal class LogUtil : ILogUtil
 		{
 			var tempLogFile = CrossIO.GetTempFileName();
 			CrossIO.CopyFile(GameLogFile, tempLogFile, true);
-			CreateEntry(zipArchive, "Log.log", File.ReadAllText(tempLogFile));
+			CreateEntry(zipArchive, "Player.log", File.ReadAllText(tempLogFile));
 
 			logTrace = ExtractTrace(GameLogFile, tempLogFile);
 			mainLogDate = File.GetLastWriteTime(GameLogFile);
@@ -124,11 +156,11 @@ internal class LogUtil : ILogUtil
 			mainLogDate = DateTime.Now;
 		}
 
-		if (CrossIO.FileExists(PreviousGameLogFile)) 
+		if (CrossIO.FileExists(PreviousGameLogFile))
 		{
 			var tempLogFile = CrossIO.GetTempFileName();
 			CrossIO.CopyFile(PreviousGameLogFile, tempLogFile, true);
-			CreateEntry(zipArchive, "Log_Previous.log", File.ReadAllText(tempLogFile));
+			CreateEntry(zipArchive, "Player_Previous.log", File.ReadAllText(tempLogFile));
 		}
 
 		if (CrossIO.FileExists(_logger.LogFilePath))
@@ -141,27 +173,24 @@ internal class LogUtil : ILogUtil
 			CreateFileEntry(zipArchive, "Skyve\\SkyveLog_Previous.log", _logger.PreviousLogFilePath);
 		}
 
-		CreateEntry(zipArchive, "Mods List.txt", _packageManager.Packages.Where(x => _packageUtil.IsIncludedAndEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name} {x.VersionName}" : $"{x.Id}: {x.Name} {x.VersionName}", CrossIO.NewLine));
+		CreateEntry(zipArchive, "ModsList.txt", _packageManager.Packages.Where(x => _packageUtil.IsEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name} {x.VersionName}" : $"{x.Id}: {x.Name} {x.VersionName}", CrossIO.NewLine));
+
+		var startFolderLength = _settings.FolderSettings.AppDataPath.Length;
+		CreateEntry(zipArchive, "FileSystem.txt", _settings.FolderSettings.AppDataPath + "\r\n\r\n" + string.Join("\r\n", Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*", SearchOption.AllDirectories).Select(x => x.Substring(startFolderLength))));
 
 		AddCompatibilityReport(zipArchive);
 	}
 
 	private void AddCompatibilityReport(ZipArchive zipArchive)
 	{
-		//var culture = LocaleHelper.CurrentCulture;
-		//LocaleHelper.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-
-		//_compatibilityManager.CacheReport();
 		var reports = _packageManager.Packages.Where(x => x.IsEnabled()).ToList(x => x.GetCompatibilityInfo());
-		reports.RemoveAll(x => x.GetNotification() <= Skyve.Compatibility.Domain.Enums.NotificationType.Warning && !_packageUtil.IsIncludedAndEnabled(x));
+
+		reports.RemoveAll(x => x.GetNotification() <= Skyve.Compatibility.Domain.Enums.NotificationType.Warning && !_packageUtil.IsEnabled(x));
 
 		CreateEntry(zipArchive, "Skyve\\CompatibilityReport.json", reports);
-
-		//LocaleHelper.CurrentCulture = culture;
-		//_compatibilityManager.CacheReport();
 	}
 
-	private async Task AddProfile(ZipArchive zipArchive)
+	private async Task AddProfileToZip(ZipArchive zipArchive)
 	{
 		if (_playsetManager.CurrentPlayset is null)
 		{
@@ -171,16 +200,16 @@ internal class LogUtil : ILogUtil
 		CreateEntry(zipArchive, "Skyve\\CurrentPlayset.json", await _playsetManager.GenerateImportPlayset(_playsetManager.CurrentPlayset));
 	}
 
-	private static void AddErrors(ZipArchive zipArchive, List<ILogTrace> logTrace)
+	private static void AddErrorsToZip(ZipArchive zipArchive, List<ILogTrace> logTrace)
 	{
-		logTrace = logTrace.AllWhere(x => x.Type is not "INFO" and not "DEBUG");
+		logTrace = logTrace.AllWhere(x => x.Type is "FATAL" or "CRITICAL" or "EMERGENCY" or "EXCEPTION" or "ERROR");
 
 		if (logTrace.Count == 0)
 		{
 			return;
 		}
 
-		CreateEntry(zipArchive, "Log_Errors.log", logTrace.ListStrings(e => e.ToString() + "\r\n\r\n"));
+		CreateEntry(zipArchive, "ErrorsInLogs.log", logTrace.ListStrings(e => e.ToString() + "\r\n\r\n"));
 	}
 
 	private string GetLastCrashLog(DateTime mainLogDate)
@@ -220,30 +249,12 @@ internal class LogUtil : ILogUtil
 		var traces = new List<ILogTrace>();
 		LogTrace? currentTrace = null;
 
-		if (!originalFile.EndsWith("Player.log") && !originalFile.EndsWith("Player-prev.log") && originalFile is not "Log.log" and not "Log_Previous.log")
+		if (originalFile.EndsWith("Player-prev.log") || originalFile is "Player_Previous.log")
 		{
-			for (var i = 0; i < lines.Length; i++)
-			{
-				var line = lines[i];
-
-				if (!IsValid(line))
-				{
-					continue;
-				}
-
-				if (ParseLine(line, out var date, out var type, out var title))
-				{
-					currentTrace = new LogTrace(type!, title!, date, originalFile);
-
-					traces.Add(currentTrace);
-				}
-				else
-				{
-					currentTrace?.AddTrace(line);
-				}
-			}
+			return traces;
 		}
-		else
+
+		if (originalFile.EndsWith("Player.log") || originalFile is "Player.log")
 		{
 			var stamp = File.GetLastWriteTime(originalFile);
 
@@ -263,6 +274,29 @@ internal class LogUtil : ILogUtil
 				else
 				{
 					currentTrace = null;
+				}
+			}
+		}
+		else
+		{
+			for (var i = 0; i < lines.Length; i++)
+			{
+				var line = lines[i];
+
+				if (!IsValid(line))
+				{
+					continue;
+				}
+
+				if (ParseLine(line, out var date, out var type, out var title))
+				{
+					currentTrace = new LogTrace(type!, title!, date, originalFile);
+
+					traces.Add(currentTrace);
+				}
+				else
+				{
+					currentTrace?.AddTrace(line);
 				}
 			}
 		}
@@ -371,6 +405,9 @@ internal class LogUtil : ILogUtil
 		var profileEntry = zipArchive.CreateEntry(entry);
 		using var writer = new StreamWriter(profileEntry.Open());
 
-		writer.Write(content.RegexReplace(@"(users[/\\]).+?([/\\])", x => $"{x.Groups[1].Value}%username%{x.Groups[2].Value}"));
+		var regex = Regex.Escape(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)).Replace(@"\\", @"[/\\]").RegexReplace(@"[^/\\\]]+$", @"[^/\\]+");
+		var replacement = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).RegexReplace(@"[^/\\]+$", "%username%");
+
+		writer.Write(content.RegexReplace(regex, replacement));
 	}
 }

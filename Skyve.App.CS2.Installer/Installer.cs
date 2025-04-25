@@ -2,11 +2,15 @@
 
 using Microsoft.Win32;
 
+using NetFwTypeLib;
+
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.ServiceProcess;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +39,13 @@ public class Installer
 
 		try
 		{
-			targetFolder.Delete(true);
+			if (targetFolder.Exists)
+			{
+				foreach (var item in targetFolder.GetFiles())
+				{
+					item.Delete();
+				}
+			}
 		}
 		catch { }
 
@@ -44,6 +54,21 @@ public class Installer
 		try
 		{
 			originalPath.CopyAll(targetFolder);
+
+			var thumbsFolder = new DirectoryInfo(Path.Combine(targetFolder.FullName, "Thumbs"));
+
+			thumbsFolder.Create();
+
+			var dirSecurity = thumbsFolder.GetAccessControl();
+
+			dirSecurity.AddAccessRule(new FileSystemAccessRule(
+				new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+				FileSystemRights.Read | FileSystemRights.Write | FileSystemRights.Modify,
+				InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+				PropagationFlags.None,
+				AccessControlType.Allow));
+
+			thumbsFolder.SetAccessControl(dirSecurity);
 		}
 		catch (Exception ex)
 		{
@@ -83,6 +108,8 @@ public class Installer
 			await RegisterService(!InstallService);
 		}
 		catch { }
+
+		AddFirewallRule(exePath);
 
 		RegisterCustomProtocol("Skyve", exePath);
 
@@ -149,6 +176,8 @@ public class Installer
 		}
 
 		service.Start();
+
+		AddFirewallRule(servicePath);
 	}
 
 	private static void Run(string command)
@@ -188,7 +217,7 @@ public class Installer
 
 		File.Delete(shortcutPath);
 
-		foreach (var item in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "*.lnk"))
+		foreach (var item in Directory.GetFiles(GetFolderPath(SpecialFolder.Desktop), "*.lnk"))
 		{
 			if (ExtensionClass.GetShortcutPath(item).PathEquals(Application.ExecutablePath))
 			{
@@ -356,7 +385,14 @@ public class Installer
 
 				InstallService = !bool.TryParse(key.GetValue("InstallBackgroundService")?.ToString(), out var install) || install;
 
-				return INSTALL_PATH = Path.GetDirectoryName(path!.Trim('"').Replace("\\\\", "\\"));
+				path = Path.GetDirectoryName(path!.Trim('"').Replace("\\\\", "\\"));
+
+				if (Directory.Exists(path))
+				{
+					return INSTALL_PATH = path;
+				}
+
+				return null;
 			}
 			finally
 			{
@@ -368,6 +404,54 @@ public class Installer
 		{
 			return null;
 		}
+	}
+
+	public static void SetInstallSettings(string path, bool desktopShortcut, bool installService)
+	{
+		INSTALL_PATH = path;
+		DesktopShortcut = desktopShortcut;
+		InstallService = installService;
+	}
+
+	public static void AddFirewallRule(string exePath)
+	{
+		try
+		{
+			var ruleName = Path.GetFileNameWithoutExtension(exePath);
+
+			// Get the firewall policy
+			var firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(
+				Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+
+			// Add Inbound Rule
+			var inboundRule = (INetFwRule)Activator.CreateInstance(
+				Type.GetTypeFromProgID("HNetCfg.FWRule"));
+
+			inboundRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+			inboundRule.Description = "Inbound rule for " + ruleName;
+			inboundRule.ApplicationName = exePath;
+			inboundRule.Enabled = true;
+			inboundRule.InterfaceTypes = "All";
+			inboundRule.Name = ruleName + " (Inbound)";
+			inboundRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN;
+
+			firewallPolicy.Rules.Add(inboundRule);
+
+			// Add Outbound Rule
+			var outboundRule = (INetFwRule)Activator.CreateInstance(
+				Type.GetTypeFromProgID("HNetCfg.FWRule"));
+
+			outboundRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
+			outboundRule.Description = "Outbound rule for " + ruleName;
+			outboundRule.ApplicationName = exePath;
+			outboundRule.Enabled = true;
+			outboundRule.InterfaceTypes = "All";
+			outboundRule.Name = ruleName + " (Outbound)";
+			outboundRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
+
+			firewallPolicy.Rules.Add(outboundRule);
+		}
+		catch { }
 	}
 
 	public static void RegisterCustomProtocol(string protocolName, string executablePath)
@@ -434,13 +518,6 @@ public class Installer
 		{
 			MessageBox.Show("Failed to associate file type: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
-	}
-
-	public static void SetInstallSettings(string path, bool desktopShortcut, bool installService)
-	{
-		INSTALL_PATH = path;
-		DesktopShortcut = desktopShortcut;
-		InstallService = installService;
 	}
 
 	private static string FormatPath(string path)

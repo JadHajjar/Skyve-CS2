@@ -141,8 +141,8 @@ public class SkyveApiUtil
 		return await Delete<ApiResponse>("/DeleteReviewMessage", (nameof(packageId), packageId));
 	}
 
-	public async Task<GoFileInfo?> GetGoFileInfo()
+	public async Task<GoFileUploadInfo?> GetGoFileUploadInfo(string folder)
 	{
-		return ConvertDto<GoFileInfoData, GoFileInfo, GoFileInfoDto>(await Get<GoFileInfoData>("/GetGoFileInfo"));
+		return ConvertDto<GoFileUploadData, GoFileUploadInfo, GoFileInfoDto>(await Get<GoFileUploadData>("/GetGoFileUploadInfo", ("folderName", folder)));
 	}
 }

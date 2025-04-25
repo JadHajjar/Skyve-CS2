@@ -17,7 +17,7 @@ using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
 namespace Skyve.Domain.CS2.Content;
 
-public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
+public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IFullThumbnailObject
 {
 	private LocalData PdxLocalData;
 
@@ -123,5 +123,13 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject
 	bool IWorkshopInfo.HasComments()
 	{
 		return false;
+	}
+
+	public bool GetFullThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
+	{
+		thumbnailUrl = ThumbnailUrl;
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version, false);
+
+		return true;
 	}
 }

@@ -27,6 +27,7 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool LinkModAssets { get; set; } = true;
 	public bool FadeDisabledItems { get; set; } = true;
 	public bool ShowDatesRelatively { get; set; } = true;
+	public bool DisableContentCreatorWarnings { get; set; }
 	public bool FilterOutPackagesWithOneAsset { get; set; }
 	public bool FilterOutPackagesWithMods { get; set; }
 	public bool AdvancedLaunchOptions { get; set; }

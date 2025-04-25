@@ -30,13 +30,16 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 			ReviewDate = data.ReviewDate,
 			ReviewedGameVersion = data.ReviewedGameVersion,
 			Tags = data.Tags ?? [],
-			Stability = (PackageStability)data.Stability,
-			Type = (PackageType)data.Type,
-			Usage = (PackageUsage)data.Usage,
+			Stability = data.Stability.TryCast<PackageStability>(),
+			Type = data.Type.TryCast<PackageType>(),
+			SavegameEffect = data.SavegameEffect.TryCast<SavegameEffect>(),
+			Usage = data.Usage.TryCast<PackageUsage>(),
+			RemovalSteps = data.RemovalSteps,
 			RequiredDLCs = data.RequiredDLCs ?? [],
 			Interactions = data.Interactions?.ToList(Convert) ?? [],
 			Links = data.Links?.ToList(Convert) ?? [],
 			Statuses = data.Statuses?.ToList(Convert) ?? [],
+			ActiveReports = data.ActiveReports,
 		};
 	}
 
@@ -44,9 +47,9 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 	{
 		return new PackageInteraction
 		{
-			Type = (InteractionType)data.Type,
-			Action = (StatusAction)data.Action,
-			Packages = data.Packages,
+			Type = data.Type.TryCast<InteractionType>(),
+			Action = data.Action.TryCast<StatusAction>(),
+			Packages = data.Packages?.ToList(x => new CompatibilityPackageReference(new GenericPackageIdentity(x))),
 			Note = data.Note
 		};
 	}
@@ -55,9 +58,9 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 	{
 		return new PackageStatus
 		{
-			Type = (StatusType)data.Type,
-			Action = (StatusAction)data.Action,
-			Packages = data.Packages,
+			Type = data.Type.TryCast<StatusType>(),
+			Action = data.Action.TryCast<StatusAction>(),
+			Packages = data.Packages?.ToList(x => new CompatibilityPackageReference(new GenericPackageIdentity(x))),
 			Note = data.Note
 		};
 	}
@@ -66,7 +69,7 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 	{
 		return new PackageLink
 		{
-			Type = (LinkType)data.Type,
+			Type = data.Type.TryCast<LinkType>(),
 			Title = data.Title,
 			Url = data.Url,
 		};

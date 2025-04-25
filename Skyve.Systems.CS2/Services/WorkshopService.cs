@@ -48,6 +48,7 @@ public class WorkshopService : IWorkshopService
 	private readonly INotificationsService _notificationsService;
 	private readonly IInterfaceService _interfaceService;
 	private readonly IServiceProvider _serviceProvider;
+	private readonly IDlcManager _dlcManager;
 	private readonly UserService _userService;
 	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
@@ -64,7 +65,7 @@ public class WorkshopService : IWorkshopService
 	public bool IsAvailable => Context is not null;
 	public bool IsReady => Context is not null && IsLoggedIn && !Context.Mods.SyncOngoing();
 
-	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler)
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler, IDlcManager dlcManager)
 	{
 		_logger = logger;
 		_settings = settings;
@@ -79,6 +80,7 @@ public class WorkshopService : IWorkshopService
 		_userProcessor = new PdxUserProcessor(this, saveHandler, _notifier);
 
 		_processor.TasksCompleted += Processor_TasksCompleted;
+		_dlcManager = dlcManager;
 	}
 
 	private void Processor_TasksCompleted()
@@ -102,7 +104,9 @@ public class WorkshopService : IWorkshopService
 			throw new Exception("FolderSettings AppData folder does not exist");
 		}
 
-		var pdxSdkPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk");
+		var junction = JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath).IfEmpty(_settings.FolderSettings.AppDataPath);
+
+		var pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
 		var ecoSystem = _settings.FolderSettings.GamingPlatform switch { GamingPlatform.Epic => Ecosystem.Epic, GamingPlatform.Microsoft => Ecosystem.Microsoft_Store, _ => Ecosystem.Steam };
 
@@ -122,7 +126,6 @@ public class WorkshopService : IWorkshopService
 			Logger = _pdxLogUtil,
 			DiskIORoot = pdxSdkPath,
 			Environment = BackendEnvironment.Live,
-			TelemetryDebugEnabled = false,
 			Ecosystem = ecoSystem,
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
 #if DEBUG
@@ -134,7 +137,8 @@ public class WorkshopService : IWorkshopService
 #endif
 		};
 
-		config.Mods.RootPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".cache", "Mods");
+		config.Mods.UsePatching = true;
+		config.Mods.RootPath = CrossIO.Combine(junction, ".cache", "Mods");
 
 		//if (Enum.TryParse<Language>(LocaleHelper.CurrentCulture.IetfLanguageTag.Substring(0, 2).ToLower(), out var lang))
 		//{
@@ -147,6 +151,8 @@ public class WorkshopService : IWorkshopService
 				platform: platform,
 				@namespace: "cities_skylines_2",
 				config: config);
+
+			_logger.Info("SDK Created");
 
 			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
 
@@ -169,16 +175,22 @@ public class WorkshopService : IWorkshopService
 				return false;
 			}
 
+			_logger.Info("Logging in...");
+
 			var startupResult = ProcessResult(await Context.Account.Startup());
 
 			if (!startupResult.IsLoggedIn)
 			{
+				_logger.Info("Existing session failed to log in.");
+
 				if (!ConnectionHandler.IsConnected)
 				{
 					if (loginWaitingConnection)
 					{
 						return false;
 					}
+
+					_logger.Info("Waiting for internet connection to log in...");
 
 					loginWaitingConnection = true;
 
@@ -195,6 +207,8 @@ public class WorkshopService : IWorkshopService
 
 				if (!TryGetCredentials(out var credentials))
 				{
+					_logger.Info("No existing credentials to log in with.");
+
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 					_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false, _interfaceService));
@@ -206,6 +220,8 @@ public class WorkshopService : IWorkshopService
 
 				if (!loginResult.Success)
 				{
+					_logger.Info("Login attempt with existing credentials failed.");
+
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 					_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
 					_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(true, _interfaceService));
@@ -216,7 +232,11 @@ public class WorkshopService : IWorkshopService
 
 			IsLoggedIn = true;
 
-			_userService.SetLoggedInUser((await Context.Profile.Get()).Social?.DisplayName);
+			var userName = (await Context.Profile.Get()).Social?.DisplayName ?? "N/A";
+
+			_userService.SetLoggedInUser(userName);
+
+			_logger.Info("Logged in with " + userName);
 
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginWaitingConnectionNotification>();
 			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
@@ -312,7 +332,11 @@ public class WorkshopService : IWorkshopService
 		{
 			var ratingResult = await Context.Mods.GetUserRating(id);
 
-			return new PdxModDetails(result.Mod, ratingResult.Rating != 0);
+			return new PdxModDetails(result.Mod, ratingResult.Rating != 0)
+			{
+				Requirements = result.Mod.Dependencies?.Where(x => x.Type is not DependencyType.Dlc).ToArray(x => new PdxModsRequirement(x)) ?? [],
+				DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc && x.DisplayName != "Beach Properties").ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
+			};
 		}
 		else if (result?.Error.Category is BaseCategory.NotFound)
 		{
@@ -346,6 +370,11 @@ public class WorkshopService : IWorkshopService
 		return result?.CreatorProfile is not null ? new PdxUser(result.CreatorProfile) : new PdxUser(username);
 	}
 
+	public IEnumerable<IUser> GetKnownUsers()
+	{
+		return _userProcessor.GetCache();
+	}
+
 	public IPackage GetPackage(IPackageIdentity identity)
 	{
 		return GetInfo(identity) as IPackage ?? new PdxModIdentityPackage(identity);
@@ -361,11 +390,11 @@ public class WorkshopService : IWorkshopService
 		return string.IsNullOrWhiteSpace(authorId?.ToString()) ? null : (IUser)new PdxUser(authorId!.ToString());
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> GetWorkshopItemsByUserAsync(object userId, WorkshopQuerySorting sorting = WorkshopQuerySorting.DateCreated, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
+	public async Task<(IEnumerable<IWorkshopInfo> Mods, int TotalCount)> GetWorkshopItemsByUserAsync(object userId, WorkshopQuerySorting sorting = WorkshopQuerySorting.DateCreated, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
 	{
 		if (Context is null)
 		{
-			return [];
+			return ([], 0);
 		}
 
 		if (all)
@@ -386,14 +415,14 @@ public class WorkshopService : IWorkshopService
 
 		ProcessResult(result);
 
-		return result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]);
+		return (result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]), result.TotalCount);
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> QueryFilesAsync(WorkshopQuerySorting sorting, WorkshopSearchTime searchTime = WorkshopSearchTime.AllTime, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
+	public async Task<(IEnumerable<IWorkshopInfo> Mods, int TotalCount)> QueryFilesAsync(WorkshopQuerySorting sorting, WorkshopSearchTime searchTime = WorkshopSearchTime.AllTime, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
 	{
 		if (Context is null)
 		{
-			return [];
+			return ([], 0);
 		}
 
 		if (all)
@@ -414,14 +443,14 @@ public class WorkshopService : IWorkshopService
 
 		ProcessResult(result);
 
-		return result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]);
+		return (result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]), result.TotalCount);
 	}
 
-	public async Task<IEnumerable<IWorkshopInfo>> GetAllFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, object? userId = null)
+	public async Task<(IEnumerable<IWorkshopInfo> Mods, int TotalCount)> GetAllFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, object? userId = null)
 	{
 		if (Context is null)
 		{
-			return [];
+			return ([], 0);
 		}
 
 		var items = new List<IWorkshopInfo>();
@@ -443,16 +472,16 @@ public class WorkshopService : IWorkshopService
 
 			if (!result.Success)
 			{
-				return items;
+				return (items, items.Count);
 			}
 
 			var mods = result.Mods?.ToList(x => new PdxPackage(x)) ?? [];
 
 			items.AddRange(mods);
 
-			if (mods.Count < 100)
+			if ((page + 1) * 100 >= result.TotalCount)
 			{
-				return items;
+				return (items, items.Count);
 			}
 		}
 	}
@@ -564,18 +593,17 @@ public class WorkshopService : IWorkshopService
 		return await _processor.Queue(async () =>
 		{
 			var list = new List<PdxPlaysetPackage>();
-			var page = 1;
 
-			while (true)
+			for (var page = 1; ; page++)
 			{
-				var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, page++, includeOnline: includeOnline));
+				var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, page, includeOnline: includeOnline));
 
 				if (result.Mods is not null)
 				{
 					list.AddRange(result.Mods.Select(x => new PdxPlaysetPackage(x)).Distinct(x => x.Id));
 				}
 
-				if (!result.Success || result.Mods?.Count < 100)
+				if (!result.Success || (page * 100 >= result.TotalCount))
 				{
 					break;
 				}
@@ -878,7 +906,7 @@ public class WorkshopService : IWorkshopService
 		{
 			if (!ProcessResult(await Context.Mods.CreatePlayset(playsetName)).Success)
 			{
-				return null; 
+				return null;
 			}
 
 			var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(true));
@@ -1003,7 +1031,6 @@ public class WorkshopService : IWorkshopService
 		{
 			_logger.Exception(ex, "Failed to sync mods");
 		}
-
 	}
 
 	public async Task DeactivateActivePlayset()
@@ -1115,7 +1142,11 @@ public class WorkshopService : IWorkshopService
 	{
 		if (result.Error is not null)
 		{
-			_logger.Error($"[PDX] [{result.Error.Category}] [{result.Error.SubCategory}] {result.Error.Details}");
+			_logger.Error($"[PDX] [{result.Error.Category}] [{result.Error.SubCategory}] {result.Error.Details}"
+#if DEBUG
+				+ $"\r\n{new StackTrace()}"
+#endif
+				);
 		}
 
 		return result;

@@ -2,19 +2,16 @@
 using Colossal.Json;
 using Colossal.Logging;
 using Colossal.PSI.Common;
-using Colossal.PSI.Environment;
 
 using Game;
 using Game.Modding;
-using Game.Rendering;
 using Game.SceneFlow;
 
 using Skyve.App.CS2.Installer;
+using Skyve.Domain.CS2.Utilities;
 
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Security.Principal;
 
 namespace Skyve.Mod.CS2
 {
@@ -37,6 +34,8 @@ namespace Skyve.Mod.CS2
 				Log.Info(ModPath);
 			}
 
+			GameManager.instance.RegisterUpdater(ListMods);
+
 			updateSystem.UpdateAt<InstallSkyveUISystem>(SystemUpdatePhase.UIUpdate);
 
 			Settings = new SkyveModSettings(this);
@@ -50,27 +49,9 @@ namespace Skyve.Mod.CS2
 
 			AssetDatabase.global.LoadSettings(nameof(SkyveMod), Settings, new SkyveModSettings(this));
 
-			try
-			{
-				if (File.Exists(FolderSettings.FolderSettingsPath))
-				{
-					var folderSettings = JSON.MakeInto<FolderSettings>(JSON.Load(File.ReadAllText(FolderSettings.FolderSettingsPath)));
+			UpdateFolderSettings();
 
-					folderSettings.Save();
-
-					Log.Info("Folder settings updated");
-				}
-				else
-				{
-					new FolderSettings().Save();
-
-					Log.Info("Folder settings created");
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Error(ex);
-			}
+			UpdateDlcInfo();
 
 			//var assets = AssetDatabase.global.GetAssets<AssetData>();
 
@@ -96,6 +77,86 @@ namespace Skyve.Mod.CS2
 			//{
 			//	Log.Info("  " + item.Key + "  " + item.Value);
 			//}
+		}
+
+		private static void UpdateFolderSettings()
+		{
+			try
+			{
+				if (File.Exists(FolderSettings.FolderSettingsPath))
+				{
+					try
+					{
+						var folderSettings = JSON.MakeInto<FolderSettings>(JSON.Load(File.ReadAllText(FolderSettings.FolderSettingsPath)));
+
+						folderSettings.Save();
+
+						Log.Info("Folder settings updated");
+					}
+					catch
+					{
+						new FolderSettings().Save();
+
+						Log.Info("Folder settings created [RECOVERY]");
+
+						throw;
+					}
+				}
+				else
+				{
+					new FolderSettings().Save();
+
+					Log.Info("Folder settings created");
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
+		}
+
+		private static void UpdateDlcInfo()
+		{
+			try
+			{
+				var config = new DlcConfig();
+
+				try
+				{
+					if (File.Exists(FolderSettings.DlcConfigPath))
+					{
+						config = JSON.MakeInto<DlcConfig>(JSON.Load(File.ReadAllText(FolderSettings.DlcConfigPath)));
+					}
+				}
+				catch (Exception ex)
+				{
+					Log.Error(ex);
+				}
+
+				config.AvailableDLCs.Clear();
+
+				foreach (var item in PlatformManager.instance.EnumerateDLCs())
+				{
+					Log.Info($"{item.backendId} {item.backendName}");
+					if (PlatformManager.instance.IsDlcOwned(item) && uint.TryParse(item.backendId, out var id))
+					{
+						config.AvailableDLCs.Add(id);
+					}
+				}
+
+				Log.Info(JSON.Dump(config));
+
+				File.WriteAllText(FolderSettings.DlcConfigPath, JSON.Dump(config));
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
+		}
+
+		private void ListMods()
+		{
+			Log.Info("\n======= Enabled Mods =======\n\t" + string.Join("\n\t", GameManager.instance.modManager.ListModsEnabled()) + "\n============================");
 		}
 
 		public static bool InstallApp()

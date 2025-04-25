@@ -64,8 +64,8 @@ public partial class CommentsSectionControl : SlickControl
 		{
 			App.Program.MainForm.CurrentPanel.StartLoader();
 			isLoading = true;
-			modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package, page);
-			changelogs = (await ServiceCenter.Get<IWorkshopService>().GetInfoAsync(Package))?.Changelog.OrderBy(x => x.ReleasedDate).ToArray();
+			modCommentsInfo = await ServiceCenter.Get<IWorkshopService>().GetComments(Package.GetWorkshopInfo() ?? Package, page);
+			changelogs = (Package.IsLocal() ? Package.GetWorkshopInfo() : await ServiceCenter.Get<IWorkshopService>().GetInfoAsync(Package))?.Changelog.OrderBy(x => x.ReleasedDate).ToArray();
 			noMorePages = !(modCommentsInfo?.HasMore ?? false);
 			App.Program.MainForm.CurrentPanel.StopLoader();
 
@@ -140,7 +140,7 @@ public partial class CommentsSectionControl : SlickControl
 		TB_Message.Text = string.Empty;
 		TB_Message_Enter(sender, e);
 
-		var control = new CommentControl(post, Package, Package.GetWorkshopInfo()?.Version, lastRead) { Dock = DockStyle.Top };
+		var control = new CommentControl(post, Package, Package.GetWorkshopInfo()?.VersionName, lastRead) { Dock = DockStyle.Top };
 
 		P_Comments.Controls.Add(control);
 

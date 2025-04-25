@@ -260,7 +260,6 @@ namespace Skyve.App.CS2
 			// PI_DLCs
 			// 
 			this.PI_DLCs.Group = "Content";
-			this.PI_DLCs.Hidden = true;
 			dynamicIcon12.Name = "Dlc";
 			this.PI_DLCs.IconName = dynamicIcon12;
 			this.PI_DLCs.SubItems = new SlickControls.PanelItem[0];

@@ -20,9 +20,9 @@ public class IndexedPackageInteraction : IIndexedPackageStatus<InteractionType>
 		{
 			foreach (var item in interaction.Packages)
 			{
-				if (packages.ContainsKey(item))
+				if (packages.ContainsKey(item.Id))
 				{
-					Packages[item] = packages[item];
+					Packages[item.Id] = packages[item.Id];
 				}
 			}
 		}

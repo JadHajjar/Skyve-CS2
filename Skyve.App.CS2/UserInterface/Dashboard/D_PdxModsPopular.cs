@@ -20,7 +20,7 @@ internal class D_PdxModsPopular() : D_PdxModsBase(lastTag)
 
 	protected override async Task<bool> ProcessDataLoad(CancellationToken token)
 	{
-		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.Best, WorkshopSearchTime.Week, requiredTags: SelectedTags, limit: 16)).ToList();
+		var list = (await WorkshopService.QueryFilesAsync(WorkshopQuerySorting.Best, WorkshopSearchTime.Week, requiredTags: SelectedTags, limit: 16)).Mods.ToList();
 
 		if (token.IsCancellationRequested)
 		{

@@ -22,14 +22,23 @@ public partial class PC_PlaysetAdd : PanelContent
 
 		if (_playsetManager.CurrentPlayset is null)
 		{
-			B_ClonePlayset.Parent = null;
+			B_ClonePlayset.Enabled=false;
 		}
+	}
+
+	protected override void LocaleChanged()
+	{
+		base.LocaleChanged();
+
+		L_Title.Text = Locale.NewPlaysetTip;
 	}
 
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
+		L_Title.Font = UI.Font(12.75F, System.Drawing.FontStyle.Bold);
+		L_Title.Margin = UI.Scale(new Padding(6));
 		B_Cancel.Font = UI.Font(9.75F);
 		DAD_NewPlayset.Margin = B_Cancel.Margin = UI.Scale(new Padding(10), UI.UIScale);
 	}
@@ -86,7 +95,7 @@ public partial class PC_PlaysetAdd : PanelContent
 		{
 			DAD_NewPlayset.Loading = true;
 
-			var newPlayset = await _playsetManager.ImportPlayset(obj);
+			var newPlayset = await _playsetManager.ImportPlayset(obj, true);
 
 			if (newPlayset is not null)
 			{

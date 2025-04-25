@@ -12,6 +12,7 @@ public class TagItem(TagSource source, string key, string value) : ITag
 	public string Value { get; set; } = value;
 	public string Icon => Source switch { TagSource.ID => "Paradox", TagSource.Custom => "Search", _ => "Tag" };
 	public bool IsCustom => Source is TagSource.Custom;
+	public bool IsWorkshop => Source is TagSource.Workshop;
 
 	public override string ToString()
 	{

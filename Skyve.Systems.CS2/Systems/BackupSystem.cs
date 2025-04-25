@@ -197,6 +197,11 @@ internal class BackupSystem : IBackupSystem
 	{
 		try
 		{
+			if (string.IsNullOrWhiteSpace(_backupSettings.DestinationFolder) || !Directory.Exists(_backupSettings.DestinationFolder))
+			{
+				return true;
+			}
+
 			_notifier.IsBackingUp = true;
 			_notifier.OnBackupStarted();
 

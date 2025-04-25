@@ -102,8 +102,13 @@ internal class PlaysetManager : IPlaysetManager
 		return false;
 	}
 
-	public async Task<bool> DeletePlayset(IPlayset playset)
+	public async Task<bool> DeletePlayset(IPlayset? playset)
 	{
+		if (playset is null)
+		{
+			return false;
+		}
+
 		if (await _workshopService.DeletePlayset(playset.Id))
 		{
 			lock (_playsets)
@@ -149,44 +154,7 @@ internal class PlaysetManager : IPlaysetManager
 		CurrentPlayset = playset;
 		CurrentCustomPlayset = GetCustomPlayset(playset);
 
-		if (playset.Temporary)
-		{
-			_notifier.OnPlaysetChanged();
-
-			_settings.SessionSettings.CurrentPlayset = null;
-			_settings.SessionSettings.Save();
-
-			return;
-		}
-
-		if (SystemsProgram.MainForm as SlickForm is null)
-		{
-			ApplyPlayset(playset);
-		}
-		else
-		{
-			new BackgroundAction("Applying playset", () => ApplyPlayset(playset)).Run();
-		}
-	}
-
-	internal async void ApplyPlayset(IPlayset playset)
-	{
-		try
-		{
-			await _workshopService.ActivatePlayset(playset.Id);
-
-			_notifier.OnPlaysetChanged();
-		}
-		catch (Exception ex)
-		{
-			MessagePrompt.Show(ex, "Failed to apply your playset", form: SystemsProgram.MainForm as SlickForm);
-
-			_notifier.OnPlaysetChanged();
-		}
-		finally
-		{
-			_notifier.IsApplyingPlayset = false;
-		}
+		_notifier.OnPlaysetChanged();
 	}
 
 	public void OnAutoSave()
@@ -264,7 +232,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<bool> RenamePlayset(IPlayset playset, string text)
 	{
-		if (playset == null || playset.Temporary)
+		if (playset == null)
 		{
 			return false;
 		}
@@ -333,7 +301,7 @@ internal class PlaysetManager : IPlaysetManager
 		return newPlayset;
 	}
 
-	public async Task<IPlayset?> ImportPlayset(string fileName, bool createNew = false)
+	public async Task<IPlayset?> ImportPlayset(string fileName, bool createNew = true)
 	{
 		var playset = JsonConvert.DeserializeObject<PdxPlaysetImport>(File.ReadAllText(fileName.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase) ? ExtractZipPlayset(fileName) : fileName));
 
@@ -342,7 +310,7 @@ internal class PlaysetManager : IPlaysetManager
 			throw new Exception(LocaleCS2.PlaysetAlreadyImported);
 		}
 
-		var newPlayset = await CreateNewPlayset(playset.GeneralData?.Name ?? "New Playset") ?? throw new Exception(Locale.CouldNotCreatePlayset);
+		var newPlayset = (createNew ? await CreateNewPlayset(playset.GeneralData?.Name ?? "New Playset") : CurrentPlayset) ?? throw new Exception(Locale.CouldNotCreatePlayset);
 
 		if (playset.SubscribedMods is not null)
 		{
@@ -385,18 +353,18 @@ internal class PlaysetManager : IPlaysetManager
 		return Task.FromResult((IPlayset?)JsonConvert.DeserializeObject<PdxPlaysetImport>(CrossIO.FileExists(file) ? File.ReadAllText(file) : file));
 	}
 
-	public async Task SetIncludedForAll(IPackageIdentity package, bool value)
+	public async Task SetIncludedForAll(IPackageIdentity package, bool value, bool withVersion = true, bool promptForDependencies = true)
 	{
-		await SetIncludedForAll([package], value);
+		await SetIncludedForAll([package], value, withVersion, promptForDependencies);
 	}
 
-	public async Task SetIncludedForAll(IEnumerable<IPackageIdentity> packages, bool value)
+	public async Task SetIncludedForAll(IEnumerable<IPackageIdentity> packages, bool value, bool withVersion = true, bool promptForDependencies = true)
 	{
 		try
 		{
 			foreach (var playset in Playsets)
 			{
-				await _packageUtil.SetIncluded(packages, value, playset.Id, false);
+				await _packageUtil.SetIncluded(packages, value, playset.Id, withVersion, promptForDependencies);
 			}
 		}
 		catch (Exception ex)
@@ -418,11 +386,11 @@ internal class PlaysetManager : IPlaysetManager
 			{
 				if (value)
 				{
-					await _packageUtil.SetEnabled(packages, true, playset.Id, false);
+					await _packageUtil.SetEnabled(packages, true, playset.Id);
 				}
 				else
 				{
-					await _packageUtil.SetEnabled(packages, false, playset.Id, false);
+					await _packageUtil.SetEnabled(packages, false, playset.Id);
 				}
 			}
 		}

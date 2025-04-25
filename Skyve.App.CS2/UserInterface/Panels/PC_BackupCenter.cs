@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using static Skyve.App.UserInterface.Panels.DashboardPanelControl;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_BackupCenter : PanelContent
@@ -286,8 +287,7 @@ public partial class PC_BackupCenter : PanelContent
 			return;
 		}
 
-		if (TB_DestinationFolder.Text.PathContains(ServiceCenter.Get<ISettings>().FolderSettings.AppDataPath)
-			|| !HasLocalSystemWriteAccess(TB_DestinationFolder.Text))
+		if (IsInvalidPath(TB_DestinationFolder.Text))
 		{
 			if (ShowPrompt(Locale.ChooseDifferentBackupLocation, Locale.InvalidFolder, PromptButtons.OKIgnore, PromptIcons.Error) == DialogResult.Ignore)
 			{
@@ -304,6 +304,64 @@ public partial class PC_BackupCenter : PanelContent
 				}
 			});
 		}
+	}
+
+	private bool IsInvalidPath(string path)
+	{
+		var invalidPaths = new[]
+		{
+			App.Program.CurrentDirectory,
+			App.Program.CurrentDirectory,
+			Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+			Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+			"C:/temp" +
+			"C:/windows" +
+			"C:/program files"
+		};
+
+		if (invalidPaths.Any(path.PathContains))
+		{
+			return true;
+		}
+
+		if (HasLocalSystemWriteAccess(path))
+		{
+			return false;
+		}
+
+		try
+		{
+			GiveLocalSystemAccess(path);
+		}
+		catch { }
+
+		return !HasLocalSystemWriteAccess(path);
+	}
+
+	private void GiveLocalSystemAccess(string folderPath)
+	{
+		var directoryInfo = new DirectoryInfo(folderPath);
+		var directorySecurity = directoryInfo.GetAccessControl();
+		var accessRule = new FileSystemAccessRule(
+			"SYSTEM",
+			FileSystemRights.Read | FileSystemRights.Write | FileSystemRights.Modify,
+			InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+			PropagationFlags.None,
+			AccessControlType.Allow
+		);
+
+		var denyRule = new FileSystemAccessRule(
+			"SYSTEM",
+			FileSystemRights.Read | FileSystemRights.Write | FileSystemRights.Modify,
+			InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+			PropagationFlags.None,
+			AccessControlType.Deny
+		);
+
+		directorySecurity.AddAccessRule(accessRule);
+		directorySecurity.RemoveAccessRule(denyRule);
+
+		directoryInfo.SetAccessControl(directorySecurity);
 	}
 
 	public static bool HasLocalSystemWriteAccess(string folderPath)

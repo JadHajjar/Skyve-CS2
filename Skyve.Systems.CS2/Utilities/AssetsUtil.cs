@@ -152,27 +152,48 @@ internal class AssetsUtil : IAssetUtil
 						, entry.LastWriteTime.ToUniversalTime().Date
 						, [Regex.Match(type, @"\.(\w+?)(Prefab)?,").Groups[1].Value.FormatWords()]);
 
-					var imageEntry = archive.GetEntry(Path.ChangeExtension(entry.FullName, "png"))
-						?? archive.GetEntry(Path.ChangeExtension(entry.FullName.Insert(entry.FullName.Length - 7, "_thumbnail"), "png"));
+					//var imageEntry = archive.GetEntry(Path.ChangeExtension(entry.FullName, "png"))
+					//	?? archive.GetEntry(Path.ChangeExtension(entry.FullName.Insert(entry.FullName.Length - 7, "_thumbnail"), "png"));
 
-					if (imageEntry is not null && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
-					{
-						imageEntry.ExtractToFile(asset.Thumbnail);
-					}
-					else
-					{
-						var ailThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "Thumbnails", name + ".png");
-						var ailCThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "CustomThumbnails", name + ".png");
+					//if (imageEntry is not null && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+					//{
+					//	imageEntry.ExtractToFile(asset.Thumbnail);
+					//}
+					//else
+					//{
+					//	var ailThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "Thumbnails", name + ".png");
+					//	var ailColoredThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "Thumbnails", "ColoredPropless", name + ".png");
+					//	var ailCustomThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "CustomThumbnails");
 
-						if (CrossIO.FileExists(ailThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
-						{
-							File.Copy(ailThumbnail, asset.Thumbnail, true);
-						}
-						else if (CrossIO.FileExists(ailCThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
-						{
-							File.Copy(ailCThumbnail, asset.Thumbnail, true);
-						}
-					}
+					//	if (CrossIO.FileExists(ailColoredThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+					//	{
+					//		File.Copy(ailColoredThumbnail, asset.Thumbnail, true);
+
+					//		yield return asset;
+					//		continue;
+					//	}
+
+					//	if (CrossIO.FileExists(ailThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+					//	{
+					//		File.Copy(ailThumbnail, asset.Thumbnail, true);
+
+					//		yield return asset;
+					//		continue;
+					//	}
+
+					//	if (Directory.Exists(ailCustomThumbnail))
+					//	{
+					//		ailCustomThumbnail = Directory.GetFiles(ailCustomThumbnail, $"{name}.png", SearchOption.AllDirectories).FirstOrDefault();
+
+					//		if (CrossIO.FileExists(ailCustomThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
+					//		{
+					//			File.Copy(ailCustomThumbnail, asset.Thumbnail, true);
+
+					//			yield return asset;
+					//			continue;
+					//		}
+					//	}
+					//}
 
 					yield return asset;
 				}

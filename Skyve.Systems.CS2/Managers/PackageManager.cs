@@ -173,7 +173,7 @@ internal class PackageManager : IPackageManager
 		}
 	}
 
-	public IPackage? GetPackageById(IPackageIdentity identity)
+	public ILocalPackageData? GetPackageById(IPackageIdentity identity)
 	{
 		if (identity is ILocalPackageIdentity localPackageIdentity)
 		{
@@ -182,21 +182,21 @@ internal class PackageManager : IPackageManager
 
 			if (matchedPackage is not null)
 			{
-				return matchedPackage;
+				return matchedPackage?.LocalData;
 			}
 		}
 
 		if (indexedPackages?.TryGetValue(identity.Id, out var package) ?? false)
 		{
-			return package;
+			return package?.LocalData;
 		}
 
 		return null;
 	}
 
-	public IPackage? GetPackageByFolder(string folder)
+	public ILocalPackageData? GetPackageByFolder(string folder)
 	{
-		return Packages.FirstOrDefault(x => x.LocalData?.Folder.PathEquals(folder) ?? false);
+		return Packages.FirstOrDefault(x => x.LocalData?.Folder.PathEquals(folder) ?? false)?.LocalData;
 	}
 
 	public void SetPackages(List<IPackage> content)
@@ -277,11 +277,11 @@ internal class PackageManager : IPackageManager
 		//}
 	}
 
-	public List<IPackage> GetModsByName(string modName)
+	public List<ILocalPackageData> GetModsByName(string modName)
 	{
 		if (indexedMods?.TryGetValue(modName, out var mods) == true)
 		{
-			return mods;
+			return mods.SelectWhereNotNull(x => x.LocalData).ToList()!;
 		}
 
 		return [];

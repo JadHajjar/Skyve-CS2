@@ -10,7 +10,9 @@ public class SteamAppData
 {
 	public string? name { get; set; }
 	public string? short_description { get; set; }
-	public uint[]? dlc { get; set; }
+	public bool is_free { get; set; }
+	public ulong[]? dlc { get; set; }
+	public string[]? developers { get; set; }
 	public SteamAppReleaseDate? release_date { get; set; }
 	public SteamPriceOverview? price_overview { get; set; }
 }

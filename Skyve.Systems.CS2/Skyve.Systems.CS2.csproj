@@ -21,13 +21,13 @@
 		<ProjectReference Include="..\..\Skyve-Api\Domain\Skyve-Api Domain.csproj" />
 
 		<Reference Include="PDX.SDK">
-			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.dll</HintPath>
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Content\Game\.ModdingToolchain\ModPublisher\PDX.SDK.dll</HintPath>
 		</Reference>
 		<Reference Include="PDX.SDK.Contracts">
-			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.Contracts.dll</HintPath>
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Content\Game\.ModdingToolchain\ModPublisher\PDX.SDK.Contracts.dll</HintPath>
 		</Reference>
 		<Reference Include="PDX.SDK.Network">
-			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\StreamingAssets\~Tooling~\ModPublisher\PDX.SDK.Network.dll</HintPath>
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Content\Game\.ModdingToolchain\ModPublisher\PDX.SDK.Network.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 	<ItemGroup>

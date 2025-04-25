@@ -1,6 +1,4 @@
-﻿using Skyve.App.UserInterface.CompatibilityReport;
-using Skyve.Compatibility.Domain;
-using Skyve.Compatibility.Domain.Enums;
+﻿using Skyve.Compatibility.Domain.Enums;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
@@ -12,8 +10,6 @@ namespace Skyve.App.CS2.UserInterface.Panels;
 
 public partial class PC_SendReviewRequest : PC_PackagePageBase
 {
-	private IPackageStatusControl<StatusType, PackageStatus>? statusControl;
-	private IPackageStatusControl<InteractionType, PackageInteraction>? interactionControl;
 	private string? lastSaveUrl;
 
 	public PC_SendReviewRequest(IPackageIdentity package) : base(package)
@@ -23,6 +19,8 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		SetPackage(Package);
 
 		ServiceCenter.Get(out ILocationService locationService, out IPackageManager packageManager);
+
+		logReportControl.Text = $"Log Report {DateTime.Now:yy-MM-dd_HH-mm}.zip";
 
 		DD_SaveFile.StartingFolder = IOSelectionDialog.CustomDirectory;
 		DD_SaveFile.PinnedFolders = new()
@@ -42,6 +40,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		base.LocaleChanged();
 
 		Text = LocaleCR.RequestReview;
+		L_Title.Text = LocaleCR.ChooseWhatToRequest;
 		L_Disclaimer.Text = LocaleCR.RequestReviewDisclaimer;
 		B_Apply.Text = Locale.SendReview + "*";
 		L_English.Text = Locale.UseEnglishPlease;
@@ -51,16 +50,18 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 	{
 		base.UIChanged();
 
-		foreach (Control item in TLP_MainInfo.Controls)
+		foreach (Control item in TLP_Changes.Controls)
 		{
 			item.Margin = UI.Scale(new Padding(5));
 		}
 
-		TLP_Button.Padding = TLP_Description.Padding = P_Content.Padding = UI.Scale(new Padding(7));
-		slickSpacer2.Margin = L_Disclaimer.Margin = B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
-		TB_Note.MinimumSize = UI.Scale(new Size(0, 100), UI.UIScale);
-		L_Disclaimer.Font = UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
+		TLP_Form.Padding = TB_Note.Margin = L_English.Margin = UI.Scale(new Padding(7));
+		slickSpacer2.Margin = L_Disclaimer.Margin =  B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
+		TB_Note.Height = UI.Scale(250);
+		L_Disclaimer.Font =  UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
 		slickSpacer2.Height = UI.Scale(2);
+		L_Title.Font = UI.Font(12.75F, FontStyle.Bold);
+		L_Title.Margin = UI.Scale(new Padding(6));
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -68,52 +69,27 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		base.DesignChanged(design);
 
 		L_Disclaimer.ForeColor = design.InfoColor;
-		L_English.ForeColor = design.YellowColor;
+		L_Disclaimer.ForeColor = L_English.ForeColor = design.YellowColor;
+	}
+
+	private void B_AddMissingInfo_Click(object sender, EventArgs e)
+	{
+		TLP_Actions.Hide();
+		TLP_Form.Show();
+		TLP_Changes.Show();
+
+		var data = Package.GetPackageInfo();
+		DD_Stability.SelectedItem = data?.Stability ?? PackageStability.NotReviewed;
+		DD_PackageType.SelectedItem = data?.Type ?? PackageType.GenericPackage;
+		DD_SavegameEffect.SelectedItem = data?.SavegameEffect ?? SavegameEffect.Unknown;
+		DD_DLCs.SelectedItems = data is null ? [] : ServiceCenter.Get<IDlcManager>().Dlcs.Where(x => data.RequiredDLCs?.Contains(x.Id) ?? false);
+		DD_Usage.SelectedItems = Enum.GetValues(typeof(PackageUsage)).Cast<PackageUsage>().Where(x => data?.Usage.HasFlag(x) ?? true);
 	}
 
 	private void B_ReportIssue_Click(object sender, EventArgs e)
 	{
 		TLP_Actions.Hide();
-		TLP_Button.Show();
-		TLP_MainInfo.Show();
-		TLP_Description.Show();
-		P_Content.Show();
-
-		var data = Package.GetPackageInfo();
-		DD_Stability.SelectedItem = data?.Stability ?? PackageStability.NotReviewed;
-		DD_PackageType.SelectedItem = data?.Type ?? PackageType.GenericPackage;
-		DD_DLCs.SelectedItems = data is null ? Enumerable.Empty<IDlcInfo>() : ServiceCenter.Get<IDlcManager>().Dlcs.Where(x => data.RequiredDLCs?.Contains(x.Id) ?? false);
-		DD_Usage.SelectedItems = Enum.GetValues(typeof(PackageUsage)).Cast<PackageUsage>().Where(x => data?.Usage.HasFlag(x) ?? true);
-	}
-
-	private void B_AddStatus_Click(object sender, EventArgs e)
-	{
-		P_Content.Controls.Add(statusControl = new IPackageStatusControl<StatusType, PackageStatus>(Package));
-
-		statusControl.Margin = TB_Note.Margin;
-		statusControl.P_Main.BackColor = default;
-		statusControl.I_Close.Hide();
-		statusControl.Dock = DockStyle.Top;
-
-		TLP_Button.Show();
-		TLP_Description.Show();
-		P_Content.Show();
-		TLP_Actions.Hide();
-	}
-
-	private void B_AddInteraction_Click(object sender, EventArgs e)
-	{
-		P_Content.Controls.Add(interactionControl = new IPackageStatusControl<InteractionType, PackageInteraction>(Package));
-
-		interactionControl.Margin = TB_Note.Margin;
-		interactionControl.P_Main.BackColor = default;
-		interactionControl.I_Close.Hide();
-		interactionControl.Dock = DockStyle.Top;
-
-		TLP_Button.Show();
-		TLP_Description.Show();
-		P_Content.Show();
-		TLP_Actions.Hide();
+		TLP_Form.Show();
 	}
 
 	private async void B_Apply_Click(object sender, EventArgs e)
@@ -135,41 +111,23 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		{
 			PackageId = Package.Id,
 			PackageNote = TB_Note.Text,
-			SaveUrl = lastSaveUrl
+			SaveUrl = lastSaveUrl,
+			PackageStability = (int)DD_Stability.SelectedItem,
+			PackageType = (int)DD_PackageType.SelectedItem,
+			PackageUsage = DD_Usage.SelectedItems.Any() ? (int)DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next) : 0,
+			RequiredDLCs = DD_DLCs.SelectedItems.ListStrings(x => x.Id.ToString(), ","),
+			SavegameEffect = (int)DD_SavegameEffect.SelectedItem,
+			IsMissingInfo = false,
+
+			LogFile = await Task.Run(async () =>
+			{
+				using var stream = new MemoryStream();
+
+				await ServiceCenter.Get<ILogUtil>().CreateZipToStream(stream);
+
+				return stream.ToArray();
+			})
 		};
-
-		if (statusControl is not null)
-		{
-			postPackage.IsStatus = true;
-			postPackage.StatusNote = statusControl.PackageStatus.Note;
-			postPackage.StatusAction = (int)statusControl.PackageStatus.Action;
-			postPackage.StatusPackages = statusControl.PackageStatus.Packages!.ListStrings(",");
-			postPackage.StatusType = (int)statusControl.PackageStatus.Type;
-		}
-		else if (interactionControl is not null)
-		{
-			postPackage.IsInteraction = true;
-			postPackage.StatusNote = interactionControl.PackageStatus.Note;
-			postPackage.StatusAction = (int)interactionControl.PackageStatus.Action;
-			postPackage.StatusPackages = interactionControl.PackageStatus.Packages!.ListStrings(",");
-			postPackage.StatusType = (int)interactionControl.PackageStatus.Type;
-		}
-		else
-		{
-			postPackage.PackageStability = (int)DD_Stability.SelectedItem;
-			postPackage.PackageType = (int)DD_PackageType.SelectedItem;
-			postPackage.PackageUsage = (int)DD_Usage.SelectedItems.Aggregate((prev, next) => prev | next);
-			postPackage.RequiredDLCs = DD_DLCs.SelectedItems.Select(x => x.Id).ListStrings(",");
-		}
-
-		postPackage.LogFile = await Task.Run(async () =>
-		{
-			using var stream = new MemoryStream();
-
-			await ServiceCenter.Get<ILogUtil>().CreateZipToStream(stream);
-
-			return stream.ToArray();
-		});
 
 		var response = await ServiceCenter.Get<SkyveApiUtil>().SendReviewRequest(postPackage);
 

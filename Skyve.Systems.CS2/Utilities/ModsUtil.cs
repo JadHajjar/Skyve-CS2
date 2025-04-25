@@ -161,12 +161,12 @@ internal class ModsUtil : IModUtil
 		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id, withVersion ? mod.Version : null);
 	}
 
-	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null, bool withVersion = true)
+	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null, bool withVersion = true, bool promptForDependencies = true)
 	{
-		await SetIncluded([mod], value, playsetId, withVersion);
+		await SetIncluded([mod], value, playsetId, withVersion, promptForDependencies);
 	}
 
-	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null, bool withVersion = true)
+	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null, bool withVersion = true, bool promptForDependencies = true)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -182,7 +182,10 @@ internal class ModsUtil : IModUtil
 
 		SaveHistory();
 
-		mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+		if (!value)
+		{
+			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+		}
 
 		await SetLocalModIncluded(mods.AllWhere(x => x.Id <= 0 && IsIncluded(x, playset) != value), playset, value);
 
@@ -193,7 +196,7 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
-		if (value && mods is List<IPackageIdentity> modList)
+		if (value && promptForDependencies && mods is List<IPackageIdentity> modList)
 		{
 			switch (_settings.UserSettings.DependencyResolution)
 			{
@@ -249,12 +252,12 @@ internal class ModsUtil : IModUtil
 		_notifier.OnRefreshUI(true);
 	}
 
-	public async Task SetEnabled(IPackageIdentity mod, bool value, int? playsetId = null, bool withVersion = true)
+	public async Task SetEnabled(IPackageIdentity mod, bool value, int? playsetId = null)
 	{
-		await SetEnabled([mod], value, playsetId, withVersion);
+		await SetEnabled([mod], value, playsetId);
 	}
 
-	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null, bool withVersion = true)
+	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -270,7 +273,10 @@ internal class ModsUtil : IModUtil
 
 		SaveHistory();
 
-		mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+		if (!value)
+		{
+			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+		}
 
 		await SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), playset, value);
 
@@ -407,37 +413,48 @@ internal class ModsUtil : IModUtil
 
 	private async Task<List<IPackageIdentity>> ResolveDependencies(List<IPackageIdentity> mods, int? playsetId)
 	{
-		if (mods.Count == 0)
+		var dependencies = await Resolve(mods, playsetId);
+
+		dependencies.RemoveAll(x => mods.Any(y => x.Id == y.Id));
+
+		return dependencies.Distinct(x => x.Id).ToList();
+
+		async Task<List<IPackageIdentity>> Resolve(List<IPackageIdentity> mods, int? playsetId)
 		{
-			return [];
-		}
-
-		var list = new List<IPackageIdentity>();
-
-		foreach (var mod in mods)
-		{
-			var workshopInfo = await _workshopService.GetInfoAsync(mod);
-
-			if (workshopInfo is not null)
+			if (mods.Count == 0)
 			{
-				foreach (var item in workshopInfo.Requirements)
-				{
-					if (!item.IsDlc
-						&& !mods.Any(x => x.Id == item.Id)
-						&& !list.Any(x => x.Id == item.Id)
-						&& !IsEnabled(item, playsetId))
-					{
-						item.Version = null;
+				return [];
+			}
 
-						list.Add(item);
+			var list = new List<IPackageIdentity>(mods);
+
+			foreach (var mod in mods)
+			{
+				var workshopInfo = await _workshopService.GetInfoAsync(mod);
+
+				if (workshopInfo is not null)
+				{
+					foreach (var item in workshopInfo.Requirements)
+					{
+						if (!item.IsDlc
+							&& !list.Any(x => x.Id == item.Id)
+							&& !IsEnabled(item, playsetId, false))
+						{
+							item.Version = null;
+
+							list.Add(item);
+						}
 					}
 				}
 			}
+
+			if (list.Count != mods.Count)
+			{
+				list.AddRange(await Resolve(list, playsetId));
+			}
+
+			return list;
 		}
-
-		list.AddRange(await ResolveDependencies(list, playsetId));
-
-		return list;
 	}
 
 	public int GetLoadOrder(IPackage package)
