@@ -22,7 +22,7 @@ public partial class PC_PlaysetAdd : PanelContent
 
 		if (_playsetManager.CurrentPlayset is null)
 		{
-			B_ClonePlayset.Parent = null;
+			B_ClonePlayset.Enabled=false;
 		}
 	}
 

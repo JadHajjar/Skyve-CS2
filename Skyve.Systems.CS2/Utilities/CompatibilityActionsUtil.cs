@@ -24,6 +24,11 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	#region RecommendedAction
 	public bool HasRecommendedAction(ICompatibilityItem message)
 	{
+		if (_playsetManager.CurrentPlayset is null)
+		{
+			return false;
+		}
+
 		return message.Status.Action switch
 		{
 			StatusAction.DisableOther or StatusAction.IncludeOther or StatusAction.ExcludeOther or StatusAction.UnsubscribeOther => message.Packages.Any(),
@@ -35,6 +40,11 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 
 	public ICompatibilityActionInfo? GetRecommendedAction(ICompatibilityItem message)
 	{
+		if (_playsetManager.CurrentPlayset is null)
+		{
+			return null;
+		}
+
 		switch (message.Status.Action)
 		{
 			case StatusAction.IncludeOther:
@@ -121,7 +131,7 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	private async Task IncludeAndEnableMain(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		await _packageUtil.SetIncluded(message, true, withVersion: false, promptForDependencies: false);
-		
+
 		await _packageUtil.SetEnabled(message, true);
 	}
 
@@ -147,7 +157,7 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	{
 		return message.Status.Action switch
 		{
-			StatusAction.DisableOther or StatusAction.IncludeOther or StatusAction.ExcludeOther or StatusAction.UnsubscribeOther => message.Packages.Count() > 1,
+			StatusAction.DisableOther or StatusAction.IncludeOther or StatusAction.ExcludeOther or StatusAction.UnsubscribeOther => _playsetManager.CurrentPlayset is not null && message.Packages.Count() > 1,
 			StatusAction.RequiresConfiguration => true,
 			_ => false,
 		};
@@ -155,12 +165,17 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 
 	public ICompatibilityActionInfo? GetBulkAction(ICompatibilityItem message)
 	{
+		if (_playsetManager.CurrentPlayset is null && message.Status.Action != StatusAction.RequiresConfiguration)
+		{
+			return null;
+		}
+
 		switch (message.Status.Action)
 		{
 			case StatusAction.IncludeOther:
 				if (message.Packages.Count() > 1)
 				{
-					var anyExcluded = message.Packages.Any(x => !_packageUtil.IsIncluded(x));
+					var anyExcluded = message.Packages.Any(x => !_packageUtil.IsIncluded(x, withVersion: false));
 
 					return new ActionInfo(IncludeAndEnablePackages
 						, anyExcluded ? Locale.IncludeAll : Locale.EnableAll
@@ -212,11 +227,16 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	#region Action
 	public bool HasAction(ICompatibilityItem message, IPackageIdentity package)
 	{
+		if (_playsetManager.CurrentPlayset is null)
+		{
+			return false;
+		}
+
 		return message.Status.Action switch
 		{
-			StatusAction.IncludeOther => !_packageUtil.IsIncludedAndEnabled(package),
-			StatusAction.DisableOther => _packageUtil.IsEnabled(package),
-			StatusAction.ExcludeOther => _packageUtil.IsIncluded(package),
+			StatusAction.IncludeOther => !_packageUtil.IsIncludedAndEnabled(package, withVersion: false),
+			StatusAction.DisableOther => _packageUtil.IsEnabled(package, withVersion: false),
+			StatusAction.ExcludeOther => _packageUtil.IsIncluded(package, withVersion: false),
 			StatusAction.UnsubscribeOther => package.GetLocalPackage() is not null,
 			StatusAction.SelectOne => true,
 			StatusAction.Switch => true,
@@ -226,14 +246,19 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 
 	public ICompatibilityActionInfo? GetAction(ICompatibilityItem message, IPackageIdentity package)
 	{
+		if (_playsetManager.CurrentPlayset is null)
+		{
+			return null;
+		}
+
 		switch (message.Status.Action)
 		{
 			case StatusAction.IncludeOther:
-				if (!_packageUtil.IsIncluded(package))
+				if (!_packageUtil.IsIncluded(package, withVersion: false))
 				{
 					return new ActionInfo(IncludeAndEnablePackage, Locale.IncludeItem, "Add", FormDesign.Design.GreenColor);
 				}
-				else if (!_packageUtil.IsEnabled(package))
+				else if (!_packageUtil.IsEnabled(package, withVersion: false))
 				{
 					return new ActionInfo(IncludeAndEnablePackage, Locale.EnableItem, "Ok", FormDesign.Design.GreenColor);
 				}
@@ -241,7 +266,7 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 				break;
 
 			case StatusAction.DisableOther:
-				if (_packageUtil.IsEnabled(package))
+				if (_packageUtil.IsEnabled(package, withVersion: false))
 				{
 					return new ActionInfo(DisablePackage, Locale.EnableItem, "Enabled", FormDesign.Design.OrangeColor);
 				}
@@ -249,7 +274,7 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 				break;
 
 			case StatusAction.ExcludeOther:
-				if (_packageUtil.IsIncluded(package))
+				if (_packageUtil.IsIncluded(package, withVersion: false))
 				{
 					return new ActionInfo(ExcludePackage, Locale.ExcludeItem, "X", FormDesign.Design.RedColor);
 				}
