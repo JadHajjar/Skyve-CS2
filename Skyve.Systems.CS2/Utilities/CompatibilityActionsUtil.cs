@@ -26,8 +26,8 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	{
 		return message.Status.Action switch
 		{
-			StatusAction.SubscribeToPackages or StatusAction.IncludeOther or StatusAction.ExcludeOther or StatusAction.UnsubscribeOther => message.Packages.Any(),
-			StatusAction.IncludeThis or StatusAction.UnsubscribeThis or StatusAction.ExcludeThis => true,
+			StatusAction.DisableOther or StatusAction.IncludeOther or StatusAction.ExcludeOther or StatusAction.UnsubscribeOther => message.Packages.Any(),
+			StatusAction.IncludeThis or StatusAction.UnsubscribeThis or StatusAction.ExcludeThis or StatusAction.DisableThis => true,
 			StatusAction.Switch => message.Packages.Count() == 1,
 			_ => false
 		};
@@ -37,7 +37,6 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	{
 		switch (message.Status.Action)
 		{
-			case StatusAction.SubscribeToPackages:
 			case StatusAction.IncludeOther:
 				if (message.Packages.Any())
 				{
@@ -46,19 +45,36 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 
 				break;
 			case StatusAction.ExcludeOther:
-			case StatusAction.UnsubscribeOther:
 				if (message.Packages.Any())
 				{
-					return new ActionInfo(ExcludeAndDisablePackages, Locale.ExcludeAll, "X");
+					return new ActionInfo(ExcludePackages, Locale.ExcludeAll, "X");
 				}
 
 				break;
+			case StatusAction.DisableOther:
+				if (message.Packages.Any())
+				{
+					return new ActionInfo(DisablePackages, Locale.DisableAll, "Enabled");
+				}
+
+				break;
+			case StatusAction.UnsubscribeOther:
+				if (message.Packages.Any())
+				{
+					return new ActionInfo(ExcludePackagesInAllPlaysets, Locale.ExcludeThisItemInAllPlaysets.Plural, "Trash");
+				}
+
+				break;
+
 			case StatusAction.UnsubscribeThis:
-				return new ActionInfo(ExcludeAndDisableMain, Locale.Exclude, "X");
+				return new ActionInfo(ExcludeMainInAllPlaysets, Locale.ExcludeThisItemInAllPlaysets, "Trash");
 			case StatusAction.ExcludeThis:
-				return new ActionInfo(DisableMain, Locale.Exclude, "X");
+				return new ActionInfo(ExcludeMain, Locale.Exclude, "X");
 			case StatusAction.IncludeThis:
 				return new ActionInfo(IncludeAndEnableMain, Locale.Include, "Add");
+			case StatusAction.DisableThis:
+				return new ActionInfo(DisableMain, Locale.DisableItem, "Enabled");
+
 			case StatusAction.Switch:
 				if (message.Packages.Count() == 1)
 				{
@@ -82,40 +98,46 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 
 	private async Task IncludeAndEnablePackages(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
-		await _packageUtil.SetEnabled(message.Packages, true);
-
 		await _packageUtil.SetIncluded(message.Packages, true, withVersion: false, promptForDependencies: false);
+
+		await _packageUtil.SetEnabled(message.Packages, true);
 	}
 
-	private async Task ExcludeAndDisablePackages(ICompatibilityItem message, IPackageIdentity? package = null)
+	private async Task ExcludePackages(ICompatibilityItem message, IPackageIdentity? package = null)
+	{
+		await _packageUtil.SetIncluded(message.Packages, false, withVersion: false, promptForDependencies: false);
+	}
+
+	private async Task DisablePackages(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		await _packageUtil.SetEnabled(message.Packages, false);
+	}
 
-		await _packageUtil.SetIncluded(message.Packages, false, withVersion: false, promptForDependencies: false);
+	private async Task ExcludePackagesInAllPlaysets(ICompatibilityItem message, IPackageIdentity? package = null)
+	{
+		await _playsetManager.SetIncludedForAll(message.Packages, false, withVersion: false, promptForDependencies: false);
 	}
 
 	private async Task IncludeAndEnableMain(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
-		await _packageUtil.SetEnabled(message, true);
-
 		await _packageUtil.SetIncluded(message, true, withVersion: false, promptForDependencies: false);
+		
+		await _packageUtil.SetEnabled(message, true);
 	}
 
-	private async Task ExcludeAndDisableMain(ICompatibilityItem message, IPackageIdentity? package = null)
+	private async Task ExcludeMain(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
-		if (message.IsIncluded())
-		{
-			await _packageUtil.SetIncluded(message, false, withVersion: false, promptForDependencies: false);
-		}
-		else
-		{
-			await _playsetManager.SetIncludedForAll(message, false, withVersion: false, promptForDependencies: false);
-		}
+		await _packageUtil.SetIncluded(message, false, withVersion: false, promptForDependencies: false);
 	}
 
 	private async Task DisableMain(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		await _packageUtil.SetEnabled(message, false);
+	}
+
+	private async Task ExcludeMainInAllPlaysets(ICompatibilityItem message, IPackageIdentity? package = null)
+	{
+		await _playsetManager.SetIncludedForAll(message, false, withVersion: false, promptForDependencies: false);
 	}
 
 	#endregion
@@ -125,7 +147,7 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	{
 		return message.Status.Action switch
 		{
-			StatusAction.SubscribeToPackages or StatusAction.IncludeOther or StatusAction.ExcludeOther or StatusAction.UnsubscribeOther => message.Packages.Count() > 1,
+			StatusAction.DisableOther or StatusAction.IncludeOther or StatusAction.ExcludeOther or StatusAction.UnsubscribeOther => message.Packages.Count() > 1,
 			StatusAction.RequiresConfiguration => true,
 			_ => false,
 		};
@@ -135,7 +157,6 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	{
 		switch (message.Status.Action)
 		{
-			case StatusAction.SubscribeToPackages:
 			case StatusAction.IncludeOther:
 				if (message.Packages.Count() > 1)
 				{
@@ -148,12 +169,24 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 				}
 
 				break;
-
 			case StatusAction.ExcludeOther:
+				if (message.Packages.Count() > 1)
+				{
+					return new ActionInfo(ExcludePackages, Locale.ExcludeAll, "X", FormDesign.Design.RedColor);
+				}
+
+				break;
+			case StatusAction.DisableOther:
+				if (message.Packages.Count() > 1)
+				{
+					return new ActionInfo(DisablePackages, Locale.DisableAll, "Enabled", FormDesign.Design.OrangeColor);
+				}
+
+				break;
 			case StatusAction.UnsubscribeOther:
 				if (message.Packages.Count() > 1)
 				{
-					return new ActionInfo(ExcludeAndDisablePackages, Locale.ExcludeAll, "X");
+					return new ActionInfo(ExcludePackagesInAllPlaysets, Locale.ExcludeThisItemInAllPlaysets.Plural, "Trash", FormDesign.Design.RedColor);
 				}
 
 				break;
@@ -179,42 +212,54 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 	#region Action
 	public bool HasAction(ICompatibilityItem message, IPackageIdentity package)
 	{
-		switch (message.Status.Action)
+		return message.Status.Action switch
 		{
-			case StatusAction.SubscribeToPackages:
-				if (!_packageUtil.IsIncluded(package))
-				{
-					return true;
-				}
-				else if (!_packageUtil.IsEnabled(package))
-				{
-					return true;
-				}
-
-				break;
-
-			case StatusAction.SelectOne:
-				return true;
-
-			case StatusAction.Switch:
-				return true;
-		}
-
-		return false;
+			StatusAction.IncludeOther => !_packageUtil.IsIncludedAndEnabled(package),
+			StatusAction.DisableOther => _packageUtil.IsEnabled(package),
+			StatusAction.ExcludeOther => _packageUtil.IsIncluded(package),
+			StatusAction.UnsubscribeOther => package.GetLocalPackage() is not null,
+			StatusAction.SelectOne => true,
+			StatusAction.Switch => true,
+			_ => false,
+		};
 	}
 
 	public ICompatibilityActionInfo? GetAction(ICompatibilityItem message, IPackageIdentity package)
 	{
 		switch (message.Status.Action)
 		{
-			case StatusAction.SubscribeToPackages:
+			case StatusAction.IncludeOther:
 				if (!_packageUtil.IsIncluded(package))
 				{
-					return new ActionInfo(IncludePackage, Locale.IncludeItem, "Add");
+					return new ActionInfo(IncludeAndEnablePackage, Locale.IncludeItem, "Add", FormDesign.Design.GreenColor);
 				}
 				else if (!_packageUtil.IsEnabled(package))
 				{
-					return new ActionInfo(EnablePackage, Locale.EnableItem, "Enabled", FormDesign.Design.GreenColor);
+					return new ActionInfo(IncludeAndEnablePackage, Locale.EnableItem, "Ok", FormDesign.Design.GreenColor);
+				}
+
+				break;
+
+			case StatusAction.DisableOther:
+				if (_packageUtil.IsEnabled(package))
+				{
+					return new ActionInfo(DisablePackage, Locale.EnableItem, "Enabled", FormDesign.Design.OrangeColor);
+				}
+
+				break;
+
+			case StatusAction.ExcludeOther:
+				if (_packageUtil.IsIncluded(package))
+				{
+					return new ActionInfo(ExcludePackage, Locale.ExcludeItem, "X", FormDesign.Design.RedColor);
+				}
+
+				break;
+
+			case StatusAction.UnsubscribeOther:
+				if (package.GetLocalPackage() is not null)
+				{
+					return new ActionInfo(ExcludePackageInAllPlaysets, Locale.ExcludeThisItemInAllPlaysets, "Trash", FormDesign.Design.RedColor);
 				}
 
 				break;
@@ -243,7 +288,7 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 		await _packageUtil.SetEnabled(package, true);
 	}
 
-	private async Task IncludePackage(ICompatibilityItem message, IPackageIdentity? package)
+	private async Task IncludeAndEnablePackage(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		if (package is null)
 		{
@@ -255,14 +300,34 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 		await _packageUtil.SetEnabled(package, true);
 	}
 
-	private async Task EnablePackage(ICompatibilityItem message, IPackageIdentity? package)
+	private async Task ExcludePackage(ICompatibilityItem message, IPackageIdentity? package = null)
 	{
 		if (package is null)
 		{
 			return;
 		}
 
-		await _packageUtil.SetEnabled(package, true);
+		await _packageUtil.SetIncluded(package, false, withVersion: false, promptForDependencies: false);
+	}
+
+	private async Task DisablePackage(ICompatibilityItem message, IPackageIdentity? package = null)
+	{
+		if (package is null)
+		{
+			return;
+		}
+
+		await _packageUtil.SetEnabled(package, false);
+	}
+
+	private async Task ExcludePackageInAllPlaysets(ICompatibilityItem message, IPackageIdentity? package = null)
+	{
+		if (package is null)
+		{
+			return;
+		}
+
+		await _playsetManager.SetIncludedForAll(package, false, withVersion: false, promptForDependencies: false);
 	}
 
 	private async Task SwitchPackage(ICompatibilityItem message, IPackageIdentity? package)

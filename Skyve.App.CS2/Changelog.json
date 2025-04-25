@@ -24,8 +24,9 @@
       {
         "Name": "Review Request Changes",
         "Changes": [
-          "Added the mod's thumbnail to the gallery tab.",
-          "Fixed images not loading properly."
+          "Simplified the review request process, you'll now only be prompted for two options with improved explanations along the way.",
+          "Improved the "
+          "Fixed not being able to upload a savegame with your request."
         ]
       },
       {

@@ -32,10 +32,12 @@ internal class CompatibilityUtil : ICompatibilityUtil
 		if (workshopInfo.Tags.ContainsKey("Savegame") || workshopInfo.Tags.ContainsKey("Map"))
 		{
 			info.Type = PackageType.MapSavegame;
+			info.SavegameEffect = SavegameEffect.None;
 		}
 		else if (workshopInfo.Requirements?.Any(x => x.Id is MUSIC_MOD_ID) ?? false)
 		{
 			info.Type = PackageType.MusicPack;
+			info.SavegameEffect = SavegameEffect.None;
 
 			info.Statuses!.Add(new PackageStatus(StatusType.MusicCanBeCopyrighted));
 		}

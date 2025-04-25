@@ -47,8 +47,8 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 	{
 		return new PackageInteraction
 		{
-			Type = (InteractionType)data.Type,
-			Action = (StatusAction)data.Action,
+			Type = data.Type.TryCast<InteractionType>(),
+			Action = data.Action.TryCast<StatusAction>(),
 			Packages = data.Packages?.ToList(x => new CompatibilityPackageReference(new GenericPackageIdentity(x))),
 			Note = data.Note
 		};
@@ -58,8 +58,8 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 	{
 		return new PackageStatus
 		{
-			Type = (StatusType)data.Type,
-			Action = (StatusAction)data.Action,
+			Type = data.Type.TryCast<StatusType>(),
+			Action = data.Action.TryCast<StatusAction>(),
 			Packages = data.Packages?.ToList(x => new CompatibilityPackageReference(new GenericPackageIdentity(x))),
 			Note = data.Note
 		};
