@@ -63,7 +63,7 @@ partial class PC_CompatibilityManagement
 			this.FLP_Tags = new SlickControls.SmartFlowPanel();
 			this.L_NoTags = new System.Windows.Forms.Label();
 			this.DD_Stability = new Skyve.App.UserInterface.Dropdowns.PackageStabilityDropDown();
-			this.DD_PackageType = new Skyve.App.UserInterface.Dropdowns.PackageTypeDropDown();
+			this.DD_PackageType = new Skyve.App.UserInterface.Dropdowns.PackageTypeSingleDropDown();
 			this.DD_Usage = new Skyve.App.UserInterface.Dropdowns.PackageUsageDropDown();
 			this.DD_DLCs = new Skyve.App.UserInterface.Dropdowns.DlcDropDown();
 			this.DD_SavegameEffect = new Skyve.App.UserInterface.Dropdowns.SavegameEffectDropDown();
@@ -880,7 +880,7 @@ partial class PC_CompatibilityManagement
 	private App.UserInterface.Dropdowns.PackageUsageDropDown DD_Usage;
 	private SlickCheckbox CB_BlackListId;
 	private SlickCheckbox CB_BlackListName;
-	private App.UserInterface.Dropdowns.PackageTypeDropDown DD_PackageType;
+	private App.UserInterface.Dropdowns.PackageTypeSingleDropDown DD_PackageType;
 	private SlickSpacer slickSpacer3;
 	private System.Windows.Forms.Label L_Page;
 	private SlickPictureBox PB_Loading;

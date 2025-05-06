@@ -72,11 +72,13 @@ internal class AssetsUtil : IAssetUtil
 			if (getAsset<SaveGameMetaData>(AssetType.SaveGame, ".SaveGameMetadata", out var asset, out var saveData))
 			{
 				asset!.SaveGameMetaData = saveData;
+				asset.Tags = ["SaveGame"];
 				yield return asset;
 			}
 			else if (getAsset<MapMetaData>(AssetType.Map, ".MapMetadata", out asset, out var mapData))
 			{
 				asset!.MapMetaData = mapData;
+				asset.Tags = ["Map"];
 				yield return asset;
 			}
 			else
@@ -328,5 +330,38 @@ internal class AssetsUtil : IAssetUtil
 	public void BuildAssetIndex()
 	{
 		//assetIndex = _contentManager.Assets.ToDictionary(x => x.FilePath.FormatPath(), StringComparer.OrdinalIgnoreCase);
+	}
+
+	public void DeleteAsset(IAsset asset)
+	{
+		CrossIO.DeleteFile(asset.FilePath);
+
+		if (CrossIO.FileExists(asset.FilePath + ".cid"))
+		{
+			CrossIO.DeleteFile(asset.FilePath + ".cid");
+		}
+
+		if (asset.Package?.LocalData is not LocalPackageData packageData)
+		{
+			return;
+		}
+
+		var source = packageData.Assets;
+		var dest = new IAsset[source.Length - 1];
+		var index = source.IndexOf(asset);
+
+		if (index > 0)
+		{
+			Array.Copy(source, 0, dest, 0, index);
+		}
+
+		if (index < source.Length - 1)
+		{
+			Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
+		}
+
+		packageData.Assets = dest;
+
+		_notifier.OnContentLoaded();
 	}
 }

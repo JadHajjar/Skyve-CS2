@@ -44,6 +44,8 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool SyncBeforeLaunching { get; set; } = true;
 	public bool ColoredAuthorNames { get; set; } = true;
 	public bool DisableLogCleanup { get; set; }
+	public bool ExcludeTipShown { get; set; }
+	public bool ClearFilterTipShown { get; set; }
 	public DependencyResolveBehavior DependencyResolution { get; set; }
 
 	public void Save()

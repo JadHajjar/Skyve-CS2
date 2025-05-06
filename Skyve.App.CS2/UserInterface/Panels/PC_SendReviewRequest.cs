@@ -56,9 +56,9 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		}
 
 		TLP_Form.Padding = TB_Note.Margin = L_English.Margin = UI.Scale(new Padding(7));
-		slickSpacer2.Margin = L_Disclaimer.Margin =  B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
+		slickSpacer2.Margin = L_Disclaimer.Margin = B_Apply.Margin = B_Apply.Padding = TB_Note.Margin = UI.Scale(new Padding(5));
 		TB_Note.Height = UI.Scale(250);
-		L_Disclaimer.Font =  UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
+		L_Disclaimer.Font = UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
 		slickSpacer2.Height = UI.Scale(2);
 		L_Title.Font = UI.Font(12.75F, FontStyle.Bold);
 		L_Title.Margin = UI.Scale(new Padding(6));
@@ -94,7 +94,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 
 	private async void B_Apply_Click(object sender, EventArgs e)
 	{
-		if (TB_Note.Text.AsEnumerable().Count(x => !char.IsWhiteSpace(x) && x is not '.' and not ',' and not '\'' and not '0') < 5)
+		if (TB_Note.Text.Length > 2000 || TB_Note.Text.Where(x => x is not '.' and not ',' and not '\'' and not '0').GetWords().Count() < 4)
 		{
 			ShowPrompt(Locale.AddMeaningfulDescription, PromptButtons.OK, PromptIcons.Hand);
 			return;

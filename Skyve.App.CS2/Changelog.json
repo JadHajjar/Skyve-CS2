@@ -2,6 +2,29 @@
   {
     "Stable": false,
     "Beta": true,
+    "Version": "1.0.0",
+    "Date": "2025-04-25",
+    "Tagline": "First Stable Release!",
+    "ChangeGroups": [
+      {
+        "Name": "Changes compared to v0.16.0",
+        "Changes": [
+          "Added the compatibility notification on the PDX Mods dashboard widgets.",
+          "Fixed the mod names overflowing on the PDX Mods dashboard widgets.",
+          "Added a 'Maps and Savegames' content tab. Removed maps and savegames from the assets tab.",
+          "Added two tutorial notifications for removing mods from your playset and clearing filters.",
+          "Improved the differentiation between code mods and 'assets' throughout the app.",
+          "Improved the UX when selecting a backup in the Backup Center tab.",
+          "Improved tooltips in the content pages.",
+          "Skyve will now only require itself in your active playset if no other playset includes it.",
+          "Fixed the 'Playsets' tab in the mod page not always showing the selected version in each playset."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
     "Version": "0.16.0",
     "Date": "2025-04-25",
     "Tagline": "Beta pre-release of the v1.0 stable update.",

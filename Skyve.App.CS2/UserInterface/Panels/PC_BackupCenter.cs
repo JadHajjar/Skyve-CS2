@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using static Skyve.App.UserInterface.Panels.DashboardPanelControl;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_BackupCenter : PanelContent
@@ -482,6 +481,7 @@ public partial class PC_BackupCenter : PanelContent
 	{
 		backupListControl.IndividualItem = backupViewControl.IndividualItem = true;
 		backupListControl.RestorePoint = backupViewControl.RestorePoint = false;
+		DD_BackupType.Visible = false;
 
 		backupListControl.Clear();
 		backupListControl.Loading = true;
@@ -493,6 +493,7 @@ public partial class PC_BackupCenter : PanelContent
 	{
 		backupListControl.IndividualItem = backupViewControl.IndividualItem = false;
 		backupListControl.RestorePoint = backupViewControl.RestorePoint = true;
+		DD_BackupType.Visible = true;
 
 		backupListControl.Clear();
 		backupListControl.Loading = true;
@@ -514,7 +515,7 @@ public partial class PC_BackupCenter : PanelContent
 
 	private void BackupListControl_CanDrawItem(object sender, CanDrawItemEventArgs<BackupListControl.RestoreGroup> e)
 	{
-		if (DD_BackupType.SelectedItem is not null)
+		if (backupListControl.RestorePoint && DD_BackupType.SelectedItem is not null)
 		{
 			e.DoNotDraw = !e.Item.RestoreItems.Any(x => x.MetaData.Type == DD_BackupType.SelectedItem);
 		}
@@ -589,6 +590,10 @@ public partial class PC_BackupCenter : PanelContent
 		TLP_Restore.Controls.Add(TLP_RestoreGroups, 0, 1);
 		TLP_Restore.SetColumnSpan(TLP_RestoreGroups, 2);
 
+		var restorePoint = (from restoreItem in item.RestoreItems
+							group restoreItem by restoreItem.MetaData.Type into grouped
+							select grouped).Count() > 1;
+
 		foreach (var backupGroup in item.RestoreItems.GroupBy(x => x.MetaData.Type))
 		{
 			TLP_RestoreGroups.ColumnStyles.Add(new() { SizeType = SizeType.Percent, Width = 100 });
@@ -607,13 +612,13 @@ public partial class PC_BackupCenter : PanelContent
 			panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 10));
 			panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
-			var control = new RestoreListControl(backupListControl.RestorePoint) { Dock = DockStyle.Fill };
+			var control = new RestoreListControl(restorePoint) { Dock = DockStyle.Fill };
 
 			control.SetItems(backupGroup
 				.OrderByDescending(x => x.MetaData.BackupTime)
-				.Select(x => new RestoreListControl.RestoreItem(x, backupListControl.RestorePoint || x.MetaData.BackupTime == backupGroup.Max(y => y.MetaData.BackupTime))));
+				.Select(x => new RestoreListControl.RestoreItem(x, restorePoint || x.MetaData.BackupTime == backupGroup.Max(y => y.MetaData.BackupTime))));
 
-			if (backupListControl.RestorePoint)
+			if (restorePoint)
 			{
 				var clearButton = new SlickButton
 				{

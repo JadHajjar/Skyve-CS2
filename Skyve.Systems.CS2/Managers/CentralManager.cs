@@ -3,7 +3,6 @@
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
-using Skyve.Systems.CS2.Systems;
 using Skyve.Systems.CS2.Utilities;
 
 using SlickControls;
@@ -327,9 +326,32 @@ internal class CentralManager : ICentralManager
 #else
 		const ulong MODID = 75804;
 #endif
-		var package = new GenericPackageIdentity(MODID);
+		var modExists = false;
+		var workshopInfo = await _workshopService.GetInfoAsync(new GenericPackageIdentity(MODID));
 
-		await _modUtil.SetIncluded(package, true);
+		foreach (var item in _playsetManager.Playsets)
+		{
+			var version = _modUtil.GetSelectedVersion(workshopInfo!, item.Id);
+
+			if (version is null)
+			{
+				continue;
+			}
+
+			modExists = true;
+
+			if (version == workshopInfo!.LatestVersion)
+			{
+				continue;
+			}
+
+			await _modUtil.SetIncluded(workshopInfo, true, item.Id, false, false);
+		}
+
+		if (!modExists)
+		{
+			await _modUtil.SetIncluded(workshopInfo!, true, null, false, false);
+		}
 	}
 
 	private void CleanupData()

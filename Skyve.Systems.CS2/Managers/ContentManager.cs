@@ -189,7 +189,7 @@ internal class ContentManager : IContentManager
 		var packages = new List<IPackage>();
 		var gameModsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods");
 		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves", _settings.FolderSettings.UserIdentifier);
-		//var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps", _settings.FolderSettings.UserIdentifier);
+		var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps", _settings.FolderSettings.UserIdentifier);
 
 		if (Directory.Exists(gameModsPath))
 		{
@@ -211,7 +211,7 @@ internal class ContentManager : IContentManager
 		}
 
 		var savesPackage = GetPackage(gameSavesPath, true, null);
-		//var mapsPackage = GetPackage(gameMapsPath, true, null);
+		var mapsPackage = GetPackage(gameMapsPath, true, null);
 
 		if (savesPackage is not null)
 		{
@@ -219,11 +219,11 @@ internal class ContentManager : IContentManager
 			packages.Add(savesPackage);
 		}
 
-		//if (mapsPackage is not null)
-		//{
-		//	mapsPackage.IsBuiltIn = true;
-		//	packages.Add(mapsPackage);
-		//}
+		if (mapsPackage is not null)
+		{
+			mapsPackage.IsBuiltIn = true;
+			packages.Add(mapsPackage);
+		}
 
 		var subscribedItems = await _workshopService.GetLocalPackages();
 

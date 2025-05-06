@@ -137,11 +137,11 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 	protected override void UIChanged()
 	{
-		base_P_Side.Width = UI.Scale(175);
+		base_P_Side.Width = UI.Scale(200);
 		base_TLP_Side.Padding = UI.Scale(new Padding(5));
 		base_P_Side.Padding = UI.Scale(new Padding(0, 5, 5, 5));
 		slickTabControl.Padding = P_SideContainer.Padding = new Padding(0, UI.Scale(30), 0, 0);
-		CustomTitleBounds = new Point(singlePackage ? 0 : UI.Scale(175), 0);
+		CustomTitleBounds = new Point(singlePackage ? 0 : UI.Scale(200), 0);
 
 		base.UIChanged();
 

@@ -2,7 +2,7 @@
 using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Dashboard;
 using Skyve.App.UserInterface.Lists;
-using Skyve.App.UserInterface.Panels;
+using Skyve.Compatibility.Domain.Enums;
 
 using System.Drawing;
 using System.Threading;
@@ -182,23 +182,30 @@ internal abstract class D_PdxModsBase : IDashboardItem
 
 	private void DrawHorizontalMod(PaintEventArgs e, IWorkshopInfo workshopInfo, Rectangle rect)
 	{
+		var backColor = FormDesign.Design.BackColor;
 		var banner = workshopInfo.GetThumbnail() ?? ItemListControl.WorkshopThumb;
 		var bannerRect = rect.Pad(Margin.Left / 2, 0, 0, 0).Align(new Size(rect.Height - (Margin.Left / 2), rect.Height - (Margin.Left / 2)), ContentAlignment.MiddleLeft);
+		var notification = workshopInfo.GetCompatibilityInfo().GetNotification();
+
+		if (notification > NotificationType.Info)
+		{
+			using var brush = new SolidBrush(backColor = notification.GetColor().MergeColor(backColor, 30));
+			using var icon = notification.GetIcon(true).Get(rect.Height - Margin.Left).Color(notification.GetColor());
+
+			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, 0).Pad(HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation) ? 0 : Margin.Left / 4), Margin.Left / 2);
+
+			e.Graphics.DrawImage(icon, rect.Pad(Margin.Left).Align(icon.Size, ContentAlignment.MiddleRight));
+
+			_buttonActions[Rectangle.FromLTRB(rect.Right - (rect.Height - Margin.Left), rect.Top, rect.Right, rect.Bottom)] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo, true);
+		}
 
 		if (banner is not null)
 		{
-			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(4), FormDesign.Design.BackColor);
-		}
-
-		if (HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))
-		{
-			using var brush = new SolidBrush(Color.FromArgb(40, FormDesign.Design.ForeColor));
-
-			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, 0), Margin.Left / 2);
+			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(4), backColor);
 		}
 
 		var text = workshopInfo.CleanName(out var tags) ?? Locale.UnknownPackage;
-		var textRect = rect.Pad(Margin.Left + bannerRect.Width, Margin.Left / 4, Margin.Left / 2, Margin.Left / 4);
+		var textRect = rect.Pad(Margin.Left + bannerRect.Width, Margin.Left / 4, notification > NotificationType.Info ? rect.Height - (Margin.Left / 2) : Margin.Left / 2, (rect.Height / 2) - (Margin.Left / 4));
 		using var textBrush = new SolidBrush(FormDesign.Design.ForeColor);
 		using var fadedBrush = new SolidBrush(Color.FromArgb(160, FormDesign.Design.ForeColor));
 		using var authorBrush = new SolidBrush(Color.FromArgb(180, UserIcon.GetUserColor(workshopInfo.Author?.Name ?? string.Empty, true)));
@@ -206,10 +213,12 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		using var smallFont = UI.Font(6.75F);
 		using var format = new StringFormat { LineAlignment = StringAlignment.Far };
 
-		var isVersion = workshopInfo.IsCodeMod;
-		var versionText = isVersion ? workshopInfo.VersionName : null;
+		var isVersion = workshopInfo.IsCodeMod();
+		var versionText = isVersion ? "v" + workshopInfo.VersionName : workshopInfo.ServerSize.SizeString(0);
 
-		e.Graphics.DrawString(text, textFont, textBrush, textRect);
+		DrawTextAndTags(e, workshopInfo, textBrush, backColor, textRect);
+
+		textRect = rect.Pad(Margin.Left + bannerRect.Width, (rect.Height / 2) - (Margin.Left / 4), Margin.Left / 2, Margin.Left / 4);
 
 		if (versionText is null)
 		{
@@ -217,34 +226,13 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		}
 		else
 		{
-			e.Graphics.DrawString($"v{versionText} • ", smallFont, fadedBrush, textRect, format);
+			e.Graphics.DrawString($"{versionText} • ", smallFont, fadedBrush, textRect, format);
 
-			e.Graphics.DrawString(workshopInfo.Author?.Name ?? string.Empty, smallFont, authorBrush, textRect.Pad((int)e.Graphics.Measure($"v{versionText} • ", smallFont).Width, 0, 0, 0), format);
-		}
-
-		var tagRect = new Rectangle(textRect.X + (int)e.Graphics.Measure(text, Font).Width + (Margin.Left / 2), textRect.Y + (Margin.Top / 4), 0, textRect.Height);
-
-		if (tags is not null)
-		{
-			foreach (var item in tags)
-			{
-				tagRect.X += (Margin.Left / 2) + e.Graphics.DrawLabel(item.Text, null, item.Color, tagRect, ContentAlignment.TopLeft, smaller: true).Width;
-			}
+			e.Graphics.DrawString(workshopInfo.Author?.Name ?? string.Empty, smallFont, authorBrush, textRect.Pad((int)e.Graphics.Measure($"{versionText} • ", smallFont).Width, 0, 0, 0), format);
 		}
 
 		_buttonActions[rect] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
 		_buttonRightClickActions[rect] = () => RightClick(workshopInfo);
-	}
-
-	private void DrawGridMod(PaintEventArgs e, IWorkshopInfo workshopInfo, Rectangle rect)
-	{
-		var banner = workshopInfo.GetThumbnail() ?? ItemListControl.WorkshopThumb;
-		var bannerRect = rect.Pad(Margin.Top / 2).Align(new Size(rect.Width - Margin.Top*3/2, rect.Width - Margin.Top * 3 / 2), ContentAlignment.TopLeft);
-
-		if (banner is not null)
-		{
-			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(4), FormDesign.Design.BackColor);
-		}
 
 		if (HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))
 		{
@@ -252,49 +240,128 @@ internal abstract class D_PdxModsBase : IDashboardItem
 
 			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, 0), Margin.Left / 2);
 		}
+	}
+
+	private void DrawGridMod(PaintEventArgs e, IWorkshopInfo workshopInfo, Rectangle rect)
+	{
+		rect.Height -= UI.Scale(3);
+
+		var backColor = FormDesign.Design.BackColor;
+		var banner = workshopInfo.GetThumbnail() ?? ItemListControl.WorkshopThumb;
+		var bannerRect = rect.Pad(Margin.Top / 2).Align(new Size(rect.Width - (Margin.Top * 3 / 2), rect.Width - (Margin.Top * 3 / 2)), ContentAlignment.TopLeft);
+		var notification = workshopInfo.GetCompatibilityInfo().GetNotification();
+
+		if (notification > NotificationType.Info)
+		{
+			using var brush = new SolidBrush(backColor = notification.GetColor().MergeColor(backColor, 30));
+			using var font = UI.Font(6.5F);
+			using var textBrush_ = new SolidBrush(notification.GetColor());
+			using var icon = notification.GetIcon(true).Get(font.Height).Color(textBrush_.Color);
+
+			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, 0), Margin.Left / 2);
+
+			e.Graphics.DrawImage(icon, rect.Pad(Margin.Left / 2).Align(icon.Size, ContentAlignment.BottomLeft));
+
+			e.Graphics.DrawString(LocaleCR.Get(notification.ToString()), font, textBrush_, rect.Pad(0, 0, (Margin.Left / 2) + UI.Scale(1), (Margin.Left / 4) - UI.Scale(1)), new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Far });
+
+			_buttonActions[Rectangle.FromLTRB(rect.Left, rect.Bottom - font.Height, rect.Right, rect.Bottom)] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo, true);
+		}
+
+		if (banner is not null)
+		{
+			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(4), backColor);
+		}
 
 		using var baseFont = UI.Font(8F, FontStyle.Bold);
-		var text = workshopInfo.CleanName(out var tags) ?? Locale.UnknownPackage;
-		var textRect = rect.Pad(Margin.Left / 2, bannerRect.Height + (Margin.Left * 4 / 4), Margin.Left / 2, Margin.Left / 4).ClipTo(baseFont.Height * 5 / 3);
+		var textRect = rect.Pad(Margin.Left / 2, bannerRect.Height + (Margin.Left * 4 / 4), Margin.Left / 2, Margin.Left / 4).ClipTo(baseFont.Height * 4 / 3);
 		using var textBrush = new SolidBrush(FormDesign.Design.ForeColor);
 		using var fadedBrush = new SolidBrush(FormDesign.Design.ForeColor.MergeColor(FormDesign.Design.BackColor, 70));
 		using var authorBrush = new SolidBrush(Color.FromArgb(180, UserIcon.GetUserColor(workshopInfo.Author?.Name ?? string.Empty, true)));
-		using var textFont = UI.Font(8F, FontStyle.Bold).FitTo(text, textRect, e.Graphics);
-		using var format = new StringFormat { };
 
-		var isVersion = workshopInfo.IsCodeMod;
-		var versionText = isVersion ? workshopInfo.VersionName : null;
+		textRect.Y += DrawTextAndTags(e, workshopInfo, textBrush, backColor, textRect);
 
-		e.Graphics.DrawString(text, textFont, textBrush, textRect);
+		DrawVersionAndAuthor(e, workshopInfo, fadedBrush, authorBrush, backColor, textRect);
 
-		var tagRect = new Rectangle(textRect.X + (int)e.Graphics.Measure(text, Font).Width + (Margin.Left / 2), textRect.Y + (Margin.Top / 4), 0, textRect.Height);
+		_buttonActions[rect] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
+		_buttonRightClickActions[rect] = () => RightClick(workshopInfo);
+
+		if (HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))
+		{
+			using var brush = new SolidBrush(Color.FromArgb(40, FormDesign.Design.ForeColor));
+
+			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, notification > NotificationType.Info ? 0 : UI.Scale(14)), Margin.Left / 2);
+		}
+	}
+
+	private int DrawTextAndTags(PaintEventArgs e, IWorkshopInfo workshopInfo, SolidBrush textBrush, Color backColor, Rectangle rect)
+	{
+		var text = workshopInfo.CleanName(out var tags) ?? Locale.UnknownPackage;
+		using var font = UI.Font(8F, FontStyle.Bold);
+		using var format = new StringFormat { LineAlignment = StringAlignment.Center };
+
+		using var highResBmp = new Bitmap(UI.Scale(500), rect.Height);
+		using var highResG = Graphics.FromImage(highResBmp);
+
+		highResG.SetUp(backColor);
+
+		var textSize = highResG.Measure(text, font);
+
+		highResG.DrawString(text, font, textBrush, new Rectangle(default, highResBmp.Size), format);
+
+		var tagRect = new Rectangle((int)textSize.Width + (Margin.Left / 4), 0, 0, rect.Height);
 
 		if (tags is not null)
 		{
 			foreach (var item in tags)
 			{
-				tagRect.X += (Margin.Left / 2) + e.Graphics.DrawLabel(item.Text, null, item.Color, tagRect, ContentAlignment.TopLeft, smaller: true).Width;
+				tagRect.X += (Margin.Left / 4) + highResG.DrawLabel(item.Text, null, item.Color, tagRect, ContentAlignment.MiddleLeft, smaller: true).Width;
 			}
 		}
 
-		textRect = Rectangle.FromLTRB(textRect.X, textRect.Y + (int)e.Graphics.Measure(text, textFont, textRect.Width).Height + UI.Scale(2), textRect.Right, rect.Bottom - (Margin.Left / 2));
+		var factor = Math.Min(1, (double)rect.Width / tagRect.X);
 
-		if (versionText is null)
+		e.Graphics.SetClip(rect);
+		e.Graphics.DrawImage(highResBmp, new Rectangle(rect.X, rect.Y, (int)(highResBmp.Width * factor), (int)(rect.Height * factor)));
+		e.Graphics.ResetClip();
+
+		return (int)(rect.Height * factor);
+	}
+
+	private void DrawVersionAndAuthor(PaintEventArgs e, IWorkshopInfo workshopInfo, SolidBrush fadedBrush, SolidBrush authorBrush, Color backColor, Rectangle rect)
+	{
+		var isVersion = workshopInfo.IsCodeMod();
+		var versionText = isVersion ? "v" + workshopInfo.VersionName : workshopInfo.ServerSize.SizeString(0);
+		using var font = UI.Font(6.75F);
+		using var format = new StringFormat { LineAlignment = StringAlignment.Center };
+
+		using var highResBmp = new Bitmap(UI.Scale(500), rect.Height);
+		using var highResG = Graphics.FromImage(highResBmp);
+
+		highResG.SetUp(backColor);
+
+		var x = 0;
+
+		if (versionText is not null)
 		{
-			using var smallFont = UI.Font(6.75F).FitTo(workshopInfo.Author?.Name ?? string.Empty, textRect, e.Graphics);
-			e.Graphics.DrawString(workshopInfo.Author?.Name ?? string.Empty, smallFont, authorBrush, textRect, format);
+			highResG.DrawString($"{versionText} • ", font, fadedBrush, new Rectangle(default, highResBmp.Size), format);
+
+			x = (int)highResG.Measure($"{versionText} • ", font).Width;
 		}
-		else
+
+		highResG.DrawString(workshopInfo.Author?.Name ?? string.Empty, font, authorBrush, new Rectangle(x, 0, highResBmp.Width - x, highResBmp.Height), format);
+
+		var totalWidth = x + (int)highResG.Measure(workshopInfo.Author?.Name ?? string.Empty, font).Width;
+
+		if (totalWidth == 0)
 		{
-			using var smallFont = UI.Font(6.75F).FitTo($"v{versionText} • {workshopInfo.Author?.Name ?? string.Empty}", textRect, e.Graphics);
-
-
-			e.Graphics.DrawString($"v{versionText} • {workshopInfo.Author?.Name ?? string.Empty}", smallFont, authorBrush, textRect, format);
-			e.Graphics.DrawString($"v{versionText} • ", smallFont, fadedBrush, textRect, format);
+			return;
 		}
 
-		_buttonActions[rect] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
-		_buttonRightClickActions[rect] = () => RightClick(workshopInfo);
+		var factor = Math.Min(1, (double)rect.Width / totalWidth);
+
+		e.Graphics.SetClip(rect);
+		e.Graphics.DrawImage(highResBmp, new Rectangle(rect.X, rect.Y, (int)(highResBmp.Width * factor), (int)(rect.Height * factor)));
+		e.Graphics.ResetClip();
 	}
 
 	protected abstract void ViewMore();

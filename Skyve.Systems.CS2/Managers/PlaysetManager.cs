@@ -149,10 +149,16 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task ActivatePlayset(IPlayset playset)
 	{
+		await Task.Delay(250);
+
 		await _workshopService.ActivatePlayset(playset.Id);
 
 		CurrentPlayset = playset;
-		CurrentCustomPlayset = GetCustomPlayset(playset);
+
+		var customPlayset = GetCustomPlayset(playset);
+		customPlayset.DateUsed = DateTime.Now;
+
+		Save(customPlayset);
 
 		_notifier.OnPlaysetChanged();
 	}
@@ -252,6 +258,12 @@ internal class PlaysetManager : IPlaysetManager
 		if (playset is not null)
 		{
 			_playsets[playset.Id] = playset;
+
+			var customPlayset = GetCustomPlayset(playset);
+			customPlayset.DateCreated = DateTime.Now;
+			customPlayset.DateUsed = DateTime.Now;
+
+			Save(customPlayset);
 		}
 
 		return playset;
