@@ -7,6 +7,7 @@ using Skyve.Domain.Systems;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -14,7 +15,7 @@ using System.Windows.Forms;
 namespace Skyve.Systems.CS2.Managers;
 internal class ModLogicManager : IModLogicManager
 {
-	private const string Skyve_ASSEMBLY = "Skyve Mod.dll";
+	private const string SKYVE_ASSEMBLY = "Skyve Mod.dll";
 
 	private ModCollection _modCollection = new(GetGroupInfo());
 
@@ -22,7 +23,7 @@ internal class ModLogicManager : IModLogicManager
 	{
 		return new(StringComparer.OrdinalIgnoreCase)
 		{
-			[Skyve_ASSEMBLY] = new() { Required = true },
+			[SKYVE_ASSEMBLY] = new() { Required = true },
 		};
 	}
 
@@ -68,6 +69,11 @@ internal class ModLogicManager : IModLogicManager
 			return true;
 		}
 
+		if (mod.IsLocal() && Path.GetFileName(mod.Folder) == _settings.FolderSettings.UserIdentifier)
+		{
+			return true;
+		}
+
 		var list = _modCollection.GetCollection(Path.GetFileName(mod.FilePath), out var collection);
 
 		if (!(collection?.Required ?? false) || list is null)
@@ -105,13 +111,22 @@ internal class ModLogicManager : IModLogicManager
 
 	public void ApplyRequiredStates(IModUtil modUtil)
 	{
-		var skyveMods = _modCollection.GetCollection(Skyve_ASSEMBLY, out var collectionInfo);
+		var skyveMods = _modCollection.GetCollection(SKYVE_ASSEMBLY, out var collectionInfo);
 
 		foreach (var item in skyveMods?.Where(x => x.LocalData != null) ?? [])
 		{
-			if (File.GetLastWriteTimeUtc(CrossIO.Combine(item.LocalData!.Folder, ".App", "Skyve.exe")).Ticks > Math.Max(File.GetLastWriteTimeUtc(Application.ExecutablePath).Ticks, File.GetCreationTimeUtc(Application.ExecutablePath).Ticks))
+			var skyvePath = CrossIO.Combine(item.LocalData!.Folder, ".App", "Skyve.exe");
+			var currentPath = Application.ExecutablePath;
+
+			var skyveVersion = FileVersionInfo.GetVersionInfo(skyvePath).FileVersion;
+			var currentVersion = FileVersionInfo.GetVersionInfo(currentPath).FileVersion;
+
+			if (Version.TryParse(skyveVersion, out var skyveVer) && Version.TryParse(currentVersion, out var currentVer))
 			{
-				_notifier.OnSkyveUpdateAvailable();
+				if (skyveVer > currentVer)
+				{
+					_notifier.OnSkyveUpdateAvailable();
+				}
 			}
 		}
 
@@ -129,7 +144,14 @@ internal class ModLogicManager : IModLogicManager
 
 	public bool IsPseudoMod(IPackage package)
 	{
-		return package.GetPackageInfo()?.Type is not null and not PackageType.GenericPackage and not PackageType.MusicPack and not PackageType.ContentPackage;
+		var info = package.GetPackageInfo();
+
+		if (info is null)
+		{
+			return false;
+		}
+
+		return info.Type is PackageType.MusicPack or PackageType.NameList;
 	}
 
 	public bool AreMultipleSkyvesPresent(out List<IPackageIdentity> skyveInstances)

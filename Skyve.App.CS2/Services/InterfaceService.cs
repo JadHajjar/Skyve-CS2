@@ -60,9 +60,9 @@ internal class InterfaceService : IAppInterfaceService
 		return new PC_CompatibilityManagement([package]);
 	}
 
-	void IInterfaceService.OpenPlaysetPage(IPlayset playset, bool settingsTab)
+	void IInterfaceService.OpenPlaysetPage(IPlayset playset, bool settingsTab, bool editName)
 	{
-		App.Program.MainForm.TryInvoke(() => App.Program.MainForm.PushPanel(new PC_PlaysetPage(playset, settingsTab)));
+		App.Program.MainForm.TryInvoke(() => App.Program.MainForm.PushPanel(new PC_PlaysetPage(playset, settingsTab, editName)));
 	}
 
 	bool IInterfaceService.AskForDependencyConfirmation(List<IPackageIdentity> packages, List<IPackageIdentity> dependencies)

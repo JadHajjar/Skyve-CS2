@@ -7,19 +7,19 @@ namespace Skyve.App.CS2.UserInterface.Generic;
 internal class BackupListControl : SlickStackedListControl<BackupListControl.RestoreGroup>
 {
 	[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	public bool RestorePoint { get; internal set; }
+	public bool RestorePoint { get; set; } = true;
 	[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	public bool IndividualItem { get; internal set; } = true;
+	public bool IndividualItem { get; set; }
 
 	public BackupListControl()
 	{
-		ItemHeight = 40;
 		HighlightOnHover = true;
 		SeparateWithLines = true;
 	}
 
 	protected override void UIChanged()
 	{
+		ItemHeight = 42;
 		Padding = UI.Scale(new Padding(3));
 
 		base.UIChanged();
@@ -94,18 +94,6 @@ internal class BackupListControl : SlickStackedListControl<BackupListControl.Res
 
 				rectangle = rectangle.Pad(rect.Width + Padding.Horizontal, 0, 0, 0);
 			}
-
-			SlickButton.AlignAndDraw(e.Graphics, rectangle, ContentAlignment.MiddleRight, new ButtonDrawArgs
-			{
-				BackColor = !e.HoverState.HasFlag(HoverState.Hovered) ? e.BackColor : Color.FromArgb(120, FormDesign.Design.ActiveColor),
-				Text = e.Item.Time.ToString("d MMM yyyy - h:mm tt"),
-				Icon = "Clock",
-				Font = UI.Font(9F, FontStyle.Bold),
-				Padding = UI.Scale(new Padding(4)),
-				BorderRadius = Padding.Left,
-				NoGradient = true,
-				Size = UI.Scale(new Size(175, 24))
-			});
 		}
 		else
 		{

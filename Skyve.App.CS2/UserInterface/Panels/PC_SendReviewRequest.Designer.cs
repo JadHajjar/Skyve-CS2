@@ -53,7 +53,7 @@ partial class PC_SendReviewRequest
 			this.B_Apply = new SlickControls.SlickButton();
 			this.TLP_Changes = new SlickControls.RoundedGroupTableLayoutPanel();
 			this.DD_Stability = new Skyve.App.UserInterface.Dropdowns.PackageStabilityDropDown();
-			this.DD_PackageType = new Skyve.App.UserInterface.Dropdowns.PackageTypeDropDown();
+			this.DD_PackageType = new Skyve.App.UserInterface.Dropdowns.PackageTypeSingleDropDown();
 			this.DD_Usage = new Skyve.App.UserInterface.Dropdowns.PackageUsageDropDown();
 			this.DD_DLCs = new Skyve.App.UserInterface.Dropdowns.DlcDropDown();
 			this.DD_SavegameEffect = new Skyve.App.UserInterface.Dropdowns.SavegameEffectDropDown();
@@ -468,7 +468,7 @@ partial class PC_SendReviewRequest
 	private RoundedGroupTableLayoutPanel TLP_LogReport;
 	private RoundedGroupTableLayoutPanel TLP_Changes;
 	private PackageStabilityDropDown DD_Stability;
-	private PackageTypeDropDown DD_PackageType;
+	private PackageTypeSingleDropDown DD_PackageType;
 	private PackageUsageDropDown DD_Usage;
 	private DlcDropDown DD_DLCs;
 	private SavegameEffectDropDown DD_SavegameEffect;

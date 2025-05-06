@@ -2,9 +2,11 @@
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Generic;
 using Skyve.App.UserInterface.Panels;
+using Skyve.App.Utilities;
 using Skyve.Domain.CS2.Content;
 
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,6 +15,7 @@ namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_PlaysetPage : PlaysetSettingsPanel
 {
 	private readonly bool loadingPlayset;
+	private readonly bool _editName;
 	private readonly IOSelectionDialog imagePrompt;
 
 	private readonly IPlaysetManager _playsetManager;
@@ -24,7 +27,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 	public ContentList LC_Items { get; }
 	public PlaysetSideControl SideControl { get; }
 
-	public PC_PlaysetPage(IPlayset playset, bool settingsTab) : base(true)
+	public PC_PlaysetPage(IPlayset playset, bool settingsTab, bool editName) : base(true)
 	{
 		Playset = playset;
 
@@ -32,12 +35,13 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 		InitializeComponent();
 
+		_editName = editName;
 		imagePrompt = new IOSelectionDialog
 		{
 			ValidExtensions = IO.ImageExtensions
 		};
 
-		T_Content.LinkedControl = LC_Items = new ContentList(SkyvePage.Playset, false, GetContents, () => Locale.Package);
+		T_Content.LinkedControl = LC_Items = new ContentList(SkyvePage.PlaysetPackages, false, GetContents, () => Locale.Package);
 
 		LC_Items.SelectedPlayset = playset.Id;
 
@@ -50,6 +54,8 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 				SlickTip.SetTo(item, item.Text + "_Tip");
 			}
 		}
+
+		B_Deactivate.Visible = _playsetManager.CurrentPlayset == playset;
 
 		var customPlayset = playset.GetCustomPlayset();
 
@@ -94,6 +100,24 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 			DD_LogLevel.SelectedItem = extendedPlayset.LaunchSettings.LogLevel.IfEmpty("DEFAULT");
 			TB_CustomArgs.Text = extendedPlayset.LaunchSettings.CustomArgs;
 		}
+
+		_notifier.PlaysetChanged += Notifier_PlaysetChanged;
+	}
+
+	private void Notifier_PlaysetChanged()
+	{
+		SideControl.Invalidate();
+		B_Deactivate.Visible = _playsetManager.CurrentPlayset == Playset;
+	}
+
+	protected override void OnCreateControl()
+	{
+		base.OnCreateControl();
+
+		if (_editName)
+		{
+			Form.OnNextIdle(EditName);
+		}
 	}
 
 	protected override async Task<bool> LoadDataAsync()
@@ -128,6 +152,9 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		P_Side.Width = UI.Scale(250);
 		P_Side.Padding = UI.Scale(new Padding(15, 0, 15, 15));
 		slickSpacer1.Margin = B_EditThumbnail.Margin = B_EditColor.Margin = B_ClearThumbnail.Margin = B_ClearColor.Margin = UI.Scale(new Padding(5));
+		B_Deactivate.Margin = B_Share.Margin = B_Delete.Margin = UI.Scale(new Padding(17, 12, 17, 0));
+		B_Deactivate.Padding = B_Share.Padding = B_Delete.Padding = UI.Scale(new Padding(5));
+		B_Deactivate.Font = B_Share.Font = B_Delete.Font = UI.Font(9F);
 		slickSpacer1.Height = (int)UI.FontScale;
 
 		I_Color.Size = I_Thumbnail.Size = UI.Scale(new Size(24, 24));
@@ -308,5 +335,54 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		L_ColorInfo.Text = customPlayset.Color.HasValue ? Locale.PlaysetColorSet : Locale.PlaysetColorNotSet;
 
 		SideControl.Invalidate();
+	}
+
+	private async void B_Share_Click(object sender, EventArgs e)
+	{
+		B_Share.Loading = true;
+
+		try
+		{
+			var playset = await _playsetManager.GenerateImportPlayset(Playset);
+			var path = CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveDataPath, "Playsets", "Shared", $"{Playset.Name} {DateTime.Now:yy-MM-dd}.json");
+
+			Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+			File.WriteAllText(path, Newtonsoft.Json.JsonConvert.SerializeObject(playset));
+
+			PlatformUtil.OpenFolder(path);
+		}
+		catch (Exception ex)
+		{
+			MessagePrompt.Show(ex, form: Form);
+		}
+
+		B_Share.Loading = false;
+	}
+
+	private async void B_Deactivate_ClickAsync(object sender, EventArgs e)
+	{
+		B_Deactivate.Loading = true;
+		await _playsetManager.DeactivateActivePlayset();
+		B_Deactivate.Loading = false;
+	}
+
+	private async void B_Delete_Click(object sender, EventArgs e)
+	{
+		B_Delete.Loading = true;
+
+		if (MessagePrompt.Show(Locale.AreYouSure + "\r\n\r\n" + Locale.ActionUnreversible, PromptButtons.YesNo, PromptIcons.Hand, form: App.Program.MainForm) == DialogResult.Yes)
+		{
+			if (await ServiceCenter.Get<IPlaysetManager>().DeletePlayset(Playset))
+			{
+				PushBack();
+			}
+			else
+			{
+				ShowPrompt(Locale.FailedToDeletePlayset, PromptButtons.OK, PromptIcons.Error);
+			}
+		}
+
+		B_Delete.Loading = false;
 	}
 }

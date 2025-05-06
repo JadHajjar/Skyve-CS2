@@ -1,7 +1,6 @@
 ﻿using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Forms;
-using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
 
 using System.Drawing;
@@ -24,6 +23,7 @@ internal class RightClickService : IRightClickService
 		var settings = ServiceCenter.Get<ISettings>();
 		var modUtil = ServiceCenter.Get<IModUtil>();
 		var modLogicManager = ServiceCenter.Get<IModLogicManager>();
+		var interfaceService = ServiceCenter.Get<IInterfaceService>();
 
 		var anyIncluded = list.Any(x => packageUtil.IsIncluded(x));
 		var anyExcluded = list.Any(x => !packageUtil.IsIncluded(x));
@@ -38,6 +38,7 @@ internal class RightClickService : IRightClickService
 		return
 		[
 			new(Locale.ViewOnWorkshop, "Link", () => PlatformUtil.OpenUrl(list[0].Url), visible: list.Count == 1 && !string.IsNullOrWhiteSpace(list[0].Url)),
+			new(Locale.OpenPackagePage, "Package", () => interfaceService.OpenPackagePage(list[0]), visible: list.Count == 1),
 			new(Locale.OpenPackageFolder.FormatPlural(list.Count), "Folder", () => list.Select(x => x.GetLocalPackageIdentity()?.FilePath).WhereNotEmpty().Foreach(PlatformUtil.OpenFolder), visible: anyInstalled),
 			new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "PC", () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => ServiceCenter.Get<IPackageManager>().MoveToLocalFolder(x!.Package)), visible: settings.UserSettings.ComplexListUI && anyWorkshopAndInstalled),
 
@@ -97,7 +98,7 @@ internal class RightClickService : IRightClickService
 
 	private static void AskThenDelete<T>(IEnumerable<T> items) where T : IPackageIdentity
 	{
-		if (MessagePrompt.Show(Locale.AreYouSure + "\r\n\r\n" + Locale.ActionUnreversible.FormatPlural(items.Count()), PromptButtons.YesNo, form: App.Program.MainForm) == DialogResult.Yes)
+		if (MessagePrompt.Show(Locale.AreYouSure + "\r\n\r\n" + Locale.ActionUnreversible.FormatPlural(items.Count()), PromptButtons.YesNo, PromptIcons.Hand, form: App.Program.MainForm) == DialogResult.Yes)
 		{
 			foreach (var item in items.SelectWhereNotNull(x => x.GetLocalPackageIdentity()))
 			{
@@ -105,7 +106,7 @@ internal class RightClickService : IRightClickService
 				{
 					if (item!.IsLocal() && item is IAsset asset)
 					{
-						CrossIO.DeleteFile(asset.FilePath);
+						ServiceCenter.Get<IAssetUtil>().DeleteAsset(asset);
 					}
 					else if (item!.GetLocalPackage() is not null)
 					{
@@ -139,6 +140,7 @@ internal class RightClickService : IRightClickService
 			new(Locale.Manage, "Wrench", visible: isLocal, disabled: true)
 			{
 				SubItems = [
+					new(Locale.EditPlaysetName, "Edit", () => EditName(playset)),
 					new(customPlayset.IsFavorite ? Locale.UnFavoriteThisPlayset : Locale.FavoriteThisPlayset, "Star", () => TogglePlaysetFavorite(playset)),
 					new(Locale.ChangePlaysetColor, "Paint", () => ChangeColor(playset)),
 					new(Locale.EditPlaysetThumbnail, "EditImage", () => ChangeThumbnail(playset)),
@@ -150,6 +152,18 @@ internal class RightClickService : IRightClickService
 			SlickStripItem.Empty,
 			new(Locale.PlaysetDelete, "Trash", () => DeletePlayset(playset))
 		];
+	}
+
+	private void EditName(IPlayset playset)
+	{
+		try
+		{
+			ServiceCenter.Get<IAppInterfaceService>().OpenPlaysetPage(playset, editName: true);
+		}
+		catch (Exception ex)
+		{
+			App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDownloadPlayset, form: App.Program.MainForm));
+		}
 	}
 
 	private async void ActivatePlayset(IPlayset playset)
@@ -169,7 +183,13 @@ internal class RightClickService : IRightClickService
 
 	private async void DeletePlayset(IPlayset playset)
 	{
-		await ServiceCenter.Get<IPlaysetManager>().DeletePlayset(playset);
+		if (MessagePrompt.Show(Locale.AreYouSure + "\r\n\r\n" + Locale.ActionUnreversible, PromptButtons.YesNo, PromptIcons.Hand, form: App.Program.MainForm) == DialogResult.Yes)
+		{
+			if (!await ServiceCenter.Get<IPlaysetManager>().DeletePlayset(playset))
+			{
+				MessagePrompt.Show(Locale.FailedToDeletePlayset, PromptButtons.OK, PromptIcons.Error, form: App.Program.MainForm);
+			}
+		}
 	}
 
 	private void ChangeColor(IPlayset playset)

@@ -12,9 +12,9 @@ internal class BackupViewControl : SlickControl
 	private Rectangle IndividualItemRect;
 
 	[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	public bool RestorePoint { get; internal set; }
+	public bool RestorePoint { get; set; } = true;
 	[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	public bool IndividualItem { get; internal set; } = true;
+	public bool IndividualItem { get; set; }
 
 	public event EventHandler? RestorePointClicked;
 	public event EventHandler? IndividualItemClicked;

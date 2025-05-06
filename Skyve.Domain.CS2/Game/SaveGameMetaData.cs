@@ -8,6 +8,7 @@ public class SaveGameMetaData
 	public int Money { get; set; }
 	public int Xp { get; set; }
 	public string? MapName { get; set; }
+	public string[]? ModsEnabled { get; set; }
 	public string? SaveGameData { get; set; }
 	public bool AutoSave { get; set; }
 	public string? SessionGuid { get; set; }

@@ -1,5 +1,5 @@
 ﻿using Skyve.App.Interfaces;
-using Skyve.App.UserInterface.Lists;
+using Skyve.App.UserInterface.CompatibilityReport;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Drawing;
@@ -18,11 +18,8 @@ public partial class PC_ReviewRequests : PanelContent
 	{
 		InitializeComponent();
 
-		tableLayoutPanel1.Controls.Add(reviewRequestList = new ReviewRequestList { Dock = DockStyle.Fill }, 0, 0);
-
-		reviewRequestList.ItemMouseClick += ReviewRequestList_ItemMouseClick;
-
 		_reviewRequests = [.. reviewRequests];
+		_reviewRequests.GroupBy(x => x.PackageId).Foreach(x => x.Foreach(y => y.Count = x.Count()));
 
 		packageCrList.SetItems(reviewRequests.Distinct(x => x.PackageId));
 		packageCrList.CanDrawItem += PackageCrList_CanDrawItem;
@@ -53,7 +50,7 @@ public partial class PC_ReviewRequests : PanelContent
 
 	protected override void UIChanged()
 	{
-		base_P_Side.Width = UI.Scale(175);
+		base_P_Side.Width = UI.Scale(200);
 		base_TLP_Side.Padding = UI.Scale(new Padding(5));
 		base_P_Side.Padding = UI.Scale(new Padding(0, 5, 5, 5));
 		tableLayoutPanel1.Padding = new Padding(0, UI.Scale(30), 0, 0);
@@ -104,9 +101,14 @@ public partial class PC_ReviewRequests : PanelContent
 
 		packageCrList.CurrentPackage = package;
 		packageCrList.Invalidate();
-		reviewRequestList.SetItems(_reviewRequests.Where(x => x.PackageId == package?.Id));
 
-		B_DeleteRequests.Text = LocaleCR.DeleteRequests.FormatPlural(reviewRequestList.ItemCount);
+		P_Requests.SuspendDrawing();
+		P_Requests.Controls.Clear(true);
+		P_Requests.Controls.AddRange(_reviewRequests.Where(x => x.PackageId == package?.Id).Select(x => (Control)new CompatibilityReportItemControl(x, ReviewRequestList_ItemMouseClick)).ToArray());
+		P_Requests.ResumeDrawing();
+		P_Requests.PerformLayout();
+
+		B_DeleteRequests.Text = LocaleCR.DeleteRequests.FormatPlural(P_Requests.Controls.Count);
 		B_DeleteRequests.Visible = package != null;
 
 		var currentPage = -1;
@@ -145,9 +147,9 @@ public partial class PC_ReviewRequests : PanelContent
 			|| package.Id.ToString().IndexOf(TB_Search.Text, StringComparison.OrdinalIgnoreCase) != -1);
 	}
 
-	private void ReviewRequestList_ItemMouseClick(object sender, MouseEventArgs e)
+	private void ReviewRequestList_ItemMouseClick(ReviewRequest sender, MouseEventArgs e)
 	{
-		Form.Invoke(() => Form.PushPanel(new PC_ViewReviewRequest((ReviewRequest)sender)));
+		Form.Invoke(() => Form.PushPanel(new PC_ViewReviewRequest(sender)));
 	}
 
 	private void TB_Search_TextChanged(object sender, EventArgs e)

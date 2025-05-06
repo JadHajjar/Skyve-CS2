@@ -145,4 +145,9 @@ public class SkyveApiUtil
 	{
 		return ConvertDto<GoFileUploadData, GoFileUploadInfo, GoFileInfoDto>(await Get<GoFileUploadData>("/GetGoFileUploadInfo", ("folderName", folder)));
 	}
+
+	public async Task<ApiResponse> CreateAnnouncement(AnnouncementData announcementData)
+	{
+		return await Post<AnnouncementData, ApiResponse>("/CreateAnnouncement", announcementData);
+	}
 }

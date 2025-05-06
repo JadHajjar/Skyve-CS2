@@ -42,7 +42,7 @@ public partial class MainForm : BasePanelForm
 
 		InitializeComponent();
 
-		_userService.UserInfoUpdated += _userService_UserInfoUpdated;
+		_userService.UserInfoUpdated += UserService_UserInfoUpdated;
 
 		_downloadsInfoControl = new() { Dock = DockStyle.Top };
 		_troubleshootInfoControl = new() { Dock = DockStyle.Top };
@@ -113,7 +113,7 @@ public partial class MainForm : BasePanelForm
 		_notifier.RefreshUI += RefreshUI;
 		_notifier.WorkshopInfoUpdated += RefreshUI;
 		_notifier.WorkshopUsersInfoLoaded += RefreshUI;
-		_notifier.ContentLoaded += _userService_UserInfoUpdated;
+		_notifier.ContentLoaded += UserService_UserInfoUpdated;
 		_notifier.SkyveUpdateAvailable += () => Invoke(_updateAvailableControl.Show);
 
 		ConnectionHandler.ConnectionChanged += ConnectionHandler_ConnectionChanged;
@@ -161,13 +161,11 @@ public partial class MainForm : BasePanelForm
 		catch { }
 	}
 
-	private void _userService_UserInfoUpdated()
+	private void UserService_UserInfoUpdated()
 	{
 		var hasPackages = _userService.User.Id is not null && _packageManager.Packages.Any(x => _userService.User.Id.Equals(x.GetWorkshopInfo()?.Author?.Id));
 		PI_CompatibilityManagement.Hidden = !((hasPackages || _userService.User.Manager) && !_userService.User.Malicious);
-		PI_ManageAllCompatibility.Hidden = PI_ReviewRequests.Hidden = !(_userService.User.Manager && !_userService.User.Malicious);
 		PI_ManageYourPackages.Hidden = !(hasPackages && !_userService.User.Malicious);
-		//panelItem1.Hidden = !_userService.User.Verified;
 		base_P_Tabs.FilterChanged();
 	}
 
@@ -182,7 +180,7 @@ public partial class MainForm : BasePanelForm
 		PI_Assets.Text = Locale.Asset.Plural;
 		PI_Playsets.Text = Locale.Playset.Plural;
 		PI_Mods.Text = Locale.Mod.Plural;
-		PI_ReviewRequests.Text = LocaleCR.ReviewRequests.Format(string.Empty).Trim();
+		PI_MapsSaves.Text = LocaleCR.MapSavegame.Plural;
 	}
 
 	private void ConnectionHandler_ConnectionChanged(ConnectionState newState)
@@ -442,6 +440,11 @@ public partial class MainForm : BasePanelForm
 		SetPanel<PC_Assets>(PI_Assets);
 	}
 
+	private void PI_MapsSaves_OnClick(object sender, MouseEventArgs e)
+	{
+		SetPanel<PC_MapsSaves>(PI_MapsSaves);
+	}
+
 	private void PI_ModReview_OnClick(object sender, MouseEventArgs e)
 	{
 		SetPanel(PI_ModUtilities, ServiceCenter.Get<IAppInterfaceService>().UtilitiesPanel());
@@ -481,7 +484,7 @@ public partial class MainForm : BasePanelForm
 	{
 		if (_playsetManager.CurrentPlayset is not null)
 		{
-			PushPanel(PI_CurrentPlayset, new PC_PlaysetPage(_playsetManager.CurrentPlayset, false));
+			PushPanel(PI_CurrentPlayset, new PC_PlaysetPage(_playsetManager.CurrentPlayset, false, false));
 		}
 	}
 
@@ -496,11 +499,11 @@ public partial class MainForm : BasePanelForm
 
 		try
 		{
-			var results = await ServiceCenter.Get<IWorkshopService>().GetWorkshopItemsByUserAsync(_userService.User.Id ?? string.Empty);
+			var (mods, totalCount) = await ServiceCenter.Get<IWorkshopService>().GetWorkshopItemsByUserAsync(_userService.User.Id ?? string.Empty);
 
-			if (results.Mods != null)
+			if (mods != null)
 			{
-				Invoke(() => PushPanel(PI_ManageYourPackages, new PC_CompatibilityManagement(results.Mods)));
+				Invoke(() => PushPanel(PI_ManageYourPackages, new PC_CompatibilityManagement(mods)));
 			}
 		}
 		catch (Exception ex)
@@ -509,37 +512,6 @@ public partial class MainForm : BasePanelForm
 		}
 
 		PI_ManageYourPackages.Loading = false;
-	}
-
-	private async void PI_ReviewRequests_OnClick(object sender, MouseEventArgs e)
-	{
-		if (PI_ReviewRequests.Loading)
-		{
-			return;
-		}
-
-		PI_ReviewRequests.Loading = true;
-
-		try
-		{
-			var reviewRequests = await _skyveApiUtil.GetReviewRequests();
-
-			if (reviewRequests is not null)
-			{
-				Invoke(() => PushPanel(PI_ReviewRequests, new PC_ReviewRequests(reviewRequests)));
-			}
-		}
-		catch (Exception ex)
-		{
-			MessagePrompt.Show(ex, "Failed to load your packages", form: this);
-		}
-
-		PI_ReviewRequests.Loading = false;
-	}
-
-	private void PI_ManageAllCompatibility_OnClick(object sender, MouseEventArgs e)
-	{
-		PushPanel<PC_CompatibilityManagement>(PI_ManageAllCompatibility);
 	}
 
 	private void PI_PdxMods_OnClick(object sender, MouseEventArgs e)
@@ -555,6 +527,11 @@ public partial class MainForm : BasePanelForm
 	private void PI_Backup_OnClick(object sender, MouseEventArgs e)
 	{
 		SetPanel<PC_BackupCenter>(PI_Backup);
+	}
+
+	private void PI_CompatibilityManagement_OnClick(object sender, MouseEventArgs e)
+	{
+		SetPanel<PC_CompatibilityCenter>(PI_CompatibilityManagement);
 	}
 
 	private async void panelItem1_OnClick(object sender, MouseEventArgs e)
