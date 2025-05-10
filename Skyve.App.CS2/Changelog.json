@@ -1,23 +1,72 @@
 [
   {
+    "Stable": true,
+    "Beta": false,
+    "Version": "1.0.0",
+    "Date": "2025-05-10",
+    "Tagline": "The First Stable Release!",
+    "ChangeGroups": [
+      {
+        "Name": "Changes compared to Beta v0.16",
+        "Changes": [
+          "Added a Package Type filter to the package list pages.",
+          "Added Share, deactivate, and delete buttons to the single Playset page.",
+          "Added a 'Maps and Savegames' content tab. Removed maps and savegames from the assets tab.",
+          "Added the compatibility notification on the PDX Mods dashboard widgets.",
+          "Added two tutorial notifications for removing mods from your playset and clearing filters.",
+          "Improved the UI of the playsets page with a slight update to the playset cards and improvements to the top bar buttons.",
+          "Improved the UX when selecting a backup in the Backup Center tab.",
+          "Improved tooltips in the package list pages.",
+          "Improved the differentiation between 'code mods' and 'assets' throughout the app.",
+          "Improved the FileSystem file in log reports, and added the Skyve version as a file in the log report.",
+          "Skyve will now only require itself in your active playset if no other playset includes it.",
+          "Fixed the mod names overflowing on the PDX Mods dashboard widgets.",
+          "Fixed the 'Playsets' tab in the mod page not always showing the selected version in each playset.",
+          "Fixed the playsets page not remembering the sorting and view style throughout sessions.",
+          "Fixed playsets' mod count and total size not always reflecting the correct values.",
+          "Fixed snoozes not persisting throughout sessions.",
+          "Updated translations."
+        ]
+      }
+    ]
+  },
+  {
     "Stable": false,
     "Beta": true,
     "Version": "1.0.0",
-    "Date": "2025-04-25",
-    "Tagline": "First Stable Release!",
+    "Date": "2025-05-10",
+    "Tagline": "Stable Release!",
     "ChangeGroups": [
       {
-        "Name": "Changes compared to v0.16.0",
+        "Name": "The New",
         "Changes": [
-          "Added the compatibility notification on the PDX Mods dashboard widgets.",
-          "Fixed the mod names overflowing on the PDX Mods dashboard widgets.",
+          "Added a Package Type filter to the package list pages.",
+          "Added Share, deactivate, and delete buttons to the single Playset page.",
           "Added a 'Maps and Savegames' content tab. Removed maps and savegames from the assets tab.",
-          "Added two tutorial notifications for removing mods from your playset and clearing filters.",
-          "Improved the differentiation between code mods and 'assets' throughout the app.",
+          "Added the compatibility notification on the PDX Mods dashboard widgets.",
+          "Added two tutorial notifications for removing mods from your playset and clearing filters."
+        ]
+      },
+      {
+        "Name": "The Changed",
+        "Changes": [
+          "Improved the UI of the playsets page with a slight update to the playset cards and improvements to the top bar buttons.",
           "Improved the UX when selecting a backup in the Backup Center tab.",
-          "Improved tooltips in the content pages.",
+          "Improved tooltips in the package list pages.",
+          "Improved the differentiation between 'code mods' and 'assets' throughout the app.",
+          "Improved the FileSystem file in log reports, and added the Skyve version as a file in the log report.",
           "Skyve will now only require itself in your active playset if no other playset includes it.",
-          "Fixed the 'Playsets' tab in the mod page not always showing the selected version in each playset."
+          "Updated translations."
+        ]
+      },
+      {
+        "Name": "The Fixed",
+        "Changes": [
+          "Fixed the mod names overflowing on the PDX Mods dashboard widgets.",
+          "Fixed the 'Playsets' tab in the mod page not always showing the selected version in each playset.",
+          "Fixed the playsets page not remembering the sorting and view style throughout sessions.",
+          "Fixed playsets' mod count and total size not always reflecting the correct values.",
+          "Fixed snoozes not persisting throughout sessions."
         ]
       }
     ]

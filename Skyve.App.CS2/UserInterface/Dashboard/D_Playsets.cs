@@ -2,6 +2,7 @@
 using Skyve.App.UserInterface.Dashboard;
 
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
@@ -128,6 +129,13 @@ internal class D_Playsets : IDashboardItem
 		DrawSection(e, applyDrawing, ref preferredHeight, "Playsets", Locale.Playset.Plural);
 	}
 
+	protected override void DrawBackground(PaintEventArgs e, Rectangle clipRectangle)
+	{
+		var hasColor = _playsetManager.CurrentCustomPlayset?.Color is not null;
+
+		e.Graphics.FillRoundedRectangleWithShadow(clipRectangle, BorderRadius, Padding.Right, shadow: hasColor ? Color.FromArgb(10, _playsetManager.CurrentCustomPlayset!.Color!.Value) : null, addOutline: hasColor||!MovementBlocked);
+	}
+
 	private void Draw(PaintEventArgs e, bool applyDrawing, ref int preferredHeight, bool horizontal)
 	{
 		if (Loading && !loadingFromGameLaunch)
@@ -163,7 +171,7 @@ internal class D_Playsets : IDashboardItem
 			if (applyDrawing)
 			{
 				var backColor = _playsetManager.CurrentCustomPlayset.Color ?? _playsetManager.CurrentCustomPlayset.GetThumbnail()?.GetAverageColor() ?? FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? 5 : -4, Sat: 5);
-				using var colorBrush = Gradient(backColor, 3.5f);
+				using var colorBrush = Gradient(backColor, 2.5f);
 				e.Graphics.FillRoundedRectangle(colorBrush, new Rectangle(e.ClipRectangle.X + Margin.Left, preferredHeight, e.ClipRectangle.Width - Margin.Horizontal, Margin.Top), Margin.Top / 2);
 			}
 
@@ -184,7 +192,7 @@ internal class D_Playsets : IDashboardItem
 
 		preferredHeight -= Margin.Top;
 
-		var preferredSize = horizontal ? 115 : 100;
+		var preferredSize = horizontal ? 125 : 100;
 		var columns = (int)Math.Max(1, Math.Floor((e.ClipRectangle.Width - Margin.Left) / (preferredSize * UI.FontScale)));
 		var columnWidth = (e.ClipRectangle.Width - Margin.Left) / columns;
 		var height = (horizontal ? 0 : columnWidth) + UI.Scale(35);
@@ -216,7 +224,9 @@ internal class D_Playsets : IDashboardItem
 		var banner = customPlayset.GetThumbnail();
 
 		var backColor = customPlayset.Color ?? banner?.GetThemedAverageColor() ?? FormDesign.Design.BackColor.Tint(Lum: FormDesign.Design.IsDarkTheme ? 5 : -4, Sat: 5);
-		using var backBrush = Gradient(backColor, rect, customPlayset.Color.HasValue ? 3F : 1F);
+		using var backBrush = Gradient(backColor.MergeColor(BackColor, 80), rect, customPlayset.Color.HasValue ? 3F : 1F);
+
+		e.Graphics.FillRoundedRectangleWithShadow(rect, Margin.Left / 2, UI.Scale(6) , Color.Empty, playset.Equals(_playsetManager.CurrentPlayset) ? Color.FromArgb(10	, FormDesign.Design.GreenColor): Color.FromArgb(5, backColor.MergeColor(FormDesign.Design.ForeColor, 75)), playset.Equals(_playsetManager.CurrentPlayset));
 
 		e.Graphics.FillRoundedRectangle(backBrush, rect, Margin.Left / 2);
 
@@ -235,49 +245,26 @@ internal class D_Playsets : IDashboardItem
 		}
 		else
 		{
-			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(5), backColor);
+			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(5), backColor.MergeColor(BackColor, 80));
 		}
 
 		if (HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))
 		{
-			using var brush = new SolidBrush(Color.FromArgb(40, onBannerColor));
+			using var brush = new SolidBrush(Color.FromArgb(30, onBannerColor));
 
-			e.Graphics.FillRoundedRectangle(brush, bannerRect, Margin.Left / 2);
+			e.Graphics.FillRoundedRectangle(brush, rect, Margin.Left / 2);
 		}
 
-		if (playset.Equals(_playsetManager.CurrentPlayset))
-		{
-			if (horizontal)
-			{
-				using var greenPen = new Pen(FormDesign.Design.GreenColor, (float)(2 * UI.FontScale));
-
-				e.Graphics.DrawRoundedRectangle(greenPen, rect, Margin.Left / 2);
-			}
-			else
-			{
-				var activeRect = new Rectangle(bannerRect.X + (Margin.Left / 2), bannerRect.Bottom - UI.Scale(16) - (Margin.Bottom / 2), bannerRect.Width - Margin.Left, UI.Scale(16));
-				using var greenBrush = new SolidBrush(FormDesign.Design.GreenColor);
-
-				e.Graphics.FillRoundedRectangle(greenBrush, activeRect, activeRect.Height / 4);
-
-				var text = Locale.ActivePlayset.One.ToUpper();
-				using var smallFont = UI.Font(7F, FontStyle.Bold).FitTo(text, activeRect.Pad(Margin.Left / 3), e.Graphics);
-				using var format = new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center };
-				using var textBrush2 = new SolidBrush(FormDesign.Design.GreenColor.GetTextColor());
-
-				e.Graphics.DrawString(text, smallFont, textBrush2, activeRect, format);
-			}
-		}
-
-		var textRect = horizontal ? rect.Pad(Margin.Left + bannerRect.Width, Margin.Left / 2, Margin.Left / 2, Margin.Left / 2) : rect.Pad(Margin.Left / 2, bannerRect.Height + Margin.Top, Margin.Left / 2, Margin.Left / 2);
+		var textRect = horizontal ? rect.Pad(Margin.Left /2+ bannerRect.Width, Margin.Left / 2, Margin.Left / 2, Margin.Left / 2) : rect.Pad(Margin.Left / 2, bannerRect.Height + Margin.Top, Margin.Left / 2, Margin.Left / 2);
 		using var textBrush = new SolidBrush(onBannerColor);
 		using var textFont = UI.Font(horizontal ? 8.5F : 8.75F, FontStyle.Bold).FitTo(playset.Name, textRect, e.Graphics);
 		using var centerFormat = new StringFormat { LineAlignment = StringAlignment.Center };
 
-		e.Graphics.DrawString(playset.Name, textFont, textBrush, textRect, horizontal ? centerFormat : null);
-
-		if (!horizontal)
+		if (horizontal)
+		e.Graphics.DrawHighResText(playset.Name, textFont, textBrush, textRect,2, horizontal ? centerFormat : null);
+		else
 		{
+		e.Graphics.DrawString(playset.Name, textFont, textBrush, textRect, horizontal ? centerFormat : null);
 			using var fadedBrush = new SolidBrush(Color.FromArgb(175, onBannerColor));
 			using var smallTextFont = UI.Font(7F);
 

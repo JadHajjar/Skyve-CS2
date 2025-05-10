@@ -215,17 +215,27 @@ internal class ContentManager : IContentManager
 
 		if (savesPackage is not null)
 		{
+#if DEBUG
+			_logger.Debug($"Found built-in saves package: '{savesPackage.LocalData.Folder}'");
+#endif
 			savesPackage.IsBuiltIn = true;
 			packages.Add(savesPackage);
 		}
 
 		if (mapsPackage is not null)
 		{
+#if DEBUG
+			_logger.Debug($"Found built-in maps package: '{mapsPackage.LocalData.Folder}'");
+#endif
 			mapsPackage.IsBuiltIn = true;
 			packages.Add(mapsPackage);
 		}
 
+		_logger.Info("Getting all packages from the workshop..");
+
 		var subscribedItems = await _workshopService.GetLocalPackages();
+
+		_logger.Info($"Found {subscribedItems.Count} workshop packages");
 
 		foreach (var mod in subscribedItems.Where(x => x.LocalData is not null))
 		{
@@ -284,7 +294,10 @@ internal class ContentManager : IContentManager
 			var isCodeMod = _modUtil.GetModInfo(folder, out var modDll, out var version);
 			IAsset[] assets;
 
-			try { assets = _assetUtil.GetAssets(folder, withSubDirectories).ToArray(); }
+			try 
+			{
+				assets = _assetUtil.GetAssets(folder, withSubDirectories).ToArray();
+			}
 			catch { assets = []; }
 
 			if (pdxMod is not null)

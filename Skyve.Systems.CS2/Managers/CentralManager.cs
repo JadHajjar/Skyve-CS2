@@ -321,8 +321,8 @@ internal class CentralManager : ICentralManager
 
 	public async Task UpdateSkyveVersionsInPlaysets()
 	{
-#if Stable
-		const ulong MODID = ;
+#if STABLE
+		const ulong MODID = 75804;
 #else
 		const ulong MODID = 75804;
 #endif

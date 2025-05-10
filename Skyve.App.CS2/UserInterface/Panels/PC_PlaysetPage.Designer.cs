@@ -17,6 +17,7 @@ partial class PC_PlaysetPage
 	protected override void Dispose(bool disposing)
 	{
 		_notifier.PlaysetChanged -= Notifier_PlaysetChanged;
+		_notifier.PlaysetUpdated -= Notifier_PlaysetUpdated;
 
 		if (disposing && (components != null))
 		{

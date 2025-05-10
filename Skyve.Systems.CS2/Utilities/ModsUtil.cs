@@ -82,6 +82,7 @@ internal class ModsUtil : IModUtil
 					, new GenericPackageIdentity { Id = (ulong)mod.Id, Name = mod.Name }
 					, item.ModIsEnabled
 					, item.Version);
+
 			}
 		}
 
@@ -184,7 +185,7 @@ internal class ModsUtil : IModUtil
 
 		if (!value)
 		{
-			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this, playsetId));
 		}
 
 		await SetLocalModIncluded(mods.AllWhere(x => x.Id <= 0 && IsIncluded(x, playset) != value), playset, value);
@@ -275,7 +276,7 @@ internal class ModsUtil : IModUtil
 
 		if (!value)
 		{
-			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this));
+			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this, playsetId));
 		}
 
 		await SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), playset, value);
@@ -723,5 +724,11 @@ internal class ModsUtil : IModUtil
 		_notifier.OnPlaysetChanged();
 
 		return result;
+	}
+
+	public bool IsIncludedInOtherPlaysets(ILocalPackageIdentity mod, int? playsetId = null, bool withVersion = true, bool andEnabled = false)
+	{
+		return modConfig.GetIncludedPlaysets(mod.Id, withVersion ? mod.Version : null, andEnabled)
+			.Any(x => x != (playsetId ?? currentPlayset));
 	}
 }

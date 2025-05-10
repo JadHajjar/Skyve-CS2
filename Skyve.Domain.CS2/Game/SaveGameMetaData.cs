@@ -2,7 +2,7 @@
 public class SaveGameMetaData
 {
 	public string? Preview { get; set; }
-	public string? Theme { get; set; }
+	public string Theme { get; set; } = null!;
 	public string? CityName { get; set; }
 	public int Population { get; set; }
 	public int Money { get; set; }

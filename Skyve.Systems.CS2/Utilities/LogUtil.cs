@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -176,9 +177,33 @@ internal class LogUtil : ILogUtil
 		CreateEntry(zipArchive, "ModsList.txt", _packageManager.Packages.Where(x => _packageUtil.IsEnabled(x)).ListStrings(x => x.IsLocal() ? $"Local: {x.Name} {x.VersionName}" : $"{x.Id}: {x.Name} {x.VersionName}", CrossIO.NewLine));
 
 		var startFolderLength = _settings.FolderSettings.AppDataPath.Length;
-		CreateEntry(zipArchive, "FileSystem.txt", _settings.FolderSettings.AppDataPath + "\r\n\r\n" + string.Join("\r\n", Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*", SearchOption.AllDirectories).Select(x => x.Substring(startFolderLength))));
+		CreateEntry(zipArchive, "FileSystem.txt", _settings.FolderSettings.AppDataPath + "\r\n\r\n" + string.Join("\r\n", EnumerateFilesystemFiles(startFolderLength)));
+
+		var assembly = Assembly.GetEntryAssembly();
+		var details = assembly.GetName();
+
+#if STABLE
+		CreateEntry(zipArchive,$"Skyve Stable v{details.Version.GetString()}", string.Empty);
+#elif Release
+		CreateEntry(zipArchive,$"Skyve Beta v{details.Version.GetString()}", string.Empty);
+#else
+		CreateEntry(zipArchive, $"Skyve Debug v{details.Version.GetString()}", string.Empty);
+#endif
 
 		AddCompatibilityReport(zipArchive);
+	}
+
+	private IEnumerable<string> EnumerateFilesystemFiles(int startFolderLength)
+	{
+		foreach (var item in Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*", SearchOption.AllDirectories))
+		{
+			var text = item.Substring(startFolderLength);
+
+			if (!text.StartsWith(@"\.cache\Modding") && !text.StartsWith(@"\ModsData\AssetIconLibrary") && !text.StartsWith(@"\ModsData\AssetPacksManager"))
+			{
+				yield return text;
+			}
+		}
 	}
 
 	private void AddCompatibilityReport(ZipArchive zipArchive)

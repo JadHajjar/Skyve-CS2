@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Skyve.Domain.CS2.Utilities;
@@ -127,6 +128,31 @@ public class ModStateCollection
 		}
 
 		return null;
+	}
+
+	public IEnumerable<int> GetIncludedPlaysets(ulong modId, string? version, bool andEnabled)
+	{
+		foreach (var item in _enabledConfig)
+		{
+			if (!_enabledConfig.TryGetValue(item.Key, out var dic)
+				|| !dic.TryGetValue(modId, out var enabled)
+				|| (!enabled && andEnabled))
+			{
+				continue;
+			}
+
+			if (version is not null and not "")
+			{
+				if (!_versionConfig.TryGetValue(item.Key, out var versionDic)
+					|| !versionDic.TryGetValue(modId, out var ver)
+					|| (ver != version && ver != ""))
+				{
+					continue;
+				}
+			}
+
+			yield return item.Key;
+		}
 	}
 
 	public void SetVersion(int playset, ulong modId, string version)

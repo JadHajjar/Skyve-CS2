@@ -189,6 +189,7 @@ internal class PlaysetManager : IPlaysetManager
 			var customPlaysets = new List<ICustomPlayset>();
 			var playsets = await _workshopService.GetPlaysets(!ConnectionHandler.IsConnected || !_notifier.IsPlaysetsLoaded);
 			var activePlayset = await _workshopService.GetActivePlaysetId();
+			var mods = await _workshopService.GetLocalPackages();
 
 			foreach (var item in playsets)
 			{
@@ -217,6 +218,15 @@ internal class PlaysetManager : IPlaysetManager
 					_customPlaysets[item.Id] = item;
 				}
 
+				foreach (var mod in mods)
+				{
+					foreach (var item in mod.Playsets)
+					{
+						_playsets[item.PlaysetId].ModCount++;
+						_playsets[item.PlaysetId].ModSize += mod.Size;
+					}
+				}
+
 				CurrentPlayset = _playsets.TryGet(activePlayset);
 				CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
 			}
@@ -238,10 +248,12 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<bool> RenamePlayset(IPlayset playset, string text)
 	{
-		if (playset == null)
+		if (playset == null || string.IsNullOrWhiteSpace(text))
 		{
 			return false;
 		}
+
+		text = text.Trim();
 
 		if (playset is Playset playset_)
 		{
@@ -337,6 +349,12 @@ internal class PlaysetManager : IPlaysetManager
 
 			await _packageUtil.SetEnabled(playset.LocalMods.Values.Where(x => !x.IsEnabled), false, newPlayset.Id);
 		}
+
+		var customPlayset = GetCustomPlayset(newPlayset) as ExtendedPlayset;
+
+		customPlayset!.BannerBytes = playset.GeneralData?.BannerBytes ?? customPlayset!.BannerBytes;
+		customPlayset!.Color = playset.GeneralData?.Color ?? customPlayset!.Color;
+		customPlayset!.Usage = playset.GeneralData?.Usage ?? customPlayset!.Usage;
 
 		return newPlayset;
 	}
@@ -488,7 +506,7 @@ internal class PlaysetManager : IPlaysetManager
 		return await _workshopService.GetModsInPlayset(playset.Id, true);
 	}
 
-	public async Task<object> GenerateImportPlayset(IPlayset? playset)
+	public async Task<object> GenerateImportPlayset(IPlayset? playset, bool sharing = false)
 	{
 		if (playset is null)
 		{
@@ -496,6 +514,7 @@ internal class PlaysetManager : IPlaysetManager
 		}
 
 		var contents = await GetPlaysetContents(playset!);
+		var customPlayset = sharing ? GetCustomPlayset(playset) as ExtendedPlayset : null;
 
 		return new PdxPlaysetImport
 		{
@@ -504,6 +523,9 @@ internal class PlaysetManager : IPlaysetManager
 			{
 				Id = playset.Id,
 				Name = playset.Name,
+				BannerBytes = customPlayset?.BannerBytes,
+				Color = customPlayset?.Color,
+				Usage = customPlayset?.Usage
 			},
 			SubscribedMods = contents.Where(x => !(_workshopService.GetInfo(x)?.Tags?.Any(x => x.Key is "Map" or "Savegame") ?? false)).ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Id.ToString(), new()
 			{

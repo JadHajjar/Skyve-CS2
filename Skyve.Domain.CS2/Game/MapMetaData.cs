@@ -5,7 +5,7 @@ public class MapMetaData
 	public string? DisplayName { get; set; }
 	public string? Thumbnail { get; set; }
 	public string? Preview { get; set; }
-	public string? Theme { get; set; }
+	public string Theme { get; set; } = null!;
 	public float Cloudiness { get; set; }
 	public float Precipitation { get; set; }
 	public float Latitude { get; set; }

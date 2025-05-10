@@ -37,7 +37,6 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 		ServerSize = (long)mod.Size;
 		Version = mod.Version;
 		VersionName = mod.UserModVersion.IfEmpty(mod.Version);
-		LatestVersion = mod.LatestVersion;
 		SuggestedGameVersion = mod.RequiredGameVersion;
 		Subscribers = mod.SubscriptionsTotal;
 		HasVoted = hasVoted;
@@ -93,7 +92,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
 	bool IWorkshopInfo.IsPartialInfo { get; }
 	bool IPackage.IsBuiltIn { get; }
-	public string? LatestVersion { get; }
+	public string? LatestVersion => Changelog.LastOrDefault()?.VersionId ?? "1";
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements
 	{
 		get

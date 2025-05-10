@@ -57,6 +57,10 @@ internal class AssetsUtil : IAssetUtil
 				continue;
 			}
 
+#if DEBUG
+			_logger.Debug($"Reading asset: {file}..");
+#endif
+
 			ZipArchive archive;
 
 			try
@@ -69,22 +73,35 @@ internal class AssetsUtil : IAssetUtil
 				continue;
 			}
 
+#if DEBUG
+			_logger.Debug($"Asset contains {archive.Entries.Count} items...");
+#endif
+
 			if (getAsset<SaveGameMetaData>(AssetType.SaveGame, ".SaveGameMetadata", out var asset, out var saveData))
 			{
+#if DEBUG
+				_logger.Debug($"SaveGame asset created: {asset!.Name}...");
+#endif
 				asset!.SaveGameMetaData = saveData;
-				asset.Tags = ["SaveGame"];
+				asset.Tags = ["Savegame", saveData!.Theme];
 				yield return asset;
 			}
 			else if (getAsset<MapMetaData>(AssetType.Map, ".MapMetadata", out asset, out var mapData))
 			{
+#if DEBUG
+				_logger.Debug($"Map asset created: {asset!.Name}...");
+#endif
 				asset!.MapMetaData = mapData;
-				asset.Tags = ["Map"];
+				asset.Tags = ["Map", mapData!.Theme];
 				yield return asset;
 			}
 			else
 			{
 				foreach (var entry in archive.Entries)
 				{
+#if DEBUG
+					_logger.Debug($"Working on entry: {entry.Name}...");
+#endif
 					if (entry.FullName.EndsWith(".cid", StringComparison.InvariantCultureIgnoreCase))
 					{
 						using var cidStream = entry.Open();
@@ -110,7 +127,7 @@ internal class AssetsUtil : IAssetUtil
 
 					var typeBuilder = new StringBuilder();
 
-					while (true)
+					for (var i = 0; i < 500; i++)
 					{
 						var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
 
@@ -126,7 +143,7 @@ internal class AssetsUtil : IAssetUtil
 
 					var nameBuilder = new StringBuilder();
 
-					while (true)
+					for (var i = 0; i < 500; i++)
 					{
 						var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
 

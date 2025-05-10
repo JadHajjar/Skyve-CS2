@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Publish>
-  <ModId Value="75804" />
+  <ModId Value="" />
   <DisplayName Value="Skyve [BETA]" />
   <ShortDescription Value="The all-in-one mod manager for Cities: Skylines II and PDX Mods" />
   <LongDescription>
 Skyve is your all-in-one mod manager for Cities: Skylines II and PDX Mods.
 It's a standalone application that you can use without opening the game, and it allows you to manage playsets, download or update your mods, browse PDX Mods, and much more.
 
+This is the BETA version of Skyve, it receives more frequent updates than the stable version, and it may contain bugs or issues that are not present in the stable version.
 
 # Installation
 After adding Skyve to your playset, you will see a new button in the main menu called "Install Skyve".
@@ -28,6 +29,7 @@ Skyve also comes with extensive bulk actions:
 * Subscribe/unsubscribe/enable/disable multiple mods at a time.
 * Add or remove mods from **all** your playsets at the same time.
 * Merge or Exclude another playset's mods from your current playset.
+* Automatic backups of your cities, playsets, and settings.
 
 
 ## Compatibility Management
@@ -79,17 +81,17 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_01.png" />
   <Screenshot Value="Properties/Release/Screenshot_02.png" />
   <Screenshot Value="Properties/Release/Screenshot_03.png" />
+  <Screenshot Value="Properties/Release/Screenshot_04.png" />
+  <Screenshot Value="Properties/Release/Screenshot_05.png" />
   <Screenshot Value="Properties/Release/Screenshot_06.png" />
   <Screenshot Value="Properties/Release/Screenshot_07.png" />
+  <Screenshot Value="Properties/Release/Screenshot_08.png" />
   <Screenshot Value="Properties/Release/Screenshot_09.png" />
   <Screenshot Value="Properties/Release/Screenshot_10.png" />
-  <Screenshot Value="Properties/Release/Screenshot_11.png" />
-  <Screenshot Value="Properties/Release/Screenshot_12.png" />
-  <Screenshot Value="Properties/Release/Screenshot_14.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
   <ModVersion Value="0.16.0" />
-  <GameVersion Value="1.*" />
+  <GameVersion Value="*" />
   <ChangeLog>
 # v0.16.0
 *Beta pre-release of the v1.0 stable update.*

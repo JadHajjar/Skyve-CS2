@@ -23,7 +23,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 	private readonly IPackageUtil _packageUtil;
 	private readonly INotifier _notifier;
 
-	public IPlayset Playset { get; }
+	public IPlayset Playset { get; set; }
 	public ContentList LC_Items { get; }
 	public PlaysetSideControl SideControl { get; }
 
@@ -102,6 +102,15 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		}
 
 		_notifier.PlaysetChanged += Notifier_PlaysetChanged;
+		_notifier.PlaysetUpdated += Notifier_PlaysetUpdated;
+	}
+
+	private void Notifier_PlaysetUpdated()
+	{
+		Playset = _playsetManager.GetPlayset(Playset.Id) ?? Playset;
+
+		SideControl.Playset = Playset;
+		SideControl.Invalidate();
 	}
 
 	private void Notifier_PlaysetChanged()
@@ -343,7 +352,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 		try
 		{
-			var playset = await _playsetManager.GenerateImportPlayset(Playset);
+			var playset = await _playsetManager.GenerateImportPlayset(Playset, true);
 			var path = CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveDataPath, "Playsets", "Shared", $"{Playset.Name} {DateTime.Now:yy-MM-dd}.json");
 
 			Directory.CreateDirectory(Path.GetDirectoryName(path));

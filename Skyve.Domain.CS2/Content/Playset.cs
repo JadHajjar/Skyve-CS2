@@ -17,8 +17,6 @@ public class Playset : IPlayset
 		Id = playset.PlaysetId;
 		Name = playset.Name;
 		DateUpdated = playset.Updated ?? DateTime.MinValue;
-		ModCount = playset.ModsCount;
-		ModSize = playset.ModsSize;
 		ThumbnailUrl = playset.DisplayImagePath;
 	}
 
@@ -31,8 +29,8 @@ public class Playset : IPlayset
 	public int Id { get; }
 	public string? Name { get; set; }
 	public DateTime DateUpdated { get; }
-	public int ModCount { get; }
-	public ulong ModSize { get; }
+	public int ModCount { get; set; }
+	public ulong ModSize { get; set; }
 	public string? ThumbnailUrl { get; }
 	public bool Temporary { get; }
 

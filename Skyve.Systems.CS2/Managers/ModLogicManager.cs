@@ -57,7 +57,7 @@ internal class ModLogicManager : IModLogicManager
 		return _modCollection.GetCollection(key, out _) ?? [];
 	}
 
-	public bool IsRequired(ILocalPackageIdentity? mod, IModUtil modUtil)
+	public bool IsRequired(ILocalPackageIdentity? mod, IModUtil modUtil, int? playsetId)
 	{
 		if (mod is null)
 		{
@@ -83,13 +83,13 @@ internal class ModLogicManager : IModLogicManager
 
 		foreach (var modItem in list)
 		{
-			if (modItem.LocalData != mod && modUtil.IsIncluded(modItem) && modUtil.IsEnabled(modItem))
+			if (modItem.LocalData?.Equals(mod.GetLocalPackage()) == false && modUtil.IsEnabled(modItem, playsetId, withVersion: false))
 			{
 				return false;
 			}
 		}
 
-		return true;
+		return !modUtil.IsIncludedInOtherPlaysets(mod, playsetId, withVersion: false, andEnabled: true);
 	}
 
 	public bool IsForbidden(ILocalPackageIdentity? mod)

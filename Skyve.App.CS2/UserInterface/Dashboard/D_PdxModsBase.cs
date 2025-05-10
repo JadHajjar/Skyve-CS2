@@ -15,6 +15,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 	private static readonly Dictionary<string, DateTime> _lastLoadTimes = [];
 	private static readonly string[] _tags = ["Code Mod", "Map", "Savegame", "All"];
 	private string selectedTag;
+	private int maxHeight;
 
 	protected readonly IWorkshopService WorkshopService;
 	protected readonly IUserService UserService;
@@ -77,6 +78,11 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		using var fontSmallBold = UI.Font(6.75F, FontStyle.Bold);
 
 		var tagRect = new Rectangle(e.ClipRectangle.X + BorderRadius, preferredHeight, 0, 0);
+
+		if (!applyDrawing)
+		{
+			maxHeight = 0;
+		}
 
 		foreach (var item in _tags)
 		{
@@ -141,25 +147,27 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		var columnWidth = (e.ClipRectangle.Width - Margin.Left) / columns;
 		var height = horizontal ? UI.Scale(34) : (columnWidth + UI.Scale(42));
 
+		maxHeight = Math.Max(height, maxHeight);
+
 		for (var i = 0; i < Math.Min(packages.Count, horizontal ? 12 : (columns < 9 ? (columns * 2) : columns)); i++)
 		{
 			if (i > 0 && (i % columns) == 0)
 			{
-				preferredHeight += height;
+				preferredHeight += maxHeight;
 			}
 
-			var rect = new Rectangle(e.ClipRectangle.X + (Margin.Left / 2) + (i % columns * columnWidth), preferredHeight, columnWidth, height);
+			var rect = new Rectangle(e.ClipRectangle.X + (Margin.Left / 2) + (i % columns * columnWidth), preferredHeight, columnWidth, maxHeight);
 
-			if (applyDrawing)
+			if (horizontal)
 			{
-				if (horizontal)
+				if (applyDrawing)
 				{
 					DrawHorizontalMod(e, packages[i], rect);
 				}
-				else
-				{
-					DrawGridMod(e, packages[i], rect);
-				}
+			}
+			else
+			{
+				maxHeight = Math.Max(maxHeight, DrawGridMod(e, packages[i], rect, applyDrawing));
 			}
 		}
 
@@ -190,7 +198,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		if (notification > NotificationType.Info)
 		{
 			using var brush = new SolidBrush(backColor = notification.GetColor().MergeColor(backColor, 30));
-			using var icon = notification.GetIcon(true).Get(rect.Height - Margin.Left).Color(notification.GetColor());
+			using var icon = notification.GetIcon(true).Get(rect.Height - Margin.Vertical).Color(notification.GetColor());
 
 			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, 0).Pad(HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation) ? 0 : Margin.Left / 4), Margin.Left / 2);
 
@@ -242,7 +250,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		}
 	}
 
-	private void DrawGridMod(PaintEventArgs e, IWorkshopInfo workshopInfo, Rectangle rect)
+	private int DrawGridMod(PaintEventArgs e, IWorkshopInfo workshopInfo, Rectangle rect, bool applyDrawing)
 	{
 		rect.Height -= UI.Scale(3);
 
@@ -251,7 +259,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		var bannerRect = rect.Pad(Margin.Top / 2).Align(new Size(rect.Width - (Margin.Top * 3 / 2), rect.Width - (Margin.Top * 3 / 2)), ContentAlignment.TopLeft);
 		var notification = workshopInfo.GetCompatibilityInfo().GetNotification();
 
-		if (notification > NotificationType.Info)
+		if (applyDrawing && notification > NotificationType.Info)
 		{
 			using var brush = new SolidBrush(backColor = notification.GetColor().MergeColor(backColor, 30));
 			using var font = UI.Font(6.5F);
@@ -267,7 +275,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			_buttonActions[Rectangle.FromLTRB(rect.Left, rect.Bottom - font.Height, rect.Right, rect.Bottom)] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo, true);
 		}
 
-		if (banner is not null)
+		if (applyDrawing && banner is not null)
 		{
 			e.Graphics.DrawRoundedImage(banner, bannerRect, UI.Scale(4), backColor);
 		}
@@ -280,17 +288,19 @@ internal abstract class D_PdxModsBase : IDashboardItem
 
 		textRect.Y += DrawTextAndTags(e, workshopInfo, textBrush, backColor, textRect);
 
-		DrawVersionAndAuthor(e, workshopInfo, fadedBrush, authorBrush, backColor, textRect);
+		textRect.Y += DrawVersionAndAuthor(e, workshopInfo, fadedBrush, authorBrush, backColor, textRect);
 
 		_buttonActions[rect] = () => ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
 		_buttonRightClickActions[rect] = () => RightClick(workshopInfo);
 
-		if (HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))
+		if (applyDrawing && HoverState.HasFlag(HoverState.Hovered) && rect.Contains(CursorLocation))
 		{
 			using var brush = new SolidBrush(Color.FromArgb(40, FormDesign.Design.ForeColor));
 
-			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, notification > NotificationType.Info ? 0 : UI.Scale(14)), Margin.Left / 2);
+			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, notification > NotificationType.Info ? 0 : (rect.Bottom- textRect.Y)), Margin.Left / 2);
 		}
+
+		return textRect.Y - rect.Y + (notification > NotificationType.Info ?  UI.Scale(20):0);
 	}
 
 	private int DrawTextAndTags(PaintEventArgs e, IWorkshopInfo workshopInfo, SolidBrush textBrush, Color backColor, Rectangle rect)
@@ -327,7 +337,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		return (int)(rect.Height * factor);
 	}
 
-	private void DrawVersionAndAuthor(PaintEventArgs e, IWorkshopInfo workshopInfo, SolidBrush fadedBrush, SolidBrush authorBrush, Color backColor, Rectangle rect)
+	private int DrawVersionAndAuthor(PaintEventArgs e, IWorkshopInfo workshopInfo, SolidBrush fadedBrush, SolidBrush authorBrush, Color backColor, Rectangle rect)
 	{
 		var isVersion = workshopInfo.IsCodeMod();
 		var versionText = isVersion ? "v" + workshopInfo.VersionName : workshopInfo.ServerSize.SizeString(0);
@@ -354,7 +364,7 @@ internal abstract class D_PdxModsBase : IDashboardItem
 
 		if (totalWidth == 0)
 		{
-			return;
+			return 0;
 		}
 
 		var factor = Math.Min(1, (double)rect.Width / totalWidth);
@@ -362,6 +372,8 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		e.Graphics.SetClip(rect);
 		e.Graphics.DrawImage(highResBmp, new Rectangle(rect.X, rect.Y, (int)(highResBmp.Width * factor), (int)(rect.Height * factor)));
 		e.Graphics.ResetClip();
+
+		return (int)(rect.Height * factor);
 	}
 
 	protected abstract void ViewMore();

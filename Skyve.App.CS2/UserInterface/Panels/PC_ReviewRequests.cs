@@ -219,4 +219,12 @@ public partial class PC_ReviewRequests : PanelContent
 
 		return base.ProcessCmdKey(ref msg, keyData);
 	}
+
+	private void B_ManagePackage_Click(object sender, EventArgs e)
+	{
+		if (CurrentPackage is not null)
+		{
+			Form.PushPanel(new PC_CompatibilityManagement([CurrentPackage]));
+		}
+	}
 }

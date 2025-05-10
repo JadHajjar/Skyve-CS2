@@ -1,4 +1,5 @@
-﻿using Skyve.Domain.Systems;
+﻿using Skyve.Domain.Enums;
+using Skyve.Domain.Systems;
 
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,9 @@ public class PdxPlaysetImport : ITemporaryPlayset
 	{
 		public int Id { get; set; }
 		public string? Name { get; set; }
+        public byte[]? BannerBytes { get; set; }
+        public Color? Color { get; set; }
+		public PackageUsage? Usage { get; set; }
 	}
 
 	public class ModInfo : IPlaysetPackage
@@ -41,8 +45,8 @@ public class PdxPlaysetImport : ITemporaryPlayset
 	int IPlayset.Id => GeneralData?.Id ?? -1;
 	string? IPlayset.Name => GeneralData?.Name;
 	DateTime IPlayset.DateUpdated { get; } = DateTime.Now;
-	int IPlayset.ModCount => SubscribedMods?.Count ?? 0;
-	ulong IPlayset.ModSize { get; }
+	int IPlayset.ModCount { get => SubscribedMods?.Count ?? 0; set { } }
+	ulong IPlayset.ModSize { get; set; }
 
 	bool IThumbnailObject.GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{

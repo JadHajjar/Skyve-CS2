@@ -564,8 +564,10 @@ public partial class CommentControl : SlickControl
 	{
 		public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 		{
-			thumbnailUrl = $"https://forum.paradoxplaza.com/forum/attachments/{id}";
-			thumbnail = imageService.GetImage(thumbnailUrl, true, $"Attachment_{id}.jpeg").Result;
+			//thumbnailUrl = $"https://forum.paradoxplaza.com/forum/attachments/{id}";
+			//thumbnail = imageService.GetImage(thumbnailUrl, true, $"Attachment_{id}.jpeg").Result;
+			thumbnailUrl = null;
+			thumbnail = null;
 
 			return true;
 		}

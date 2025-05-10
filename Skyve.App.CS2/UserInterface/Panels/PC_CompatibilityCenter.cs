@@ -18,6 +18,9 @@ public partial class PC_CompatibilityCenter : PanelContent
 		ServiceCenter.Get(out _skyveApiUtil);
 
 		InitializeComponent();
+
+		AnnouncementDateFrom.Value = DateTime.Today;
+		AnnouncementDateTo.Value = DateTime.Today.AddDays(7);
 	}
 
 	protected override async Task<bool> LoadDataAsync()
@@ -76,13 +79,15 @@ public partial class PC_CompatibilityCenter : PanelContent
 
 		AnnouncementButton.Loading = true;
 
-		var result = await _skyveApiUtil.CreateAnnouncement(new AnnouncementData
+		var announcementData = new AnnouncementData
 		{
 			Title = AnnouncementTitle.Text,
 			Description = AnnouncementText.Text,
 			Date = AnnouncementDateFrom.Value,
 			EndDate = AnnouncementDateTo.Value,
-		});
+		};
+
+		var result = await _skyveApiUtil.CreateAnnouncement(announcementData);
 
 		AnnouncementButton.Loading = false;
 
@@ -96,6 +101,7 @@ public partial class PC_CompatibilityCenter : PanelContent
 
 		AnnouncementButton.ImageName = "Check";
 
+		await ServiceCenter.Get<ISkyveDataManager>().DownloadData();
 		await Task.Delay(3000);
 
 		AnnouncementButton.ImageName = "Send";

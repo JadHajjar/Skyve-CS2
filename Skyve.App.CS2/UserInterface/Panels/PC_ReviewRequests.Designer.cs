@@ -86,7 +86,7 @@ partial class PC_ReviewRequests
 			this.B_DeleteRequests.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon1.Name = "Trash";
 			this.B_DeleteRequests.ImageName = dynamicIcon1;
-			this.B_DeleteRequests.Location = new System.Drawing.Point(279, 403);
+			this.B_DeleteRequests.Location = new System.Drawing.Point(283, 403);
 			this.B_DeleteRequests.Name = "B_DeleteRequests";
 			this.B_DeleteRequests.Size = new System.Drawing.Size(179, 32);
 			this.B_DeleteRequests.SpaceTriggersClick = true;
@@ -101,12 +101,13 @@ partial class PC_ReviewRequests
 			this.B_ManagePackage.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon2.Name = "Link";
 			this.B_ManagePackage.ImageName = dynamicIcon2;
-			this.B_ManagePackage.Location = new System.Drawing.Point(464, 403);
+			this.B_ManagePackage.Location = new System.Drawing.Point(468, 403);
 			this.B_ManagePackage.Name = "B_ManagePackage";
-			this.B_ManagePackage.Size = new System.Drawing.Size(151, 32);
+			this.B_ManagePackage.Size = new System.Drawing.Size(147, 32);
 			this.B_ManagePackage.SpaceTriggersClick = true;
 			this.B_ManagePackage.TabIndex = 22;
 			this.B_ManagePackage.Text = "ManagePackage";
+			this.B_ManagePackage.Click += new System.EventHandler(this.B_ManagePackage_Click);
 			// 
 			// panel1
 			// 
@@ -122,12 +123,12 @@ partial class PC_ReviewRequests
 			// 
 			// P_Requests
 			// 
-			this.P_Requests.Location = new System.Drawing.Point(0, 0);
-		this.P_Requests.MaximizeSpaceUsage = true;
-			this.P_Requests.SmartAutoSize = true;
 			this.P_Requests.ColumnWidth = 300;
-		this.P_Requests.Name = "P_Requests";
+			this.P_Requests.Location = new System.Drawing.Point(0, 0);
+			this.P_Requests.MaximizeSpaceUsage = true;
+			this.P_Requests.Name = "P_Requests";
 			this.P_Requests.Size = new System.Drawing.Size(0, 0);
+			this.P_Requests.SmartAutoSize = true;
 			this.P_Requests.TabIndex = 1;
 			// 
 			// slickScroll1
@@ -272,7 +273,6 @@ partial class PC_ReviewRequests
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
 			this.base_P_Side.ResumeLayout(false);
 			this.base_TLP_Side.ResumeLayout(false);
 			this.base_TLP_Side.PerformLayout();
