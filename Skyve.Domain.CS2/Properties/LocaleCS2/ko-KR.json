@@ -33,7 +33,7 @@
   },
   "IncludeThisItemInAllPlaysets": {
     "One": "모든 PLAYSET에 추가하기",
-    "Plural": "Add the selected items to all your playsets"
+    "Plural": "선택된 항목을 플레이어의 모든 프로필세트에 추가하기"
   },
   "ExcludeThisItemInAllPlaysets": {
     "One": "모든 PLAYSET에서 제거",
@@ -44,7 +44,7 @@
   "PackageIsIncomplete": "The local size of '{0}' ({1}) is different than PDX Mods' {2}",
   "OpenCitiesAppData": "Cities Skylines 2의 AppData 폴더 열기",
   "ResetSteamCache": "PDX 모드 캐시 지우기",
-  "ParadoxLoginFailedTitle": "Could not log you in to PDX Mods",
+  "ParadoxLoginFailedTitle": "패러독스 모드에 로그인 할 수 없었습니다",
   "ParadoxLoginFailedNoConnection": "인터넷이 연결되지 않았습니다. 연결 상태를 확인하고 여기를 클릭하여 다시 시도하십시오.",
   "ParadoxLoginFailedBadCredentials": "저장된 닉네임/비밀번호로 로그인에 실패하였습니다. 여기를 클릭하여 로그인 정보를 업데이트 하십시오.",
   "ParadoxLoginFailedEmpty": "현재 세션이 만료된 것으로 보입니다. 게임을 실행하여 로그인을 다시 하거나, Skyve를 통해 로그인하려면 여기를 클릭하세요.",
@@ -57,8 +57,8 @@
   },
   "LoginToParadox": "Paradox에 로그인",
   "LoginFailed": "로그인에 실패했습니다. 이메일 및 비밀번호를 정확하게 입력하거나 나중에 다시 시도하십시오.",
-  "RememberMeInfo": "* Your credentials will be encrypted and saved to your computer.",
-  "LoginDisclaimer": "The login process is securely handled through Paradox services and no data is shared with Skyve.",
+  "RememberMeInfo": "* 로그인 정보는 암호화되어 자신의 컴퓨터에 저장됩니다.",
+  "LoginDisclaimer": "로그인 과정은 패러독스를 통해 안전하게 다뤄지며 Skyve와는 정보를 공유하지 않습니다.",
   "DropNewPlayset": "PLAYSET 파일을 가져오려면 여기에 놓거나 선택하세요",
   "FilterIncludedByDefault": "Enable 'Included' filter for local content by default",
   "FilterIncludedByDefault_Tip": "Only shows local content that are included in your active playset by default.",
@@ -76,7 +76,7 @@
   "DeveloperMode": "개발자 모드 활성화",
   "UIDeveloperMode": "개발자 모드 UI 활성화",
   "LogsToPlayerLog": "Player.log에 로그 복사",
-  "InvalidFolderSettings": "Invalid setup detected",
+  "InvalidFolderSettings": "유효하지 않은 설정 감지됨",
   "InvalidFolderSettingsInfo": "Skyve was not able to properly detect Cities: Skylines II's data folder.\r\n\r\nClick here to manually select the data folder.",
   "SkyvenotSetUpInfo": "Skyve was not set up yet. Please launch Cities: Skylines II with Skyve enabled to complete the setup.\r\n\r\nMake sure mods load successfully, and if not, try creating a new playset with only Skyve included in it.",
   "InvalidFolderSettingsFail": "선택된 경로는 올바르지 않습니다. AppData의 'Cities Skylines II' 폴더를 선택하십시오.",
@@ -150,32 +150,32 @@
   "TotalBackupSize": "Total Backups Size",
   "Tag_Static Object": "프롭",
   "Tag_Building": "건물",
-  "Tag_Building Extension": "Building Extension",
-  "Tag_Zone": "Zone",
-  "Tag_Asset Pack": "Asset Pack",
+  "Tag_Building Extension": "건물 확장",
+  "Tag_Zone": "구역",
+  "Tag_Asset Pack": "에셋 팩",
   "Backup_SaveGames": {
-    "One": "Savegame",
-    "Plural": "{0} savegames"
+    "One": "세이브파일",
+    "Plural": "세이브파일 {0}개"
   },
   "Backup_Maps": {
-    "One": "Map",
-    "Plural": "{0} maps"
+    "One": "맵",
+    "Plural": "맵 {0}개"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
-    "Plural": "{0} playsets"
+    "One": "플레이세트",
+    "Plural": "플레이세트 {0}개"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "설정 파일",
+    "Plural": "설정 파일 {0}개"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
-    "Plural": "{0} mod settings folders"
+    "One": "모드 설정 폴더",
+    "Plural": "모드 설정 폴더 {0}개"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "로컬 모드",
+    "Plural": "로컬 모드 {0}개"
   },
   "ParadoxContextFailed": "Paradox backend failed to load",
   "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
@@ -187,7 +187,7 @@
   "NoSettingsBackup": "No available settings backup available",
   "RestoreLatestSettings": "Restore latest settings backup",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
+    "One": "망가진 설정 파일 감지됨",
     "Plural": "{0} Corrupted Settings Files Detected"
   },
   "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
