@@ -238,7 +238,7 @@ internal class PlaysetManager : IPlaysetManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Could not load local playsets.");
+			_logger.Exception(ex, memberName: $"Could not load local playsets.");
 		}
 
 		_notifier.IsPlaysetsLoaded = true;
@@ -399,7 +399,7 @@ internal class PlaysetManager : IPlaysetManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Failed to apply included status '{value}' to package: '{packages}'");
+			_logger.Exception(ex, memberName: $"Failed to apply included status '{value}' to package: '{packages}'");
 		}
 	}
 
@@ -426,7 +426,7 @@ internal class PlaysetManager : IPlaysetManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Failed to apply included status '{value}' to package: '{packages}'");
+			_logger.Exception(ex, memberName: $"Failed to apply included status '{value}' to package: '{packages}'");
 		}
 	}
 
@@ -447,7 +447,7 @@ internal class PlaysetManager : IPlaysetManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to create shortcut");
+			_logger.Exception(ex, memberName: "Failed to create shortcut");
 		}
 	}
 

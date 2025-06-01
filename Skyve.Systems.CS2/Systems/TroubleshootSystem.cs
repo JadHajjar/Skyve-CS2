@@ -233,7 +233,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Unexpected error in {nameof(TroubleshootSystem)}.{nameof(ApplyConfirmation)}");
+			_logger.Exception(ex, memberName: $"Unexpected error in {nameof(TroubleshootSystem)}.{nameof(ApplyConfirmation)}");
 
 			return TroubleshootResult.Error;
 		}
@@ -282,7 +282,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Unexpected error in {nameof(TroubleshootSystem)}.{nameof(ApplyConfirmation)}");
+			_logger.Exception(ex, memberName: $"Unexpected error in {nameof(TroubleshootSystem)}.{nameof(ApplyConfirmation)}");
 
 			return TroubleshootResult.Error;
 		}

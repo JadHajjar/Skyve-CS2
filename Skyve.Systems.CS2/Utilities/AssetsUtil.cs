@@ -69,7 +69,7 @@ internal class AssetsUtil : IAssetUtil
 			}
 			catch (Exception ex)
 			{
-				_logger.Exception(ex, "Failed to load asset: " + file);
+				_logger.Exception(ex, memberName: "Failed to load asset: " + file);
 				continue;
 			}
 

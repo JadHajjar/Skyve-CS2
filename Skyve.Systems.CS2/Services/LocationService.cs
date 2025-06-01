@@ -112,7 +112,7 @@ internal class LocationService : ILocationService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to create shortcut");
+			_logger.Exception(ex, memberName: "Failed to create shortcut");
 		}
 	}
 
@@ -177,7 +177,7 @@ internal class LocationService : ILocationService
 			}
 			catch (Exception ex)
 			{
-				_logger.Exception(ex, "Failed to find steam's installation folder");
+				_logger.Exception(ex, memberName: "Failed to find steam's installation folder");
 			}
 
 			if (_settings.FolderSettings.Platform is not Platform.Windows)

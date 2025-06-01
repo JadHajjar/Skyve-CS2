@@ -184,7 +184,7 @@ internal class LogUtil : ILogUtil
 
 #if STABLE
 		CreateEntry(zipArchive,$"Skyve Stable v{details.Version.GetString()}", string.Empty);
-#elif Release
+#elif RELEASE
 		CreateEntry(zipArchive,$"Skyve Beta v{details.Version.GetString()}", string.Empty);
 #else
 		CreateEntry(zipArchive, $"Skyve Debug v{details.Version.GetString()}", string.Empty);
@@ -262,7 +262,7 @@ internal class LogUtil : ILogUtil
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to load the previous crash dump log");
+			_logger.Exception(ex, memberName: "Failed to load the previous crash dump log");
 		}
 
 		return string.Empty;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Publish>
   <ModId Value="75804" />
   <DisplayName Value="Skyve" />
@@ -89,37 +89,30 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Stable/Screenshot_10.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="0.16.0" />
+  <ModVersion Value="1.0.0" />
   <GameVersion Value="*" />
   <ChangeLog>
-# v0.16.0
-*Beta pre-release of the v1.0 stable update.*
+# v1.0.0
+*The First Stable Release!*
 
-## Compatibility Report Functionality Changes
-* Added a new section for mods' effect on savegames when removed to let you know if a mod is unsafe to remove, and steps for how to safely remove it.
-* Added a new section for packages' type, including content mods, visual mods, simulation mods, etc.
-* Reworked some compatibility notifications to be more meaningful of the status of the mod.
-* Improved how obsolete, superseeded, and broken mods are presented with better context, notification, and text descriptions.
-* Improved the available actions that suggested in the compatibility report.
-* Updated various statuses' warning level to better reflect their actual severity.
-* Updated various logic checks to deliver more accurate results for some compatibility warnings.
-* Updated the snooze system, this will result in your previously snoozed warnings to reset.
-* Fixed not being able to upload a savegame with your request.
-
-## Compatibility Report UI Changes
-* Added a 'Snoozed' section to the compatibility report tab to allow you to see active issues that were hidden.
-* Added a new 'Information' section in the compatibility tab in the mod page for the new sections and the review info.
-* Improved the interactions and interface of the review process on both the user's and management's ends.
-* Improved the wording of multiple compatibility descriptions.
-* Simplified the review request process, you'll now only be prompted for two options with improved explanations along the way.
-* Fixed the compatibility report tab not showing all issues correctly.
-
-## Other Changes
-* Updated choice-selection screens' interface design.
-* Local mods are now matched to their workshop counterpart and will show the proper thumbnail, mod info, and compatibility report.
-* Potentially fixed some users not being able to login with the app.
-* Fixed tags showing their codename instead of their display name in some screens.
-* Fixed not being able to select a different version of Skyve from the version dropdown.
+## Changes compared to Beta v0.16
+* Added a Package Type filter to the package list pages.
+* Added Share, deactivate, and delete buttons to the single Playset page.
+* Added a 'Maps and Savegames' content tab. Removed maps and savegames from the assets tab.
+* Added the compatibility notification on the PDX Mods dashboard widgets.
+* Added two tutorial notifications for removing mods from your playset and clearing filters.
+* Improved the UI of the playsets page with a slight update to the playset cards and improvements to the top bar buttons.
+* Improved the UX when selecting a backup in the Backup Center tab.
+* Improved tooltips in the package list pages.
+* Improved the differentiation between 'code mods' and 'assets' throughout the app.
+* Improved the FileSystem file in log reports, and added the Skyve version as a file in the log report.
+* Skyve will now only require itself in your active playset if no other playset includes it.
+* Fixed the mod names overflowing on the PDX Mods dashboard widgets.
+* Fixed the 'Playsets' tab in the mod page not always showing the selected version in each playset.
+* Fixed the playsets page not remembering the sorting and view style throughout sessions.
+* Fixed playsets' mod count and total size not always reflecting the correct values.
+* Fixed snoozes not persisting throughout sessions.
+* Updated translations.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

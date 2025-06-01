@@ -263,7 +263,7 @@ internal class ContentManager : IContentManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to analyze packages");
+			_logger.Exception(ex, memberName: "Failed to analyze packages");
 		}
 
 		return packages;
@@ -321,7 +321,7 @@ internal class ContentManager : IContentManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Failed to create a package from the folder: '{folder}'");
+			_logger.Exception(ex, memberName: $"Failed to create a package from the folder: '{folder}'");
 
 			return null;
 		}

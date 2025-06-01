@@ -13,7 +13,6 @@ internal class InterfaceService : IInterfaceService
 
 	public void OpenLogReport(bool save)
 	{
-
 	}
 
 	public void OpenOptionsPage()
@@ -30,12 +29,14 @@ internal class InterfaceService : IInterfaceService
 
 	public void OpenPlaysetPage(IPlayset playset, bool settingsTab = false)
 	{
+	}
 
+	public void OpenPlaysetPage(IPlayset playset, bool settingsTab = false, bool editName = false)
+	{
 	}
 
 	public void RestoreBackup(string restoreBackup)
 	{
-
 	}
 
 	public void ViewSpecificPackages(List<IPackageIdentity> packages, string title)

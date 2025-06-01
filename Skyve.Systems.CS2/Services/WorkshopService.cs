@@ -49,6 +49,7 @@ public class WorkshopService : IWorkshopService
 	private readonly IInterfaceService _interfaceService;
 	private readonly IServiceProvider _serviceProvider;
 	private readonly IDlcManager _dlcManager;
+	private readonly ISkyveDataManager _skyveDataManager;
 	private readonly UserService _userService;
 	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
@@ -65,7 +66,7 @@ public class WorkshopService : IWorkshopService
 	public bool IsAvailable => Context is not null;
 	public bool IsReady => Context is not null && IsLoggedIn && !Context.Mods.SyncOngoing();
 
-	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler, IDlcManager dlcManager)
+	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler, IDlcManager dlcManager, ISkyveDataManager skyveDataManager)
 	{
 		_logger = logger;
 		_settings = settings;
@@ -81,6 +82,7 @@ public class WorkshopService : IWorkshopService
 
 		_processor.TasksCompleted += Processor_TasksCompleted;
 		_dlcManager = dlcManager;
+		_skyveDataManager = skyveDataManager;
 	}
 
 	private void Processor_TasksCompleted()
@@ -128,6 +130,7 @@ public class WorkshopService : IWorkshopService
 			Environment = BackendEnvironment.Live,
 			Ecosystem = ecoSystem,
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
+			StandardTelemetryEnabled = false, TelemetryDebugEnabled = false, UnityEventTelemetryEnable = false,
 #if DEBUG
 			LogLevel = LogLevel.L1_Debug,
 			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/{typeof(WorkshopService).Assembly.GetName().Version}-test" } },
@@ -162,7 +165,7 @@ public class WorkshopService : IWorkshopService
 		{
 			_notificationsService.SendNotification(new ParadoxContextFailedNotification(this));
 
-			_logger.Exception(ex, "Failed to create PDX Context");
+			_logger.Exception(ex, memberName: "Failed to create PDX Context");
 		}
 	}
 
@@ -321,6 +324,11 @@ public class WorkshopService : IWorkshopService
 		if (Context is null || id <= 0 || !IsLoggedIn)
 		{
 			return null;
+		}
+
+		if (_skyveDataManager.IsBlacklisted((ulong)id))
+		{
+			return new PdxBannedMod(id);
 		}
 
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
@@ -711,7 +719,7 @@ public class WorkshopService : IWorkshopService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Catastrophic error during SubscribeBulk");
+			_logger.Exception(ex, memberName: "Catastrophic error during SubscribeBulk");
 
 			return false;
 		}
@@ -748,7 +756,7 @@ public class WorkshopService : IWorkshopService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Catastrophic error during UnsubscribeBulk");
+			_logger.Exception(ex, memberName: "Catastrophic error during UnsubscribeBulk");
 
 			return false;
 		}
@@ -785,7 +793,7 @@ public class WorkshopService : IWorkshopService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Catastrophic error during UnsubscribeBulk");
+			_logger.Exception(ex, memberName: "Catastrophic error during UnsubscribeBulk");
 
 			return false;
 		}
@@ -822,7 +830,7 @@ public class WorkshopService : IWorkshopService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Catastrophic error during UnsubscribeBulk");
+			_logger.Exception(ex, memberName: "Catastrophic error during UnsubscribeBulk");
 
 			return false;
 		}
@@ -859,7 +867,7 @@ public class WorkshopService : IWorkshopService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Catastrophic error during UnsubscribeBulk");
+			_logger.Exception(ex, memberName: "Catastrophic error during UnsubscribeBulk");
 
 			return false;
 		}
@@ -946,7 +954,7 @@ public class WorkshopService : IWorkshopService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Catastrophic error during SetEnableBulk({enable})");
+			_logger.Exception(ex, memberName: $"Catastrophic error during SetEnableBulk({enable})");
 
 			return false;
 		}
@@ -971,7 +979,7 @@ public class WorkshopService : IWorkshopService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Catastrophic error during SetEnableBulk({enable})");
+			_logger.Exception(ex, memberName: $"Catastrophic error during SetEnableBulk({enable})");
 
 			return false;
 		}
@@ -1029,7 +1037,7 @@ public class WorkshopService : IWorkshopService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to sync mods");
+			_logger.Exception(ex, memberName: "Failed to sync mods");
 		}
 	}
 
@@ -1104,7 +1112,7 @@ public class WorkshopService : IWorkshopService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to repair context");
+			_logger.Exception(ex, memberName: "Failed to repair context");
 		}
 
 		await _serviceProvider.GetService<ICentralManager>()!.Initialize();

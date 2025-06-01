@@ -2,7 +2,7 @@
   "ModName": "Skyve",
   "StableThumbnailUrl": "https://imgur.com/VGQBK7Z.png",
   "BetaThumbnailUrl": "https://imgur.com/s9gxObz.png",
-  "StablePublishConfigurationFile": "Properties\\Release\\PublishConfiguration.xml",
+  "StablePublishConfigurationFile": "Properties\\Stable\\PublishConfiguration.xml",
   "BetaPublishConfigurationFile": "Properties\\Release\\PublishConfiguration.xml",
   "ChangelogFile": "..\\Skyve.App.CS2\\Changelog.json"
 }

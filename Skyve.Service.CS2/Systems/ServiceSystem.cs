@@ -40,7 +40,7 @@ internal class ServiceSystem
 			}
 			catch (Exception ex)
 			{
-				_logger.Exception(ex, "Unexpected error during Update Loop");
+				_logger.Exception(ex, memberName: "Unexpected error during Update Loop");
 			}
 
 			await Task.Delay(TimeSpan.FromMinutes(30));
@@ -66,7 +66,7 @@ internal class ServiceSystem
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Unexpected error during Backup Loop");
+			_logger.Exception(ex, memberName: "Unexpected error during Backup Loop");
 		}
 	}
 

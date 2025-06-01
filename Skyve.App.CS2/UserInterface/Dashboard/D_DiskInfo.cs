@@ -62,7 +62,7 @@ internal class D_DiskInfo : IDashboardItem
 
 		OnResizeRequested();
 
-		_logger.Exception(ex, "Failed to get Disk Info Summary");
+		_logger.Exception(ex, memberName: "Failed to get Disk Info Summary");
 	}
 
 	protected override Task<bool> ProcessDataLoad(CancellationToken token)

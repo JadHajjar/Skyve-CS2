@@ -76,7 +76,7 @@ internal class CentralManager : ICentralManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Error in Initialization");
+			_logger.Exception(ex, memberName: "Error in Initialization");
 		}
 	}
 
@@ -90,7 +90,7 @@ internal class CentralManager : ICentralManager
 			}
 			catch (Exception ex)
 			{
-				_logger.Exception(ex, "Failed to complete the First Time Setup");
+				_logger.Exception(ex, memberName: "Failed to complete the First Time Setup");
 
 				MessagePrompt.Show(ex, "Failed to complete the First Time Setup", form: SystemsProgram.MainForm as SlickForm);
 			}

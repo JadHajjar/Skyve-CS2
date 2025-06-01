@@ -166,7 +166,7 @@ internal class DlcManager : IDlcManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to get the steam information for appid " + steamId);
+			_logger.Exception(ex, memberName: "Failed to get the steam information for appid " + steamId);
 		}
 
 		return [];

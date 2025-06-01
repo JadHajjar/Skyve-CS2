@@ -243,7 +243,7 @@ internal class PackageManager : IPackageManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Failed to delete the folder '{folder}'");
+			_logger.Exception(ex, memberName: $"Failed to delete the folder '{folder}'");
 		}
 
 		PackageWatcher.Resume();

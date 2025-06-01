@@ -170,7 +170,7 @@ internal class BackupSystem : IBackupSystem
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to load backup file: " + fileName);
+			_logger.Exception(ex, memberName: "Failed to load backup file: " + fileName);
 
 			return null;
 		}
@@ -241,7 +241,7 @@ internal class BackupSystem : IBackupSystem
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to do backup");
+			_logger.Exception(ex, memberName: "Failed to do backup");
 
 			return false;
 		}
@@ -412,7 +412,7 @@ internal class BackupSystem : IBackupSystem
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Failed to restore the {metaData.Type} backup ({metaData.Name}) from '{file}'");
+			_logger.Exception(ex, memberName: $"Failed to restore the {metaData.Type} backup ({metaData.Name}) from '{file}'");
 
 			return false;
 		}

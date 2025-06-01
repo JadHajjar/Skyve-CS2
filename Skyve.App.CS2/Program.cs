@@ -192,17 +192,17 @@ internal static class Program
 
 	private static void BackgroundAction_BackgroundTaskError(BackgroundAction b, Exception e)
 	{
-		ServiceCenter.Provider.GetService<ILogger>().Exception(e, $"The background action ({b}) failed");
+		ServiceCenter.Provider.GetService<ILogger>().Exception(e, memberName: $"The background action ({b}) failed");
 	}
 
 	private static void GlobalThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
 	{
-		ServiceCenter.Provider.GetService<ILogger>().Exception(e.Exception, $"CRASH");
+		ServiceCenter.Provider.GetService<ILogger>().Exception(e.Exception, memberName: $"CRASH");
 	}
 
 	private static void GlobalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
 	{
-		ServiceCenter.Provider.GetService<ILogger>().Exception((Exception)e.ExceptionObject, $"CRASH");
+		ServiceCenter.Provider.GetService<ILogger>().Exception((Exception)e.ExceptionObject, memberName: $"CRASH");
 	}
 
 	[System.Runtime.InteropServices.DllImport("user32.dll")]

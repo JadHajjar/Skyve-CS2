@@ -286,7 +286,7 @@ internal class CitiesManager : ICitiesManager
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to kill C:S II");
+			_logger.Exception(ex, memberName: "Failed to kill C:S II");
 		}
 	}
 

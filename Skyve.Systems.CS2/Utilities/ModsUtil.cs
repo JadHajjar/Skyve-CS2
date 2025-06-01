@@ -408,7 +408,7 @@ internal class ModsUtil : IModUtil
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, $"Failed to {(value ? "enable" : "disable")} the local mod {item.Name}");
+			_logger.Exception(ex, memberName: $"Failed to {(value ? "enable" : "disable")} the local mod {item.Name}");
 		}
 	}
 

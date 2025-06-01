@@ -35,7 +35,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to load compatibility data cache");
+			_logger.Exception(ex, memberName: "Failed to load compatibility data cache");
 		}
 	}
 
@@ -49,7 +49,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to clear compatibility data cache");
+			_logger.Exception(ex, memberName: "Failed to clear compatibility data cache");
 		}
 
 		_notifier.OnContentLoaded();
@@ -105,7 +105,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Failed to get compatibility data");
+			_logger.Exception(ex, memberName: "Failed to get compatibility data");
 		}
 
 		CompatibilityData ??= new IndexedCompatibilityData([], []);
@@ -115,6 +115,11 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 	{
 		return CompatibilityData.BlackListedIds.Contains(package.Id)
 			|| CompatibilityData.BlackListedNames.Contains(package.Name ?? string.Empty);
+	}
+
+	public bool IsBlacklisted(ulong packageId)
+	{
+		return CompatibilityData.BlackListedIds.Contains(packageId);
 	}
 
 	public ulong GetIdFromModName(string fileName)

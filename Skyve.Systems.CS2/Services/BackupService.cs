@@ -97,7 +97,7 @@ internal class BackupService : IBackupService
 		}
 		catch (Exception ex)
 		{
-			_logger.Exception(ex, "Fatal error during backup. Disabling system...");
+			_logger.Exception(ex, memberName: "Fatal error during backup. Disabling system...");
 
 			return false;
 		}
