@@ -4,7 +4,7 @@ namespace Skyve.Domain.CS2.Paradox;
 
 public class PdxBannedMod : PdxModDetails
 {
-	public PdxBannedMod(int id) : base(new ModDetails { Id = id, Name = id.ToString() }, false)
+	public PdxBannedMod(int id) : base(new ModDetails { Id = id, Name = id.ToString() })
 	{
 		IsBanned = true;
 	}

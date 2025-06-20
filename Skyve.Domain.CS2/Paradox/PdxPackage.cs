@@ -102,6 +102,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 	public ulong Id { get; private set; }
 	public string Name { get; }
 	public string? Url { get; }
+	public ModAccessControlLevelState? AccessControlLevelState { get; set; }
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
 	string? IWorkshopInfo.SuggestedGameVersion => RequiredGameVersion;

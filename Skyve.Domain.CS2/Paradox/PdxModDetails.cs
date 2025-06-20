@@ -25,7 +25,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 		Tags = [];
 	}
 
-	public PdxModDetails(ModDetails mod, bool hasVoted)
+	public PdxModDetails(ModDetails mod)
 	{
 		Id = (ulong)mod.Id;
 		Name = mod.DisplayName;
@@ -39,17 +39,17 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 		VersionName = mod.UserModVersion.IfEmpty(mod.Version);
 		SuggestedGameVersion = mod.RequiredGameVersion;
 		Subscribers = mod.SubscriptionsTotal;
-		HasVoted = hasVoted;
+		HasVoted = mod.HasLiked;
 		VoteCount = mod.RatingsTotal;
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
 		ForumLink = mod.ForumLinks?.FirstOrDefault();
-		Tags = mod.Tags.ToDictionary(x => x.Id, x => x.DisplayName);
+		Tags = mod.Tags?.ToDictionary(x => x.Id, x => x.DisplayName) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
 		ServerTime = mod.LatestUpdate ?? Changelog.Max(x => x.ReleasedDate) ?? default;
-		Images = mod.Screenshots.ToArray(x => new ParadoxScreenshot(x.Image, Id, mod.Version, false));
-		Links = mod.ExternalLinks.ToArray(x => new ParadoxLink(x));
+		Images = mod.Screenshots?.ToArray(x => new ParadoxScreenshot(x.Image, Id, mod.Version, false));
+		Links = mod.ExternalLinks?.ToArray(x => new ParadoxLink(x));
 		Timestamp = DateTime.Now;
 	}
 

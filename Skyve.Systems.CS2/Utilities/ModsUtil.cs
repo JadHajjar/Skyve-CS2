@@ -96,10 +96,16 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
+		var playset = await _workshopService.GetActivePlaysetId();
+
+		if (playset <= 0)
+		{
+			return;
+		}
+
 		var index = 1;
 		var mods = _serviceProvider.GetService<ILoadOrderHelper>()?.GetOrderedMods().OfType<IMod>();
 		var orderedMods = new List<ModLoadOrder>();
-		var playset = await _workshopService.GetActivePlaysetId();
 
 		if (mods is null)
 		{

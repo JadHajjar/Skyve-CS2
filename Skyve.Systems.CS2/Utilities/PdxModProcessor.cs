@@ -17,7 +17,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 	private readonly SaveHandler _saveHandler;
 	private readonly INotifier _notifier;
 
-	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(1, 5000, GetCachedInfo(saveHandler))
+	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(25, 5000, GetCachedInfo(saveHandler))
 	{
 		_workshopService = workshopService;
 		_saveHandler = saveHandler;

@@ -83,6 +83,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailOb
 	public bool IsInvalid { get; set; }
 	public string Guid { get; set; }
 	public bool HasVoted { get; set; }
+	public ModAccessControlLevelState? AccessControlLevelState { get; set; }
 	IUser? IWorkshopInfo.Author => new PdxUser(Author);
 	Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }

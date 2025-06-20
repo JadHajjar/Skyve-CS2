@@ -118,7 +118,16 @@ public class WorkshopService : IWorkshopService
 		}
 		else
 		{
-			return;
+			if (CrossIO.FileExists(CrossIO.Combine(pdxSdkPath, "LastUserId.txt")))
+			{
+				_settings.FolderSettings.UserIdentifier = File.ReadAllText(CrossIO.Combine(pdxSdkPath, "LastUserId.txt"));
+
+				pdxSdkPath = CrossIO.Combine(pdxSdkPath, _settings.FolderSettings.UserIdentifier);
+			}
+			else
+			{
+				return;
+			}
 		}
 
 		var config = new Config
@@ -133,7 +142,7 @@ public class WorkshopService : IWorkshopService
 			StandardTelemetryEnabled = false, TelemetryDebugEnabled = false, UnityEventTelemetryEnable = false,
 #if DEBUG
 			LogLevel = LogLevel.L1_Debug,
-			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/{typeof(WorkshopService).Assembly.GetName().Version}-test" } },
+			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/9999"/*{typeof(WorkshopService).Assembly.GetName().Version}-test"*/ } },
 #else
 			LogLevel = LogLevel.L2_Warning,
 			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/{typeof(WorkshopService).Assembly.GetName().Version}" } },
@@ -316,7 +325,31 @@ public class WorkshopService : IWorkshopService
 
 	public async Task<IWorkshopInfo?> GetInfoAsync(IPackageIdentity identity)
 	{
-		return identity.Id <= 0 ? null : await _modProcessor.Get((int)identity.Id, true);
+		if (identity.Id <= 0)
+		{
+			return null;
+		}
+
+		if (Context is not null)
+		{
+			var result = await Context.Mods.GetLocalModDetails($"{identity.Id}_{identity.Version}");
+
+			if (!result.Success || result?.Mod is null)
+			{
+				result = await Context.Mods.GetDetails((int)identity.Id, identity.Version);
+			}
+
+			if (result.Success && result?.Mod is not null)
+			{
+				return new PdxModDetails(result.Mod)
+				{
+					Requirements = result.Mod.Dependencies?.Where(x => x.Type is not DependencyType.Dlc).ToArray(x => new PdxModsRequirement(x)) ?? [],
+					DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc && x.DisplayName != "Beach Properties").ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
+				};
+			}
+		}
+
+		return await _modProcessor.Get((int)identity.Id, true);
 	}
 
 	internal async Task<PdxModDetails?> GetInfoAsync(int id)
@@ -338,9 +371,7 @@ public class WorkshopService : IWorkshopService
 
 		if (result?.Mod is not null)
 		{
-			var ratingResult = await Context.Mods.GetUserRating(id);
-
-			return new PdxModDetails(result.Mod, ratingResult.Rating != 0)
+			return new PdxModDetails(result.Mod)
 			{
 				Requirements = result.Mod.Dependencies?.Where(x => x.Type is not DependencyType.Dlc).ToArray(x => new PdxModsRequirement(x)) ?? [],
 				DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc && x.DisplayName != "Beach Properties").ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
@@ -586,9 +617,9 @@ public class WorkshopService : IWorkshopService
 		return result.Success;
 	}
 
-	public async Task<int> GetActivePlaysetId()
+	public Task<int> GetActivePlaysetId()
 	{
-		return Context is null ? 0 : ProcessResult(await Context.Mods.GetActivePlayset()).PlaysetId;
+		return Task.FromResult(Context is null ? 0 : Context.Mods.GetActivePlayset().PlaysetId);
 	}
 
 	public async Task<IEnumerable<IPlaysetPackage>> GetModsInPlayset(int playsetId, bool includeOnline = false)
@@ -600,24 +631,14 @@ public class WorkshopService : IWorkshopService
 
 		return await _processor.Queue(async () =>
 		{
-			var list = new List<PdxPlaysetPackage>();
+			var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, int.MaxValue, 1, includeOnline: includeOnline));
 
-			for (var page = 1; ; page++)
+			if (result.Mods is not null)
 			{
-				var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 100, page, includeOnline: includeOnline));
-
-				if (result.Mods is not null)
-				{
-					list.AddRange(result.Mods.Select(x => new PdxPlaysetPackage(x)).Distinct(x => x.Id));
-				}
-
-				if (!result.Success || (page * 100 >= result.TotalCount))
-				{
-					break;
-				}
+				return result.Mods.Select(x => new PdxPlaysetPackage(x)).ToList();
 			}
 
-			return list;
+			return [];
 		});
 	}
 

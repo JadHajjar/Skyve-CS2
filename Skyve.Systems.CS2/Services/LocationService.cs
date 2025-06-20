@@ -147,7 +147,7 @@ internal class LocationService : ILocationService
 			$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
 			$"SteamPath: {_settings.FolderSettings.SteamPath}");
 
-		if (string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier) && Directory.Exists(_settings.FolderSettings.AppDataPath))
+		if (string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier) && Directory.Exists(CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk")))
 		{
 			var folders = Directory.GetDirectories(CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk")).AllWhere(x => ulong.TryParse(x, out var val) && val > 1000000000000);
 
