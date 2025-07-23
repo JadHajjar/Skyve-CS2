@@ -29,6 +29,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 using PdxPlatform = PDX.SDK.Contracts.Enums.Platform;
@@ -59,6 +60,7 @@ public class WorkshopService : IWorkshopService
 	private bool loginWaitingConnection;
 	private bool syncOccurred;
 	private List<ITag>? cachedTags;
+	private CancellationTokenSource tokenSource = new();
 
 	private IContext? Context { get; set; }
 	public bool IsLoggedIn { get; private set; }
@@ -139,7 +141,12 @@ public class WorkshopService : IWorkshopService
 			Environment = BackendEnvironment.Live,
 			Ecosystem = ecoSystem,
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
-			StandardTelemetryEnabled = false, TelemetryDebugEnabled = false, UnityEventTelemetryEnable = false,
+			Telemetry = new TelemetryConfig
+			{
+				StandardTelemetryEnabled = false,
+				TelemetryDebugEnabled = false,
+				UnityEventTelemetryEnable = false,
+			},
 #if DEBUG
 			LogLevel = LogLevel.L1_Debug,
 			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/9999"/*{typeof(WorkshopService).Assembly.GetName().Version}-test"*/ } },
@@ -332,7 +339,7 @@ public class WorkshopService : IWorkshopService
 
 		if (Context is not null)
 		{
-			var result = await Context.Mods.GetLocalModDetails($"{identity.Id}_{identity.Version}");
+			var result = await Context.Mods.GetLocalModDetails((int)identity.Id, identity.Version);
 
 			if (!result.Success || result?.Mod is null)
 			{
@@ -454,7 +461,7 @@ public class WorkshopService : IWorkshopService
 
 		ProcessResult(result);
 
-		return (result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]), result.TotalCount);
+		return (result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)[], result.TotalCount);
 	}
 
 	public async Task<(IEnumerable<IWorkshopInfo> Mods, int TotalCount)> QueryFilesAsync(WorkshopQuerySorting sorting, WorkshopSearchTime searchTime = WorkshopSearchTime.AllTime, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
@@ -482,7 +489,7 @@ public class WorkshopService : IWorkshopService
 
 		ProcessResult(result);
 
-		return (result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)([]), result.TotalCount);
+		return (result.Success ? result.Mods?.ToList(x => new PdxPackage(x)) ?? [] : (IEnumerable<IWorkshopInfo>)[], result.TotalCount);
 	}
 
 	public async Task<(IEnumerable<IWorkshopInfo> Mods, int TotalCount)> GetAllFilesAsync(WorkshopQuerySorting sorting, string? query = null, string[]? requiredTags = null, object? userId = null)
@@ -563,7 +570,7 @@ public class WorkshopService : IWorkshopService
 
 		var playsets = ProcessResult(await _processor.Queue(async () => await Context.Mods.ListAllPlaysets(!localOnly)));
 
-		return !playsets.Success ? (List<IPlayset>)([]) : playsets.AllPlaysets.ToList(playset => (IPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
+		return !playsets.Success ? [] : playsets.AllPlaysets.ToList(playset => (IPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
 	}
 
 	public async Task<IPlayset?> GetCurrentPlayset()
@@ -732,7 +739,7 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var result = await _processor.Queue(async () => await Context.Mods.SubscribeBulk(mods, playset));
+			var result = await _processor.Queue(async () => await Context.Mods.SubscribeBulk(mods, playset, tokenSource.Token));
 
 			await Task.Delay(1000);
 
@@ -800,7 +807,7 @@ public class WorkshopService : IWorkshopService
 
 				foreach (var name in mods)
 				{
-					var result = await Context.Mods.Subscribe(name, playset);
+					var result = await Context.Mods.Subscribe(name, playset, tokenSource.Token);
 
 					results.Add(ProcessResult(result));
 
@@ -1028,7 +1035,22 @@ public class WorkshopService : IWorkshopService
 		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);
 	}
 
-	public async Task RunSync()
+	public Task RunUpSync()
+	{
+		return RunSync(SyncDirection.Upstream);
+	}
+
+	public Task RunDownSync()
+	{
+		return RunSync(SyncDirection.Downstream);
+	}
+
+	public Task RunSync()
+	{
+		return RunSync(SyncDirection.Default);
+	}
+
+	private async Task RunSync(SyncDirection direction)
 	{
 		if (Context is null || Context.Mods.SyncOngoing())
 		{
@@ -1039,22 +1061,24 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			await _processor.Queue(async () =>
+			var result = await _processor.Queue(async () =>
 			{
 				_notifier.IsWorkshopSyncInProgress = true;
 				_notifier.OnWorkshopSyncStarted();
 
-				var result = ProcessResult(await Context.Mods.Sync());
-
-				if (result.Error != null && result.Error == Mods.PromptNeeded)
-				{
-					var conflicts = await Context.Mods.GetSyncConflicts();
-
-					ProcessResult(await Context.Mods.Sync(SyncDirection.Downstream));
-				}
+				var result = ProcessResult(await Context.Mods.Sync(direction, cancellationToken: tokenSource.Token));
 
 				_notifier.IsWorkshopSyncInProgress = false;
+
+				return result;
 			});
+
+			if (result.Error == Mods.PromptNeeded)
+			{
+				var conflicts = await Context.Mods.GetSyncConflicts();
+
+				_notifier.OnRequestSyncConflictPrompt(conflicts.ToArray(x => new SyncConflictInfo(x)));
+			}
 		}
 		catch (Exception ex)
 		{
@@ -1082,6 +1106,12 @@ public class WorkshopService : IWorkshopService
 			IsLoggedIn = false;
 			IsLoginPending = false;
 		}
+	}
+
+	public void CancelActions()
+	{
+		tokenSource.Cancel();
+		tokenSource = new();
 	}
 
 	public async void RepairContext()

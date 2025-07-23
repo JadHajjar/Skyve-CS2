@@ -2,29 +2,31 @@
 using PDX.SDK.Contracts.Internal;
 using PDX.SDK.Contracts.Logging;
 
+using System.Runtime.CompilerServices;
+
 namespace Skyve.Systems.CS2.Utilities;
 public class PdxLogUtil(Skyve.Domain.Systems.ILogger logger) : ILogger
 {
-	public void Log(string msg, LogLevel logLevel = LogLevel.L1_Debug, FlowData? flowData = null)
+	public void Log(string msg, LogLevel logLevel = LogLevel.L1_Debug, FlowData? flowData = null, [CallerMemberName] string? memberName = null)
 	{
 		switch (logLevel)
 		{
 #if DEBUG
 			case LogLevel.L0_Info:
-				logger.Info($"[PDX] {msg}", null, null);
+				logger.Info($"[PDX:{memberName}] {msg}", null, null);
 				break;
 			case LogLevel.L1_Debug:
-				logger.Debug($"[PDX] {msg}", null, null);
+				logger.Debug($"[PDX:{memberName}] {msg}", null, null);
 				break;
 #endif
 			case LogLevel.L2_Warning:
-				logger.Warning($"[PDX] {msg}", null, null);
+				logger.Warning($"[PDX:{memberName}] {msg}", null, null);
 				break;
 			case LogLevel.L3_Error:
-				logger.Error($"[PDX] {msg}", null, null);
+				logger.Error($"[PDX:{memberName}] {msg}", null, null);
 				break;
 			case LogLevel.L4_Fatal:
-				logger.Exception($"[PDX] {msg}", null, null);
+				logger.Exception($"[PDX:{memberName}] {msg}", null, null);
 				break;
 		}
 	}

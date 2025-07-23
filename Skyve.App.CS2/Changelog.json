@@ -1,5 +1,35 @@
 [
   {
+    "Stable": false,
+    "Beta": true,
+    "Version": "1.0.1",
+    "Date": "2025-06-11",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Backend Improvements.",
+          "Updated to the PDX SDK v1.34.0"
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": true,
+    "Beta": false,
+    "Version": "1.0.1",
+    "Date": "2025-06-11",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Backend Improvements.",
+          "Updated to the PDX SDK v1.34.0"
+        ]
+      }
+    ]
+  },
+  {
     "Stable": true,
     "Beta": false,
     "Version": "1.0.0",
