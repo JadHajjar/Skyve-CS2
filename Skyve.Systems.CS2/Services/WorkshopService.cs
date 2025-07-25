@@ -103,6 +103,8 @@ public class WorkshopService : IWorkshopService
 			return;
 		}
 
+		_logger.Info("Starting PDX SDK..");
+
 		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
 		{
 			throw new Exception("FolderSettings AppData folder does not exist");
@@ -140,6 +142,7 @@ public class WorkshopService : IWorkshopService
 			DiskIORoot = pdxSdkPath,
 			Environment = BackendEnvironment.Live,
 			Ecosystem = ecoSystem,
+			UserId = _settings.FolderSettings.UserIdentifier,
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
 			Telemetry = new TelemetryConfig
 			{
@@ -730,7 +733,7 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset)
 	{
-		if (Context is null || playset <= 1 || !mods.Any())
+		if (Context is null || playset <= 0 || !mods.Any())
 		{
 			return false;
 		}
@@ -755,7 +758,7 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<bool> UnsubscribeBulk(IEnumerable<int> mods, int playset)
 	{
-		if (Context is null || playset <= 1 || !mods.Any())
+		if (Context is null || playset <= 0 || !mods.Any())
 		{
 			return false;
 		}
@@ -792,7 +795,7 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<bool> SubscribeBulk(IEnumerable<string> mods, int playset)
 	{
-		if (Context is null || playset <= 1 || !mods.Any())
+		if (Context is null || playset <= 0 || !mods.Any())
 		{
 			return false;
 		}
@@ -829,7 +832,7 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<bool> UnsubscribeBulk(IEnumerable<string> mods, int playset)
 	{
-		if (Context is null || playset <= 1 || !mods.Any())
+		if (Context is null || playset <= 0 || !mods.Any())
 		{
 			return false;
 		}
@@ -940,14 +943,16 @@ public class WorkshopService : IWorkshopService
 
 		var result = await _processor.Queue(async () =>
 		{
-			if (!ProcessResult(await Context.Mods.CreatePlayset(playsetName)).Success)
+			var createPlaysetResult = ProcessResult(await Context.Mods.CreatePlayset(playsetName));
+
+			if (!createPlaysetResult.Success)
 			{
 				return null;
 			}
 
 			var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(true));
 
-			return playsets.AllPlaysets?.OrderBy(x => x.PlaysetId).LastOrDefault();
+			return playsets.AllPlaysets?.FirstOrDefault(x => x.PlaysetId == createPlaysetResult.PlaysetId);
 		});
 
 		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);
@@ -1063,21 +1068,25 @@ public class WorkshopService : IWorkshopService
 		{
 			var result = await _processor.Queue(async () =>
 			{
-				_notifier.IsWorkshopSyncInProgress = true;
-				_notifier.OnWorkshopSyncStarted();
+				try
+				{
+					_notifier.IsWorkshopSyncInProgress = true;
+					_notifier.OnWorkshopSyncStarted();
 
-				var result = ProcessResult(await Context.Mods.Sync(direction, cancellationToken: tokenSource.Token));
-
-				_notifier.IsWorkshopSyncInProgress = false;
-
-				return result;
+					return ProcessResult(await Context.Mods.Sync(direction, cancellationToken: tokenSource.Token));
+				}
+				finally
+				{
+					_notifier.IsWorkshopSyncInProgress = false;
+					//_notifier.OnWorkshopSyncEnded();
+				}
 			});
 
 			if (result.Error == Mods.PromptNeeded)
 			{
 				var conflicts = await Context.Mods.GetSyncConflicts();
 
-				_notifier.OnRequestSyncConflictPrompt(conflicts.ToArray(x => new SyncConflictInfo(x)));
+				_interfaceService.OpenSyncConflictPrompt(conflicts.ToArray(x => new SyncConflictInfo(x)));
 			}
 		}
 		catch (Exception ex)

@@ -42,4 +42,8 @@ internal class InterfaceService : IInterfaceService
 	public void ViewSpecificPackages(List<IPackageIdentity> packages, string title)
 	{
 	}
+
+	void IInterfaceService.OpenSyncConflictPrompt(ISyncConflictInfo[] conflicts)
+	{
+	}
 }

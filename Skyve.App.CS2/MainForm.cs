@@ -114,7 +114,6 @@ public partial class MainForm : BasePanelForm
 		_notifier.WorkshopInfoUpdated += RefreshUI;
 		_notifier.WorkshopUsersInfoLoaded += RefreshUI;
 		_notifier.ContentLoaded += UserService_UserInfoUpdated;
-		_notifier.RequestSyncConflictPrompt += RequestSyncConflictPrompt;
 		_notifier.SkyveUpdateAvailable += () => Invoke(_updateAvailableControl.Show);
 
 		ConnectionHandler.ConnectionChanged += ConnectionHandler_ConnectionChanged;
@@ -168,14 +167,6 @@ public partial class MainForm : BasePanelForm
 		PI_CompatibilityManagement.Hidden = !((hasPackages || _userService.User.Manager) && !_userService.User.Malicious);
 		PI_ManageYourPackages.Hidden = !(hasPackages && !_userService.User.Malicious);
 		base_P_Tabs.FilterChanged();
-	}
-
-	private void RequestSyncConflictPrompt(ISyncConflictInfo[] conflicts)
-	{
-		this.TryInvoke(() =>
-		{
-			throw new NotImplementedException();
-		});
 	}
 
 	public void RefreshUI()

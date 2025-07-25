@@ -16,9 +16,6 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 	private readonly ISettings _settings = settings;
 	private readonly INotifier _notifier = notifier;
 
-	private float downloadProgress;
-	private float installProgress;
-
 	public event Action? UpdateDisplayNotification;
 
 	public SubscriptionStatus Status { get; private set; }
@@ -33,12 +30,10 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 	public void OnDownloadProgress(PackageDownloadProgress info)
 	{
-		downloadProgress = info.Progress;
-
 		Status = new SubscriptionStatus(
 			isActive: true,
-			modId: info.Id,
-			progress: (installProgress + (downloadProgress * 3)) / 4f,
+			modId: info.Id.If(0UL, Status.ModId),
+			progress: info.Progress * 3 / 4f,
 			processedBytes: info.ProcessedBytes,
 			totalSize: info.Size);
 
@@ -49,8 +44,22 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 	{
 		Status = new SubscriptionStatus(
 			isActive: false,
-			modId: info.Id,
-			progress: info.Progress,
+			modId: info.Id.If(0UL, Status.ModId),
+			progress: 1f,
+			processedBytes: 0,
+			totalSize: 0);
+
+		UpdateDisplayNotification?.Invoke();
+
+		_notifier.OnRefreshUI(true);
+	}
+
+	public void OnDownloadCancelled(PackageInstallProgress info)
+	{
+		Status = new SubscriptionStatus(
+			isActive: false,
+			modId: info.Id.If(0UL, Status.ModId),
+			progress: -2f,
 			processedBytes: 0,
 			totalSize: 0);
 
@@ -61,12 +70,10 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 	public void OnInstallProgress(PackageInstallProgress info)
 	{
-		installProgress = info.Progress;
-
 		Status = new SubscriptionStatus(
 			isActive: true,
-			modId: info.Id,
-			progress: (installProgress + (downloadProgress * 3)) / 4f,
+			modId: info.Id.If(0UL, Status.ModId),
+			progress: (info.Progress + 3) / 4f,
 			processedBytes: 0,
 			totalSize: 0);
 
@@ -75,10 +82,9 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 	public void OnInstallStarted(PackageInstallProgress info)
 	{
-		installProgress = downloadProgress = 0f;
 		Status = new SubscriptionStatus(
 			isActive: true,
-			modId: info.Id,
+			modId: info.Id.If(0UL, Status.ModId),
 			progress: info.Progress,
 			processedBytes: 0,
 			totalSize: 0);

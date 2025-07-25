@@ -189,7 +189,6 @@ internal class PlaysetManager : IPlaysetManager
 			var customPlaysets = new List<ICustomPlayset>();
 			var playsets = await _workshopService.GetPlaysets(!ConnectionHandler.IsConnected || !_notifier.IsPlaysetsLoaded);
 			var activePlayset = await _workshopService.GetActivePlaysetId();
-			var mods = await _workshopService.GetLocalPackages();
 
 			foreach (var item in playsets)
 			{
@@ -216,15 +215,6 @@ internal class PlaysetManager : IPlaysetManager
 				foreach (var item in customPlaysets)
 				{
 					_customPlaysets[item.Id] = item;
-				}
-
-				foreach (var mod in mods)
-				{
-					foreach (var item in mod.Playsets)
-					{
-						_playsets[item.PlaysetId].ModCount++;
-						_playsets[item.PlaysetId].ModSize += mod.Size;
-					}
 				}
 
 				CurrentPlayset = _playsets.TryGet(activePlayset);

@@ -37,7 +37,12 @@ internal class InterfaceService : IAppInterfaceService
 
 	void IInterfaceService.OpenParadoxLogin()
 	{
-		new ParadoxLoginForm().ShowDialog(App.Program.MainForm);
+		App.Program.MainForm.TryInvoke(() => new ParadoxLoginForm().ShowDialog(App.Program.MainForm));
+	}
+
+	void IInterfaceService.OpenSyncConflictPrompt(ISyncConflictInfo[] conflicts)
+	{
+		App.Program.MainForm.TryInvoke(() => new SyncConflictForm(conflicts).ShowDialog(App.Program.MainForm));
 	}
 
 	PanelContent IAppInterfaceService.NewPlaysetPanel()

@@ -10,9 +10,9 @@ using Skyve.Domain;
 using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
-using Skyve.Systems.CS2.Systems;
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,6 +38,7 @@ internal class WorkshopEventsManager
 		context.Events.Subscribe<ITransferStatusUpdated>(OnTransferUpdated);
 		context.Events.Subscribe<IInstallProgressEvent>(OnInstallProgress);
 		context.Events.Subscribe<IModDownloadFailed>(OnModDownloadFailed);
+		context.Events.Subscribe<IModDownloadCancelledByUser>(OnModDownloadCancelled);
 		//context.Events.Subscribe<IModUnsubscribed>(OnModUnsubscribe);
 	}
 
@@ -60,15 +61,37 @@ internal class WorkshopEventsManager
 
 	private void OnInstallProgress(IInstallProgressEvent @event)
 	{
-		_subscriptionsManager.OnInstallProgress(new PackageInstallProgress
+				Debug.WriteLine($"INSTALL {@event.Reference} {@event.CurrentStage} " + @event.Progress);
+		switch (@event.CurrentStage)
 		{
-			Id = (ulong)@event.Reference.SmartParse(),
-			Progress = @event.Progress,
-		});
+			case PDX.SDK.Contracts.Enums.InstallStage.PreStepsStarted:
+			case PDX.SDK.Contracts.Enums.InstallStage.PatchDownloadStarted:
+				_subscriptionsManager.OnInstallStarted(new PackageInstallProgress
+				{
+					Id = (ulong)@event.Reference.SmartParse(),
+					Progress = 0
+				});
+				break;
+			case PDX.SDK.Contracts.Enums.InstallStage.PatchDownloadCancelled:
+				_subscriptionsManager.OnInstallProgress(new PackageInstallProgress
+				{
+					Id = (ulong)@event.Reference.SmartParse(),
+					Progress = -2f,
+				});
+				break;
+			default:
+				_subscriptionsManager.OnInstallProgress(new PackageInstallProgress
+				{
+					Id = (ulong)@event.Reference.SmartParse(),
+					Progress = @event.Progress,
+				});
+				break;
+		}
 	}
 
 	private void OnTransferUpdated(ITransferStatusUpdated updated)
 	{
+		Debug.WriteLine("DOWNLOAD " + updated.TransferStatus.Progress);
 		_subscriptionsManager.OnDownloadProgress(new PackageDownloadProgress
 		{
 			Id = (ulong)updated.TransferStatus.Id.SmartParse(),
@@ -84,6 +107,16 @@ internal class WorkshopEventsManager
 		{
 			Id = (ulong)completed.ModId,
 			Progress = 1
+		});
+	}
+
+	private void OnModDownloadCancelled(IModDownloadCancelledByUser cancelled)
+	{
+				Debug.WriteLine($"CANCELLED {cancelled.ModId}");
+		_subscriptionsManager.OnDownloadCancelled(new PackageInstallProgress
+		{
+			Id = (ulong)cancelled.ModId,
+			Progress = -2
 		});
 	}
 

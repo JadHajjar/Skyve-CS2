@@ -183,6 +183,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation DiskStatus => _instance.GetText("DiskStatus");
 
 	/// <summary>
+	/// Download cancelled
+	/// </summary>
+	public static Translation DownloadCancelled => _instance.GetText("DownloadCancelled");
+
+	/// <summary>
 	/// Download completed
 	/// </summary>
 	public static Translation DownloadComplete => _instance.GetText("DownloadComplete");
@@ -196,6 +201,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Downloading...
 	/// </summary>
 	public static Translation Downloading => _instance.GetText("Downloading");
+
+	/// <summary>
+	/// Download starting...
+	/// </summary>
+	public static Translation DownloadStarted => _instance.GetText("DownloadStarted");
 
 	/// <summary>
 	/// Drop or select a playset's file here to import it
@@ -649,6 +659,12 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SubscribeToItem => _instance.GetText("SubscribeToItem");
 
 	/// <summary>
+	/// <para>Affected playset: {1}</para>
+	/// <para>Plural: Affected playsets: {1}</para>
+	/// </summary>
+	public static Translation SyncAffectedPlaysets => _instance.GetText("SyncAffectedPlaysets");
+
+	/// <summary>
 	/// Synchronize mods before launching the game
 	/// </summary>
 	public static Translation SyncBeforeLaunching => _instance.GetText("SyncBeforeLaunching");
@@ -657,6 +673,36 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Runs a mod sync before launching to make sure all mods are up to date.
 	/// </summary>
 	public static Translation SyncBeforeLaunchingTip => _instance.GetText("SyncBeforeLaunching_Tip");
+
+	/// <summary>
+	/// Use cloud data
+	/// </summary>
+	public static Translation SyncCloud => _instance.GetText("SyncCloud");
+
+	/// <summary>
+	/// Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.
+	/// </summary>
+	public static Translation SyncCloudInfo => _instance.GetText("SyncCloudInfo");
+
+	/// <summary>
+	/// Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.
+	/// </summary>
+	public static Translation SyncConflictInfo => _instance.GetText("SyncConflictInfo");
+
+	/// <summary>
+	/// Sync Conflicts Detected
+	/// </summary>
+	public static Translation SyncConflictTitle => _instance.GetText("SyncConflictTitle");
+
+	/// <summary>
+	/// Use local data
+	/// </summary>
+	public static Translation SyncLocal => _instance.GetText("SyncLocal");
+
+	/// <summary>
+	/// Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.
+	/// </summary>
+	public static Translation SyncLocalInfo => _instance.GetText("SyncLocalInfo");
 
 	/// <summary>
 	/// Sync is currently ongoing

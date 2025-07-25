@@ -500,7 +500,9 @@ internal class ModsUtil : IModUtil
 	}
 
 	public async Task Initialize()
-	{
+	{ 
+		Notifier_PlaysetChanged();
+
 		await RefreshModConfig();
 	}
 

@@ -10,6 +10,7 @@ public class DownloadsInfoControl : SlickControl
 {
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly INotifier _notifier;
+	private Rectangle cancelRect;
 
 	public DownloadsInfoControl()
 	{
@@ -57,13 +58,20 @@ public class DownloadsInfoControl : SlickControl
 			return;
 		}
 
-		if (e.Button == MouseButtons.Left)
+		if (ClientRectangle.Pad(Padding - new Padding(Padding.Left)).Pad(0, 0, 0, UI.Scale(20)).Contains(e.Location))
 		{
-			ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
+			if (e.Button == MouseButtons.Left)
+			{
+				ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
+			}
+			else if (e.Button == MouseButtons.Right)
+			{
+				SlickToolStrip.Show(App.Program.MainForm, ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(workshopInfo));
+			}
 		}
-		else if (e.Button == MouseButtons.Right)
+		else if (cancelRect.Contains(e.Location))
 		{
-			SlickToolStrip.Show(App.Program.MainForm, ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(workshopInfo));
+			ServiceCenter.Get<IWorkshopService>().CancelActions();
 		}
 	}
 
@@ -75,7 +83,7 @@ public class DownloadsInfoControl : SlickControl
 	protected override void UIChanged()
 	{
 		Padding = UI.Scale(new Padding(3, 8, 3, 4));
-		Height = UI.Scale(60);
+		Height = UI.Scale(80);
 	}
 
 	protected override void OnPaint(PaintEventArgs e)
@@ -119,7 +127,7 @@ public class DownloadsInfoControl : SlickControl
 
 		e.Graphics.DrawString(workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), font, brush, new Rectangle(thumbRect.Right + Padding.Left, Padding.Top - (Padding.Left / 2), Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.TopLeft), new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
 
-		var barRect = new Rectangle(Padding.Left, Height - Padding.Bottom - UI.Scale(8), Width - Padding.Right, UI.Scale(8));
+		var barRect = new Rectangle(Padding.Left, Height - Padding.Bottom - UI.Scale(28), Width - Padding.Horizontal, UI.Scale(8));
 
 		e.Graphics.FillRoundedRectangle(brush, barRect, barRect.Height / 2);
 
@@ -130,20 +138,41 @@ public class DownloadsInfoControl : SlickControl
 			e.Graphics.FillRoundedRectangle(activeBrush, activeBarRect, barRect.Height / 2, topRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width, botRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width);
 		}
 
-		var text = _subscriptionsManager.Status.Progress == 1f ? LocaleCS2.DownloadComplete : _subscriptionsManager.Status.Progress == -1f ? LocaleCS2.DownloadFailed : LocaleCS2.Downloading;
+		var text = _subscriptionsManager.Status.Progress switch
+		{
+			-2f => LocaleCS2.DownloadCancelled,
+			-1f => LocaleCS2.DownloadFailed,
+			0f => LocaleCS2.DownloadStarted,
+			1f => LocaleCS2.DownloadComplete,
+			_ => LocaleCS2.Downloading
+		};
 		var bottomTextRect = new Rectangle(thumbRect.Right + Padding.Left, thumbRect.Bottom + Padding.Left, Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.BottomLeft);
 
 		e.Graphics.DrawString(text, smallFont, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Near });
 
-		if (_subscriptionsManager.Status.Progress < 1f)
+		if (_subscriptionsManager.Status.Progress.IsWithin(0, 1))
 		{
 			e.Graphics.DrawString($"{_subscriptionsManager.Status.Progress * 100:0}%", font, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Far });
 		}
 
-		if (HoverState.HasFlag(HoverState.Hovered))
+		if (HoverState.HasFlag(HoverState.Hovered) && ClientRectangle.Pad(Padding - new Padding(Padding.Left)).Pad(0, 0, 0, UI.Scale(20)).Contains(PointToClient(Cursor.Position)))
 		{
 			using var backBrush = new SolidBrush(Color.FromArgb(50, FormDesign.Design.ActiveColor));
-			e.Graphics.FillRoundedRectangle(backBrush, ClientRectangle.Pad(Padding - new Padding(Padding.Left)), Padding.Left*2);
+			e.Graphics.FillRoundedRectangle(backBrush, ClientRectangle.Pad(Padding - new Padding(Padding.Left)).Pad(0, 0, 0, UI.Scale(20)), Padding.Left * 2);
+		}
+
+		if (_subscriptionsManager.Status.IsActive)
+		{
+			using var tinyFont = UI.Font(7.5F);
+			cancelRect = SlickButton.AlignAndDraw(e.Graphics, ClientRectangle, ContentAlignment.BottomLeft, new ButtonDrawArgs
+			{
+				Icon = "Cancel",
+				Text = LocaleSlickUI.Cancel,
+				Padding = UI.Scale(new Padding(2)),
+				Font = tinyFont,
+				Cursor = PointToClient(Cursor.Position),
+				HoverState = HoverState
+			});
 		}
 	}
 }

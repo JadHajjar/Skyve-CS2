@@ -101,32 +101,19 @@ internal class CentralManager : ICentralManager
 		ConnectionHandler.AssumeInternetConnectivity = _settings.UserSettings.AssumeInternetConnectivity;
 		ConnectionHandler.Start();
 
-		_logger.Info("Starting PDX SDK..");
-
-		await _workshopService.Initialize();
-
-		await _modUtil.Initialize();
-
-		await _playsetManager.Initialize();
-
-		_ = Task.Run(CheckCorruptedSettingsFiles);
-
 		_citiesManager.GameClosed -= CitiesManager_GameClosed;
 		_citiesManager.GameClosed += CitiesManager_GameClosed;
 
-		_logger.Info("Loading packages..");
+		_ = Task.Run(CheckCorruptedSettingsFiles);
 
-		var content = await _contentManager.LoadContents();
+		await _workshopService.Initialize();
 
-		_logger.Info($"Loaded {content.Count} packages");
+		await _workshopService.Login();
 
-		_versionUpdateService.Run(content);
-
-		_packageManager.SetPackages(content);
-
-		_logger.Info($"Loading and applying Compatibility Data..");
-
-		_skyveDataManager.Start(content);
+		await Task.WhenAll(
+			_playsetManager.Initialize(),
+			_modUtil.Initialize(),
+			LoadContent());
 
 		_notifier.OnContentLoaded();
 
@@ -153,12 +140,9 @@ internal class CentralManager : ICentralManager
 			_logger.Warning("Not connected to the internet, delaying remaining loads.");
 		}
 
-		await ConnectionHandler.WhenConnected(UpdateCompatibilityCatalogue);
+		await ConnectionHandler.WhenConnected(_workshopService.RunSync);
 
-		if (await _workshopService.Login())
-		{
-			await _workshopService.RunSync();
-		}
+		await ConnectionHandler.WhenConnected(UpdateCompatibilityCatalogue);
 
 		await ConnectionHandler.WhenConnected(_dlcManager.UpdateDLCs);
 
@@ -183,6 +167,23 @@ internal class CentralManager : ICentralManager
 		{
 			new BackgroundAction(RunBackupService);
 		}
+	}
+
+	private async Task LoadContent()
+	{
+		_logger.Info("Loading packages..");
+
+		var content = await _contentManager.LoadContents();
+
+		_logger.Info($"Loaded {content.Count} packages");
+
+		_versionUpdateService.Run(content);
+
+		_packageManager.SetPackages(content);
+
+		_logger.Info($"Loading and applying Compatibility Data..");
+
+		_skyveDataManager.Start(content);
 	}
 
 	private void CitiesManager_GameClosed()

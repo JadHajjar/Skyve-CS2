@@ -16,6 +16,8 @@ public class Playset : IPlayset
 	{
 		Id = playset.PlaysetId;
 		Name = playset.Name;
+		ModCount = playset.ModsCount;
+		ModSize = playset.ModsSize;
 		DateUpdated = playset.Updated ?? DateTime.MinValue;
 		ThumbnailUrl = playset.DisplayImagePath;
 	}
