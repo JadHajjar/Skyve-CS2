@@ -55,7 +55,7 @@ partial class SyncConflictForm
 			// 
 			this.base_P_Container.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(199)))), ((int)(((byte)(145)))));
 			this.base_P_Container.Controls.Add(this.TLP);
-			this.base_P_Container.Size = new System.Drawing.Size(350, 503);
+			this.base_P_Container.Size = new System.Drawing.Size(377, 536);
 			// 
 			// TLP
 			// 
@@ -90,13 +90,13 @@ partial class SyncConflictForm
 			this.TLP.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.TLP.Size = new System.Drawing.Size(348, 501);
+			this.TLP.Size = new System.Drawing.Size(375, 534);
 			this.TLP.TabIndex = 0;
 			// 
 			// spacer
 			// 
 			this.spacer.Dock = System.Windows.Forms.DockStyle.Top;
-			this.spacer.Location = new System.Drawing.Point(59, 275);
+			this.spacer.Location = new System.Drawing.Point(73, 292);
 			this.spacer.Name = "spacer";
 			this.spacer.Size = new System.Drawing.Size(229, 1);
 			this.spacer.TabIndex = 7;
@@ -107,7 +107,7 @@ partial class SyncConflictForm
 			// 
 			this.L_Title.Anchor = System.Windows.Forms.AnchorStyles.Top;
 			this.L_Title.AutoSize = true;
-			this.L_Title.Location = new System.Drawing.Point(151, 215);
+			this.L_Title.Location = new System.Drawing.Point(165, 232);
 			this.L_Title.Name = "L_Title";
 			this.L_Title.Size = new System.Drawing.Size(45, 19);
 			this.L_Title.TabIndex = 8;
@@ -121,7 +121,7 @@ partial class SyncConflictForm
 			this.B_Cloud.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon1.Name = "Globe";
 			this.B_Cloud.ImageName = dynamicIcon1;
-			this.B_Cloud.Location = new System.Drawing.Point(59, 282);
+			this.B_Cloud.Location = new System.Drawing.Point(73, 299);
 			this.B_Cloud.Name = "B_Cloud";
 			this.B_Cloud.Size = new System.Drawing.Size(94, 36);
 			this.B_Cloud.SpaceTriggersClick = true;
@@ -133,7 +133,7 @@ partial class SyncConflictForm
 			// 
 			this.L_CloudInfo.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.L_CloudInfo.AutoSize = true;
-			this.L_CloudInfo.Location = new System.Drawing.Point(59, 321);
+			this.L_CloudInfo.Location = new System.Drawing.Point(73, 338);
 			this.L_CloudInfo.Name = "L_CloudInfo";
 			this.L_CloudInfo.Size = new System.Drawing.Size(45, 19);
 			this.L_CloudInfo.TabIndex = 8;
@@ -146,7 +146,7 @@ partial class SyncConflictForm
 			this.B_Local.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon2.Name = "PC";
 			this.B_Local.ImageName = dynamicIcon2;
-			this.B_Local.Location = new System.Drawing.Point(175, 343);
+			this.B_Local.Location = new System.Drawing.Point(189, 360);
 			this.B_Local.Name = "B_Local";
 			this.B_Local.Size = new System.Drawing.Size(113, 36);
 			this.B_Local.SpaceTriggersClick = true;
@@ -158,7 +158,7 @@ partial class SyncConflictForm
 			// 
 			this.L_LocalInfo.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.L_LocalInfo.AutoSize = true;
-			this.L_LocalInfo.Location = new System.Drawing.Point(243, 382);
+			this.L_LocalInfo.Location = new System.Drawing.Point(257, 399);
 			this.L_LocalInfo.Name = "L_LocalInfo";
 			this.L_LocalInfo.Size = new System.Drawing.Size(45, 19);
 			this.L_LocalInfo.TabIndex = 8;
@@ -167,7 +167,7 @@ partial class SyncConflictForm
 			// L_Info
 			// 
 			this.L_Info.AutoSize = true;
-			this.L_Info.Location = new System.Drawing.Point(59, 234);
+			this.L_Info.Location = new System.Drawing.Point(73, 251);
 			this.L_Info.Name = "L_Info";
 			this.L_Info.Size = new System.Drawing.Size(45, 19);
 			this.L_Info.TabIndex = 8;
@@ -180,7 +180,7 @@ partial class SyncConflictForm
 			this.I_Paradox.Enabled = false;
 			dynamicIcon3.Name = "PDXMods";
 			this.I_Paradox.ImageName = dynamicIcon3;
-			this.I_Paradox.Location = new System.Drawing.Point(124, 127);
+			this.I_Paradox.Location = new System.Drawing.Point(138, 144);
 			this.I_Paradox.Name = "I_Paradox";
 			this.I_Paradox.Size = new System.Drawing.Size(99, 85);
 			this.I_Paradox.TabIndex = 0;
@@ -193,7 +193,7 @@ partial class SyncConflictForm
 			this.TLP.SetColumnSpan(this.I_Close, 2);
 			this.I_Close.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.I_Close.LoaderSpeed = 1D;
-			this.I_Close.Location = new System.Drawing.Point(296, 0);
+			this.I_Close.Location = new System.Drawing.Point(323, 0);
 			this.I_Close.Margin = new System.Windows.Forms.Padding(0);
 			this.I_Close.Name = "I_Close";
 			this.TLP.SetRowSpan(this.I_Close, 2);
@@ -205,7 +205,7 @@ partial class SyncConflictForm
 			// L_Playsets
 			// 
 			this.L_Playsets.AutoSize = true;
-			this.L_Playsets.Location = new System.Drawing.Point(59, 253);
+			this.L_Playsets.Location = new System.Drawing.Point(73, 270);
 			this.L_Playsets.Name = "L_Playsets";
 			this.L_Playsets.Size = new System.Drawing.Size(45, 19);
 			this.L_Playsets.TabIndex = 11;
@@ -214,7 +214,7 @@ partial class SyncConflictForm
 			// SyncConflictForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(361, 514);
+			this.ClientSize = new System.Drawing.Size(388, 547);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.MaximizedBounds = new System.Drawing.Rectangle(0, 0, 2560, 1380);
 			this.Name = "SyncConflictForm";
