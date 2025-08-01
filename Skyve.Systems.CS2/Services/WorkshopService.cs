@@ -110,11 +110,18 @@ public class WorkshopService : IWorkshopService
 			throw new Exception("FolderSettings AppData folder does not exist");
 		}
 
-		var junction = JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath).IfEmpty(_settings.FolderSettings.AppDataPath);
-
+		var environment = BackendEnvironment.Live;
+		var junction =JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath).IfEmpty(_settings.FolderSettings.AppDataPath);
+		var @namespace = "cities_skylines_2";
 		var pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
 		var ecoSystem = _settings.FolderSettings.GamingPlatform switch { GamingPlatform.Epic => Ecosystem.Epic, GamingPlatform.Microsoft => Ecosystem.Microsoft_Store, _ => Ecosystem.Steam };
+
+		//// For sandbox testing
+		//@namespace = "pdx_sdk_cs";
+		//junction = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Paradox", "PDXSDKCSHARP", "Skyve");
+		//pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
+		//environment = BackendEnvironment.Sandbox;
 
 		if (!string.IsNullOrWhiteSpace(_settings.FolderSettings.UserIdentifier))
 		{
@@ -140,7 +147,7 @@ public class WorkshopService : IWorkshopService
 			GameVersion = _citiesManager.GameVersion,
 			Logger = _pdxLogUtil,
 			DiskIORoot = pdxSdkPath,
-			Environment = BackendEnvironment.Live,
+			Environment = environment,
 			Ecosystem = ecoSystem,
 			UserId = _settings.FolderSettings.UserIdentifier,
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
@@ -152,7 +159,7 @@ public class WorkshopService : IWorkshopService
 			},
 #if DEBUG
 			LogLevel = LogLevel.L1_Debug,
-			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/9999"/*{typeof(WorkshopService).Assembly.GetName().Version}-test"*/ } },
+			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/9999" } },
 #else
 			LogLevel = LogLevel.L2_Warning,
 			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/{typeof(WorkshopService).Assembly.GetName().Version}" } },
@@ -171,7 +178,7 @@ public class WorkshopService : IWorkshopService
 		{
 			Context = await PDX.SDK.Context.Create(
 				platform: platform,
-				@namespace: "cities_skylines_2",
+				@namespace: @namespace,
 				config: config);
 
 			_logger.Info("SDK Created");
@@ -254,7 +261,10 @@ public class WorkshopService : IWorkshopService
 
 			IsLoggedIn = true;
 
-			var userName = (await Context.Profile.Get()).Social?.DisplayName ?? "N/A";
+			var userName = (await Context.Profile.Get()).Social?.DisplayName;
+
+			if (string.IsNullOrEmpty(userName))
+				userName = (await Context.Account.GetDetails())?.Email.RegexReplace(@"\*+", "***") ?? "N/A";
 
 			_userService.SetLoggedInUser(userName);
 
