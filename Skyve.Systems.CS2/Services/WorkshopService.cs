@@ -637,9 +637,9 @@ public class WorkshopService : IWorkshopService
 		return result.Success;
 	}
 
-	public Task<int> GetActivePlaysetId()
+	public async Task<int> GetActivePlaysetId()
 	{
-		return Task.FromResult(Context is null ? 0 : Context.Mods.GetActivePlayset().PlaysetId);
+		return Context is null ? 0 : (await Context.Mods.GetActivePlayset()).PlaysetId;
 	}
 
 	public async Task<IEnumerable<IPlaysetPackage>> GetModsInPlayset(int playsetId, bool includeOnline = false)

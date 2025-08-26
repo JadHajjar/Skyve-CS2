@@ -55,6 +55,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PluginFiles Include="Plugins\steam_api.dll" />
+		<PluginFiles Include="Plugins\steam_api64.dll" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(BuildType)' == 'Debug'">
+		<PluginFiles Include="Plugins\steam_appid.txt" />
+	</ItemGroup>
+
+	<Target Name="CopyPluginFiles" AfterTargets="Build">
+		<Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(OutputPath)" />
+	</Target>
+
+	<ItemGroup>
 		<Reference Include="Microsoft.CSharp" />
 		<Reference Include="System.Configuration" />
 		<Reference Include="System.IO.Compression" />

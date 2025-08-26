@@ -5,6 +5,7 @@ using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Skyve.Systems.CS2.Services;
 internal class SettingsService : ISettings
@@ -22,6 +23,11 @@ internal class SettingsService : ISettings
 	public SettingsService(SaveHandler saveHandler)
 	{
 		var settingsSaveHandler = new SaveHandler(CrossIO.Combine(Path.GetDirectoryName(saveHandler.SaveDirectory), "ModsSettings"));
+
+		//var isRunning = SteamAPI_IsSteamRunning();
+		//var init = SteamAPI_Init();
+		//var userId = GetSteamUserId();
+		//SteamAPI_Shutdown();
 
 		FolderSettings = settingsSaveHandler.Load<FolderSettings>();
 		SessionSettings = settingsSaveHandler.Load<SessionSettings>();

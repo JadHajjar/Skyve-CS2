@@ -12,198 +12,94 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
 
-//public static class SteamUtil
-//{
-//	private const string DLC_CACHE_FILE = "SteamDlcsCache.json";
+public static class SteamUtil
+{
+	private const string LibraryName = "steam_api64";
 
-//	private static readonly SteamUserProcessor _steamUserProcessor;
+	public static string GetSteamUserId()
+	{
+		var currentUser = SteamAPI_SteamUser_v023();
+		if (currentUser == System.IntPtr.Zero)
+		{
+			return string.Empty;
+		}
 
-//	public static List<SteamDlc> Dlcs { get; private set; }
+		var userId = ISteamUser_GetSteamID(currentUser);
+		if (userId == 0)
+		{
+			return string.Empty;
+		}
 
-//	public static event Action? DLCsLoaded;
+		return userId.ToString();
+	}
 
-//	static SteamUtil()
-//	{
-//		ServiceCenter.Get<SaveHandler>().Load(out List<SteamDlc>? cache, DLC_CACHE_FILE);
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_IsSteamRunning", CallingConvention = CallingConvention.Cdecl)]
+	[return: MarshalAs(UnmanagedType.I1)]
+	public static extern bool SteamAPI_IsSteamRunning();
 
-//		Dlcs = cache ?? new();
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_Init", CallingConvention = CallingConvention.Cdecl)]
+	[return: MarshalAs(UnmanagedType.I1)]
+	public static extern bool SteamAPI_Init();
 
-//		_steamUserProcessor = new();
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_Shutdown", CallingConvention = CallingConvention.Cdecl)]
+	public static extern void SteamAPI_Shutdown();
 
-//		var notifier = ServiceCenter.Get<INotifier>();
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamUser_v023", CallingConvention = CallingConvention.Cdecl)]
+	public static extern System.IntPtr SteamAPI_SteamUser_v023();
 
-//		_steamUserProcessor.ItemsLoaded += notifier.OnWorkshopUsersInfoLoaded;
-//	}
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_ISteamUser_GetSteamID", CallingConvention = CallingConvention.Cdecl)]
+	public static extern ulong ISteamUser_GetSteamID(System.IntPtr instancePtr);
 
-//	public static SteamUser? GetUser(ulong steamId)
-//	{
-//		return steamId == 0 ? null : _steamUserProcessor.Get(steamId, false).Result;
-//	}
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v012", CallingConvention = CallingConvention.Cdecl)]
+	private static extern IntPtr SteamAPI_SteamApps1();
 
-//	public static async Task<SteamUser?> GetUserAsync(ulong steamId)
-//	{
-//		return steamId == 0 ? null : await _steamUserProcessor.Get(steamId, true);
-//	}
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v013", CallingConvention = CallingConvention.Cdecl)]
+	private static extern IntPtr SteamAPI_SteamApps2();
 
-//	public static bool IsDlcInstalledLocally(uint dlcId)
-//	{
-//		return false;// _csCache?.AvailableDLCs?.Contains(dlcId) ?? false;
-//	}
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v014", CallingConvention = CallingConvention.Cdecl)]
+	private static extern IntPtr SteamAPI_SteamApps3();
 
-//	public static ulong GetLoggedInSteamId()
-//	{
-//		try
-//		{
-//			using var steam = new SteamBridge();
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v015", CallingConvention = CallingConvention.Cdecl)]
+	private static extern IntPtr SteamAPI_SteamApps4();
 
-//			return steam.GetSteamId();
-//		}
-//		catch
-//		{
-//			return 0;
-//		}
-//	}
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v016", CallingConvention = CallingConvention.Cdecl)]
+	private static extern IntPtr SteamAPI_SteamApps5();
 
-//	public static bool IsSteamAvailable()
-//	{
-//		return CrossIO.FileExists(ServiceCenter.Get<ILocationService>().SteamPathWithExe);
-//	}
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v017", CallingConvention = CallingConvention.Cdecl)]
+	private static extern IntPtr SteamAPI_SteamApps6();
 
-//	public static void ExecuteSteam(string args)
-//	{
-//		var file = ServiceCenter.Get<ILocationService>().SteamPathWithExe;
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v018", CallingConvention = CallingConvention.Cdecl)]
+	private static extern IntPtr SteamAPI_SteamApps7();
 
-//		if (CrossIO.CurrentPlatform is Platform.Windows)
-//		{
-//			var process = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(file));
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_ISteamApps_GetAppInstallDir",		CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+	private static extern uint SteamAPI_ISteamApps_GetAppInstallDir(		IntPtr instancePtr, uint appId, StringBuilder folder, uint folderBufferSize);
 
-//			if (process.Length == 0)
-//			{
-//				Notification.Create(Locale.SteamNotOpenTo, null, PromptIcons.Info, null).Show(SystemsProgram.MainForm, 10);
-//			}
-//		}
+	public static bool TryGetAppInstallDir(uint appId, out string pchFolder, uint bufferSize = 1024)
+	{
+		pchFolder = string.Empty;
 
-//		ServiceCenter.Get<IIOUtil>().Execute(file, args);
-//	}
+		IntPtr apps1 = SteamAPI_SteamApps1(); // get ISteamApps* pointer
+		IntPtr apps2 = SteamAPI_SteamApps2(); // get ISteamApps* pointer
+		IntPtr apps3 = SteamAPI_SteamApps3(); // get ISteamApps* pointer
+		IntPtr apps4 = SteamAPI_SteamApps4(); // get ISteamApps* pointer
+		IntPtr apps5 = SteamAPI_SteamApps5(); // get ISteamApps* pointer
+		IntPtr apps6 = SteamAPI_SteamApps6(); // get ISteamApps* pointer
+		IntPtr apps7 = SteamAPI_SteamApps7(); // get ISteamApps* pointer
+		if (apps1 == IntPtr.Zero)
+			return false;
 
-//	public static async Task<Dictionary<ulong, SteamUser>> GetSteamUsersAsync(List<ulong> steamId64s)
-//	{
-//		steamId64s.RemoveAll(x => x == 0);
+		var sb = new StringBuilder((int)bufferSize);
+		uint len = SteamAPI_ISteamApps_GetAppInstallDir(apps, appId, sb, bufferSize);
 
-//		if (steamId64s.Count == 0)
-//		{
-//			return new();
-//		}
+		if (len > 0)
+			pchFolder = sb.ToString();
 
-//		try
-//		{
-//			var result = await ServiceCenter.Get<SkyveApiUtil>().Post<List<ulong>, List<SteamUser>>("/GetUsers", steamId64s);
-
-//			return result?.ToDictionary(x => x.SteamId) ?? new();
-//		}
-//		catch (Exception ex)
-//		{
-//			ServiceCenter.Get<ILogger>().Exception(ex, "Failed to get steam author information");
-//		}
-
-//		return new();
-//	}
-
-//	public static async Task<Dictionary<string, SteamAppInfo>> GetSteamAppInfoAsync(uint steamId)
-//	{
-//		try
-//		{
-//			var url = $"https://store.steampowered.com/api/appdetails";
-
-//			return await ApiUtil.Get<Dictionary<string, SteamAppInfo>>(url, ("appids", steamId), ("l", "english")) ?? new();
-//		}
-//		catch (Exception ex)
-//		{
-//			ServiceCenter.Get<ILogger>().Exception(ex, "Failed to get the steam information for appid " + steamId);
-//		}
-
-//		return new();
-//	}
-
-//	public static async Task LoadDlcs()
-//	{
-//		ServiceCenter.Get<ILogger>().Info($"Loading DLCs..");
-
-//		var dlcs = await GetSteamAppInfoAsync(949230);
-
-//		if (!dlcs.ContainsKey("949230"))
-//		{
-//			ServiceCenter.Get<ILogger>().Info($"Failed to load DLCs, steam info returned invalid content..");
-//			return;
-//		}
-
-//		var newDlcs = new List<SteamDlc>(Dlcs);
-
-//		try
-//		{
-//			foreach (var dlc in dlcs["949230"].data?.dlc?.Where(x => !Dlcs.Any(y => y.Id == x && y.Timestamp > DateTime.Now.AddDays(-7))) ?? [])
-//			{
-//				var data = await GetSteamAppInfoAsync(dlc);
-
-//				if (data.ContainsKey(dlc.ToString()))
-//				{
-//					var info = data[dlc.ToString()].data!;
-
-//					newDlcs.RemoveAll(y => y.Id == dlc);
-
-//					newDlcs.Add(new SteamDlc
-//					{
-//						Timestamp = DateTime.Now,
-//						Id = dlc,
-//						Name = info.name!,
-//						Description = info.short_description!,
-//						Price = info.price_overview?.final_formatted,
-//						OriginalPrice = info.price_overview?.initial_formatted,
-//						Discount = info.price_overview?.discount_percent ?? 0F,
-//						ReleaseDate = DateTime.TryParseExact(info.release_date?.date, "dd MMM, yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ? dt : DateTime.MinValue
-//					});
-//				}
-//			}
-
-//			ServiceCenter.Get<ILogger>().Info($"DLCs ({newDlcs.Count}) loaded..");
-
-//			ServiceCenter.Get<SaveHandler>().Save(Dlcs = newDlcs, DLC_CACHE_FILE);
-//		}
-//		catch (Exception ex)
-//		{
-//			ServiceCenter.Get<ILogger>().Exception(ex, $"Failed to load DLCs..");
-//		}
-//		finally
-//		{
-//			DLCsLoaded?.Invoke();
-//		}
-//	}
-
-//	public static void ClearCache()
-//	{
-//		_steamUserProcessor.Clear();
-
-//		try
-//		{
-//			Dlcs = new();
-//			CrossIO.DeleteFile(ServiceCenter.Get<SaveHandler>().GetPath(DLC_CACHE_FILE));
-//		}
-//		catch (Exception ex)
-//		{
-//			ServiceCenter.Get<ILogger>().Exception(ex, "Failed to clear DLC_CACHE_FILE");
-//		}
-
-//		try
-//		{
-//			CrossIO.DeleteFile(ServiceCenter.Get<SaveHandler>().GetPath(SteamUserProcessor.STEAM_USER_CACHE_FILE));
-//		}
-//		catch (Exception ex)
-//		{
-//			ServiceCenter.Get<ILogger>().Exception(ex, "Failed to clear STEAM_USER_CACHE_FILE");
-//		}
-//	}
-//}
+		return len > 0;
+	}
+}

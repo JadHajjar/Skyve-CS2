@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using Skyve.Domain;
 using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
+using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.IO;
@@ -53,23 +54,21 @@ internal class LocationService : ILocationService
 			_settings.FolderSettings.SteamPath = FindSteamPath(_settings.FolderSettings);
 		}
 
-		if (!_settings.SessionSettings.FirstTimeSetupCompleted)
+		if (!TryGenerateFolderSettings())
 		{
-			RunFirstTimeSetup();
+			_settings.FolderSettings.Reload();
 		}
-		else
-		{
-			SetCorrectPathSeparator();
 
-			_logger.Info("Folder Settings:\r\n" +
-				$"Platform: {CrossIO.CurrentPlatform}\r\n" +
-				$"UserIdType: {_settings.FolderSettings.UserIdType}\r\n" +
-				$"UserIdentifier: {_settings.FolderSettings.UserIdentifier}\r\n" +
-				$"GamingPlatform: {_settings.FolderSettings.GamingPlatform}\r\n" +
-				$"GamePath: {_settings.FolderSettings.GamePath}\r\n" +
-				$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
-				$"SteamPath: {_settings.FolderSettings.SteamPath}");
-		}
+		SetCorrectPathSeparator();
+
+		_logger.Info("Folder Settings:\r\n" +
+			$"Platform: {CrossIO.CurrentPlatform}\r\n" +
+			$"UserIdType: {_settings.FolderSettings.UserIdType}\r\n" +
+			$"UserIdentifier: {_settings.FolderSettings.UserIdentifier}\r\n" +
+			$"GamingPlatform: {_settings.FolderSettings.GamingPlatform}\r\n" +
+			$"GamePath: {_settings.FolderSettings.GamePath}\r\n" +
+			$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
+			$"SteamPath: {_settings.FolderSettings.SteamPath}");
 
 		if (!Directory.Exists(_settings.FolderSettings.AppDataPath) || string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier))
 		{
@@ -82,6 +81,25 @@ internal class LocationService : ILocationService
 				notificationsService.SendNotification(new InvalidFolderSettingsNotification());
 			}
 		}
+	}
+
+	private bool TryGenerateFolderSettings()
+	{
+		try
+		{
+			_settings.FolderSettings.SteamPath = FindSteamPath(_settings.FolderSettings);
+			_settings.FolderSettings.UserIdType = "steam";
+			_settings.FolderSettings.UserIdentifier = SteamUtil.GetSteamUserId();
+			_settings.FolderSettings.GamingPlatform = Skyve.Domain.Enums.GamingPlatform.Steam;
+
+			if (SteamUtil.TryGetAppInstallDir(949230, out var dir))
+				;
+
+			return true;
+		}
+		catch (Exception ex) {
+			_logger.Exception(ex, "Failed to generate folder settings");
+			return false; }
 	}
 
 	public void SetPaths(string gamePath, string appDataPath, string steamPath)

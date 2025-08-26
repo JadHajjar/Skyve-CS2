@@ -53,9 +53,17 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 
 		PdxLocalData = mod.LocalData;
-		ThumbnailPath = mod.LocalData is not null
-			? CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename)
-			: string.Empty;
+
+		if (mod.LocalData?.FolderAbsolutePath is not null)
+		{
+			LocalData = new LocalPackageData(this, [], [], mod.LocalData.FolderAbsolutePath, mod.UserModVersion, mod.LocalData.ContentFileOrFolder, mod.RequiredGameVersion);
+
+			ThumbnailPath = CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
+		}
+		else
+		{
+			ThumbnailPath = string.Empty;
+		}
 
 		if (mod is ModSearch modSearch)
 		{
