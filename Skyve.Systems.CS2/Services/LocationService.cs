@@ -59,6 +59,10 @@ internal class LocationService : ILocationService
 			_settings.FolderSettings.Reload();
 		}
 
+		_settings.FolderSettings.GamePath = _settings.FolderSettings.GamePath?.FormatPath() ?? string.Empty;
+		_settings.FolderSettings.AppDataPath = _settings.FolderSettings.AppDataPath?.FormatPath() ?? string.Empty;
+		_settings.FolderSettings.SteamPath = _settings.FolderSettings.SteamPath?.FormatPath() ?? string.Empty;
+
 		SetCorrectPathSeparator();
 
 		_logger.Info("Folder Settings:\r\n" +
@@ -70,45 +74,101 @@ internal class LocationService : ILocationService
 			$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
 			$"SteamPath: {_settings.FolderSettings.SteamPath}");
 
-		if (!Directory.Exists(_settings.FolderSettings.AppDataPath) || string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier))
+		if (!CheckFolderSettingsValidity(out var onlyAppDataError))
 		{
-			if (Directory.Exists(Path.Combine(Path.GetDirectoryName(GetFolderPath(SpecialFolder.ApplicationData)), "LocalLow", "Colossal Order", "Cities Skylines II")))
+			if (onlyAppDataError)
 			{
-				notificationsService.SendNotification(new SkyveNotSetupNotification());
+				notificationsService.SendNotification(new InvalidFolderSettingsNotification());
 			}
 			else
 			{
-				notificationsService.SendNotification(new InvalidFolderSettingsNotification());
+#if STEAM
+				notificationsService.SendNotification(new SkyveNotSetupNotification());
+#else
+				notificationsService.SendNotification(new SkyveNotSetupNotification());
+#endif
 			}
 		}
 	}
 
 	private bool TryGenerateFolderSettings()
 	{
+#if STEAM
 		try
 		{
+			if (!SteamUtil.IsSteamRunning())
+			{
+				throw new Exception("Steam is not running.");
+			}
+
+			if (!SteamUtil.InitSteamAPI())
+			{
+				throw new Exception("Failed to initialize Steam API connection.");
+			}
+
+			if (!SteamUtil.TryGetSteamUserId(out var userId))
+			{
+				throw new Exception("Failed to get the game's install folder. Is it actually installed?");
+			}
+
+			if (!SteamUtil.TryGetAppInstallDir(949230, out var gamePath))
+			{
+				throw new Exception("Failed to get the game's install folder. Is it actually installed?");
+			}
+
 			_settings.FolderSettings.SteamPath = FindSteamPath(_settings.FolderSettings);
 			_settings.FolderSettings.UserIdType = "steam";
-			_settings.FolderSettings.UserIdentifier = SteamUtil.GetSteamUserId();
+			_settings.FolderSettings.UserIdentifier = userId.ToString();
 			_settings.FolderSettings.GamingPlatform = Skyve.Domain.Enums.GamingPlatform.Steam;
+			_settings.FolderSettings.AppDataPath = Path.Combine(GetFolderPath(SpecialFolder.UserProfile), "AppData", "LocalLow", "Colossal Order", "Cities Skylines II");
+			_settings.FolderSettings.GamePath = gamePath;
 
-			if (SteamUtil.TryGetAppInstallDir(949230, out var dir))
-				;
+			_settings.FolderSettings.Save();
 
 			return true;
 		}
-		catch (Exception ex) {
+		catch (Exception ex)
+		{
 			_logger.Exception(ex, "Failed to generate folder settings");
-			return false; }
+
+			return false;
+		}
+		finally
+		{
+			SteamUtil.ShutdownSteamAPI();
+		}
+#else
+		if (!_settings.SessionSettings.FirstTimeSetupCompleted)
+		{
+			RunFirstTimeSetup();
+		}
+		else
+		{
+			SetCorrectPathSeparator();
+
+			_logger.Info("Folder Settings:\r\n" +
+				$"Platform: {CrossIO.CurrentPlatform}\r\n" +
+				$"UserIdType: {_settings.FolderSettings.UserIdType}\r\n" +
+				$"UserIdentifier: {_settings.FolderSettings.UserIdentifier}\r\n" +
+				$"GamingPlatform: {_settings.FolderSettings.GamingPlatform}\r\n" +
+				$"GamePath: {_settings.FolderSettings.GamePath}\r\n" +
+				$"AppDataPath: {_settings.FolderSettings.AppDataPath}\r\n" +
+				$"SteamPath: {_settings.FolderSettings.SteamPath}");
+		}
+
+		return true;
+#endif
 	}
 
-	public void SetPaths(string gamePath, string appDataPath, string steamPath)
+	private bool CheckFolderSettingsValidity(out bool onlyAppDataError)
 	{
-		_settings.FolderSettings.GamePath = gamePath;
-		_settings.FolderSettings.AppDataPath = appDataPath;
-		_settings.FolderSettings.SteamPath = steamPath;
+		onlyAppDataError =
+			Directory.Exists(_settings.FolderSettings.SteamPath) &&
+			!string.IsNullOrEmpty(_settings.FolderSettings.UserIdType) &&
+			!string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier) &&
+			Directory.Exists(_settings.FolderSettings.GamePath);
 
-		_settings.FolderSettings.Save();
+		return onlyAppDataError && Directory.Exists(_settings.FolderSettings.AppDataPath);
 	}
 
 	private void SetCorrectPathSeparator()
@@ -156,6 +216,7 @@ internal class LocationService : ILocationService
 
 	public void RunFirstTimeSetup()
 	{
+#if !STEAM
 		_logger.Info("First time setup Folder settings:\r\n" +
 			$"Platform: {_settings.FolderSettings.Platform}\r\n" +
 			$"UserIdType: {_settings.FolderSettings.UserIdType}\r\n" +
@@ -209,6 +270,7 @@ internal class LocationService : ILocationService
 
 			SetCorrectPathSeparator();
 		}
+#endif
 	}
 
 	private string FindSteamPath(IFolderSettings settings)

@@ -4,6 +4,7 @@ using Skyve.Domain;
 using Skyve.Domain.CS2.Steam;
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
+using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Concurrent;
@@ -47,12 +48,20 @@ internal class DlcManager : IDlcManager
 
 	public bool IsAvailable(IDlcInfo dlc)
 	{
-		return _config.AvailableDLCs.Contains(dlc.Id);
+#if STEAM
+		return SteamUtil.IsDlcOwned((uint)dlc.Id);
+#else
+		//return _config.AvailableDLCs.Contains(dlc.Id);
+#endif
 	}
 
 	public bool IsAvailable(ulong dlc)
 	{
-		return _config.AvailableDLCs.Contains(dlc);
+#if STEAM
+		return SteamUtil.IsDlcOwned((uint)dlc);
+#else
+		//return _config.AvailableDLCs.Contains(dlc);
+#endif
 	}
 
 	public bool IsIncluded(IDlcInfo dlc)

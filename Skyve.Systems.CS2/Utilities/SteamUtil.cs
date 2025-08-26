@@ -1,20 +1,6 @@
-using Extensions;
-
-using Skyve.Domain;
-using Skyve.Domain.CS2.Steam;
-using Skyve.Domain.Systems;
-
-using SlickControls;
-
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
 
@@ -22,84 +8,73 @@ public static class SteamUtil
 {
 	private const string LibraryName = "steam_api64";
 
-	public static string GetSteamUserId()
+	public static bool TryGetSteamUserId(out ulong userId)
 	{
-		var currentUser = SteamAPI_SteamUser_v023();
-		if (currentUser == System.IntPtr.Zero)
+		var currentUser = GetSteamUserInstance();
+		if (currentUser != System.IntPtr.Zero)
 		{
-			return string.Empty;
+			userId = ISteamUser_GetSteamID(currentUser);
+		}
+		else
+		{
+			userId = 0;
 		}
 
-		var userId = ISteamUser_GetSteamID(currentUser);
-		if (userId == 0)
-		{
-			return string.Empty;
-		}
 
-		return userId.ToString();
+		return userId != 0;
+	}
+
+	public static bool TryGetAppInstallDir(uint appId, out string pchFolder, int bufferSize = 260)
+	{
+		var appsPtr = GetSteamAppsInstance();
+
+		var sb = new StringBuilder(bufferSize); // MAX_PATH size
+
+		var length = ISteamApps_GetAppInstallDir(appsPtr, appId, sb, (uint)sb.Capacity);
+
+		if (length > 0)
+		{
+			pchFolder = sb.ToString();
+			return true;
+		}
+		else
+		{
+			pchFolder = string.Empty;
+			return false;
+		}
+	}
+
+	public static bool IsDlcOwned(uint appId)
+	{
+		var appsPtr = GetSteamAppsInstance();
+
+		return ISteamApps_BIsSubscribedApp(appsPtr, appId);
 	}
 
 	[DllImport(LibraryName, EntryPoint = "SteamAPI_IsSteamRunning", CallingConvention = CallingConvention.Cdecl)]
 	[return: MarshalAs(UnmanagedType.I1)]
-	public static extern bool SteamAPI_IsSteamRunning();
+	public static extern bool IsSteamRunning();
 
 	[DllImport(LibraryName, EntryPoint = "SteamAPI_Init", CallingConvention = CallingConvention.Cdecl)]
 	[return: MarshalAs(UnmanagedType.I1)]
-	public static extern bool SteamAPI_Init();
+	public static extern bool InitSteamAPI();
 
 	[DllImport(LibraryName, EntryPoint = "SteamAPI_Shutdown", CallingConvention = CallingConvention.Cdecl)]
-	public static extern void SteamAPI_Shutdown();
+	public static extern void ShutdownSteamAPI();
 
 	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamUser_v023", CallingConvention = CallingConvention.Cdecl)]
-	public static extern System.IntPtr SteamAPI_SteamUser_v023();
+	private static extern IntPtr GetSteamUserInstance();
 
 	[DllImport(LibraryName, EntryPoint = "SteamAPI_ISteamUser_GetSteamID", CallingConvention = CallingConvention.Cdecl)]
-	public static extern ulong ISteamUser_GetSteamID(System.IntPtr instancePtr);
+	private static extern ulong ISteamUser_GetSteamID(IntPtr instancePtr);
 
-	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v012", CallingConvention = CallingConvention.Cdecl)]
-	private static extern IntPtr SteamAPI_SteamApps1();
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v008", CallingConvention = CallingConvention.Cdecl)]
+	private static extern IntPtr GetSteamAppsInstance();
 
-	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v013", CallingConvention = CallingConvention.Cdecl)]
-	private static extern IntPtr SteamAPI_SteamApps2();
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_ISteamApps_GetAppInstallDir", CallingConvention = CallingConvention.Cdecl)]
+	private static extern uint ISteamApps_GetAppInstallDir(IntPtr instancePtr, uint appId, StringBuilder folder, uint folderBufferSize);
 
-	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v014", CallingConvention = CallingConvention.Cdecl)]
-	private static extern IntPtr SteamAPI_SteamApps3();
-
-	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v015", CallingConvention = CallingConvention.Cdecl)]
-	private static extern IntPtr SteamAPI_SteamApps4();
-
-	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v016", CallingConvention = CallingConvention.Cdecl)]
-	private static extern IntPtr SteamAPI_SteamApps5();
-
-	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v017", CallingConvention = CallingConvention.Cdecl)]
-	private static extern IntPtr SteamAPI_SteamApps6();
-
-	[DllImport(LibraryName, EntryPoint = "SteamAPI_SteamApps_v018", CallingConvention = CallingConvention.Cdecl)]
-	private static extern IntPtr SteamAPI_SteamApps7();
-
-	[DllImport(LibraryName, EntryPoint = "SteamAPI_ISteamApps_GetAppInstallDir",		CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-	private static extern uint SteamAPI_ISteamApps_GetAppInstallDir(		IntPtr instancePtr, uint appId, StringBuilder folder, uint folderBufferSize);
-
-	public static bool TryGetAppInstallDir(uint appId, out string pchFolder, uint bufferSize = 1024)
-	{
-		pchFolder = string.Empty;
-
-		IntPtr apps1 = SteamAPI_SteamApps1(); // get ISteamApps* pointer
-		IntPtr apps2 = SteamAPI_SteamApps2(); // get ISteamApps* pointer
-		IntPtr apps3 = SteamAPI_SteamApps3(); // get ISteamApps* pointer
-		IntPtr apps4 = SteamAPI_SteamApps4(); // get ISteamApps* pointer
-		IntPtr apps5 = SteamAPI_SteamApps5(); // get ISteamApps* pointer
-		IntPtr apps6 = SteamAPI_SteamApps6(); // get ISteamApps* pointer
-		IntPtr apps7 = SteamAPI_SteamApps7(); // get ISteamApps* pointer
-		if (apps1 == IntPtr.Zero)
-			return false;
-
-		var sb = new StringBuilder((int)bufferSize);
-		uint len = SteamAPI_ISteamApps_GetAppInstallDir(apps, appId, sb, bufferSize);
-
-		if (len > 0)
-			pchFolder = sb.ToString();
-
-		return len > 0;
-	}
+	[DllImport(LibraryName, EntryPoint = "SteamAPI_ISteamApps_BIsSubscribedApp", CallingConvention = CallingConvention.Cdecl)]
+	[return: MarshalAs(UnmanagedType.I1)]
+	public static extern bool ISteamApps_BIsSubscribedApp(IntPtr instancePtr, uint appId);
 }

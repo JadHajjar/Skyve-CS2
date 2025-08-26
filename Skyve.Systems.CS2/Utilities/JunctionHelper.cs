@@ -56,6 +56,11 @@ public static class JunctionHelper
 
 	public static string GetJunctionState(string appDataFolder)
 	{
+		if (!Directory.Exists(appDataFolder))
+		{
+			return string.Empty;
+		}
+
 		var p = Process.Start(new ProcessStartInfo()
 		{
 			Arguments = $"/C dir \"{Path.GetDirectoryName(appDataFolder)}\" /al /s & exit",

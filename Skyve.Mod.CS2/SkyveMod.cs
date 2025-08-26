@@ -133,7 +133,7 @@ namespace Skyve.Mod.CS2
 					Log.Error(ex);
 				}
 
-				config.AvailableDLCs.Clear();
+				config.AvailableDLCs = new();
 
 				foreach (var item in PlatformManager.instance.EnumerateDLCs())
 				{

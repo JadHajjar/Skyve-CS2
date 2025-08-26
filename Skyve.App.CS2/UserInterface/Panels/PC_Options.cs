@@ -23,7 +23,7 @@ public partial class PC_Options : PanelContent
 
 		foreach (var button in this.GetControls<SlickButton>())
 		{
-			if (button != B_ChangeLog && button != B_CreateJunction && button != B_DeleteJunction && button is not SlickLabel)
+			if (button != B_ChangeLog && button != B_CreateJunction && button != B_DeleteJunction && button != B_Icons8 && button is not SlickLabel)
 			{
 				SlickTip.SetTo(button, LocaleHelper.GetGlobalText($"{button.Text}_Tip"));
 			}
@@ -84,7 +84,7 @@ public partial class PC_Options : PanelContent
 		DD_Language.Width = UI.Scale(220);
 		TLP_Main.Padding = UI.Scale(new Padding(3, 0, 7, 0));
 		B_Theme.Margin = TLP_UI.Margin = TLP_Settings.Margin = TLP_Advanced.Margin = B_HelpTranslate.Margin = TLP_HelpLogs.Margin =
-			 B_Discord.Margin = B_Guide.Margin = B_Reset.Margin = B_ChangeLog.Margin = B_CreateShortcut.Margin =
+			 B_Discord.Margin = B_Guide.Margin = B_Reset.Margin = B_ChangeLog.Margin = B_CreateShortcut.Margin = B_Icons8.Margin =
 			TLP_Preferences.Margin = UI.Scale(new Padding(10), UI.UIScale);
 		DD_Language.Margin = UI.Scale(new Padding(10, 7, 10, 5), UI.UIScale);
 		slickSpacer5.Height = slickSpacer1.Height = slickSpacer2.Height = (int)(1.5 * UI.FontScale);
@@ -96,6 +96,7 @@ public partial class PC_Options : PanelContent
 		L_JunctionStatus.Margin = UI.Scale(new Padding(3, 5, 3, 3));
 		L_JunctionDescription.Margin = UI.Scale(new Padding(10, 5, 3, 15));
 
+		B_Icons8.Font = UI.Font(8.25F, FontStyle.Underline);
 		L_JunctionTitle.Font = UI.Font(9.5F, FontStyle.Bold);
 		L_JunctionDescription.Font = UI.Font(7.75F);
 		L_JunctionStatusLabel.Font = UI.Font(8.25F, FontStyle.Bold);
@@ -355,5 +356,10 @@ public partial class PC_Options : PanelContent
 		_settings.UserSettings.DependencyResolution = (DependencyResolveBehavior)DD_Dependency.SelectedOption;
 
 		_settings.UserSettings.Save();
+	}
+
+	private void B_Icons8_Click(object sender, EventArgs e)
+	{
+		PlatformUtil.OpenUrl("https://icons8.com/");
 	}
 }

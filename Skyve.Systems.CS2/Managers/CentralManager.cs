@@ -76,12 +76,19 @@ internal class CentralManager : ICentralManager
 		}
 		catch (Exception ex)
 		{
+			_notifier.OnContentLoaded();
+			_compatibilityManager.DoFirstCache();
+
 			_logger.Exception(ex, memberName: "Error in Initialization");
 		}
 	}
 
 	public async Task Initialize()
 	{
+#if STEAM
+		try { SteamUtil.InitSteamAPI(); }
+		catch { }
+#else
 		if (!_settings.SessionSettings.FirstTimeSetupCompleted)
 		{
 			try
@@ -95,7 +102,7 @@ internal class CentralManager : ICentralManager
 				MessagePrompt.Show(ex, "Failed to complete the First Time Setup", form: SystemsProgram.MainForm as SlickForm);
 			}
 		}
-
+#endif
 		_logger.Info("Checking for internet connection..");
 
 		ConnectionHandler.AssumeInternetConnectivity = _settings.UserSettings.AssumeInternetConnectivity;
@@ -193,6 +200,9 @@ internal class CentralManager : ICentralManager
 
 	private void CheckCorruptedSettingsFiles()
 	{
+		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
+			return;
+
 		var corruptedFiles = new List<string>();
 
 		foreach (var item in Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*.coc", SearchOption.AllDirectories))
@@ -249,6 +259,7 @@ internal class CentralManager : ICentralManager
 		_logger.Info($"Compatibility report cached");
 	}
 
+#if !STEAM
 	private void RunFirstTimeSetup()
 	{
 		_logger.Info("Running First Time Setup");
@@ -267,6 +278,7 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info("Saved Session Settings");
 	}
+#endif
 
 	public async Task<bool> RunCommands()
 	{
@@ -325,7 +337,7 @@ internal class CentralManager : ICentralManager
 #if STABLE
 		const ulong MODID = 75804;
 #else
-		const ulong MODID = 75804;
+		const ulong MODID = 108773;
 #endif
 		var modExists = false;
 		var workshopInfo = await _workshopService.GetInfoAsync(new GenericPackageIdentity(MODID));

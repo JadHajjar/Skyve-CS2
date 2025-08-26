@@ -69,7 +69,7 @@ internal class D_DiskInfo : IDashboardItem
 	{
 		var contentInfo = new ContentInfo();
 		var junctionLocation = JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath);
-		var drive = new DriveInfo(junctionLocation.IfEmpty(_settings.FolderSettings.AppDataPath).Substring(0, 1));
+		var drive = new DriveInfo(junctionLocation.IfEmpty(_settings.FolderSettings.AppDataPath)?.Substring(0, 1) ?? "C");
 
 		contentInfo.HasMultipleDrives = DriveInfo.GetDrives().Count(x => x.DriveType is DriveType.Removable or DriveType.Fixed && x.TotalSize > 150 * 1024L * 1024L * 1024L) > 1;
 		contentInfo.DriveLetter = drive.Name;
