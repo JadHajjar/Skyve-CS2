@@ -51,7 +51,7 @@ internal class DlcManager : IDlcManager
 #if STEAM
 		return SteamUtil.IsDlcOwned((uint)dlc.Id);
 #else
-		//return _config.AvailableDLCs.Contains(dlc.Id);
+		return _config.AvailableDLCs.Contains(dlc.Id);
 #endif
 	}
 
@@ -60,7 +60,7 @@ internal class DlcManager : IDlcManager
 #if STEAM
 		return SteamUtil.IsDlcOwned((uint)dlc);
 #else
-		//return _config.AvailableDLCs.Contains(dlc);
+		return _config.AvailableDLCs.Contains(dlc);
 #endif
 	}
 
