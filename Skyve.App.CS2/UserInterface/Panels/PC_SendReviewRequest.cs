@@ -40,7 +40,7 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		base.LocaleChanged();
 
 		Text = LocaleCR.RequestReview;
-		L_Title.Text = LocaleCR.ChooseWhatToRequest;
+		L_Title2.Text = LocaleCR.ChooseWhatToRequest;
 		L_Disclaimer.Text = LocaleCR.RequestReviewDisclaimer;
 		B_Apply.Text = Locale.SendReview + "*";
 		L_English.Text = Locale.UseEnglishPlease;
@@ -60,8 +60,8 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 		TB_Note.Height = UI.Scale(250);
 		L_Disclaimer.Font = UI.Font(7.5F, FontStyle.Bold | FontStyle.Italic);
 		slickSpacer2.Height = UI.Scale(2);
-		L_Title.Font = UI.Font(12.75F, FontStyle.Bold);
-		L_Title.Margin = UI.Scale(new Padding(6));
+		L_Title2.Font = UI.Font(12.75F, FontStyle.Bold);
+		L_Title2.Margin = UI.Scale(new Padding(6));
 	}
 
 	protected override void DesignChanged(FormDesign design)

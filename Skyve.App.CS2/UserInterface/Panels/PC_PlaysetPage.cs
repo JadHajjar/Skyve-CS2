@@ -14,7 +14,6 @@ using System.Windows.Forms;
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_PlaysetPage : PlaysetSettingsPanel
 {
-	private readonly bool loadingPlayset;
 	private readonly bool _editName;
 	private readonly IOSelectionDialog imagePrompt;
 
@@ -192,7 +191,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 	private void ValueChanged(object sender, EventArgs e)
 	{
-		if (loadingPlayset || !Live)
+		if (!Live)
 		{
 			return;
 		}
@@ -236,11 +235,6 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 	private async void PlaysetUsage_SelectedValueChanged(object sender, EventArgs e)
 	{
-		if (loadingPlayset)
-		{
-			return;
-		}
-
 		var usage = FLP_Usage.Controls.OfType<PlaysetUsageSelection>().FirstOrAny(x => x.Selected).Usage;
 		var invalidPackages = _playsetManager.GetInvalidPackages(Playset, usage);
 

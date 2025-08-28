@@ -20,7 +20,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailOb
 {
 	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
 
-	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? versionName, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)), isCodeMod, version, versionName, filePath, mod.RequiredGameVersion)
+	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? versionName, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames?.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)) ?? [], isCodeMod, version, versionName, filePath, mod.RequiredGameVersion)
 	{
 		IsLocal = mod.Id <= 0;
 		Id = (ulong)mod.Id;
@@ -41,7 +41,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailOb
 		InstalledDate = mod.InstalledDate;
 		SuggestedGameVersion = mod.RequiredGameVersion;
 		PdxLocalData = mod.LocalData;
-		ThumbnailPath = CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
+		ThumbnailPath = mod.LocalData.ThumbnailFilename is null ? string.Empty : CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
 		ServerTime = mod.LatestUpdate ?? default;
 		ServerSize = (long)mod.Size;
 		IsCollection = false;

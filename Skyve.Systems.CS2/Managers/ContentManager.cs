@@ -405,7 +405,7 @@ internal class ContentManager : IContentManager
 
 	public void StartListeners()
 	{
-		PackageWatcher.Dispose();
+		//PackageWatcher.Dispose();
 
 		//PackageWatcher.Create(_locationManager.ModsPath, false, false);
 

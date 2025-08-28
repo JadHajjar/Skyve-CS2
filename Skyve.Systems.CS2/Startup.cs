@@ -27,7 +27,6 @@ public static class Startup
 		services.AddSingleton<IContentManager, ContentManager>();
 		services.AddSingleton<IModDllManager, ModDllManager>();
 		services.AddSingleton<IModUtil, ModsUtil>();
-		services.AddSingleton<IOnlinePlaysetUtil, OnlinePlaysetUtil>();
 		services.AddSingleton<IWorkshopService, WorkshopService>();
 		services.AddSingleton<IUserService, UserService>();
 		services.AddSingleton<IDlcManager, DlcManager>();

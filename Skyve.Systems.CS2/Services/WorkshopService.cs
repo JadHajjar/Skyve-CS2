@@ -39,7 +39,7 @@ namespace Skyve.Systems.CS2.Services;
 public class WorkshopService : IWorkshopService
 {
 	public event Action? OnLogin;
-	public event Action? OnLogout;
+	event Action? IWorkshopService.OnLogout { add { } remove { } }
 	public event Action? OnContextAvailable;
 
 	private readonly ILogger _logger;
@@ -745,6 +745,8 @@ public class WorkshopService : IWorkshopService
 
 	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset)
 	{
+		mods = mods.Where(x => x.Key > 0);
+
 		if (Context is null || playset <= 0 || !mods.Any())
 		{
 			return false;

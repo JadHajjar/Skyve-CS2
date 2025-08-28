@@ -49,15 +49,9 @@
 		<ProjectReference Include="..\..\Skyve\Skyve.Systems\Skyve.Systems.csproj" />
 		<ProjectReference Include="..\..\SlickControls\SlickControls.csproj" />
 
-		<Reference Include="PDX.SDK">
-			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Content\Game\.ModdingToolchain\ModPublisher\PDX.SDK.dll</HintPath>
-		</Reference>
-		<Reference Include="PDX.SDK.Contracts">
-			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Content\Game\.ModdingToolchain\ModPublisher\PDX.SDK.Contracts.dll</HintPath>
-		</Reference>
-		<Reference Include="PDX.SDK.Network">
-			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Content\Game\.ModdingToolchain\ModPublisher\PDX.SDK.Network.dll</HintPath>
-		</Reference>
+		<ProjectReference Include="..\..\PDXSDK\PDX.SDK\PDX.SDK.csproj" />
+		<ProjectReference Include="..\..\PDXSDK\PDX.SDK.Contracts\PDX.SDK.Contracts.csproj" />
+		<ProjectReference Include="..\..\PDXSDK\PDX.SDK.Network\PDX.SDK.Network.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>

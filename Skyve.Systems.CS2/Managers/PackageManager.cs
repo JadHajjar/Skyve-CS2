@@ -16,7 +16,6 @@ internal class PackageManager : IPackageManager
 	private readonly Dictionary<ulong, IPackage> indexedPackages = [];
 	private readonly Dictionary<string, List<IPackage>> indexedMods = [];
 	private readonly List<IPackage> packages = [];
-	private IPackage? saveGamesPackage;
 
 	private readonly IModLogicManager _modLogicManager;
 	private readonly ISettings _settings;
@@ -236,7 +235,7 @@ internal class PackageManager : IPackageManager
 			RemovePackage(package);
 		}
 
-		PackageWatcher.Pause();
+		//PackageWatcher.Pause();
 		try
 		{
 			CrossIO.DeleteFolder(folder);
@@ -246,7 +245,7 @@ internal class PackageManager : IPackageManager
 			_logger.Exception(ex, memberName: $"Failed to delete the folder '{folder}'");
 		}
 
-		PackageWatcher.Resume();
+		//PackageWatcher.Resume();
 	}
 
 	public void MoveToLocalFolder(IPackage item)

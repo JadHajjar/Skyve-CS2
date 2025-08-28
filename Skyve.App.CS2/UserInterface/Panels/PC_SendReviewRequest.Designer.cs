@@ -42,7 +42,7 @@ partial class PC_SendReviewRequest
 			SlickControls.DynamicIcon dynamicIcon7 = new SlickControls.DynamicIcon();
 			this.TLP_Actions = new System.Windows.Forms.TableLayoutPanel();
 			this.slickSpacer1 = new SlickControls.SlickSpacer();
-			this.L_Title = new System.Windows.Forms.Label();
+			this.L_Title2 = new System.Windows.Forms.Label();
 			this.B_ReportIssue = new Skyve.App.UserInterface.Generic.BigSelectionOptionControl();
 			this.B_AddMissingInfo = new Skyve.App.UserInterface.Generic.BigSelectionOptionControl();
 			this.L_English = new System.Windows.Forms.Label();
@@ -90,7 +90,7 @@ partial class PC_SendReviewRequest
 			this.TLP_Actions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TLP_Actions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TLP_Actions.Controls.Add(this.slickSpacer1, 1, 2);
-			this.TLP_Actions.Controls.Add(this.L_Title, 0, 1);
+			this.TLP_Actions.Controls.Add(this.L_Title2, 0, 1);
 			this.TLP_Actions.Controls.Add(this.B_ReportIssue, 1, 4);
 			this.TLP_Actions.Controls.Add(this.B_AddMissingInfo, 2, 4);
 			this.TLP_Actions.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -119,14 +119,14 @@ partial class PC_SendReviewRequest
 			// 
 			// L_Title
 			// 
-			this.L_Title.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.L_Title.AutoSize = true;
-			this.TLP_Actions.SetColumnSpan(this.L_Title, 4);
-			this.L_Title.Location = new System.Drawing.Point(579, 94);
-			this.L_Title.Name = "L_Title";
-			this.L_Title.Size = new System.Drawing.Size(45, 19);
-			this.L_Title.TabIndex = 15;
-			this.L_Title.Text = "label1";
+			this.L_Title2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.L_Title2.AutoSize = true;
+			this.TLP_Actions.SetColumnSpan(this.L_Title2, 4);
+			this.L_Title2.Location = new System.Drawing.Point(579, 94);
+			this.L_Title2.Name = "L_Title";
+			this.L_Title2.Size = new System.Drawing.Size(45, 19);
+			this.L_Title2.TabIndex = 15;
+			this.L_Title2.Text = "label1";
 			// 
 			// B_ReportIssue
 			// 
@@ -462,7 +462,7 @@ partial class PC_SendReviewRequest
 	private System.Windows.Forms.TableLayoutPanel TLP_Description;
 	private DragAndDropControl DD_SaveFile;
 	private SlickSpacer slickSpacer1;
-	private System.Windows.Forms.Label L_Title;
+	private System.Windows.Forms.Label L_Title2;
 	private BigSelectionOptionControl B_ReportIssue;
 	private System.Windows.Forms.Label L_Disclaimer;
 	private RoundedGroupTableLayoutPanel TLP_LogReport;

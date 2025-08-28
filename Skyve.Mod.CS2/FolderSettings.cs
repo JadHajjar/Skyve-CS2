@@ -79,5 +79,10 @@ namespace Skyve.Mod.CS2
 				_ => Platform.Windows,
 			};
 		}
+
+		public void Reload()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

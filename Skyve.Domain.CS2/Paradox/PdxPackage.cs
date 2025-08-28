@@ -71,7 +71,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 		}
 	}
 
-	public string Version { get; set; }
+	public string? Version { get; set; }
 	public string VersionName { get; set; }
 	public string DisplayName { get; set; }
 	public string Author { get; set; }
@@ -124,7 +124,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version);
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version ?? string.Empty);
 
 		return true;
 	}
@@ -137,7 +137,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 	public bool GetFullThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version, false);
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version ?? string.Empty, false);
 
 		return true;
 	}
