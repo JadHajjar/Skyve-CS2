@@ -342,9 +342,12 @@ internal class CentralManager : ICentralManager
 		var modExists = false;
 		var workshopInfo = await _workshopService.GetInfoAsync(new GenericPackageIdentity(MODID));
 
+		if (workshopInfo is null)
+			return;
+
 		foreach (var item in _playsetManager.Playsets)
 		{
-			var version = _modUtil.GetSelectedVersion(workshopInfo!, item.Id);
+			var version = _modUtil.GetSelectedVersion(workshopInfo, item.Id);
 
 			if (version is null)
 			{

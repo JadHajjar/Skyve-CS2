@@ -56,6 +56,7 @@ public class WorkshopService : IWorkshopService
 	private readonly PdxModProcessor _modProcessor;
 	private readonly PdxUserProcessor _userProcessor;
 	private readonly AsyncProcessor _processor = new();
+	private readonly Regex _modIdRegex = new(@"(\d+)_(\d+)?", RegexOptions.Compiled);
 
 	private bool loginWaitingConnection;
 	private bool syncOccurred;
@@ -113,7 +114,7 @@ public class WorkshopService : IWorkshopService
 		}
 
 		var environment = BackendEnvironment.Live;
-		var junction =JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath).IfEmpty(_settings.FolderSettings.AppDataPath);
+		var junction = JunctionHelper.GetJunctionState(_settings.FolderSettings.AppDataPath).IfEmpty(_settings.FolderSettings.AppDataPath);
 		var @namespace = "cities_skylines_2";
 		var pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
@@ -266,7 +267,9 @@ public class WorkshopService : IWorkshopService
 			var userName = (await Context.Profile.Get()).Social?.DisplayName;
 
 			if (string.IsNullOrEmpty(userName))
+			{
 				userName = (await Context.Account.GetDetails())?.Email.RegexReplace(@"\*+", "***") ?? "N/A";
+			}
 
 			_userService.SetLoggedInUser(userName);
 
@@ -342,7 +345,12 @@ public class WorkshopService : IWorkshopService
 
 	public IWorkshopInfo? GetInfo(IPackageIdentity identity)
 	{
-		return identity.Id <= 0 ? null : _modProcessor.Get((int)identity.Id).Result;
+		if (identity.Id <= 0)
+		{
+			return null;
+		}
+
+		return _modProcessor.Get($"{identity.Id}_{identity.Version}", false).Result;
 	}
 
 	public async Task<IWorkshopInfo?> GetInfoAsync(IPackageIdentity identity)
@@ -352,13 +360,30 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
+		return await _modProcessor.Get($"{identity.Id}_{identity.Version}", true);
+	}
+
+	internal async Task<PdxModDetails?> GetInfoAsync(string id)
+	{
+		var rgx = _modIdRegex.Match(id);
+
+		if (!rgx.Success)
+		{
+			return null;
+		}
+
 		if (Context is not null)
 		{
-			var result = await Context.Mods.GetLocalModDetails((int)identity.Id, identity.Version);
+			var result = await Context.Mods.GetLocalModDetails(int.Parse(rgx.Groups[1].Value), rgx.Groups[2].Value.IfEmpty(null));
 
 			if (!result.Success || result?.Mod is null)
 			{
-				result = await Context.Mods.GetDetails((int)identity.Id, identity.Version);
+				var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
+				result = await Context.Mods.GetDetails(int.Parse(rgx.Groups[1].Value), rgx.Groups[2].Value.IfEmpty(null), platform);
+			}
+			else
+			{
+				result.Mod.HasLiked = _modProcessor.Get(id, false).Result?.HasVoted ?? false;
 			}
 
 			if (result.Success && result?.Mod is not null)
@@ -371,40 +396,7 @@ public class WorkshopService : IWorkshopService
 			}
 		}
 
-		return await _modProcessor.Get((int)identity.Id, true);
-	}
-
-	internal async Task<PdxModDetails?> GetInfoAsync(int id)
-	{
-		if (Context is null || id <= 0 || !IsLoggedIn)
-		{
-			return null;
-		}
-
-		if (_skyveDataManager.IsBlacklisted((ulong)id))
-		{
-			return new PdxBannedMod(id);
-		}
-
-		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
-		var result = await Context.Mods.GetDetails(id, null, platform);
-
-		ProcessResult(result);
-
-		if (result?.Mod is not null)
-		{
-			return new PdxModDetails(result.Mod)
-			{
-				Requirements = result.Mod.Dependencies?.Where(x => x.Type is not DependencyType.Dlc).ToArray(x => new PdxModsRequirement(x)) ?? [],
-				DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc && x.DisplayName != "Beach Properties").ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
-			};
-		}
-		else if (result?.Error.Category is BaseCategory.NotFound)
-		{
-			return new PdxBannedMod(id);
-		}
-
-		return null;
+		return new PdxBannedMod(int.Parse(rgx.Groups[1].Value));
 	}
 
 	public IAuthor? GetUser(IUser? user)
@@ -444,11 +436,6 @@ public class WorkshopService : IWorkshopService
 	public async Task<IPackage> GetPackageAsync(IPackageIdentity identity)
 	{
 		return await GetInfoAsync(identity) as IPackage ?? new PdxModIdentityPackage(identity);
-	}
-
-	public IUser? GetUser(object authorId)
-	{
-		return string.IsNullOrWhiteSpace(authorId?.ToString()) ? null : (IUser)new PdxUser(authorId!.ToString());
 	}
 
 	public async Task<(IEnumerable<IWorkshopInfo> Mods, int TotalCount)> GetWorkshopItemsByUserAsync(object userId, WorkshopQuerySorting sorting = WorkshopQuerySorting.DateCreated, string? query = null, string[]? requiredTags = null, bool all = false, int? limit = null, int? page = null)
@@ -631,7 +618,7 @@ public class WorkshopService : IWorkshopService
 		}
 		else
 		{
-			await _modProcessor.Get((int)packageIdentity.Id, true);
+			await _modProcessor.Get($"{packageIdentity.Id}_{packageIdentity.Version}", true);
 		}
 
 		_modProcessor.CacheItems();
@@ -653,7 +640,7 @@ public class WorkshopService : IWorkshopService
 
 		return await _processor.Queue(async () =>
 		{
-			var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, int.MaxValue, 1, includeOnline: includeOnline));
+			var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 10_000, 1, includeOnline: includeOnline));
 
 			if (result.Mods is not null)
 			{
@@ -1233,104 +1220,4 @@ public class WorkshopService : IWorkshopService
 
 		return result;
 	}
-
-	#region Collection Test
-	public async Task<int> CreateCollection(string folder, string name, string desc, string thumbnail, List<IPackageIdentity>? list = null)
-	{
-		if (Context is null)
-		{
-			return 0;
-		}
-
-		var config = new BaseOptionSet
-		{
-			DisplayName = name,
-			ShortDescription = desc,
-			LongDescription = desc,
-			Dependencies = list?.ToDictionary(x => (int)x.Id, x => new ModDependency
-			{
-				Id = (int)x.Id,
-				DisplayName = x.Name,
-				Type = DependencyType.Mod
-			}) ?? [],
-			Tags = ["Code Mod"],
-			ModVersion = "1",
-			GameVersion = "*.*.*",
-			Thumbnail = thumbnail,
-		};
-
-		var wipInfo = await Context.Mods.RegisterWIP(config.DisplayName, config.ShortDescription, config.LongDescription, 100UL);
-		PrepareContent(config, wipInfo, folder);
-		var updateWipData = new UpdateWipData
-		{
-			guid = wipInfo.Guid,
-			contentFileOrFolderName = "Content",
-			displayName = config.DisplayName,
-			shortDescription = config.ShortDescription,
-			longDescription = config.LongDescription,
-			thumbnailFilename = Path.GetFileName(config.Thumbnail),
-			screenshotsFilenames = config.Screenshots.Select((string s) => Path.GetFileName(s)).ToList<string>()
-		};
-		var updateWipData2 = updateWipData;
-		var result = await Context.Mods.UpdateWIP(updateWipData2);
-
-		var publishWipData = new PublishWipData
-		{
-			wipGuid = wipInfo.Guid,
-			os = ModPlatform.Windows,
-			recommendedGameVersion = config.GameVersion,
-			userModVersion = config.ModVersion,
-			forumLink = config.ForumLink,
-			dependencies = config.Dependencies.Values.ToList<ModDependency>(),
-			tags = config.Tags.ToList<string>()
-		};
-		var publishResult = await Context.Mods.PublishWIP(publishWipData);
-
-		return publishResult.ModId;
-	}
-
-	private static void PrepareContent(BaseOptionSet config, RegisterResult wipInfo, string folder)
-	{
-		var text = Path.Combine(wipInfo.Path, "Content");
-		if (Directory.Exists(text))
-		{
-			Directory.Delete(text, true);
-		}
-
-		Directory.CreateDirectory(text);
-		new DirectoryInfo(folder).CopyAll(new(text));
-		//File.WriteAllLines(Path.Combine(text, "ModList.txt"), config.Dependencies.ToArray(x => $"{x.Key} - {x.Value.DisplayName}"));
-		var text2 = Path.Combine(wipInfo.Path, ".metadata");
-		var text3 = Path.Combine(text2, Path.GetFileName(config.Thumbnail));
-		if (!string.IsNullOrEmpty(config.Thumbnail) && File.Exists(config.Thumbnail))
-		{
-			File.Copy(config.Thumbnail, text3, true);
-		}
-		else
-		{
-		}
-
-		if (config.Screenshots.Count > 0)
-		{
-			foreach (var text4 in config.Screenshots)
-			{
-				File.Copy(text4, Path.Combine(text2, Path.GetFileName(text4)), true);
-			}
-		}
-	}
-
-	public class BaseOptionSet
-	{
-		public string? DisplayName { get; set; }
-		public string? ShortDescription { get; set; }
-		public string? LongDescription { get; set; }
-		public string? Thumbnail { get; set; }
-		public string? ForumLink { get; set; }
-		public string? ModVersion { get; set; }
-		public string? GameVersion { get; set; }
-		public HashSet<string>? Tags { get; set; }
-		public HashSet<string> Screenshots { get; set; } = [];
-		public Dictionary<int, ModDependency> Dependencies { get; set; } = [];
-	}
-	#endregion
 }

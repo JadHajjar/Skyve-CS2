@@ -6,10 +6,11 @@ using Skyve.Systems.CS2.Services;
 
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
-internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
+internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 {
 	public const string CACHE_FILE = "PdxModsCache.json";
 
@@ -17,7 +18,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 	private readonly SaveHandler _saveHandler;
 	private readonly INotifier _notifier;
 
-	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(25, 5000, GetCachedInfo(saveHandler))
+	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(100, 1000, GetCachedInfo(saveHandler))
 	{
 		_workshopService = workshopService;
 		_saveHandler = saveHandler;
@@ -30,10 +31,10 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 		return ConnectionHandler.IsConnected;
 	}
 
-	protected override async Task<(Dictionary<int, PdxModDetails>, bool)> ProcessItems(List<int> entities)
+	protected override async Task<(Dictionary<string, PdxModDetails>, bool)> ProcessItems(List<string> entities)
 	{
 		var failed = false;
-		var results = new Dictionary<int, PdxModDetails>();
+		var results = new Dictionary<string, PdxModDetails>();
 
 		foreach (var item in entities)
 		{
@@ -43,7 +44,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 
 				if (package != null)
 				{
-					results[item] = package;
+					results[$"{package.Id}_{package.Version}"] = package;
 				}
 			}
 			catch { failed = true; }
@@ -59,7 +60,7 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 		}
 	}
 
-	protected override void CacheItems(Dictionary<int, PdxModDetails> results)
+	protected override void CacheItems(Dictionary<string, PdxModDetails> results)
 	{
 		try
 		{
@@ -68,13 +69,18 @@ internal class PdxModProcessor : PeriodicProcessor<int, PdxModDetails>
 		catch { }
 	}
 
-	private static Dictionary<int, PdxModDetails>? GetCachedInfo(SaveHandler saveHandler)
+	private static Dictionary<string, PdxModDetails>? GetCachedInfo(SaveHandler saveHandler)
 	{
 		try
 		{
 			var path = saveHandler.GetPath(CACHE_FILE);
 
-			saveHandler.Load(out Dictionary<int, PdxModDetails>? dic, CACHE_FILE);
+			saveHandler.Load(out Dictionary<string, PdxModDetails>? dic, CACHE_FILE);
+
+			foreach (var item in dic?.Keys.AllWhere(x => !x.Contains("_")) ?? [])
+			{
+				dic!.Remove(item);
+			}
 
 			return dic;
 		}

@@ -137,7 +137,6 @@ public partial class PC_PackagePageBase : PanelContent
 		LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);
 		LI_Votes.ValueText = workshopInfo?.VoteCount >= 0 ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
 		LI_Subscribers.ValueText = workshopInfo?.Subscribers >= 0 ? Locale.SubscribersCount.FormatPlural(workshopInfo.Subscribers, workshopInfo.Subscribers.ToString("N0")) : null;
-		LI_Votes.ValueColor = workshopInfo?.HasVoted == true ? FormDesign.Design.GreenColor : null;
 
 		L_Author.Visible = workshopInfo is not null;
 		L_Author.Author = workshopInfo?.Author;
@@ -430,23 +429,6 @@ public partial class PC_PackagePageBase : PanelContent
 		{
 			PlatformUtil.OpenUrl(e.Url.AbsoluteUri);
 		}
-	}
-
-	private async void LI_Votes_ValueClicked(object sender, EventArgs e)
-	{
-		await ServiceCenter.Get<IWorkshopService>().ToggleVote(Package);
-
-		var workshopInfo = Package.GetWorkshopInfo();
-		LI_Votes.ValueText = workshopInfo?.VoteCount >= 0 ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
-		LI_Votes.ValueColor = workshopInfo?.HasVoted == true ? FormDesign.Design.GreenColor : null;
-		LI_Votes.Invalidate();
-	}
-
-	private void LI_Votes_HoverStateChanged(object sender, HoverState e)
-	{
-		var workshopInfo = Package.GetWorkshopInfo();
-		LI_Votes.LabelText = LI_Votes.HoverState.HasFlag(HoverState.Hovered) ? (workshopInfo?.HasVoted == true ? LocaleCS2.UnVoteMod : LocaleCS2.VoteMod) : "Votes";
-		LI_Votes.Invalidate();
 	}
 
 	private void FLP_Package_Links_SizeChanged(object sender, EventArgs e)

@@ -234,8 +234,6 @@ partial class PC_PackagePageBase
 			this.LI_Votes.Padding = new System.Windows.Forms.Padding(5);
 			this.LI_Votes.Size = new System.Drawing.Size(150, 65);
 			this.LI_Votes.TabIndex = 3;
-			this.LI_Votes.ValueClicked += new System.EventHandler(this.LI_Votes_ValueClicked);
-			this.LI_Votes.HoverStateChanged += new System.EventHandler<SlickControls.HoverState>(this.LI_Votes_HoverStateChanged);
 			// 
 			// LI_UpdateTime
 			// 
