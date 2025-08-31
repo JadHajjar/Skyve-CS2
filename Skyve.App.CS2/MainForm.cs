@@ -533,30 +533,4 @@ public partial class MainForm : BasePanelForm
 	{
 		SetPanel<PC_CompatibilityCenter>(PI_CompatibilityManagement);
 	}
-
-	private async void panelItem1_OnClick(object sender, MouseEventArgs e)
-	{
-		var io = new IOSelectionDialog();
-		io.PromptFolder(this);
-
-		if (!Directory.Exists(io.SelectedPath))
-		{
-			return;
-		}
-
-		var folder = io.SelectedPath;
-
-		io.PromptFile(this);
-		var thumb = io.SelectedPath;
-
-		var res = await ServiceCenter.Get<IWorkshopService, WorkshopService>().CreateCollection(folder,
-					MessagePrompt.ShowInput("Name of the asset").Input,
-					MessagePrompt.ShowInput("Description of the asset").Input,
-					thumb);
-
-		if (res != 0)
-		{
-			PlatformUtil.OpenUrl($"https://mods.paradoxplaza.com/mods/{res}/Windows");
-		}
-	}
 }

@@ -5,6 +5,7 @@ using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -31,10 +32,10 @@ internal class PdxUserProcessor : PeriodicProcessor<string, PdxUser>
 		return ConnectionHandler.IsConnected;
 	}
 
-	protected override async Task<(Dictionary<string, PdxUser>, bool)> ProcessItems(List<string> entities)
+	protected override async Task<(ConcurrentDictionary<string, PdxUser>, bool)> ProcessItems(List<string> entities)
 	{
 		var failed = false;
-		var results = new Dictionary<string, PdxUser>();
+		var results = new ConcurrentDictionary<string, PdxUser>();
 
 		foreach (var item in entities)
 		{
@@ -60,7 +61,7 @@ internal class PdxUserProcessor : PeriodicProcessor<string, PdxUser>
 		}
 	}
 
-	protected override void CacheItems(Dictionary<string, PdxUser> results)
+	protected override void CacheItems(ConcurrentDictionary<string, PdxUser> results)
 	{
 		try
 		{
@@ -69,13 +70,13 @@ internal class PdxUserProcessor : PeriodicProcessor<string, PdxUser>
 		catch { }
 	}
 
-	private static Dictionary<string, PdxUser>? GetCachedInfo(SaveHandler saveHandler)
+	private static ConcurrentDictionary<string, PdxUser>? GetCachedInfo(SaveHandler saveHandler)
 	{
 		try
 		{
 			var path = saveHandler.GetPath(CACHE_FILE);
 
-			saveHandler.Load(out Dictionary<string, PdxUser>? dic, CACHE_FILE);
+			saveHandler.Load(out ConcurrentDictionary<string, PdxUser>? dic, CACHE_FILE);
 
 			return dic;
 		}

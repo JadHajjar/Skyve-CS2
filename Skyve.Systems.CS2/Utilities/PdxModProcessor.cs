@@ -5,8 +5,8 @@ using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
@@ -31,10 +31,10 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 		return ConnectionHandler.IsConnected;
 	}
 
-	protected override async Task<(Dictionary<string, PdxModDetails>, bool)> ProcessItems(List<string> entities)
+	protected override async Task<(ConcurrentDictionary<string, PdxModDetails>, bool)> ProcessItems(List<string> entities)
 	{
 		var failed = false;
-		var results = new Dictionary<string, PdxModDetails>();
+		var results = new ConcurrentDictionary<string, PdxModDetails>();
 
 		foreach (var item in entities)
 		{
@@ -47,7 +47,10 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 					results[$"{package.Id}_{package.Version}"] = package;
 				}
 			}
-			catch { failed = true; }
+			catch
+			{
+				failed = true;
+			}
 		}
 
 		try
@@ -60,7 +63,33 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 		}
 	}
 
-	protected override void CacheItems(Dictionary<string, PdxModDetails> results)
+	protected override bool TryGetEntityFromCache(string entity, out PdxModDetails result)
+	{
+		if (entity[entity.Length - 1] != '_')
+		{
+			return base.TryGetEntityFromCache(entity, out result);
+		}
+
+		if (!ulong.TryParse(entity.Substring(0, entity.Length - 1), out var id))
+		{
+			result = null!;
+			return false;
+		}
+
+		foreach (var item in GetCache())
+		{
+			if (item.Id == id)
+			{
+				result = item;
+				return true;
+			}
+		}
+
+		result = null!;
+		return false;
+	}
+
+	protected override void CacheItems(ConcurrentDictionary<string, PdxModDetails> results)
 	{
 		try
 		{
@@ -69,17 +98,17 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 		catch { }
 	}
 
-	private static Dictionary<string, PdxModDetails>? GetCachedInfo(SaveHandler saveHandler)
+	private static ConcurrentDictionary<string, PdxModDetails>? GetCachedInfo(SaveHandler saveHandler)
 	{
 		try
 		{
 			var path = saveHandler.GetPath(CACHE_FILE);
 
-			saveHandler.Load(out Dictionary<string, PdxModDetails>? dic, CACHE_FILE);
+			saveHandler.Load(out ConcurrentDictionary<string, PdxModDetails>? dic, CACHE_FILE);
 
 			foreach (var item in dic?.Keys.AllWhere(x => !x.Contains("_")) ?? [])
 			{
-				dic!.Remove(item);
+				dic!.TryRemove(item, out _);
 			}
 
 			return dic;
