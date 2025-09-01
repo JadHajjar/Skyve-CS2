@@ -134,7 +134,7 @@
   "Sorting_WorkshopName": "Alfabetik Sıralama",
   "InitialRelease": "Initial Release",
   "ForumPage": "Forum Page",
-  "DisableBurstCompile": "Disable Burst-Compilation",
+  "DisableBurstCompile": "Seri-Derlemeyi Devre Dışı Bırak",
   "UnreadComment": "New comments on '{0}'",
   "SafeMode": "Safe Mode",
   "LaunchInSafeMode": "Launch in Safe Mode",
