@@ -1,28 +1,28 @@
 {
-  "StartCities": "Cities: Skylines'ı Başlat",
+  "StartCities": "Cities: Skylines II'yi Başlat",
   "StopCities": "Cities: Skylines II'yi Durdur",
-  "NoWorkshop": "Atölye Paketleri Yok",
-  "ExcludeAll": "Etkin oyun setinizden tüm ögeleri kaldırın",
-  "ExcludeAllDisabled": "Etkin oyun setinizden tüm devre dışı bırakılmış ögeleri kaldırın",
-  "IncludeAll": "Tüm ögeleri etkin oyun setinize ekleyin",
-  "ExcludeAllFiltered": "Etkin oyun setinizden filtrelenmiş ögeleri kaldırın",
-  "ExcludeAllDisabledFiltered": "Etkin oyun setinizden filterelenmiş ve devre dışı bırakılmış ögeleri kaldırın",
-  "IncludeAllFiltered": "Filtrelenmiş ögeleri etkin oyun setinize ekleyin",
-  "ExcludeAllSelected": "Seçili ögeleri etkin oyun setinizden kaldırın",
-  "ExcludeAllDisabledSelected": "Etkin oyun setinizden seçilmiş ve devre dışı bırakılmış ögeleri kaldırın",
-  "IncludeAllSelected": "Seçili ögeleri etkin oyun setinize ekleyin",
-  "ViewOnWorkshop": "PDX Mods'ta görüntüleyin",
+  "NoWorkshop": "Atölye Paketlerini Devre Dışı Bırak",
+  "ExcludeAll": "Etkin oyun setinizden tüm öğeleri kaldırın",
+  "ExcludeAllDisabled": "Etkin oyun setinizden tüm devre dışı bırakılmış öğeleri kaldırın",
+  "IncludeAll": "Tüm öğeleri etkin oyun setinize ekleyin",
+  "ExcludeAllFiltered": "Etkin oyun setinizden filtrelenmiş öğeleri kaldırın",
+  "ExcludeAllDisabledFiltered": "Etkin oyun setinizden filtrelenmiş ve devre dışı bırakılmış öğeleri kaldırın",
+  "IncludeAllFiltered": "Filtrelenmiş öğeleri etkin oyun setinize ekleyin",
+  "ExcludeAllSelected": "Seçili öğeleri etkin oyun setinizden kaldırın",
+  "ExcludeAllDisabledSelected": "Etkin oyun setinizden seçilmiş ve devre dışı bırakılmış öğeleri kaldırın",
+  "IncludeAllSelected": "Seçili öğeleri etkin oyun setinize ekleyin",
+  "ViewOnWorkshop": "PDX Mods'ta görüntüle",
   "CopyWorkshopLink": {
-    "One": "PDX Mods linkini kopyalayın",
-    "Plural": "Seçili paketlerin PDX Mods linklerini kopyalayın"
+    "One": "PDX Mods linkini kopyala",
+    "Plural": "Seçili paketlerin PDX Mods linklerini kopyala"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "PDX Mods bağlantısını Markdown formatında kopyala",
-    "Plural": "Seçilen paketlerin PDX Mods bağlantılarını Markdown formatında kopyala"
+    "One": "PDX Mods bağlantısını düz metin formatında kopyala",
+    "Plural": "Seçilen paketlerin PDX Mods bağlantılarını düz metin formatında kopyala"
   },
   "CopyWorkshopId": {
-    "One": "PDX Mods ID'isini kopyalayın",
-    "Plural": "Seçili paketlerin PDX Mods ID'lerini kopyalayın"
+    "One": "PDX Mods ID'sini kopyala",
+    "Plural": "Seçili paketlerin PDX Mods ID'lerini kopyala"
   },
   "LaunchThroughCities": "Cities2.exe yoluyla başlat",
   "IncludeItem": "Etkin oyun setine ekle",
@@ -33,37 +33,37 @@
   },
   "IncludeThisItemInAllPlaysets": {
     "One": "Tüm oyun setlerine ekle",
-    "Plural": "Seçili ögeleri tüm oyun setlerine ekle"
+    "Plural": "Seçili öğeleri tüm oyun setlerine ekle"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Tüm oyun setlerinden kaldır",
-    "Plural": "Seçili ögeleri tüm oyun setlerinden kaldır"
+    "One": "Tüm oyun setlerinizden kaldırın",
+    "Plural": "Seçili öğeleri tüm oyun setlerinizden kaldırın"
   },
   "PackageIsRemoved": "'{0}' PDX Mods'tan kaldırıldı",
-  "PackageIsUnknown": "'{0}' için olan bilgi PDX Mods'tan henüz ulaşılamadı",
-  "PackageIsIncomplete": "'{0}'ın yerel boyutu ({1}) PDX Mods'taki boyuttan farklı ({2})",
+  "PackageIsUnknown": "PDX Mods'tan gelen bilgiler '{0}' için henüz yüklenmedi",
+  "PackageIsIncomplete": "'{0}'ın yerel boyutu ({1}) PDX Mods'taki boyuttan farklı {2}",
   "OpenCitiesAppData": "C:S II'nin AppData klasörünü aç",
   "ResetSteamCache": "PDX Mods önbelleğini temizle",
-  "ParadoxLoginFailedTitle": "PDX Mods'a giriş yapılamadı",
-  "ParadoxLoginFailedNoConnection": "Internet'e bağlı değilsiniz. Lütfen bağlantınızı kontrol edip tekrar deneyin.",
-  "ParadoxLoginFailedBadCredentials": "Kayıtlı kullanıcı adı/şifre giriş yaparken doğrulanamadı. Bilgilerinizi güncellemek için buraya tıklayın.",
-  "ParadoxLoginFailedEmpty": "Oturumunuzun süresi doldu. Yeniden oturum açmak için ya oyunu başlatıp giriş yapın ya da doğrudan Skyve üzerinden giriş yapmak için buraya tıklayın.",
+  "ParadoxLoginFailedTitle": "PDX Mods'a girişiniz yapılamadı",
+  "ParadoxLoginFailedNoConnection": "İnternet'e bağlı değilsiniz. Lütfen bağlantınızı kontrol edin ve buraya tıklayarak tekrar deneyin.",
+  "ParadoxLoginFailedBadCredentials": "Kayıtlı kullanıcı adı/şifre ile giriş yapılamadı. Bilgilerinizi güncellemek için buraya tıklayın.",
+  "ParadoxLoginFailedEmpty": "Oturumunuzun süresi doldu. Tekrar giriş yapmak için ya oyunu başlatıp giriş yapın ya da Skyve üzerinden giriş yapmak için buraya tıklayın.",
   "DownloadComplete": "İndirme tamamlandı",
   "DownloadFailed": "İndirme başarısız",
   "Downloading": "İndiriliyor...",
   "ModsDownloadFailed": {
-    "One": "Bir mod indirilirken bir sorun oluştu",
-    "Plural": "Bazı modlar indirilirken sorun oluştu"
+    "One": "Bir mod indirilirken hata oluştu",
+    "Plural": "Bazı modlar indirilirken hata oluştu"
   },
-  "LoginToParadox": "Paradox'a giriş yap",
-  "LoginFailed": "Giriş yapma başarısız oldu, lütfen e-posta ve şifrenizi kontrol edin veya daha sonra bir daha deneyin.",
-  "RememberMeInfo": "* Giriş bilgileriniz şifreleneck ve bilgisayarınıza kaydedilecektir.",
-  "LoginDisclaimer": "Oturum açma doğrudan Paradox sunucularıyla olup Skyve ile ehrhangi bir veri paylaşılmamaktadır.",
-  "DropNewPlayset": "Bir oyun setini içeri aktarmak için dosyasını buraya sürükleyin veya seçin",
-  "FilterIncludedByDefault": "Yerel içerikler için 'Dahil' filtresini varsayılan olarak etkinleştir",
-  "FilterIncludedByDefault_Tip": "Varsayılan olarak etkin oyun setinizde dahil bulunan sadece yerel içerikleri gösterir.",
-  "RunSetupOrRunApp": "Skyve'yi bu klasörden çalıştıramazsınız. Zaten indirdiyseniz Programlar listesinden başlatın.\n\nAksi takdirde 'Tamam' tuşuna tıklayıp kurulum programını başlatın.",
-  "CantRunAppFromHere": "Skyve'yi bu klasörden çalıştıramazsınız.\n\nUygulamayı Programlar listesinden çalıştırın veya Skyve Kurulumunu modlar klasöründen başlatın.",
+  "LoginToParadox": "Paradox'a giriş yapın",
+  "LoginFailed": "Giriş başarısız oldu. E-posta ve şifrenizin doğru olduğundan emin olun veya daha sonra tekrar deneyin.",
+  "RememberMeInfo": "* Giriş bilgileriniz şifrelenecek ve bilgisayarınıza kaydedilecektir.",
+  "LoginDisclaimer": "Giriş işlemi Paradox servisleri aracılığıyla güvenli bir şekilde olur ve Skyve ile herhangi bir veri paylaşılmamaktadır.",
+  "DropNewPlayset": "Bir oyun setinin dosyasını içeri aktarmak için dosyayı buraya sürükleyin veya seçin",
+  "FilterIncludedByDefault": "Yerel içerikler için 'Dahil' filtresini varsayılan olarak aktif et",
+  "FilterIncludedByDefault_Tip": "Yalnızca varsayılan olarak etkin oyun setinize dahil olan yerel içerikleri gösterir.",
+  "RunSetupOrRunApp": "Skyve'ı bu klasörden çalıştıramazsınız. Zaten indirdiyseniz Programlar listesinden başlatın.\n\nAksi takdirde 'Tamam' tuşuna tıklayıp kurulumu başlatın.",
+  "CantRunAppFromHere": "Skyve'ı bu klasörden çalıştıramazsınız.\n\nUygulamayı Programlar listesinden çalıştırın veya mods klasöründen Skyve Kurulumunu başlatın.",
   "UpdateAvailable": "Güncelleme mevcut",
   "UpdateAvailableInfo": "Skyve'ı güncellemek için buraya tıkla",
   "VoteMod": "Bu modu beğen",
@@ -132,67 +132,67 @@
   "Sorting_DateUpdated": "En Son Güncellenen",
   "Sorting_DateCreated": "En Yeni",
   "Sorting_WorkshopName": "Alfabetik Sıralama",
-  "InitialRelease": "Initial Release",
-  "ForumPage": "Forum Page",
+  "InitialRelease": "İlk Sürüm",
+  "ForumPage": "Forum Sayfası",
   "DisableBurstCompile": "Seri-Derlemeyi Devre Dışı Bırak",
-  "UnreadComment": "New comments on '{0}'",
-  "SafeMode": "Safe Mode",
-  "LaunchInSafeMode": "Launch in Safe Mode",
-  "SafeModeInfo": "Launch the game in 'Safe Mode' to help identify issues with crashes.\r\n\r\nIt is hard to identify the source of a crash, and makes recovering a save impossible sometimes.\r\nSafe mode allows the game to avoid crashes in most cases which lets you recover a save, and properly logs errors to be analysed by tech support.",
-  "SearchTime": "Time Period",
-  "SearchTime_AllTime": "All Time",
-  "SearchTime_Day": "24 hours",
-  "SearchTime_Week": "7 Days",
-  "SearchTime_Month": "1 Month",
-  "SearchTime_Quarter": "3 Months",
-  "SearchTime_SixMonths": "6 Months",
-  "SearchTime_Year": "1 Year",
-  "TotalBackupSize": "Total Backups Size",
-  "Tag_Static Object": "Prop",
-  "Tag_Building": "Building",
-  "Tag_Building Extension": "Building Extension",
-  "Tag_Zone": "Zone",
-  "Tag_Asset Pack": "Asset Pack",
+  "UnreadComment": "{0} Yeni yorum",
+  "SafeMode": "Güvenli Mod",
+  "LaunchInSafeMode": "Güvenli Modda Başlat",
+  "SafeModeInfo": "Oyunu 'Güvenli Modda' başlatmak sorunları bulmanıza yardımcı olur.\n\nBir çökmenin kaynağını bulmak zordur ve bazen kaydı kurtarmayı imkansızlaştırır.\nGüvenli mod, oyunun çökmesini çoğu senaryoda önler, kaydı kurtarmanızı sağlayabilir ve analiz edilmek üzere 'log' dosyalarını teknik destek için kaydedebilirsiniz.",
+  "SearchTime": "Zaman Aralığı",
+  "SearchTime_AllTime": "Tüm Zamanlar",
+  "SearchTime_Day": "24 Saat",
+  "SearchTime_Week": "7 Gün",
+  "SearchTime_Month": "1 Ay",
+  "SearchTime_Quarter": "3 Ay",
+  "SearchTime_SixMonths": "6 Ay",
+  "SearchTime_Year": "1 Yıl",
+  "TotalBackupSize": "Toplam Yedekleme Boyutu",
+  "Tag_Static Object": "Dekor",
+  "Tag_Building": "Binalar",
+  "Tag_Building Extension": "Bina Uzantıları",
+  "Tag_Zone": "Alan",
+  "Tag_Asset Pack": "Asset Paketi",
   "Backup_SaveGames": {
-    "One": "Savegame",
+    "One": "savegame",
     "Plural": "{0} savegames"
   },
   "Backup_Maps": {
-    "One": "Map",
-    "Plural": "{0} maps"
+    "One": "Harita",
+    "Plural": "{0} haritalar"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
-    "Plural": "{0} playsets"
+    "One": "Oyun Seti",
+    "Plural": "{0} oyun seti"
   },
   "Backup_SettingsFiles": {
-    "One": "Settings files",
-    "Plural": "{0} settings files"
+    "One": "Ayar dosyaları",
+    "Plural": "{0} ayar dosyaları"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod settings folders",
-    "Plural": "{0} mod settings folders"
+    "One": "Mod ayar dosyaları",
+    "Plural": "{0} mod ayar dosyaları"
   },
   "Backup_LocalMods": {
-    "One": "Local mod",
-    "Plural": "{0} local mods"
+    "One": "Yerel mod",
+    "Plural": "{0} yerel modlar"
   },
-  "ParadoxContextFailed": "Paradox backend failed to load",
-  "ParadoxContextFailedInfo": "Something is causing the paradox backend to fail.\r\nClick this message to try and repair it.\r\n\r\nIf the repair is not successful, ask for help on tech support forums.",
-  "BackupStartingNow": "Automatic backup starting now...",
-  "BackupServiceUnavailable": "The Skyve service is not installed. Automatic backups will only work while the Skyve app is open.",
-  "BackupServiceAvailable": "Skyve service online",
-  "NextScheduledBackup": "Next scheduled backup is {0}",
-  "LastSettingsBackup": "Last settings backup was {0}",
-  "NoSettingsBackup": "No available settings backup available",
-  "RestoreLatestSettings": "Restore latest settings backup",
+  "ParadoxContextFailed": "Paradox backend yüklenemedi",
+  "ParadoxContextFailedInfo": "Bir şey Paradox backend'in başarısız olmasına neden oluyor.\nTekrar denemek ve onarmak için bu mesaja tıklayın.\n\nEğer onarma başarısız olursa, teknik destek forumlarından yardım talep edin.",
+  "BackupStartingNow": "Otomatik yedekleme şimdi başlatılıyor...",
+  "BackupServiceUnavailable": "Skyve hizmeti yüklü değil. Otomatk yedelemeler sadece Skyve uygulaması açık ise çalışır.",
+  "BackupServiceAvailable": "Skyve hizmeti aktif",
+  "NextScheduledBackup": "Bir sonraki planlı yedekleme {0}",
+  "LastSettingsBackup": "Son ayarlar yedeklemesi {0} idi",
+  "NoSettingsBackup": "Kullanılabilir ayarlar yedeklemesi bulunmuyor",
+  "RestoreLatestSettings": "En son ayarlar yedeklemelerini geri yükle",
   "CorruptedSettingsFiles": {
-    "One": "Corrupted Settings File Detected",
-    "Plural": "{0} Corrupted Settings Files Detected"
+    "One": "Bozuk Ayarlar Dosyası Algılandı",
+    "Plural": "{0} Bozuk Ayarlar Dosyası Algılandı"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve has found available backups to restore your settings to their previous state.\r\n\r\nClick here to restore them now.",
-  "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
-  "RecentBackups": "Recent Backups",
-  "DisableLogCleanup": "Disable logs cleanup when launching the game",
-  "DisableLogCleanup_Tip": "Skips the deletion of the Logs folder when launching the game through Skyve."
+  "CorruptedSettingsFilesBackupAvailable": "Skyve önceki ayarlarınızı geri yüklemek için kullanılabilir yedeklemeler buldu.\n\nŞimdi geri yüklemek için buraya tıklayın.",
+  "CorruptedSettingsFilesNoBackup": "Ayarlarınızı geri yüklemek için yedekleme bulunamadı. Gelecekte ayarlarınızı korumak için yedekleme ayarlarınızı oluşturun.\n\nBozuk dosyaları silmek için buraya tıklayın.",
+  "RecentBackups": "Son Yedeklemeler",
+  "DisableLogCleanup": "Oyunu başlatırken günlük temizlemeyi devre dışı bırak",
+  "DisableLogCleanup_Tip": "Oyunu Skyve üzerinden başlatırken 'Logs' klasörünün silinmesini atlar."
 }
