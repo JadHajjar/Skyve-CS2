@@ -68,33 +68,33 @@
   "UpdateAvailableInfo": "Skyve'ı güncellemek için buraya tıkla",
   "VoteMod": "Bu modu beğen",
   "UnVoteMod": "Bu moddan beğeniyi kaldır",
-  "LogLevel": "Günlük Seviyesi",
+  "LogLevel": "Log Seviyesi",
   "ParadoxAccount": "Paradox Hesabı",
   "LoggingIn": "Giriş Yapılıyor...",
-  "NotLoggedInCheckNotification": "Paradox'a giriş yapmadınız, Daha fazla bilgi için bildirimleriniz kontrol edin.",
+  "NotLoggedInCheckNotification": "Paradox'a giriş yapmadınız, daha fazla bilgi için bildirimlerinizi kontrol edin.",
   "HideUserSection": "Ana menüde profilinizi gizleyin",
-  "DeveloperMode": "Geliştirici Modunu Etkinleştir",
-  "UIDeveloperMode": "Arayüz Geliştirici Modunu Aktifleştir",
-  "LogsToPlayerLog": "Günlükleri Player.Log'a kopyala",
-  "InvalidFolderSettings": "Geçersiz kurulum tespit edildi",
-  "InvalidFolderSettingsInfo": "Skyve Cities: Skylines II'nin veri klasörünü bulamadı.\n\nElle seçmek için buraya tıklayın.",
-  "SkyvenotSetUpInfo": "Skyve henüz kurulmadı. Kurulumu tamamlamak için lütfen Cities: Skylines II oyununu Skyve etkin şekilde başlatarak açın.\n\nModların sorunsuz yüklendiğinden emin olun. Eğer yüklenmezlerse, yalnızca Skyve içeren yeni bir oyun profili oluşturmayı deneyin.",
-  "InvalidFolderSettingsFail": "Seçili yol doğru değil. Lütfen app data klasöründeki 'Cities Skylines II' klasörünü seçin.",
-  "DefaultLocation": "Varsayılan Kullanıcı verisi Konumu",
+  "DeveloperMode": "Developer Modu Aktifleştir",
+  "UIDeveloperMode": "Arayüz Developer Modunu Aktifleştir",
+  "LogsToPlayerLog": "Logları Player.Log'a kopyala",
+  "InvalidFolderSettings": "Geçersiz kurulum algılandı",
+  "InvalidFolderSettingsInfo": "Skyve Cities: Skylines II veri klasörünü düzgün şekilde algılayamadı.\n\nVeri klasörünü manuel olarak seçmek için buraya tıklayın.",
+  "SkyvenotSetUpInfo": "Skyve henüz kurulmadı. Kurulumu tamamlamak için lütfen Cities: Skylines II'yi Skyve etkinken başlatın.\n\nModların sorunsuz yüklendiğinden emin olun ve eğer yüklenmezlerse, yalnızca Skyve'ı içeren yeni bir oyun seti oluşturun.",
+  "InvalidFolderSettingsFail": "Seçili yol doğru değil. Lütfen AppData klasöründeki 'Cities Skylines II' klasörünü seçin.",
+  "DefaultLocation": "Varsayılan Kullanıcı Verisi Konumu",
   "JunctionTitle": "Özel İçerik Konumu",
-  "JunctionDescription": "Oyunun içeriklerinin depolandığı klasörü değiştir. Buna her türlü ayarlar, modlar ve varlıklar da dahildir.\n\nSkyve seçilen klasörle varsayılan veri klasörü arasında bir köprü kuracaktır.",
+  "JunctionDescription": "Oyunun içeriklerinin depolandığı klasörü değiştir. Buna her türlü ayarlar, modlar ve assetler de dahildir.\n\nSkyve bu işlem sırasında seçilen klasör ile varsayılan AppData klasörü arasında bir köprü kuracaktır.",
   "CurrentStatus": "Mevcut Durum:",
   "ChangeLocation": "İçerik Konumunu Değiştir",
   "ResetLocation": "Konumu Sıfırla",
-  "JunctionRestart": "Bu işlem sırasında Skyve ve Cities: Skylines II kapanacaktır.\n\nBitince Skyve otomatik olarak yeniden başlayacak.",
-  "PlaysetAlreadyImported": "Bu oyun seti zaten oyun seti listenizde bulunuyor.",
+  "JunctionRestart": "Bu işlem sırasında Skyve ve Cities: Skylines II kapanacaktır.\n\nİşlem tamamlandığında Skyve otomatik olarak yeniden başlatılacaktır.",
+  "PlaysetAlreadyImported": "Bu oyun seti zaten oyun seti listenizde mevcut.",
   "JunctionInvalidFolder": "Seçilen klasör geçerli bir hedef değil. Lütfen başka bir klasör deneyin.",
   "CouldNotRetrieveMods": "Modların verilerine ulaşılamadı",
   "NewGameUpdate": "Yeni Cities: Skylines II Güncellemesi",
-  "NewGameUpdateInfo": "{0} yaması hazır.\nOyununuzu başlatmadan önce uyumluluk raporunu kontrol edin.",
-  "PdxSyncInfo": "PDX senkronizasyon işlemi modlarınızın indirilmesini, güncellenmesini ve ayarlarınızla oyun setlerinizin bilgisayarınızla PDX Mods sunucuları arası eşitlenmesini sağlar.",
+  "NewGameUpdateInfo": "{0} yaması artık mevcut.\nOyununuzu başlatmadan önce uyumluluk raporunu kontrol edin.",
+  "PdxSyncInfo": "PDX Senkronizasyon işlemi modlarınızın indirilmesini ve güncellenmesini, ayrıca ayarlarınızı ve oyun setlerinizi yerel bilgisayarınız ile PDX Mods sunucuları arasında eşitlenmesini sağlar.",
   "SyncOngoing": "Senkronizasyon devam ediyor",
-  "PdxSync": "PDX Mods senkronizasyon",
+  "PdxSync": "PDX Mods Senkronizasyonu",
   "RunSync": "Senkronizasyonu Başlat",
   "PDXModsNew": "PDX Mods'ta Yeni",
   "PDXModsUpdated": "PDX Mods'ta yakın zamanda güncellenmiş",
@@ -105,28 +105,28 @@
   "TotalSubbedSize": "Aboneliklerin Boyutu",
   "TotalOtherSize": "Diğer Dosyaların Boyutu",
   "FreeSpace": "{0} Boş",
-  "UsedOutOfSpace": "{1} sürücüsünce {0} içinden",
+  "UsedOutOfSpace": "{1} sürücüsündeki {0} dışında",
   "LowSpaceCreateJunction": {
     "Zero": "Depolama alanınız azalıyor, daha çok yer açmanız veya ilave bir depolama birimi bağlamanız önerilir.",
-    "One": "Depolama alanınız azalıyor, ayarlardan oyun verilerinin nereye kaydedildiğini değiştirin."
+    "One": "Depolama alanınız azalıyor, oyun verilerinin nereye kaydedildiğini değiştirmek için ayarlara gidin."
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "'{1}' bazı gereksinimlere ihtiyaç duyuyor",
-    "Plural": "Eklediğiniz paketlerin bazı gereksinimleri var"
+    "One": "'{1}' bağımlılıkları bulunmakta",
+    "Plural": "Eklediğiniz paketlerin bağımlılıkları var"
   },
   "AddingDependencies": {
-    "One": "Eklediğiniz mod/modların düzgün çalışması için '{1}' gerekiyor.\n\n'{1}' oyun setinize eklensin mi?",
-    "Plural": "Eklediğiniz mod/modların düzgün çalışması için {0} tane gereksinime ihtiyaç duyuyor: {1}\n\nBunları da oyun setinize eklemek ister misiniz?"
+    "One": "Eklediğiniz mod/modların düzgün çalışması için '{1}' gereklidir.\n\nOyun setinize '{1}' eklemek ister misiniz?",
+    "Plural": "Eklediğiniz mod/modların {0} bağımlılığı bulunuyor: {1}\n\nBu bağımlılıkları da oyun setinize eklemek ister misiniz?"
   },
-  "Dependency_Automatic": "Otomatik olarak gereksinimleri ekle",
+  "Dependency_Automatic": "Bağımlılıkları otomatik olarak ekle",
   "Dependency_Ask": "Her seferinde sor",
   "Dependency_None": "Hiçbir şey yapma",
-  "DependencyResolution": "Gereksinim Çözümü",
-  "DependencyResolution_Tip": "Gereksinimleri olan bir modu gereksinimlerini yüklemeden eklediğinizde ne olacağını seçin.",
+  "DependencyResolution": "Bağımlılık Çözümü",
+  "DependencyResolution_Tip": "Bağımlılıkları olmayan bir mod eklediğinizde ne olacağını seçin.",
   "SyncOngoingLaunchGame": "Skyve modlarınızın senkronizasyon işlemini bitirmedi, hazır olduğunda oyunu başlatmak ister misiniz?\nOyunu şimdi başlatmak için 'Hayır'a basın.",
-  "StartingWithNoPlayset": "Oyunu herhangi bir oyun seti olmadan başlatıyorsunuz.\nHiçbir mod oyun içinde etkinleştirilmeyecektir.",
+  "StartingWithNoPlayset": "Oyunu aktif bir oyun seti olmadan başlatıyorsunuz.\nBu, oyunda hiçbir modun etkinleştirilmeyeceği anlamına gelir.",
   "SyncBeforeLaunching": "Oyunu başlatmadan önce modları senkronize et",
-  "SyncBeforeLaunching_Tip": "Oyunu başlatmadan önce bir mod senkronizasyonu yapar ve bu sayede tüm modlarınızın güncel olduğunu doğrular.",
+  "SyncBeforeLaunching_Tip": "Başlatmadan önce mod senkronizasyonu yapararak tüm modların güncel olduğundan emin olur.",
   "Sorting_Best": "En Popüler",
   "Sorting_Popularity": "En Çok Abone Olunan",
   "Sorting_DateUpdated": "En Son Güncellenen",
@@ -154,7 +154,7 @@
   "Tag_Zone": "Alan",
   "Tag_Asset Pack": "Asset Paketi",
   "Backup_SaveGames": {
-    "One": "savegame",
+    "One": "Savegame",
     "Plural": "{0} savegames"
   },
   "Backup_Maps": {
@@ -170,8 +170,8 @@
     "Plural": "{0} ayar dosyaları"
   },
   "Backup_ModsSettingsFiles": {
-    "One": "Mod ayar dosyaları",
-    "Plural": "{0} mod ayar dosyaları"
+    "One": "Mod ayarları klasörleri",
+    "Plural": "{0} mod ayarları klasörleri"
   },
   "Backup_LocalMods": {
     "One": "Yerel mod",
@@ -193,6 +193,6 @@
   "CorruptedSettingsFilesBackupAvailable": "Skyve önceki ayarlarınızı geri yüklemek için kullanılabilir yedeklemeler buldu.\n\nŞimdi geri yüklemek için buraya tıklayın.",
   "CorruptedSettingsFilesNoBackup": "Ayarlarınızı geri yüklemek için yedekleme bulunamadı. Gelecekte ayarlarınızı korumak için yedekleme ayarlarınızı oluşturun.\n\nBozuk dosyaları silmek için buraya tıklayın.",
   "RecentBackups": "Son Yedeklemeler",
-  "DisableLogCleanup": "Oyunu başlatırken günlük temizlemeyi devre dışı bırak",
+  "DisableLogCleanup": "Oyunu başlatırken günlükleri temizlemeyi devre dışı bırak",
   "DisableLogCleanup_Tip": "Oyunu Skyve üzerinden başlatırken 'Logs' klasörünün silinmesini atlar."
 }
