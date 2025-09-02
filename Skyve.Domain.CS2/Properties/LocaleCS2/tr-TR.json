@@ -62,7 +62,7 @@
   "DropNewPlayset": "Bir oyun setinin dosyasını içeri aktarmak için dosyayı buraya sürükleyin veya seçin",
   "FilterIncludedByDefault": "Yerel içerikler için 'Dahil' filtresini varsayılan olarak aktif et",
   "FilterIncludedByDefault_Tip": "Yalnızca varsayılan olarak etkin oyun setinize dahil olan yerel içerikleri gösterir.",
-  "RunSetupOrRunApp": "Skyve'ı bu klasörden çalıştıramazsınız. Zaten indirdiyseniz Programlar listesinden başlatın.\n\nAksi takdirde 'Tamam' tuşuna tıklayıp kurulumu başlatın.",
+  "RunSetupOrRunApp": "Skyve'ı bu klasörden çalıştıramazsınız. Zaten yüklediyseniz Programlar listesinden başlatın.\n\nAksi takdirde 'Tamam' tuşuna tıklayıp kurulumu başlatın.",
   "CantRunAppFromHere": "Skyve'ı bu klasörden çalıştıramazsınız.\n\nUygulamayı Programlar listesinden çalıştırın veya mods klasöründen Skyve Kurulumunu başlatın.",
   "UpdateAvailable": "Güncelleme mevcut",
   "UpdateAvailableInfo": "Skyve'ı güncellemek için buraya tıkla",
