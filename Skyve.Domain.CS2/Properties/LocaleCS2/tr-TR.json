@@ -135,7 +135,7 @@
   "InitialRelease": "İlk Sürüm",
   "ForumPage": "Forum Sayfası",
   "DisableBurstCompile": "Seri-Derlemeyi Devre Dışı Bırak",
-  "UnreadComment": "{0} Yeni yorum",
+  "UnreadComment": "'{0}' için yeni yorumlar",
   "SafeMode": "Güvenli Mod",
   "LaunchInSafeMode": "Güvenli Modda Başlat",
   "SafeModeInfo": "Oyunu 'Güvenli Modda' başlatmak sorunları bulmanıza yardımcı olur.\n\nBir çökmenin kaynağını bulmak zordur ve bazen kaydı kurtarmayı imkansızlaştırır.\nGüvenli mod, oyunun çökmesini çoğu senaryoda önler, kaydı kurtarmanızı sağlayabilir ve analiz edilmek üzere 'log' dosyalarını teknik destek için kaydedebilirsiniz.",
