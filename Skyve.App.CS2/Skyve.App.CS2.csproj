@@ -54,11 +54,11 @@
 		<ProjectReference Include="..\..\Skyve-CS2\Skyve.Systems.CS2\Skyve.Systems.CS2.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(BuildType)' == 'Steam'">
 		<PluginFiles Include="Plugins\steam_api.dll" />
 		<PluginFiles Include="Plugins\steam_api64.dll" />
 	</ItemGroup>
-	<ItemGroup Condition="'$(BuildType)' == 'Steam'">
+	<ItemGroup Condition="'$(BuildType)' == 'Steam' AND '$(DebugType)' == 'full'">
 		<PluginFiles Include="Plugins\steam_appid.txt" />
 	</ItemGroup>
 

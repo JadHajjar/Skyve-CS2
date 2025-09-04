@@ -33,6 +33,24 @@
 	  </COMReference>
 	</ItemGroup>
 
+	<Target Name="Copy Files" BeforeTargets="Publish" Condition="'$(BuildType)' == 'Steam'">
+		<ItemGroup>
+			<AppFiles Include="..\Skyve.Service.CS2\bin\$(BuildType)\**\*.*" />
+			<AppFiles Include="..\Skyve.App.CS2\bin\$(BuildType)\**\*.*" />
+			<AppFiles Include="..\Skyve.App.CS2.Installer\bin\$(BuildType)\**\*.*" />
+		</ItemGroup>
+
+		<RemoveDir Directories="$(DeployDir)" />
+		<Copy SourceFiles="@(AppFiles)" DestinationFiles="@(AppFiles->'$(DeployDir)\App\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="$(DeployDir)\App\Skyve Setup.exe" DestinationFolder="$(DeployDir)\App\Uninstall.exe" />
+		<Copy SourceFiles="Resources\installscript.vdf" DestinationFolder="$(DeployDir)\App" />
+		<Copy SourceFiles="Resources\build.vdf" DestinationFolder="$(DeployDir)" />
+	</Target>
+
+	<Target Name="Publish Build" AfterTargets="Publish" Condition="'$(BuildType)' == 'Steam'">
+		<Exec Command="C:\SteamCmd\steamcmd.exe +login dotcax +run_app_build $(MSBuildProjectDirectory)\$(DeployDir)\build.vdf +quit" />
+	</Target>
+
 	<ItemGroup>
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>

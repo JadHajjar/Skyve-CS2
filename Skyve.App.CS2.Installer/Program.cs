@@ -6,7 +6,10 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace Skyve.App.CS2.Installer;
 
@@ -17,6 +20,11 @@ internal static class Program
 	{
 		try
 		{
+#if STEAM
+			MessageBox.Show(string.Join(",", args));
+
+			DoSilentInstall(args);
+#else
 			if (RedirectIfNeeded(args, out var uninstall))
 			{
 				return;
@@ -32,13 +40,42 @@ internal static class Program
 			}
 
 			Application.Run(new InstallingForm(uninstall));
+#endif
 		}
 		catch (Exception ex)
 		{
-			MessagePrompt.Show(ex, "Something went wrong while starting the installer");
+#if STEAM
+			SetProcessDPIAware();
+
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+#endif
+			if (ex is KnownException)
+			{
+				MessagePrompt.Show(ex.InnerException, ex.Message, icon: PromptIcons.Error);
+			}
+			else
+			{
+				MessagePrompt.Show(ex, "Something unexpected went wrong while installing Skyve:");
+			}
 		}
 	}
 
+	private static async void DoSilentInstall(string[] args)
+	{
+		Installer.SetInstallSettings(Application.StartupPath, false, true);
+
+		if (args.ElementAtOrDefault(0) == "-uninstall")
+		{
+			await Installer.UnInstall();
+		}
+		else
+		{
+			await Installer.Install();
+		}
+	}
+
+#if !STEAM
 	private static bool RedirectIfNeeded(string[] args, out bool uninstall)
 	{
 		var isAdmin = WinExtensionClass.IsAdministrator;
@@ -73,6 +110,7 @@ internal static class Program
 
 		return false;
 	}
+#endif
 
 	[System.Runtime.InteropServices.DllImport("user32.dll")]
 	private static extern bool SetProcessDPIAware();

@@ -359,3 +359,4 @@ MigrationBackup/
 FodyWeavers.xsd
 KEYS.cs
 Skyve.Mod.CS2/Library/ilpp.pid
+*.vdf

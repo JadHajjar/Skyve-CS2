@@ -37,6 +37,7 @@ public class Installer
 		var servicePath = Path.Combine(targetFolder.FullName, "Skyve.Service.exe");
 		var uninstallPath = Path.Combine(targetFolder.FullName, "Uninstall.exe");
 
+#if !STEAM
 		try
 		{
 			if (targetFolder.Exists)
@@ -108,6 +109,7 @@ public class Installer
 			await RegisterService(!InstallService);
 		}
 		catch { }
+#endif
 
 		AddFirewallRule(exePath);
 
@@ -211,6 +213,9 @@ public class Installer
 
 	public static async Task UnInstall()
 	{
+#if STEAM
+		await RegisterService(true);
+#else
 		await KillRunningApps();
 
 		var shortcutPath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Skyve CS-II.lnk";
@@ -241,6 +246,7 @@ public class Installer
 			WorkingDirectory = Path.GetTempPath(),
 			FileName = "cmd.exe"
 		});
+#endif
 	}
 
 	private static async Task KillRunningApps()
