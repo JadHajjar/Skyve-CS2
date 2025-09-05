@@ -21,9 +21,7 @@ internal static class Program
 		try
 		{
 #if STEAM
-			MessageBox.Show(string.Join(",", args));
-
-			DoSilentInstall(args);
+			DoSilentInstall();
 #else
 			if (RedirectIfNeeded(args, out var uninstall))
 			{
@@ -61,16 +59,22 @@ internal static class Program
 		}
 	}
 
-	private static async void DoSilentInstall(string[] args)
+	private static async void DoSilentInstall()
 	{
 		Installer.SetInstallSettings(Application.StartupPath, false, true);
 
-		if (args.ElementAtOrDefault(0) == "-uninstall")
+		if (Path.GetFileNameWithoutExtension(Application.ExecutablePath).Equals("uninstall", StringComparison.InvariantCultureIgnoreCase))
 		{
+			if (!WinExtensionClass.IsAdministrator)
+				throw new KnownException(new AccessViolationException(), "You must run the uninstaller as Administrator");
+
 			await Installer.UnInstall();
 		}
 		else
 		{
+			if (!WinExtensionClass.IsAdministrator)
+				throw new KnownException(new AccessViolationException(), "You must run the setup as Administrator");
+
 			await Installer.Install();
 		}
 	}

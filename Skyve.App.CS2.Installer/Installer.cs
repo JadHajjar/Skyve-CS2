@@ -28,16 +28,17 @@ public class Installer
 
 	public static async Task Install()
 	{
-		await KillRunningApps();
-
 		var targetFolder = new DirectoryInfo(INSTALL_PATH);
 		var originalPath = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), ".App"));
-		var shortcutPath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Skyve CS-II.lnk";
 		var exePath = Path.Combine(targetFolder.FullName, "Skyve.exe");
 		var servicePath = Path.Combine(targetFolder.FullName, "Skyve.Service.exe");
 		var uninstallPath = Path.Combine(targetFolder.FullName, "Uninstall.exe");
 
 #if !STEAM
+		var shortcutPath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Skyve CS-II.lnk";
+
+		await KillRunningApps();
+
 		try
 		{
 			if (targetFolder.Exists)
@@ -103,13 +104,9 @@ public class Installer
 		{
 			throw new KnownException(ex, "The skyve app could not be found. It is likely an anti-virus software removed it.\r\n\r\nApp location: " + exePath);
 		}
-
-		try
-		{
-			await RegisterService(!InstallService);
-		}
-		catch { }
 #endif
+
+		await RegisterService(!InstallService);
 
 		AddFirewallRule(exePath);
 
@@ -274,6 +271,9 @@ public class Installer
 		{
 			foreach (var file in Directory.GetFiles(INSTALL_PATH, "*.exe"))
 			{
+				if (file.Equals(Application.ExecutablePath, StringComparison.OrdinalIgnoreCase))
+					continue;
+
 				foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(file)))
 				{
 					process.Kill();

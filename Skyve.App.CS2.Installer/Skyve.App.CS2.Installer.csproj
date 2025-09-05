@@ -42,7 +42,7 @@
 
 		<RemoveDir Directories="$(DeployDir)" />
 		<Copy SourceFiles="@(AppFiles)" DestinationFiles="@(AppFiles->'$(DeployDir)\App\%(RecursiveDir)%(Filename)%(Extension)')" />
-		<Copy SourceFiles="$(DeployDir)\App\Skyve Setup.exe" DestinationFolder="$(DeployDir)\App\Uninstall.exe" />
+		<Copy SourceFiles="$(DeployDir)\App\Skyve Setup.exe" DestinationFiles="$(DeployDir)\App\Uninstall.exe" />
 		<Copy SourceFiles="Resources\installscript.vdf" DestinationFolder="$(DeployDir)\App" />
 		<Copy SourceFiles="Resources\build.vdf" DestinationFolder="$(DeployDir)" />
 	</Target>

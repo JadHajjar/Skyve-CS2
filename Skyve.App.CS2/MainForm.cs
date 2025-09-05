@@ -65,7 +65,9 @@ public partial class MainForm : BasePanelForm
 
 		var currentVersion = Assembly.GetEntryAssembly().GetName().Version;
 
-#if STABLE
+#if STEAM
+		L_Version.Text = "v" + currentVersion.GetString() + " - Steam";
+#elif STABLE
 		L_Version.Text = "v" + currentVersion.GetString();
 #else
 		L_Version.Text = "v" + currentVersion.GetString() + " Beta";
@@ -79,15 +81,7 @@ public partial class MainForm : BasePanelForm
 
 		try
 		{
-
-			if (!_settings.SessionSettings.FirstTimeSetupCompleted && string.IsNullOrEmpty(ConfigurationManager.AppSettings["GamePath"]))
-			{
-				SetPanel<PC_Options>(PI_Options);
-			}
-			else
-			{
-				SetPanel<PC_MainPage>(PI_Dashboard);
-			}
+			SetPanel<PC_MainPage>(PI_Dashboard);
 		}
 		catch (Exception ex)
 		{
