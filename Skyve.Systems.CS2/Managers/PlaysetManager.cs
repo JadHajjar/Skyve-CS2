@@ -523,6 +523,7 @@ internal class PlaysetManager : IPlaysetManager
 				Name = x.Name,
 				IsEnabled = x.IsEnabled,
 				LoadOrder = x.LoadOrder,
+				IsVersionLocked = x.IsVersionLocked,
 				Version = x.Version,
 			})),
 			LocalMods = _packageManager.Packages.Where(x => x.IsLocal && _packageUtil.IsIncluded(x) && x.Name is not "Maps" and not "Saves").ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Name, new()

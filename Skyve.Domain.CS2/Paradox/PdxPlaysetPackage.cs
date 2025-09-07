@@ -20,6 +20,7 @@ public class PdxPlaysetPackage : IPlaysetPackage
 		Name = subscribedMod.DisplayName;
 		Version = subscribedMod.Version;
 		VersionName = subscribedMod.UserModVersion;
+		IsVersionLocked = subscribedMod.PreferredVersion is not null;
 		IsEnabled = mod.IsEnabled;
 		LoadOrder = mod.LoadOrder;
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
@@ -33,6 +34,7 @@ public class PdxPlaysetPackage : IPlaysetPackage
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
 	public bool IsBuiltIn { get; }
+	public bool IsVersionLocked { get; }
 	public bool IsEnabled { get; }
 	public int LoadOrder { get; }
 	public ILocalPackageData? LocalData { get; }

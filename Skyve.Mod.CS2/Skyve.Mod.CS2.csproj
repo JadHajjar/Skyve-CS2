@@ -31,7 +31,7 @@
 			
 			<App Include="$(ProjectDir)..\Skyve.App.CS2\bin\$(BuildType)\Skyve.exe" />
 			<Service Include="$(ProjectDir)..\Skyve.Service.CS2\bin\$(BuildType)\Skyve.Service.exe" />
-			<Setup Include="$(ProjectDir)..\Skyve.App.CS2.Installer\bin\$(BuildType)\Skyve Setup.exe" />
+			<Setup Include="$(ProjectDir)..\Skyve.App.CS2.Installer\bin\$(BuildType)\Setup.exe" />
 		</ItemGroup>
 
 		<Copy SourceFiles="@(AppFiles)" DestinationFiles="@(AppFiles->'$(DeployDir)\.App\%(RecursiveDir)%(Filename)%(Extension)')" />

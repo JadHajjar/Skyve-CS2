@@ -50,6 +50,8 @@ public class SkyveService : ServiceBase
 
 			provider.GetService<INotifier>()!.Context = SkyveContext.Service;
 
+			SystemExtensions.Initialize(provider);
+
 			Providers.Add(provider);
 
 			new Thread(new ThreadStart(provider.GetService<ServiceSystem>()!.Run)) { IsBackground = true }.Start();

@@ -44,6 +44,7 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 
 				if (package != null)
 				{
+					results[item] = package;
 					results[$"{package.Id}_{package.Version}"] = package;
 				}
 			}
@@ -65,9 +66,9 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 
 	protected override bool TryGetEntityFromCache(string entity, out PdxModDetails result)
 	{
-		if (entity[entity.Length - 1] != '_')
+		if (base.TryGetEntityFromCache(entity, out result))
 		{
-			return base.TryGetEntityFromCache(entity, out result);
+			return true;
 		}
 
 		if (!ulong.TryParse(entity.Substring(0, entity.Length - 1), out var id))

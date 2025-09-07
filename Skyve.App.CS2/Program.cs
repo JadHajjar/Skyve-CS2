@@ -165,7 +165,7 @@ internal static class Program
 			SetProcessDPIAware();
 		}
 
-		var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "Skyve Setup.exe");
+		var setupFile = CrossIO.Combine(Path.GetDirectoryName(App.Program.CurrentDirectory), "Setup.exe");
 
 		if (CrossIO.FileExists(setupFile))
 		{

@@ -210,6 +210,8 @@ public class Installer
 
 	public static async Task UnInstall()
 	{
+		var exePath = Path.Combine(INSTALL_PATH, "Skyve.exe");
+
 #if STEAM
 		await RegisterService(true);
 #else
@@ -244,8 +246,13 @@ public class Installer
 			FileName = "cmd.exe"
 		});
 #endif
+
+		RegisterCustomProtocol("Skyve", exePath, true);
+
+		AssociateFileType(exePath, true);
 	}
 
+#if !STEAM
 	private static async Task KillRunningApps()
 	{
 		var service = ServiceController.GetServices().FirstOrDefault(x => x.ServiceName == "Skyve.Service");
@@ -364,6 +371,7 @@ public class Installer
 			throw new Exception("An error occurred writing uninstall information to the registry.  The service is fully installed but can only be uninstalled manually through the command line.", ex);
 		}
 	}
+#endif
 
 	public static string? GetCurrentInstallationPath()
 	{
@@ -460,10 +468,16 @@ public class Installer
 		catch { }
 	}
 
-	public static void RegisterCustomProtocol(string protocolName, string executablePath)
+	public static void RegisterCustomProtocol(string protocolName, string executablePath, bool uninstall = false)
 	{
 		try
 		{
+			if (uninstall)
+			{
+				Registry.ClassesRoot.DeleteSubKeyTree(protocolName);
+				return;
+			}
+
 			// Create the root key for the custom protocol
 			using var protocolKey = Registry.ClassesRoot.CreateSubKey(protocolName);
 			if (protocolKey == null)
@@ -487,12 +501,18 @@ public class Installer
 		}
 	}
 
-	public static void AssociateFileType(string executablePath)
+	public static void AssociateFileType(string executablePath, bool uninstall = false)
 	{
 		try
 		{
 			var extension = ".sbak";
 			var progId = "Skyve.sbakfile";
+
+			if (uninstall)
+			{
+				Registry.ClassesRoot.DeleteSubKeyTree(extension);
+				return;
+			}
 
 			// Register file extension
 			using (var key = Registry.ClassesRoot.CreateSubKey(extension))

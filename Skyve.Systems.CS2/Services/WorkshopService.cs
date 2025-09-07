@@ -376,7 +376,7 @@ public class WorkshopService : IWorkshopService
 		{
 			var result = await Context.Mods.GetLocalModDetails(int.Parse(rgx.Groups[1].Value), rgx.Groups[2].Value.IfEmpty(null));
 
-			if (!result.Success || result?.Mod is null)
+			if (!result.Success || result?.Mod is null || result.Mod.Id <= 0)
 			{
 				var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
 				result = await Context.Mods.GetDetails(int.Parse(rgx.Groups[1].Value), rgx.Groups[2].Value.IfEmpty(null), platform);

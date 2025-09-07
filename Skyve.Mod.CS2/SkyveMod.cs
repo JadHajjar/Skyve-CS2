@@ -165,7 +165,7 @@ namespace Skyve.Mod.CS2
 
 			try
 			{
-				var setupFile = Path.Combine(ModPath, "Skyve Setup.exe");
+				var setupFile = Path.Combine(ModPath, "Setup.exe");
 
 				InstallHelper.Run(setupFile);
 

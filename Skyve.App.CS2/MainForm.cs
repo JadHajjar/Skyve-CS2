@@ -146,7 +146,7 @@ public partial class MainForm : BasePanelForm
 
 		try
 		{
-			var setupFile = Path.Combine(mostRecent.LocalData!.Folder, "Skyve Setup.exe");
+			var setupFile = Path.Combine(mostRecent.LocalData!.Folder, "Setup.exe");
 
 			InstallHelper.Run(setupFile);
 

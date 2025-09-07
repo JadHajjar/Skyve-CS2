@@ -39,7 +39,7 @@ internal class PackageCompatibilityControl : SlickControl
 		var notificationType = compatibilityReport?.GetNotification();
 		var status = _packageUtil.GetStatus(Package, out _);
 
-		Height = UI.Scale(32) * ((status <= DownloadStatus.OK ? 0 : 1) + (notificationType <= NotificationType.Info ? 0 : 1));
+		Height = UI.Scale(32) * ((status > DownloadStatus.OK && status != DownloadStatus.VersionLocked ? 1 : 0) + (notificationType <= NotificationType.Info ? 0 : 1));
 	}
 
 	protected override void OnPaint(PaintEventArgs e)
@@ -71,7 +71,7 @@ internal class PackageCompatibilityControl : SlickControl
 			e.Graphics.DrawString(text, font, textBrush, textRect, format);
 		}
 
-		if (status > DownloadStatus.OK)
+		if (status > DownloadStatus.OK && status != DownloadStatus.VersionLocked )
 		{
 			var text = "";
 			var iconName = (DynamicIcon?)null;

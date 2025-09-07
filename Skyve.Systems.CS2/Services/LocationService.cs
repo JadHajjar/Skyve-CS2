@@ -93,6 +93,11 @@ internal class LocationService : ILocationService
 
 	private bool TryGenerateFolderSettings()
 	{
+		if (Application.ExecutablePath.EndsWith("Skyve.Service.exe"))
+		{
+			return false;
+		}
+
 #if STEAM
 		try
 		{

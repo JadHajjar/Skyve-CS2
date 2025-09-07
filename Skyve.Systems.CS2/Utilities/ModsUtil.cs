@@ -82,7 +82,6 @@ internal class ModsUtil : IModUtil
 					, new GenericPackageIdentity { Id = (ulong)mod.Id, Name = mod.Name }
 					, item.ModIsEnabled
 					, item.Version);
-
 			}
 		}
 

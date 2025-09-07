@@ -19,7 +19,7 @@
 		<NeutralLanguage>en</NeutralLanguage>
 		<Title>Skyve</Title>
 		<AssemblyName>Skyve.App.CS2.Setup</AssemblyName>
-		<TargetName>Skyve Setup</TargetName>
+		<TargetName>Setup</TargetName>
 	</PropertyGroup>
 	<ItemGroup>
 	  <COMReference Include="NetFwTypeLib">
@@ -40,11 +40,19 @@
 			<AppFiles Include="..\Skyve.App.CS2.Installer\bin\$(BuildType)\**\*.*" />
 		</ItemGroup>
 
+		<ReadLinesFromFile File="Resources\build.vdf">
+			<Output TaskParameter="Lines" ItemName="BuildVdfLines" />
+		</ReadLinesFromFile>
+
+		<ItemGroup>
+			<ProcessedBuildVdfLines Include="@(BuildVdfLines->Replace('@VERSION@', '$(Version)'))" />
+		</ItemGroup>
+
 		<RemoveDir Directories="$(DeployDir)" />
 		<Copy SourceFiles="@(AppFiles)" DestinationFiles="@(AppFiles->'$(DeployDir)\App\%(RecursiveDir)%(Filename)%(Extension)')" />
-		<Copy SourceFiles="$(DeployDir)\App\Skyve Setup.exe" DestinationFiles="$(DeployDir)\App\Uninstall.exe" />
+		<Copy SourceFiles="$(DeployDir)\App\Setup.exe" DestinationFiles="$(DeployDir)\App\Uninstall.exe" />
 		<Copy SourceFiles="Resources\installscript.vdf" DestinationFolder="$(DeployDir)\App" />
-		<Copy SourceFiles="Resources\build.vdf" DestinationFolder="$(DeployDir)" />
+		<WriteLinesToFile File="$(DeployDir)\build.vdf" Lines="@(ProcessedBuildVdfLines)" Overwrite="true" />
 	</Target>
 
 	<Target Name="Publish Build" AfterTargets="Publish" Condition="'$(BuildType)' == 'Steam'">
@@ -71,7 +79,7 @@
 		<EmbeddedResource Include="Resources\Skyve_Background_Beta.png" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(BuildType)' != 'Steam'">
 		<PackageReference Include="Costura.Fody" Version="5.7.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
