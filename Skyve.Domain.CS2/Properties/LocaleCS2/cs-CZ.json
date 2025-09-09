@@ -104,7 +104,7 @@
   "TotalSavesSize": "Velikost Uložených her",
   "TotalSubbedSize": "Velikost odběrů",
   "TotalOtherSize": "Velikost ostatních souborů",
-  "FreeSpace": "{0} zdarma",
+  "FreeSpace": "{0} volno",
   "UsedOutOfSpace": "z {0} na disku {1}",
   "LowSpaceCreateJunction": {
     "Zero": "Dochází vám místo na disku, musíte uvolnit nějaké úložiště nebo si pořídit další pevný disk.",

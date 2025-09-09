@@ -182,7 +182,7 @@
   "BackupStartingNow": "Cópia de segurança automática a iniciar...",
   "BackupServiceUnavailable": "O serviço do Skyve não está instalado. As cópias de segurança automáticas só funcionarão enquanto a aplicação do Skyve estiver aberta.",
   "BackupServiceAvailable": "Serviço Skyve online",
-  "NextScheduledBackup": "Próxima cópia de segurança agendada é {0}",
+  "NextScheduledBackup": "Próxima cópia de segurança agendada daqui {0}",
   "LastSettingsBackup": "Última cópia de segurança das definições foi {0}",
   "NoSettingsBackup": "Nenhuma cópia de segurança de definições disponível",
   "RestoreLatestSettings": "Restaurar última cópia de segurança de definiçéoes",
