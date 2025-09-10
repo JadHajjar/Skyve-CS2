@@ -110,7 +110,7 @@ internal class TagsService : ITagsService
 	{
 		try
 		{
-			var tags = await _workshopService.GetAvailableTags();
+			var tags = _workshopService.GetAvailableTags();
 			var packages = await _workshopService.GetLocalPackages();
 
 			lock (_workshopTags)

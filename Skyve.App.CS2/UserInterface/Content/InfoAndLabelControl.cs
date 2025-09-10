@@ -67,7 +67,7 @@ internal class InfoAndLabelControl : SlickControl
 	{
 		e.Graphics.SetUp(BackColor);
 
-		if (string.IsNullOrWhiteSpace(ValueText))
+		if (string.IsNullOrWhiteSpace(ValueText) || !Live)
 		{
 			return;
 		}

@@ -213,6 +213,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation DropNewPlayset => _instance.GetText("DropNewPlayset");
 
 	/// <summary>
+	/// Edit this mod's information
+	/// </summary>
+	public static Translation EditModInfo => _instance.GetText("EditModInfo");
+
+	/// <summary>
 	/// Remove all items from your active playset
 	/// </summary>
 	public static Translation ExcludeAll => _instance.GetText("ExcludeAll");
@@ -738,6 +743,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Zone
 	/// </summary>
 	public static Translation TagZone => _instance.GetText("Tag_Zone");
+
+	/// <summary>
+	/// Title &amp; Descriptions
+	/// </summary>
+	public static Translation TitleDesc => _instance.GetText("TitleDesc");
 
 	/// <summary>
 	/// Total Backups Size

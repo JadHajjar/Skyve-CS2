@@ -206,5 +206,7 @@
   "SyncAffectedPlaysets": {
     "One": "Affected playset: {1}",
     "Plural": "Affected playsets: {1}"
-  }
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }

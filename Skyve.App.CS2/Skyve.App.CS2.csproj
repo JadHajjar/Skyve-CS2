@@ -99,6 +99,9 @@
 		  <SubType>Form</SubType>
 		</Compile>
 		<Compile Update="UserInterface\Generic\ModVersionDropDown.cs" />
+		<Compile Update="UserInterface\Panels\PC_PackageEdit.cs">
+		  <SubType>UserControl</SubType>
+		</Compile>
 		<Compile Update="UserInterface\Panels\PC_SendReviewRequest.cs" />
 		<Compile Update="UserInterface\Panels\PC_ReviewRequests.cs" />
 		<Compile Update="UserInterface\Panels\PC_ViewReviewRequest.cs" />

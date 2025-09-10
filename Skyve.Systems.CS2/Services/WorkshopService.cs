@@ -68,6 +68,7 @@ public class WorkshopService : IWorkshopService
 	public bool IsLoginPending { get; private set; } = true;
 	public bool IsAvailable => Context is not null;
 	public bool IsReady => Context is not null && IsLoggedIn && !Context.Mods.SyncOngoing();
+	public GetGameDataResult? GameData { get; private set; }
 
 	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler, IDlcManager dlcManager, ISkyveDataManager skyveDataManager)
 	{
@@ -185,6 +186,8 @@ public class WorkshopService : IWorkshopService
 				config: config);
 
 			_logger.Info("SDK Created");
+
+			GameData = await Context.Mods.GetGameData();
 
 			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
 
@@ -534,19 +537,19 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	public async Task<IEnumerable<ITag>> GetAvailableTags()
+	public IEnumerable<ITag> GetAvailableTags()
 	{
 		if (cachedTags is not null)
 		{
 			return cachedTags;
 		}
 
-		if (Context is null)
+		if (Context is null || GameData is null)
 		{
 			return [];
 		}
 
-		var gameData = ProcessResult(await Context.Mods.GetGameData());
+		var gameData = ProcessResult(GameData);
 
 		return cachedTags = gameData.Tags.ToList(x => (ITag)new TagItem(Skyve.Domain.CS2.Enums.TagSource.Workshop, x.Value.Id, x.Value.DisplayName));
 	}
@@ -1094,6 +1097,14 @@ public class WorkshopService : IWorkshopService
 		{
 			_logger.Exception(ex, memberName: "Failed to sync mods");
 		}
+	}
+
+	public async Task<IModStagingDataBuilder?> GetModStagingDataFromExistingMod(ulong modId)
+	{
+		if (Context is null || modId <= 0)
+			return null;
+
+		return await Context.Mods.Publishing.GetModStagingDataFromExistingMod((int)modId);
 	}
 
 	public async Task DeactivateActivePlayset()

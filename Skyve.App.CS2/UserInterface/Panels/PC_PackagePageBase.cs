@@ -5,7 +5,7 @@ using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
-using Skyve.Domain.CS2.Utilities;
+using Skyve.Systems.CS2.Services;
 
 using System.Drawing;
 using System.Text.RegularExpressions;
@@ -21,6 +21,7 @@ public partial class PC_PackagePageBase : PanelContent
 	private readonly INotifier _notifier;
 	private readonly IPackageUtil _packageUtil;
 	private readonly ISettings _settings;
+	private readonly IUserService _userService;
 	private readonly IWorkshopService _workshopService;
 	private TagControl? addTagControl;
 	private bool refreshPending;
@@ -40,7 +41,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 	public PC_PackagePageBase(IPackageIdentity package, bool load = false, bool autoRefresh = true) : base(load)
 	{
-		ServiceCenter.Get(out _notifier, out _packageUtil, out _settings, out _workshopService, out IImageService imageService);
+		ServiceCenter.Get(out _notifier, out _packageUtil, out _settings, out _workshopService, out _userService, out IImageService imageService);
 
 		InitializeComponent();
 
@@ -128,6 +129,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
+		B_EditModInfo.Visible = workshopInfo?.Author?.Equals(_userService.User) ?? false;
 		LI_Version.LabelText = localData?.IsCodeMod ?? true ? "Version" : "Content";
 		LI_Version.ValueText = localData?.IsCodeMod ?? true ? localData?.VersionName ?? workshopInfo?.VersionName : $"{localData.Assets.Length} {Locale.Asset.FormatPlural(localData.Assets.Length).ToLower()}";
 		SlickTip.SetTo(LI_Version, localData?.IsCodeMod ?? true ? localData?.Version ?? workshopInfo?.Version : null);
@@ -289,7 +291,7 @@ public partial class PC_PackagePageBase : PanelContent
 		TLP_TopInfo.Margin = B_Incl.Margin = base_slickSpacer.Margin = UI.Scale(new Padding(5));
 		base_slickSpacer.Height = (int)UI.FontScale;
 		TLP_ModInfo.Padding = TLP_ModRequirements.Padding = TLP_Tags.Padding = TLP_Links.Padding = DD_Version.Margin =
-		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = UI.Scale(new Padding(5));
+		TLP_ModInfo.Margin = TLP_ModRequirements.Margin = TLP_Tags.Margin = TLP_Links.Margin = B_EditModInfo.Margin = UI.Scale(new Padding(5));
 		L_Info.Font = L_Requirements.Font = L_Tags.Font = L_Links.Font = UI.Font(7F, FontStyle.Bold);
 		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = L_Links.Margin = UI.Scale(new Padding(3));
 		L_Author.Margin = L_Title.Margin = UI.Scale(new Padding(5, 0, 0, 0));
@@ -435,9 +437,25 @@ public partial class PC_PackagePageBase : PanelContent
 	{
 		foreach (Control ctrl in FLP_Package_Links.Controls)
 		{
-			ctrl.Size = new(ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal, ctrl.Parent.Width / 3 - ctrl.Margin.Horizontal);
+			ctrl.Size = new((ctrl.Parent.Width / 3) - ctrl.Margin.Horizontal, (ctrl.Parent.Width / 3) - ctrl.Margin.Horizontal);
 		}
 
 		FLP_Package_Links.PerformLayout();
+	}
+
+	private async void B_EditModInfo_Click(object sender, EventArgs e)
+	{
+		B_EditModInfo.Loading = true;
+		var staging = await (_workshopService as WorkshopService)!.GetModStagingDataFromExistingMod(Package.GetWorkshopInfo()?.Id ?? Package.Id);
+		B_EditModInfo.Loading = false;
+
+		if (staging != null)
+		{
+			Form.PushPanel(new PC_PackageEdit(Package, staging));
+		}
+		else
+		{
+			ShowPrompt("Could not edit this mod, try again later", icon: PromptIcons.Warning);
+		}
 	}
 }
