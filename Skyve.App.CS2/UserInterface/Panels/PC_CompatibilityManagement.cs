@@ -406,7 +406,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 
 		L_NoTags.Visible = FLP_Tags.Controls.Count == 0;
 
-		SetLinks(postPackage.Links ?? []);
+		SetLinks(postPackage.Links?.Cast<ILink>() ?? []);
 
 		postPackage.Statuses ??= [];
 		postPackage.Interactions ??= [];
@@ -505,7 +505,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		form.LinksReturned += SetLinks;
 	}
 
-	private void SetLinks(IEnumerable<PackageLink> links)
+	private void SetLinks(IEnumerable<ILink> links)
 	{
 		FLP_Links.Controls.Clear(true);
 

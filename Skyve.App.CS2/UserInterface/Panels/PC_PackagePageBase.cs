@@ -129,7 +129,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
-		B_EditModInfo.Visible = workshopInfo?.Author?.Equals(_userService.User) ?? false;
+		B_EditModInfo.Visible = 		workshopInfo?.Author?.Equals(_userService.User) ?? false;
 		LI_Version.LabelText = localData?.IsCodeMod ?? true ? "Version" : "Content";
 		LI_Version.ValueText = localData?.IsCodeMod ?? true ? localData?.VersionName ?? workshopInfo?.VersionName : $"{localData.Assets.Length} {Locale.Asset.FormatPlural(localData.Assets.Length).ToLower()}";
 		SlickTip.SetTo(LI_Version, localData?.IsCodeMod ?? true ? localData?.Version ?? workshopInfo?.Version : null);

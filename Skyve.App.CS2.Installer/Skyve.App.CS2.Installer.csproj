@@ -53,10 +53,14 @@
 		<Copy SourceFiles="$(DeployDir)\App\Setup.exe" DestinationFiles="$(DeployDir)\App\Uninstall.exe" />
 		<Copy SourceFiles="Resources\installscript.vdf" DestinationFolder="$(DeployDir)\App" />
 		<WriteLinesToFile File="$(DeployDir)\build.vdf" Lines="@(ProcessedBuildVdfLines)" Overwrite="true" />
+		<SignFile CertificateThumbprint="$(Certificate)" SigningTarget="$(DeployDir)\App\Skyve.exe" TargetFrameworkVersion="v4.8" />
+		<SignFile CertificateThumbprint="$(Certificate)" SigningTarget="$(DeployDir)\App\Setup.exe" TargetFrameworkVersion="v4.8" />
+		<SignFile CertificateThumbprint="$(Certificate)" SigningTarget="$(DeployDir)\App\Uninstall.exe" TargetFrameworkVersion="v4.8" />
+		<SignFile CertificateThumbprint="$(Certificate)" SigningTarget="$(DeployDir)\App\Skyve.Service.exe" TargetFrameworkVersion="v4.8" />
 	</Target>
 
 	<Target Name="Publish Build" AfterTargets="Publish" Condition="'$(BuildType)' == 'Steam'">
-		<Exec Command="C:\SteamCmd\steamcmd.exe +login dotcax +run_app_build $(MSBuildProjectDirectory)\$(DeployDir)\build.vdf +quit" />
+		<!--<Exec Command="C:\SteamCmd\steamcmd.exe +login dotcax +run_app_build $(MSBuildProjectDirectory)\$(DeployDir)\build.vdf +quit" />-->
 	</Target>
 
 	<ItemGroup>

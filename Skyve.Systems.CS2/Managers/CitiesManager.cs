@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Forms;
 
 namespace Skyve.Systems.CS2.Managers;
 internal class CitiesManager : ICitiesManager
@@ -48,7 +49,7 @@ internal class CitiesManager : ICitiesManager
 		_serviceProvider = serviceProvider;
 		_settings = settings;
 
-		var citiesMonitorTimer = new Timer(1000);
+		var citiesMonitorTimer = new System.Timers.Timer(1000);
 
 		citiesMonitorTimer.Elapsed += CitiesMonitorTimer_Elapsed;
 		citiesMonitorTimer.Start();
@@ -113,11 +114,11 @@ internal class CitiesManager : ICitiesManager
 
 		if (notifier!.IsWorkshopSyncInProgress)
 		{
-			switch (MessagePrompt.Show(LocaleCS2.SyncOngoingLaunchGame, LocaleCS2.SyncOngoing, PromptButtons.YesNoCancel, PromptIcons.Hand))
+			switch (MessagePrompt.Show(LocaleCS2.SyncOngoingLaunchGame, LocaleCS2.SyncOngoing, PromptButtons.YesNoCancel, PromptIcons.Hand, form: SystemsProgram.MainForm as SlickForm))
 			{
-				case System.Windows.Forms.DialogResult.Cancel:
+				case DialogResult.Cancel:
 					return;
-				case System.Windows.Forms.DialogResult.Yes:
+				case DialogResult.Yes:
 					_logger.Info("Waiting for Synchronize to finish before launching the game");
 
 					while (notifier!.IsWorkshopSyncInProgress)
@@ -139,9 +140,9 @@ internal class CitiesManager : ICitiesManager
 
 		if (playsetManager!.CurrentPlayset is null)
 		{
-			switch (MessagePrompt.Show(LocaleCS2.StartingWithNoPlayset, Locale.NoActivePlayset, PromptButtons.OKCancel, PromptIcons.Hand))
+			switch (MessagePrompt.Show(LocaleCS2.StartingWithNoPlayset, Locale.NoActivePlayset, PromptButtons.OKCancel, PromptIcons.Hand, form: SystemsProgram.MainForm as SlickForm))
 			{
-				case System.Windows.Forms.DialogResult.Cancel:
+				case DialogResult.Cancel:
 					return;
 			}
 		}

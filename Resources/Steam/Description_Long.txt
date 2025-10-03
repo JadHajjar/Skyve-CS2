@@ -1,0 +1,50 @@
+Skyve is your all-in-one mod manager for Cities: Skylines II and PDX Mods. It's a community-made open source project that offers simple and extensive control of your mods, browsing, and compatibility information, all in a standalone application that you can use before opening the game.
+‎ 
+[h1][b]Features[/b][/h1]
+Skyve comes packed with features designed to simplify modding, here's what you can expect:
+‎
+[h2]PDX Mods Integration[/h2]
+Skyve integrates seamlessly with PDX Mods, letting you browse mods directly within the tool. You’ll be able to:
+[list]
+	[*]Subscribe or unsubscribe from mods
+	[*]Download new mods or update existing ones
+	[*]Organize your playsets and enable/disable mods as needed
+[/list]
+
+
+On top of that, Skyve provides convenient bulk actions to make managing mods easier:
+[list]
+	[*]Subscribe, unsubscribe, enable, or disable multiple mods at once
+	[*]Add or remove mods across all your playsets in one step
+	[*]Merge or exclude another playset’s mods from your current playset
+[/list]
+
+
+[h2]Compatibility Information[/h2]
+Skyve includes an [b]online compatibility catalogue[/b], maintained and updated by community members, giving you real-time information about the mods you’re using.
+‎ 
+Some of the ways it helps include:
+[list]
+	[*]Notifying you if a mod isn’t compatible with the latest game patch
+	[*]Flagging mods that are broken or deprecated
+	[*]Warning you if two or more of your mods conflict or overlap in functionality
+	[*]Highlighting mods that could break your save if removed
+	[*]Pointing out when a mod has been succeeded by a newer version
+	[*]Letting you know if any requirements are missing for your active mods
+[/list]
+Skyve shows these warnings as you browse, so you’ll know in advance if a mod might cause problems before subscribing.
+You’ll also have access to a [b]dedicated compatibility report page[/b], which lists all issues with your mods and even offers one-click fixes to resolve them quickly.
+‎
+[h2]Quality of Life[/h2]
+The original and main goal is to make modding easy. And that includes quality of life features like:
+[list]
+	[*]Keeps your mods up to date automatically while you're not playing, so you can instantly hop into the game after being away for a few days.
+	[*]Automatic backups of your cities, mods, settings, etc.
+	[*]Move your mods content to different folders or drives without breaking your setup.
+	[*]Advanced filtering, tagging, and actions while browsing your mods.
+	[*]View connections between mod dependencies in a mod's references tab.
+	[*]Easily see what playsets include a specific mod and manage them directly from the mod's page.
+	[*]Easy access to your logs to be able to get better help on forums or Discord.
+[/list]
+
+

@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1218,7 +1219,7 @@ public class WorkshopService : IWorkshopService
 		};
 	}
 
-	private T ProcessResult<T>(T result) where T : Result
+	private T ProcessResult<T>(T result, [CallerLineNumber] int? lineNumber = default, [CallerMemberName] string? memberName = default) where T : Result
 	{
 		if (result.Error is not null)
 		{
@@ -1226,7 +1227,7 @@ public class WorkshopService : IWorkshopService
 #if DEBUG
 				+ $"\r\n{new StackTrace()}"
 #endif
-				);
+				, lineNumber, memberName);
 		}
 
 		return result;

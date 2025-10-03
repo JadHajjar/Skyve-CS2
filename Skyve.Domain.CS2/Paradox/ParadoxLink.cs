@@ -27,7 +27,7 @@ public class ParadoxLink : ILink
 			"gitlab" => LinkType.Gitlabs,
 			_ => LinkType.Website
 		};
-		
+
 		Title = Type.ToString();
 
 		if (Type is LinkType.BuyMeACoffee)
@@ -39,5 +39,24 @@ public class ParadoxLink : ILink
 	public ParadoxLink()
 	{
 
+	}
+
+	public static string ToParadoxLinkType(LinkType linkType)
+	{
+		return linkType switch
+		{
+			LinkType.Discord => "discord",
+			LinkType.Github => "github",
+			LinkType.YouTube => "youtube",
+			LinkType.Twitch => "twitch",
+			LinkType.X => "x",
+			LinkType.Paypal => "paypal",
+			LinkType.Patreon => "patreon",
+			LinkType.BuyMeACoffee => "buymeacoffee",
+			LinkType.Crowdin => "crowdin",
+			LinkType.Kofi => "kofi",
+			LinkType.Gitlabs => "gitlab",
+			_ => ""
+		};
 	}
 }
