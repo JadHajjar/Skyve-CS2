@@ -7,6 +7,15 @@ using System.Runtime.CompilerServices;
 namespace Skyve.Systems.CS2.Utilities;
 public class PdxLogUtil(Skyve.Domain.Systems.ILogger logger) : ILogger
 {
+	public bool IsLogLevelEnabled(LogLevel logLevel)
+	{
+#if DEBUG
+		return true;
+#else
+		return logLevel >= LogLevel.L2_Warning;
+#endif
+	}
+
 	public void Log(string msg, LogLevel logLevel = LogLevel.L1_Debug, FlowData? flowData = null, [CallerMemberName] string? memberName = null)
 	{
 		switch (logLevel)

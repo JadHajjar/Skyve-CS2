@@ -11,9 +11,9 @@ public class PdxModsRequirement : IPackageRequirement
 
 	public PdxModsRequirement(ModDependency x)
 	{
-		if (x.Id.HasValue)
+		if (x.Id!=null)
 		{
-			Id = (ulong)x.Id.Value;
+			Id = ulong.Parse(x.Id);
 			Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 		}
 

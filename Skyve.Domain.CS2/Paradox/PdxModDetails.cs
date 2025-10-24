@@ -27,7 +27,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 
 	public PdxModDetails(ModDetails mod)
 	{
-		Id = (ulong)mod.Id;
+		Id = ulong.Parse(mod.Id);
 		Name = mod.DisplayName;
 		Guid = mod.Name;
 		ThumbnailUrl = mod.ThumbnailPath;
@@ -117,7 +117,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, Version ?? "");
+		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id.ToString(), Version ?? "");
 
 		return true;
 	}
@@ -125,7 +125,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 	public bool GetFullThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, Version ?? "", false);
+		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id.ToString(), Version ?? "", false);
 
 		return true;
 	}

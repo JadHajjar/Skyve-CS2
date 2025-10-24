@@ -24,8 +24,8 @@ using System.Windows.Forms;
 namespace Skyve.Systems.CS2.Managers;
 internal class PlaysetManager : IPlaysetManager
 {
-	private readonly Dictionary<int, ICustomPlayset> _customPlaysets = [];
-	private readonly Dictionary<int, IPlayset> _playsets = [];
+	private readonly Dictionary<string, ICustomPlayset> _customPlaysets = [];
+	private readonly Dictionary<string, IPlayset> _playsets = [];
 
 	public IPlayset? CurrentPlayset { get; internal set; }
 	public ICustomPlayset? CurrentCustomPlayset { get; internal set; }
@@ -76,7 +76,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<bool> MergeIntoCurrentPlayset(IPlayset playset)
 	{
-		var modsInPlayset = await _workshopService.GetModsInPlayset(playset.Id, true);
+		var modsInPlayset = await _workshopService.GetModsInPlayset(playset.Id!, true);
 
 		if (modsInPlayset.Any())
 		{
@@ -90,7 +90,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<bool> ExcludeFromCurrentPlayset(IPlayset playset)
 	{
-		var modsInPlayset = await _workshopService.GetModsInPlayset(playset.Id);
+		var modsInPlayset = await _workshopService.GetModsInPlayset(playset.Id!);
 
 		if (modsInPlayset.Any())
 		{
@@ -109,11 +109,11 @@ internal class PlaysetManager : IPlaysetManager
 			return false;
 		}
 
-		if (await _workshopService.DeletePlayset(playset.Id))
+		if (await _workshopService.DeletePlayset(playset.Id!))
 		{
 			lock (_playsets)
 			{
-				_playsets.Remove(playset.Id);
+				_playsets.Remove(playset.Id!);
 			}
 
 			await RefreshCurrentPlayset();
@@ -134,7 +134,7 @@ internal class PlaysetManager : IPlaysetManager
 
 		lock (_playsets)
 		{
-			if (activePlayset > 0)
+			if (activePlayset != null)
 			{
 				CurrentPlayset = _playsets.TryGet(activePlayset);
 				CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
@@ -151,7 +151,7 @@ internal class PlaysetManager : IPlaysetManager
 	{
 		await Task.Delay(250);
 
-		await _workshopService.ActivatePlayset(playset.Id);
+		await _workshopService.ActivatePlayset(playset.Id!);
 
 		CurrentPlayset = playset;
 
@@ -209,7 +209,7 @@ internal class PlaysetManager : IPlaysetManager
 
 				foreach (var item in playsets)
 				{
-					_playsets[item.Id] = item;
+					_playsets[item.Id!] = item;
 				}
 
 				foreach (var item in customPlaysets)
@@ -217,7 +217,7 @@ internal class PlaysetManager : IPlaysetManager
 					_customPlaysets[item.Id] = item;
 				}
 
-				CurrentPlayset = _playsets.TryGet(activePlayset);
+				CurrentPlayset = _playsets.TryGet(activePlayset!);
 				CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
 			}
 
@@ -250,7 +250,7 @@ internal class PlaysetManager : IPlaysetManager
 			playset_.Name = text;
 		}
 
-		return await _workshopService.RenamePlayset(playset.Id, text);
+		return await _workshopService.RenamePlayset(playset.Id!, text);
 	}
 
 	public async Task<IPlayset?> CreateNewPlayset(string playsetName)
@@ -259,7 +259,7 @@ internal class PlaysetManager : IPlaysetManager
 
 		if (playset is not null)
 		{
-			_playsets[playset.Id] = playset;
+			_playsets[playset.Id!] = playset;
 
 			var customPlayset = GetCustomPlayset(playset);
 			customPlayset.DateCreated = DateTime.Now;
@@ -307,7 +307,7 @@ internal class PlaysetManager : IPlaysetManager
 
 		lock (_playsets)
 		{
-			_playsets[newPlayset.Id] = newPlayset;
+			_playsets[newPlayset.Id!] = newPlayset;
 		}
 
 		_notifier.OnPlaysetUpdated();
@@ -319,7 +319,7 @@ internal class PlaysetManager : IPlaysetManager
 	{
 		var playset = JsonConvert.DeserializeObject<PdxPlaysetImport>(File.ReadAllText(fileName.EndsWith(".zip", StringComparison.InvariantCultureIgnoreCase) ? ExtractZipPlayset(fileName) : fileName));
 
-		if (!createNew && _playsets.ContainsKey(playset.GeneralData?.Id ?? 0))
+		if (!createNew && _playsets.ContainsKey(playset.GeneralData?.Id ?? string.Empty))
 		{
 			throw new Exception(LocaleCS2.PlaysetAlreadyImported);
 		}
@@ -446,7 +446,7 @@ internal class PlaysetManager : IPlaysetManager
 		return await _workshopService.ClonePlayset(playset.Id);
 	}
 
-	public IPlayset? GetPlayset(int id)
+	public IPlayset? GetPlayset(string id)
 	{
 		lock (_playsets)
 		{

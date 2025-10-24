@@ -1,4 +1,5 @@
-﻿using PDX.SDK.Contracts.Service.Mods.Models;
+﻿using PDX.SDK.Contracts.Service.Mods.Interfaces;
+using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain.CS2.Content;
 
@@ -19,7 +20,7 @@ public class PdxPlaysetPackage : IPlaysetPackage
 			return;
 		}
 
-		Id = (ulong)subscribedMod.Id;
+		Id = ulong.Parse(subscribedMod.Id);
 		Name = subscribedMod.DisplayName;
 		Version = subscribedMod.Version;
 		VersionName = subscribedMod.UserModVersion;
