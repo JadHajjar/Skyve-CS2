@@ -25,7 +25,7 @@ public class ExtendedPlayset : ICustomPlayset
 		Id = playset.Id;
 	}
 
-	public int Id { get; set; }
+	public string? Id { get; set; }
 	public DateTime DateUsed { get; set; }
 	public DateTime DateCreated { get; set; }
 	public PackageUsage Usage { get; set; }

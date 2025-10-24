@@ -504,8 +504,8 @@ internal class TroubleshootSystem : ITroubleshootSystem
 	public class TroubleshootState : ITroubleshootSettings
 	{
 		public string? PlaysetName { get; set; }
-		public int OriginalPlaysetId { get; set; }
-		public int TroubleshootingPlaysetId { get; set; }
+		public string? OriginalPlaysetId { get; set; }
+		public string? TroubleshootingPlaysetId { get; set; }
 		public List<GenericLocalPackageIdentity>? UnprocessedItems { get; set; }
 		public PackageList? LeftProcessingItems { get; set; }
 		public PackageList? RightProcessingItems { get; set; }

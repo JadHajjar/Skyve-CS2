@@ -47,21 +47,20 @@ internal class WorkshopEventsManager
 		var notification = _notificationsService.GetNotifications<PdxModDownloadFailed>().FirstOrDefault() ?? new PdxModDownloadFailed();
 
 		notification.Time = DateTime.Now;
-		notification.Mods.Add((ulong)failed.ModId);
+		notification.Mods.Add(ulong.Parse(failed.Id));
 
 		_notificationsService.RemoveNotificationsOfType<PdxModDownloadFailed>();
 		_notificationsService.SendNotification(notification);
 
 		_subscriptionsManager.OnInstallFinished(new PackageInstallProgress
 		{
-			Id = (ulong)failed.ModId,
+			Id = ulong.Parse(failed.Id),
 			Progress = -1
 		});
 	}
 
 	private void OnInstallProgress(IInstallProgressEvent @event)
 	{
-				Debug.WriteLine($"INSTALL {@event.Reference} {@event.CurrentStage} " + @event.Progress);
 		switch (@event.CurrentStage)
 		{
 			case PDX.SDK.Contracts.Enums.InstallStage.PreStepsStarted:
@@ -91,7 +90,6 @@ internal class WorkshopEventsManager
 
 	private void OnTransferUpdated(ITransferStatusUpdated updated)
 	{
-		Debug.WriteLine("DOWNLOAD " + updated.TransferStatus.Progress);
 		_subscriptionsManager.OnDownloadProgress(new PackageDownloadProgress
 		{
 			Id = (ulong)updated.TransferStatus.Id.SmartParse(),
@@ -105,17 +103,16 @@ internal class WorkshopEventsManager
 	{
 		_subscriptionsManager.OnInstallFinished(new PackageInstallProgress
 		{
-			Id = (ulong)completed.ModId,
+			Id = ulong.Parse(completed.Id),
 			Progress = 1
 		});
 	}
 
 	private void OnModDownloadCancelled(IModDownloadCancelledByUser cancelled)
 	{
-				Debug.WriteLine($"CANCELLED {cancelled.ModId}");
 		_subscriptionsManager.OnDownloadCancelled(new PackageInstallProgress
 		{
-			Id = (ulong)cancelled.ModId,
+			Id = ulong.Parse(cancelled.Id),
 			Progress = -2
 		});
 	}
@@ -124,10 +121,10 @@ internal class WorkshopEventsManager
 	{
 		_subscriptionsManager.OnInstallStarted(new PackageInstallProgress
 		{
-			Id = (ulong)started.ModId,
+			Id = ulong.Parse(started.Id),
 			Progress = 0
 		});
 
-		Task.Run(() => _workshopService.GetInfoAsync(new GenericPackageIdentity((ulong)started.ModId)));
+		Task.Run(() => _workshopService.GetInfoAsync(new GenericPackageIdentity(ulong.Parse(started.Id))));
 	}
 }

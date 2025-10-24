@@ -9,6 +9,7 @@ using PDX.SDK.Contracts.Credential;
 using PDX.SDK.Contracts.Enums;
 using PDX.SDK.Contracts.Enums.Errors;
 using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Interfaces;
 using PDX.SDK.Contracts.Service.Mods.Models;
 using PDX.SDK.Contracts.Service.Mods.Result;
 
@@ -120,11 +121,14 @@ public class WorkshopService : IWorkshopService
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
 		var ecoSystem = _settings.FolderSettings.GamingPlatform switch { GamingPlatform.Epic => Ecosystem.Epic, GamingPlatform.Microsoft => Ecosystem.Microsoft_Store, _ => Ecosystem.Steam };
 
-		//// For sandbox testing
-		//@namespace = "pdx_sdk_cs";
-		//junction = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Paradox", "PDXSDKCSHARP", "Skyve");
-		//pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
-		//environment = BackendEnvironment.Sandbox;
+		// For sandbox testing
+		@namespace = "pdx_sdk_cs";
+		junction = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Paradox", "PDXSDKCSHARP", "Skyve");
+		pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
+		environment = BackendEnvironment.Sandbox;
+
+		//@namespace = "mods_test_game2";
+		//pdxSdkPath = junction = @"C:\Users\jad.hajjar\AppData\LocalLow\ParadoxInteractive\ModsUI_Unity\Paradox\mods_test_game2";
 
 		if (!string.IsNullOrWhiteSpace(_settings.FolderSettings.UserIdentifier))
 		{
@@ -154,13 +158,14 @@ public class WorkshopService : IWorkshopService
 			Ecosystem = ecoSystem,
 			UserId = _settings.FolderSettings.UserIdentifier,
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
+			DisplayName = "Skyve",
 			Telemetry = new TelemetryConfig
 			{
 				StandardTelemetryEnabled = false,
 				TelemetryDebugEnabled = false,
 				UnityEventTelemetryEnable = false,
 			},
-#if DEBUG
+#if !DEBUG
 			LogLevel = LogLevel.L1_Debug,
 			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/9999" } },
 #else
@@ -179,10 +184,21 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			Context = await PDX.SDK.Context.Create(
+			var result = await PDX.SDK.Context.Create(
 				platform: platform,
 				@namespace: @namespace,
 				config: config);
+
+			Context = result.Context;
+
+			if (!result.Success)
+			{
+				_notificationsService.SendNotification(new ParadoxContextFailedNotification(this));
+
+				_logger.Exception(result.Error.ToString(), memberName: "Failed to create PDX Context");
+
+				return;
+			}
 
 			_logger.Info("SDK Created");
 
@@ -374,12 +390,12 @@ public class WorkshopService : IWorkshopService
 
 		if (Context is not null)
 		{
-			var result = await Context.Mods.GetLocalModDetails(int.Parse(rgx.Groups[1].Value), rgx.Groups[2].Value.IfEmpty(null));
+			var result = await Context.Mods.GetLocalModDetails(id);
 
-			if (!result.Success || result?.Mod is null || result.Mod.Id <= 0)
+			if (!result.Success || result?.Mod is null || result.Mod.Id.SmartParse() <= 0)
 			{
-				var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
-				result = await Context.Mods.GetDetails(int.Parse(rgx.Groups[1].Value), rgx.Groups[2].Value.IfEmpty(null), platform);
+				var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.MacOS, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
+				result = await Context.Mods.GetDetails(rgx.Groups[1].Value, rgx.Groups[2].Value.IfEmpty(null), platform);
 			}
 			else
 			{
@@ -396,7 +412,7 @@ public class WorkshopService : IWorkshopService
 			}
 		}
 
-		return new PdxBannedMod(int.Parse(rgx.Groups[1].Value));
+		return new PdxBannedMod(rgx.Groups[1].Value);
 	}
 
 	public IAuthor? GetUser(IUser? user)
@@ -605,9 +621,9 @@ public class WorkshopService : IWorkshopService
 			workshopInfo.VoteCount += workshopInfo.HasVoted ? 1 : -1;
 		}
 
-		hasVoted ??= ProcessResult(await Context.Mods.GetUserRating((int)packageIdentity.Id)).Rating != 0;
+		hasVoted ??= ProcessResult(await Context.Mods.GetUserRating(packageIdentity.Id.ToString())).Rating != 0;
 
-		var result = await Context.Mods.Rate((int)packageIdentity.Id, hasVoted.Value ? 0 : 5);
+		var result = await Context.Mods.Rate(packageIdentity.Id.ToString(), hasVoted.Value ? 0 : 5);
 
 		ProcessResult(result);
 
@@ -626,12 +642,12 @@ public class WorkshopService : IWorkshopService
 		return result.Success;
 	}
 
-	public async Task<int> GetActivePlaysetId()
+	public async Task<string?> GetActivePlaysetId()
 	{
-		return Context is null ? 0 : (await Context.Mods.GetActivePlayset()).PlaysetId;
+		return Context is null ? null : (await Context.Mods.GetActivePlayset()).PlaysetId;
 	}
 
-	public async Task<IEnumerable<IPlaysetPackage>> GetModsInPlayset(int playsetId, bool includeOnline = false)
+	public async Task<IEnumerable<IPlaysetPackage>> GetModsInPlayset(string playsetId, bool includeOnline = false)
 	{
 		if (Context is null)
 		{
@@ -640,7 +656,7 @@ public class WorkshopService : IWorkshopService
 
 		return await _processor.Queue(async () =>
 		{
-			var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId, 10_000, 1, includeOnline: includeOnline));
+			var result = ProcessResult(await Context.Mods.ListModsInPlayset(playsetId.ToString(), 10_000, 1, includeOnline: includeOnline));
 
 			if (result.Mods is not null)
 			{
@@ -691,7 +707,7 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await Context.Mods.GetForumThread((int)info.Id, modDetails.Version, int.Parse(regex.Groups[1].Value), page, limit));
+		var result = ProcessResult(await Context.Mods.GetForumThread(info.Id.ToString(), modDetails.Version, int.Parse(regex.Groups[1].Value), page, limit));
 
 		return !result.Success
 			? null
@@ -725,41 +741,14 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = ProcessResult(await Context.Mods.CreateForumPost((int)info.Id, modDetails.Version, int.Parse(regex.Groups[1].Value), comment.Replace("\r", "").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\"", "'")));
+		var result = ProcessResult(await Context.Mods.CreateForumPost(info.Id.ToString(), modDetails.Version, int.Parse(regex.Groups[1].Value), comment.Replace("\r", "").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\"", "'")));
 
 		return !result.Success ? null : (IModComment)new PdxForumPost(result.Post);
 	}
 
-	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset)
+	internal async Task<bool> UnsubscribeBulk(IEnumerable<int> mods, string playset)
 	{
-		mods = mods.Where(x => x.Key > 0);
-
-		if (Context is null || playset <= 0 || !mods.Any())
-		{
-			return false;
-		}
-
-		syncOccurred = true;
-
-		try
-		{
-			var result = await _processor.Queue(async () => await Context.Mods.SubscribeBulk(mods, playset, tokenSource.Token));
-
-			await Task.Delay(1000);
-
-			return ProcessResult(result).Success;
-		}
-		catch (Exception ex)
-		{
-			_logger.Exception(ex, memberName: "Catastrophic error during SubscribeBulk");
-
-			return false;
-		}
-	}
-
-	internal async Task<bool> UnsubscribeBulk(IEnumerable<int> mods, int playset)
-	{
-		if (Context is null || playset <= 0 || !mods.Any())
+		if (Context is null || playset is null || !mods.Any())
 		{
 			return false;
 		}
@@ -774,7 +763,7 @@ public class WorkshopService : IWorkshopService
 
 				foreach (var id in mods)
 				{
-					var result = await Context.Mods.Unsubscribe(id, playset);
+					var result = await Context.Mods.Unsubscribe(id.ToString(), playset);
 
 					results.Add(ProcessResult(result));
 
@@ -794,9 +783,9 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	internal async Task<bool> SubscribeBulk(IEnumerable<string> mods, int playset)
+	internal async Task<bool> SubscribeBulk(IEnumerable<IModBase> mods, string playset)
 	{
-		if (Context is null || playset <= 0 || !mods.Any())
+		if (Context is null || playset is null || !mods.Any())
 		{
 			return false;
 		}
@@ -805,23 +794,11 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var results = await _processor.Queue(async () =>
-			{
-				var results = new List<Result>();
+			var result = await _processor.Queue(async () => await Context.Mods.SubscribeBulk(mods, playset, tokenSource.Token));
 
-				foreach (var name in mods)
-				{
-					var result = await Context.Mods.Subscribe(name, playset, tokenSource.Token);
+			ProcessResult(result);
 
-					results.Add(ProcessResult(result));
-
-					await Task.Delay(1000);
-				}
-
-				return results;
-			});
-
-			return results.All(x => x.Success);
+			return result.Success;
 		}
 		catch (Exception ex)
 		{
@@ -831,9 +808,9 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	internal async Task<bool> UnsubscribeBulk(IEnumerable<string> mods, int playset)
+	internal async Task<bool> UnsubscribeBulk(IEnumerable<IModBase> mods, string playset)
 	{
-		if (Context is null || playset <= 0 || !mods.Any())
+		if (Context is null || playset is null || !mods.Any())
 		{
 			return false;
 		}
@@ -885,7 +862,7 @@ public class WorkshopService : IWorkshopService
 
 				foreach (var id in mods)
 				{
-					var result = await Context.Mods.Unsubscribe(id);
+					var result = await Context.Mods.Unsubscribe(id.ToString());
 
 					results.Add(ProcessResult(result));
 
@@ -905,7 +882,7 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	public async Task<bool> DeletePlayset(int playset)
+	public async Task<bool> DeletePlayset(string playset)
 	{
 		if (Context is null)
 		{
@@ -915,7 +892,7 @@ public class WorkshopService : IWorkshopService
 		return ProcessResult(await _processor.Queue(async () => await Context.Mods.DeletePlayset(playset))).Success;
 	}
 
-	public async Task<bool> ActivatePlayset(int playset)
+	public async Task<bool> ActivatePlayset(string playset)
 	{
 		if (Context is null)
 		{
@@ -925,7 +902,7 @@ public class WorkshopService : IWorkshopService
 		return ProcessResult(await _processor.Queue(async () => await Context.Mods.ActivatePlayset(playset))).Success;
 	}
 
-	public async Task<bool> RenamePlayset(int playset, string name)
+	public async Task<bool> RenamePlayset(string playset, string name)
 	{
 		if (Context is null)
 		{
@@ -953,13 +930,13 @@ public class WorkshopService : IWorkshopService
 
 			var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(true));
 
-			return playsets.AllPlaysets?.FirstOrDefault(x => x.PlaysetId == createPlaysetResult.PlaysetId);
+			return playsets.AllPlaysets?.FirstOrDefault(x => x.Id == createPlaysetResult.Id);
 		});
 
 		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);
 	}
 
-	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, int playset)
+	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, string playset)
 	{
 		if (Context is null)
 		{
@@ -969,7 +946,7 @@ public class WorkshopService : IWorkshopService
 		ProcessResult(await _processor.Queue(async () => await Context.Mods.SetLoadOrder(orderedMods, playset)));
 	}
 
-	internal async Task<bool> SetEnableBulk(List<int> modKeys, int playset, bool enable)
+	internal async Task<bool> SetEnableBulk(List<int> modKeys, string playset, bool enable)
 	{
 		if (Context is null)
 		{
@@ -979,8 +956,8 @@ public class WorkshopService : IWorkshopService
 		try
 		{
 			var result = await _processor.Queue(async () => enable
-				? await Context.Mods.EnableBulk(modKeys, playset)
-				: await Context.Mods.DisableBulk(modKeys, playset));
+				? await Context.Mods.EnableBulk(modKeys.ConvertAll(x=>x.ToString()), playset)
+				: await Context.Mods.DisableBulk(modKeys.ConvertAll(x => x.ToString()), playset));
 
 			ProcessResult(result);
 
@@ -994,7 +971,7 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	internal async Task<bool> SetEnableBulk(List<string> modNames, int playset, bool enable)
+	internal async Task<bool> SetEnableBulk(List<IModBase> modNames, string playset, bool enable)
 	{
 		if (Context is null)
 		{
@@ -1019,7 +996,7 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	internal async Task<IPlayset?> ClonePlayset(int id)
+	internal async Task<IPlayset?> ClonePlayset(string id)
 	{
 		if (Context is null)
 		{
@@ -1028,14 +1005,14 @@ public class WorkshopService : IWorkshopService
 
 		var result = await _processor.Queue(async () =>
 		{
-			if (!ProcessResult(await Context.Mods.ClonePlayset(id)).Success)
+			if (!ProcessResult(await Context.Mods.ClonePlayset(id.ToString())).Success)
 			{
 				return null;
 			}
 
 			var playsets = ProcessResult(await Context.Mods.ListAllPlaysets(true));
 
-			return playsets.AllPlaysets?.OrderBy(x => x.PlaysetId).LastOrDefault();
+			return playsets.AllPlaysets?.OrderBy(x => x.Id).LastOrDefault();
 		});
 
 		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);

@@ -1,6 +1,8 @@
 ﻿using Extensions;
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Interfaces;
+using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Utilities;
@@ -11,19 +13,22 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-using PdxIMod = PDX.SDK.Contracts.Service.Mods.Models.IMod;
+using PdxIMod = PDX.SDK.Contracts.Service.Mods.Interfaces.IMod;
 using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
 
 namespace Skyve.Domain.CS2.Paradox;
 
 public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailObject
 {
-	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
+	private LocalData PdxLocalData;
+	private string _modId;
 
-	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? versionName, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames?.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)) ?? [], isCodeMod, version, versionName, filePath, mod.RequiredGameVersion)
+	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? versionName, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames?.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), ulong.TryParse(mod.Id, out var id) ? id : 0, mod.Version, true)) ?? [], isCodeMod, version, versionName, filePath, mod.RequiredGameVersion)
 	{
-		IsLocal = mod.Id <= 0;
-		Id = (ulong)mod.Id;
+		_modId = mod.Id;
+		Source = mod.Source;
+		IsLocal = mod.Source != SourceType.PdxMods;
+		Id = ulong.TryParse(mod.Id, out var id) ? id : 0;
 		Guid = mod.Name;
 		Name = DisplayName = mod.DisplayName;
 		ShortDescription = mod.ShortDescription;
@@ -32,6 +37,8 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailOb
 		VersionName = mod.UserModVersion.IfEmpty(versionName);
 		LatestVersion = mod.LatestVersion;
 		ThumbnailUrl = mod.ThumbnailPath;
+		OperatingSystem = mod.OperatingSystem;
+		ExternalLinks = mod.ExternalLinks;
 		Author = mod.Author;
 		Version = mod.Version;
 		Rating = mod.Rating;
@@ -63,13 +70,13 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailOb
 	public string? SuggestedGameVersion { get; }
 	public string ThumbnailPath { get; set; }
 	public ulong Size { get; set; }
-	public List<PDX.SDK.Contracts.Service.Mods.Models.ModTag> Tags { get; set; }
+	public List<ModTag> Tags { get; set; }
 	public int Rating { get; set; }
 	public int RatingsTotal { get; set; }
 	public ModState State { get; set; }
 	public DateTime? LatestUpdate { get; set; }
 	public DateTime? InstalledDate { get; set; }
-	PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxIMod.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
+	LocalData PDX.SDK.Contracts.Service.Mods.Interfaces.ILocalModBase.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
 	public string? ThumbnailUrl { get; set; }
 	public string? Description => LongDescription;
 	public DateTime ServerTime { get; set; }
@@ -86,15 +93,19 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailOb
 	public ModAccessControlLevelState? AccessControlLevelState { get; set; }
 	IUser? IWorkshopInfo.Author => new PdxUser(Author);
 	Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);
-	int PdxIMod.Id { get => (int)Id; set => Id = (ulong)value; }
+	string IModBase.Id { get => _modId; set => _modId = value; }
 	string PdxIMod.Name { get => Guid; set => Guid = value; }
-	string PdxIMod.Version { get => Version ?? ""; set => Version = value; }
+	string IModBase.Version { get => Version ?? ""; set => Version = value; }
 	string PdxIMod.UserModVersion { get => VersionName ?? ""; set => VersionName = value; }
 	bool IWorkshopInfo.IsPartialInfo => true;
 	public IEnumerable<IThumbnailObject> Images => LocalData.Images;
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<ILink> IWorkshopInfo.Links => [];
+
+	public SourceType Source { get; }
+	public ModPlatform OperatingSystem { get; set; }
+	public List<ExternalLink> ExternalLinks { get; set; }
 
 	bool IWorkshopInfo.HasComments()
 	{
@@ -104,7 +115,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailOb
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version ?? "");
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id.ToString(), Version ?? "");
 
 		return true;
 	}
@@ -112,7 +123,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailOb
 	public bool GetFullThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id, Version ?? "", false);
+		thumbnail = DomainUtils.GetThumbnail(imageService, ThumbnailPath, ThumbnailUrl, Id.ToString(), Version ?? "", false);
 
 		return true;
 	}

@@ -239,14 +239,11 @@ internal class ContentManager : IContentManager
 
 		foreach (var mod in subscribedItems.Where(x => x.LocalData is not null))
 		{
-			if (mod.LocalData.LocalType is not LocalType.WorkInProgress)
-			{
-				var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
+			var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
 
-				if (pdxPackage is not null && (pdxPackage.Id == 0 || !packages.Any(x => x.Id == pdxPackage.Id && x.Version == ((IPackage)pdxPackage).Version)))
-				{
-					packages.Add(pdxPackage);
-				}
+			if (pdxPackage is not null && (pdxPackage.Id == 0 || !packages.Any(x => x.Id == pdxPackage.Id && x.Version == ((IPackage)pdxPackage).Version)))
+			{
+				packages.Add(pdxPackage);
 			}
 		}
 

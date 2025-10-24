@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using PDX.SDK.Contracts.Service.Mods.Interfaces;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain;
@@ -21,10 +22,10 @@ using System.Threading.Tasks;
 namespace Skyve.Systems.CS2.Utilities;
 internal class ModsUtil : IModUtil
 {
-	private int currentPlayset;
+	private string? currentPlayset;
 	private int currentHistoryIndex;
 	private ModStateCollection modConfig = new();
-	private Dictionary<int, int> _orderedMods = [];
+	private Dictionary<string, int> _orderedMods = [];
 	private readonly List<ModStateCollection> _modConfigHistory = [];
 	private readonly List<ulong> _enabling = [];
 
@@ -63,7 +64,7 @@ internal class ModsUtil : IModUtil
 
 	private void Notifier_PlaysetChanged()
 	{
-		currentPlayset = _serviceProvider.GetService<IPlaysetManager>()?.CurrentPlayset?.Id ?? 0;
+		currentPlayset = _serviceProvider.GetService<IPlaysetManager>()?.CurrentPlayset?.Id;
 	}
 
 	private async Task RefreshModConfig()
@@ -79,7 +80,7 @@ internal class ModsUtil : IModUtil
 			foreach (var item in mod.Playsets)
 			{
 				config.SetState(item.PlaysetId
-					, new GenericPackageIdentity { Id = (ulong)mod.Id, Name = mod.Name }
+					, new GenericPackageIdentity { Id = ulong.TryParse(mod.Id,out var id)?id:0, Name = mod.Id }
 					, item.ModIsEnabled
 					, item.Version);
 			}
@@ -97,7 +98,7 @@ internal class ModsUtil : IModUtil
 
 		var playset = await _workshopService.GetActivePlaysetId();
 
-		if (playset <= 0)
+		if (playset is null)
 		{
 			return;
 		}
@@ -140,23 +141,23 @@ internal class ModsUtil : IModUtil
 		//_config.Save();
 	}
 
-	public bool IsIncluded(IPackageIdentity mod, int? playsetId = null, bool withVersion = true)
+	public bool IsIncluded(IPackageIdentity mod, string? playsetId = null, bool withVersion = true)
 	{
 		if (mod.Id <= 0)
 		{
-			return mod is LocalPdxPackage ? modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Name) : IsEnabled(mod);
+			return mod is LocalPdxPackage ? modConfig.IsIncluded(playsetId ?? currentPlayset, (mod as IModBase)!.Id) : IsEnabled(mod);
 		}
 
 		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod.Id, withVersion ? mod.Version : null);
 	}
 
-	public bool IsEnabled(IPackageIdentity mod, int? playsetId = null, bool withVersion = true)
+	public bool IsEnabled(IPackageIdentity mod, string? playsetId = null, bool withVersion = true)
 	{
 		if (mod.Id <= 0)
 		{
 			if (mod is LocalPdxPackage)
 			{
-				return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Name);
+				return modConfig.IsEnabled(playsetId ?? currentPlayset, (mod as IModBase)!.Id);
 			}
 
 			var folder = mod.GetLocalPackageIdentity()?.Folder;
@@ -167,12 +168,12 @@ internal class ModsUtil : IModUtil
 		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod.Id, withVersion ? mod.Version : null);
 	}
 
-	public async Task SetIncluded(IPackageIdentity mod, bool value, int? playsetId = null, bool withVersion = true, bool promptForDependencies = true)
+	public async Task SetIncluded(IPackageIdentity mod, bool value, string? playsetId = null, bool withVersion = true, bool promptForDependencies = true)
 	{
 		await SetIncluded([mod], value, playsetId, withVersion, promptForDependencies);
 	}
 
-	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null, bool withVersion = true, bool promptForDependencies = true)
+	public async Task SetIncluded(IEnumerable<IPackageIdentity> mods, bool value, string? playsetId = null, bool withVersion = true, bool promptForDependencies = true)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -181,7 +182,7 @@ internal class ModsUtil : IModUtil
 
 		var playset = playsetId ?? currentPlayset;
 
-		if (playset <= 0)
+		if (playset is null)
 		{
 			return;
 		}
@@ -258,12 +259,12 @@ internal class ModsUtil : IModUtil
 		_notifier.OnRefreshUI(true);
 	}
 
-	public async Task SetEnabled(IPackageIdentity mod, bool value, int? playsetId = null)
+	public async Task SetEnabled(IPackageIdentity mod, bool value, string? playsetId = null)
 	{
 		await SetEnabled([mod], value, playsetId);
 	}
 
-	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value, int? playsetId = null)
+	public async Task SetEnabled(IEnumerable<IPackageIdentity> mods, bool value, string? playsetId = null)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -272,7 +273,7 @@ internal class ModsUtil : IModUtil
 
 		var playset = playsetId ?? currentPlayset;
 
-		if (playset <= 0)
+		if (playset is null)
 		{
 			return;
 		}
@@ -327,20 +328,15 @@ internal class ModsUtil : IModUtil
 		_notifier.OnRefreshUI(true);
 	}
 
-	private async Task SetLocalModIncluded(List<IPackageIdentity> mods, int playset, bool value)
+	private async Task SetLocalModIncluded(List<IPackageIdentity> mods, string playset, bool value)
 	{
 		if (mods.Count == 0)
 		{
 			return;
 		}
 
-		foreach (var item in mods)
+		foreach (var item in mods.Where(x => x is not LocalPdxPackage))
 		{
-			if (item is LocalPdxPackage)
-			{
-				continue;
-			}
-
 			var localIdentity = item.GetLocalPackageIdentity();
 
 			if (localIdentity is null)
@@ -351,23 +347,23 @@ internal class ModsUtil : IModUtil
 			SetLocalFolderIncluded(value, item, localIdentity);
 		}
 
-		var pdxMods = mods.Where(x => x is LocalPdxPackage).ToList(x => x.Name);
+		var pdxMods = mods.Where(x => x is LocalPdxPackage ).Cast<IModBase>().ToList();
 
 		if (value)
 		{
 			await _workshopService.SubscribeBulk(pdxMods, playset);
 
-			pdxMods.ForEach(x => modConfig.SetEnabled(playset, x, true));
+			pdxMods.ForEach(x => modConfig.SetEnabled(playset, x.Id, true));
 		}
 		else
 		{
 			await _workshopService.UnsubscribeBulk(pdxMods, playset);
 
-			pdxMods.ForEach(x => modConfig.Remove(playset, x));
+			pdxMods.ForEach(x => modConfig.Remove(playset, x.Id));
 		}
 	}
 
-	private async Task SetLocalModEnabled(List<IPackageIdentity> mods, int playset, bool value)
+	private async Task SetLocalModEnabled(List<IPackageIdentity> mods, string playset, bool value)
 	{
 		if (mods.Count == 0)
 		{
@@ -391,11 +387,11 @@ internal class ModsUtil : IModUtil
 			SetLocalFolderIncluded(value, item, localIdentity);
 		}
 
-		var pdxMods = mods.Where(x => x is LocalPdxPackage).ToList(x => x.Name);
+		var pdxMods = mods.Where(x => x is LocalPdxPackage).Cast<IModBase>().ToList();
 
 		await _workshopService.SetEnableBulk(pdxMods, playset, value);
 
-		pdxMods.ForEach(x => modConfig.SetEnabled(playset, x, value));
+		pdxMods.ForEach(x => modConfig.SetEnabled(playset, x.ToString(), value));
 	}
 
 	private void SetLocalFolderIncluded(bool value, IPackageIdentity item, ILocalPackageIdentity localIdentity)
@@ -417,7 +413,7 @@ internal class ModsUtil : IModUtil
 		}
 	}
 
-	private async Task<List<IPackageIdentity>> ResolveDependencies(List<IPackageIdentity> mods, int? playsetId)
+	private async Task<List<IPackageIdentity>> ResolveDependencies(List<IPackageIdentity> mods, string? playsetId)
 	{
 		var dependencies = await Resolve(mods, playsetId);
 
@@ -425,7 +421,7 @@ internal class ModsUtil : IModUtil
 
 		return dependencies.Distinct(x => x.Id).ToList();
 
-		async Task<List<IPackageIdentity>> Resolve(List<IPackageIdentity> mods, int? playsetId)
+		async Task<List<IPackageIdentity>> Resolve(List<IPackageIdentity> mods, string? playsetId)
 		{
 			if (mods.Count == 0)
 			{
@@ -465,7 +461,7 @@ internal class ModsUtil : IModUtil
 
 	public int GetLoadOrder(IPackage package)
 	{
-		if (_orderedMods.TryGetValue((int)package.Id, out var order))
+		if (_orderedMods.TryGetValue(package.Id.ToString(), out var order))
 		{
 			return order;
 		}
@@ -548,10 +544,10 @@ internal class ModsUtil : IModUtil
 		var modConfigOld = modConfig.ToDictionary();
 		var modConfigNew = newState.ToDictionary();
 
-		var itemsToExclude = new List<(int, ulong)>();
-		var itemsToInclude = new List<(int, ulong)>();
-		var itemsToDisable = new List<(int, ulong)>();
-		var itemsToEnable = new List<(int, ulong)>();
+		var itemsToExclude = new List<(string, ulong)>();
+		var itemsToInclude = new List<(string, ulong)>();
+		var itemsToDisable = new List<(string, ulong)>();
+		var itemsToEnable = new List<(string, ulong)>();
 
 		foreach (var key in modConfigNew.Keys)
 		{
@@ -665,12 +661,12 @@ internal class ModsUtil : IModUtil
 		_notifier.OnRefreshUI(true);
 	}
 
-	public string? GetSelectedVersion(IPackageIdentity package, int? playsetId = null)
+	public string? GetSelectedVersion(IPackageIdentity package, string? playsetId = null)
 	{
 		return modConfig.GetVersion(playsetId ?? currentPlayset, package.Id);
 	}
 
-	private async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null, bool withVersion = true)
+	private async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids, string? playsetId = null, bool withVersion = true)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -679,7 +675,7 @@ internal class ModsUtil : IModUtil
 
 		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
 
-		if (currentPlayset == 0)
+		if (currentPlayset is null)
 		{
 			return false;
 		}
@@ -688,11 +684,11 @@ internal class ModsUtil : IModUtil
 
 		_notifier.OnRefreshUI(true);
 
-		var dictionary = new Dictionary<int, string?>();
+		var dictionary = new List<IModBase>();
 
 		foreach (var item in ids)
 		{
-			dictionary[(int)item.Id] = withVersion ? item.Version == "" || item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version : null;
+			dictionary.Add(new PdxModBase(item.Id.ToString(),  withVersion ? item.Version == "" || item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version : null));
 		}
 
 		var result = await _workshopService.SubscribeBulk(dictionary, currentPlayset);
@@ -705,7 +701,7 @@ internal class ModsUtil : IModUtil
 		return result;
 	}
 
-	private async Task<bool> UnSubscribe(IEnumerable<IPackageIdentity> ids, int? playsetId = null)
+	private async Task<bool> UnSubscribe(IEnumerable<IPackageIdentity> ids, string? playsetId = null)
 	{
 		if (!_workshopService.IsAvailable)
 		{
@@ -714,7 +710,7 @@ internal class ModsUtil : IModUtil
 
 		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
 
-		if (currentPlayset == 0)
+		if (currentPlayset is null)
 		{
 			return false;
 		}
@@ -733,7 +729,7 @@ internal class ModsUtil : IModUtil
 		return result;
 	}
 
-	public bool IsIncludedInOtherPlaysets(ILocalPackageIdentity mod, int? playsetId = null, bool withVersion = true, bool andEnabled = false)
+	public bool IsIncludedInOtherPlaysets(ILocalPackageIdentity mod, string? playsetId = null, bool withVersion = true, bool andEnabled = false)
 	{
 		return modConfig.GetIncludedPlaysets(mod.Id, withVersion ? mod.Version : null, andEnabled)
 			.Any(x => x != (playsetId ?? currentPlayset));

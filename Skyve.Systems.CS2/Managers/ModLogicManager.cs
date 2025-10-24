@@ -57,7 +57,7 @@ internal class ModLogicManager : IModLogicManager
 		return _modCollection.GetCollection(key, out _) ?? [];
 	}
 
-	public bool IsRequired(ILocalPackageIdentity? mod, IModUtil modUtil, int? playsetId)
+	public bool IsRequired(ILocalPackageIdentity? mod, IModUtil modUtil, string? playsetId)
 	{
 		if (mod is null)
 		{

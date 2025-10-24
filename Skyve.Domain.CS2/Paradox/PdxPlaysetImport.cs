@@ -17,7 +17,7 @@ public class PdxPlaysetImport : ITemporaryPlayset
 
 	public class GeneralDataInfo
 	{
-		public int Id { get; set; }
+		public string? Id { get; set; }
 		public string? Name { get; set; }
         public byte[]? BannerBytes { get; set; }
         public Color? Color { get; set; }
@@ -43,7 +43,7 @@ public class PdxPlaysetImport : ITemporaryPlayset
 		ILocalPackageData? IPackage.LocalData { get; }
 	}
 
-	int IPlayset.Id => GeneralData?.Id ?? -1;
+	string? IPlayset.Id => GeneralData?.Id;
 	string? IPlayset.Name => GeneralData?.Name;
 	DateTime IPlayset.DateUpdated { get; } = DateTime.Now;
 	int IPlayset.ModCount { get => SubscribedMods?.Count ?? 0; set { } }

@@ -1,4 +1,5 @@
-﻿using PDX.SDK.Contracts.Service.Mods.Models;
+﻿using PDX.SDK.Contracts.Service.Mods.Interfaces;
+using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain.Systems;
 
@@ -12,15 +13,15 @@ public class PdxPlaysetPackage : IPlaysetPackage
 	{
 		if (mod is not PlaysetSubscribedMod subscribedMod)
 		{
-			Name = mod.DisplayName;
+			Name = mod.Id;
 			return;
 		}
 
-		Id = (ulong)subscribedMod.Id;
+		Id = ulong.Parse(subscribedMod.Id);
 		Name = subscribedMod.DisplayName;
 		Version = subscribedMod.Version;
 		VersionName = subscribedMod.UserModVersion;
-		IsVersionLocked = subscribedMod.PreferredVersion is not null;
+		//IsVersionLocked = subscribedMod.PreferredVersion is not null;
 		IsEnabled = mod.IsEnabled;
 		LoadOrder = mod.LoadOrder;
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";

@@ -1,4 +1,6 @@
-﻿using Skyve.Domain.CS2.Utilities;
+﻿using Extensions;
+
+using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
 using System;
@@ -9,12 +11,11 @@ public class Playset : IPlayset
 {
 	public Playset()
 	{
-
 	}
 
 	public Playset(PDX.SDK.Contracts.Service.Mods.Models.Playset playset)
 	{
-		Id = playset.PlaysetId;
+		Id = playset.Id;
 		Name = playset.Name;
 		ModCount = playset.ModsCount;
 		ModSize = playset.ModsSize;
@@ -24,11 +25,11 @@ public class Playset : IPlayset
 
 	public Playset(PDX.SDK.Contracts.Service.Mods.Result.CreatePlaysetResult createdPlayset)
 	{
-		Id = createdPlayset.PlaysetId;
+		Id = createdPlayset.Id;
 		Name = createdPlayset.Name;
 	}
 
-	public int Id { get; }
+	public string? Id { get; }
 	public string? Name { get; set; }
 	public DateTime DateUpdated { get; }
 	public int ModCount { get; set; }
@@ -50,7 +51,7 @@ public class Playset : IPlayset
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, null, thumbnailUrl, (ulong)Id, "Playset");
+		thumbnail = DomainUtils.GetThumbnail(imageService, null, thumbnailUrl, Id, "Playset");
 
 		return true;
 	}

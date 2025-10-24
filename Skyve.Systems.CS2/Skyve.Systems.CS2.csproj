@@ -20,9 +20,9 @@
 		<ProjectReference Include="..\..\Skyve\Skyve.Systems\Skyve.Systems.csproj" />
 		<ProjectReference Include="..\..\Skyve-Api\Domain\Skyve-Api Domain.csproj" />
 
-		<ProjectReference Include="..\..\PDXSDK\PDX.SDK\PDX.SDK.csproj" />
-		<ProjectReference Include="..\..\PDXSDK\PDX.SDK.Contracts\PDX.SDK.Contracts.csproj" />
-		<ProjectReference Include="..\..\PDXSDK\PDX.SDK.Network\PDX.SDK.Network.csproj" />
+		<ProjectReference Include="C:\Programming\pdx-sdk-csharp\src\PDX.SDK\PDX.SDK.csproj" />
+		<ProjectReference Include="C:\Programming\pdx-sdk-csharp\src\PDX.SDK.Contracts\PDX.SDK.Contracts.csproj" />
+		<ProjectReference Include="C:\Programming\pdx-sdk-csharp\src\PDX.SDK.Network\PDX.SDK.Network.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="System.Configuration" />

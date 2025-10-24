@@ -100,7 +100,7 @@ internal class AssetsUtil : IAssetUtil
 				foreach (var entry in archive.Entries)
 				{
 #if DEBUG
-					_logger.Debug($"Working on entry: {entry.Name}...");
+					//_logger.Debug($"Working on entry: {entry.Name}...");
 #endif
 					if (entry.FullName.EndsWith(".cid", StringComparison.InvariantCultureIgnoreCase))
 					{
