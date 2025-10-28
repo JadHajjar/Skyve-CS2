@@ -31,63 +31,12 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 	public void OnDownloadProgress(PackageDownloadProgress info)
 	{
 		Status = new SubscriptionStatus(
-			isActive: true,
-			modId: info.Id.If(0UL, Status.ModId),
-			progress: info.Progress * 3 / 4f,
-			processedBytes: info.ProcessedBytes,
-			totalSize: info.Size);
-
-		UpdateDisplayNotification?.Invoke();
-	}
-
-	public void OnInstallFinished(PackageInstallProgress info)
-	{
-		Status = new SubscriptionStatus(
-			isActive: false,
-			modId: info.Id.If(0UL, Status.ModId),
-			progress: 1f,
-			processedBytes: 0,
-			totalSize: 0);
-
-		UpdateDisplayNotification?.Invoke();
-
-		_notifier.OnRefreshUI(true);
-	}
-
-	public void OnDownloadCancelled(PackageInstallProgress info)
-	{
-		Status = new SubscriptionStatus(
-			isActive: false,
-			modId: info.Id.If(0UL, Status.ModId),
-			progress: -2f,
-			processedBytes: 0,
-			totalSize: 0);
-
-		UpdateDisplayNotification?.Invoke();
-
-		_notifier.OnRefreshUI(true);
-	}
-
-	public void OnInstallProgress(PackageInstallProgress info)
-	{
-		Status = new SubscriptionStatus(
-			isActive: true,
-			modId: info.Id.If(0UL, Status.ModId),
-			progress: (info.Progress + 3) / 4f,
-			processedBytes: 0,
-			totalSize: 0);
-
-		UpdateDisplayNotification?.Invoke();
-	}
-
-	public void OnInstallStarted(PackageInstallProgress info)
-	{
-		Status = new SubscriptionStatus(
-			isActive: true,
+			status: info.Status,
+			isActive: info.Progress < 1f,
 			modId: info.Id.If(0UL, Status.ModId),
 			progress: info.Progress,
-			processedBytes: 0,
-			totalSize: 0);
+			processedBytes: info.ProcessedBytes,
+			totalSize: info.Size);
 
 		UpdateDisplayNotification?.Invoke();
 	}
