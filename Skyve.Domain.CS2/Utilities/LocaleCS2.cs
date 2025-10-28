@@ -84,6 +84,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation ChangeLocation => _instance.GetText("ChangeLocation");
 
 	/// <summary>
+	/// Checking integrity...
+	/// </summary>
+	public static Translation CheckingIntegrity => _instance.GetText("CheckingIntegrity");
+
+	/// <summary>
+	/// Cleaning up...
+	/// </summary>
+	public static Translation CleaningUp => _instance.GetText("CleaningUp");
+
+	/// <summary>
 	/// <para>Copy PDX Mods ID</para>
 	/// <para>Plural: Copy the selected packages' PDX Mods IDs</para>
 	/// </summary>
@@ -201,6 +211,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// Downloading...
 	/// </summary>
 	public static Translation Downloading => _instance.GetText("Downloading");
+
+	/// <summary>
+	/// Download pending...
+	/// </summary>
+	public static Translation DownloadPending => _instance.GetText("DownloadPending");
 
 	/// <summary>
 	/// Download starting...
@@ -521,6 +536,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// This playset is already present in your list of playsets.
 	/// </summary>
 	public static Translation PlaysetAlreadyImported => _instance.GetText("PlaysetAlreadyImported");
+
+	/// <summary>
+	/// Processing files...
+	/// </summary>
+	public static Translation Processing => _instance.GetText("Processing");
 
 	/// <summary>
 	/// Recent Backups

@@ -1,4 +1,6 @@
-﻿using Skyve.App.Interfaces;
+﻿using PDX.SDK.Contracts.Enums;
+
+using Skyve.App.Interfaces;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
@@ -138,14 +140,7 @@ public class DownloadsInfoControl : SlickControl
 			e.Graphics.FillRoundedRectangle(activeBrush, activeBarRect, barRect.Height / 2, topRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width, botRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width);
 		}
 
-		var text = _subscriptionsManager.Status.Progress switch
-		{
-			-2f => LocaleCS2.DownloadCancelled,
-			-1f => LocaleCS2.DownloadFailed,
-			0f => LocaleCS2.DownloadStarted,
-			1f => LocaleCS2.DownloadComplete,
-			_ => LocaleCS2.Downloading
-		};
+		var text = GetText(_subscriptionsManager.Status.Status);
 		var bottomTextRect = new Rectangle(thumbRect.Right + Padding.Left, thumbRect.Bottom + Padding.Left, Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.BottomLeft);
 
 		e.Graphics.DrawString(text, smallFont, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Near });
@@ -174,5 +169,22 @@ public class DownloadsInfoControl : SlickControl
 				HoverState = HoverState
 			});
 		}
+	}
+
+	private string GetText(string status)
+	{
+		return status switch
+		{
+			nameof(ModDownloadStatus.Pending) => LocaleCS2.DownloadPending,
+			nameof(ModDownloadStatus.Started) => LocaleCS2.DownloadStarted,
+			nameof(ModDownloadStatus.Downloading) => LocaleCS2.Downloading,
+			nameof(ModDownloadStatus.CheckingIntegrity) => LocaleCS2.CheckingIntegrity,
+			nameof(ModDownloadStatus.Processing) => LocaleCS2.Processing,
+			nameof(ModDownloadStatus.CleaningUp) => LocaleCS2.CleaningUp,
+			nameof(ModDownloadStatus.Completed) => LocaleCS2.DownloadComplete,
+			nameof(ModDownloadStatus.Canceled) => LocaleCS2.DownloadCancelled,
+			nameof(ModDownloadStatus.Failed) => LocaleCS2.DownloadFailed,
+			_ => status,
+		};
 	}
 }
