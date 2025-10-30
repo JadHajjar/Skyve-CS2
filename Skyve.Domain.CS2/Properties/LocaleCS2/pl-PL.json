@@ -49,9 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Zła nazwa użytkownika lub hasło. Kliknij tutaj, aby zaktualizować podane informacje.",
   "ParadoxLoginFailedEmpty": "Twoja sesja prawdopodobnie wygasła. Spróbuj uruchomić grę, aby zalogować się ponownie, lub kliknij tutaj, aby zalogować się przez Skyve.",
   "DownloadComplete": "Pobieranie ukończone",
-  "DownloadStarted": "Download starting...",
+  "DownloadStarted": "Rozpoczynanie pobierania...",
   "DownloadFailed": "Pobieranie nieudane",
-  "DownloadCancelled": "Download cancelled",
+  "DownloadCancelled": "Anulowano pobieranie",
   "Downloading": "Pobieranie...",
   "ModsDownloadFailed": {
     "One": "Nie udało się pobrać moda",
@@ -73,7 +73,7 @@
   "LogLevel": "Poziom logów",
   "ParadoxAccount": "Konto Paradox",
   "LoggingIn": "Logowanie...",
-  "Logout": "Log out",
+  "Logout": "Wyloguj",
   "NotLoggedInCheckNotification": "Nie jesteś zalogowany do Paradox, sprawdź swoje powiadomienia, aby uzyskać więcej informacji.",
   "HideUserSection": "Ukryj swój profil w menu głównym",
   "DeveloperMode": "Włącz tryb dewelopera",
@@ -208,6 +208,6 @@
     "One": "Affected playset: {1}",
     "Plural": "Affected playsets: {1}"
   },
-  "TitleDesc": "Title & Descriptions",
-  "EditModInfo": "Edit this mod's information"
+  "TitleDesc": "Tytuł i opis",
+  "EditModInfo": "Edytuj informacje tego moda"
 }
