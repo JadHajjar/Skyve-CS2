@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "إسم المستخدم/كلمة المرور المحفوظة فشل في تسجيل الدخول. انقر هنا لتحديث المعلومات الخاصة بك.",
   "ParadoxLoginFailedEmpty": "قد انتهت صلاحية جلستك على الأرجح. حاول بدء اللعبة لتسجيل الدخول مرة أخرى، أو انقر هنا لتسجيل الدخول من خلال Skyve.",
   "DownloadComplete": "اكتمل التحميل",
+  "DownloadStarted": "Download starting...",
   "DownloadFailed": "فشل التحميل",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "تنزيل...",
   "ModsDownloadFailed": {
     "One": "فشل تنزيل التعديل",
@@ -71,6 +73,7 @@
   "LogLevel": "مستوى السجل",
   "ParadoxAccount": "حساب فردوس",
   "LoggingIn": "جاري تسجيل الدخول...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "لم تقم بتسجيل الدخول إلى البارادوس، تحقق من الإشعارات للحصول على مزيد من المعلومات.",
   "HideUserSection": "إخفاء ملفك الشخصي في القائمة الرئيسية",
   "DeveloperMode": "تمكين وضع المطور",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "No backups are available to restore your settings. Set up your backup settings to safeguard your settings in the future.\r\n\r\nClick here to delete the corrupted files.",
   "RecentBackups": "النسخ الاحتياطية الأخيرة",
   "DisableLogCleanup": "تعطيل سجلات التنظيف عند بدء اللعبة",
-  "DisableLogCleanup_Tip": "تخطي حذف مجلد السجلات عند بدء اللعبة من خلال سفايف."
+  "DisableLogCleanup_Tip": "تخطي حذف مجلد السجلات عند بدء اللعبة من خلال سفايف.",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncAffectedPlaysets": {
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }
