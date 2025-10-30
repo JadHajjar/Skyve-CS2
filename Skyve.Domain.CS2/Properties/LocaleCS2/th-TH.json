@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "ชื่อผู้ใช้/รหัสผ่านที่คุณบันทึกไว้ไม่สามารถเข้าสู่ระบบได้ คลิกที่นี่เพื่ออัปเดตข้อมูลของคุณ",
   "ParadoxLoginFailedEmpty": "เซสชันของคุณอาจหมดอายุแล้ว ลองเปิดเกมเพื่อเข้าสู่ระบบอีกครั้ง หรือคลิกที่นี่เพื่อเข้าสู่ระบบผ่าน Skyve",
   "DownloadComplete": "ดาวน์โหลดเสร็จสมบูรณ์แล้ว",
+  "DownloadStarted": "Download starting...",
   "DownloadFailed": "ดาวน์โหลดล้มเหลว",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "กำลังดาวน์โหลด...",
   "ModsDownloadFailed": {
     "One": "ล้มเหลวในการดาวน์โหลดม็อด",
@@ -71,6 +73,7 @@
   "LogLevel": "ระดับการจดบันทึก",
   "ParadoxAccount": "บัญชี Paradox",
   "LoggingIn": "กำลังเข้าสู่ระบบ...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "คุณไม่ได้เข้าสู่ระบบ Paradox โปรดตรวจสอบการแจ้งเตือนของคุณเพื่อดูข้อมูลเพิ่มเติม",
   "HideUserSection": "ซ่อนโปรไฟล์ของคุณในเมนูหลัก",
   "DeveloperMode": "เปิดใช้โหมดผู้พัฒนา",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "ไม่มีการสำรองข้อมูลสำหรับกู้คืนการตั้งค่าของคุณ ตั้งค่าการสำรองข้อมูลของคุณเป็นการปกป้องการตั้งค่าของคุณในอนาคต\n\nคลิกที่นี่เพื่อลบไฟล์ที่เสียหาย",
   "RecentBackups": "ข้อมูลสำรองที่ผ่านมา",
   "DisableLogCleanup": "ปิดใช้งานการล้างข้อมูลบันทึกเหตุการณ์เมื่อเปิดเกม",
-  "DisableLogCleanup_Tip": "ข้ามการลบโฟลเดอร์บันทึกเหตุการณ์เมื่อเปิดเกมผ่าน Skyve"
+  "DisableLogCleanup_Tip": "ข้ามการลบโฟลเดอร์บันทึกเหตุการณ์เมื่อเปิดเกมผ่าน Skyve",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncAffectedPlaysets": {
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }

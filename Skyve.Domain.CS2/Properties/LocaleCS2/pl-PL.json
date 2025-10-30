@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Zła nazwa użytkownika lub hasło. Kliknij tutaj, aby zaktualizować podane informacje.",
   "ParadoxLoginFailedEmpty": "Twoja sesja prawdopodobnie wygasła. Spróbuj uruchomić grę, aby zalogować się ponownie, lub kliknij tutaj, aby zalogować się przez Skyve.",
   "DownloadComplete": "Pobieranie ukończone",
+  "DownloadStarted": "Download starting...",
   "DownloadFailed": "Pobieranie nieudane",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "Pobieranie...",
   "ModsDownloadFailed": {
     "One": "Nie udało się pobrać moda",
@@ -71,6 +73,7 @@
   "LogLevel": "Poziom logów",
   "ParadoxAccount": "Konto Paradox",
   "LoggingIn": "Logowanie...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "Nie jesteś zalogowany do Paradox, sprawdź swoje powiadomienia, aby uzyskać więcej informacji.",
   "HideUserSection": "Ukryj swój profil w menu głównym",
   "DeveloperMode": "Włącz tryb dewelopera",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "Brak dostępnej kopii zapasowej do przywrócenia ustawień. Ustaw ustawienia kopii zapasowej, aby zabezpieczyć swoje ustawienia w przyszłości.\n\nKliknij tutaj, aby usunąć uszkodzone pliki.",
   "RecentBackups": "Ostatnie kopie zapasowe",
   "DisableLogCleanup": "Wyłącz czyszczenie logów przy uruchomianiu gry",
-  "DisableLogCleanup_Tip": "Pomija usuwanie folderu logów przy uruchamianiu gry przez Skyve."
+  "DisableLogCleanup_Tip": "Pomija usuwanie folderu logów przy uruchamianiu gry przez Skyve.",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncAffectedPlaysets": {
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }

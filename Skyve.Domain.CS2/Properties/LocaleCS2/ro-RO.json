@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Numele de utilizator/parola salvată a eșuat. Apasă aici pentru a-ți actualiza informațiile.",
   "ParadoxLoginFailedEmpty": "Sesiunea ta probabil a expirat. Încearcă să lansezi jocul pentru a te loga din nou, sau apasă aici pentru a te autentifica prin Skyve.",
   "DownloadComplete": "Descărcare finalizată",
+  "DownloadStarted": "Download starting...",
   "DownloadFailed": "Descărcare eșuată",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "Descărcare...",
   "ModsDownloadFailed": {
     "One": "Un mod nu a putut fi descărcat",
@@ -71,6 +73,7 @@
   "LogLevel": "Nivel jurnal",
   "ParadoxAccount": "Cont Paradox",
   "LoggingIn": "Se conectează...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "Nu sunteți conectat la Paradox, verificați notificările pentru mai multe informații.",
   "HideUserSection": "Ascunde profilul tău în meniul principal",
   "DeveloperMode": "Activează Modul Dezvoltator",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "Nu sunt disponibile copii de rezervă pentru a restabili setările. Configurați setările de rezervă pentru a proteja setările viitoare.\r\n\r\nClick aici pentru a șterge fișierele corupte.",
   "RecentBackups": "Backup-uri recente",
   "DisableLogCleanup": "Dezactivează curățarea jurnalelor la lansarea jocului",
-  "DisableLogCleanup_Tip": "Sari ștergerea dosarului de loguri la lansarea jocului prin Skyve."
+  "DisableLogCleanup_Tip": "Sari ștergerea dosarului de loguri la lansarea jocului prin Skyve.",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncAffectedPlaysets": {
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }

@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "使用已保存的用户名/密码登录失败。请点击此处更新您的信息。",
   "ParadoxLoginFailedEmpty": "您的会话可能已过期。请尝试启动游戏并重新登录，或点击此处通过 Skyve 登录。",
   "DownloadComplete": "下载完毕",
+  "DownloadStarted": "Download starting...",
   "DownloadFailed": "下载失败",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "正在下载...",
   "ModsDownloadFailed": {
     "One": "一个模组下载失败",
@@ -71,6 +73,7 @@
   "LogLevel": "日志级别",
   "ParadoxAccount": "Paradox 帐户",
   "LoggingIn": "正在登录...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "您没有登录 Paradox 账号，请检查您的通知以了解更多信息。",
   "HideUserSection": "在主菜单中隐藏用户信息卡片",
   "DeveloperMode": "启用开发者模式",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "没有可用的备份来恢复您的设置。请启用备份，以保护您的设置。\n点击此处删除损坏的文件。",
   "RecentBackups": "最近备份",
   "DisableLogCleanup": "禁用启动游戏时的日志清理程序",
-  "DisableLogCleanup_Tip": "在通过 Skyve 启动游戏时，跳过清理日志文件夹的程序。"
+  "DisableLogCleanup_Tip": "在通过 Skyve 启动游戏时，跳过清理日志文件夹的程序。",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncAffectedPlaysets": {
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }

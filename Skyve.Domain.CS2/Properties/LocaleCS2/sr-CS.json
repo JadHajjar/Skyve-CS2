@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Vaše sačuvano korisničko ime/lozinka nisu uspeli da se prijave. Kliknite ovde da ažurirate svoje informacije.",
   "ParadoxLoginFailedEmpty": "Vaša sesija je verovatno istekla. Pokušajte da pokrenete igru da se ponovo prijavite, ili kliknite ovde da se prijavite preko Skyve-a.",
   "DownloadComplete": "Preuzimanje završeno",
+  "DownloadStarted": "Download starting...",
   "DownloadFailed": "Preuzimanje nije uspelo",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "Preuzimanje...",
   "ModsDownloadFailed": {
     "One": "Mod nije uspeo da se preuzme",
@@ -71,6 +73,7 @@
   "LogLevel": "Nivo zapisivanja",
   "ParadoxAccount": "Paradox nalog",
   "LoggingIn": "Prijavljivanje...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "Niste prijavljeni na Paradox, proverite svoja obaveštenja za više informacija.",
   "HideUserSection": "Sakrij svoj profil u glavnom meniju",
   "DeveloperMode": "Omogući režim za programere",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "Nema bekapova dostupnih za vraćanje vaših podešavanja. Podesite svoja bekap podešavanja da zaštitite svoja podešavanja u budućnosti.\r\n\r\nKliknite ovde da obrišete oštećene datoteke.",
   "RecentBackups": "Nedavni bekapovi",
   "DisableLogCleanup": "Onemogući čišćenje zapisa prilikom pokretanja igre",
-  "DisableLogCleanup_Tip": "Preskače brisanje foldera Logs prilikom pokretanja igre kroz Skyve."
+  "DisableLogCleanup_Tip": "Preskače brisanje foldera Logs prilikom pokretanja igre kroz Skyve.",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncAffectedPlaysets": {
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }
