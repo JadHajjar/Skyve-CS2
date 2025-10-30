@@ -37,7 +37,7 @@ partial class PC_CompatibilityCenter
 			this.smartTablePanel = new SlickControls.SmartTablePanel();
 			this.roundedGroupTableLayoutPanel3 = new SlickControls.RoundedGroupTableLayoutPanel();
 			this.B_ReviewRequests = new SlickControls.SlickButton();
-			this.activeReviewsControl = new Skyve.App.CS2.UserInterface.Content.OutOfDatePackagesControl();
+			this.activeReviewsControl = new Skyve.App.CS2.UserInterface.Content.PackagesWithIssuesControl();
 			this.L_NoActiveRequests = new System.Windows.Forms.Label();
 			this.roundedGroupTableLayoutPanel1 = new SlickControls.RoundedGroupTableLayoutPanel();
 			this.AnnouncementTitle = new SlickControls.SlickTextBox();
@@ -311,7 +311,7 @@ partial class PC_CompatibilityCenter
 	private SlickButton AnnouncementButton;
 	private SlickTextBox AnnouncementTitle;
 	private SlickButton B_ReviewRequests;
-	private Content.OutOfDatePackagesControl activeReviewsControl;
+	private Content.PackagesWithIssuesControl activeReviewsControl;
 	private System.Windows.Forms.Label L_NoActiveRequests;
 	private SlickScroll slickScroll1;
 	private App.UserInterface.Generic.BigSelectionOptionControl bigSelectionOptionControl1;

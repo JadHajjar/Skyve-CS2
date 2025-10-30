@@ -1,21 +1,78 @@
 [
   {
     "Stable": false,
-    "Beta": true,
-    "Version": "1.0.1",
-    "Date": "2025-06-11",
+    "Beta": false,
+    "Version": "1.1.1",
+    "Date": "2025-10-30",
     "ChangeGroups": [
       {
         "Name": "Changes",
         "Changes": [
-          "Backend Improvements.",
-          "Updated to the PDX SDK v1.34.0"
+          "Added the ability to remove version locks by right-clicking on a mod or selected mods.",
+          "Action buttons now show as dimmed when not having an active playset.",
+          "Fixed unusual suggested game versions breaking the compatibility report."
         ]
       }
     ]
   },
   {
-    "Stable": true,
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.0",
+    "Date": "2025-10-29",
+    "ChangeGroups": [
+      {
+        "Name": "New Features",
+        "Changes": [
+          "Added the ability to cancel mod downloads.",
+          "Added the sync conflict prompt in cases where the sync fails. Previously Skyve would always assume you want the cloud data.",
+          "Added a logout button in your user widget on the dashboard.",
+          "Added the ability to edit your mods' information from Skyve using the new 'Edit mod information' in the mods' page."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Added a 'Version Locked' label for mods in your playset that will not auto-update.",
+          "Added a dedicated like button in the mod page.",
+          "Added an automatic basic setup when running the Skyve app before opening the game, allowing players to use Skyve in case they can not get to the main menu.",
+          "Improved the speed of the startup flow, getting you logged in and ready much sooner.",
+          "Improved the process for selecting a different content location by loosening up some restrictions.",
+          "Fixed not being able to open the folder location of mods in various areas of the app.",
+          "Fixed the 'No Active Playset' popup sometimes hiding behing the Skyve app window.",
+          "Fixed automatic backups not always running when selecting multiple schedule options.",
+          "Fixed an issue with playsets backup requiring online access to run."
+        ]
+      },
+      {
+        "Name": "PDX SDK v1.38.0 Changes",
+        "Changes": [
+          "Added the functionality of cancelling mod downloads, mod downloads are then resumed if the previous attempt was canceled.",
+          "Reworked the cache files to fix playset conflict notifications.",
+          "Fixed crashes on startup related to invalid files or files not being accessible.",
+          "Fixed selected mod version not updating correctly during the same session.",
+          "Fixed creating the playset sometimes getting the same ID as a previous one.",
+          "Fixed image and metadata files not getting deleted when updating a mod to a newer version."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.0.2",
+    "Date": "2025-10-03",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Temporarily disabled playsets backup."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
     "Beta": false,
     "Version": "1.0.1",
     "Date": "2025-06-11",

@@ -32,6 +32,7 @@ public class PdxPlaysetImport : ITemporaryPlayset
 		public int LoadOrder { get; set; }
 		public bool IsEnabled { get; set; }
 		public bool IsVersionLocked { get; set; }
+		public int PlaysetId { get; set; }
 
 		ulong IPackageIdentity.Id => (ulong)Id;
 		string IPackageIdentity.Name => Name ?? Id.ToString();

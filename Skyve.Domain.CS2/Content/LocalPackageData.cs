@@ -28,7 +28,7 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject, IEquatable<
 		VersionName = version;
 		Assets = assets;
 		Folder = folder;
-		FilePath = filePath;
+		FilePath = filePath.IfEmpty(Folder);
 		Images = images;
 		SuggestedGameVersion = suggestedGameVersion;
 

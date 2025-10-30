@@ -2,58 +2,53 @@
 
 using Game.UI;
 
+using Skyve.App.CS2.Installer;
+
+using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Skyve.Mod.CS2
 {
 	internal partial class InstallSkyveUISystem : UISystemBase
 	{
 		private ValueBinding<bool> isInstalledBinding;
-		private bool installComplete;
+		private ValueBinding<bool> isUpToDateBinding;
+		private bool installing;
 
 		protected override void OnCreate()
 		{
 			base.OnCreate();
 
-			AddBinding(isInstalledBinding = new ValueBinding<bool>("SkyveMod", "IsInstalled", IsInstalled()));
+			SkyveMod.CheckIfInstalled(out var isInstalled, out var isUpToDate);
+
+			SkyveMod.Log.Info($"isInstalled: {isInstalled}, isUpToDate: {isUpToDate}");
+
+			AddBinding(isInstalledBinding = new ValueBinding<bool>("SkyveMod", "IsUpToDate", isUpToDate));
+			AddBinding(isUpToDateBinding = new ValueBinding<bool>("SkyveMod", "IsInstalled", isInstalled));
 			AddBinding(new TriggerBinding("SkyveMod", "InstallSkyve", Install));
 		}
 
 		private void Install()
 		{
-			if (SkyveMod.InstallApp())
-			{
-				installComplete = true;
-			}
+			installing = true;
+
+			SkyveMod.InstallApp();
+
+			Task.Run(async () => { await Task.Delay(30_000); installing = false; });
 		}
 
 		protected override void OnUpdate()
 		{
-			if (installComplete && IsInstalled())
+			if (installing)
 			{
-				installComplete = false;
+				SkyveMod.CheckIfInstalled(out var isInstalled, out var isUpToDate);
 
-				isInstalledBinding.Update(true);
+				isInstalledBinding.Update(isInstalled);
+				isUpToDateBinding.Update(isUpToDate);
 			}
 
 			base.OnUpdate();
-		}
-
-		private bool IsInstalled()
-		{
-			return File.Exists(Path.Combine(GetCurrentInstallationPath() ?? "C:\\Program Files", "Skyve.exe"));
-		}
-
-		public static string GetCurrentInstallationPath()
-		{
-			try
-			{
-				return File.ReadAllText(Path.Combine(FolderSettings.SettingsFolder, "InstallPath"));
-			}
-			catch
-			{
-				return null;
-			}
 		}
 	}
 }

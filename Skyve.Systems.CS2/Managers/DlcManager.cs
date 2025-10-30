@@ -181,7 +181,7 @@ internal class DlcManager : IDlcManager
 		return [];
 	}
 
-	public IDlcInfo TryGetDlc(string displayName)
+	public IDlcInfo? TryGetDlc(string displayName, bool exact = false)
 	{
 		if (displayName == "San Fransisco Set")
 		{
@@ -198,10 +198,10 @@ internal class DlcManager : IDlcManager
 			}
 		}
 
-		return new SteamDlc { Name = displayName };
+		return exact ? null : new SteamDlc { Name = displayName };
 	}
 
-	public IDlcInfo TryGetDlc(ulong dlc)
+	public IDlcInfo? TryGetDlc(ulong dlc, bool exact = false)
 	{
 		foreach (var item in Dlcs)
 		{
@@ -211,6 +211,6 @@ internal class DlcManager : IDlcManager
 			}
 		}
 
-		return new SteamDlc { Id = dlc, Name = dlc.ToString() };
+		return exact ? null : new SteamDlc { Id = dlc, Name = dlc.ToString() };
 	}
 }

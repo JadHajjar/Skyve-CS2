@@ -6,7 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Content;
-internal class OutOfDatePackagesControl : SlickControl
+internal class PackagesWithIssuesControl : SlickControl
 {
 	private List<IPackageIdentity> packages = [];
 
@@ -26,10 +26,11 @@ internal class OutOfDatePackagesControl : SlickControl
 	public void SetPackages(IEnumerable<IPackageIdentity> value)
 	{
 		packages = value.ToList();
+		Visible = packages.Count > 0;
 		Invalidate();
 	}
 
-	public OutOfDatePackagesControl()
+	public PackagesWithIssuesControl()
 	{
 		AutoInvalidate = false;
 	}

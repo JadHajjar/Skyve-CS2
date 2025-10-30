@@ -73,6 +73,7 @@
   "LogLevel": "Log Level",
   "ParadoxAccount": "Paradox Account",
   "LoggingIn": "Logging in...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "You're not logged in to Paradox, check your notifications for more information.",
   "HideUserSection": "Hide your profile in the main menu",
   "DeveloperMode": "Enable Developer Mode",

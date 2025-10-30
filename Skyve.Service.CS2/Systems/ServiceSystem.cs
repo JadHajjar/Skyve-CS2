@@ -43,7 +43,7 @@ internal class ServiceSystem
 				_logger.Exception(ex, memberName: "Unexpected error during Update Loop");
 			}
 
-			await Task.Delay(TimeSpan.FromMinutes(30));
+			await Task.Delay(TimeSpan.FromMinutes(120));
 		}
 	}
 
@@ -76,7 +76,7 @@ internal class ServiceSystem
 
 		await _workshopService.Initialize();
 
-		await _workshopService.Login();
+		//await _workshopService.Login();
 	}
 
 	private async Task PostBackupTask()

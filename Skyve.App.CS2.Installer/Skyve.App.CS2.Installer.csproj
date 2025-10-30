@@ -20,6 +20,7 @@
 		<Title>Skyve</Title>
 		<AssemblyName>Skyve.App.CS2.Setup</AssemblyName>
 		<TargetName>Setup</TargetName>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 	<ItemGroup>
 	  <COMReference Include="NetFwTypeLib">
@@ -45,7 +46,7 @@
 		</ReadLinesFromFile>
 
 		<ItemGroup>
-			<ProcessedBuildVdfLines Include="@(BuildVdfLines->Replace('@VERSION@', '$(Version)'))" />
+			<ProcessedBuildVdfLines Include="@(BuildVdfLines-&gt;Replace('@VERSION@', '$(Version)'))" />
 		</ItemGroup>
 
 		<RemoveDir Directories="$(DeployDir)" />
@@ -60,7 +61,7 @@
 	</Target>
 
 	<Target Name="Publish Build" AfterTargets="Publish" Condition="'$(BuildType)' == 'Steam'">
-		<!--<Exec Command="C:\SteamCmd\steamcmd.exe +login dotcax +run_app_build $(MSBuildProjectDirectory)\$(DeployDir)\build.vdf +quit" />-->
+		<Exec Command="C:\SteamCmd\steamcmd.exe +login dotcax +run_app_build $(MSBuildProjectDirectory)\$(DeployDir)\build.vdf +quit" />
 	</Target>
 
 	<ItemGroup>

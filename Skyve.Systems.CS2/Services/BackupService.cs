@@ -43,21 +43,21 @@ internal class BackupService : IBackupService
 
 		if (_backupSettings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnScheduledTimes))
 		{
-			startBackup = _backupSettings.ScheduleSettings.ScheduleTimes.Any(x => currentTime == (int)x.TotalMinutes);
+			startBackup |= _backupSettings.ScheduleSettings.ScheduleTimes.Any(x => currentTime == (int)x.TotalMinutes);
 		}
 
 		if (isCitiesRunning != _citiesManager.IsRunning())
 		{
 			isCitiesRunning = !isCitiesRunning;
 
-			startBackup = !isCitiesRunning && _backupSettings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnGameClose);
+			startBackup |= !isCitiesRunning && _backupSettings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnGameClose);
 		}
 
 		if (_backupSettings.ScheduleSettings.Type.HasFlag(BackupScheduleType.OnNewSaveGame))
 		{
 			var savePackage = _contentManager.GetSaveFiles();
 
-			startBackup = savePackage?.LocalData?.Assets?.Any(x => currentTime == (int)x.LocalTime.TimeOfDay.TotalMinutes) ?? false;
+			startBackup |= savePackage?.LocalData?.Assets?.Any(x => currentTime == (int)x.LocalTime.TimeOfDay.TotalMinutes) ?? false;
 		}
 
 		if (startBackup)

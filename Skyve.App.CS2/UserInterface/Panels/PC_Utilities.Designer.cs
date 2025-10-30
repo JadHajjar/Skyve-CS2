@@ -80,7 +80,7 @@ partial class PC_Utilities
 			this.slickSpacer1 = new SlickControls.SlickSpacer();
 			this.slickScroll1 = new SlickControls.SlickScroll();
 			this.DD_TextImport = new Skyve.App.UserInterface.Generic.DragAndDropControl();
-			this.outOfDatePackagesControl1 = new Skyve.App.CS2.UserInterface.Content.OutOfDatePackagesControl();
+			this.outOfDatePackagesControl1 = new Skyve.App.CS2.UserInterface.Content.PackagesWithIssuesControl();
 			this.TLP_Main.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.P_Troubleshoot.SuspendLayout();
@@ -655,7 +655,7 @@ partial class PC_Utilities
 	private System.Windows.Forms.Panel panel2;
 	private RoundedGroupTableLayoutPanel P_Issues;
 	private SlickButton B_FixAllIssues;
-	private Content.OutOfDatePackagesControl outOfDatePackagesControl1;
+	private Content.PackagesWithIssuesControl outOfDatePackagesControl1;
 	private SlickScroll slickScroll1;
 	private RoundedGroupTableLayoutPanel P_SafeMode;
 	private SlickButton B_SafeMode;

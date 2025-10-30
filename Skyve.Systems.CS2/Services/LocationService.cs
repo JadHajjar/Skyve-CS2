@@ -22,6 +22,8 @@ internal class LocationService : ILocationService
 
 	private readonly ILogger _logger;
 	private readonly ISettings _settings;
+	private readonly INotifier _notifier;
+
 	public string DataPath => CrossIO.Combine(_settings.FolderSettings.GamePath, "Cities2_Data");
 	public string ManagedDLL => CrossIO.Combine(DataPath, "Managed");
 	public string SkyveSettingsPath => CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsSettings", "Skyve");
@@ -44,10 +46,11 @@ internal class LocationService : ILocationService
 		Platform.Windows or _ => "Steam.exe",
 	};
 
-	public LocationService(ILogger logger, ISettings settings, INotificationsService notificationsService)
+	public LocationService(ILogger logger, ISettings settings, INotifier notifier, INotificationsService notificationsService)
 	{
 		_logger = logger;
 		_settings = settings;
+		_notifier = notifier;
 
 		if (!Directory.Exists(_settings.FolderSettings.SteamPath))
 		{
@@ -82,18 +85,14 @@ internal class LocationService : ILocationService
 			}
 			else
 			{
-#if STEAM
 				notificationsService.SendNotification(new SkyveNotSetupNotification());
-#else
-				notificationsService.SendNotification(new SkyveNotSetupNotification());
-#endif
 			}
 		}
 	}
 
 	private bool TryGenerateFolderSettings()
 	{
-		if (Application.ExecutablePath.EndsWith("Skyve.Service.exe"))
+		if (_notifier.Context == Skyve.Domain.Enums.SkyveContext.Service)
 		{
 			return false;
 		}
@@ -170,8 +169,7 @@ internal class LocationService : ILocationService
 		onlyAppDataError =
 			Directory.Exists(_settings.FolderSettings.SteamPath) &&
 			!string.IsNullOrEmpty(_settings.FolderSettings.UserIdType) &&
-			!string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier) &&
-			Directory.Exists(_settings.FolderSettings.GamePath);
+			!string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier);
 
 		return onlyAppDataError && Directory.Exists(_settings.FolderSettings.AppDataPath);
 	}
@@ -233,7 +231,7 @@ internal class LocationService : ILocationService
 
 		if (string.IsNullOrEmpty(_settings.FolderSettings.UserIdentifier) && Directory.Exists(CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk")))
 		{
-			var folders = Directory.GetDirectories(CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk")).AllWhere(x => ulong.TryParse(x, out var val) && val > 1000000000000);
+			var folders = Directory.GetDirectories(CrossIO.Combine(_settings.FolderSettings.AppDataPath, ".pdxsdk")).AllWhere(x => ulong.TryParse(Path.GetFileName(x), out var val) && val > 1000000000000);
 
 			if (folders.Count == 1)
 			{

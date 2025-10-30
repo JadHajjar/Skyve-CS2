@@ -40,7 +40,7 @@ namespace Skyve.Systems.CS2.Services;
 public class WorkshopService : IWorkshopService
 {
 	public event Action? OnLogin;
-	event Action? IWorkshopService.OnLogout { add { } remove { } }
+	public event Action? OnLogout;
 	public event Action? OnContextAvailable;
 
 	private readonly ILogger _logger;
@@ -188,7 +188,10 @@ public class WorkshopService : IWorkshopService
 
 			_logger.Info("SDK Created");
 
-			GameData = await Context.Mods.GetGameData();
+			if (_notifier.Context is not SkyveContext.Service)
+			{
+				GameData = await Context.Mods.GetGameData();
+			}
 
 			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
 
@@ -341,6 +344,36 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
+	public async Task<bool> Logout()
+	{
+		if (Context is null || !IsLoggedIn)
+		{
+			return false;
+		}
+
+		var result = ProcessResult(await Context.Account.Logout());
+
+		if (result.Success)
+		{
+			try
+			{
+				Registry.CurrentUser.DeleteSubKey("Software\\Skyve");
+			}
+			catch { }
+
+			IsLoggedIn = false;
+
+			_notificationsService.RemoveNotificationsOfType<ParadoxLoginRequiredNotification>();
+			_notificationsService.SendNotification(new ParadoxLoginRequiredNotification(false, _interfaceService));
+
+			_userService.SetLoggedInUser(null);
+
+			OnLogout?.Invoke();
+		}
+
+		return result.Success;
+	}
+
 	public void ClearCache()
 	{
 		_modProcessor.Clear();
@@ -349,7 +382,7 @@ public class WorkshopService : IWorkshopService
 
 	public IWorkshopInfo? GetInfo(IPackageIdentity identity)
 	{
-		if (identity.Id <= 0)
+		if (identity.Id <= 0 || identity is IDlcInfo)
 		{
 			return null;
 		}
@@ -359,7 +392,7 @@ public class WorkshopService : IWorkshopService
 
 	public async Task<IWorkshopInfo?> GetInfoAsync(IPackageIdentity identity)
 	{
-		if (identity.Id <= 0)
+		if (identity.Id <= 0 || identity is IDlcInfo)
 		{
 			return null;
 		}
@@ -376,28 +409,37 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		if (Context is not null)
+		var modId = int.Parse(rgx.Groups[1].Value);
+
+		if (Context is null)
 		{
-			var result = await Context.Mods.GetLocalModDetails(int.Parse(rgx.Groups[1].Value), rgx.Groups[2].Value.IfEmpty(null));
+			return null;
+		}
 
-			if (!result.Success || result?.Mod is null || result.Mod.Id <= 0)
-			{
-				var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
-				result = await Context.Mods.GetDetails(int.Parse(rgx.Groups[1].Value), rgx.Groups[2].Value.IfEmpty(null), platform);
-			}
-			else
-			{
-				result.Mod.HasLiked = _modProcessor.Get(id, false).Result?.HasVoted ?? false;
-			}
+		if (_dlcManager.TryGetDlc((ulong)modId, true) is not null)
+		{
+			return null;
+		}
 
-			if (result.Success && result?.Mod is not null)
+		var result = await Context.Mods.GetLocalModDetails(modId, rgx.Groups[2].Value.IfEmpty(null));
+
+		if (!result.Success || result?.Mod is null || result.Mod.Id <= 0)
+		{
+			var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
+			result = await Context.Mods.GetDetails(modId, rgx.Groups[2].Value.IfEmpty(null), platform);
+		}
+		else
+		{
+			result.Mod.HasLiked = _modProcessor.Get(id, false).Result?.HasVoted ?? false;
+		}
+
+		if (result.Success && result?.Mod is not null)
+		{
+			return new PdxModDetails(result.Mod)
 			{
-				return new PdxModDetails(result.Mod)
-				{
-					Requirements = result.Mod.Dependencies?.Where(x => x.Type is not DependencyType.Dlc).ToArray(x => new PdxModsRequirement(x)) ?? [],
-					DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc && x.DisplayName != "Beach Properties").ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
-				};
-			}
+				Requirements = result.Mod.Dependencies?.Where(x => x.Type is not DependencyType.Dlc).ToArray(x => new PdxModsRequirement(x)) ?? [],
+				DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc && x.DisplayName != "Beach Properties").ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
+			};
 		}
 
 		return new PdxBannedMod(int.Parse(rgx.Groups[1].Value));
@@ -648,7 +690,7 @@ public class WorkshopService : IWorkshopService
 
 			if (result.Mods is not null)
 			{
-				return result.Mods.Select(x => new PdxPlaysetPackage(x)).ToList();
+				return result.Mods.Select(x => new PdxPlaysetPackage(x, playsetId)).ToList();
 			}
 
 			return [];
@@ -734,7 +776,7 @@ public class WorkshopService : IWorkshopService
 		return !result.Success ? null : (IModComment)new PdxForumPost(result.Post);
 	}
 
-	internal async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset)
+	public async Task<bool> SubscribeBulk(IEnumerable<KeyValuePair<int, string?>> mods, int playset)
 	{
 		mods = mods.Where(x => x.Key > 0);
 
@@ -1103,9 +1145,28 @@ public class WorkshopService : IWorkshopService
 	public async Task<IModStagingDataBuilder?> GetModStagingDataFromExistingMod(ulong modId)
 	{
 		if (Context is null || modId <= 0)
+		{
 			return null;
+		}
 
-		return await Context.Mods.Publishing.GetModStagingDataFromExistingMod((int)modId);
+		return await Context.Mods.Publishing.GetModStagingDataFromExistingMod((int)modId, null, ModPlatform.Windows);
+	}
+
+	public async Task<PublishingResult?> PublishMod(IModStagingData modStagingData)
+	{
+		if (Context is null || modStagingData is null)
+		{
+			return null;
+		}
+
+		var result = ProcessResult(await Context.Mods.Publishing.PublishMod(modStagingData));
+
+		if (result.Success)
+		{
+			await _modProcessor.Refresh($"{modStagingData.Id}_{modStagingData.Version}");
+		}
+
+		return result;
 	}
 
 	public async Task DeactivateActivePlayset()

@@ -59,6 +59,7 @@ internal static class Program
 		}
 	}
 
+#if STEAM
 	private static async void DoSilentInstall()
 	{
 		Installer.SetInstallSettings(Application.StartupPath, false, true);
@@ -78,8 +79,7 @@ internal static class Program
 			await Installer.Install();
 		}
 	}
-
-#if !STEAM
+#else
 	private static bool RedirectIfNeeded(string[] args, out bool uninstall)
 	{
 		var isAdmin = WinExtensionClass.IsAdministrator;
@@ -88,28 +88,35 @@ internal static class Program
 
 		uninstall = args.ElementAtOrDefault(0) == "uninstall";
 
-		if (!uninstall && fileName == "uninstall")
+		try
 		{
-			var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), $"Skyve Uninstall.exe");
-
-			Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
-
-			File.Copy(Application.ExecutablePath, tempPath, true);
-
-			Process.Start(new ProcessStartInfo(tempPath) 
+			if (!uninstall && fileName == "uninstall")
 			{
-				Verb = isAdmin ? "" : "runas",
-				Arguments = "uninstall" 
-			});
+				var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), $"Skyve Uninstall.exe");
 
-			return true;
+				Directory.CreateDirectory(Path.GetDirectoryName(tempPath));
+
+				File.Copy(Application.ExecutablePath, tempPath, true);
+
+				Process.Start(new ProcessStartInfo(tempPath)
+				{
+					Verb = isAdmin ? "" : "runas",
+					Arguments = "uninstall"
+				});
+
+				return true;
+			}
+
+			//if (!isAdmin)
+			//{
+			//	Process.Start(new ProcessStartInfo(setupFile) { Verb = "runas" });
+
+			//	return true;
+			//}
 		}
-
-		if (!isAdmin)
+		catch (Exception ex)
 		{
-			Process.Start(new ProcessStartInfo(setupFile) { Verb = "runas" });
-
-			return true;
+			throw new KnownException(ex, "Could not start the setup. Please run the setup as administrator.");
 		}
 
 		return false;

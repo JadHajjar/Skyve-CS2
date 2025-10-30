@@ -15,7 +15,12 @@ namespace Skyve.Mod.CS2
 		public const string GAMEPLAY_GROUP = nameof(GAMEPLAY_GROUP);
 
 		[SettingsUISection(GAMEPLAY_GROUP)]
+		[SettingsUIHideByCondition(typeof(SkyveMod), nameof(SkyveMod.IsUpdateAvailable))]
 		public bool InstallApp { set => SkyveMod.InstallApp(); }
+
+		[SettingsUISection(GAMEPLAY_GROUP)]
+		[SettingsUIHideByCondition(typeof(SkyveMod), nameof(SkyveMod.IsUpdateAvailable), true)]
+		public bool UpdateApp { set => SkyveMod.InstallApp(); }
 
 		public SkyveModSettings(SkyveMod mod) : base(mod)
 		{

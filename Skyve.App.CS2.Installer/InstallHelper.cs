@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Win32;
+
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -6,6 +8,8 @@ namespace Skyve.App.CS2.Installer
 {
 	public static class InstallHelper
 	{
+		public const string REG_KEY = "SkyveAppCs2";
+
 		public static void Run(string setupPath)
 		{
 			var folder = Path.Combine(Path.GetTempPath(), $"Skyve-Setup-{Guid.NewGuid()}");
@@ -41,5 +45,56 @@ namespace Skyve.App.CS2.Installer
 				File.Copy(newPath, newPath.Replace(directory.FullName, target.FullName), true);
 			}
 		}
+
+#nullable enable
+		public static string? GetCurrentInstallationPath(out bool serviceInstalled)
+		{
+			serviceInstalled = false;
+
+			try
+			{
+				using var parent = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true) ?? throw new Exception("Uninstall registry key not found.");
+
+				RegistryKey? key = null;
+
+				try
+				{
+					key = parent.OpenSubKey(REG_KEY, true);
+
+					if (key is null)
+					{
+						return null;
+					}
+
+					var path = key.GetValue("UninstallString")?.ToString();
+
+					if (string.IsNullOrEmpty(path))
+					{
+						return null;
+					}
+
+					serviceInstalled = !bool.TryParse(key.GetValue("InstallBackgroundService")?.ToString(), out var install) || install;
+
+					path = Path.GetDirectoryName(path!.Trim('"').Replace("\\\\", "\\"));
+
+					if (Directory.Exists(path))
+					{
+						return path;
+					}
+
+					return null;
+				}
+				finally
+				{
+					key?.Close();
+					key?.Dispose();
+				}
+			}
+			catch
+			{
+				return null;
+			}
+		}
+#nullable restore
 	}
 }

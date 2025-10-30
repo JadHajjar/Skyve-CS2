@@ -346,7 +346,7 @@ internal class BackupSystem : IBackupSystem
 
 	private async Task<IEnumerable<IBackupItem>> MakePlaysetBackup()
 	{
-		var playsets = await _workshopService.GetPlaysets(false);
+		var playsets = await _workshopService.GetPlaysets(true);
 
 		if (playsets is null)
 		{
@@ -364,7 +364,7 @@ internal class BackupSystem : IBackupSystem
 				continue;
 			}
 
-			var playset = await _playsetManager.GenerateImportPlayset(item);
+			var playset = await _playsetManager.GenerateImportPlayset(item, includeOnline: false);
 
 			backups.Add(new BackupItem.ActivePlayset(playset, item, _playsetManager));
 		}

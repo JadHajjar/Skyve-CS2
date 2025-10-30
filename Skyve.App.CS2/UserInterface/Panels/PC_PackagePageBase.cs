@@ -449,7 +449,7 @@ public partial class PC_PackagePageBase : PanelContent
 		var staging = await (_workshopService as WorkshopService)!.GetModStagingDataFromExistingMod(Package.GetWorkshopInfo()?.Id ?? Package.Id);
 		B_EditModInfo.Loading = false;
 
-		if (staging != null)
+		if (staging?.MetaData != null)
 		{
 			Form.PushPanel(new PC_PackageEdit(Package, staging));
 		}

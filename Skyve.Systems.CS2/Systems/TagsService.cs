@@ -90,13 +90,13 @@ internal class TagsService : ITagsService
 			}
 		}
 
-		foreach (var asset in _serviceProvider.GetService<IPackageManager>()!.Assets)
-		{
-			foreach (var item in asset.Tags)
-			{
-				_assetTags.Add(item);
-			}
-		}
+		//foreach (var asset in _serviceProvider.GetService<IPackageManager>()!.Assets)
+		//{
+		//	foreach (var item in asset.Tags)
+		//	{
+		//		_assetTags.Add(item);
+		//	}
+		//}
 
 		//var assetDictionary = new Dictionary<string, IAsset>(StringComparer.CurrentCultureIgnoreCase);
 

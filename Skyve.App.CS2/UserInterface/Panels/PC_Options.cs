@@ -259,7 +259,6 @@ public partial class PC_Options : PanelContent
 			};
 
 			if (dialog.SelectedPath.Length < 5
-				|| new DirectoryInfo(dialog.SelectedPath).Attributes.HasAnyFlag(FileAttributes.System, FileAttributes.ReadOnly, FileAttributes.Temporary)
 				|| invalidPaths.Any(dialog.SelectedPath.PathContains))
 			{
 				ShowPrompt(LocaleCS2.JunctionInvalidFolder, Locale.InvalidFolder, PromptButtons.OK, PromptIcons.Hand);

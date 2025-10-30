@@ -21,7 +21,6 @@ using static System.Environment;
 namespace Skyve.App.CS2.Installer;
 public class Installer
 {
-	private const string REG_KEY = "SkyveAppCs2";
 	private static string INSTALL_PATH = @"C:\Program Files\Skyve CS-II";
 	private static bool DesktopShortcut;
 	private static bool InstallService;
@@ -102,7 +101,10 @@ public class Installer
 		}
 		catch (Exception ex)
 		{
-			throw new KnownException(ex, "The skyve app could not be found. It is likely an anti-virus software removed it.\r\n\r\nApp location: " + exePath);
+			if (!File.Exists(exePath))
+			{
+				throw new KnownException(ex, "The skyve app could not be found. It is likely an anti-virus software removed it.\r\n\r\nApp location: " + exePath);
+			}
 		}
 #endif
 
@@ -231,7 +233,7 @@ public class Installer
 
 		using var parent = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true);
 
-		parent?.DeleteSubKey(REG_KEY);
+		parent?.DeleteSubKey(InstallHelper.REG_KEY);
 
 		await RegisterService(true);
 
@@ -279,7 +281,9 @@ public class Installer
 			foreach (var file in Directory.GetFiles(INSTALL_PATH, "*.exe"))
 			{
 				if (file.Equals(Application.ExecutablePath, StringComparison.OrdinalIgnoreCase))
+				{
 					continue;
+				}
 
 				foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(file)))
 				{
@@ -335,12 +339,12 @@ public class Installer
 
 			try
 			{
-				key = parent.OpenSubKey(REG_KEY, true);
+				key = parent.OpenSubKey(InstallHelper.REG_KEY, true);
 
 				var isUpdate = key is not null;
 				var version = Assembly.GetExecutingAssembly().GetName().Version;
 
-				key ??= parent.CreateSubKey(REG_KEY) ?? throw new Exception(string.Format("Unable to create uninstaller '{0}'", REG_KEY));
+				key ??= parent.CreateSubKey(InstallHelper.REG_KEY) ?? throw new Exception(string.Format("Unable to create uninstaller '{0}'", InstallHelper.REG_KEY));
 
 				key.SetValue("DisplayName", "Skyve - Cities: Skylines II");
 				key.SetValue("ApplicationVersion", version.ToString());
@@ -375,49 +379,12 @@ public class Installer
 
 	public static string? GetCurrentInstallationPath()
 	{
-		try
-		{
-			using var parent = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true) ?? throw new Exception("Uninstall registry key not found.");
+		var currentInstallPath = InstallHelper.GetCurrentInstallationPath(out var serviceInstalled);
 
-			RegistryKey? key = null;
+		INSTALL_PATH = currentInstallPath?? INSTALL_PATH;
+		InstallService = serviceInstalled;
 
-			try
-			{
-				key = parent.OpenSubKey(REG_KEY, true);
-
-				if (key is null)
-				{
-					return null;
-				}
-
-				var path = key.GetValue("UninstallString")?.ToString();
-
-				if (string.IsNullOrEmpty(path))
-				{
-					return null;
-				}
-
-				InstallService = !bool.TryParse(key.GetValue("InstallBackgroundService")?.ToString(), out var install) || install;
-
-				path = Path.GetDirectoryName(path!.Trim('"').Replace("\\\\", "\\"));
-
-				if (Directory.Exists(path))
-				{
-					return INSTALL_PATH = path;
-				}
-
-				return null;
-			}
-			finally
-			{
-				key?.Close();
-				key?.Dispose();
-			}
-		}
-		catch
-		{
-			return null;
-		}
+		return currentInstallPath;
 	}
 
 	public static void SetInstallSettings(string path, bool desktopShortcut, bool installService)

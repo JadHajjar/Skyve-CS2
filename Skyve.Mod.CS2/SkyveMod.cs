@@ -11,6 +11,7 @@ using Skyve.App.CS2.Installer;
 using Skyve.Domain.CS2.Utilities;
 
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace Skyve.Mod.CS2
@@ -18,10 +19,20 @@ namespace Skyve.Mod.CS2
 	public class SkyveMod : IMod
 	{
 		private static string ModPath;
+		private static System.Version ModVer;
 
 		public static ILog Log = LogManager.GetLogger(nameof(SkyveMod)).SetShowsErrorsInUI(false);
 
 		public SkyveModSettings Settings { get; private set; }
+		public static bool IsUpdateAvailable
+		{
+			get
+			{
+				CheckIfInstalled(out var isInstalled, out var isUpToDate);
+
+				return isInstalled && !isUpToDate;
+			}
+		}
 
 		public void OnLoad(UpdateSystem updateSystem)
 		{
@@ -30,6 +41,7 @@ namespace Skyve.Mod.CS2
 			if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
 			{
 				ModPath = Path.GetDirectoryName(asset.path);
+				ModVer = asset.version;
 
 				Log.Info(ModPath);
 			}
@@ -182,6 +194,45 @@ namespace Skyve.Mod.CS2
 		public void OnDispose()
 		{
 			Log.Info(nameof(OnDispose));
+		}
+
+		public static void CheckIfInstalled(out bool isInstalled, out bool isUpToDate)
+		{
+			var installedPath = GetCurrentInstallationPath();
+			var skyvePath = Path.Combine(installedPath ?? string.Empty, "Skyve.exe");
+
+			if (!File.Exists(skyvePath))
+			{
+				isInstalled = isUpToDate = false;
+				return;
+			}
+
+			var skyveVersion = FileVersionInfo.GetVersionInfo(skyvePath).FileVersion;
+
+			if (System.Version.TryParse(skyveVersion, out var skyveVer))
+			{
+				isInstalled = true;
+				isUpToDate = skyveVer.Major == ModVer.Major 
+					&& skyveVer.Minor == ModVer.Minor
+					&& Math.Max(0, skyveVer.Build) == Math.Max(0, ModVer.Build)
+					&& Math.Max(0, skyveVer.Revision) == Math.Max(0, ModVer.Revision);
+			}
+			else
+			{
+				isInstalled = isUpToDate = false;
+			}
+		}
+
+		private static string GetCurrentInstallationPath()
+		{
+			try
+			{
+				return File.ReadAllText(Path.Combine(FolderSettings.SettingsFolder, "InstallPath"));
+			}
+			catch
+			{
+				return @"C:\Program Files (x86)\Skyve CS-II";
+			}
 		}
 	}
 }

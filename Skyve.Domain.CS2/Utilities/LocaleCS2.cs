@@ -390,6 +390,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation LogLevel => _instance.GetText("LogLevel");
 
 	/// <summary>
+	/// Log out
+	/// </summary>
+	public static Translation Logout => _instance.GetText("Logout");
+
+	/// <summary>
 	/// Copy logs to Player.log
 	/// </summary>
 	public static Translation LogsToPlayerLog => _instance.GetText("LogsToPlayerLog");

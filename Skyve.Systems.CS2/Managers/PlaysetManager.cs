@@ -491,19 +491,19 @@ internal class PlaysetManager : IPlaysetManager
 		CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
 	}
 
-	public async Task<IEnumerable<IPlaysetPackage>> GetPlaysetContents(IPlayset playset)
+	public async Task<IEnumerable<IPlaysetPackage>> GetPlaysetContents(IPlayset playset, bool includeOnline)
 	{
-		return await _workshopService.GetModsInPlayset(playset.Id, true);
+		return await _workshopService.GetModsInPlayset(playset.Id, includeOnline);
 	}
 
-	public async Task<object> GenerateImportPlayset(IPlayset? playset, bool sharing = false)
+	public async Task<object> GenerateImportPlayset(IPlayset? playset, bool sharing = false, bool includeOnline = true)
 	{
 		if (playset is null)
 		{
 			throw new NullReferenceException(nameof(playset));
 		}
 
-		var contents = await GetPlaysetContents(playset!);
+		var contents = await GetPlaysetContents(playset!, includeOnline);
 		var customPlayset = sharing ? GetCustomPlayset(playset) as ExtendedPlayset : null;
 
 		return new PdxPlaysetImport

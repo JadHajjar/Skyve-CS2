@@ -9,6 +9,7 @@ public class IncludedButton : SlickButton
 {
 	private readonly IModLogicManager _modLogicManager;
 	private readonly IModUtil _modUtil;
+	private readonly IPlaysetManager _playsetManager;
 	private readonly ISubscriptionsManager _subscriptionsManager;
 
 	public IPackageIdentity Package { get; set; }
@@ -17,7 +18,7 @@ public class IncludedButton : SlickButton
 	{
 		Package = package;
 
-		ServiceCenter.Get(out _modLogicManager, out _modUtil, out _subscriptionsManager);
+		ServiceCenter.Get(out _modLogicManager, out _modUtil, out _playsetManager, out _subscriptionsManager);
 	}
 
 	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -79,8 +80,25 @@ public class IncludedButton : SlickButton
 
 		if (!Package.IsLocal())
 		{
-			SlickTip.SetTo(this, (e.Location.X < Width - Height) ? string.Empty : Package.GetWorkshopInfo()?.HasVoted == true ? LocaleCS2.UnVoteMod : LocaleCS2.VoteMod, offset: new Point(Width - Height, 0));
+			if (e.Location.X > Width - Height)
+			{
+				SlickTip.SetTo(this, Package.GetWorkshopInfo()?.HasVoted == true ? LocaleCS2.UnVoteMod : LocaleCS2.VoteMod, offset: new Point(Width - Height, 0));
+				Cursor = Cursors.Hand;
+
+				return;
+			}
+
+			if (e.Location.X > Width - Height - UI.Scale(8))
+			{
+				SlickTip.SetTo(this, string.Empty);
+				Cursor = Cursors.Default;
+
+				return;
+			}
 		}
+
+		SlickTip.SetTo(this, _playsetManager.CurrentPlayset is null && !Package.IsLocal() ? Locale.NoActivePlayset : string.Empty);
+		Cursor = _playsetManager.CurrentPlayset is null && !Package.IsLocal() ? Cursors.Default : Cursors.Hand;
 	}
 
 	public override Size CalculateAutoSize(Size availableSize)
@@ -119,7 +137,7 @@ public class IncludedButton : SlickButton
 		string text;
 
 		var required = _modLogicManager.IsRequired(localIdentity, _modUtil);
-		var isHovered = Loading || (buttonRect.Contains(CursorLocation) && HoverState.HasFlag(HoverState.Hovered));
+		var isHovered = !(_playsetManager.CurrentPlayset is null && !Package.IsLocal()) && (Loading || (buttonRect.Contains(CursorLocation) && HoverState.HasFlag(HoverState.Hovered)));
 
 		if (isHovered)
 		{
@@ -239,6 +257,12 @@ public class IncludedButton : SlickButton
 		using var textBrush = new SolidBrush(iconColor);
 		using var format = new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center };
 		e.Graphics.DrawString(text, font, textBrush, textRect, format);
+
+		if (_playsetManager.CurrentPlayset is null && !Package.IsLocal())
+		{
+			var dimBrush = new SolidBrush(Color.FromArgb(150, BackColor));
+			e.Graphics.FillRectangle(dimBrush, buttonRect);
+		}
 	}
 
 	private void DrawLikeButton(PaintEventArgs e, Rectangle rectangle)

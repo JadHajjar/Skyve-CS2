@@ -2,8 +2,10 @@
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.Utilities;
+using Skyve.Systems.CS2.Services;
 
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.Services;
@@ -34,6 +36,7 @@ internal class RightClickService : IRightClickService
 		var anyWorkshop = list.Any(x => !x.IsLocal());
 		var anyWorkshopAndInstalled = list.Any(x => !x.IsLocal() && x.GetLocalPackageIdentity() is not null);
 		var anyNotRequired = list.Any(x => !modLogicManager.IsRequired(x.GetLocalPackageIdentity(), modUtil));
+		var anyVersionLocked = list.Any(x => packageUtil.GetStatus(x, out _) == DownloadStatus.VersionLocked);
 
 		return
 		[
@@ -54,6 +57,7 @@ internal class RightClickService : IRightClickService
 					SlickStripItem.Empty,
 					new(Locale.EditTags.FormatPlural(list.Count), "Tag", () => EditTags(list)),
 					new(Locale.EditCompatibility.FormatPlural(list.Count), "CompatibilityReport", () => { App.Program.MainForm.PushPanel(new PC_CompatibilityManagement(items)); }, visible: (userService.User.Manager || list.Any(item => userService.User.Equals(item.GetWorkshopInfo()?.Author))) && anyWorkshop),
+					new(Locale.RemoveVersionLock.FormatPlural(list.Count), "Lock", async () => await RemoveVersionLock(list, packageUtil)),
 					SlickStripItem.Empty,
 					new((anyLocal && list[0] is IAsset ? Locale.DeleteAsset : Locale.DeletePackage).FormatPlural(list.Count), "Trash", () => AskThenDelete(list), visible: anyLocal),
 				]
@@ -94,6 +98,23 @@ internal class RightClickService : IRightClickService
 		});
 
 		return frm;
+	}
+
+	private static async Task RemoveVersionLock(IEnumerable<IPackageIdentity> list, IPackageUtil packageUtil)
+	{
+		var lockedPackages = list.AllWhere(x => packageUtil.GetStatus(x, out _) == DownloadStatus.VersionLocked);
+
+		if (lockedPackages.Count > 0)
+		{
+			var result = await ServiceCenter.Get<IWorkshopService, WorkshopService>().SubscribeBulk(lockedPackages.ToDictionary(x => (int)x.Id, x => (string?)null), (lockedPackages[0] as IPlaysetPackage)!.PlaysetId);
+
+			if (result)
+			{
+				lockedPackages.Foreach(x => (x as IPlaysetPackage)!.IsVersionLocked = false);
+
+				ServiceCenter.Get<INotifier>().OnRefreshUI(true);
+			}
+		}
 	}
 
 	private static void AskThenDelete<T>(IEnumerable<T> items) where T : IPackageIdentity

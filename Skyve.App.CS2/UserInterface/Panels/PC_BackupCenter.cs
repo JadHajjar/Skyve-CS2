@@ -281,35 +281,36 @@ public partial class PC_BackupCenter : PanelContent
 
 	private void TB_DestinationFolder_Leave(object sender, EventArgs e)
 	{
-		if (string.IsNullOrWhiteSpace(TB_DestinationFolder.Text))
+		if (string.IsNullOrWhiteSpace(TB_DestinationFolder.Text) || TB_DestinationFolder.Text == ServiceCenter.Get<ISettings>().BackupSettings.DestinationFolder)
 		{
 			return;
 		}
 
-		if (IsInvalidPath(TB_DestinationFolder.Text))
+		if (!IsInvalidPath(TB_DestinationFolder.Text))
 		{
-			if (ShowPrompt(Locale.ChooseDifferentBackupLocation, Locale.InvalidFolder, PromptButtons.OKIgnore, PromptIcons.Error) == DialogResult.Ignore)
-			{
-				return;
-			}
-
-			TB_DestinationFolder.Text = string.Empty;
-
-			BeginInvoke(() =>
-			{
-				if (!T_Settings.Selected)
-				{
-					T_Settings.Selected = true;
-				}
-			});
+			return;
 		}
+
+		if (ShowPrompt(Locale.ChooseDifferentBackupLocation, Locale.InvalidFolder, PromptButtons.OKIgnore, PromptIcons.Error) == DialogResult.Ignore)
+		{
+			return;
+		}
+
+		TB_DestinationFolder.Text = string.Empty;
+
+		BeginInvoke(() =>
+		{
+			if (!T_Settings.Selected)
+			{
+				T_Settings.Selected = true;
+			}
+		});
 	}
 
 	private bool IsInvalidPath(string path)
 	{
 		var invalidPaths = new[]
 		{
-			App.Program.CurrentDirectory,
 			App.Program.CurrentDirectory,
 			Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
 			Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
@@ -331,6 +332,8 @@ public partial class PC_BackupCenter : PanelContent
 		try
 		{
 			GiveLocalSystemAccess(path);
+
+			return true;
 		}
 		catch { }
 
@@ -464,14 +467,14 @@ public partial class PC_BackupCenter : PanelContent
 			backupListControl.SetItems(backups
 				.Where(x => !x.MetaData.IsArchived)
 				.GroupBy(x => x.MetaData.BackupTime)
-				.Select(x => new BackupListControl.RestoreGroup(x.Key, new List<IRestoreItem>(x))));
+				.Select(x => new BackupListControl.RestoreGroup(x.Key, [.. x])));
 		}
 		else
 		{
 			backupListControl.SetItems(backups
 				.Where(x => !x.MetaData.IsArchived)
 				.GroupBy(x => $"{x.MetaData.Type}_{x.MetaData.Name}")
-				.Select(x => new BackupListControl.RestoreGroup(x.First().MetaData.Name ?? "", new List<IRestoreItem>(x))));
+				.Select(x => new BackupListControl.RestoreGroup(x.First().MetaData.Name ?? "", [.. x])));
 		}
 
 		backupListControl.Loading = false;

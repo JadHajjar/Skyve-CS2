@@ -18,6 +18,7 @@ internal class D_PdxUser : IDashboardItem
 
 		_userService.UserInfoUpdated += Invalidate;
 		_workshopService.OnLogin += Invalidate;
+		_workshopService.OnLogout += Invalidate;
 	}
 
 	protected override void Dispose(bool disposing)
@@ -25,6 +26,8 @@ internal class D_PdxUser : IDashboardItem
 		if (disposing)
 		{
 			_userService.UserInfoUpdated -= Invalidate;
+			_workshopService.OnLogin -= Invalidate;
+			_workshopService.OnLogout -= Invalidate;
 		}
 
 		base.Dispose(disposing);
@@ -101,6 +104,22 @@ internal class D_PdxUser : IDashboardItem
 			});
 
 			preferredHeight += BorderRadius / 2;
+		}
+
+		if (_workshopService.IsLoggedIn)
+		{
+			preferredHeight += UI.Scale(12);
+			var rect = Rectangle.FromLTRB(e.ClipRectangle.Left, e.ClipRectangle.Bottom - UI.Scale(20), e.ClipRectangle.Right - BorderRadius, e.ClipRectangle.Bottom - BorderRadius / 2);
+
+			_buttonActions.Add(rect, async () => await _workshopService.Logout());
+
+			if (applyDrawing)
+			{
+				using var font = UI.Font(7F, rect.Contains(CursorLocation) ? FontStyle.Underline : FontStyle.Regular);
+				using var brush = new SolidBrush(rect.Contains(CursorLocation) ? FormDesign.Design.ActiveColor : FormDesign.Design.InfoColor);
+				using var format = new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center };
+				e.Graphics.DrawString(LocaleCS2.Logout, font, brush, rect, format);
+			}
 		}
 	}
 }
