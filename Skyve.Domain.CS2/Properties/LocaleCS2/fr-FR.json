@@ -49,9 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Vos identifiants enregistrés n'ont pas pu vous connecter. Cliquez ici pour mettre à jour vos informations.",
   "ParadoxLoginFailedEmpty": "Votre session a probablement expiré. Essayez de lancer le jeu pour vous reconnecter, ou cliquez ici pour vous connecter via Skyve.",
   "DownloadComplete": "Téléchargement terminé",
-  "DownloadStarted": "Download starting...",
+  "DownloadStarted": "Démarrage du téléchargement...",
   "DownloadFailed": "Échec du téléchargement",
-  "DownloadCancelled": "Download cancelled",
+  "DownloadCancelled": "Téléchargement annulé",
   "Downloading": "Téléchargement...",
   "ModsDownloadFailed": {
     "One": "Le téléchargement d'un mod a échoué",
@@ -73,7 +73,7 @@
   "LogLevel": "Niveau de log",
   "ParadoxAccount": "Compte Paradox",
   "LoggingIn": "Identification...",
-  "Logout": "Log out",
+  "Logout": "Se déconnecter",
   "NotLoggedInCheckNotification": "Vous n'êtes pas connecté à votre compte Paradox, regardez les notifications pour plus d'informations.",
   "HideUserSection": "Masquer votre profil dans le menu principal",
   "DeveloperMode": "Activer le mode développeur",
@@ -203,11 +203,11 @@
   "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
   "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
   "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
-  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncConflictTitle": "Conflits de Synchronisation Détectés",
   "SyncAffectedPlaysets": {
-    "One": "Affected playset: {1}",
-    "Plural": "Affected playsets: {1}"
+    "One": "Playset affecté : {1}",
+    "Plural": "Playsets affectés : {1}"
   },
-  "TitleDesc": "Title & Descriptions",
-  "EditModInfo": "Edit this mod's information"
+  "TitleDesc": "Titre et Descriptions",
+  "EditModInfo": "Modifier les informations de ce mod"
 }
