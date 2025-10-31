@@ -43,7 +43,7 @@
   "PackageIsUnknown": "Информация из PDX модов еще не загружена для '{0}'",
   "PackageIsIncomplete": "Локальный размер '{0}' ({1}) отличается от PDX модов {2}",
   "OpenCitiesAppData": "Открыть папку Cities: Skylines2/AppData",
-  "ResetSteamCache": "Очистить кэш PDX модов",
+  "ResetSteamCache": "Очистить кэш PDX Mods",
   "ParadoxLoginFailedTitle": "Не удалось войти в PDX моды",
   "ParadoxLoginFailedNoConnection": "Вы не подключены к Интернету. Проверьте подключение и щелкните здесь снова.",
   "ParadoxLoginFailedBadCredentials": "Не удалось войти в систему с сохранённым именем пользователя/паролем. Нажмите здесь, чтобы обновить информацию.",
@@ -203,7 +203,7 @@
   "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
   "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
   "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
-  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncConflictTitle": "",
   "SyncAffectedPlaysets": {
     "One": "Affected playset: {1}",
     "Plural": "Affected playsets: {1}"
