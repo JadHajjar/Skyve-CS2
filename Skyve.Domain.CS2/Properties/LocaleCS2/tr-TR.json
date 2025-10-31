@@ -49,9 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Kayıtlı kullanıcı adı/şifre ile giriş yapılamadı. Bilgilerinizi güncellemek için buraya tıklayın.",
   "ParadoxLoginFailedEmpty": "Oturumunuzun süresi doldu. Tekrar giriş yapmak için ya oyunu başlatıp giriş yapın ya da Skyve üzerinden giriş yapmak için buraya tıklayın.",
   "DownloadComplete": "İndirme tamamlandı",
-  "DownloadStarted": "Download starting...",
+  "DownloadStarted": "İndirme başlatılıyor...",
   "DownloadFailed": "İndirme başarısız",
-  "DownloadCancelled": "Download cancelled",
+  "DownloadCancelled": "İndirme iptal edildi",
   "Downloading": "İndiriliyor...",
   "ModsDownloadFailed": {
     "One": "Bir mod indirilirken hata oluştu",
@@ -73,7 +73,7 @@
   "LogLevel": "Log Seviyesi",
   "ParadoxAccount": "Paradox Hesabı",
   "LoggingIn": "Giriş Yapılıyor...",
-  "Logout": "Log out",
+  "Logout": "Çıkış yap",
   "NotLoggedInCheckNotification": "Paradox'a giriş yapmadınız, daha fazla bilgi için bildirimlerinizi kontrol edin.",
   "HideUserSection": "Ana menüde profilinizi gizleyin",
   "DeveloperMode": "Developer Modu Aktifleştir",
@@ -198,16 +198,16 @@
   "RecentBackups": "Son Yedeklemeler",
   "DisableLogCleanup": "Oyunu başlatırken günlükleri temizlemeyi devre dışı bırak",
   "DisableLogCleanup_Tip": "Oyunu Skyve üzerinden başlatırken 'Logs' klasörünün silinmesini atlar.",
-  "SyncCloud": "Use cloud data",
-  "SyncLocal": "Use local data",
-  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
-  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
-  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
-  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncCloud": "Bulut verisini kullan",
+  "SyncLocal": "Yerel veriyi kullan",
+  "SyncCloudInfo": "Paradox Mods’tan eksik bilgileri indirir ve çakışmaları yerel veri yerine bulut verisini kullanarak çözer.",
+  "SyncLocalInfo": "Tüm yerel bilgileri Paradox Mods’a yükler; bulutta olan ancak yerel verilerinizde olmayan oyun setleri indirilecektir.",
+  "SyncConflictInfo": "Yerel oyun setleriniz ile Paradox Mods üzerindeki bulut verileri arasında bazı çakışmalar tespit edildi. Modlarınızı güncelleyebilmek için aşağıda bir çözüm seçmeniz gerekiyor.",
+  "SyncConflictTitle": "Senkronizasyon çakışmaları tespit edildi",
   "SyncAffectedPlaysets": {
-    "One": "Affected playset: {1}",
-    "Plural": "Affected playsets: {1}"
+    "One": "Etkilenen oyun seti: {1}",
+    "Plural": "Etkilenen oyun setleri: {1}"
   },
-  "TitleDesc": "Title & Descriptions",
-  "EditModInfo": "Edit this mod's information"
+  "TitleDesc": "Başlık ve Açıklamalar",
+  "EditModInfo": "Bu modun bilgilerini düzenle"
 }
