@@ -114,18 +114,18 @@
     "One": "你的磁盘空间即将耗尽，请前往设置选项，更改游戏内容的存储位置。"
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "“{1}”需要前置项目",
-    "Plural": "您正在添加的插件需要前置项目"
+    "One": "“{1}”需要依赖项",
+    "Plural": "您正在添加的插件需要依赖项"
   },
   "AddingDependencies": {
-    "One": "你正在添加的模组需要“{1}”作为前置。\n\n是否也将“{1}”添加到你的配组中？",
-    "Plural": "你正在添加的模组具有 {0} 个依赖项：{1}\n\n是否也将这些依赖项添加到你的配组中？"
+    "One": "你正在添加的插件需要“{1}”作为依赖项。\n\n是否也将“{1}”添加到你的配组中？",
+    "Plural": "您正在添加的插件有 {0} 个依赖项：{1}\n\n您想把它们也添加到配组中吗？"
   },
-  "Dependency_Automatic": "自动添加前置项目",
+  "Dependency_Automatic": "自动添加依赖项",
   "Dependency_Ask": "每次询问",
-  "Dependency_None": "无需采取任何操作",
-  "DependencyResolution": "选择如何处理前置项目",
-  "DependencyResolution_Tip": "选择在添加模组但其缺少前置项时的处理方式。",
+  "Dependency_None": "不采取任何操作",
+  "DependencyResolution": "选择如何处理依赖项",
+  "DependencyResolution_Tip": "选择在添加插件但缺少依赖项时的处理方式。",
   "SyncOngoingLaunchGame": "Skyve 正在同步您的插件，是否希望在插件同步完成后启动游戏？\n选择“否”跳过此步骤立即启动游戏。",
   "StartingWithNoPlayset": "你即将在未激活任何配组的情况下启动游戏。\n这意味着游戏中将不会启用任何插件。",
   "SyncBeforeLaunching": "在启动游戏前同步插件",
@@ -193,16 +193,16 @@
     "One": "发现损坏的设置文件",
     "Plural": "发现 {0} 个损坏的设置文件"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve 已找到可用的备份，可将你的设置恢复到之前的状态。\n\n点击此处立即恢复。",
-  "CorruptedSettingsFilesNoBackup": "没有可用于恢复设置的备份。请配置备份选项，以便今后保护你的设置。\n\n点击此处删除损坏的文件。",
+  "CorruptedSettingsFilesBackupAvailable": "Skyve 已找到可用的备份，可以将您的设置恢复到之前的状态。 \n\n点击此处立即恢复。",
+  "CorruptedSettingsFilesNoBackup": "没有可用于恢复您的设置的备份文件。请设置备份，以保护您的设置免受数据丢失的影响。\n\n点击此处删除损坏的文件。",
   "RecentBackups": "最近备份",
   "DisableLogCleanup": "禁用启动游戏时的日志清理程序",
   "DisableLogCleanup_Tip": "在通过 Skyve 启动游戏时，跳过清理日志文件夹的程序。",
   "SyncCloud": "保留云端数据",
   "SyncLocal": "保留本地数据",
   "SyncCloudInfo": "从 Paradox Mods 下载任何缺失的信息，并通过使用云端数据替代本地数据来解决冲突。",
-  "SyncLocalInfo": "将所有本地信息上传至 Paradox Mods，任何存在于云端但不在本地数据中的配组都将被下载到本地。",
-  "SyncConflictInfo": "检测到你的本地配组与 Paradox Mods 云端数据之间存在冲突。在获取模组更新之前，你需要先在下方选择一种解决方案。",
+  "SyncLocalInfo": "将所有本地信息上传至 Paradox Mods ，任何存在于云端但不存在于本地数据中的配组都将被下载到本地。",
+  "SyncConflictInfo": "检测到您的本地配组与 Paradox Mods 上的云端数据存在一些冲突。您需要在下方选择一个解决方案，才能更新您的模组。",
   "SyncConflictTitle": "检测到同步冲突",
   "SyncAffectedPlaysets": {
     "One": "受影响的配组：{1}",
