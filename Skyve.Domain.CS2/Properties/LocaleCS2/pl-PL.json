@@ -198,15 +198,15 @@
   "RecentBackups": "Ostatnie kopie zapasowe",
   "DisableLogCleanup": "Wyłącz czyszczenie logów przy uruchomianiu gry",
   "DisableLogCleanup_Tip": "Pomija usuwanie folderu logów przy uruchamianiu gry przez Skyve.",
-  "SyncCloud": "Use cloud data",
-  "SyncLocal": "Use local data",
-  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncCloud": "Użyj danych z chmury",
+  "SyncLocal": "Użyj danych lokalnych",
+  "SyncCloudInfo": "Pobiera brakujące informacje z Paradox Mods i rozwiąże konflikty przez użycie danych z chmury zamiast danych lokalnych.",
   "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
   "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
-  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncConflictTitle": "Wykryto konflikt synchronizacji",
   "SyncAffectedPlaysets": {
-    "One": "Affected playset: {1}",
-    "Plural": "Affected playsets: {1}"
+    "One": "Dotyczy zestawu: {1}",
+    "Plural": "Dotyczy zestawów: {1}"
   },
   "TitleDesc": "Tytuł i opis",
   "EditModInfo": "Edytuj informacje tego moda"
