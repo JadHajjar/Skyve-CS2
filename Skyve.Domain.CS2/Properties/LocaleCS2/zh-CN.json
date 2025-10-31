@@ -17,8 +17,8 @@
     "Plural": "复制已选插件的 PDX Mods 链接"
   },
   "CopyWorkshopMarkdownLink": {
-    "One": "以Markdown形式复制PDX Mods链接",
-    "Plural": "以Markdown形式复制已选插件的PDX Mods链接"
+    "One": "以 Markdown 形式复制 PDX Mods 链接",
+    "Plural": "以 Markdown 形式复制已选插件的 PDX Mods 链接"
   },
   "CopyWorkshopId": {
     "One": "复制 PDX Mods ID",
@@ -33,25 +33,25 @@
   },
   "IncludeThisItemInAllPlaysets": {
     "One": "添加到所有配组中",
-    "Plural": "将所有选中项添加到所有播放集中"
+    "Plural": "将所有选中项添加到所有配组中"
   },
   "ExcludeThisItemInAllPlaysets": {
     "One": "从所有配组中移除",
     "Plural": "从所有配组中移除选中项目"
   },
-  "PackageIsRemoved": "插件 '{0}' 已从 Paradox Mods 移除",
-  "PackageIsUnknown": "无法从PDX Mods 获取“{0}”的信息",
-  "PackageIsIncomplete": "插件 '{0}' 的本地文件大小({1}) 与其 PDX Mods 版本的文件大小 ({2}) 不同",
-  "OpenCitiesAppData": "打开 C:S || 的 AppData 文件夹",
+  "PackageIsRemoved": "插件“{0}”已从 Paradox Mods 移除",
+  "PackageIsUnknown": "无法从 PDX Mods 获取“{0}”的信息",
+  "PackageIsIncomplete": "插件“{0}”的本地文件大小（{1}）与其 PDX Mods 版本的文件大小（{2}）不同",
+  "OpenCitiesAppData": "打开 C:S II 的 AppData 文件夹",
   "ResetSteamCache": "清除 Paradox Mods 的缓存",
   "ParadoxLoginFailedTitle": "无法登录到 Paradox Mods",
   "ParadoxLoginFailedNoConnection": "您的网络连接异常，请检查您的连接，然后点击此处重试。",
-  "ParadoxLoginFailedBadCredentials": "使用已保存的用户名/密码登录失败。请点击此处更新您的信息。",
+  "ParadoxLoginFailedBadCredentials": "使用已保存的用户名或密码登录失败。请点击此处更新您的信息。",
   "ParadoxLoginFailedEmpty": "您的会话可能已过期。请尝试启动游戏并重新登录，或点击此处通过 Skyve 登录。",
   "DownloadComplete": "下载完毕",
-  "DownloadStarted": "Download starting...",
+  "DownloadStarted": "正在开始下载...",
   "DownloadFailed": "下载失败",
-  "DownloadCancelled": "Download cancelled",
+  "DownloadCancelled": "已取消下載",
   "Downloading": "正在下载...",
   "ModsDownloadFailed": {
     "One": "一个模组下载失败",
@@ -61,7 +61,7 @@
   "LoginFailed": "登录失败，请确保您的电子邮件地址和密码是正确的。或稍后再试。",
   "RememberMeInfo": "* 您的凭据将被加密，并保存到您的计算机中。",
   "LoginDisclaimer": "登录流程将安全地通过 Paradox 服务处理，不会与 Skyve 共享数据。",
-  "DropNewPlayset": "将配组拖到此处；或单击此处选择文件，来导入配组。",
+  "DropNewPlayset": "将配组文件拖放到此处，或选择文件以导入。",
   "FilterIncludedByDefault": "默认筛选出已装载的本地资产",
   "FilterIncludedByDefault_Tip": "默认只显示当前配组中已装载的本地资产。",
   "RunSetupOrRunApp": "您不能从此文件夹中运行 Skyve 。如果您已经安装了 Skyve，请从程序列表中运行它。\n\n如果没有，请点击“OK”来运行安装程序。",
@@ -73,7 +73,7 @@
   "LogLevel": "日志级别",
   "ParadoxAccount": "Paradox 帐户",
   "LoggingIn": "正在登录...",
-  "Logout": "Log out",
+  "Logout": "退出登录",
   "NotLoggedInCheckNotification": "您没有登录 Paradox 账号，请检查您的通知以了解更多信息。",
   "HideUserSection": "在主菜单中隐藏用户信息卡片",
   "DeveloperMode": "启用开发者模式",
@@ -81,11 +81,11 @@
   "LogsToPlayerLog": "将日志复制到 Player.log",
   "InvalidFolderSettings": "检测到无效设置",
   "InvalidFolderSettingsInfo": "Skyve 无法找到 Cities: Skylines II 正确的数据文件夹。\n\n点击此处以手动选择数据文件夹。",
-  "SkyvenotSetUpInfo": "Skyve 应用程序尚未设置好。请启用 Skyve 模组，并启动 Cities: Skylines II，以便完成设置。\n\n请确保模组能够成功加载。如果加载失败，请尝试新建一个 playset，并且只将 Skyve 添加到其中。",
-  "InvalidFolderSettingsFail": "您选择的路径不正确。请在您的 AppData 文件夹中选择 \"Cities: Skylines II\" 文件夹。",
+  "SkyvenotSetUpInfo": "Skyve 尚未完成设置。请在启用 Skyve 的情况下启动 Cities: Skylines II 以完成初始化。\n\n请确保模组能够成功加载；如果无法加载，请尝试创建一个仅包含 Skyve 的新配组。",
+  "InvalidFolderSettingsFail": "您选择的路径不正确。请在您的 AppData 文件夹中选择“Cities Skylines II”文件夹。",
   "DefaultLocation": "默认用户数据位置",
   "JunctionTitle": "自定义内容存储位置",
-  "JunctionDescription": "更改游戏内容（所有模组、资产和游戏设置）的存储位置。\n在此过程中，Skyve 会创建一个链接，来链接您所设定的位置和默认 AppData 文件夹的位置。",
+  "JunctionDescription": "更改游戏存储内容的位置，其中包括模组、资产和设置。\n\n在此过程中，Skyve 将在你指定的位置与默认的 AppData 文件夹之间创建一个链接。",
   "CurrentStatus": "当前状态：",
   "ChangeLocation": "更改内容存储位置",
   "ResetLocation": "重置位置",
@@ -95,7 +95,7 @@
   "CouldNotRetrieveMods": "无法获取模组数据",
   "NewGameUpdate": "Cities: Skylines II 最新更新",
   "NewGameUpdateInfo": "版本更新 {0} 现已发布。\n在开始游戏前，请务必检查兼容性。",
-  "PdxSyncInfo": "PDX 同步程序负责下载和更新模组，在本地和 PDX Mods 服务器之间同步设置和配组。",
+  "PdxSyncInfo": "PDX 同步进程负责下载和更新你的模组，并在本地与 PDX Mods 服务之间同步你的设置和配组。",
   "SyncOngoing": "同步正在进行中",
   "PdxSync": "与 PDX Mods 同步",
   "RunSync": "开始同步",
@@ -110,38 +110,38 @@
   "FreeSpace": "剩余 {0}",
   "UsedOutOfSpace": "{1} 盘 共 {0}",
   "LowSpaceCreateJunction": {
-    "Zero": "硬盘空间即将用尽，你需要清理一些空间，或者购买一个额外的硬盘。",
-    "One": "硬盘空间不足，请前往选项页面更改游戏内容的保存位置。"
+    "Zero": "你的磁盘空间即将耗尽，请清理部分存储空间或增加额外的硬盘。",
+    "One": "你的磁盘空间即将耗尽，请前往设置选项，更改游戏内容的保存位置。"
   },
   "ModsYouAreAddingRequireDependencies": {
-    "One": "‘{1}’ 需要前置项目",
-    "Plural": "您正在添加的模组需要前置项目"
+    "One": "“{1}”需要前置项目",
+    "Plural": "您正在添加的插件需要前置项目"
   },
   "AddingDependencies": {
-    "One": "添加的模组需要‘{1}’才能使用。\n是否将‘{1}’添加至配组？",
-    "Plural": "您正在添加的模组有 {0} 个前置项： {1}\n\n要将它们一并添加到您的配组中吗？"
+    "One": "你正在添加的模组需要“{1}”作为前置。\n\n是否也将“{1}”添加到你的配组中？",
+    "Plural": "你正在添加的模组具有 {0} 个依赖项：{1}\n\n是否也将这些依赖项添加到你的配组中？"
   },
   "Dependency_Automatic": "自动添加前置项目",
   "Dependency_Ask": "每次询问",
   "Dependency_None": "无需采取任何操作",
   "DependencyResolution": "选择如何处理前置项目",
   "DependencyResolution_Tip": "选择在添加模组但其缺少前置项时的处理方式。",
-  "SyncOngoingLaunchGame": "Skyve正在同步你的模组，是否在同步完成后再启动？\n选择‘否’直接启动。",
-  "StartingWithNoPlayset": "正在无配组的情况下启动游戏。\n这意味着不会加载任何模组。",
+  "SyncOngoingLaunchGame": "Skyve 仍在同步你的模组。是否希望在模组准备就绪后再启动游戏？\n选择“否”即可立即启动游戏。",
+  "StartingWithNoPlayset": "你即将在未启用任何配组的情况下启动游戏。\n这意味着游戏中将不会启用任何模组。",
   "SyncBeforeLaunching": "在启动游戏前同步模组",
   "SyncBeforeLaunching_Tip": "在启动游戏前同步模组，确保模组已经最新。",
   "Sorting_Best": "最受欢迎",
   "Sorting_Popularity": "最多订阅",
   "Sorting_DateUpdated": "最后更新",
   "Sorting_DateCreated": "最近添加",
-  "Sorting_WorkshopName": "字母序",
+  "Sorting_WorkshopName": "按字母顺序",
   "InitialRelease": "初始版本",
   "ForumPage": "论坛页面",
   "DisableBurstCompile": "禁用 Burst 编译器",
-  "UnreadComment": "'{0}' 的新评论",
+  "UnreadComment": "“{0}”的新评论",
   "SafeMode": "安全模式",
   "LaunchInSafeMode": "在安全模式下启动",
-  "SafeModeInfo": "以“安全模式”启动游戏，以便帮助诊断崩溃问题。\n实际上，崩溃的原因难以确定，有时也导致存档无法恢复。\n安全模式能让游戏在大多数情况下避免崩溃，从而让你能够恢复存档，并且会正确地记录错误日志，以供技术支持分析。",
+  "SafeModeInfo": "以“安全模式”启动游戏，以帮助识别导致崩溃的问题。\n\n由于崩溃原因往往难以确定，有时甚至会导致无法恢复存档。\n安全模式能在大多数情况下避免游戏崩溃，使你能够恢复存档，并生成详细的错误日志，供技术支持进行分析。",
   "SearchTime": "时间",
   "SearchTime_AllTime": "全部时间",
   "SearchTime_Day": "24 小时",
@@ -193,21 +193,21 @@
     "One": "发现损坏的设置文件",
     "Plural": "发现 {0} 个损坏的设置文件"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve 已找到可用的备份，可以将您的设置恢复到之前的状态。 \n点击此处开始恢复。",
-  "CorruptedSettingsFilesNoBackup": "没有可用的备份来恢复您的设置。请启用备份，以保护您的设置。\n点击此处删除损坏的文件。",
+  "CorruptedSettingsFilesBackupAvailable": "Skyve 已找到可用的备份，可将你的设置恢复到之前的状态。\n\n点击此处立即恢复。",
+  "CorruptedSettingsFilesNoBackup": "没有可用于恢复设置的备份。请配置备份选项，以便今后保护你的设置。\n\n点击此处删除损坏的文件。",
   "RecentBackups": "最近备份",
   "DisableLogCleanup": "禁用启动游戏时的日志清理程序",
   "DisableLogCleanup_Tip": "在通过 Skyve 启动游戏时，跳过清理日志文件夹的程序。",
-  "SyncCloud": "Use cloud data",
-  "SyncLocal": "Use local data",
-  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
-  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
-  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
-  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncCloud": "保留云端数据",
+  "SyncLocal": "保留本地数据",
+  "SyncCloudInfo": "从 Paradox Mods 下载任何缺失的信息，并通过使用云端数据替代本地数据来解决冲突。",
+  "SyncLocalInfo": "将所有本地信息上传至 Paradox Mods，任何存在于云端但不在本地数据中的配组都将被下载到本地。",
+  "SyncConflictInfo": "检测到您的本地配组与 Paradox Mods 上的云端数据存在一些冲突。您需要在下方选择一个解决方案，才能更新您的模组。",
+  "SyncConflictTitle": "检测到同步冲突",
   "SyncAffectedPlaysets": {
-    "One": "Affected playset: {1}",
-    "Plural": "Affected playsets: {1}"
+    "One": "受影响的配组：{1}",
+    "Plural": "受影响的配组：{1}"
   },
-  "TitleDesc": "Title & Descriptions",
-  "EditModInfo": "Edit this mod's information"
+  "TitleDesc": "标题和描述",
+  "EditModInfo": "编辑这个模组的信息"
 }
