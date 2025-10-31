@@ -1,7 +1,7 @@
 {
   "StartCities": "启动都市：天际线2",
   "StopCities": "关闭都市：天际线2",
-  "NoWorkshop": "禁用 Paradox Mods 插件",
+  "NoWorkshop": "禁用创意工坊插件",
   "ExcludeAll": "移除已激活配组中的所有项目",
   "ExcludeAllDisabled": "移除已激活配组中的已禁用项目",
   "IncludeAll": "将所有项目添加到已激活的配组中",
