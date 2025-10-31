@@ -49,9 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Не удалось войти в систему с сохранённым именем пользователя/паролем. Нажмите здесь, чтобы обновить информацию.",
   "ParadoxLoginFailedEmpty": "Скорее всего, ваша сессия истекла. Попробуйте запустить игру, чтобы войти снова или нажмите здесь, чтобы войти в Skyve.",
   "DownloadComplete": "Загрузка завершена",
-  "DownloadStarted": "Download starting...",
+  "DownloadStarted": "Начало загрузки...",
   "DownloadFailed": "Ошибка загрузки",
-  "DownloadCancelled": "Download cancelled",
+  "DownloadCancelled": "Загрузка остановлена",
   "Downloading": "Загрузка...",
   "ModsDownloadFailed": {
     "One": "Не удалось загрузить мод",
@@ -73,7 +73,7 @@
   "LogLevel": "Уровень логирования",
   "ParadoxAccount": "Аккаунт Paradox",
   "LoggingIn": "Авторизация...",
-  "Logout": "Log out",
+  "Logout": "Выход",
   "NotLoggedInCheckNotification": "Вы не вошли в Paradox, проверьте уведомления для большего кол-ва информации.",
   "HideUserSection": "Скрыть ваш профиль в главном меню",
   "DeveloperMode": "Включить Режим Разработчика",
@@ -198,16 +198,16 @@
   "RecentBackups": "Недавние резервные копии",
   "DisableLogCleanup": "Отключить очистку журналов при запуске игры",
   "DisableLogCleanup_Tip": "Пропускает удаление папки логов при запуске игры через Skyve.",
-  "SyncCloud": "Use cloud data",
-  "SyncLocal": "Use local data",
-  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
-  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
-  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncCloud": "Использовать облачные данные",
+  "SyncLocal": "Использовать локальные данные",
+  "SyncCloudInfo": "Загружает всю недостающую информацию из Paradox Mods и разрешает конфликты, используя облачные данные вместо локальных.",
+  "SyncLocalInfo": "При загрузке всей локальной информации в Paradox Mods будет загружен любой игровой набор, который находится в облаке, но не в ваших локальных данных.",
+  "SyncConflictInfo": "Были обнаружены некоторые конфликты между вашими локальными игровыми наборами и облачными данными в Paradox Mods. Прежде чем вы сможете получать обновления для своих модов, вам необходимо выбрать способ разрешения, указанный ниже.",
   "SyncConflictTitle": "",
   "SyncAffectedPlaysets": {
-    "One": "Affected playset: {1}",
-    "Plural": "Affected playsets: {1}"
+    "One": "Связанный игровой набор: {1}",
+    "Plural": "Связанные игровые наборы: {1}"
   },
-  "TitleDesc": "Title & Descriptions",
-  "EditModInfo": "Edit this mod's information"
+  "TitleDesc": "Название и описание",
+  "EditModInfo": "Изменить информацию о модификации"
 }
