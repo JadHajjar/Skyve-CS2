@@ -201,8 +201,8 @@
   "SyncCloud": "Użyj danych z chmury",
   "SyncLocal": "Użyj danych lokalnych",
   "SyncCloudInfo": "Pobiera brakujące informacje z Paradox Mods i rozwiąże konflikty przez użycie danych z chmury zamiast danych lokalnych.",
-  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
-  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncLocalInfo": "Prześle wszystkie lokalne informacje do Paradox Mods, każdy zestaw znajdujący się w chmurze i nieistniejący na dysku zostanie pobrany.",
+  "SyncConflictInfo": "Wykryto konflikt pomiędzy twoimi lokalnymi zestawami a danymi w chmurze Paradox Mods. Musisz wybrać poniżej, co chcesz zrobić, zanim będziesz mógł otrzymywać aktualizacje swoich modów.",
   "SyncConflictTitle": "Wykryto konflikt synchronizacji",
   "SyncAffectedPlaysets": {
     "One": "Dotyczy zestawu: {1}",
