@@ -201,13 +201,13 @@
   "SyncCloud": "Cloud-Daten verwenden",
   "SyncLocal": "Lokale Daten verwenden",
   "SyncCloudInfo": "Lädt alle fehlenden Daten von Paradox Mods herunter und löst Konflikte, durch Verwendung der Cloud-Daten anstelle der lokalen Daten.",
-  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
-  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncLocalInfo": "Lädt alle lokalen Daten hoch auf Paradox Mods, alle in der Cloud liegenden Spielsets, welche nicht lokal vorliegen, werden heruntergeladen.",
+  "SyncConflictInfo": "Einige Konflikte wurden zwischen deinen lokalen Spielsets und den Cloud-Daten auf Paradox Mods entdeckt. Du musst eine Konfliktlösung unten auswählen, bevor du weitere Updates für deine Mods erhalten kannst.",
   "SyncConflictTitle": "Synchronisationskonflikt erkannt",
   "SyncAffectedPlaysets": {
     "One": "Betroffenes Spielset: {1}",
     "Plural": "Betroffene Spielsets: {1}"
   },
   "TitleDesc": "Titel & Beschreibungen",
-  "EditModInfo": "Edit this mod's information"
+  "EditModInfo": "Diese Mod-Informationen bearbeiten"
 }
