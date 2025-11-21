@@ -268,7 +268,7 @@ public partial class PC_PackageEdit : PanelContent
 
 		form.PackageSelected += Form_PackageSelected;
 
-		App.Program.MainForm.PushPanel(form);
+		Form.PushPanel(form);
 	}
 
 	private void Form_PackageSelected(IEnumerable<ulong> packages)

@@ -66,7 +66,7 @@ public class WorkshopService : IWorkshopService
 
 	private IContext? Context { get; set; }
 	public bool IsLoggedIn { get; private set; }
-	public bool IsLoginPending { get; private set; } = true;
+	public bool IsLoginPending { get; set; } = true;
 	public bool IsAvailable => Context is not null;
 	public bool IsReady => Context is not null && IsLoggedIn && !Context.Mods.SyncOngoing();
 	public GetGameDataResult? GameData { get; private set; }
@@ -154,7 +154,7 @@ public class WorkshopService : IWorkshopService
 			DiskIORoot = pdxSdkPath,
 			Environment = environment,
 			Ecosystem = ecoSystem,
-			UserId = _settings.FolderSettings.UserIdentifier,
+			//UserId = _settings.FolderSettings.UserIdentifier,
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
 			Telemetry = new TelemetryConfig
 			{

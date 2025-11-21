@@ -17,55 +17,68 @@ using System.Threading.Tasks;
 namespace Skyve.Systems.CS2.Managers;
 internal class CentralManager : ICentralManager
 {
-	private readonly IModLogicManager _modLogicManager;
 	private readonly ICompatibilityManager _compatibilityManager;
 	private readonly IPlaysetManager _playsetManager;
 	private readonly ICitiesManager _citiesManager;
 	private readonly ILocationService _locationService;
-	private readonly ISubscriptionsManager _subscriptionManager;
 	private readonly IPackageManager _packageManager;
 	private readonly IContentManager _contentManager;
 	private readonly ISettings _settings;
 	private readonly ILogger _logger;
 	private readonly INotifier _notifier;
 	private readonly IModUtil _modUtil;
-	private readonly IPackageUtil _packageUtil;
 	private readonly IVersionUpdateService _versionUpdateService;
 	private readonly INotificationsService _notificationsService;
 	private readonly IUpdateManager _updateManager;
-	private readonly IAssetUtil _assetUtil;
 	private readonly IWorkshopService _workshopService;
 	private readonly ISkyveDataManager _skyveDataManager;
 	private readonly IDlcManager _dlcManager;
 	private readonly IInterfaceService _interfaceService;
 	private readonly IBackupService _backupService;
 	private readonly IBackupSystem _backupSystem;
+	private readonly SkyveApiUtil _skyveApiUtil;
 
-	public CentralManager(IModLogicManager modLogicManager, ICompatibilityManager compatibilityManager, IPlaysetManager playsetManager, ICitiesManager citiesManager, ILocationService locationManager, ISubscriptionsManager subscriptionManager, IPackageManager packageManager, IContentManager contentManager, ISettings settings, ILogger logger, INotifier notifier, IModUtil modUtil, IPackageUtil packageUtil, IVersionUpdateService versionUpdateService, INotificationsService notificationsService, IUpdateManager updateManager, IAssetUtil assetUtil, IWorkshopService workshopService, ISkyveDataManager skyveDataManager, IDlcManager dlcManager, IInterfaceService interfaceService, IBackupService backupService, IBackupSystem backupSystem)
+	public CentralManager(ICompatibilityManager compatibilityManager,
+					   IPlaysetManager playsetManager,
+					   ICitiesManager citiesManager,
+					   ILocationService locationManager,
+					   IPackageManager packageManager,
+					   IContentManager contentManager,
+					   ISettings settings,
+					   ILogger logger,
+					   INotifier notifier,
+					   IModUtil modUtil,
+					   IVersionUpdateService versionUpdateService,
+					   INotificationsService notificationsService,
+					   IUpdateManager updateManager,
+					   IWorkshopService workshopService,
+					   ISkyveDataManager skyveDataManager,
+					   IDlcManager dlcManager,
+					   IInterfaceService interfaceService,
+					   IBackupService backupService,
+					   IBackupSystem backupSystem,
+					   SkyveApiUtil skyveApiUtil)
 	{
-		_modLogicManager = modLogicManager;
 		_compatibilityManager = compatibilityManager;
 		_playsetManager = playsetManager;
 		_citiesManager = citiesManager;
 		_locationService = locationManager;
-		_subscriptionManager = subscriptionManager;
 		_packageManager = packageManager;
 		_contentManager = contentManager;
 		_settings = settings;
 		_logger = logger;
 		_notifier = notifier;
 		_modUtil = modUtil;
-		_packageUtil = packageUtil;
 		_versionUpdateService = versionUpdateService;
 		_notificationsService = notificationsService;
 		_updateManager = updateManager;
-		_assetUtil = assetUtil;
 		_workshopService = workshopService;
 		_skyveDataManager = skyveDataManager;
 		_dlcManager = dlcManager;
 		_interfaceService = interfaceService;
 		_backupService = backupService;
 		_backupSystem = backupSystem;
+		_skyveApiUtil = skyveApiUtil;
 	}
 
 	public async void Start()
@@ -107,6 +120,19 @@ internal class CentralManager : ICentralManager
 
 		ConnectionHandler.AssumeInternetConnectivity = _settings.UserSettings.AssumeInternetConnectivity;
 		ConnectionHandler.Start();
+
+		var ping = await _skyveApiUtil.Ping();
+
+		if (!ping.Success && ping.Message == "Unauthorized")
+		{
+			_notifier.OnContentLoaded();
+			_compatibilityManager.CacheReport();
+			_workshopService.IsLoginPending = false;
+			_notifier.OnRefreshUI(true);
+
+			_notifier.OnVersionObsolete();
+			return;
+		}
 
 		_citiesManager.GameClosed -= CitiesManager_GameClosed;
 		_citiesManager.GameClosed += CitiesManager_GameClosed;

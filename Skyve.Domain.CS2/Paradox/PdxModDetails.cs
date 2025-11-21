@@ -47,7 +47,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 		ForumLink = mod.ForumLinks?.FirstOrDefault();
 		Tags = mod.Tags?.ToDictionary(x => x.Id, x => x.DisplayName) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
-		ServerTime = mod.LatestUpdate ?? Changelog.Max(x => x.ReleasedDate) ?? default;
+		ServerTime = (mod.LatestUpdate ?? Changelog.Max(x => x.ReleasedDate))?.ToUniversalTime() ?? default;
 		Images = mod.Screenshots?.ToArray(x => new ParadoxScreenshot(x.Image, Id, mod.Version, false));
 		Links = mod.ExternalLinks?.ToArray(x => new ParadoxLink(x));
 		Timestamp = DateTime.Now;

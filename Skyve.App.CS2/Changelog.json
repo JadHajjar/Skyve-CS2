@@ -1,5 +1,67 @@
 [
   {
+    "Stable": true,
+    "Beta": false,
+    "Version": "1.1.4",
+    "Date": "2025-11-15",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Mods that broke from a patch now always show as broken, even if you are not using them.",
+          "Added an automatic fallback in case a Skyve version becomes obsolete.",
+          "Fixed Bridges & Ports dependencies not being matched correctly.",
+          "Updated compatibility management tools."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": true,
+    "Version": "1.1.4",
+    "Date": "2025-11-15",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Small UI fixes."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.3",
+    "Date": "2025-11-09",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Mods that broke from a patch now always show as broken, even if you are not using them.",
+          "Added an automatic fallback in case a Skyve version becomes obsolete.",
+          "Fixed Bridges & Ports dependencies not being matched correctly.",
+          "Updated compatibility management tools."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.2",
+    "Date": "2025-11-01",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed a bug that caused the loaded mods in-game to not match the ones you had shown in Skyve."
+        ]
+      }
+    ]
+  },
+  {
     "Stable": false,
     "Beta": false,
     "Version": "1.1.1",
@@ -10,7 +72,8 @@
         "Changes": [
           "Added the ability to remove version locks by right-clicking on a mod or selected mods.",
           "Action buttons now show as dimmed when not having an active playset.",
-          "Fixed unusual suggested game versions breaking the compatibility report."
+          "Fixed unusual suggested game versions breaking the compatibility report.",
+          "Updated translations."
         ]
       }
     ]

@@ -27,8 +27,9 @@ public class PackageData
 	public List<PackageLink> Links { get; set; }
 	public List<PackageStatus> Statuses { get; set; }
 	public List<PackageInteraction> Interactions { get; set; }
+	public string? ThumbnailUrl { get; set; }
 
-    public PackageData()
+	public PackageData()
     {
         Tags = [];
 		Links = [];

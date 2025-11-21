@@ -592,6 +592,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		postPackage.Links = FLP_Links.Controls.OfType<LinkControl>().ToList(x => (PackageLink)x.Link);
 		postPackage.Statuses = FLP_Statuses.Controls.OfType<IPackageStatusControl<StatusType, PackageStatus>>().ToList(x => x.PackageStatus);
 		postPackage.Interactions = FLP_Interactions.Controls.OfType<IPackageStatusControl<InteractionType, PackageInteraction>>().ToList(x => x.PackageStatus);
+		postPackage.ThumbnailUrl = Package.GetWorkshopInfo()?.ThumbnailUrl ?? postPackage.ThumbnailUrl;
 
 		if (!CRNAttribute.GetAttribute(postPackage.Stability).Browsable)
 		{

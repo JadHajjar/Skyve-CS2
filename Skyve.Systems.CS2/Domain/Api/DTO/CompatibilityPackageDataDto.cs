@@ -40,6 +40,7 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 			Links = data.Links?.ToList(Convert) ?? [],
 			Statuses = data.Statuses?.ToList(Convert) ?? [],
 			ActiveReports = data.ActiveReports,
+			ThumbnailUrl = data.ThumbnailUrl,
 		};
 	}
 

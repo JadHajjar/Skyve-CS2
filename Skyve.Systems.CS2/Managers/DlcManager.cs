@@ -192,7 +192,7 @@ internal class DlcManager : IDlcManager
 		{
 			var text = item.Name.RegexRemove("^.+?- ").RegexRemove("(Content )?Creator Pack: ");
 
-			if (text == displayName)
+			if (text.Replace("&", "And") == displayName.Replace("&", "And"))
 			{
 				return item;
 			}

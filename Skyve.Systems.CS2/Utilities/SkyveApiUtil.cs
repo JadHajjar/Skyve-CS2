@@ -71,6 +71,11 @@ public class SkyveApiUtil
 		return ConvertDto<UserData, User, UserDto>(await Get<UserData[]>("/Users"));
 	}
 
+	public async Task<ApiResponse> Ping()
+	{
+		return await Get<ApiResponse>("/Ping");
+	}
+
 	public async Task<PackageData[]> GetPackageData()
 	{
 		return ConvertDto<CompatibilityPackageData, PackageData, PackageDataDto>(await Get<CompatibilityPackageData[]>("/CompatibilityData"));
@@ -89,6 +94,11 @@ public class SkyveApiUtil
 	public async Task<ApiResponse> UpdatePackageData(CompatibilityPostPackage postPackage)
 	{
 		return await Post<PostPackage, ApiResponse>("/UpdatePackageData", ConvertDto<CompatibilityPostPackage, PostPackage, PostPackageDto>(postPackage)!);
+	}
+
+	public async Task<ApiResponse> BulkUpdatePackageData(BulkCompatibilityPackageUpdate postPackage)
+	{
+		return await Post<BulkCompatibilityPackageUpdateData, ApiResponse>("/BulkUpdatePackageData", ConvertDto<BulkCompatibilityPackageUpdate, BulkCompatibilityPackageUpdateData, BulkUpdateDto>(postPackage)!);
 	}
 
 	public async Task<ApiResponse> SendReviewRequest(ReviewRequest request)

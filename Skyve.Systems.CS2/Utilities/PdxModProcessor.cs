@@ -18,17 +18,17 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 	private readonly SaveHandler _saveHandler;
 	private readonly INotifier _notifier;
 
-	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(100, 1000, GetCachedInfo(saveHandler))
+	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(30, 3000, 5000, GetCachedInfo(saveHandler))
 	{
 		_workshopService = workshopService;
 		_saveHandler = saveHandler;
 		_notifier = notifier;
-		MaxCacheTime = TimeSpan.FromHours(1);
+		MaxCacheTime = TimeSpan.FromHours(2);
 	}
 
 	protected override bool CanProcess()
 	{
-		return ConnectionHandler.IsConnected;
+		return ConnectionHandler.IsConnected && base.CanProcess();
 	}
 
 	protected override async Task<(ConcurrentDictionary<string, PdxModDetails>, bool)> ProcessItems(List<string> entities)
