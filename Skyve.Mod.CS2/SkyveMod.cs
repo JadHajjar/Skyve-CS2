@@ -1,4 +1,5 @@
-﻿using Colossal.IO.AssetDatabase;
+﻿using Colossal.Core;
+using Colossal.IO.AssetDatabase;
 using Colossal.Json;
 using Colossal.Logging;
 using Colossal.PSI.Common;
@@ -51,7 +52,7 @@ namespace Skyve.Mod.CS2
 				Log.Info(ModPath);
 			}
 
-			GameManager.instance.RegisterUpdater(ListMods);
+			MainThreadDispatcher.RegisterUpdater(ListMods);
 
 			updateSystem.UpdateAt<InstallSkyveUISystem>(SystemUpdatePhase.UIUpdate);
 
@@ -193,12 +194,40 @@ namespace Skyve.Mod.CS2
 			if (enabledMods.Mods?.Count > 0)
 			{
 				list = enabledMods.Mods.Select(x => $"{x.Name} - v{x.UserModVersion} ({x.Id})").ToList();
+			//TryFixUIMods(enabledMods);
 			}
 
 			Log.Info("\n======= Current User =======\n\t" + context.Config.UserId +
 					"\n======= Active Playset =======\n\t" + activePlayset.PlaysetId +
 					"\n======= Enabled Mods =======\n\t" + string.Join("\n\t", list) + "\n============================" +
 					"\n======= Loaded Assemblies =======\n\t" + string.Join("\n\t", GameManager.instance.modManager.ListModsEnabled()) + "\n============================");
+
+		}
+
+		private static void TryFixUIMods(PDX.SDK.Contracts.Service.Mods.Result.ModListResult enabledMods)
+		{
+			//typeof(ModManager).GetMethod("InitializeUIModules", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(GameManager.instance.modManager, new object[0]);
+			foreach (var item in enabledMods.Mods)
+			{
+				if (item.LocalData?.FolderAbsolutePath is null or "")
+				{
+					continue;
+				}
+
+				var mjs = Directory.EnumerateFiles(item.LocalData.FolderAbsolutePath, "*.mjs", SearchOption.AllDirectories).FirstOrDefault();
+
+				if (mjs is null or "")
+				{
+					continue;
+				}
+
+				var asset = AssetDatabase.global.GetAsset(SearchFilter<UIModuleAsset>.ByCondition(asset => asset.name == Path.GetFileName(mjs)));
+
+				if (asset == null)
+					continue;
+
+				GameManager.instance.modManager.AddUIModule(asset);
+			}
 		}
 
 		public static bool InstallApp()

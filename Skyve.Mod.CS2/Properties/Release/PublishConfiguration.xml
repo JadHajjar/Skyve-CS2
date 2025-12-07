@@ -90,12 +90,14 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_10.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="1.1.4" />
+  <ModVersion Value="1.1.7" />
   <GameVersion Value="*" />
   <ChangeLog>
-# v1.1.4
+# v1.1.7
 ## Changes
-* Small UI fixes.
+* Added full support for the new tags in the PDX Mods tab.
+* Selecting tags from PDX Mods in the mod page now properly selects the browsing tag on the right.
+* Fixed mods lists showing tag IDs instead of tag Names.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

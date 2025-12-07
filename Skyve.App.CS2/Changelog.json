@@ -1,5 +1,50 @@
 [
   {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.7",
+    "Date": "2025-12-07",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added full support for the new tags in the PDX Mods tab.",
+          "Selecting tags from PDX Mods in the mod page now properly selects the browsing tag on the right.",
+          "Fixed mods lists showing tag IDs instead of tag Names."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.6",
+    "Date": "2025-12-04",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added partial support for the new tags in the PDX Mods tab.",
+          "Mod compatibility with patch 1.5.2f1."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.5",
+    "Date": "2025-11-23",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added support for mod visiblity when editing your mod's information."
+        ]
+      }
+    ]
+  },
+  {
     "Stable": true,
     "Beta": false,
     "Version": "1.1.4",

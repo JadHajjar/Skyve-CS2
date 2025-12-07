@@ -14,6 +14,8 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
+using ACL = PDX.SDK.Contracts.Service.Mods.Enums.ModAccessControlLevelState;
+
 namespace Skyve.App.CS2.UserInterface.Panels;
 public partial class PC_PackageEdit : PanelContent
 {
@@ -71,6 +73,8 @@ public partial class PC_PackageEdit : PanelContent
 		TB_UserVersion.Enabled = !string.IsNullOrEmpty(staging.MetaData.UserModVersion);
 		TB_GameVersion.Text = staging.MetaData.RecommendedGameVersion;
 		TB_ForumLink.Text = staging.MetaData.ForumLinks?.FirstOrDefault();
+		DD_ACL.Items = staging.MetaData.AccessControlLevelState != ACL.Private ? [ACL.Public, ACL.Unlisted] : [ACL.Public, ACL.Unlisted, ACL.Private];
+		DD_ACL.SelectedItem = staging.MetaData.AccessControlLevelState ?? ACL.Public;
 
 		if (CrossIO.FileExists(staging.ThumbnailAbsolutePath))
 		{
@@ -125,7 +129,7 @@ public partial class PC_PackageEdit : PanelContent
 		TLP_Versions.Margin = TLP_Dependencies.Margin = TLP_Links.Margin = UI.Scale(new Padding(0, 5, 5, 5));
 		slickTabControl1.Padding = UI.Scale(new Padding(5, 5, 0, 0));
 		TLP_Versions.MaximumSize = TLP_Dependencies.MaximumSize = TLP_Links.MaximumSize = TB_Title.MaximumSize = TB_ShortDesc.MaximumSize = new Size(UI.Scale(600), 9999);
-		slickSpacer2.Margin = slickSpacer3.Margin = L_NoLinks.Margin = L_NoPackages.Margin = DD_Dlcs.Margin = TB_ForumLink.Margin = UI.Scale(new Padding(5));
+		slickSpacer2.Margin = slickSpacer3.Margin = L_NoLinks.Margin = L_NoPackages.Margin = DD_Dlcs.Margin = TB_ForumLink.Margin = B_Publish.Margin = DD_ACL.Margin = UI.Scale(new Padding(5));
 		slickSpacer2.Height = slickSpacer3.Height = UI.Scale(1);
 		I_AddLinks.Size = I_AddPackages.Size = I_CopyLinks.Size = I_CopyPackages.Size = I_PasteLinks.Size = I_PastePackages.Size = UI.Scale(new Size(24, 24));
 		I_AddLinks.Padding = I_AddPackages.Padding = I_CopyLinks.Padding = I_CopyPackages.Padding = I_PasteLinks.Padding = I_PastePackages.Padding = UI.Scale(new Padding(4));
