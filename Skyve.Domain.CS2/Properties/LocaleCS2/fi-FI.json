@@ -49,9 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Tallennetun käyttäjänimesi/salasanasi kirjautuminen epäonnistui. Päivitä tiedot napsauttamalla tätä.",
   "ParadoxLoginFailedEmpty": "Istuntosi on todennäköisesti vanhentunut. Kokeile käynnistää peli kirjautuaksesi uudelleen tai klikkaa tästä kirjautuaksesi sisään Skyven kautta.",
   "DownloadComplete": "Lataus suoritettu",
-  "DownloadStarted": "Download starting...",
+  "DownloadStarted": "Lataus käynnistyy...",
   "DownloadFailed": "Lataus epäonnistui",
-  "DownloadCancelled": "Download cancelled",
+  "DownloadCancelled": "Lataus peruttu",
   "Downloading": "Ladataan...",
   "ModsDownloadFailed": {
     "One": "Modin lataaminen epäonnistui",
@@ -73,7 +73,7 @@
   "LogLevel": "Lokin Taso",
   "ParadoxAccount": "Paradox Tili",
   "LoggingIn": "Kirjaudutaan sisään...",
-  "Logout": "Log out",
+  "Logout": "Kirjaudu ulos",
   "NotLoggedInCheckNotification": "Et ole kirjautunut Paradoxiin, tarkista ilmoituksesi saadaksesi lisätietoja.",
   "HideUserSection": "Piilota profiilisi päävalikossa",
   "DeveloperMode": "Ota Kehittäjätila Käyttöön",
@@ -208,6 +208,6 @@
     "One": "Affected playset: {1}",
     "Plural": "Affected playsets: {1}"
   },
-  "TitleDesc": "Title & Descriptions",
-  "EditModInfo": "Edit this mod's information"
+  "TitleDesc": "Otsikko ja Kuvaus",
+  "EditModInfo": "Muokkaa tämän modin tietoja"
 }
