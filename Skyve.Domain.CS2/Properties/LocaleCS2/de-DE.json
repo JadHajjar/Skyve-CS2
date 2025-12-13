@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Dein gespeicherter Benutzername/Passwort konnte sich nicht einloggen. Klicke hier, um Deine Daten zu aktualisieren.",
   "ParadoxLoginFailedEmpty": "Deine Sitzung ist wahrscheinlich abgelaufen. Versuche, das Spiel zu starten, um dich erneut anzumelden, oder klicke hier, um dich über Skyve anzumelden.",
   "DownloadComplete": "Herunterladen abgeschlossen",
+  "DownloadStarted": "Herunterladen gestartet...",
   "DownloadFailed": "Download fehlgeschlagen",
+  "DownloadCancelled": "Herunterladen abgebrochen",
   "Downloading": "Wird heruntergeladen...",
   "ModsDownloadFailed": {
     "One": "Eine Mod konnte nicht heruntergeladen werden",
@@ -71,6 +73,7 @@
   "LogLevel": "Log-Level",
   "ParadoxAccount": "Paradox-Konto",
   "LoggingIn": "Anmelden...",
+  "Logout": "Abmelden",
   "NotLoggedInCheckNotification": "Du bist nicht bei Paradox angemeldet, überprüfe Deine Benachrichtigungen auf weitere Informationen.",
   "HideUserSection": "Profil im Hauptmenü ausblenden",
   "DeveloperMode": "Entwicklermodus aktivieren",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "Es sind keine Sicherungen verfügbar, um Ihre Einstellungen wiederherzustellen. Richten Sie Ihre Einstellungs-Sicherungen ein, um Ihre Einstellungen in Zukunft zu sichern.\n\nKlicken Sie hier, um die beschädigten Dateien zu löschen.",
   "RecentBackups": "Neueste Sicherungen",
   "DisableLogCleanup": "Aufräumen der Logs beim Starten des Spiels deaktivieren",
-  "DisableLogCleanup_Tip": "Überspringt die Löschung des Log-Ordners, wenn das Spiel über Skyve gestartet wird."
+  "DisableLogCleanup_Tip": "Überspringt die Löschung des Log-Ordners, wenn das Spiel über Skyve gestartet wird.",
+  "SyncCloud": "Cloud-Daten verwenden",
+  "SyncLocal": "Lokale Daten verwenden",
+  "SyncCloudInfo": "Lädt alle fehlenden Daten von Paradox Mods herunter und löst Konflikte, durch Verwendung der Cloud-Daten anstelle der lokalen Daten.",
+  "SyncLocalInfo": "Lädt alle lokalen Daten hoch auf Paradox Mods, alle in der Cloud liegenden Spielsets, welche nicht lokal vorliegen, werden heruntergeladen.",
+  "SyncConflictInfo": "Einige Konflikte wurden zwischen deinen lokalen Spielsets und den Cloud-Daten auf Paradox Mods entdeckt. Du musst eine Konfliktlösung unten auswählen, bevor du weitere Updates für deine Mods erhalten kannst.",
+  "SyncConflictTitle": "Synchronisationskonflikt erkannt",
+  "SyncAffectedPlaysets": {
+    "One": "Betroffenes Spielset: {1}",
+    "Plural": "Betroffene Spielsets: {1}"
+  },
+  "TitleDesc": "Titel & Beschreibungen",
+  "EditModInfo": "Diese Mod-Informationen bearbeiten"
 }

@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "I tuoi username/password salvati sono errati. Clicca qui per aggiornare le tue informazioni.",
   "ParadoxLoginFailedEmpty": "Probabilmente la tua sessione è scaduta. Prova ad avviare il gioco per accedere di nuovo, o clicca qui per accedere tramite Skyve.",
   "DownloadComplete": "Download completato",
+  "DownloadStarted": "Download starting...",
   "DownloadFailed": "Download non riuscito",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "Download in corso...",
   "ModsDownloadFailed": {
     "One": "Impossibile scaricare una mod",
@@ -71,6 +73,7 @@
   "LogLevel": "Livello Log",
   "ParadoxAccount": "Account Paradox",
   "LoggingIn": "Accesso in corso...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "Non hai effettuato l'accesso a Paradox, controlla le notifiche per maggiori informazioni.",
   "HideUserSection": "Nascondi il tuo profilo nel menu principale",
   "DeveloperMode": "Abilita Modalità Sviluppatore",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "Nessun backup disponibile per ripristinare le impostazioni. Configura le impostazioni di backup per proteggere le tue impostazioni in futuro.  \n\nClicca qui per eliminare i file corrotti.",
   "RecentBackups": "Backup recenti",
   "DisableLogCleanup": "Disabilita la pulizia dei log all'avvio del gioco",
-  "DisableLogCleanup_Tip": "Salta l'eliminazione della cartella Logs durante l'avvio del gioco tramite Skyve."
+  "DisableLogCleanup_Tip": "Salta l'eliminazione della cartella Logs durante l'avvio del gioco tramite Skyve.",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncAffectedPlaysets": {
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }

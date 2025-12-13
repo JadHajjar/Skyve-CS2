@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Uw opgeslagen gebruikersnaam/wachtwoord kon niet inloggen. Klik hier om uw gegevens bij te werken.",
   "ParadoxLoginFailedEmpty": "Je sessie is waarschijnlijk verlopen. Probeer het spel op te starten om opnieuw in te loggen, of klik hier om in te loggen via Skyve.",
   "DownloadComplete": "Download voltooid",
+  "DownloadStarted": "Download is gestart...",
   "DownloadFailed": "Downloaden mislukt",
+  "DownloadCancelled": "Download geannuleerd",
   "Downloading": "Downloadenchar@@0",
   "ModsDownloadFailed": {
     "One": "Een mod kon niet worden gedownload",
@@ -71,6 +73,7 @@
   "LogLevel": "Log niveau",
   "ParadoxAccount": "Paradox Account",
   "LoggingIn": "Bezig met inloggen",
+  "Logout": "Afmelden",
   "NotLoggedInCheckNotification": "U bent niet ingelogd bij Paradox, controleer uw meldingen voor meer informatie.",
   "HideUserSection": "Verberg je profiel in het hoofdmenu",
   "DeveloperMode": "Ontwikkelaarsmodus inschakelen",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "Er zijn geen back-ups beschikbaar om uw instellingen te herstellen. Stel uw back-upinstellingen in om uw instellingen in de toekomst veilig te stellen.\r\n\r\nKlik hier om beschadigde bestanden te verwijderen.",
   "RecentBackups": "Recente back-ups",
   "DisableLogCleanup": "Logs opschonen uitschakelen bij het starten van het spel",
-  "DisableLogCleanup_Tip": "Overslaan het verwijderen van de Logs map bij het starten van het spel via Skyve."
+  "DisableLogCleanup_Tip": "Overslaan het verwijderen van de Logs map bij het starten van het spel via Skyve.",
+  "SyncCloud": "Gebruik cloud data",
+  "SyncLocal": "Gebruik lokale data",
+  "SyncCloudInfo": "Download alle missende informatie van Paradox Mods, en lost conflicten op door gebruik te maken van cloud data in plaats van de lokale data.",
+  "SyncLocalInfo": "Upload alle lokale informatie naar Paradox Mods, playsets die in de cloud staan, maar niet lokaal, worden gedownload.",
+  "SyncConflictInfo": "Er zijn conflicten geconstateerd tussen je lokale playsets en de cloud data op Paradox Mods. Kies eerst een oplossing voordat je updates voor je mods kunt ontvangen.",
+  "SyncConflictTitle": "Sync conflicten geconstateerd",
+  "SyncAffectedPlaysets": {
+    "One": "Getroffen playset:{1}",
+    "Plural": "Getroffen playsets:{1}"
+  },
+  "TitleDesc": "Titel & beschrijvingen",
+  "EditModInfo": "Bewerk de informatie van deze mod"
 }
