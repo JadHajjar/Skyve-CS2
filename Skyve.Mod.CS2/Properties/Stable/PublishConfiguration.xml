@@ -89,34 +89,14 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Stable/Screenshot_10.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="1.1.0" />
+  <ModVersion Value="1.1.7" />
   <GameVersion Value="*" />
   <ChangeLog>
-# v1.1.0
-## New Features
-* Added the ability to cancel mod downloads.
-* Added the sync conflict prompt in cases where the sync fails. Previously Skyve would always assume you want the cloud data.
-* Added a logout button in your user widget on the dashboard.
-* Added the ability to edit your mods' information from Skyve using the new 'Edit mod information' in the mods' page.
-
-## Other Changes
-* Added a 'Version Locked' label for mods in your playset that will not auto-update.
-* Added a dedicated like button in the mod page.
-* Added an automatic basic setup when running the Skyve app before opening the game, allowing players to use Skyve in case they can not get to the main menu.
-* Improved the speed of the startup flow, getting you logged in and ready much sooner.
-* Improved the process for selecting a different content location by loosening up some restrictions.
-* Fixed not being able to open the folder location of mods in various areas of the app.
-* Fixed the 'No Active Playset' popup sometimes hiding behing the Skyve app window.
-* Fixed automatic backups not always running when selecting multiple schedule options.
-* Fixed an issue with playsets backup requiring online access to run.
-
-## PDX SDK v1.38.0 Changes
-* Added the functionality of cancelling mod downloads, mod downloads are then resumed if the previous attempt was canceled.
-* Reworked the cache files to fix playset conflict notifications.
-* Fixed crashes on startup related to invalid files or files not being accessible.
-* Fixed selected mod version not updating correctly during the same session.
-* Fixed creating the playset sometimes getting the same ID as a previous one.
-* Fixed image and metadata files not getting deleted when updating a mod to a newer version.
+# v1.1.7
+## Changes
+* Added full support for the new tags in the PDX Mods tab.
+* Selecting tags from PDX Mods in the mod page now properly selects the browsing tag on the right.
+* Fixed mods lists showing tag IDs instead of tag Names.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

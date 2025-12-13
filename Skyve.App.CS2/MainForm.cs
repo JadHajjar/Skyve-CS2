@@ -1,5 +1,6 @@
 ﻿using Skyve.App.CS2.Installer;
 using Skyve.App.CS2.UserInterface.Content;
+using Skyve.App.CS2.UserInterface.Forms;
 using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Content;
@@ -90,8 +91,6 @@ public partial class MainForm : BasePanelForm
 
 		Task.Run(ItemListControl.LoadThumbnails);
 
-		new BackgroundAction("Central Startup", ServiceCenter.Get<ICentralManager>().Start).Run();
-
 		var citiesManager = ServiceCenter.Get<ICitiesManager>();
 
 		citiesManager.MonitorTick += CitiesManager_MonitorTick;
@@ -103,6 +102,7 @@ public partial class MainForm : BasePanelForm
 #endif
 
 		_startTimeoutTimer.Elapsed += StartTimeoutTimer_Elapsed;
+		_notifier.VersionObsolete += VersionObsolete;
 		_notifier.PlaysetChanged += PlaysetChanged;
 		_notifier.RefreshUI += RefreshUI;
 		_notifier.WorkshopInfoUpdated += RefreshUI;
@@ -111,6 +111,8 @@ public partial class MainForm : BasePanelForm
 		_notifier.SkyveUpdateAvailable += () => Invoke(_updateAvailableControl.Show);
 
 		ConnectionHandler.ConnectionChanged += ConnectionHandler_ConnectionChanged;
+
+		new BackgroundAction("Central Startup", ServiceCenter.Get<ICentralManager>().Start).Run();
 
 		if (CrossIO.FileExists(CrossIO.Combine(App.Program.CurrentDirectory, "batch.bat")))
 		{
@@ -122,6 +124,11 @@ public partial class MainForm : BasePanelForm
 		}
 
 		base_PB_Icon.Loading = true;
+	}
+
+	private void VersionObsolete()
+	{
+		this.TryInvoke(() => new VersionObsoletePrompt() { Icon = Icon }.ShowDialog(this));
 	}
 
 	private void PlaysetChanged()
@@ -230,7 +237,7 @@ public partial class MainForm : BasePanelForm
 		var backBrightness = FormDesign.Design.MenuColor.GetBrightness();
 		var foreBrightness = FormDesign.Design.ForeColor.GetBrightness();
 
-		using var icon = new Bitmap(IconManager.GetIcons("AppIcon").FirstOrDefault(x => x.Key > base_PB_Icon.Width).Value).Color(base_PB_Icon.HoverState.HasFlag(HoverState.Hovered) && !base_PB_Icon.HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.MenuForeColor : Math.Abs(backBrightness - foreBrightness) < 0.4F ? FormDesign.Design.BackColor : FormDesign.Design.ForeColor);
+		using var icon = new Bitmap(IconManager.GetIcons("AppIcon").FirstOrAny(x => x.Key > base_PB_Icon.Width).Value).Color(base_PB_Icon.HoverState.HasFlag(HoverState.Hovered) && !base_PB_Icon.HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.MenuForeColor : Math.Abs(backBrightness - foreBrightness) < 0.4F ? FormDesign.Design.BackColor : FormDesign.Design.ForeColor);
 
 		var useGlow = !ConnectionHandler.IsConnected
 			|| (buttonStateRunning is not null && buttonStateRunning != isGameRunning)
@@ -241,7 +248,7 @@ public partial class MainForm : BasePanelForm
 
 		if (useGlow)
 		{
-			using var glowIcon = new Bitmap(IconManager.GetIcons("GlowAppIcon").FirstOrDefault(x => x.Key > base_PB_Icon.Width).Value);
+			using var glowIcon = new Bitmap(IconManager.GetIcons("GlowAppIcon").FirstOrAny(x => x.Key > base_PB_Icon.Width).Value);
 
 			var color = FormDesign.Modern.ActiveColor;
 			var minimum = 0;

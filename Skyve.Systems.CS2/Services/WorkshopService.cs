@@ -61,12 +61,12 @@ public class WorkshopService : IWorkshopService
 
 	private bool loginWaitingConnection;
 	private bool syncOccurred;
-	private List<ITag>? cachedTags;
+	private List<IWorkshopTag>? cachedTags;
 	private CancellationTokenSource tokenSource = new();
 
 	private IContext? Context { get; set; }
 	public bool IsLoggedIn { get; private set; }
-	public bool IsLoginPending { get; private set; } = true;
+	public bool IsLoginPending { get; set; } = true;
 	public bool IsAvailable => Context is not null;
 	public bool IsReady => Context is not null && IsLoggedIn && !Context.Mods.SyncOngoing();
 	public GetGameDataResult? GameData { get; private set; }
@@ -154,7 +154,7 @@ public class WorkshopService : IWorkshopService
 			DiskIORoot = pdxSdkPath,
 			Environment = environment,
 			Ecosystem = ecoSystem,
-			UserId = _settings.FolderSettings.UserIdentifier,
+			//UserId = _settings.FolderSettings.UserIdentifier,
 			UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
 			Telemetry = new TelemetryConfig
 			{
@@ -580,7 +580,7 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	public IEnumerable<ITag> GetAvailableTags()
+	public IEnumerable<IWorkshopTag> GetAvailableTags()
 	{
 		if (cachedTags is not null)
 		{
@@ -594,7 +594,17 @@ public class WorkshopService : IWorkshopService
 
 		var gameData = ProcessResult(GameData);
 
-		return cachedTags = gameData.Tags.ToList(x => (ITag)new TagItem(Skyve.Domain.CS2.Enums.TagSource.Workshop, x.Value.Id, x.Value.DisplayName));
+		return cachedTags = gameData.Filters.Tags.Where(x => !x.Hidden).OrderBy(x => x.Order).ToList(GetNestedTag);
+	}
+
+	private IWorkshopTag GetNestedTag(ModTagNode tag)
+	{
+		return new TagItem(Skyve.Domain.CS2.Enums.TagSource.Workshop, tag.TagName, tag.DisplayName)
+		{
+			UsageCount = tag.UsageCount,
+			IsSelectable = tag.Selectable,
+			Children = tag.Children?.Where(x => !x.Hidden).OrderBy(x => x.Order).ToArray(GetNestedTag) ?? []
+		};
 	}
 
 	internal async Task<List<Mod>> GetLocalPackages()

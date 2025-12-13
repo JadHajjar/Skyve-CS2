@@ -19,7 +19,7 @@ internal class PdxUserProcessor : PeriodicProcessor<string, PdxUser>
 	private readonly SaveHandler _saveHandler;
 	private readonly INotifier _notifier;
 
-	public PdxUserProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(1, 5000, GetCachedInfo(saveHandler))
+	public PdxUserProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(1, 5000, 1000, GetCachedInfo(saveHandler))
 	{
 		_workshopService = workshopService;
 		_saveHandler = saveHandler;

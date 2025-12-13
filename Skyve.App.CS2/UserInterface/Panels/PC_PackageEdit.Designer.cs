@@ -68,6 +68,7 @@ partial class PC_PackageEdit
 			this.L_Author = new Skyve.App.UserInterface.Generic.AuthorControl();
 			this.base_slickSpacer = new SlickControls.SlickSpacer();
 			this.B_Publish = new SlickControls.SlickButton();
+			this.DD_ACL = new Skyve.App.CS2.UserInterface.Generic.AccessLevelControlDropdown();
 			this.P_SideContainer = new System.Windows.Forms.Panel();
 			this.slickTabControl1 = new SlickControls.SlickTabControl();
 			this.T_TitleDesc = new SlickControls.SlickTabControl.Tab();
@@ -103,7 +104,6 @@ partial class PC_PackageEdit
 			this.I_PastePackages = new SlickControls.SlickIcon();
 			this.I_AddPackages = new SlickControls.SlickIcon();
 			this.P_ModDependencies = new System.Windows.Forms.Panel();
-			this.accessLevelControlDropdown1 = new Skyve.App.CS2.UserInterface.Generic.AccessLevelControlDropdown();
 			this.T_Images = new SlickControls.SlickTabControl.Tab();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.TLP_Screenshots = new SlickControls.RoundedGroupTableLayoutPanel();
@@ -164,15 +164,17 @@ partial class PC_PackageEdit
 			this.TLP_Side.ColumnCount = 1;
 			this.TLP_Side.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.TLP_Side.Controls.Add(this.TLP_TopInfo, 0, 0);
-			this.TLP_Side.Controls.Add(this.base_slickSpacer, 0, 1);
-			this.TLP_Side.Controls.Add(this.B_Publish, 0, 2);
+			this.TLP_Side.Controls.Add(this.base_slickSpacer, 0, 2);
+			this.TLP_Side.Controls.Add(this.B_Publish, 0, 3);
+			this.TLP_Side.Controls.Add(this.DD_ACL, 0, 1);
 			this.TLP_Side.Location = new System.Drawing.Point(0, 0);
 			this.TLP_Side.Name = "TLP_Side";
-			this.TLP_Side.RowCount = 3;
+			this.TLP_Side.RowCount = 4;
 			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Side.Size = new System.Drawing.Size(390, 162);
+			this.TLP_Side.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.TLP_Side.Size = new System.Drawing.Size(390, 182);
 			this.TLP_Side.TabIndex = 1;
 			// 
 			// TLP_TopInfo
@@ -233,7 +235,7 @@ partial class PC_PackageEdit
 			// base_slickSpacer
 			// 
 			this.base_slickSpacer.Dock = System.Windows.Forms.DockStyle.Top;
-			this.base_slickSpacer.Location = new System.Drawing.Point(3, 105);
+			this.base_slickSpacer.Location = new System.Drawing.Point(3, 125);
 			this.base_slickSpacer.Name = "base_slickSpacer";
 			this.base_slickSpacer.Size = new System.Drawing.Size(384, 14);
 			this.base_slickSpacer.TabIndex = 1;
@@ -248,13 +250,24 @@ partial class PC_PackageEdit
 			this.B_Publish.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon2.Name = "Check";
 			this.B_Publish.ImageName = dynamicIcon2;
-			this.B_Publish.Location = new System.Drawing.Point(3, 125);
+			this.B_Publish.Location = new System.Drawing.Point(3, 145);
 			this.B_Publish.Name = "B_Publish";
 			this.B_Publish.Size = new System.Drawing.Size(384, 34);
 			this.B_Publish.SpaceTriggersClick = true;
 			this.B_Publish.TabIndex = 2;
 			this.B_Publish.Text = "Apply Changes";
 			this.B_Publish.Click += new System.EventHandler(this.B_Publish_Click);
+			// 
+			// DD_ACL
+			// 
+			this.DD_ACL.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.DD_ACL.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DD_ACL.ItemHeight = 24;
+			this.DD_ACL.Location = new System.Drawing.Point(3, 105);
+			this.DD_ACL.Name = "DD_ACL";
+			this.DD_ACL.Size = new System.Drawing.Size(384, 14);
+			this.DD_ACL.TabIndex = 4;
+			this.DD_ACL.Text = "Mod Visibility";
 			// 
 			// P_SideContainer
 			// 
@@ -497,15 +510,14 @@ partial class PC_PackageEdit
 			this.tableLayoutPanel2.Controls.Add(this.TLP_Versions, 0, 0);
 			this.tableLayoutPanel2.Controls.Add(this.TLP_Links, 0, 2);
 			this.tableLayoutPanel2.Controls.Add(this.TLP_Dependencies, 0, 1);
-			this.tableLayoutPanel2.Controls.Add(this.accessLevelControlDropdown1, 0, 3);
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.RowCount = 4;
+			this.tableLayoutPanel2.RowCount = 3;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(552, 564);
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(552, 541);
 			this.tableLayoutPanel2.TabIndex = 18;
 			// 
 			// TLP_Versions
@@ -581,7 +593,7 @@ partial class PC_PackageEdit
 			this.TLP_Links.Dock = System.Windows.Forms.DockStyle.Top;
 			dynamicIcon16.Name = "Link";
 			this.TLP_Links.ImageName = dynamicIcon16;
-			this.TLP_Links.Location = new System.Drawing.Point(3, 363);
+			this.TLP_Links.Location = new System.Drawing.Point(3, 360);
 			this.TLP_Links.Name = "TLP_Links";
 			this.TLP_Links.Padding = new System.Windows.Forms.Padding(22);
 			this.TLP_Links.RowCount = 5;
@@ -591,7 +603,7 @@ partial class PC_PackageEdit
 			this.TLP_Links.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Links.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Links.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Links.Size = new System.Drawing.Size(546, 178);
+			this.TLP_Links.Size = new System.Drawing.Size(546, 44);
 			this.TLP_Links.TabIndex = 2;
 			this.TLP_Links.Text = "Links";
 			this.TLP_Links.UseFirstRowForPadding = true;
@@ -639,7 +651,7 @@ partial class PC_PackageEdit
 			// 
 			this.TLP_Links.SetColumnSpan(this.P_Links, 3);
 			this.P_Links.Dock = System.Windows.Forms.DockStyle.Top;
-			this.P_Links.Location = new System.Drawing.Point(22, 61);
+			this.P_Links.Location = new System.Drawing.Point(22, 38);
 			this.P_Links.Margin = new System.Windows.Forms.Padding(0);
 			this.P_Links.Name = "P_Links";
 			this.P_Links.Size = new System.Drawing.Size(502, 0);
@@ -649,7 +661,7 @@ partial class PC_PackageEdit
 			// 
 			this.TLP_Links.SetColumnSpan(this.slickSpacer3, 3);
 			this.slickSpacer3.Dock = System.Windows.Forms.DockStyle.Top;
-			this.slickSpacer3.Location = new System.Drawing.Point(25, 64);
+			this.slickSpacer3.Location = new System.Drawing.Point(25, 41);
 			this.slickSpacer3.Name = "slickSpacer3";
 			this.slickSpacer3.Size = new System.Drawing.Size(496, 14);
 			this.slickSpacer3.TabIndex = 5;
@@ -661,7 +673,7 @@ partial class PC_PackageEdit
 			this.TLP_Links.SetColumnSpan(this.TB_ForumLink, 3);
 			this.TB_ForumLink.Dock = System.Windows.Forms.DockStyle.Top;
 			this.TB_ForumLink.LabelText = "Forum Link";
-			this.TB_ForumLink.Location = new System.Drawing.Point(25, 84);
+			this.TB_ForumLink.Location = new System.Drawing.Point(25, 41);
 			this.TB_ForumLink.MaxLength = 250;
 			this.TB_ForumLink.Name = "TB_ForumLink";
 			this.TB_ForumLink.Padding = new System.Windows.Forms.Padding(7, 25, 7, 7);
@@ -678,9 +690,9 @@ partial class PC_PackageEdit
 			this.L_NoLinks.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.L_NoLinks.AutoSize = true;
 			this.TLP_Links.SetColumnSpan(this.L_NoLinks, 3);
-			this.L_NoLinks.Location = new System.Drawing.Point(250, 42);
+			this.L_NoLinks.Location = new System.Drawing.Point(251, 22);
 			this.L_NoLinks.Name = "L_NoLinks";
-			this.L_NoLinks.Size = new System.Drawing.Size(45, 19);
+			this.L_NoLinks.Size = new System.Drawing.Size(44, 16);
 			this.L_NoLinks.TabIndex = 3;
 			this.L_NoLinks.Text = "label1";
 			// 
@@ -712,7 +724,7 @@ partial class PC_PackageEdit
 			this.TLP_Dependencies.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Dependencies.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Dependencies.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Dependencies.Size = new System.Drawing.Size(546, 190);
+			this.TLP_Dependencies.Size = new System.Drawing.Size(546, 187);
 			this.TLP_Dependencies.TabIndex = 18;
 			this.TLP_Dependencies.Text = "Dependencies";
 			this.TLP_Dependencies.UseFirstRowForPadding = true;
@@ -721,7 +733,7 @@ partial class PC_PackageEdit
 			// 
 			this.TLP_Dependencies.SetColumnSpan(this.slickSpacer2, 3);
 			this.slickSpacer2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.slickSpacer2.Location = new System.Drawing.Point(25, 64);
+			this.slickSpacer2.Location = new System.Drawing.Point(25, 61);
 			this.slickSpacer2.Name = "slickSpacer2";
 			this.slickSpacer2.Size = new System.Drawing.Size(496, 23);
 			this.slickSpacer2.TabIndex = 26;
@@ -733,9 +745,9 @@ partial class PC_PackageEdit
 			this.L_NoPackages.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.L_NoPackages.AutoSize = true;
 			this.TLP_Dependencies.SetColumnSpan(this.L_NoPackages, 3);
-			this.L_NoPackages.Location = new System.Drawing.Point(250, 42);
+			this.L_NoPackages.Location = new System.Drawing.Point(251, 42);
 			this.L_NoPackages.Name = "L_NoPackages";
-			this.L_NoPackages.Size = new System.Drawing.Size(45, 19);
+			this.L_NoPackages.Size = new System.Drawing.Size(44, 16);
 			this.L_NoPackages.TabIndex = 4;
 			this.L_NoPackages.Text = "label1";
 			// 
@@ -747,7 +759,7 @@ partial class PC_PackageEdit
 			this.DD_Dlcs.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DD_Dlcs.ItemHeight = 24;
 			this.DD_Dlcs.Items = new PDX.SDK.Contracts.Service.Mods.Models.ModGameAddon[0];
-			this.DD_Dlcs.Location = new System.Drawing.Point(25, 93);
+			this.DD_Dlcs.Location = new System.Drawing.Point(25, 90);
 			this.DD_Dlcs.Name = "DD_Dlcs";
 			this.DD_Dlcs.Size = new System.Drawing.Size(496, 72);
 			this.DD_Dlcs.TabIndex = 4;
@@ -798,24 +810,13 @@ partial class PC_PackageEdit
 			this.P_ModDependencies.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.TLP_Dependencies.SetColumnSpan(this.P_ModDependencies, 3);
 			this.P_ModDependencies.Dock = System.Windows.Forms.DockStyle.Top;
-			this.P_ModDependencies.Location = new System.Drawing.Point(22, 61);
+			this.P_ModDependencies.Location = new System.Drawing.Point(22, 58);
 			this.P_ModDependencies.Margin = new System.Windows.Forms.Padding(0);
 			this.P_ModDependencies.Name = "P_ModDependencies";
 			this.P_ModDependencies.Size = new System.Drawing.Size(502, 0);
 			this.P_ModDependencies.TabIndex = 24;
 			this.P_ModDependencies.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.P_ModDependencies_ControlRemoved);
 			this.P_ModDependencies.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.P_ModDependencies_ControlRemoved);
-			// 
-			// accessLevelControlDropdown1
-			// 
-			this.accessLevelControlDropdown1.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.accessLevelControlDropdown1.ItemHeight = 24;
-			this.accessLevelControlDropdown1.Location = new System.Drawing.Point(3, 547);
-			this.accessLevelControlDropdown1.Name = "accessLevelControlDropdown1";
-			this.accessLevelControlDropdown1.Size = new System.Drawing.Size(281, 14);
-			this.accessLevelControlDropdown1.TabIndex = 4;
-			this.accessLevelControlDropdown1.Text = "Mod Visibility";
-			this.accessLevelControlDropdown1.Visible = false;
 			// 
 			// T_Images
 			// 
@@ -994,7 +995,7 @@ partial class PC_PackageEdit
 	private SlickTextBox TB_LongDesc;
 	private RoundedGroupTableLayoutPanel TLP_Links;
 	private System.Windows.Forms.Label L_NoLinks;
-	private Generic.AccessLevelControlDropdown accessLevelControlDropdown1;
+	private Generic.AccessLevelControlDropdown DD_ACL;
 	private RoundedGroupTableLayoutPanel TLP_Dependencies;
 	private RoundedGroupTableLayoutPanel TLP_Versions;
 	private SlickTextBox TB_GameVersion;

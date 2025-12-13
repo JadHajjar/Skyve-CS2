@@ -14,7 +14,7 @@ internal class PdxModsDlcDropdown : SlickMultiSelectionDropDown<ModGameAddon>
 	{
 		ServiceCenter.Get(out _imageService);
 		
-		Items = ServiceCenter.Get<IWorkshopService, WorkshopService>()?.GameData?.Addons.Where(x => x.Type == "DLC").ToArray() ?? [];
+		Items = ServiceCenter.Get<IWorkshopService, WorkshopService>()?.GameData?.Addons.Where(x => x.Type is "DLC" or "Expansion").ToArray() ?? [];
 	}
 
 	protected override void UIChanged()

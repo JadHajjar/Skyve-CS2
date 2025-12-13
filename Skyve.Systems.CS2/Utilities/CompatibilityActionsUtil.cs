@@ -32,8 +32,10 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 		return message.Status.Action switch
 		{
 			StatusAction.DisableOther or StatusAction.IncludeOther or StatusAction.ExcludeOther or StatusAction.UnsubscribeOther => message.Packages.Any(),
-			StatusAction.IncludeThis or StatusAction.UnsubscribeThis or StatusAction.ExcludeThis or StatusAction.DisableThis => true,
-			StatusAction.Switch => message.Packages.Count() == 1,
+			StatusAction.IncludeThis or StatusAction.UnsubscribeThis => true,
+			StatusAction.DisableThis => _packageUtil.IsIncludedAndEnabled(message),
+			StatusAction.ExcludeThis => _packageUtil.IsIncluded(message),
+			StatusAction.Switch => message.Packages.Count() == 1 && _packageUtil.IsIncluded(message),
 			_ => false
 		};
 	}

@@ -37,6 +37,7 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 			RemovalSteps = data.RemovalSteps,
 			Tags = data.Tags,
 			ActiveReports = data.ActiveReports,
+			ThumbnailUrl = data.ThumbnailUrl,
 			Links = data.Links.ToList(Convert),
 			Statuses = data.Statuses.ToList(Convert),
 			Interactions = data.Interactions.ToList(Convert),

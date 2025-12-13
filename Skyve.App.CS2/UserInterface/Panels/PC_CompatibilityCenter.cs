@@ -19,6 +19,7 @@ public partial class PC_CompatibilityCenter : PanelContent
 
 		InitializeComponent();
 
+		TB_GameVersion.Text = ServiceCenter.Get<ICitiesManager>().GameVersion;
 		AnnouncementDateFrom.Value = DateTime.Today;
 		AnnouncementDateTo.Value = DateTime.Today.AddDays(7);
 	}
@@ -58,12 +59,13 @@ public partial class PC_CompatibilityCenter : PanelContent
 		base.UIChanged();
 
 		AnnouncementText.Height = UI.Scale(100);
+		TB_GameVersion.Width = UI.Scale(200);
 
-		foreach (var panel in smartTablePanel.Controls.OfType<RoundedGroupTableLayoutPanel>())
+		foreach (Control ctrl in smartTablePanel.Controls)
 		{
-			panel.Margin = UI.Scale(new Padding(10));
+			ctrl.Margin = UI.Scale(new Padding(10));
 
-			foreach (Control item in panel.Controls)
+			foreach (Control item in ctrl.Controls)
 			{
 				item.Margin = UI.Scale(new Padding(5));
 			}
@@ -167,5 +169,15 @@ public partial class PC_CompatibilityCenter : PanelContent
 	private void B_Manage_Click(object sender, EventArgs e)
 	{
 		Form.PushPanel<PC_CompatibilityManagement>();
+	}
+
+	private void B_BulkEdit_Click(object sender, EventArgs e)
+	{
+		Form.PushPanel<PC_CompatibilityBulkEditing>();
+	}
+
+	private void TB_GameVersion_TextChanged(object sender, EventArgs e)
+	{
+		ServiceCenter.Get<ICitiesManager>().GameVersion = TB_GameVersion.Text;
 	}
 }

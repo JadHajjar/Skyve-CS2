@@ -623,6 +623,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation SkyvenotSetUpInfo => _instance.GetText("SkyvenotSetUpInfo");
 
 	/// <summary>
+	/// Your current Skyve version has become outdated and may not work with the latest mods update.  Follow the update instructions to learn how to upgrade and get back to creating and playing without issues.
+	/// </summary>
+	public static Translation SkyveVersionBlockedDescription => _instance.GetText("SkyveVersionBlockedDescription");
+
+	/// <summary>
+	/// Update Required for Skyve
+	/// </summary>
+	public static Translation SkyveVersionBlockedTitle => _instance.GetText("SkyveVersionBlockedTitle");
+
+	/// <summary>
 	/// Most Popular
 	/// </summary>
 	public static Translation SortingBest => _instance.GetText("Sorting_Best");
@@ -813,6 +823,11 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	/// View on PDX Mods
 	/// </summary>
 	public static Translation ViewOnWorkshop => _instance.GetText("ViewOnWorkshop");
+
+	/// <summary>
+	/// View Update Instructions
+	/// </summary>
+	public static Translation ViewUpdateInstructions => _instance.GetText("ViewUpdateInstructions");
 
 	/// <summary>
 	/// Like this mod

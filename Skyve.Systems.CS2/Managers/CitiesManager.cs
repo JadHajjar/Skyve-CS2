@@ -38,7 +38,7 @@ internal class CitiesManager : ICitiesManager
 	public event Action? GameClosed;
 	public event Action<bool>? LaunchingStatusChanged;
 
-	public string GameVersion { get; }
+	public string GameVersion { get; set; }
 
 	public CitiesManager(ILogger logger, INotifier notifier, ILocationService locationManager, ISettings settings, IIOUtil iOUtil, IServiceProvider serviceProvider, INotificationsService notificationsService)
 	{

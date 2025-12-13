@@ -62,7 +62,7 @@
 	<ItemGroup>
 		<Reference Include="Game">
 			<Private>false</Private>
-		</Reference>
+		</Reference>	
 		<Reference Include="Colossal.Core">
 			<Private>false</Private>
 		</Reference>
@@ -73,6 +73,9 @@
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Colossal.PSI.PdxSdk">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="PDX.SDK">
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Colossal.Localization">
@@ -100,6 +103,9 @@
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Unity.Mathematics">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="PDX.SDK.Contracts">
 			<Private>false</Private>
 		</Reference>
 	</ItemGroup>

@@ -149,7 +149,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 	public PackageData GetAutomatedReport(IPackageIdentity package)
 	{
 		var workshopInfo = package.GetWorkshopInfo();
-		var isCodeMod = (workshopInfo?.IsCodeMod ?? package.GetLocalPackage()?.IsCodeMod ?? false);
+		var isCodeMod = workshopInfo?.IsCodeMod ?? package.GetLocalPackage()?.IsCodeMod ?? false;
 
 		var info = new PackageData
 		{
