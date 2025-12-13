@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "保存されたユーザー名/パスワードはログインに失敗しました。情報を更新するにはここをクリックしてください。",
   "ParadoxLoginFailedEmpty": "セッションの有効期限が切れている可能性があります。ゲームを起動して再度ログインするか、Skyve経由でログインするにはここをクリックしてください。",
   "DownloadComplete": "ダウンロード完了",
+  "DownloadStarted": "Download starting...",
   "DownloadFailed": "ダウンロード失敗",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "ダウンロード中...",
   "ModsDownloadFailed": {
     "One": "Modのダウンロードに失敗しました",
@@ -71,6 +73,7 @@
   "LogLevel": "ログレベル",
   "ParadoxAccount": "Paradoxアカウント",
   "LoggingIn": "ログイン中...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "Paradoxにログインしていません。詳細については通知を確認してください。",
   "HideUserSection": "メインメニューでプロフィールを非表示にする",
   "DeveloperMode": "開発者モードを有効にする",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "復元するバックアップはありません。データを保護するためにバックアップを設定してください。\n\n破損したファイルを削除するには、ここをクリックしてください。",
   "RecentBackups": "最近のバックアップ",
   "DisableLogCleanup": "起動時にログのクリーンアップを無効にする",
-  "DisableLogCleanup_Tip": "Skyveを介してゲームを起動したときにログフォルダの削除をスキップします。"
+  "DisableLogCleanup_Tip": "Skyveを介してゲームを起動したときにログフォルダの削除をスキップします。",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncAffectedPlaysets": {
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }

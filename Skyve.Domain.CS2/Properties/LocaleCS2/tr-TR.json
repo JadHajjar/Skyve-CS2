@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Kayıtlı kullanıcı adı/şifre ile giriş yapılamadı. Bilgilerinizi güncellemek için buraya tıklayın.",
   "ParadoxLoginFailedEmpty": "Oturumunuzun süresi doldu. Tekrar giriş yapmak için ya oyunu başlatıp giriş yapın ya da Skyve üzerinden giriş yapmak için buraya tıklayın.",
   "DownloadComplete": "İndirme tamamlandı",
+  "DownloadStarted": "İndirme başlatılıyor...",
   "DownloadFailed": "İndirme başarısız",
+  "DownloadCancelled": "İndirme iptal edildi",
   "Downloading": "İndiriliyor...",
   "ModsDownloadFailed": {
     "One": "Bir mod indirilirken hata oluştu",
@@ -71,6 +73,7 @@
   "LogLevel": "Log Seviyesi",
   "ParadoxAccount": "Paradox Hesabı",
   "LoggingIn": "Giriş Yapılıyor...",
+  "Logout": "Çıkış yap",
   "NotLoggedInCheckNotification": "Paradox'a giriş yapmadınız, daha fazla bilgi için bildirimlerinizi kontrol edin.",
   "HideUserSection": "Ana menüde profilinizi gizleyin",
   "DeveloperMode": "Developer Modu Aktifleştir",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "Ayarlarınızı geri yüklemek için yedekleme bulunamadı. Gelecekte ayarlarınızı korumak için yedekleme ayarlarınızı oluşturun.\n\nBozuk dosyaları silmek için buraya tıklayın.",
   "RecentBackups": "Son Yedeklemeler",
   "DisableLogCleanup": "Oyunu başlatırken günlükleri temizlemeyi devre dışı bırak",
-  "DisableLogCleanup_Tip": "Oyunu Skyve üzerinden başlatırken 'Logs' klasörünün silinmesini atlar."
+  "DisableLogCleanup_Tip": "Oyunu Skyve üzerinden başlatırken 'Logs' klasörünün silinmesini atlar.",
+  "SyncCloud": "Bulut verisini kullan",
+  "SyncLocal": "Yerel veriyi kullan",
+  "SyncCloudInfo": "Paradox Mods’tan eksik bilgileri indirir ve çakışmaları yerel veri yerine bulut verisini kullanarak çözer.",
+  "SyncLocalInfo": "Tüm yerel bilgileri Paradox Mods’a yükler; bulutta olan ancak yerel verilerinizde olmayan oyun setleri indirilecektir.",
+  "SyncConflictInfo": "Yerel oyun setleriniz ile Paradox Mods üzerindeki bulut verileri arasında bazı çakışmalar tespit edildi. Modlarınızı güncelleyebilmek için aşağıda bir çözüm seçmeniz gerekiyor.",
+  "SyncConflictTitle": "Senkronizasyon çakışmaları tespit edildi",
+  "SyncAffectedPlaysets": {
+    "One": "Etkilenen oyun seti: {1}",
+    "Plural": "Etkilenen oyun setleri: {1}"
+  },
+  "TitleDesc": "Başlık ve Açıklamalar",
+  "EditModInfo": "Bu modun bilgilerini düzenle"
 }
