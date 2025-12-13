@@ -209,5 +209,8 @@
     "Plural": "Affected playsets: {1}"
   },
   "TitleDesc": "Otsikko ja Kuvaus",
-  "EditModInfo": "Muokkaa tämän modin tietoja"
+  "EditModInfo": "Muokkaa tämän modin tietoja",
+  "SkyveVersionBlockedTitle": "Päivitys vaaditaan Skyvelle",
+  "SkyveVersionBlockedDescription": "Nykyinen Skyve-versiosi on vanhentunut eikä välttämättä toimi uusimpien modien päivityksen kanssa.\r\n\r\nNoudata päivitysohjeita ja opi päivittämään ja palaamaan luomaan ja pelaamaan ilman ongelmia.",
+  "ViewUpdateInstructions": "Näytä Päivitysohjeet"
 }

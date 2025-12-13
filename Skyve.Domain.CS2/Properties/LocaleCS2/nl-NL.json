@@ -209,5 +209,8 @@
     "Plural": "Getroffen playsets:{1}"
   },
   "TitleDesc": "Titel & beschrijvingen",
-  "EditModInfo": "Bewerk de informatie van deze mod"
+  "EditModInfo": "Bewerk de informatie van deze mod",
+  "SkyveVersionBlockedTitle": "Update vereist voor Skyve",
+  "SkyveVersionBlockedDescription": "Je huidige Skyve versie is verouderd en werkt mogelijk niet met de nieuwste mods update.\r\n\r\nVolg de update-instructies om te leren hoe te upgraden en terug te keren naar creëren en zonder problemen te spelen.",
+  "ViewUpdateInstructions": "Instructies voor bijwerken bekijken"
 }

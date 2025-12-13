@@ -209,5 +209,8 @@
     "Plural": "Affected playsets: {1}"
   },
   "TitleDesc": "Title & Descriptions",
-  "EditModInfo": "Edit this mod's information"
+  "EditModInfo": "Edit this mod's information",
+  "SkyveVersionBlockedTitle": "Actualizare necesară pentru Skyve",
+  "SkyveVersionBlockedDescription": "Versiunea ta curentă Skyve a devenit învechită și este posibil să nu funcționeze cu cea mai recentă actualizare de moduri.\r\n\r\nUrmați instrucțiunile de actualizare pentru a învăța cum să faceți upgrade și să reveniți la creare și să jucați fără probleme.",
+  "ViewUpdateInstructions": "Vezi instrucţiunile de actualizare"
 }

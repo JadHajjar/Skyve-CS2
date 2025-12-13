@@ -209,5 +209,8 @@
     "Plural": "Betroffene Spielsets: {1}"
   },
   "TitleDesc": "Titel & Beschreibungen",
-  "EditModInfo": "Diese Mod-Informationen bearbeiten"
+  "EditModInfo": "Diese Mod-Informationen bearbeiten",
+  "SkyveVersionBlockedTitle": "Update erforderlich für Skyve",
+  "SkyveVersionBlockedDescription": "Deine aktuelle Skyve Version ist veraltet und funktioniert möglicherweise nicht mit dem neuesten Mods Update.\r\n\r\nFolgen Sie den Update-Anweisungen, um zu erfahren, wie Sie upgraden können und zurück zum Erstellen und Spielen ohne Probleme kommen.",
+  "ViewUpdateInstructions": "Update-Anweisungen anzeigen"
 }

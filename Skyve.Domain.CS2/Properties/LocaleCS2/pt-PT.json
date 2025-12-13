@@ -209,5 +209,8 @@
     "Plural": "Conjuntos afetados: {1}"
   },
   "TitleDesc": "Título e descrições",
-  "EditModInfo": "Editar as informações deste mod"
+  "EditModInfo": "Editar as informações deste mod",
+  "SkyveVersionBlockedTitle": "Atualização necessária para o Skyve",
+  "SkyveVersionBlockedDescription": "Sua versão atual do Skyve ficou desatualizada e pode não funcionar com as últimas atualizações de mods. U\r\n\r\nSiga as instruções de atualização para aprender como fazer o upgrade e voltar a criar e jogar sem problemas.",
+  "ViewUpdateInstructions": "Ver Instruções de Atualização"
 }

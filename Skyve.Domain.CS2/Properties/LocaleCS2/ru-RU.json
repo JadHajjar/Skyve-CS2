@@ -209,5 +209,8 @@
     "Plural": "Связанные игровые наборы: {1}"
   },
   "TitleDesc": "Название и описание",
-  "EditModInfo": "Изменить информацию о модификации"
+  "EditModInfo": "Изменить информацию о модификации",
+  "SkyveVersionBlockedTitle": "Требуется обновление для Skyve",
+  "SkyveVersionBlockedDescription": "Your current Skyve version has become outdated and may not work with the latest mods update.\r\n\r\nFollow the update instructions to learn how to upgrade and get back to creating and playing without issues.",
+  "ViewUpdateInstructions": "Инструкции по обновлению"
 }

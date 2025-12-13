@@ -209,5 +209,8 @@
     "Plural": "Affected playsets: {1}"
   },
   "TitleDesc": "Title & Descriptions",
-  "EditModInfo": "Edit this mod's information"
+  "EditModInfo": "Edit this mod's information",
+  "SkyveVersionBlockedTitle": "التحديث مطلوب للسماء",
+  "SkyveVersionBlockedDescription": "إصدار Skyve الحالي الخاص بك أصبح قديماً وقد لا يعمل مع أحدث تحديث للموديات.\r\n\r\nاتبع تعليمات التحديث لتعلم كيفية الترقية والعودة إلى الإنشاء والتشغيل بدون مشاكل.",
+  "ViewUpdateInstructions": "عرض تعليمات التحديث"
 }

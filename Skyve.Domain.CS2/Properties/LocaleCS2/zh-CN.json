@@ -209,5 +209,8 @@
     "Plural": "受影响的配组：{1}"
   },
   "TitleDesc": "标题和描述",
-  "EditModInfo": "编辑这个模组的信息"
+  "EditModInfo": "编辑这个模组的信息",
+  "SkyveVersionBlockedTitle": "Skyve 需要更新",
+  "SkyveVersionBlockedDescription": "您当前的 Skyve 版本已经过时，可能无法使用最新版模组更新。\r\n\r\n按照更新说明学习如何升级并回到创建和播放时没有问题。",
+  "ViewUpdateInstructions": "查看更新说明"
 }

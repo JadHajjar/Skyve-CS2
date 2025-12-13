@@ -209,5 +209,8 @@
     "Plural": "Dotyczy zestawów: {1}"
   },
   "TitleDesc": "Tytuł i opis",
-  "EditModInfo": "Edytuj informacje tego moda"
+  "EditModInfo": "Edytuj informacje tego moda",
+  "SkyveVersionBlockedTitle": "Wymagana aktualizacja dla Skyve",
+  "SkyveVersionBlockedDescription": "Twoja aktualna wersja Skyve stała się nieaktualna i może nie działać z najnowszą aktualizacją modów.\r\n\r\nPostępuj zgodnie z instrukcjami aktualizacji, aby dowiedzieć się, jak uaktualnić i wrócić do tworzenia i gry bez problemów.",
+  "ViewUpdateInstructions": "Zobacz Instrukcje Aktualizacji"
 }

@@ -209,5 +209,8 @@
     "Plural": "Affected playsets: {1}"
   },
   "TitleDesc": "Title & Descriptions",
-  "EditModInfo": "Edit this mod's information"
+  "EditModInfo": "Edit this mod's information",
+  "SkyveVersionBlockedTitle": "Потрібне оновлення для Skyve",
+  "SkyveVersionBlockedDescription": "Ваша поточна Skyve версія застаріла і може не працювати з останнім оновленням модів.\r\n\r\nДотримуйтесь інструкцій щодо оновлень, щоб дізнатися, як оновити та повернутися до створення та відтворення без проблем.",
+  "ViewUpdateInstructions": "Переглянути інструкції для оновлення"
 }
