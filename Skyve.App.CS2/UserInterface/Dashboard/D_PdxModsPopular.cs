@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
-internal class D_PdxModsPopular() : D_PdxModsBase(lastTag)
+internal class D_PdxModsPopular() : D_PdxModsBase()
 {
 	private static List<IWorkshopInfo> _popularMods = [];
-	private static string? lastTag;
 	private List<IWorkshopInfo> popularMods = _popularMods;
 
 	protected override List<IWorkshopInfo> GetPackages()
@@ -28,7 +27,6 @@ internal class D_PdxModsPopular() : D_PdxModsBase(lastTag)
 		}
 
 		_popularMods = popularMods = list;
-		lastTag = SelectedTags?.FirstOrDefault();
 
 		OnResizeRequested();
 
@@ -39,7 +37,7 @@ internal class D_PdxModsPopular() : D_PdxModsBase(lastTag)
 	{
 		if (popularMods.Count == 0)
 		{
-			if (Loading)
+			if (Loading || !FirstLoadComplete)
 			{
 				return DrawLoading;
 			}

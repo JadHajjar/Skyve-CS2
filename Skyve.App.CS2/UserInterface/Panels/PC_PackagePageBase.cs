@@ -26,6 +26,7 @@ public partial class PC_PackagePageBase : PanelContent
 	private TagControl? addTagControl;
 	private bool refreshPending;
 	private bool isReadOnly;
+	private DateTime? lastWorkshopTimestamp;
 
 	public IPackageIdentity Package { get; private set; }
 
@@ -92,7 +93,10 @@ public partial class PC_PackagePageBase : PanelContent
 	{
 		if (Form?.CurrentPanel == this)
 		{
-			Form.OnNextIdle(() => SetPackage(Package));
+			if (lastWorkshopTimestamp != (Package.GetWorkshopInfo() as ITimestamped)?.Timestamp)
+			{
+				Form.OnNextIdle(() => SetPackage(Package));
+			}
 		}
 		else
 		{
@@ -127,11 +131,13 @@ public partial class PC_PackagePageBase : PanelContent
 		var workshopInfo = Package.GetWorkshopInfo();
 		var localData = Package.GetLocalPackage();
 
+		lastWorkshopTimestamp = (workshopInfo as ITimestamped)?.Timestamp;
+
 		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
-		B_EditModInfo.Visible = 		workshopInfo?.Author?.Equals(_userService.User) ?? false;
+		B_EditModInfo.Visible = workshopInfo?.Author?.Equals(_userService.User) ?? false;
 		LI_Version.LabelText = localData?.IsCodeMod ?? true ? "Version" : "Content";
-		LI_Version.ValueText = localData?.IsCodeMod ?? true ? localData?.VersionName ?? workshopInfo?.VersionName : $"{localData.Assets.Length} {Locale.Asset.FormatPlural(localData.Assets.Length).ToLower()}";
+		LI_Version.ValueText = localData?.IsCodeMod ?? true ? localData?.VersionName ?? workshopInfo?.VersionName : $"{localData.AssetCount} {Locale.Asset.FormatPlural(localData.Assets.Length).ToLower()}";
 		SlickTip.SetTo(LI_Version, localData?.IsCodeMod ?? true ? localData?.Version ?? workshopInfo?.Version : null);
 		LI_UpdateTime.ValueText = date == default ? null : _settings.UserSettings.ShowDatesRelatively ? date.ToLocalTime().ToRelatedString(true, false) : date.ToLocalTime().ToString("g");
 		SlickTip.SetTo(LI_UpdateTime, date == default || !_settings.UserSettings.ShowDatesRelatively ? null : date.ToLocalTime().ToString("g"));

@@ -108,17 +108,28 @@ internal class D_PdxUser : IDashboardItem
 
 		if (_workshopService.IsLoggedIn)
 		{
-			preferredHeight += UI.Scale(12);
-			var rect = Rectangle.FromLTRB(e.ClipRectangle.Left, e.ClipRectangle.Bottom - UI.Scale(20), e.ClipRectangle.Right - BorderRadius, e.ClipRectangle.Bottom - BorderRadius / 2);
+			preferredHeight += UI.Scale(_userService.User.Manager ? 16 : 12);
+			var rect = Rectangle.FromLTRB(e.ClipRectangle.Left + UI.Scale(8), e.ClipRectangle.Bottom - UI.Scale(20), e.ClipRectangle.Right - BorderRadius, e.ClipRectangle.Bottom - (BorderRadius / 2));
 
-			_buttonActions.Add(rect, async () => await _workshopService.Logout());
+			_buttonActions.Add(rect.Pad(rect.Width / 2, 0, 0, 0), async () => await _workshopService.Logout());
 
 			if (applyDrawing)
 			{
-				using var font = UI.Font(7F, rect.Contains(CursorLocation) ? FontStyle.Underline : FontStyle.Regular);
-				using var brush = new SolidBrush(rect.Contains(CursorLocation) ? FormDesign.Design.ActiveColor : FormDesign.Design.InfoColor);
+				var hovered = rect.Pad(rect.Width / 2, 0, 0, 0).Contains(CursorLocation);
+				using var font = UI.Font(7F, hovered ? FontStyle.Underline : FontStyle.Regular);
+				using var brush = new SolidBrush(hovered ? FormDesign.Design.ActiveColor : FormDesign.Design.InfoColor);
 				using var format = new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center };
+
 				e.Graphics.DrawString(LocaleCS2.Logout, font, brush, rect, format);
+
+				if (_userService.User.Manager)
+				{
+					using var font2 = UI.Font(7F, FontStyle.Bold);
+					using var brush2 = new SolidBrush(FormDesign.Design.OrangeColor);
+					using var format2 = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center };
+
+					e.Graphics.DrawString("Manager", font2, brush2, rect, format2);
+				}
 			}
 		}
 	}

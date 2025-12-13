@@ -21,8 +21,9 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject, IEquatable<
 	public string Folder { get; set; }
 	public string FilePath { get; }
 	public string? SuggestedGameVersion { get; }
+	public int AssetCount { get; }
 
-	public LocalPackageData(IPackage package, IAsset[] assets, IThumbnailObject[] images, string folder, string? version, string filePath, string? suggestedGameVersion)
+	public LocalPackageData(IPackage package, IAsset[] assets, int assetCount, IThumbnailObject[] images, string folder, string? version, string filePath, string? suggestedGameVersion)
 	{
 		Package = package;
 		VersionName = version;
@@ -30,6 +31,7 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject, IEquatable<
 		Folder = folder;
 		FilePath = filePath.IfEmpty(Folder);
 		Images = images;
+		AssetCount = Math.Max(1, Math.Max(assets.Length, assetCount));
 		SuggestedGameVersion = suggestedGameVersion;
 
 		for (var i = 0; i < Assets.Length; i++)

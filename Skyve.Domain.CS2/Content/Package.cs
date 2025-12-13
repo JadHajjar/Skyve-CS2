@@ -17,23 +17,23 @@ public class Package : IPackage, IEquatable<Package?>
 	public string? Version { get; set; }
 	public string? VersionName { get; set; }
 
-	public Package(string folder, IAsset[] assets, IThumbnailObject[] images, bool isCodeMod, string? version, string? versionName, string? filePath, string? suggestedGameVersion)
+	public Package(string folder, IAsset[] assets, int assetCount, IThumbnailObject[] images, bool isCodeMod, string? version, string? versionName, string? filePath, string? suggestedGameVersion)
 	{
 		Name = Path.GetFileName(folder).TrimStart('.');
 		IsCodeMod = isCodeMod;
 		IsLocal = true;
 		Version = version;
 		VersionName = versionName;
-		LocalData = new LocalPackageData(this, assets, images, folder, versionName, filePath ?? folder, suggestedGameVersion);
+		LocalData = new LocalPackageData(this, assets, assetCount,  images, folder, versionName, filePath ?? folder, suggestedGameVersion);
 	}
 
-	public void RefreshData(IAsset[] assets, bool isCodeMod, string version, string? versionName, string? filePath, string? suggestedGameVersion)
+	public void RefreshData(IAsset[] assets, int assetCount, bool isCodeMod, string version, string? versionName, string? filePath, string? suggestedGameVersion)
 	{
 		IsCodeMod = isCodeMod;
 		IsLocal = true;
 		Version = version;
 		VersionName = versionName;
-		LocalData = new LocalPackageData(this, assets, LocalData.Images, LocalData.Folder, versionName, filePath ?? LocalData.Folder, suggestedGameVersion);
+		LocalData = new LocalPackageData(this, assets, assetCount, LocalData.Images, LocalData.Folder, versionName, filePath ?? LocalData.Folder, suggestedGameVersion);
 	}
 
 	#region EqualityOverrides

@@ -47,6 +47,7 @@ public class UserSettings : ConfigFile, IUserSettings
 	public bool ExcludeTipShown { get; set; }
 	public bool ClearFilterTipShown { get; set; }
 	public DependencyResolveBehavior DependencyResolution { get; set; }
+	public Dictionary<string, string> DashboardSelectedTag { get; } = [];
 
 	public void Save()
 	{

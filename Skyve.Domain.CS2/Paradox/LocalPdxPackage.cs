@@ -20,7 +20,7 @@ public class LocalPdxPackage : Package, PdxIMod, IWorkshopInfo, IFullThumbnailOb
 {
 	private PDX.SDK.Contracts.Service.Mods.Models.LocalData PdxLocalData;
 
-	public LocalPdxPackage(PdxMod mod, IAsset[] assets, bool isCodeMod, string? version, string? versionName, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, mod.LocalData.ScreenshotsFilenames?.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)) ?? [], isCodeMod, version, versionName, filePath, mod.RequiredGameVersion)
+	public LocalPdxPackage(PdxMod mod, IAsset[] assets, int assetCount, bool isCodeMod, string? version, string? versionName, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, assetCount, mod.LocalData.ScreenshotsFilenames?.ToArray(x => new ParadoxScreenshot(CrossIO.Combine(mod.LocalData.FolderAbsolutePath, x), (ulong)mod.Id, mod.Version, true)) ?? [], isCodeMod, version, versionName, filePath, mod.RequiredGameVersion)
 	{
 		IsLocal = mod.Id <= 0;
 		Id = (ulong)mod.Id;

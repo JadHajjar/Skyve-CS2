@@ -13,6 +13,8 @@ public class TagItem(TagSource source, string key, string value) : IWorkshopTag
 	public IWorkshopTag[] Children { get; set; } = [];
 	public bool IsSelectable { get; set; } = true;
 	public int? UsageCount { get; set; }
+	public int Depth { get; set; }
+	public int? Order { get; set; }
 	public string Icon => Source switch { TagSource.ID or TagSource.Workshop => "PDXMods", TagSource.Custom => "Search", _ => "Tag" };
 	public bool IsCustom => Source is TagSource.Custom;
 	public bool IsWorkshop => Source is TagSource.Workshop;

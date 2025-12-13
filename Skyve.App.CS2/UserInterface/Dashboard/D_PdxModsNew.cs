@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Dashboard;
-internal class D_PdxModsNew() : D_PdxModsBase(lastTag)
+internal class D_PdxModsNew() : D_PdxModsBase()
 {
 	private static List<IWorkshopInfo> _newMods = [];
-	private static string? lastTag;
 	private List<IWorkshopInfo> newMods = _newMods;
 
 	protected override List<IWorkshopInfo> GetPackages()
@@ -27,7 +26,6 @@ internal class D_PdxModsNew() : D_PdxModsBase(lastTag)
 		}
 
 		_newMods = newMods = list;
-		lastTag = SelectedTags?.FirstOrDefault();
 
 		OnResizeRequested();
 
@@ -38,7 +36,7 @@ internal class D_PdxModsNew() : D_PdxModsBase(lastTag)
 	{
 		if (newMods.Count == 0)
 		{
-			if (Loading)
+			if (Loading || !FirstLoadComplete)
 			{
 				return DrawLoading;
 			}

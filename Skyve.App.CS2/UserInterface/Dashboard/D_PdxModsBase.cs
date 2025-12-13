@@ -13,18 +13,22 @@ namespace Skyve.App.CS2.UserInterface.Dashboard;
 internal abstract class D_PdxModsBase : IDashboardItem
 {
 	private static readonly Dictionary<string, DateTime> _lastLoadTimes = [];
-	private static readonly string[] _tags = ["Code Mod", "Map", "Savegame", "All"];
+	private static readonly string[] _tags = ["Code Mod", "Prefab", "Map", "Savegame", "All"];
 	private string selectedTag;
 	private int maxHeight;
-
+	protected bool FirstLoadComplete;
 	protected readonly IWorkshopService WorkshopService;
 	protected readonly IUserService UserService;
+	protected readonly ITagsService TagService;
+	protected readonly ISettings Settings;
 	protected string[]? SelectedTags => selectedTag == "All" ? null : [selectedTag];
 
-	public D_PdxModsBase(string? tag)
+	public D_PdxModsBase()
 	{
-		selectedTag = tag ?? _tags[0];
-		ServiceCenter.Get(out WorkshopService, out UserService);
+		FirstLoadComplete = GetPackages().Count > 0;
+		Loading = !FirstLoadComplete;
+		ServiceCenter.Get(out WorkshopService, out UserService, out TagService, out Settings);
+		selectedTag = Settings.UserSettings.DashboardSelectedTag.TryGet(GetType().Name) ?? _tags[0];
 	}
 
 	protected abstract List<IWorkshopInfo> GetPackages();
@@ -57,6 +61,8 @@ internal abstract class D_PdxModsBase : IDashboardItem
 	{
 		_lastLoadTimes[Key] = DateTime.Now;
 
+		FirstLoadComplete = true;
+
 		return base.ProcessDataLoad(token);
 	}
 
@@ -68,6 +74,9 @@ internal abstract class D_PdxModsBase : IDashboardItem
 	private void SelectTag(string item)
 	{
 		selectedTag = item;
+
+		Settings.UserSettings.DashboardSelectedTag[GetType().Name] = selectedTag;
+		Settings.UserSettings.Save();
 
 		LoadData();
 	}
@@ -84,53 +93,56 @@ internal abstract class D_PdxModsBase : IDashboardItem
 			maxHeight = 0;
 		}
 
-		foreach (var item in _tags)
+		if (FirstLoadComplete)
 		{
-			using var buttonArgs = new ButtonDrawArgs
+			foreach (var item in _tags)
 			{
-				Font = selectedTag == item ? fontSmallBold : fontSmall,
-				Padding = UI.Scale(new Padding(2, 2, 4, 2)),
-				Text = item,
-			};
+				using var buttonArgs = new ButtonDrawArgs
+				{
+					Font = selectedTag == item ? fontSmallBold : fontSmall,
+					Padding = UI.Scale(new Padding(2, 2, 4, 2)),
+					Text = TagService.GetWorkshopTag(item).ToString()
+				};
 
-			if (selectedTag == item)
-			{
-				buttonArgs.ButtonType = ButtonType.Active;
-			}
-			else
-			{
-				buttonArgs.HoverState = HoverState & ~HoverState.Focused;
-				buttonArgs.Cursor = CursorLocation;
-			}
+				if (selectedTag == item)
+				{
+					buttonArgs.ButtonType = ButtonType.Active;
+				}
+				else
+				{
+					buttonArgs.HoverState = HoverState & ~HoverState.Focused;
+					buttonArgs.Cursor = CursorLocation;
+				}
 
-			SlickButton.PrepareLayout(e.Graphics, buttonArgs);
-
-			buttonArgs.Rectangle = tagRect.Align(buttonArgs.Rectangle.Size, ContentAlignment.TopLeft);
-
-			if (buttonArgs.Rectangle.Right > e.ClipRectangle.Right - BorderRadius)
-			{
-				tagRect.Y += buttonArgs.Rectangle.Height + (BorderRadius / 2);
-				tagRect.X = e.ClipRectangle.X + BorderRadius;
+				SlickButton.PrepareLayout(e.Graphics, buttonArgs);
 
 				buttonArgs.Rectangle = tagRect.Align(buttonArgs.Rectangle.Size, ContentAlignment.TopLeft);
+
+				if (buttonArgs.Rectangle.Right > e.ClipRectangle.Right - BorderRadius)
+				{
+					tagRect.Y += buttonArgs.Rectangle.Height + (BorderRadius / 2);
+					tagRect.X = e.ClipRectangle.X + BorderRadius;
+
+					buttonArgs.Rectangle = tagRect.Align(buttonArgs.Rectangle.Size, ContentAlignment.TopLeft);
+				}
+
+				if (selectedTag == item)
+				{
+					e.Graphics.FillRoundedRectangleWithShadow(buttonArgs.Rectangle, buttonArgs.Padding.Top, buttonArgs.Padding.Top * 2, Color.Empty, Color.FromArgb(25, FormDesign.Design.ActiveColor));
+				}
+
+				SlickButton.SetUpColors(buttonArgs);
+
+				SlickButton.DrawButton(e.Graphics, buttonArgs);
+
+				if (selectedTag != item)
+				{
+					_buttonActions[buttonArgs] = () => SelectTag(item);
+				}
+
+				tagRect.X += buttonArgs.Rectangle.Width + UI.Scale(5);
+				tagRect.Height = buttonArgs.Rectangle.Height;
 			}
-
-			if (selectedTag == item)
-			{
-				e.Graphics.FillRoundedRectangleWithShadow(buttonArgs.Rectangle, buttonArgs.Padding.Top, buttonArgs.Padding.Top * 2, Color.Empty, Color.FromArgb(25, FormDesign.Design.ActiveColor));
-			}
-
-			SlickButton.SetUpColors(buttonArgs);
-
-			SlickButton.DrawButton(e.Graphics, buttonArgs);
-
-			if (selectedTag != item)
-			{
-				_buttonActions[buttonArgs] = () => SelectTag(item);
-			}
-
-			tagRect.X += buttonArgs.Rectangle.Width + UI.Scale(5);
-			tagRect.Height = buttonArgs.Rectangle.Height;
 		}
 
 		preferredHeight = tagRect.Bottom + (BorderRadius * 3 / 2);
@@ -297,10 +309,10 @@ internal abstract class D_PdxModsBase : IDashboardItem
 		{
 			using var brush = new SolidBrush(Color.FromArgb(40, FormDesign.Design.ForeColor));
 
-			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, notification > NotificationType.Info ? 0 : (rect.Bottom- textRect.Y)), Margin.Left / 2);
+			e.Graphics.FillRoundedRectangle(brush, rect.Pad(Margin.Left / 4, 0, Margin.Left / 2, notification > NotificationType.Info ? 0 : (rect.Bottom - textRect.Y)), Margin.Left / 2);
 		}
 
-		return textRect.Y - rect.Y + (notification > NotificationType.Info ?  UI.Scale(20):0);
+		return textRect.Y - rect.Y + (notification > NotificationType.Info ? UI.Scale(20) : 0);
 	}
 
 	private int DrawTextAndTags(PaintEventArgs e, IWorkshopInfo workshopInfo, SolidBrush textBrush, Color backColor, Rectangle rect)

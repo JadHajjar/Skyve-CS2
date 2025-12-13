@@ -191,6 +191,19 @@ public class WorkshopService : IWorkshopService
 			if (_notifier.Context is not SkyveContext.Service)
 			{
 				GameData = await Context.Mods.GetGameData();
+
+				var codeTag = GameData.Filters.Tags.FirstOrDefault(x => x.TagName == "Code Mod");
+				if (codeTag is not null)
+				{
+					codeTag.Order = 1;
+				}
+
+				var assetTag = GameData.Filters.Tags.FirstOrDefault(x => x.TagName == "Prefab");
+				if (assetTag is not null)
+				{
+					assetTag.Order = 2;
+					assetTag.DisplayName = "Asset";
+				}
 			}
 
 			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
@@ -594,16 +607,18 @@ public class WorkshopService : IWorkshopService
 
 		var gameData = ProcessResult(GameData);
 
-		return cachedTags = gameData.Filters.Tags.Where(x => !x.Hidden).OrderBy(x => x.Order).ToList(GetNestedTag);
+		return cachedTags = gameData.Filters.Tags.Where(x => !x.Hidden).OrderBy(x => x.Order).ToList(x => GetNestedTag(x, 0));
 	}
 
-	private IWorkshopTag GetNestedTag(ModTagNode tag)
+	private IWorkshopTag GetNestedTag(ModTagNode tag, int depth)
 	{
 		return new TagItem(Skyve.Domain.CS2.Enums.TagSource.Workshop, tag.TagName, tag.DisplayName)
 		{
 			UsageCount = tag.UsageCount,
 			IsSelectable = tag.Selectable,
-			Children = tag.Children?.Where(x => !x.Hidden).OrderBy(x => x.Order).ToArray(GetNestedTag) ?? []
+			Order = tag.Order,
+			Depth = depth,
+			Children = tag.Children?.Where(x => !x.Hidden).OrderBy(x => x.Order).ToArray(x => GetNestedTag(x, depth + 1)) ?? []
 		};
 	}
 

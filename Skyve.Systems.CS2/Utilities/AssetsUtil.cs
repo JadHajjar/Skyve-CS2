@@ -41,14 +41,17 @@ internal class AssetsUtil : IAssetUtil
 		//_notifier.ContentLoaded += BuildAssetIndex;
 	}
 
-	public IEnumerable<IAsset> GetAssets(string folder, bool withSubDirectories = true)
+	public IEnumerable<IAsset> GetAssets(string folder, out int assetCount, bool withSubDirectories = true)
 	{
+		assetCount = 0;
+
 		if (!Directory.Exists(folder))
 		{
-			yield break;
+			return [];
 		}
 
 		var files = Directory.EnumerateFiles(folder, $"*.cok", withSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+		var assets = new List<IAsset>();
 
 		foreach (var file in files)
 		{
@@ -61,17 +64,19 @@ internal class AssetsUtil : IAssetUtil
 			_logger.Debug($"Reading asset: {file}..");
 #endif
 
-			ZipArchive archive;
+			ZipArchive zip;
 
 			try
 			{
-				archive = ZipFile.OpenRead(file);
+				zip = ZipFile.OpenRead(file);
 			}
 			catch (Exception ex)
 			{
 				_logger.Exception(ex, memberName: "Failed to load asset: " + file);
 				continue;
 			}
+
+			using var archive = zip;
 
 #if DEBUG
 			_logger.Debug($"Asset contains {archive.Entries.Count} items...");
@@ -84,7 +89,7 @@ internal class AssetsUtil : IAssetUtil
 #endif
 				asset!.SaveGameMetaData = saveData;
 				asset.Tags = ["Savegame", saveData!.Theme];
-				yield return asset;
+				 assets.Add( asset);
 			}
 			else if (getAsset<MapMetaData>(AssetType.Map, ".MapMetadata", out asset, out var mapData))
 			{
@@ -93,10 +98,13 @@ internal class AssetsUtil : IAssetUtil
 #endif
 				asset!.MapMetaData = mapData;
 				asset.Tags = ["Map", mapData!.Theme];
-				yield return asset;
+				 assets.Add( asset);
 			}
 			else
 			{
+				var assetIconDic = new List<(Asset Asset, string Entry)>();
+				var entries = new Dictionary<string, string>();
+
 				foreach (var entry in archive.Entries)
 				{
 #if DEBUG
@@ -107,6 +115,8 @@ internal class AssetsUtil : IAssetUtil
 						using var cidStream = entry.Open();
 						using var cidReader = new StreamReader(cidStream);
 
+						entries[cidReader.ReadToEnd()] = entry.FullName.TrimEnd(4);
+
 						continue;
 					}
 
@@ -116,54 +126,26 @@ internal class AssetsUtil : IAssetUtil
 					}
 
 					using var stream = entry.Open();
-					using var r = new BinaryReader(stream);
 
-					if ((ushort)stream.ReadByte() == 123)
+					var isBinary = (ushort)stream.ReadByte() != 123;
+
+					var isValidAsset = isBinary
+						? GetTypeAndNameFromBinary(stream, out var type, out var name, out var icon)
+						: GetTypeAndNameFromJson(stream, out type, out name, out icon);
+
+					if (!isValidAsset || type is "Game.Prefabs.RenderPrefab, Game")
 					{
 						continue;
 					}
 
-					r.ReadBytes(10); // skip first bytes
+					assetCount++;
 
-					var typeBuilder = new StringBuilder();
-
-					for (var i = 0; i < 500; i++)
-					{
-						var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
-
-						if (ch is '\0' or 'ī')
-						{
-							break;
-						}
-
-						typeBuilder.Append(ch);
-					}
-
-					r.ReadBytes(21); // skip extra bytes
-
-					var nameBuilder = new StringBuilder();
-
-					for (var i = 0; i < 500; i++)
-					{
-						var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
-
-						if (ch is '\0' or 'ī')
-						{
-							break;
-						}
-
-						nameBuilder.Append(ch);
-					}
-
-					var type = typeBuilder.ToString();
-					var name = nameBuilder.ToString();
-
-					if (type is "Game.Prefabs.RenderPrefab, Game")
+					if (isBinary)
 					{
 						continue;
 					}
 
-					asset = new Asset(name!
+					asset = new Asset(name!.RegexRemove(@"\\u\w{4}").Trim()
 						, AssetType.Generic
 						, folder
 						, file
@@ -171,54 +153,25 @@ internal class AssetsUtil : IAssetUtil
 						, entry.LastWriteTime.ToUniversalTime().Date
 						, [Regex.Match(type, @"\.(\w+?)(Prefab)?,").Groups[1].Value.FormatWords()]);
 
-					//var imageEntry = archive.GetEntry(Path.ChangeExtension(entry.FullName, "png"))
-					//	?? archive.GetEntry(Path.ChangeExtension(entry.FullName.Insert(entry.FullName.Length - 7, "_thumbnail"), "png"));
+					if (icon is not null and not "")
+					{
+						assetIconDic.Add((asset, icon));
+					}
 
-					//if (imageEntry is not null && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
-					//{
-					//	imageEntry.ExtractToFile(asset.Thumbnail);
-					//}
-					//else
-					//{
-					//	var ailThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "Thumbnails", name + ".png");
-					//	var ailColoredThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "Thumbnails", "ColoredPropless", name + ".png");
-					//	var ailCustomThumbnail = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ModsData", "AssetIconLibrary", "CustomThumbnails");
+					assets.Add( asset);
+				}
 
-					//	if (CrossIO.FileExists(ailColoredThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
-					//	{
-					//		File.Copy(ailColoredThumbnail, asset.Thumbnail, true);
-
-					//		yield return asset;
-					//		continue;
-					//	}
-
-					//	if (CrossIO.FileExists(ailThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
-					//	{
-					//		File.Copy(ailThumbnail, asset.Thumbnail, true);
-
-					//		yield return asset;
-					//		continue;
-					//	}
-
-					//	if (Directory.Exists(ailCustomThumbnail))
-					//	{
-					//		ailCustomThumbnail = Directory.GetFiles(ailCustomThumbnail, $"{name}.png", SearchOption.AllDirectories).FirstOrDefault();
-
-					//		if (CrossIO.FileExists(ailCustomThumbnail) && !CrossIO.FileExists(asset.SetThumbnail(_imageService)))
-					//		{
-					//			File.Copy(ailCustomThumbnail, asset.Thumbnail, true);
-
-					//			yield return asset;
-					//			continue;
-					//		}
-					//	}
-					//}
-
-					yield return asset;
+				foreach (var item in assetIconDic)
+				{
+					if (entries.TryGetValue(item.Entry, out var image))
+					{
+						if (!CrossIO.FileExists(item.Asset.SetThumbnail(_imageService)))
+						{
+							archive.GetEntry(image).ExtractToFile(item.Asset.Thumbnail);
+						}
+					}
 				}
 			}
-
-			archive.Dispose();
 
 			bool getAsset<T>(AssetType assetType, string metaDataName, out Asset? asset, out T? data)
 			{
@@ -258,14 +211,62 @@ internal class AssetsUtil : IAssetUtil
 				return size;
 			}
 		}
+
+		return assets;
 	}
 
-	public static bool GetTypeAndNameFromJson(string jsonString, out string? type, out string? name, out string? icon)
+	private bool GetTypeAndNameFromBinary(Stream stream, out string? type, out string? name, out string? icon)
 	{
+		using var r = new BinaryReader(stream);
+
+		r.ReadBytes(10); // skip first bytes
+
+		var typeBuilder = new StringBuilder();
+
+		for (var i = 0; i < 500; i++)
+		{
+			var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
+
+			if (ch is '\0' or 'ī')
+			{
+				break;
+			}
+
+			typeBuilder.Append(ch);
+		}
+
+		r.ReadBytes(21); // skip extra bytes
+
+		var nameBuilder = new StringBuilder();
+
+		for (var i = 0; i < 500; i++)
+		{
+			var ch = Encoding.Unicode.GetChars(r.ReadBytes(2))[0];
+
+			if (ch is '\0' or 'ī')
+			{
+				break;
+			}
+
+			nameBuilder.Append(ch);
+		}
+
+		type = typeBuilder.ToString().RegexRemove("^\\d+\\|");
+		name = nameBuilder.ToString();
+		icon = null;
+
+		return true;
+	}
+
+	public static bool GetTypeAndNameFromJson(Stream stream, out string? type, out string? name, out string? icon)
+	{
+		using var reader = new StreamReader(stream);
+		var jsonString = reader.ReadToEnd();
+
 		// Find matches
-		var typeMatch = Regex.Match(jsonString, @"""\$type"":\s*""([^""]+)""");
+		var typeMatch = Regex.Match(jsonString, @"""\$type"":\s*""\d+\|([^""]+)""");
 		var nameMatch = Regex.Match(jsonString, @"""name"":\s*""([^""]+)""");
-		var iconMatch = Regex.Match(jsonString, @"""assetdb://Global/(\w+)""");
+		var iconMatch = Regex.Match(jsonString, @"""assetdb://global/(\w+)""", RegexOptions.IgnoreCase);
 
 		// If both type and name are found, assign them to the out parameters
 		if (typeMatch.Success && nameMatch.Success)

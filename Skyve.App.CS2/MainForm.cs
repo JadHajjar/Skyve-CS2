@@ -165,7 +165,7 @@ public partial class MainForm : BasePanelForm
 	private void UserService_UserInfoUpdated()
 	{
 		var hasPackages = _userService.User.Id is not null && _packageManager.Packages.Any(x => _userService.User.Id.Equals(x.GetWorkshopInfo()?.Author?.Id));
-		PI_CompatibilityManagement.Hidden = !((hasPackages || _userService.User.Manager) && !_userService.User.Malicious);
+		PI_CompatibilityManagement.Hidden = !_userService.User.Manager;
 		PI_ManageYourPackages.Hidden = !(hasPackages && !_userService.User.Malicious);
 		base_P_Tabs.FilterChanged();
 	}

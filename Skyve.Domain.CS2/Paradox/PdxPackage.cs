@@ -56,7 +56,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 
 		if (mod.LocalData?.FolderAbsolutePath is not null)
 		{
-			LocalData = new LocalPackageData(this, [], [], mod.LocalData.FolderAbsolutePath, mod.UserModVersion, mod.LocalData.ContentFileOrFolder, mod.RequiredGameVersion);
+			LocalData = new LocalPackageData(this, [], 0, [], mod.LocalData.FolderAbsolutePath, mod.UserModVersion, mod.LocalData.ContentFileOrFolder, mod.RequiredGameVersion);
 
 			ThumbnailPath = CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
 		}

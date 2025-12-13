@@ -15,7 +15,7 @@ public class PdxPlaysetPackage : IPlaysetPackage
 		{
 			Name = mod.DisplayName;
 			LocalData = string.IsNullOrEmpty(mod.LocalData.FolderAbsolutePath) ? null
-				: new LocalPackageData(this, [], [], mod.LocalData.FolderAbsolutePath, null, string.Empty, null);
+				: new LocalPackageData(this, [], 0, [], mod.LocalData.FolderAbsolutePath, null, string.Empty, null);
 			return;
 		}
 
@@ -26,7 +26,7 @@ public class PdxPlaysetPackage : IPlaysetPackage
 		IsVersionLocked = subscribedMod.PreferredVersion is not null;
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 		LocalData = string.IsNullOrEmpty(mod.LocalData.FolderAbsolutePath) ? null
-			: new LocalPackageData(this, [], [], mod.LocalData.FolderAbsolutePath, subscribedMod.UserModVersion, string.Empty, null);
+			: new LocalPackageData(this, [], 0, [], mod.LocalData.FolderAbsolutePath, subscribedMod.UserModVersion, string.Empty, null);
 	}
 
 	public ulong Id { get; }

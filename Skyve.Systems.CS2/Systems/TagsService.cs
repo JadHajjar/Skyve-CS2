@@ -56,9 +56,13 @@ internal class TagsService : ITagsService
 		_notifier.ContentLoaded += GenerateCache;
 
 		if (_workshopService.IsAvailable)
-		Task.Run(UpdateWorkshopTags);
+		{
+			Task.Run(UpdateWorkshopTags);
+		}
 		else
+		{
 			_workshopService.OnContextAvailable += UpdateWorkshopTags;
+		}
 
 		Task.Run(GenerateCache);
 	}
@@ -114,7 +118,7 @@ internal class TagsService : ITagsService
 		try
 		{
 			var tags = _workshopService.GetAvailableTags();
-	
+
 			_workshopTags = Combine(tags);
 
 			var packages = await _workshopService.GetLocalPackages();
@@ -215,27 +219,14 @@ internal class TagsService : ITagsService
 		}
 	}
 
-	public IEnumerable<ITag> GetTags(IPackageIdentity package, bool ignoreParent = false)
+	public IEnumerable<ITag> GetTags(IPackageIdentity package, bool ignoreParent = false, bool ignoreSubTags = false)
 	{
 		var returned = new List<string>() { string.Empty };
+		var isAsset = package is IAsset;
 
-		if (!ignoreParent)
+		if (isAsset)
 		{
-			var tags = package.GetWorkshopInfo()?.Tags ?? [];
-			foreach (var item in tags)
-			{
-				var name = _workshopTags.TryGet(item.Key)?.Value ?? item.Value;
-				if (!returned.Contains(name))
-				{
-					returned.Add(name);
-					yield return new TagItem(TagSource.Workshop, item.Key, name);
-				}
-			}
-		}
-
-		if (package is IAsset asset)
-		{
-			foreach (var item in asset.Tags)
+			foreach (var item in (package as IAsset)!.Tags)
 			{
 				if (!returned.Contains(item))
 				{
@@ -255,6 +246,27 @@ internal class TagsService : ITagsService
 			//		}
 			//	}
 			//}
+		}
+
+		if (!ignoreParent || !isAsset)
+		{
+			var tags = package.GetWorkshopInfo()?.Tags?.Select(x => _workshopTags.TryGet(x.Key) ?? CreateWorkshopTag(x.Value, x.Key)) ?? [];
+			foreach (var item in tags.OrderBy(x => x.Order))
+			{
+				if (ignoreSubTags && item.Depth > 1)
+				{
+					continue;
+				}
+
+				if (returned.Contains(item.Value))
+				{
+					continue;
+				}
+
+				returned.Add(item.Value);
+
+				yield return new TagItem(TagSource.Workshop, item.Key, item.Value);
+			}
 		}
 
 		var skyveTags = _skyveDataManager.TryGetPackageInfo(package.Id)?.Tags;
@@ -372,6 +384,16 @@ internal class TagsService : ITagsService
 	public IWorkshopTag CreateWorkshopTag(string text, string? key)
 	{
 		return new TagItem(TagSource.Workshop, key ?? text, text);
+	}
+
+	public IWorkshopTag GetWorkshopTag(string key)
+	{
+		if (_workshopTags.TryGetValue(key, out var tag))
+		{
+			return tag;
+		}
+
+		return CreateWorkshopTag(key, key);
 	}
 
 	public ITag CreateIdTag(string text)

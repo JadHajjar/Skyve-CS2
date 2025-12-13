@@ -2,6 +2,38 @@
   {
     "Stable": false,
     "Beta": false,
+    "Version": "1.1.9",
+    "Date": "2025-12-10",
+    "ChangeGroups": [
+      {
+        "Name": "Bug hunting",
+        "Changes": [
+          "Fixed the flickering in the mod page.",
+          "Fixed cases where a mod's cached info would get stuck on an older version. Usually noticed by an empty version dropdown in the mod page.",
+          "Fixed a rare bug that caused a mod to get stuck in a subscribing loop while in its mod page.",
+          "Fixed being able to see the compatibility center."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.8",
+    "Date": "2025-12-07",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added assets tag to the PDX Mods dashboard widgets.",
+          "Selected tag in the PDX Mods dashboard widgets are now remembered throughout sessions."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
     "Version": "1.1.7",
     "Date": "2025-12-07",
     "ChangeGroups": [

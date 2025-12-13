@@ -6,7 +6,6 @@ using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Paradox;
-using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
@@ -188,6 +187,7 @@ internal class ContentManager : IContentManager
 	{
 		var packages = new List<IPackage>();
 		var gameModsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Mods");
+		var gameAssetsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "ImportedData");
 		var gameSavesPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Saves", _settings.FolderSettings.UserIdentifier);
 		var gameMapsPath = CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Maps", _settings.FolderSettings.UserIdentifier);
 
@@ -205,9 +205,20 @@ internal class ContentManager : IContentManager
 				}
 			}
 		}
-		else
+
+		if (Directory.Exists(gameAssetsPath))
 		{
-			_logger.Warning($"Folder not found: '{gameModsPath}'");
+			_logger.Info($"Looking for packages in: '{gameAssetsPath}'");
+
+			foreach (var folder in Directory.GetDirectories(gameAssetsPath))
+			{
+				var package = GetPackage(folder);
+
+				if (package is not null)
+				{
+					packages.Add(package);
+				}
+			}
 		}
 
 		var savesPackage = GetPackage(gameSavesPath, true, null);
@@ -251,7 +262,9 @@ internal class ContentManager : IContentManager
 		}
 
 		if (_notifier.Context is Skyve.Domain.Enums.SkyveContext.Service)
+		{
 			return packages;
+		}
 
 		try
 		{
@@ -293,17 +306,22 @@ internal class ContentManager : IContentManager
 
 			var isCodeMod = _modUtil.GetModInfo(folder, out var modDll, out var version);
 			IAsset[] assets;
+			var assetCount = 0;
 
-			try 
+			try
 			{
-				assets = _assetUtil.GetAssets(folder, withSubDirectories).ToArray();
+				assets = _assetUtil.GetAssets(folder, out assetCount, withSubDirectories).ToArray();
 			}
-			catch { assets = []; }
+			catch
+			{
+				assets = [];
+			}
 
 			if (pdxMod is not null)
 			{
 				return new LocalPdxPackage(pdxMod,
 					assets,
+					assetCount,
 					isCodeMod,
 					pdxMod.Version,
 					pdxMod.UserModVersion ?? version?.ToString() ?? string.Empty,
@@ -312,6 +330,7 @@ internal class ContentManager : IContentManager
 
 			return new Package(folder,
 				assets,
+				assetCount,
 				[],
 				isCodeMod,
 				"1",
@@ -380,10 +399,11 @@ internal class ContentManager : IContentManager
 		}
 
 		var isCodeMod = _modUtil.GetModInfo(package.LocalData.Folder, out var modDll, out var version);
-		var assets = _assetUtil.GetAssets(package.LocalData.Folder, !self).ToArray();
+		var assets = _assetUtil.GetAssets(package.LocalData.Folder, out var assetCount, !self).ToArray();
 
 		package.RefreshData(
 			assets,
+			assetCount,
 			isCodeMod,
 			"1",
 			localPackage.Version ?? version?.ToString() ?? string.Empty,

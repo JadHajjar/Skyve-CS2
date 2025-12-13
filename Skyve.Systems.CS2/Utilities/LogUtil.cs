@@ -7,11 +7,13 @@ using Skyve.Domain.Systems;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
@@ -195,6 +197,8 @@ internal class LogUtil : ILogUtil
 
 	private IEnumerable<string> EnumerateFilesystemFiles(int startFolderLength)
 	{
+		var sw = Stopwatch.StartNew();
+
 		foreach (var item in Directory.EnumerateFiles(_settings.FolderSettings.AppDataPath, "*", SearchOption.AllDirectories))
 		{
 			var text = item.Substring(startFolderLength);
@@ -202,6 +206,13 @@ internal class LogUtil : ILogUtil
 			if (!text.StartsWith(@"\.cache\Modding") && !text.StartsWith(@"\ModsData\AssetIconLibrary") && !text.StartsWith(@"\ModsData\AssetPacksManager"))
 			{
 				yield return text;
+			}
+
+			if (sw.ElapsedMilliseconds > 3000)
+			{
+				yield return "";
+				yield return "Filesystem listing timed out";
+				break;
 			}
 		}
 	}

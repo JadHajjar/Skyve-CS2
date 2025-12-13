@@ -52,7 +52,7 @@ internal class D_Playsets : IDashboardItem
 	{
 		this.TryInvoke(() =>
 		{
-			Loading = obj;
+			Loading = obj || !_notifier.IsPlaysetsLoaded;
 			loadingFromGameLaunch = obj;
 			Enabled = !obj;
 		});
@@ -163,7 +163,7 @@ internal class D_Playsets : IDashboardItem
 			Icon = isCitiesRunning ? "Stop" : "CS",
 			Padding = UI.Scale(new Padding(2)),
 			Enabled = Enabled && isCitiesAvailable,
-			Control = this
+			Control = loadingFromGameLaunch ? this : null
 		});
 
 		if (_playsetManager.CurrentCustomPlayset != null)

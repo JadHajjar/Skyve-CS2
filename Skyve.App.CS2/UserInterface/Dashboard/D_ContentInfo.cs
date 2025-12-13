@@ -68,7 +68,7 @@ internal class D_ContentInfo : IDashboardItem
 		foreach (var mod in _packageManager.Packages)
 		{
 			contentInfo.ModsTotal++;
-			contentInfo.AssetsTotal += mod.LocalData?.Assets.Count(x => x.AssetType is not AssetType.SaveGame) ?? 0;
+			contentInfo.AssetsTotal += mod.LocalData?.AssetCount ?? 0;
 
 			if (mod.GetWorkshopInfo()?.ServerTime > DateTime.UtcNow.AddDays(-7))
 			{
