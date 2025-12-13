@@ -1,7 +1,7 @@
 {
-  "Options.SECTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod]": "স্কাইভ",
-  "Options.GROUP[Skyve Mod.Skyve.Mod.CS2.SkyveMod.GAMEPLAY_GROUP]": "ইনস্টলেশন",
-  "Options.OPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "স্কাইভ ইন্সটল করুন",
+  "Options.SECTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod]": "Skyve",
+  "Options.GROUP[Skyve Mod.Skyve.Mod.CS2.SkyveMod.GAMEPLAY_GROUP]": "Installation",
+  "Options.OPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "Install Skyve",
   "Options.OPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.UpdateApp]": "Update Skyve",
-  "Options.OPTION_DESCRIPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "আপনার কম্পিউটারে স্কাইভ ইনস্টল করার জন্য স্কাইভ সেটআপ প্রক্রিয়া শুরু করবে।"
+  "Options.OPTION_DESCRIPTION[Skyve Mod.Skyve.Mod.CS2.SkyveMod.SkyveModSettings.InstallApp]": "Starts the Skyve setup process to install Skyve on your computer."
 }
