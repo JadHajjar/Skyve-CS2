@@ -1,6 +1,6 @@
 {
   "StartCities": "Cities: Skylines II'yi Başlat",
-  "StopCities": "Cities: Skylines II'yi Durdur",
+  "StopCities": "Cities: Skylines 2'yi Durdur",
   "NoWorkshop": "Atölye Paketlerini Devre Dışı Bırak",
   "ExcludeAll": "Etkin oyun setinizden tüm öğeleri kaldırın",
   "ExcludeAllDisabled": "Etkin oyun setinizden tüm devre dışı bırakılmış öğeleri kaldırın",
@@ -209,5 +209,8 @@
     "Plural": "Etkilenen oyun setleri: {1}"
   },
   "TitleDesc": "Başlık ve Açıklamalar",
-  "EditModInfo": "Bu modun bilgilerini düzenle"
+  "EditModInfo": "Bu modun bilgilerini düzenle",
+  "SkyveVersionBlockedTitle": "Update Required for Skyve",
+  "SkyveVersionBlockedDescription": "Your current Skyve version has become outdated and may not work with the latest mods update.\r\n\r\nFollow the update instructions to learn how to upgrade and get back to creating and playing without issues.",
+  "ViewUpdateInstructions": "View Update Instructions"
 }
