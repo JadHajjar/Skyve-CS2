@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "No se pudo iniciar sesión con tu nombre de usuario/contraseña guardados. Haz clic aquí para actualizar tu información.",
   "ParadoxLoginFailedEmpty": "Es probable que tu sesión haya expirado. Intenta iniciar el juego para iniciar sesión de nuevo, o haz clic aquí para iniciar sesión a través de Skyve.",
   "DownloadComplete": "Descarga finalizada",
+  "DownloadStarted": "Descargando...",
   "DownloadFailed": "Descarga fallida",
+  "DownloadCancelled": "Descarga cancelada",
   "Downloading": "Descargando...",
   "ModsDownloadFailed": {
     "One": "Error al descargar un mod",
@@ -71,6 +73,7 @@
   "LogLevel": "Nivel de registro",
   "ParadoxAccount": "Cuenta Paradox",
   "LoggingIn": "Iniciando sesión...",
+  "Logout": "Cerrar sesión",
   "NotLoggedInCheckNotification": "No has iniciado sesión en Paradox, revisa tus notificaciones para más información.",
   "HideUserSection": "Oculta tu perfil en el menú principal",
   "DeveloperMode": "Activar modo desarrollador",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "No hay respaldos disponibles para restaurar sus ajustes. Configure los respaldos para proteger sus ajustes del juego en el futuro.\n\nHaga clic aquí para eliminar los archivos corruptos.",
   "RecentBackups": "Respaldos Recientes",
   "DisableLogCleanup": "Desactivar limpieza de registros al iniciar el juego",
-  "DisableLogCleanup_Tip": "Salta la eliminación de la carpeta de registros al iniciar el juego a través de Skyve."
+  "DisableLogCleanup_Tip": "Salta la eliminación de la carpeta de registros al iniciar el juego a través de Skyve.",
+  "SyncCloud": "Usar datos de la nube",
+  "SyncLocal": "Usar datos locales",
+  "SyncCloudInfo": "Descargue cualquier información que falte en los Mods de Paradox, y resuelva conflictos usando los datos de la nube en lugar del local.",
+  "SyncLocalInfo": "Sube toda la información local a Paradox Mods, se descargará cualquier playset que esté en la nube pero no en tus datos locales.",
+  "SyncConflictInfo": "Se detectaron algunos conflictos entre los playsets locales y los datos de la nube en Mods de Paradox. Debes seleccionar una resolución a continuación antes de poder obtener actualizaciones de tus mods.",
+  "SyncConflictTitle": "Conflicto de sincronización detectado",
+  "SyncAffectedPlaysets": {
+    "One": "Playset afectado: {1}",
+    "Plural": "Playsets afectados: {1}"
+  },
+  "TitleDesc": "Título y Descripción",
+  "EditModInfo": "Editar la información de este mod"
 }

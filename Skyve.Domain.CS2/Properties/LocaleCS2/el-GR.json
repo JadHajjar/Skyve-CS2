@@ -49,7 +49,9 @@
   "ParadoxLoginFailedBadCredentials": "Το αποθηκευμένο όνομα χρήστη/κωδικός πρόσβασης απέτυχε να συνδεθεί. Κάντε κλικ εδώ για να ενημερώσετε τις πληροφορίες σας.",
   "ParadoxLoginFailedEmpty": "Η συνεδρία σας έχει πιθανότατα λήξει. Δοκιμάστε να εκκινήσετε το παιχνίδι για να συνδεθείτε ξανά, ή κάντε κλικ εδώ για να συνδεθείτε μέσω του Skyve.",
   "DownloadComplete": "Η λήψη ολοκληρώθηκε",
+  "DownloadStarted": "Download starting...",
   "DownloadFailed": "Αποτυχία λήψης",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "Λήψη...",
   "ModsDownloadFailed": {
     "One": "Απέτυχε η λήψη ενός mod",
@@ -71,6 +73,7 @@
   "LogLevel": "Επίπεδο Καταγραφής",
   "ParadoxAccount": "Λογαριασμός Paradox",
   "LoggingIn": "Γίνεται σύνδεση...",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "Δεν είστε συνδεδεμένοι στο Paradox, ελέγξτε τις ειδοποιήσεις σας για περισσότερες πληροφορίες.",
   "HideUserSection": "Απόκρυψη του προφίλ σας στο κύριο μενού",
   "DeveloperMode": "Ενεργοποίηση Λειτουργίας Προγραμματιστή",
@@ -194,5 +197,17 @@
   "CorruptedSettingsFilesNoBackup": "Δεν υπάρχουν διαθέσιμα αντίγραφα ασφαλείας για να επαναφέρετε τις ρυθμίσεις σας. Ρυθμίστε τις ρυθμίσεις αντιγράφων ασφαλείας για να διασφαλίσετε τις ρυθμίσεις σας στο μέλλον.\r\n\r\nΚάντε κλικ εδώ για να διαγράψετε τα κατεστραμμένα αρχεία.",
   "RecentBackups": "Πρόσφατα Αντίγραφα Ασφαλείας",
   "DisableLogCleanup": "Απενεργοποίηση καθαρισμού αρχείων καταγραφής κατά την εκκίνηση του παιχνιδιού",
-  "DisableLogCleanup_Tip": "Παράλειψη της διαγραφής του φακέλου καταγραφής κατά την εκκίνηση του παιχνιδιού μέσω του Skyve."
+  "DisableLogCleanup_Tip": "Παράλειψη της διαγραφής του φακέλου καταγραφής κατά την εκκίνηση του παιχνιδιού μέσω του Skyve.",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncAffectedPlaysets": {
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
+  },
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information"
 }
