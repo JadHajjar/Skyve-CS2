@@ -1,7 +1,7 @@
 {
-  "StartCities": "Launch Cities: Skylines II",
-  "StopCities": "Stop Cities: Skylines II",
-  "NoWorkshop": "Disable workshop packages",
+  "StartCities": "शुरू Cities: Skylines",
+  "StopCities": "रुकना Cities: Skylines",
+  "NoWorkshop": "कोई कार्यशाला पैकेज नहीं",
   "ExcludeAll": "Remove all items from your active playset",
   "ExcludeAllDisabled": "Remove all disabled items from your active playset",
   "IncludeAll": "Add all items to your active playset",
