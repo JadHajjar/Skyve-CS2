@@ -210,7 +210,7 @@
   },
   "TitleDesc": "Başlık ve Açıklamalar",
   "EditModInfo": "Bu modun bilgilerini düzenle",
-  "SkyveVersionBlockedTitle": "Update Required for Skyve",
-  "SkyveVersionBlockedDescription": "Your current Skyve version has become outdated and may not work with the latest mods update.\r\n\r\nFollow the update instructions to learn how to upgrade and get back to creating and playing without issues.",
-  "ViewUpdateInstructions": "View Update Instructions"
+  "SkyveVersionBlockedTitle": "Skyve için Güncelleme Gerekli",
+  "SkyveVersionBlockedDescription": "Mevcut Skyve sürümün artık güncel değil ve en son mod güncellemeleriyle uyumlu çalışmayabilir.\n\nSorunsuz şekilde tekrar oluşturmak ve oynamak için nasıl güncelleyeceğini anlatan talimatları takip et.",
+  "ViewUpdateInstructions": "Güncelleme Talimatlarını Görüntüle"
 }
