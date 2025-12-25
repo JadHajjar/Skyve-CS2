@@ -43,7 +43,7 @@ public partial class CommentControl : SlickControl
 
 		foreach (Match match in matches)
 		{
-			var control = new MiniThumbControl(new AttachmentThumbnail(match.Groups[1].Value))
+			var control = new MiniThumbControl(new AttachmentThumbnail(/*match.Groups[1].Value*/))
 			{
 				Label = $"Attachment #{match.Groups[1].Value}",
 				Size = UI.Scale(new Size(150, 100))
@@ -560,7 +560,7 @@ public partial class CommentControl : SlickControl
 		QUOTE
 	}
 
-	private class AttachmentThumbnail(string id) : IThumbnailObject
+	private class AttachmentThumbnail(/*string id*/) : IThumbnailObject
 	{
 		public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 		{

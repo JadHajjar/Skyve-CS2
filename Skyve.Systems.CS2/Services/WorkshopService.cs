@@ -413,6 +413,16 @@ public class WorkshopService : IWorkshopService
 		return await _modProcessor.Get($"{identity.Id}_{identity.Version}", true);
 	}
 
+	public bool IsInfoQueued(IPackageIdentity identity)
+	{
+		if (identity.Id <= 0 || identity is IDlcInfo)
+		{
+			return false;
+		}
+
+		return _modProcessor.IsQueued($"{identity.Id}_{identity.Version}");
+	}
+
 	internal async Task<PdxModDetails?> GetInfoAsync(string id)
 	{
 		var rgx = _modIdRegex.Match(id);
@@ -540,7 +550,7 @@ public class WorkshopService : IWorkshopService
 		var result = await Context.Mods.Search(new SearchData
 		{
 			sortBy = GetPdxSorting(sorting),
-			searchQuery = query,
+			searchQuery = query?.Length > 128 ? query.Substring(0, 128) : query,
 			tags = requiredTags?.ToList(),
 			time = sorting == WorkshopQuerySorting.Best ? (SearchTime)(int)searchTime : null,
 			orderBy = GetPdxOrder(sorting),

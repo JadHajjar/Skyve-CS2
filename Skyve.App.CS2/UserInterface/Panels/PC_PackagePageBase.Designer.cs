@@ -40,6 +40,7 @@ partial class PC_PackagePageBase
 			SlickControls.DynamicIcon dynamicIcon2 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon3 = new SlickControls.DynamicIcon();
 			this.P_Side = new System.Windows.Forms.Panel();
+			this.PB_DataLoading = new SlickControls.SlickLabel();
 			this.base_slickScroll = new SlickControls.SlickScroll();
 			this.TLP_Side = new System.Windows.Forms.TableLayoutPanel();
 			this.TLP_Links = new SlickControls.RoundedTableLayoutPanel();
@@ -79,13 +80,12 @@ partial class PC_PackagePageBase
 			// 
 			// base_Text
 			// 
-			this.base_Text.ButtonType = SlickControls.ButtonType.Normal;
-			this.base_Text.ColorStyle = Extensions.ColorStyle.Active;
 			this.base_Text.Size = new System.Drawing.Size(150, 41);
 			this.base_Text.Text = "Back";
 			// 
 			// P_Side
 			// 
+			this.P_Side.Controls.Add(this.PB_DataLoading);
 			this.P_Side.Controls.Add(this.base_slickScroll);
 			this.P_Side.Controls.Add(this.TLP_Side);
 			this.P_Side.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -93,6 +93,22 @@ partial class PC_PackagePageBase
 			this.P_Side.Name = "P_Side";
 			this.P_Side.Size = new System.Drawing.Size(415, 623);
 			this.P_Side.TabIndex = 14;
+			// 
+			// PB_DataLoading
+			// 
+			this.PB_DataLoading.AutoSize = true;
+			this.PB_DataLoading.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.PB_DataLoading.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.PB_DataLoading.Location = new System.Drawing.Point(0, 589);
+			this.PB_DataLoading.Name = "PB_DataLoading";
+			this.PB_DataLoading.Selected = false;
+			this.PB_DataLoading.Size = new System.Drawing.Size(395, 34);
+			this.PB_DataLoading.SpaceTriggersClick = true;
+			this.PB_DataLoading.TabIndex = 3;
+			this.PB_DataLoading.TabStop = false;
+			this.PB_DataLoading.Text = "Loading Mod Data..";
+			this.PB_DataLoading.Visible = false;
+			this.PB_DataLoading.Enabled = false;
 			// 
 			// base_slickScroll
 			// 
@@ -515,4 +531,5 @@ partial class PC_PackagePageBase
 	private System.Windows.Forms.Panel P_Side;
 	protected PackageIcon PB_Icon;
 	private SlickButton B_EditModInfo;
+	private SlickLabel PB_DataLoading;
 }

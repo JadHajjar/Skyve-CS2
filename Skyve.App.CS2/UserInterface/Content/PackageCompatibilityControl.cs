@@ -99,10 +99,12 @@ internal class PackageCompatibilityControl : SlickControl
 					iconName = "ContentRemoved";
 					color = FormDesign.Design.RedColor;
 					break;
+				default:
+					throw new NotImplementedException(_packageUtil.GetStatus(Package, out _).ToString());
 			}
 
 			using var brush = new SolidBrush(color.MergeColor(BackColor, 85));
-			using var icon = iconName?.Get(height * 3 / 4).Color(brush.Color.GetTextColor());
+			using var icon = iconName.Get(height * 3 / 4).Color(brush.Color.GetTextColor());
 			var iconRect = new Rectangle(new Point((height - icon.Height) / 2, (height - icon.Height) / 2), icon.Size);
 			var icon2Rect = new Rectangle(new Point(Width - icon.Width - ((height - icon.Height) / 2), (height - icon.Height) / 2), icon.Size);
 			var textRect = new Rectangle(iconRect.Right + iconRect.X, 0, Width - ((iconRect.Right + (iconRect.X * 2)) * 2), height);

@@ -7,6 +7,7 @@ using Skyve.Systems.CS2.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
@@ -18,7 +19,7 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 	private readonly SaveHandler _saveHandler;
 	private readonly INotifier _notifier;
 
-	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(30, 3000, 5000, GetCachedInfo(saveHandler))
+	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(35, 7500, 2000, GetCachedInfo(saveHandler))
 	{
 		_workshopService = workshopService;
 		_saveHandler = saveHandler;
@@ -36,7 +37,7 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 		var failed = false;
 		var results = new ConcurrentDictionary<string, PdxModDetails>();
 
-		foreach (var item in entities)
+		await Task.WhenAll(entities.Select(async item =>
 		{
 			try
 			{
@@ -52,7 +53,7 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 			{
 				failed = true;
 			}
-		}
+		}));
 
 		try
 		{

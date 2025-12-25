@@ -5,6 +5,7 @@ using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
+using Skyve.Domain;
 using Skyve.Systems.CS2.Services;
 
 using System.Drawing;
@@ -23,6 +24,7 @@ public partial class PC_PackagePageBase : PanelContent
 	private readonly ISettings _settings;
 	private readonly IUserService _userService;
 	private readonly IWorkshopService _workshopService;
+	private readonly ISkyveDataManager _skyveDataManager;
 	private TagControl? addTagControl;
 	private bool refreshPending;
 	private bool isReadOnly;
@@ -42,7 +44,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 	public PC_PackagePageBase(IPackageIdentity package, bool load = false, bool autoRefresh = true) : base(load)
 	{
-		ServiceCenter.Get(out _notifier, out _packageUtil, out _settings, out _workshopService, out _userService, out IImageService imageService);
+		ServiceCenter.Get(out _notifier, out _packageUtil, out _settings, out _workshopService, out _userService, out _skyveDataManager, out IImageService imageService);
 
 		InitializeComponent();
 
@@ -60,6 +62,8 @@ public partial class PC_PackagePageBase : PanelContent
 			_notifier.PackageInclusionUpdated += Notifier_PackageInclusionUpdated;
 			_notifier.PackageInformationUpdated += Notifier_WorkshopInfoUpdated;
 		}
+
+		PB_DataLoading.Visible = PB_DataLoading.Loading = _workshopService.IsInfoQueued(package);
 	}
 
 	private async void DD_Version_SelectedItemChanged(object sender, EventArgs e)
@@ -95,7 +99,12 @@ public partial class PC_PackagePageBase : PanelContent
 		{
 			if (lastWorkshopTimestamp != (Package.GetWorkshopInfo() as ITimestamped)?.Timestamp)
 			{
-				Form.OnNextIdle(() => SetPackage(Package));
+				Form.OnNextIdle(() =>
+				{
+					SetPackage(Package);
+
+					PB_DataLoading.Visible = PB_DataLoading.Loading = false;
+				});
 			}
 		}
 		else
@@ -135,7 +144,15 @@ public partial class PC_PackagePageBase : PanelContent
 
 		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
-		B_EditModInfo.Visible = workshopInfo?.Author?.Equals(_userService.User) ?? false;
+		if(workshopInfo?.Author?.Equals(_userService.User) ?? false)
+		B_EditModInfo.Visible = true;
+		else if (_skyveDataManager.ReviewRequests?.Any(x=> x.PackageId == Package.Id) ?? false)
+		{
+			B_EditModInfo.Visible = true;
+			B_EditModInfo.Text = nameof(LocaleCR.ReviewRequests);
+			B_EditModInfo.ImageName = "RequestReview";
+		}
+
 		LI_Version.LabelText = localData?.IsCodeMod ?? true ? "Version" : "Content";
 		LI_Version.ValueText = localData?.IsCodeMod ?? true ? localData?.VersionName ?? workshopInfo?.VersionName : $"{localData.AssetCount} {Locale.Asset.FormatPlural(localData.Assets.Length).ToLower()}";
 		SlickTip.SetTo(LI_Version, localData?.IsCodeMod ?? true ? localData?.Version ?? workshopInfo?.Version : null);
@@ -284,6 +301,7 @@ public partial class PC_PackagePageBase : PanelContent
 		L_Requirements.Text = Locale.Dependency.Plural.ToUpper();
 		L_Tags.Text = LocaleSlickUI.Tags.One.ToUpper();
 		L_Links.Text = Locale.Links.One.ToUpper();
+		PB_DataLoading.Text = Locale.LoadingModData;
 	}
 
 	protected override void UIChanged()
@@ -302,6 +320,7 @@ public partial class PC_PackagePageBase : PanelContent
 		L_Info.Margin = L_Requirements.Margin = L_Tags.Margin = L_Links.Margin = UI.Scale(new Padding(3));
 		L_Author.Margin = L_Title.Margin = UI.Scale(new Padding(5, 0, 0, 0));
 		L_Author.Font = UI.Font(9.5F);
+		PB_DataLoading.Padding = UI.Scale(new Padding(10));
 
 		TLP_TopInfo.Height = UI.Scale(72);
 	}
@@ -451,17 +470,24 @@ public partial class PC_PackagePageBase : PanelContent
 
 	private async void B_EditModInfo_Click(object sender, EventArgs e)
 	{
-		B_EditModInfo.Loading = true;
-		var staging = await (_workshopService as WorkshopService)!.GetModStagingDataFromExistingMod(Package.GetWorkshopInfo()?.Id ?? Package.Id);
-		B_EditModInfo.Loading = false;
-
-		if (staging?.MetaData != null)
+		if (Package.GetWorkshopInfo()?.Author?.Equals(_userService.User) ?? false)
 		{
-			Form.PushPanel(new PC_PackageEdit(Package, staging));
+			B_EditModInfo.Loading = true;
+			var staging = await (_workshopService as WorkshopService)!.GetModStagingDataFromExistingMod(Package.GetWorkshopInfo()?.Id ?? Package.Id);
+			B_EditModInfo.Loading = false;
+
+			if (staging?.MetaData != null)
+			{
+				Form.PushPanel(new PC_PackageEdit(Package, staging));
+			}
+			else
+			{
+				ShowPrompt("Could not edit this mod, try again later", icon: PromptIcons.Warning);
+			}
 		}
 		else
 		{
-			ShowPrompt("Could not edit this mod, try again later", icon: PromptIcons.Warning);
+			Form.PushPanel(new PC_ReviewRequests(_skyveDataManager.ReviewRequests.Where(x => x.PackageId == Package.Id).ToArray()));
 		}
 	}
 }

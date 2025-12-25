@@ -24,6 +24,7 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 	private readonly Regex _urlRegex = new(@"(https?|ftp)://(?:www\.)?([\w-]+(?:\.[\w-]+)*)(?:/[^?\s]*)?(?:\?[^#\s]*)?(?:#.*)?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 	public IndexedCompatibilityData CompatibilityData { get; private set; } = new();
+	public ReviewRequest[]? ReviewRequests { get; private set; }
 
 	public void Start(List<IPackage> packages)
 	{
@@ -90,16 +91,21 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 				}
 			}
 
-#if DEBUG
-			if (System.Diagnostics.Debugger.IsAttached)
+			if (_userService.User.Manager)
 			{
-				var dic = await _skyveApiUtil.Translations();
-
-				if (dic is not null)
-				{
-					File.WriteAllText("../../../../SkyveApp.Systems/Properties/CompatibilityNotes.json", Newtonsoft.Json.JsonConvert.SerializeObject(dic, Newtonsoft.Json.Formatting.Indented));
-				}
+				ReviewRequests = await _skyveApiUtil.GetReviewRequests();
 			}
+
+#if DEBUG
+			//if (System.Diagnostics.Debugger.IsAttached)
+			//{
+			//	var dic = await _skyveApiUtil.Translations();
+
+			//	if (dic is not null)
+			//	{
+			//		File.WriteAllText("../../../../SkyveApp.Systems/Properties/CompatibilityNotes.json", Newtonsoft.Json.JsonConvert.SerializeObject(dic, Newtonsoft.Json.Formatting.Indented));
+			//	}
+			//}
 #endif
 			return;
 		}

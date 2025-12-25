@@ -2,6 +2,66 @@
   {
     "Stable": false,
     "Beta": false,
+    "Version": "1.1.13",
+    "Date": "2025-12-24",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Small fix to a bug while browsing PDX Mods."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.12",
+    "Date": "2025-12-18",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed the loading process of mod details getting stuck after browsing through a lot of mods."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.11",
+    "Date": "2025-12-15",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added a loding label at the bottom of a mod's page that shows while its full info is being loaded.",
+          "Improved the loading process of mod details."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.1.10",
+    "Date": "2025-12-13",
+    "ChangeGroups": [
+      {
+        "Name": "Assets Changes",
+        "Changes": [
+          "Added support for loading assets made in the editor, assets using the old format like region packs will no longer show their individual assets in the Assets tab.",
+          "Tags shown in the package list pages now only include top-level tags instead of all tags from PDX Mods.",
+          "Added support for assets inside the ImportedData folder",
+          "Updated translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
     "Version": "1.1.9",
     "Date": "2025-12-10",
     "ChangeGroups": [

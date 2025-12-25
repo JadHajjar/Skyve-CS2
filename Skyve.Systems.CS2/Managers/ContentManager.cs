@@ -286,6 +286,11 @@ internal class ContentManager : IContentManager
 	{
 		try
 		{
+			if (string.IsNullOrEmpty(folder))
+			{
+				return null;
+			}
+
 			if (Regex.IsMatch(Path.GetFileName(folder), ExtensionClass.CharBlackListPattern))
 			{
 				_logger.Warning($"Package folder contains blacklisted characters: '{folder}'");
