@@ -13,8 +13,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-using PdxIMod = PDX.SDK.Contracts.Service.Mods.Interfaces.IMod;
-using PdxMod = PDX.SDK.Contracts.Service.Mods.Models.Mod;
+using IPdxTag = PDX.SDK.Contracts.Service.Mods.Interfaces.IModTag;
+using PdxIMod = PDX.SDK.Contracts.Service.Mods.Interfaces.ILocalModBase;
 
 namespace Skyve.Domain.CS2.Content;
 
@@ -22,29 +22,19 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 {
 	private LocalData PdxLocalData;
 
-	public PdxPackage(PdxMod mod)
+	public PdxPackage(IModSearch mod)
 	{
-		Source=mod.Source;
-		Id = ulong.TryParse(mod.Id,out var id)?id:0;
-		Guid = mod.Name;
-		Name = DisplayName = mod.DisplayName;
+		Source = mod.Source;
+		Id = ulong.TryParse(mod.Id, out var id) ? id : 0;
+		Name = mod.DisplayName;
 		ShortDescription = mod.ShortDescription;
-		LongDescription = mod.LongDescription;
-		RequiredGameVersion = mod.RequiredGameVersion;
 		VersionName = mod.UserModVersion;
 		LatestVersion = mod.LatestVersion;
-		ThumbnailUrl = mod.ThumbnailPath;
-		ExternalLinks = mod.ExternalLinks;
-		OperatingSystem = mod.OperatingSystem;
+		ThumbnailUrl = mod.ThumbnailUrl;
 		Author = mod.Author;
 		Version = mod.Version;
-		Rating = mod.Rating;
-		RatingsTotal = mod.RatingsTotal;
-		State = mod.State;
-		LatestUpdate = mod.LatestUpdate;
-		InstalledDate = mod.InstalledDate;
 		Description = mod.ShortDescription;
-		ServerTime = mod.LatestUpdate ?? default;
+		ServerTime = mod.LatestModUpdate ?? default;
 		ServerSize = (long)mod.Size;
 		IsLocal = false;
 		IsCollection = false;
@@ -53,7 +43,12 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
+		SuggestedGameVersion = mod.RequiredGameVersion;
 		Tags = mod.Tags;
+		Subscribers = mod.SubscriptionsTotal;
+		Playsets = mod.Playsets;
+		IsSubscribedInActivePlayset = mod.IsSubscribedInActivePlayset;
+		IsEnabledInActivePlayset = mod.IsEnabledInActivePlayset;
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 
 		PdxLocalData = mod.LocalData;
@@ -62,35 +57,25 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 		{
 			LocalData = new LocalPackageData(this, [], 0, [], mod.LocalData.FolderAbsolutePath, mod.UserModVersion, string.Empty, mod.RequiredGameVersion);
 
-			ThumbnailPath = CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
+			if (mod.LocalData.ThumbnailFilename is not null)
+			{
+				ThumbnailPath = CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
+			}
+			else
+			{
+				ThumbnailPath = string.Empty;
+			}
 		}
 		else
 		{
 			ThumbnailPath = string.Empty;
 		}
-
-		if (mod is ModSearch modSearch)
-		{
-			Subscribers = modSearch.InstalledCount;
-		}
 	}
 
 	public string? Version { get; set; }
 	public string VersionName { get; set; }
-	public string DisplayName { get; set; }
-	public string Author { get; set; }
 	public string ShortDescription { get; set; }
-	public string LongDescription { get; set; }
-	public string RequiredGameVersion { get; set; }
 	public string LatestVersion { get; set; }
-	public string ThumbnailPath { get; set; }
-	public ulong Size { get; set; }
-	public List<ModTag> Tags { get; set; }
-	public int Rating { get; set; }
-	public int RatingsTotal { get; set; }
-	public ModState State { get; set; }
-	public DateTime? LatestUpdate { get; set; }
-	public DateTime? InstalledDate { get; set; }
 	public string? ThumbnailUrl { get; set; }
 	public string? Description { get; set; }
 	public DateTime ServerTime { get; set; }
@@ -98,12 +83,12 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 	public int Subscribers { get; set; }
 	public int VoteCount { get; set; }
 	public bool IsRemoved { get; set; }
-	public bool IsIncompatible { get; set; }
 	public bool IsBanned { get; set; }
+	public IEnumerable<IPdxTag> Tags { get; }
 	public bool IsCollection { get; set; }
 	public bool IsInvalid { get; set; }
+	public string Author { get; set; }
 	public IEnumerable<IPackageRequirement> Requirements => [];
-	public string Guid { get; set; }
 	IUser? IWorkshopInfo.Author => new PdxUser(Author);
 	Dictionary<string, string> IWorkshopInfo.Tags => Tags.ToDictionary(x => x.Id, x => x.DisplayName);
 	public bool HasVoted { get; set; }
@@ -111,23 +96,21 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 	public bool IsLocal { get; }
 	public bool IsBuiltIn { get; }
 	public ILocalPackageData? LocalData { get; }
+	public string ThumbnailPath { get; }
+	public SourceType Source { get; }
 	public ulong Id { get; private set; }
 	public string Name { get; }
 	public string? Url { get; }
-	public ModAccessControlLevelState? AccessControlLevelState { get; set; }
 	string IModBase.Id { get => Id.ToString(); set => Id = ulong.Parse(value); }
-	string PdxIMod.Name { get => Guid; set => Guid = value; }
-	string? IWorkshopInfo.SuggestedGameVersion => RequiredGameVersion;
+	public string? SuggestedGameVersion { get; set; }
 	bool IWorkshopInfo.IsPartialInfo => true;
 	LocalData ILocalModBase.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<IThumbnailObject> IWorkshopInfo.Images => [];
 	IEnumerable<ILink> IWorkshopInfo.Links => [];
-	string PdxIMod.UserModVersion { get => VersionName; set => VersionName = value; }
-	public ModPlatform OperatingSystem { get; set; }
-	public List<ExternalLink> ExternalLinks { get; set; }
-
-	public SourceType Source{ get; }
+	public List<PlaysetInMod> Playsets { get; set; }
+	public bool IsSubscribedInActivePlayset { get; set; }
+	public bool IsEnabledInActivePlayset { get; set; }
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{

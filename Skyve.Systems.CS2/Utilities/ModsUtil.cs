@@ -82,7 +82,7 @@ internal class ModsUtil : IModUtil
 				config.SetState(item.PlaysetId
 					, new GenericPackageIdentity { Id = ulong.TryParse(mod.Id,out var id)?id:0, Name = mod.Id }
 					, item.ModIsEnabled
-					, item.Version);
+					, item.PreferredVersion);
 			}
 		}
 

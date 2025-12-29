@@ -4,13 +4,10 @@ namespace Skyve.Domain.CS2.Paradox;
 
 public class PdxBannedMod : PdxModDetails
 {
-	public PdxBannedMod(string id) : base(new ModDetails { Id = id, Name = id.ToString() })
+	public PdxBannedMod(string id)
 	{
+		Id = ulong.Parse(id);
+		Name = id.ToString();
 		IsBanned = true;
-	}
-
-	public bool HasComments()
-	{
-		return false;
 	}
 }

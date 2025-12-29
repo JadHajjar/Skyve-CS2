@@ -31,7 +31,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 	public void OnDownloadProgress(PackageDownloadProgress info)
 	{
 		Status = new SubscriptionStatus(
-			status: info.Status,
+			status: info.Status ?? string.Empty,
 			isActive: info.Progress < 1f,
 			modId: info.Id.If(0UL, Status.ModId),
 			progress: info.Progress,

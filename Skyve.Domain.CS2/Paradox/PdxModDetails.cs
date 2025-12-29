@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Interfaces;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain.CS2.Utilities;
@@ -13,9 +14,8 @@ using System.Linq;
 
 namespace Skyve.Domain.CS2.Paradox;
 
-public class PdxModDetails : IModDetails, IFullThumbnailObject
+public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 {
-	[Obsolete("", true)]
 	public PdxModDetails()
 	{
 		Name = string.Empty;
@@ -25,12 +25,12 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 		Tags = [];
 	}
 
-	public PdxModDetails(ModDetails mod)
+	public PdxModDetails(IModDetails mod)
 	{
 		Id = ulong.Parse(mod.Id);
 		Name = mod.DisplayName;
 		Guid = mod.Name;
-		ThumbnailUrl = mod.ThumbnailPath;
+		ThumbnailUrl = mod.ThumbnailUrl;
 		AuthorId = mod.Author;
 		ShortDescription = mod.ShortDescription;
 		Description = mod.LongDescription;
@@ -39,7 +39,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 		VersionName = mod.UserModVersion.IfEmpty(mod.Version);
 		SuggestedGameVersion = mod.RequiredGameVersion;
 		Subscribers = mod.SubscriptionsTotal;
-		HasVoted = mod.HasLiked;
+		HasVoted = mod.HasLiked ?? false;
 		VoteCount = mod.RatingsTotal;
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
@@ -47,7 +47,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 		ForumLink = mod.ForumLinks?.FirstOrDefault();
 		Tags = mod.Tags?.ToDictionary(x => x.Id, x => x.DisplayName) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
-		ServerTime = (mod.LatestUpdate ?? Changelog.Max(x => x.ReleasedDate))?.ToUniversalTime() ?? default;
+		ServerTime = (mod.LatestModUpdate ?? Changelog.Max(x => x.ReleasedDate))?.ToUniversalTime() ?? default;
 		Images = mod.Screenshots?.ToArray(x => new ParadoxScreenshot(x.Image, Id, mod.Version, false));
 		Links = mod.ExternalLinks?.ToArray(x => new ParadoxLink(x));
 		Timestamp = DateTime.Now;

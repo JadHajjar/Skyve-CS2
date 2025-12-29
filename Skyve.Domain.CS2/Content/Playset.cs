@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using PDX.SDK.Contracts.Service.Mods.Results;
+
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
@@ -23,7 +25,7 @@ public class Playset : IPlayset
 		ThumbnailUrl = playset.DisplayImagePath;
 	}
 
-	public Playset(PDX.SDK.Contracts.Service.Mods.Result.CreatePlaysetResult createdPlayset)
+	public Playset(ICreatePlaysetResult createdPlayset)
 	{
 		Id = createdPlayset.Id;
 		Name = createdPlayset.Name;

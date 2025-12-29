@@ -12,7 +12,7 @@ public class PdxPlaysetPackage : IPlaysetPackage
 		LoadOrder = mod.LoadOrder;
 		PlaysetId = playsetId;
 
-		if (mod is not PlaysetSubscribedMod subscribedMod)
+		if (mod is not IMod subscribedMod)
 		{
 			Name = mod.DisplayName;
 			LocalData = string.IsNullOrEmpty(mod.LocalData.FolderAbsolutePath) ? null

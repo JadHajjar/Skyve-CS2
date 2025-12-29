@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Interfaces;
 
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
@@ -279,7 +280,7 @@ internal class ContentManager : IContentManager
 		return packages;
 	}
 
-	internal Package? GetPackage(string folder, bool withSubDirectories = true, PDX.SDK.Contracts.Service.Mods.Models.Mod? pdxMod = null)
+	internal Package? GetPackage(string folder, bool withSubDirectories = true, IMod? pdxMod = null)
 	{
 		try
 		{

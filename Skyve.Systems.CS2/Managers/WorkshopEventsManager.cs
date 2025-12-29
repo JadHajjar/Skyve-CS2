@@ -3,7 +3,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using PDX.SDK.Contracts;
-using PDX.SDK.Contracts.Events.Mods;
+using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Events;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Notifications;
@@ -11,6 +12,7 @@ using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,43 +33,44 @@ internal class WorkshopEventsManager
 
 	internal void RegisterModsCallbacks(IContext context)
 	{
-		context.Mods.Downloads.DownloadStatusChanged += OnDownloadStatusChanged;
+		context.Mods.Downloads.DownloadStageChanged += OnDownloadStatusChanged;
 		context.Mods.Downloads.DownloadProgressChanged += DownloadProgressChanged;
 	}
 
-	private void DownloadProgressChanged(Guid guid, IDownloadStatus payload)
+	private void DownloadProgressChanged(Guid guid, IModDownloadStatus payload)
 	{
+		Debug.WriteLine($"{payload.Stage} - {payload.TotalProgress*100:0.0}%");
 		_subscriptionsManager.OnDownloadProgress(new PackageDownloadProgress
 		{
-			Status = payload.Status.ToString(),
-			Id = ulong.Parse(payload.Id),
+			Status = payload.Stage.ToString(),
+			Id = ulong.Parse(payload.Mod.Id),
 			Progress = payload.TotalProgress,
 			ProcessedBytes = payload.DownloadedBytes,
 			Size = payload.TotalBytesToDownload
 		});
 	}
 
-	private void OnDownloadStatusChanged(Guid guid, IDownloadStatus payload)
+	private void OnDownloadStatusChanged(Guid guid, IModDownloadStatus payload)
 	{
-		if (payload.Status == PDX.SDK.Contracts.Enums.ModDownloadStatus.Failed)
+		if (payload.Stage == ModDownloadStage.Failed)
 		{
 			SendDownloadFailedNotification(payload);
 		}
 
-		if (payload.Status == PDX.SDK.Contracts.Enums.ModDownloadStatus.Started)
+		if (payload.Stage == ModDownloadStage.Started)
 		{
-			Task.Run(() => _workshopService.GetInfoAsync(new GenericPackageIdentity(ulong.Parse(payload.Id))));
+			Task.Run(() => _workshopService.GetInfoAsync(new GenericPackageIdentity(ulong.Parse(payload.Mod.Id))));
 		}
 
 		DownloadProgressChanged(guid, payload);
 	}
 
-	private void SendDownloadFailedNotification(IDownloadStatus payload)
+	private void SendDownloadFailedNotification(IModDownloadStatus payload)
 	{
 		var notification = _notificationsService.GetNotifications<PdxModDownloadFailed>().FirstOrDefault() ?? new PdxModDownloadFailed();
 
 		notification.Time = DateTime.Now;
-		notification.Mods.AddIfNotExist(ulong.Parse(payload.Id));
+		notification.Mods.AddIfNotExist(ulong.Parse(payload.Mod.Id));
 
 		_notificationsService.RemoveNotificationsOfType<PdxModDownloadFailed>();
 		_notificationsService.SendNotification(notification);

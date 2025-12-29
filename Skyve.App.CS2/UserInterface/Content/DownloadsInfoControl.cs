@@ -1,4 +1,5 @@
 ﻿using PDX.SDK.Contracts.Enums;
+using PDX.SDK.Contracts.Service.Mods.Enums;
 
 using Skyve.App.Interfaces;
 using Skyve.Domain.CS2.Utilities;
@@ -175,15 +176,15 @@ public class DownloadsInfoControl : SlickControl
 	{
 		return status switch
 		{
-			nameof(ModDownloadStatus.Pending) => LocaleCS2.DownloadPending,
-			nameof(ModDownloadStatus.Started) => LocaleCS2.DownloadStarted,
-			nameof(ModDownloadStatus.Downloading) => LocaleCS2.Downloading,
-			nameof(ModDownloadStatus.CheckingIntegrity) => LocaleCS2.CheckingIntegrity,
-			nameof(ModDownloadStatus.Processing) => LocaleCS2.Processing,
-			nameof(ModDownloadStatus.CleaningUp) => LocaleCS2.CleaningUp,
-			nameof(ModDownloadStatus.Completed) => LocaleCS2.DownloadComplete,
-			nameof(ModDownloadStatus.Canceled) => LocaleCS2.DownloadCancelled,
-			nameof(ModDownloadStatus.Failed) => LocaleCS2.DownloadFailed,
+			nameof(ModDownloadStage.Pending) => LocaleCS2.DownloadPending,
+			nameof(ModDownloadStage.Started) => LocaleCS2.DownloadStarted,
+			nameof(ModDownloadStage.Downloading) => LocaleCS2.Downloading,
+			nameof(ModDownloadStage.CheckingIntegrity) => LocaleCS2.CheckingIntegrity,
+			nameof(ModDownloadStage.Processing) => LocaleCS2.Processing,
+			nameof(ModDownloadStage.CleaningUp) => LocaleCS2.CleaningUp,
+			nameof(ModDownloadStage.Completed) => LocaleCS2.DownloadComplete,
+			nameof(ModDownloadStage.Canceled) => LocaleCS2.DownloadCancelled,
+			nameof(ModDownloadStage.Failed) => LocaleCS2.DownloadFailed,
 			_ => status,
 		};
 	}
