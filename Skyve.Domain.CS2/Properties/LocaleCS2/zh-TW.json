@@ -210,7 +210,7 @@
   },
   "TitleDesc": "Title & Descriptions",
   "EditModInfo": "Edit this mod's information",
-  "SkyveVersionBlockedTitle": "Update Required for Skyve",
-  "SkyveVersionBlockedDescription": "Your current Skyve version has become outdated and may not work with the latest mods update.\r\n\r\nFollow the update instructions to learn how to upgrade and get back to creating and playing without issues.",
+  "SkyveVersionBlockedTitle": "Skyve 需要更新",
+  "SkyveVersionBlockedDescription": "您目前的 Skyve 版本已過時，可能無法與最新的模組更新相容。\n請遵循更新指示，了解如何升級，並回到無問題的創作與遊玩。",
   "ViewUpdateInstructions": "查看更新指示"
 }
