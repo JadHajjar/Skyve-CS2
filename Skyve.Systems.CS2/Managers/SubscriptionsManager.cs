@@ -1,6 +1,10 @@
 ﻿using Extensions;
 
+using PDX.SDK.Contracts;
+using PDX.SDK.Contracts.Service.Mods.Events;
+
 using Skyve.Domain;
+using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Services;
 
@@ -15,10 +19,9 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 	private readonly WorkshopService _workshopService = (WorkshopService)workshopService;
 	private readonly ISettings _settings = settings;
 	private readonly INotifier _notifier = notifier;
+	private bool modsDownloading = false;
 
 	public event Action? UpdateDisplayNotification;
-
-	public SubscriptionStatus Status { get; private set; }
 
 	public bool IsSubscribing(IPackageIdentity package)
 	{
@@ -28,17 +31,32 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		}
 	}
 
-	public void OnDownloadProgress(PackageDownloadProgress info)
+	public void RegisterModsCallbacks(IContext context)
 	{
-		Status = new SubscriptionStatus(
-			status: info.Status ?? string.Empty,
-			isActive: info.Progress < 1f,
-			modId: info.Id.If(0UL, Status.ModId),
-			progress: info.Progress,
-			processedBytes: info.ProcessedBytes,
-			totalSize: info.Size);
+		context.Mods.Downloads.DownloadStageChanged += DownloadProgressChanged;
+	}
 
-		UpdateDisplayNotification?.Invoke();
+	private void DownloadProgressChanged(Guid guid, IModDownloadStatus payload)
+	{
+		if (modsDownloading != _workshopService.GetOngoingDownloads().Any(x => x.Stage is > PDX.SDK.Contracts.Service.Mods.Enums.ModDownloadStage.Pending and < PDX.SDK.Contracts.Service.Mods.Enums.ModDownloadStage.Completed))
+		{
+			modsDownloading = !modsDownloading;
+
+			UpdateDisplayNotification?.Invoke();
+		}
+	}
+
+	public IEnumerable<SubscriptionStatus> GetDownloads()
+	{
+		foreach (var x in _workshopService.GetOngoingDownloads())
+		{
+			if (x.Stage is <= PDX.SDK.Contracts.Service.Mods.Enums.ModDownloadStage.Pending or >= PDX.SDK.Contracts.Service.Mods.Enums.ModDownloadStage.Completed)
+			{
+				continue;
+			}
+
+			yield return new SubscriptionStatus((ModDownloadStage)(int)x.Stage, x.DownloadedBytes, x.TotalBytesToDownload, x.TotalProgress, x.StageProgress, new PdxModDetails(x.Mod));
+		}
 	}
 
 	public void AddSubscribing(IEnumerable<IPackageIdentity> ids)
@@ -55,5 +73,17 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 		{
 			_subscribingTo.RemoveAll(x => ids.Contains(x));
 		}
+	}
+
+	public bool TryGetDownloadStatus(ulong id, out SubscriptionStatus subscriptionStatus)
+	{
+		if ( _workshopService.TryGetDownloadStatus(id, out var status))
+		{
+			subscriptionStatus= new SubscriptionStatus((ModDownloadStage)(int)status.Stage, status.DownloadedBytes, status.TotalBytesToDownload, status.TotalProgress, status.StageProgress, new PdxModDetails(status.Mod));
+			return true;
+		}
+
+		subscriptionStatus = null!;
+		return false;
 	}
 }

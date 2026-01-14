@@ -1,4 +1,6 @@
-﻿using Skyve.App.CS2.UserInterface.Panels;
+﻿using PDX.SDK.Contracts.Service.Mods.Models;
+
+using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.Utilities;
@@ -106,7 +108,7 @@ internal class RightClickService : IRightClickService
 
 		if (lockedPackages.Count > 0)
 		{
-			var result = await ServiceCenter.Get<IWorkshopService, WorkshopService>().SubscribeBulk(lockedPackages.ToDictionary(x => (int)x.Id, x => (string?)null), (lockedPackages[0] as IPlaysetPackage)!.PlaysetId);
+			var result = await ServiceCenter.Get<IWorkshopService, WorkshopService>().SubscribeBulk(lockedPackages.Select(x => new PdxModBase(x.Id.ToString(), null)), (lockedPackages[0] as IPlaysetPackage)!.PlaysetId);
 
 			if (result)
 			{

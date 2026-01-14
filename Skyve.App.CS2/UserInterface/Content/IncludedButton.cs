@@ -228,7 +228,7 @@ public class IncludedButton : SlickButton
 		{
 			iconRect = new Rectangle((Height - (buttonRect.Height * 3 / 5)) / 2, (Height - (buttonRect.Height * 3 / 5)) / 2, buttonRect.Height * 3 / 5, buttonRect.Height * 3 / 5);
 
-			if (_subscriptionsManager.Status.ModId != Package.Id || _subscriptionsManager.Status.Progress == 0 || !_subscriptionsManager.Status.IsActive)
+			if (!_subscriptionsManager.TryGetDownloadStatus(Package.Id, out var status) || status.Stage > ModDownloadStage.Started)
 			{
 				DrawLoader(e.Graphics, iconRect, iconColor);
 			}
@@ -240,7 +240,7 @@ public class IncludedButton : SlickButton
 				var rect = new RectangleF(new PointF(iconRect.X + ((iconRect.Width - drawSize.Width) / 2), iconRect.Y + ((iconRect.Height - drawSize.Height) / 2)), drawSize).Pad(size / 2);
 				using var pen = new Pen(iconColor, size) { StartCap = LineCap.Round, EndCap = LineCap.Round };
 
-				e.Graphics.DrawArc(pen, rect, -90, 360 * _subscriptionsManager.Status.Progress);
+				e.Graphics.DrawArc(pen, rect, -90, 360 * status.TotalProgress);
 			}
 		}
 		else

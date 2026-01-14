@@ -117,7 +117,7 @@ internal class TagsService : ITagsService
 	{
 		try
 		{
-			var tags = _workshopService.GetAvailableTags();
+			var tags = await _workshopService.GetAvailableTags();
 
 			_workshopTags = Combine(tags);
 

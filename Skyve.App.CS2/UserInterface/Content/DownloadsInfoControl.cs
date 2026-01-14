@@ -1,11 +1,7 @@
-﻿using PDX.SDK.Contracts.Enums;
-using PDX.SDK.Contracts.Service.Mods.Enums;
-
-using Skyve.App.Interfaces;
+﻿using Skyve.App.Interfaces;
 using Skyve.Domain.CS2.Utilities;
 
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Content;
@@ -26,56 +22,40 @@ public class DownloadsInfoControl : SlickControl
 		Margin = default;
 		Visible = false;
 		Cursor = Cursors.Hand;
+		Loading = true;
 	}
 
-	private async void SubscriptionsManager_UpdateDisplayNotification()
+	private void SubscriptionsManager_UpdateDisplayNotification()
 	{
-		Invalidate();
-
-		if (_subscriptionsManager.Status.IsActive)
-		{
-			if (!Visible)
-			{
-				this.TryInvoke(Show);
-			}
-		}
-		else
-		{
-			await Task.Delay(1500);
-
-			if (!_subscriptionsManager.Status.IsActive)
-			{
-				this.TryInvoke(Hide);
-			}
-		}
+		this.TryInvoke(() => Visible = !Visible);
 	}
 
 	protected override void OnMouseClick(MouseEventArgs e)
 	{
 		base.OnMouseClick(e);
 
-		var workshopInfo = new GenericPackageIdentity(_subscriptionsManager.Status.ModId).GetWorkshopInfo();
+		//var workshopInfo = new GenericPackageIdentity(download.ModId).GetWorkshopInfo();
 
-		if (workshopInfo is null)
-		{
-			return;
-		}
+		//if (workshopInfo is null)
+		//{
+		//	return;
+		//}
 
-		if (ClientRectangle.Pad(Padding - new Padding(Padding.Left)).Pad(0, 0, 0, UI.Scale(20)).Contains(e.Location))
-		{
-			if (e.Button == MouseButtons.Left)
-			{
-				ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
-			}
-			else if (e.Button == MouseButtons.Right)
-			{
-				SlickToolStrip.Show(App.Program.MainForm, ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(workshopInfo));
-			}
-		}
-		else if (cancelRect.Contains(e.Location))
-		{
-			ServiceCenter.Get<IWorkshopService>().CancelActions();
-		}
+		//if (ClientRectangle.Pad(Padding - new Padding(Padding.Left)).Pad(0, 0, 0, UI.Scale(20)).Contains(e.Location))
+		//{
+		//	if (e.Button == MouseButtons.Left)
+		//	{
+		//		ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(workshopInfo);
+		//	}
+		//	else if (e.Button == MouseButtons.Right)
+		//	{
+		//		SlickToolStrip.Show(App.Program.MainForm, ServiceCenter.Get<IRightClickService>().GetRightClickMenuItems(workshopInfo));
+		//	}
+		//}
+		//else if (cancelRect.Contains(e.Location))
+		//{
+		//	ServiceCenter.Get<IWorkshopService>().CancelActions();
+		//}
 	}
 
 	protected override void OnMouseMove(MouseEventArgs e)
@@ -102,90 +82,99 @@ public class DownloadsInfoControl : SlickControl
 
 		e.Graphics.DrawLine(pen, Padding.Left, pen.Width, Width - Padding.Right, pen.Width);
 
-		var workshopInfo = new GenericPackageIdentity(_subscriptionsManager.Status.ModId).GetWorkshopInfo();
-		var thumbnail = workshopInfo?.GetThumbnail();
-		var thumbRect = new Rectangle(new Point(Padding.Left, Padding.Top), UI.Scale(new Size(34, 34)));
+		var y = Padding.Top;
 
-		SlickTip.SetTo(this, workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), _subscriptionsManager.Status.TotalSize > 0 ? (_subscriptionsManager.Status.ProcessedBytes.SizeString(1) + "/" + _subscriptionsManager.Status.TotalSize.SizeString(1)) : null);
-
-		if (thumbnail is null)
+		foreach (var download in _subscriptionsManager.GetDownloads())
 		{
-			using var backBrush = new SolidBrush(Color.FromArgb(40, FormDesign.Design.ForeColor));
+			var workshopInfo = download.Mod;
+			var thumbnail = workshopInfo?.GetThumbnail();
+			var thumbRect = new Rectangle(new Point(Padding.Left, y), UI.Scale(new Size(34, 34)));
 
-			e.Graphics.FillRoundedRectangle(backBrush, thumbRect, Margin.Left / 2);
+			SlickTip.SetTo(this, workshopInfo?.CleanName() ?? download.Mod.Id.ToString(), download.TotalBytesToDownload > 0 ? (download.DownloadedBytes.SizeString(1) + "/" + download.TotalBytesToDownload.SizeString(1)) : null);
 
-			using var icon = IconManager.GetIcon("Paradox", thumbRect.Width * 3 / 4).Color(FormDesign.Design.ForeColor);
-
-			e.Graphics.DrawImage(icon, thumbRect.CenterR(icon.Size));
-		}
-		else
-		{
-			e.Graphics.DrawRoundedImage(thumbnail, thumbRect, UI.Scale(5));
-		}
-
-		using var font = UI.Font(8.25F, FontStyle.Bold);
-		using var smallFont = UI.Font(8.25F);
-		using var brush = new SolidBrush(FormDesign.Design.MenuForeColor);
-		using var activeBrush = new SolidBrush(FormDesign.Design.ActiveColor);
-
-		e.Graphics.DrawString(workshopInfo?.CleanName() ?? _subscriptionsManager.Status.ModId.ToString(), font, brush, new Rectangle(thumbRect.Right + Padding.Left, Padding.Top - (Padding.Left / 2), Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.TopLeft), new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
-
-		var barRect = new Rectangle(Padding.Left, Height - Padding.Bottom - UI.Scale(28), Width - Padding.Horizontal, UI.Scale(8));
-
-		e.Graphics.FillRoundedRectangle(brush, barRect, barRect.Height / 2);
-
-		var activeBarRect = barRect.Pad(0, 0, (int)((1f - _subscriptionsManager.Status.Progress) * barRect.Width), 0);
-
-		if (activeBarRect.Width >= barRect.Height)
-		{
-			e.Graphics.FillRoundedRectangle(activeBrush, activeBarRect, barRect.Height / 2, topRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width, botRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width);
-		}
-
-		var text = GetText(_subscriptionsManager.Status.Status);
-		var bottomTextRect = new Rectangle(thumbRect.Right + Padding.Left, thumbRect.Bottom + Padding.Left, Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.BottomLeft);
-
-		e.Graphics.DrawString(text, smallFont, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Near });
-
-		if (_subscriptionsManager.Status.Progress.IsWithin(0, 1))
-		{
-			e.Graphics.DrawString($"{_subscriptionsManager.Status.Progress * 100:0}%", font, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Far });
-		}
-
-		if (HoverState.HasFlag(HoverState.Hovered) && ClientRectangle.Pad(Padding - new Padding(Padding.Left)).Pad(0, 0, 0, UI.Scale(20)).Contains(PointToClient(Cursor.Position)))
-		{
-			using var backBrush = new SolidBrush(Color.FromArgb(50, FormDesign.Design.ActiveColor));
-			e.Graphics.FillRoundedRectangle(backBrush, ClientRectangle.Pad(Padding - new Padding(Padding.Left)).Pad(0, 0, 0, UI.Scale(20)), Padding.Left * 2);
-		}
-
-		if (_subscriptionsManager.Status.IsActive)
-		{
-			using var tinyFont = UI.Font(7.5F);
-			cancelRect = SlickButton.AlignAndDraw(e.Graphics, ClientRectangle, ContentAlignment.BottomLeft, new ButtonDrawArgs
+			if (thumbnail is null)
 			{
-				Icon = "Cancel",
-				Text = LocaleSlickUI.Cancel,
-				Padding = UI.Scale(new Padding(2)),
-				Font = tinyFont,
-				Cursor = PointToClient(Cursor.Position),
-				HoverState = HoverState
-			});
+				using var backBrush = new SolidBrush(Color.FromArgb(40, FormDesign.Design.ForeColor));
+
+				e.Graphics.FillRoundedRectangle(backBrush, thumbRect, Margin.Left / 2);
+
+				using var icon = IconManager.GetIcon("Paradox", thumbRect.Width * 3 / 4).Color(FormDesign.Design.ForeColor);
+
+				e.Graphics.DrawImage(icon, thumbRect.CenterR(icon.Size));
+			}
+			else
+			{
+				e.Graphics.DrawRoundedImage(thumbnail, thumbRect, UI.Scale(5));
+			}
+
+			using var font = UI.Font(8.25F, FontStyle.Bold);
+			using var smallFont = UI.Font(7.5F);
+			using var brush = new SolidBrush(FormDesign.Design.MenuForeColor);
+			using var activeBrush = new SolidBrush(FormDesign.Design.ActiveColor);
+
+			e.Graphics.DrawString(workshopInfo?.CleanName() ?? download.Mod.Id.ToString(), font, brush, new Rectangle(thumbRect.Right + Padding.Left, y, Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.TopLeft), new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
+
+			var barRect = new Rectangle(Padding.Left, y + UI.Scale(28) + Padding.Top, Width - Padding.Horizontal, UI.Scale(8));
+
+			e.Graphics.FillRoundedRectangle(brush, barRect, barRect.Height / 2);
+
+			var activeBarRect = barRect.Pad(0, 0, (int)((1f - download.TotalProgress) * barRect.Width), 0);
+
+			if (activeBarRect.Width >= barRect.Height)
+			{
+				e.Graphics.FillRoundedRectangle(activeBrush, activeBarRect, barRect.Height / 2, topRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width, botRight: activeBarRect.Width + (activeBarRect.Height / 2) > barRect.Width);
+			}
+
+			var text = GetText(download.Stage);
+			var bottomTextRect = new Rectangle(thumbRect.Right + Padding.Left, thumbRect.Bottom, Width - thumbRect.Right - Padding.Horizontal, 0).AlignToFontSize(font, ContentAlignment.BottomLeft);
+
+			e.Graphics.DrawString(text, smallFont, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Near });
+
+			if (download.TotalProgress.IsWithin(0, 1))
+			{
+				e.Graphics.DrawString($"{download.TotalProgress * 100:0}%", font, brush, bottomTextRect, new StringFormat { LineAlignment = StringAlignment.Far, Alignment = StringAlignment.Far });
+			}
+
+			if (HoverState.HasFlag(HoverState.Hovered) && ClientRectangle.Pad(Padding - new Padding(Padding.Left)).Pad(0, 0, 0, UI.Scale(20)).Contains(PointToClient(Cursor.Position)))
+			{
+				using var backBrush = new SolidBrush(Color.FromArgb(50, FormDesign.Design.ActiveColor));
+				e.Graphics.FillRoundedRectangle(backBrush, ClientRectangle.Pad(Padding - new Padding(Padding.Left)).Pad(0, 0, 0, UI.Scale(20)), Padding.Left * 2);
+			}
+
+			y += thumbRect.Height + Padding.Vertical + Padding.Top;
 		}
+
+		Height = y;
+
+		//if (download.IsActive)
+		//{
+		//	using var tinyFont = UI.Font(7.5F);
+		//	cancelRect = SlickButton.AlignAndDraw(e.Graphics, ClientRectangle, ContentAlignment.BottomLeft, new ButtonDrawArgs
+		//	{
+		//		Icon = "Cancel",
+		//		Text = LocaleSlickUI.Cancel,
+		//		Padding = UI.Scale(new Padding(2)),
+		//		Font = tinyFont,
+		//		Cursor = PointToClient(Cursor.Position),
+		//		HoverState = HoverState
+		//	});
+		//}
 	}
 
-	private string GetText(string status)
+	private string GetText(ModDownloadStage status)
 	{
 		return status switch
 		{
-			nameof(ModDownloadStage.Pending) => LocaleCS2.DownloadPending,
-			nameof(ModDownloadStage.Started) => LocaleCS2.DownloadStarted,
-			nameof(ModDownloadStage.Downloading) => LocaleCS2.Downloading,
-			nameof(ModDownloadStage.CheckingIntegrity) => LocaleCS2.CheckingIntegrity,
-			nameof(ModDownloadStage.Processing) => LocaleCS2.Processing,
-			nameof(ModDownloadStage.CleaningUp) => LocaleCS2.CleaningUp,
-			nameof(ModDownloadStage.Completed) => LocaleCS2.DownloadComplete,
-			nameof(ModDownloadStage.Canceled) => LocaleCS2.DownloadCancelled,
-			nameof(ModDownloadStage.Failed) => LocaleCS2.DownloadFailed,
-			_ => status,
+			ModDownloadStage.Pending => LocaleCS2.DownloadPending,
+			ModDownloadStage.Started => LocaleCS2.DownloadStarted,
+			ModDownloadStage.Downloading => LocaleCS2.Downloading,
+			ModDownloadStage.CheckingIntegrity => LocaleCS2.CheckingIntegrity,
+			ModDownloadStage.Processing => LocaleCS2.Processing,
+			ModDownloadStage.CleaningUp => LocaleCS2.CleaningUp,
+			ModDownloadStage.Completed => LocaleCS2.DownloadComplete,
+			ModDownloadStage.Canceled => LocaleCS2.DownloadCancelled,
+			ModDownloadStage.Failed => LocaleCS2.DownloadFailed,
+			_ => status.ToString(),
 		};
 	}
 }

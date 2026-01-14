@@ -12,6 +12,7 @@ using PDX.SDK.Contracts.Results;
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Interfaces;
 using PDX.SDK.Contracts.Service.Mods.Models;
+using PDX.SDK.Contracts.Service.Mods.Results;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Content;
@@ -56,7 +57,6 @@ public class WorkshopService : IWorkshopService
 	private readonly PdxLogUtil _pdxLogUtil;
 	private readonly PdxModProcessor _modProcessor;
 	private readonly PdxUserProcessor _userProcessor;
-	private readonly AsyncProcessor _processor = new();
 	private readonly Regex _modIdRegex = new(@"(\d+)_(\d+)?", RegexOptions.Compiled);
 
 	private bool loginWaitingConnection;
@@ -67,8 +67,8 @@ public class WorkshopService : IWorkshopService
 	public bool IsLoggedIn { get; private set; }
 	public bool IsLoginPending { get; set; } = true;
 	public bool IsAvailable => Context is not null;
-	public bool IsReady => Context is not null && IsLoggedIn && !Context.Mods.SyncOngoing();
-	public GetGameDataResult? GameData { get; private set; }
+	public bool IsReady => Context is not null && IsLoggedIn && !Context.Mods.IsSyncOngoing;
+	public IGameDataResult? GameData { get; private set; }
 
 	public WorkshopService(ILogger logger, ISettings settings, INotifier notifier, IUserService userService, ICitiesManager citiesManager, INotificationsService notificationsService, IInterfaceService interfaceService, IServiceProvider serviceProvider, PdxLogUtil pdxLogUtil, SaveHandler saveHandler, IDlcManager dlcManager, ISkyveDataManager skyveDataManager)
 	{
@@ -84,18 +84,8 @@ public class WorkshopService : IWorkshopService
 		_modProcessor = new PdxModProcessor(this, saveHandler, _notifier);
 		_userProcessor = new PdxUserProcessor(this, saveHandler, _notifier);
 
-		_processor.TasksCompleted += Processor_TasksCompleted;
 		_dlcManager = dlcManager;
 		_skyveDataManager = skyveDataManager;
-	}
-
-	private void Processor_TasksCompleted()
-	{
-		if (syncOccurred)
-		{
-			syncOccurred = false;
-			_notifier.OnWorkshopSyncEnded();
-		}
 	}
 
 	public async Task Initialize()
@@ -121,14 +111,14 @@ public class WorkshopService : IWorkshopService
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
 		var ecoSystem = _settings.FolderSettings.GamingPlatform switch { GamingPlatform.Epic => Ecosystem.Epic, GamingPlatform.Microsoft => Ecosystem.Microsoft_Store, _ => Ecosystem.Steam };
 
-		//// For sandbox testing
-		//@namespace = "pdx_sdk_cs";
-		//junction = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Paradox", "PDXSDKCSHARP", "Skyve");
-		//pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
-		//environment = BackendEnvironment.Sandbox;
+		// For sandbox testing
+		@namespace = "pdx_sdk_cs";
+		junction = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Paradox", "PDXSDKCSHARP", "Skyve");
+		pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
+		environment = BackendEnvironment.Sandbox;
 
-		//@namespace = "mods_test_game2";
-		//pdxSdkPath = junction = @"C:\Users\jad.hajjar\AppData\LocalLow\ParadoxInteractive\ModsUI_Unity\Paradox\mods_test_game2";
+		@namespace = "mods_test_game2";
+		pdxSdkPath = junction = @"C:\Users\jad.hajjar\AppData\LocalLow\ParadoxInteractive\ModsUI_Unity\Paradox\mods_test_game2";
 
 		if (!string.IsNullOrWhiteSpace(_settings.FolderSettings.UserIdentifier))
 		{
@@ -155,10 +145,10 @@ public class WorkshopService : IWorkshopService
 			DiskIORoot = pdxSdkPath,
 			Environment = environment,
 			DisplayName = "Skyve",
+			GameVersion = _citiesManager.GameVersion,
+			Ecosystem = ecoSystem,
 			Telemetry = new TelemetryConfig
 			{
-				GameVersion = _citiesManager.GameVersion,
-				Ecosystem = ecoSystem,
 				UserId = _settings.FolderSettings.UserIdentifier,
 				UserIdType = _settings.FolderSettings.UserIdType.IfEmpty("steam"),
 				StandardTelemetryEnabled = false,
@@ -220,7 +210,7 @@ public class WorkshopService : IWorkshopService
 				}
 			}
 
-			new WorkshopEventsManager(this, _serviceProvider).RegisterModsCallbacks(Context);
+			(_serviceProvider.GetService<ISubscriptionsManager>() as SubscriptionsManager)!.RegisterModsCallbacks(Context);
 
 			OnContextAvailable?.Invoke();
 		}
@@ -378,7 +368,7 @@ public class WorkshopService : IWorkshopService
 			return false;
 		}
 
-		var result = ProcessResult(await Context.Account.Logout());
+		var result = await ProcessResult(await Context.Account.Logout());
 
 		if (result.Success)
 		{
@@ -470,24 +460,12 @@ public class WorkshopService : IWorkshopService
 			result.Mod.HasLiked = _modProcessor.Get(id, false).Result?.HasVoted ?? false;
 		}
 
-		var result = await Context.Mods.GetLocalModDetails(modId, rgx.Groups[2].Value.IfEmpty(null));
-
-		if (!result.Success || result?.Mod is null || result.Mod.Id <= 0)
-		{
-			var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => ModPlatform.Osx, Platform.Linux => ModPlatform.Linux, _ => ModPlatform.Windows };
-			result = await Context.Mods.GetDetails(modId, rgx.Groups[2].Value.IfEmpty(null), platform);
-		}
-		else
-		{
-			result.Mod.HasLiked = _modProcessor.Get(id, false).Result?.HasVoted ?? false;
-		}
-
 		if (result.Success && result?.Mod is not null)
 		{
 			return new PdxModDetails(result.Mod)
 			{
 				Requirements = result.Mod.Dependencies?.Where(x => x.Type is not DependencyType.Dlc).ToArray(x => new PdxModsRequirement(x)) ?? [],
-				DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc && x.DisplayName != "Beach Properties").ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName))) ?? []
+				DlcRequirements = result.Mod.Dependencies?.Where(x => x.Type is DependencyType.Dlc && x.DisplayName != "Beach Properties").ToArray(x => new PdxModsDlcRequirement(_dlcManager.TryGetDlc(x.DisplayName)!)) ?? []
 			};
 		}
 
@@ -629,7 +607,7 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	public IEnumerable<IWorkshopTag> GetAvailableTags()
+	public async Task<IEnumerable<IWorkshopTag>> GetAvailableTags()
 	{
 		if (cachedTags is not null)
 		{
@@ -641,7 +619,7 @@ public class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		var gameData = ProcessResult(GameData);
+		var gameData = await ProcessResult(GameData);
 
 		return cachedTags = gameData.Filters.Tags.Where(x => !x.Hidden).OrderBy(x => x.Order).ToList(x => GetNestedTag(x, 0));
 	}
@@ -665,7 +643,7 @@ public class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		var mods = await ProcessResult(await _processor.Queue(async () => await Context.Mods.List()));
+		var mods = await ProcessResult(await Context.Mods.List());
 
 		return !mods.Success || mods.Mods is null ? [] : mods.Mods;
 	}
@@ -677,7 +655,7 @@ public class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		var playsets = await ProcessResult(await _processor.Queue(async () => await Context.Mods.ListAllPlaysets(!localOnly)));
+		var playsets = await ProcessResult(await Context.Mods.ListAllPlaysets(!localOnly));
 
 		return !playsets.Success ? [] : playsets.AllPlaysets.ToList(playset => (IPlayset)new Skyve.Domain.CS2.Content.Playset(playset));
 	}
@@ -745,17 +723,14 @@ public class WorkshopService : IWorkshopService
 			return [];
 		}
 
-		return await _processor.Queue(async () =>
+		var result = await ProcessResult(await Context.Mods.ListModsInPlayset(playsetId.ToString(), 10_000, 1, includeOnline: includeOnline));
+
+		if (result.Mods is not null)
 		{
-			var result = await ProcessResult(await Context.Mods.ListModsInPlayset(playsetId.ToString(), 10_000, 1, includeOnline: includeOnline));
+			return result.Mods.Select(x => new PdxPlaysetPackage(x, playsetId)).ToList();
+		}
 
-			if (result.Mods is not null)
-			{
-				return result.Mods.Select(x => new PdxPlaysetPackage(x, playsetId)).ToList();
-			}
-
-			return [];
-		});
+		return [];
 	}
 
 	public ILink? GetCommentsPageUrl(IPackageIdentity packageIdentity)
@@ -848,11 +823,11 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var result = await _processor.Queue(async () => await Context.Mods.UnsubscribeBulk(mods.Select(x => x.ToString()), playset));
+			var result = await Context.Mods.UnsubscribeBulk(mods.Select(x => x.ToString()), playset);
 
 			await ProcessResult(result);
 
-			return result.Success == ResultStatus.Success;
+			return result.Success != ResultStatus.Failure;
 		}
 		catch (Exception ex)
 		{
@@ -862,7 +837,7 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	internal async Task<bool> SubscribeBulk(IEnumerable<IModBase> mods, string playset)
+	public async Task<bool> SubscribeBulk(IEnumerable<IModBase> mods, string playset)
 	{
 		if (Context is null || playset is null || !mods.Any())
 		{
@@ -873,11 +848,11 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var result = await _processor.Queue(async () => await Context.Mods.SubscribeBulk(mods, playset));
+			var result = await Context.Mods.SubscribeBulk(mods, playset);
 
 			await ProcessResult(result);
 
-			return result.Success == ResultStatus.Success;
+			return result.Success != ResultStatus.Failure;
 		}
 		catch (Exception ex)
 		{
@@ -898,23 +873,18 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var results = await _processor.Queue(async () =>
+			var results = new List<IPartialResult>();
+
+			foreach (var name in mods)
 			{
-				var results = new List<IPartialResult>();
+				var result = await Context.Mods.Unsubscribe(name, playset);
 
-				foreach (var name in mods)
-				{
-					var result = await Context.Mods.Unsubscribe(name, playset);
+				results.Add(await ProcessResult(result));
 
-					results.Add(await ProcessResult(result));
+				await Task.Delay(1000);
+			}
 
-					await Task.Delay(1000);
-				}
-
-				return results;
-			});
-
-			return results.All(x => x.Success == ResultStatus.Success);
+			return results.All(x => x.Success != ResultStatus.Failure);
 		}
 		catch (Exception ex)
 		{
@@ -935,21 +905,16 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var results = await _processor.Queue(async () =>
+			var results = new List<IResult>();
+
+			foreach (var id in mods)
 			{
-				var results = new List<IResult>();
+				var result = await Context.Mods.Unsubscribe(id.ToString());
 
-				foreach (var id in mods)
-				{
-					var result = await Context.Mods.Unsubscribe(id.ToString());
+				results.Add(await ProcessResult(result));
 
-					results.Add(await ProcessResult(result));
-
-					await Task.Delay(1000);
-				}
-
-				return results;
-			});
+				await Task.Delay(1000);
+			}
 
 			return results.All(x => x.Success);
 		}
@@ -968,7 +933,7 @@ public class WorkshopService : IWorkshopService
 			return false;
 		}
 
-		return (await ProcessResult(await _processor.Queue(async () => await Context.Mods.DeletePlayset(playset)))).Success;
+		return (await ProcessResult(await Context.Mods.DeletePlayset(playset))).Success;
 	}
 
 	public async Task<bool> ActivatePlayset(string playset)
@@ -978,7 +943,7 @@ public class WorkshopService : IWorkshopService
 			return false;
 		}
 
-		return (await ProcessResult(await _processor.Queue(async () => await Context.Mods.ActivatePlayset(playset)))).Success;
+		return (await ProcessResult(await Context.Mods.ActivatePlayset(playset))).Success;
 	}
 
 	public async Task<bool> RenamePlayset(string playset, string name)
@@ -988,7 +953,7 @@ public class WorkshopService : IWorkshopService
 			return false;
 		}
 
-		return (await ProcessResult(await _processor.Queue(async () => await Context.Mods.RenamePlayset(playset, name)))).Success;
+		return (await ProcessResult(await Context.Mods.RenamePlayset(playset, name))).Success;
 	}
 
 	internal async Task<IPlayset?> CreatePlayset(string playsetName)
@@ -998,21 +963,16 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = await _processor.Queue(async () =>
+		var createPlaysetResult = await ProcessResult(await Context.Mods.CreatePlayset(playsetName));
+
+		if (createPlaysetResult.Success == ResultStatus.Failure)
 		{
-			var createPlaysetResult = await ProcessResult(await Context.Mods.CreatePlayset(playsetName));
+			return null;
+		}
 
-			if (createPlaysetResult.Success == ResultStatus.Failure)
-			{
-				return null;
-			}
+		var playset = await ProcessResult(await Context.Mods.GetPlaysetDetails(createPlaysetResult.Id));
 
-			var playsets = await ProcessResult(await Context.Mods.ListAllPlaysets(true));
-
-			return playsets.AllPlaysets?.FirstOrDefault(x => x.Id == createPlaysetResult.Id);
-		});
-
-		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);
+		return playset.Success ? new Skyve.Domain.CS2.Content.Playset(playset.Playset) : null;
 	}
 
 	internal async Task SetLoadOrder(List<ModLoadOrder> orderedMods, string playset)
@@ -1022,7 +982,7 @@ public class WorkshopService : IWorkshopService
 			return;
 		}
 
-		await ProcessResult(await _processor.Queue(async () => await Context.Mods.SetLoadOrder(orderedMods, playset)));
+		await ProcessResult(await Context.Mods.SetLoadOrder(orderedMods, playset));
 	}
 
 	internal async Task<bool> SetEnableBulk(List<int> modKeys, string playset, bool enable)
@@ -1034,9 +994,9 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var result = await _processor.Queue(async () => enable
+			var result = enable
 				? await Context.Mods.EnableBulk(modKeys.ConvertAll(x => x.ToString()), playset)
-				: await Context.Mods.DisableBulk(modKeys.ConvertAll(x => x.ToString()), playset));
+				: await Context.Mods.DisableBulk(modKeys.ConvertAll(x => x.ToString()), playset);
 
 			await ProcessResult(result);
 
@@ -1059,9 +1019,9 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var result = await _processor.Queue(async () => enable
+			var result = enable
 				? await Context.Mods.EnableBulk(modNames, playset)
-				: await Context.Mods.DisableBulk(modNames, playset));
+				: await Context.Mods.DisableBulk(modNames, playset);
 
 			await ProcessResult(result);
 
@@ -1082,19 +1042,16 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		var result = await _processor.Queue(async () =>
+		var createPlaysetResult = await ProcessResult(await Context.Mods.ClonePlayset(id.ToString()));
+
+		if (createPlaysetResult.Success == ResultStatus.Failure)
 		{
-			if ((await ProcessResult(await Context.Mods.ClonePlayset(id.ToString()))).Success == ResultStatus.Failure)
-			{
-				return null;
-			}
+			return null;
+		}
 
-			var playsets = await ProcessResult(await Context.Mods.ListAllPlaysets(true));
+		var playset = await ProcessResult(await Context.Mods.GetPlaysetDetails(createPlaysetResult.Id));
 
-			return playsets.AllPlaysets?.OrderBy(x => x.Id).LastOrDefault();
-		});
-
-		return result is null ? (IPlayset?)null : new Skyve.Domain.CS2.Content.Playset(result);
+		return playset.Success ? new Skyve.Domain.CS2.Content.Playset(playset.Playset) : null;
 	}
 
 	public Task RunUpSync()
@@ -1114,7 +1071,7 @@ public class WorkshopService : IWorkshopService
 
 	private async Task RunSync(SyncDirection direction)
 	{
-		if (Context is null || Context.Mods.SyncOngoing())
+		if (Context is null || Context.Mods.IsSyncOngoing)
 		{
 			return;
 		}
@@ -1123,21 +1080,20 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var result = await _processor.Queue(async () =>
+			try
 			{
-				try
-				{
-					_notifier.IsWorkshopSyncInProgress = true;
-					_notifier.OnWorkshopSyncStarted();
+				_notifier.IsWorkshopSyncInProgress = true;
+				_notifier.OnWorkshopSyncStarted();
 
-					return ProcessResult(await Context.Mods.Sync(direction));
-				}
-				finally
-				{
-					_notifier.IsWorkshopSyncInProgress = false;
-					//_notifier.OnWorkshopSyncEnded();
-				}
-			});
+				await ProcessResult(await Context.Mods.Sync(direction));
+
+				await Context.Mods.VerifyPdxModsIntegrity();
+			}
+			finally
+			{
+				_notifier.IsWorkshopSyncInProgress = false;
+				_notifier.OnWorkshopSyncEnded();
+			}
 		}
 		catch (Exception ex)
 		{
@@ -1152,17 +1108,17 @@ public class WorkshopService : IWorkshopService
 			return null;
 		}
 
-		return await Context.Mods.Publishing.GetModStagingDataFromExistingMod((int)modId, null, ModPlatform.Windows);
+		return await Context.Mods.Publishing.GetModStagingDataFromExistingMod(modId.ToString(), null, ModPlatform.Windows);
 	}
 
-	public async Task<PublishingResult?> PublishMod(IModStagingData modStagingData)
+	public async Task<IModPublishingResult?> PublishMod(IModStagingData modStagingData)
 	{
 		if (Context is null || modStagingData is null)
 		{
 			return null;
 		}
 
-		var result = ProcessResult(await Context.Mods.Publishing.PublishMod(modStagingData));
+		var result = await ProcessResult(await Context.Mods.Publishing.PublishMod(modStagingData));
 
 		if (result.Success)
 		{
@@ -1179,14 +1135,14 @@ public class WorkshopService : IWorkshopService
 			return;
 		}
 
-		await ProcessResult(await _processor.Queue(Context.Mods.DeactivateActivePlayset));
+		await ProcessResult(await Context.Mods.DeactivateActivePlayset());
 	}
 
 	public async Task Shutdown()
 	{
 		if (Context is not null)
 		{
-			await _processor.Queue(Context.Shutdown);
+			await Context.Shutdown();
 
 			Context = null;
 			IsLoggedIn = false;
@@ -1202,6 +1158,27 @@ public class WorkshopService : IWorkshopService
 		}
 
 		await Context.Mods.Downloads.PauseDownloads();
+	}
+
+	public PDX.SDK.Contracts.Service.Mods.Events.IModDownloadStatus[] GetOngoingDownloads()
+	{
+		if (Context is null)
+		{
+			return [];
+		}
+
+		return Context.Mods.Downloads.GetOngoingDownloads();
+	}
+
+	public bool TryGetDownloadStatus(ulong modId, out PDX.SDK.Contracts.Service.Mods.Events.IModDownloadStatus status)
+	{
+		if (Context is null)
+		{
+			status = default!;
+			return false;
+		}
+
+		return Context.Mods.Downloads.TryGetDownloadStatus(new PdxModBase(modId.ToString(), null), out status);
 	}
 
 	public async void RepairContext()

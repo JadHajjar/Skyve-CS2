@@ -92,7 +92,7 @@ public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
 	bool IWorkshopInfo.IsPartialInfo { get; }
 	bool IPackage.IsBuiltIn { get; }
-	public string? LatestVersion => Changelog.LastOrDefault()?.VersionId ?? "1";
+	public string? LatestVersion => Changelog?.LastOrDefault()?.VersionId ?? "1";
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements
 	{
 		get

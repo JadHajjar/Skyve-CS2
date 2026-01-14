@@ -1,4 +1,5 @@
 ﻿using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Interfaces;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.App.CS2.UserInterface.Content;
@@ -100,7 +101,7 @@ public partial class PC_PackageEdit : PanelContent
 
 					break;
 				case DependencyType.Mod:
-					var control = new MiniPackageControl(new GenericPackageIdentity((ulong)item.Id!, item.DisplayName)) { Dock = DockStyle.Top };
+					var control = new MiniPackageControl(new GenericPackageIdentity(ulong.Parse(item.Id), item.DisplayName)) { Dock = DockStyle.Top };
 					P_ModDependencies.Controls.Add(control);
 					break;
 			}
@@ -376,7 +377,7 @@ public partial class PC_PackageEdit : PanelContent
 			.WithRecommendedGameVersion(TB_GameVersion.Text)
 			.WithForumLinks(TB_ForumLink.Text)
 			.WithDependencies(DD_Dlcs.SelectedItems.Select(x => new ModDependency { Type = DependencyType.Dlc, DisplayName = x.ModsDependencyId })
-			.Concat(P_ModDependencies.Controls.OfType<MiniPackageControl>().Select(x => new ModDependency { Type = DependencyType.Mod, Id = (int)x.Id }))));
+			.Concat(P_ModDependencies.Controls.OfType<MiniPackageControl>().Select(x => new ModDependency { Type = DependencyType.Mod, Id = x.Id.ToString() }))));
 
 		var result = await (_workshopService as WorkshopService)!.PublishMod(_staging);
 

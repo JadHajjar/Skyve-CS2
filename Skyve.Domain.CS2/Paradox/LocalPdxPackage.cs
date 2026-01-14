@@ -22,7 +22,7 @@ public class LocalPdxPackage : Package, IModBase, IWorkshopInfo, IFullThumbnailO
 	private LocalData PdxLocalData;
 	private string _modId;
 
-	public LocalPdxPackage(PdxMod mod, IAsset[] assets, int assetCount, bool isCodeMod, string? version, string? versionName, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, assetCount, [], isCodeMod, version, versionName, filePath, mod.RequiredGameVersion)
+	public LocalPdxPackage(PdxIMod mod, IAsset[] assets, int assetCount, bool isCodeMod, string? version, string? versionName, string? filePath) : base(mod.LocalData.FolderAbsolutePath, assets, assetCount, [], isCodeMod, version, versionName, filePath, mod.RequiredGameVersion)
 	{
 		_modId = mod.Id;
 		Source = mod.Source;
