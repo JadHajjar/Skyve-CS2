@@ -117,8 +117,8 @@ public class WorkshopService : IWorkshopService
 		pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
 		environment = BackendEnvironment.Sandbox;
 
-		@namespace = "mods_test_game2";
-		pdxSdkPath = junction = @"C:\Users\jad.hajjar\AppData\LocalLow\ParadoxInteractive\ModsUI_Unity\Paradox\mods_test_game2";
+		//@namespace = "mods_test_game2";
+		//pdxSdkPath = junction = @"C:\Users\jad.hajjar\AppData\LocalLow\ParadoxInteractive\ModsUI_Unity\Paradox\mods_test_game2";
 
 		if (!string.IsNullOrWhiteSpace(_settings.FolderSettings.UserIdentifier))
 		{
