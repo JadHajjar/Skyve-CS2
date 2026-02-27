@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
+
 internal class CentralManager : ICentralManager
 {
 	private readonly ICompatibilityManager _compatibilityManager;
@@ -119,19 +120,18 @@ internal class CentralManager : ICentralManager
 		_logger.Info("Checking for internet connection..");
 
 		ConnectionHandler.AssumeInternetConnectivity = _settings.UserSettings.AssumeInternetConnectivity;
-		ConnectionHandler.Start();
+		ConnectionHandler.Start("94.231.106.4", 60_000);
 
-		var ping = await _skyveApiUtil.Ping();
-
-		if (!ping.Success && ping.Message == "Unauthorized")
+		if (ConnectionHandler.CheckConnection())
 		{
-			_notifier.OnContentLoaded();
-			_compatibilityManager.CacheReport();
-			_workshopService.IsLoginPending = false;
-			_notifier.OnRefreshUI(true);
-
-			_notifier.OnVersionObsolete();
-			return;
+			if (!await Ping())
+			{
+				return;
+			}
+		}
+		else
+		{
+			await ConnectionHandler.WhenConnected(Ping);
 		}
 
 		_citiesManager.GameClosed -= CitiesManager_GameClosed;
@@ -168,7 +168,7 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info($"Compatibility report cached");
 
-		if (!ConnectionHandler.CheckConnection())
+		if (!ConnectionHandler.IsConnected)
 		{
 			_logger.Warning("Not connected to the internet, delaying remaining loads.");
 		}
@@ -202,6 +202,24 @@ internal class CentralManager : ICentralManager
 		}
 	}
 
+	private async Task<bool> Ping()
+	{
+		var ping = await _skyveApiUtil.Ping();
+
+		if (!ping.Success && ping.Message == "Unauthorized")
+		{
+			_notifier.OnContentLoaded();
+			_compatibilityManager.CacheReport();
+			_workshopService.IsLoginPending = false;
+			_notifier.OnRefreshUI(true);
+			_notifier.OnVersionObsolete();
+
+			return false;
+		}
+
+		return true;
+	}
+
 	private async Task LoadContent()
 	{
 		_logger.Info("Loading packages..");
@@ -221,13 +239,15 @@ internal class CentralManager : ICentralManager
 
 	private void CitiesManager_GameClosed()
 	{
-		Task.Run(CheckCorruptedSettingsFiles);
+		_ = Task.Run(CheckCorruptedSettingsFiles);
 	}
 
 	private void CheckCorruptedSettingsFiles()
 	{
 		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
+		{
 			return;
+		}
 
 		var corruptedFiles = new List<string>();
 
@@ -369,7 +389,9 @@ internal class CentralManager : ICentralManager
 		var workshopInfo = await _workshopService.GetInfoAsync(new GenericPackageIdentity(MODID));
 
 		if (workshopInfo is null)
+		{
 			return;
+		}
 
 		foreach (var item in _playsetManager.Playsets)
 		{

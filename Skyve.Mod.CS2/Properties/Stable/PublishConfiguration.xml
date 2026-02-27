@@ -89,12 +89,12 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Stable/Screenshot_10.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="1.1.13" />
+  <ModVersion Value="1.1.14" />
   <GameVersion Value="*" />
   <ChangeLog>
-# v1.1.13
+# v1.1.14
 ## Changes
-* Small fix to a bug while browsing PDX Mods.
+* Fixed out of date mods not being recognized.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

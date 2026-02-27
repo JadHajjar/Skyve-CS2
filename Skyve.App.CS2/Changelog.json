@@ -2,6 +2,20 @@
   {
     "Stable": false,
     "Beta": false,
+    "Version": "1.1.14",
+    "Date": "2026-01-12",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed out of date mods not being recognized."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
     "Version": "1.1.13",
     "Date": "2025-12-24",
     "ChangeGroups": [
