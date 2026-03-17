@@ -33,7 +33,7 @@ internal class SubscriptionsManager(IWorkshopService workshopService, ISettings 
 
 	public void RegisterModsCallbacks(IContext context)
 	{
-		context.Mods.Downloads.DownloadStageChanged += DownloadProgressChanged;
+		context.Mods.Downloads.DownloadProgressChanged += DownloadProgressChanged;
 	}
 
 	private void DownloadProgressChanged(Guid guid, IModDownloadStatus payload)

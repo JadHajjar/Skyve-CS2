@@ -111,14 +111,14 @@ public class WorkshopService : IWorkshopService
 		var platform = CrossIO.CurrentPlatform switch { Platform.MacOSX => PdxPlatform.MacOS, Platform.Linux => PdxPlatform.Linux, _ => PdxPlatform.Windows };
 		var ecoSystem = _settings.FolderSettings.GamingPlatform switch { GamingPlatform.Epic => Ecosystem.Epic, GamingPlatform.Microsoft => Ecosystem.Microsoft_Store, _ => Ecosystem.Steam };
 
-		// For sandbox testing
-		@namespace = "pdx_sdk_cs";
-		junction = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Paradox", "PDXSDKCSHARP", "Skyve");
-		pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
-		environment = BackendEnvironment.Sandbox;
+		//// For sandbox testing
+		//@namespace = "pdx_sdk_cs";
+		//junction = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Paradox", "PDXSDKCSHARP", "Skyve");
+		//pdxSdkPath = CrossIO.Combine(junction, ".pdxsdk");
+		//environment = BackendEnvironment.Sandbox;
 
-		//@namespace = "mods_test_game2";
-		//pdxSdkPath = junction = @"C:\Users\jad.hajjar\AppData\LocalLow\ParadoxInteractive\ModsUI_Unity\Paradox\mods_test_game2";
+		////@namespace = "mods_test_game2";
+		////pdxSdkPath = junction = @"C:\Users\jad.hajjar\AppData\LocalLow\ParadoxInteractive\ModsUI_Unity\Paradox\mods_test_game2";
 
 		if (!string.IsNullOrWhiteSpace(_settings.FolderSettings.UserIdentifier))
 		{
@@ -713,7 +713,7 @@ public class WorkshopService : IWorkshopService
 
 	public async Task<string?> GetActivePlaysetId()
 	{
-		return Context is null ? null : (await Context.Mods.GetActivePlayset()).Id;
+		return Context is null ? null : Context.Mods.GetActivePlaysetId();
 	}
 
 	public async Task<IEnumerable<IPlaysetPackage>> GetModsInPlayset(string playsetId, bool includeOnline = false)
@@ -1281,7 +1281,7 @@ public class WorkshopService : IWorkshopService
 		{
 			var conflicts = await Context!.Mods.GetSyncConflicts();
 
-			_interfaceService.OpenSyncConflictPrompt(conflicts.ToArray(x => new SyncConflictInfo(x)));
+			_interfaceService.OpenSyncConflictPrompt(conflicts.Conflicts.ToArray(x => new SyncConflictInfo(x)));
 		}
 
 		return result;
