@@ -19,7 +19,7 @@ internal class ReviewReplyDto : IDTO<ReviewReplyData, ReviewReply>
 			Link = data.Link,
 			Message = data.Message,
 			Timestamp = data.Timestamp,
-			PackageId = data.PackageId,
+			PackageId = data.PackageId.ToString(),
 			RequestUpdate = data.RequestUpdate,
 		};
 	}
@@ -40,7 +40,7 @@ internal class ReviewReplyDataDto : IDTO<ReviewReply, ReviewReplyData>
 			Link = data.Link,
 			Message = data.Message,
 			Timestamp = data.Timestamp,
-			PackageId = data.PackageId,
+			PackageId = ulong.Parse(data.PackageId),
 			RequestUpdate = data.RequestUpdate,
 		};
 	}

@@ -2,7 +2,6 @@
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Interfaces;
-using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
@@ -18,6 +17,7 @@ public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 {
 	public PdxModDetails()
 	{
+		Id = string.Empty;
 		Name = string.Empty;
 		Guid = string.Empty;
 		Version = null;
@@ -27,7 +27,7 @@ public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 
 	public PdxModDetails(IModDetails mod)
 	{
-		Id = ulong.Parse(mod.Id);
+		Id = mod.Id;
 		Name = mod.DisplayName;
 		Guid = mod.Name;
 		ThumbnailUrl = mod.ThumbnailUrl;
@@ -43,7 +43,7 @@ public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 		VoteCount = mod.RatingsTotal;
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
-		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
+		IsBanned = mod.State is not ModState.Published and not ModState.Publishing and not ModState.Removed and not ModState.Unknown;
 		ForumLink = mod.ForumLinks?.FirstOrDefault();
 		Tags = mod.Tags?.ToDictionary(x => x.Id, x => x.DisplayName) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
@@ -53,7 +53,8 @@ public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 		Timestamp = DateTime.Now;
 	}
 
-	public ulong Id { get; set; }
+	public string Source { get; } = Defaults.WORKSHOP_SOURCE;
+	public string Id { get; set; }
 	public DateTime Timestamp { get; set; }
 	public string Name { get; set; }
 	public string Guid { get; set; }
@@ -128,5 +129,21 @@ public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id.ToString(), Version ?? "", false);
 
 		return true;
+	}
+	public override bool Equals(object? obj)
+	{
+		return obj is IPackageIdentity identity &&
+			   Source == identity.Source &&
+			   Id == identity.Id &&
+			   Version == identity.Version;
+	}
+
+	public override int GetHashCode()
+	{
+		var hashCode = -781363793;
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Source);
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Id);
+		hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(Version);
+		return hashCode;
 	}
 }

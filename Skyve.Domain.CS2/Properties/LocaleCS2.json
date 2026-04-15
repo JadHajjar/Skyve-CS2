@@ -216,5 +216,7 @@
   "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Update Required for Skyve",
   "SkyveVersionBlockedDescription": "Your current Skyve version has become outdated and may not work with the latest mods update.\r\n\r\nFollow the update instructions to learn how to upgrade and get back to creating and playing without issues.",
-  "ViewUpdateInstructions": "View Update Instructions"
+  "ViewUpdateInstructions": "View Update Instructions",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }

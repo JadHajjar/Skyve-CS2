@@ -506,7 +506,7 @@ public partial class CommentControl : SlickControl
 
 			if (regex.Success)
 			{
-				ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(new GenericPackageIdentity(ulong.Parse(regex.Groups[1].Value)), false);
+				ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, regex.Groups[1].Value), false);
 
 				return;
 			}

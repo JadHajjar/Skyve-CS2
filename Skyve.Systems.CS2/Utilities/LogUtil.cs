@@ -281,9 +281,15 @@ internal class LogUtil : ILogUtil
 
 	public List<ILogTrace> ExtractTrace(string originalFile, string log)
 	{
-		var lines = File.ReadAllLines(log);
 		var traces = new List<ILogTrace>();
 		LogTrace? currentTrace = null;
+
+		if (new FileInfo(originalFile).Length > 30_000_000)
+		{
+			return traces;
+		}
+
+		var lines = File.ReadAllLines(log);
 
 		if (originalFile.EndsWith("Player-prev.log") || originalFile is "Player_Previous.log")
 		{

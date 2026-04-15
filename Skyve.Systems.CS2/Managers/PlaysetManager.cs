@@ -214,7 +214,7 @@ internal class PlaysetManager : IPlaysetManager
 
 				foreach (var item in customPlaysets)
 				{
-					_customPlaysets[item.Id] = item;
+					_customPlaysets[item.Id!] = item;
 				}
 
 				CurrentPlayset = _playsets.TryGet(activePlayset!);
@@ -422,7 +422,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public string GetFileName(IPlayset playset)
 	{
-		return CrossIO.Combine(_locationManager.DataPath, ".cache", "Mods", "playsets_metadata", playset.Id.ToString());
+		return CrossIO.Combine(_locationManager.DataPath, ".cache", "Mods", "playsets_metadata", playset.Id);
 	}
 
 	public void CreateShortcut(IPlayset item)
@@ -443,7 +443,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<IPlayset?> ClonePlayset(IPlayset playset)
 	{
-		return await _workshopService.ClonePlayset(playset.Id);
+		return await _workshopService.ClonePlayset(playset.Id!);
 	}
 
 	public IPlayset? GetPlayset(string id)
@@ -458,7 +458,7 @@ internal class PlaysetManager : IPlaysetManager
 	{
 		lock (_playsets)
 		{
-			return _customPlaysets.TryGet(playset.Id) ?? new ExtendedPlayset(playset);
+			return _customPlaysets!.TryGet(playset.Id) ?? new ExtendedPlayset(playset);
 		}
 	}
 
@@ -485,7 +485,7 @@ internal class PlaysetManager : IPlaysetManager
 
 		lock (_playsets)
 		{
-			_customPlaysets[customPlayset.Id] = customPlayset;
+			_customPlaysets[customPlayset.Id!] = customPlayset;
 		}
 
 		CurrentCustomPlayset = CurrentPlayset is null ? null : GetCustomPlayset(CurrentPlayset);
@@ -493,7 +493,7 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task<IEnumerable<IPlaysetPackage>> GetPlaysetContents(IPlayset playset, bool includeOnline)
 	{
-		return await _workshopService.GetModsInPlayset(playset.Id, includeOnline);
+		return await _workshopService.GetModsInPlayset(playset.Id!, includeOnline);
 	}
 
 	public async Task<object> GenerateImportPlayset(IPlayset? playset, bool sharing = false, bool includeOnline = true)
@@ -519,7 +519,7 @@ internal class PlaysetManager : IPlaysetManager
 			},
 			SubscribedMods = contents.Where(x => !(_workshopService.GetInfo(x)?.Tags?.Any(x => x.Key is "Map" or "Savegame") ?? false)).ConvertDictionary(x => new KeyValuePair<string, PdxPlaysetImport.ModInfo>(x.Id.ToString(), new()
 			{
-				Id = (int)x.Id,
+				Id = x.Id,
 				Name = x.Name,
 				IsEnabled = x.IsEnabled,
 				LoadOrder = x.LoadOrder,

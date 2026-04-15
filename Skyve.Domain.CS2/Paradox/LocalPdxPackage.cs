@@ -27,7 +27,7 @@ public class LocalPdxPackage : Package, IModBase, IWorkshopInfo, IFullThumbnailO
 		_modId = mod.Id;
 		Source = mod.Source;
 		IsLocal = mod.Source != SourceType.PdxMods;
-		Id = ulong.TryParse(mod.Id, out var id) ? id : 0;
+		Id = mod.Id;
 		Name = DisplayName = mod.DisplayName;
 		ShortDescription = mod.ShortDescription;
 		LongDescription = string.Empty;
@@ -56,7 +56,7 @@ public class LocalPdxPackage : Package, IModBase, IWorkshopInfo, IFullThumbnailO
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
 		Tags = mod.Tags?.ToList() ?? [];
-		Url = Id == 0 ? null : $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
+		Url = string.IsNullOrEmpty(Id) ? null : $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
 	public string DisplayName { get; set; }
@@ -94,10 +94,9 @@ public class LocalPdxPackage : Package, IModBase, IWorkshopInfo, IFullThumbnailO
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements => [];
 	IEnumerable<IModChangelog> IWorkshopInfo.Changelog => [];
 	IEnumerable<ILink> IWorkshopInfo.Links => [];
-
-	public SourceType Source { get; }
 	public ModPlatform OperatingSystem { get; set; }
 	public List<ExternalLink> ExternalLinks { get; set; }
+	SourceType IModBase.Source => Source;
 
 	bool IWorkshopInfo.HasComments()
 	{

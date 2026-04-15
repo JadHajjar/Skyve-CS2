@@ -107,9 +107,8 @@ public partial class PC_SendReviewRequest : PC_PackagePageBase
 
 		B_Apply.Loading = true;
 
-		var postPackage = new ReviewRequest
+		var postPackage = new ReviewRequest(Package.Id)
 		{
-			PackageId = Package.Id,
 			PackageNote = TB_Note.Text,
 			SaveUrl = lastSaveUrl,
 			PackageStability = (int)DD_Stability.SelectedItem,

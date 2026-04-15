@@ -23,7 +23,7 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 			BlackListId = data.IsBlackListedById,
 			BlackListName = data.IsBlackListedByName,
 			FileName = data.FileName,
-			Id = data.Id,
+			Id = ulong.Parse(data.Id),
 			Name = data.Name,
 			Note = data.Note,
 			EditNote = data.EditNote,
@@ -50,7 +50,7 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 		{
 			Type = (int)data.Type,
 			Action = (int)data.Action,
-			Packages = data.Packages?.Select(x => x.Id).ToArray(),
+			Packages = data.Packages?.Select(x => ulong.Parse(x.Id)).ToArray(),
 			Note = data.Note
 		};
 	}
@@ -61,7 +61,7 @@ internal class PostPackageDto : IDTO<CompatibilityPostPackage, PostPackage>
 		{
 			Type = (int)data.Type,
 			Action = (int)data.Action,
-			Packages = data.Packages?.Select(x => x.Id).ToArray(),
+			Packages = data.Packages?.Select(x => ulong.Parse(x.Id)).ToArray(),
 			Note = data.Note
 		};
 	}

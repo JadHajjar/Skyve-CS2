@@ -20,7 +20,7 @@ namespace Skyve.Systems.CS2.Managers;
 internal class UpdateManager : IUpdateManager
 {
 	private readonly Dictionary<string, DateTime> _previousPackages = new(new PathEqualityComparer());
-	private readonly Dictionary<ulong, DateTime> _lastViewedComments = [];
+	private readonly Dictionary<string, DateTime> _lastViewedComments = [];
 	private readonly INotificationsService _notificationsService;
 	private readonly IPackageManager _packageManager;
 	private readonly IServiceProvider _serviceProvider;
@@ -58,9 +58,9 @@ internal class UpdateManager : IUpdateManager
 			{
 				foreach (var package in packages)
 				{
-					if (package.Folder is not null or "")
+					if (!string.IsNullOrEmpty(package.Folder ))
 					{
-						_previousPackages[package.Folder] = package.UpdateTime;
+						_previousPackages[package.Folder!] = package.UpdateTime;
 					}
 				}
 			}

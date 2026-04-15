@@ -45,7 +45,7 @@ internal class RightClickService : IRightClickService
 			new(Locale.ViewOnWorkshop, "Link", () => PlatformUtil.OpenUrl(list[0].Url), visible: list.Count == 1 && !string.IsNullOrWhiteSpace(list[0].Url)),
 			new(Locale.OpenPackagePage, "Package", () => interfaceService.OpenPackagePage(list[0]), visible: list.Count == 1),
 			new(Locale.OpenPackageFolder.FormatPlural(list.Count), "Folder", () => list.Select(x => x.GetLocalPackageIdentity()?.FilePath).WhereNotEmpty().Foreach(PlatformUtil.OpenFolder), visible: anyInstalled),
-			new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "PC", () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => ServiceCenter.Get<IPackageManager>().MoveToLocalFolder(x!.Package)), visible: settings.UserSettings.ComplexListUI && anyWorkshopAndInstalled),
+			//new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "PC", () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => ServiceCenter.Get<IPackageManager>().MoveToLocalFolder(x!.Package)), visible: anyWorkshopAndInstalled),
 
 			SlickStripItem.Empty,
 

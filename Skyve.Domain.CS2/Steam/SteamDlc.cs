@@ -3,9 +3,9 @@
 using System;
 using System.Drawing;
 using System.IO;
-using System.Reflection;
 
 namespace Skyve.Domain.CS2.Steam;
+
 public class SteamDlc : IDlcInfo, IThumbnailObject
 {
 	public static readonly Bitmap Cities2Dlc = GetEmbeddedBitmap("Skyve.Domain.CS2.Steam.Cities2Dlc.png");
@@ -20,6 +20,7 @@ public class SteamDlc : IDlcInfo, IThumbnailObject
 	public string? Price { get; set; }
 	public string? OriginalPrice { get; set; }
 	public string[]? Creators { get; set; }
+	public string? ThumbnailUrl { get; set; }
 	public float Discount { get; set; }
 	public DateTime Timestamp { get; set; }
 
@@ -27,7 +28,7 @@ public class SteamDlc : IDlcInfo, IThumbnailObject
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
-		thumbnailUrl = Id > 10 ? $"https://cdn.akamai.steamstatic.com/steam/apps/{Id}/header.jpg" : null;
+		thumbnailUrl = ThumbnailUrl ?? (Id > 10 ? $"https://cdn.akamai.steamstatic.com/steam/apps/{Id}/header.jpg" : null);
 		thumbnail = thumbnailUrl is null or "" ? null : imageService.GetImage(thumbnailUrl, true, $"Dlc_{Id}.png", false).Result;
 
 		thumbnail ??= Id == 2427731 ? Cities2Landmark : Cities2Dlc;

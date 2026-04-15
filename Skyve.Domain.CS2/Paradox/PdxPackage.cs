@@ -25,7 +25,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 	public PdxPackage(IModSearch mod)
 	{
 		Source = mod.Source;
-		Id = ulong.TryParse(mod.Id, out var id) ? id : 0;
+		Id = mod.Id;
 		Name = mod.DisplayName;
 		ShortDescription = mod.ShortDescription;
 		VersionName = mod.UserModVersion;
@@ -98,10 +98,10 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 	public ILocalPackageData? LocalData { get; }
 	public string ThumbnailPath { get; }
 	public SourceType Source { get; }
-	public ulong Id { get; private set; }
+	public string Id { get; private set; }
 	public string Name { get; }
 	public string? Url { get; }
-	string IModBase.Id { get => Id.ToString(); set => Id = ulong.Parse(value); }
+	string IModBase.Id { get => Id.ToString(); set => Id = value; }
 	public string? SuggestedGameVersion { get; set; }
 	bool IWorkshopInfo.IsPartialInfo => true;
 	LocalData ILocalModBase.LocalData { get => PdxLocalData; set => PdxLocalData = value; }
@@ -111,6 +111,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 	public List<PlaysetInMod> Playsets { get; set; }
 	public bool IsSubscribedInActivePlayset { get; set; }
 	public bool IsEnabledInActivePlayset { get; set; }
+	string IPackageIdentity.Source => Source;
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
@@ -132,4 +133,22 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 
 		return true;
 	}
+
+	public override bool Equals(object? obj)
+	{
+		return obj is IPackageIdentity identity &&
+			Source == identity.Source &&
+			Id == identity.Id &&
+			Version == identity.Version;
+	}
+
+	public override int GetHashCode()
+	{
+		var hashCode = -781363793;
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Source);
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Id);
+		hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(Version);
+		return hashCode;
+	}
+
 }

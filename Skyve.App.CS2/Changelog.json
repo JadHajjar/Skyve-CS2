@@ -2,6 +2,21 @@
   {
     "Stable": false,
     "Beta": false,
+    "Version": "1.2.0",
+    "Date": "2026-04-24",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed mods being counted as banned incorrectly.",
+          "Changed the format for searching by mod ID in the PDX Mods tab to '#1234' instead of '1234'."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
     "Version": "1.1.13",
     "Date": "2025-12-24",
     "ChangeGroups": [

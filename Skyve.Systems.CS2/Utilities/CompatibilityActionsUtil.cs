@@ -18,7 +18,7 @@ public class CompatibilityActionsUtil(ICompatibilityManager compatibilityManager
 
 	public bool CanSnooze(ICompatibilityItem message)
 	{
-		return message.Status.Notification > NotificationType.Info && message.PackageId != 0;
+		return message.Status.Notification > NotificationType.Info && string.IsNullOrEmpty(message.PackageId);
 	}
 
 	#region RecommendedAction

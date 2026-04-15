@@ -1,4 +1,6 @@
-﻿using Skyve.Domain.Enums;
+﻿using Extensions;
+
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
@@ -26,7 +28,8 @@ public class PdxPlaysetImport : ITemporaryPlayset
 
 	public class ModInfo : IPlaysetPackage
 	{
-		public int Id { get; set; }
+		public string Source { get; set; } = string.Empty;
+		public string Id { get; set; } = string.Empty;
 		public string? Name { get; set; }
 		public string? Version { get; set; }
 		public int LoadOrder { get; set; }
@@ -34,12 +37,13 @@ public class PdxPlaysetImport : ITemporaryPlayset
 		public bool IsVersionLocked { get; set; }
 		public string PlaysetId { get; set; } = string.Empty;
 
-		ulong IPackageIdentity.Id => (ulong)Id;
+		string IPackageIdentity.Source => Source;
+		string IPackageIdentity.Id => Id;
 		string IPackageIdentity.Name => Name ?? Id.ToString();
 		string? IPackageIdentity.Url { get; }
 		bool IPackage.IsCodeMod { get; }
 		bool IPackage.IsBuiltIn { get; }
-		bool IPackage.IsLocal => Id <= 0;
+		bool IPackage.IsLocal => Source == "local" || Id.SmartParse() <= 0;
 		string? IPackage.VersionName { get; }
 		ILocalPackageData? IPackage.LocalData { get; }
 	}

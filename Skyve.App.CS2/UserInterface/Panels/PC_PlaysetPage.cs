@@ -106,7 +106,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 	private void Notifier_PlaysetUpdated()
 	{
-		Playset = _playsetManager.GetPlayset(Playset.Id) ?? Playset;
+		Playset = _playsetManager.GetPlayset(Playset.Id!) ?? Playset;
 
 		SideControl.Playset = Playset;
 		SideControl.Invalidate();

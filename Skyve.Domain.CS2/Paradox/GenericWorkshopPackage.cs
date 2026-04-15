@@ -13,23 +13,24 @@ public class PdxModIdentityPackage : IPackage
 		Version = identity.Version;
 	}
 
-	public PdxModIdentityPackage(ulong id)
+	public PdxModIdentityPackage(string id)
 	{
 		Id = id;
-		Name = id.ToString();
+		Name = id;
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 	}
 
 	public PdxModIdentityPackage()
 	{
-		Name = string.Empty;
+		Id = Name = string.Empty;
 	}
 
 	public ILocalPackageData? LocalData { get; }
 	public bool IsCodeMod { get; }
 	public bool IsLocal { get; }
 	public bool IsBuiltIn { get; }
-	public ulong Id { get; }
+	public string Source { get; } = Defaults.WORKSHOP_SOURCE;
+	public string Id { get; }
 	public string Name { get; }
 	public string? Url { get; }
 	public string? Version { get; set; }

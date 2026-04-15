@@ -101,7 +101,7 @@ public partial class PC_PackageEdit : PanelContent
 
 					break;
 				case DependencyType.Mod:
-					var control = new MiniPackageControl(new GenericPackageIdentity(ulong.Parse(item.Id), item.DisplayName)) { Dock = DockStyle.Top };
+					var control = new MiniPackageControl(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, item.Id, item.DisplayName)) { Dock = DockStyle.Top };
 					P_ModDependencies.Controls.Add(control);
 					break;
 			}
@@ -259,9 +259,9 @@ public partial class PC_PackageEdit : PanelContent
 		{
 			if (ulong.TryParse(item.Value, out var id))
 			{
-				if (!P_ModDependencies.Controls.OfType<MiniPackageControl>().Any(x => x.Id == id))
+				if (!P_ModDependencies.Controls.OfType<MiniPackageControl>().Any(x => x.Id == id.ToString()))
 				{
-					P_ModDependencies.Controls.Add(new MiniPackageControl(id) { Dock = DockStyle.Top });
+					P_ModDependencies.Controls.Add(new MiniPackageControl(id.ToString()) { Dock = DockStyle.Top });
 				}
 			}
 		}
@@ -269,18 +269,18 @@ public partial class PC_PackageEdit : PanelContent
 
 	private void I_AddPackages_Click(object sender, EventArgs e)
 	{
-		var form = new PC_WorkshopPackageSelection(P_ModDependencies.Controls.OfType<MiniPackageControl>().Select(x => x.Id));
+		var form = new PC_WorkshopPackageSelection(P_ModDependencies.Controls.OfType<MiniPackageControl>().Select(x => x.Package));
 
 		form.PackageSelected += Form_PackageSelected;
 
 		Form.PushPanel(form);
 	}
 
-	private void Form_PackageSelected(IEnumerable<ulong> packages)
+	private void Form_PackageSelected(IEnumerable<IPackageIdentity> packages)
 	{
 		foreach (var item in packages)
 		{
-			if (!P_ModDependencies.Controls.OfType<MiniPackageControl>().Any(x => x.Id == item))
+			if (!P_ModDependencies.Controls.OfType<MiniPackageControl>().Any(x => x.Id == item.Id))
 			{
 				P_ModDependencies.Controls.Add(new MiniPackageControl(item) { Dock = DockStyle.Top });
 			}

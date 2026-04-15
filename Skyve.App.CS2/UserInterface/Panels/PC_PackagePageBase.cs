@@ -5,7 +5,6 @@ using Skyve.App.UserInterface.Content;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.UserInterface.Panels;
 using Skyve.App.Utilities;
-using Skyve.Domain;
 using Skyve.Systems.CS2.Services;
 
 using System.Drawing;
@@ -14,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
+
 public partial class PC_PackagePageBase : PanelContent
 {
 	protected readonly IncludedButton B_Incl;
@@ -144,9 +144,9 @@ public partial class PC_PackagePageBase : PanelContent
 
 		var date = workshopInfo is null || workshopInfo.ServerTime == default ? (localData?.LocalTime ?? default) : workshopInfo.ServerTime;
 
-		if(workshopInfo?.Author?.Equals(_userService.User) ?? false)
-		B_EditModInfo.Visible = true;
-		else if (_skyveDataManager.ReviewRequests?.Any(x=> x.PackageId == Package.Id) ?? false)
+		if (workshopInfo?.Author?.Equals(_userService.User) ?? false)
+			B_EditModInfo.Visible = true;
+		else if (_skyveDataManager.ReviewRequests?.Any(x => x.PackageId == Package.Id) ?? false)
 		{
 			B_EditModInfo.Visible = true;
 			B_EditModInfo.Text = nameof(LocaleCR.ReviewRequests);
@@ -158,7 +158,7 @@ public partial class PC_PackagePageBase : PanelContent
 		SlickTip.SetTo(LI_Version, localData?.IsCodeMod ?? true ? localData?.Version ?? workshopInfo?.Version : null);
 		LI_UpdateTime.ValueText = date == default ? null : _settings.UserSettings.ShowDatesRelatively ? date.ToLocalTime().ToRelatedString(true, false) : date.ToLocalTime().ToString("g");
 		SlickTip.SetTo(LI_UpdateTime, date == default || !_settings.UserSettings.ShowDatesRelatively ? null : date.ToLocalTime().ToString("g"));
-		LI_ModId.ValueText = Package.Id > 0 ? Package.Id.ToString() : null;
+		LI_ModId.ValueText = Package.Source == Defaults.WORKSHOP_SOURCE ? Package.Id.ToString() : null;
 		LI_Size.ValueText = localData?.FileSize.SizeString(0) ?? workshopInfo?.ServerSize.SizeString(0);
 		LI_Votes.ValueText = workshopInfo?.VoteCount >= 0 ? Locale.VotesCount.FormatPlural(workshopInfo.VoteCount, workshopInfo.VoteCount.ToString("N0")) : null;
 		LI_Subscribers.ValueText = workshopInfo?.Subscribers >= 0 ? Locale.SubscribersCount.FormatPlural(workshopInfo.Subscribers, workshopInfo.Subscribers.ToString("N0")) : null;

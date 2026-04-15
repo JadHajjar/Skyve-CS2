@@ -4,6 +4,6 @@ namespace Skyve.Domain.CS2.Content;
 
 public class ReadComment
 {
-	public ulong PackageId { get; set; }
+	public string PackageId { get; set; } = string.Empty;
 	public DateTime DateRead { get; set; }
 }

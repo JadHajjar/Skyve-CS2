@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
+
 public partial class PC_Utilities : PanelContent
 {
+	private static bool integrityRunning;
+
 	private readonly ISettings _settings;
 	private readonly ICitiesManager _citiesManager;
 	private readonly ISubscriptionsManager _subscriptionsManager;
 	private readonly INotifier _notifier;
-	private readonly ILocationService _locationManager;
 	private readonly IPackageManager _packageManager;
 	private readonly IPackageUtil _packageUtil;
 	private readonly IWorkshopService _workshopService;
@@ -23,7 +25,7 @@ public partial class PC_Utilities : PanelContent
 
 	public PC_Utilities()
 	{
-		ServiceCenter.Get(out _settings, out _citiesManager, out _subscriptionsManager, out _notifier, out _locationManager, out _packageUtil, out _packageManager, out _workshopService, out _downloadService);
+		ServiceCenter.Get(out _settings, out _citiesManager, out _subscriptionsManager, out _notifier, out _packageUtil, out _packageManager, out _workshopService, out _downloadService);
 
 		InitializeComponent();
 
@@ -39,9 +41,9 @@ public partial class PC_Utilities : PanelContent
 
 		this.TryInvoke(() =>
 		{
-			var ready = _workshopService.IsReady && !_notifier.IsWorkshopSyncInProgress;
-			B_RunSync.Enabled = ready;
-			L_SyncStatus.Text = ready ? Locale.Ready : LocaleCS2.SyncOngoing;
+			var ready = !integrityRunning && _workshopService.IsReady && !_notifier.IsWorkshopSyncInProgress;
+			B_RunSync.Enabled = B_VerifyIntegrity.Enabled = ready;
+			L_SyncStatus.Text = ready ? Locale.Ready : _workshopService.IsLoggedIn ? LocaleCS2.SyncOngoing : LocaleCS2.NotLoggedInCheckNotification;
 			L_SyncStatus.ForeColor = (ready ? FormDesign.Design.GreenColor : FormDesign.Design.OrangeColor).MergeColor(FormDesign.Design.ForeColor, 75);
 
 			outOfDatePackagesControl1.SetPackages(outOfDatePackages);
@@ -61,19 +63,23 @@ public partial class PC_Utilities : PanelContent
 		L_PdxSyncInfo.Text = LocaleCS2.PdxSyncInfo;
 		L_SyncStatusLabel.Text = LocaleCS2.CurrentStatus;
 		L_SafeMode.Text = LocaleCS2.SafeModeInfo;
+		L_VerifyIntegrity.Text = LocaleCS2.VerifyIntegrityInfo;
 	}
 
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
-		B_SafeMode.Margin = B_Troubleshoot.Margin = B_RunSync.Margin = P_Sync.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10));
+		B_VerifyIntegrity.Margin = B_SafeMode.Margin = B_Troubleshoot.Margin = P_Sync.Margin = P_Troubleshoot.Margin = P_Reset.Margin = P_Text.Margin = UI.Scale(new Padding(10, 0, 10, 10));
 		B_ImportClipboard.Margin = UI.Scale(new Padding(10));
-		L_Troubleshoot.Font = L_PdxSyncInfo.Font = L_SyncStatus.Font = UI.Font(9F);
+		L_Troubleshoot.Font = L_PdxSyncInfo.Font = L_VerifyIntegrity.Font = L_SyncStatus.Font = UI.Font(9F);
 		L_SyncStatusLabel.Font = UI.Font(9F, FontStyle.Bold);
 		L_Troubleshoot.Margin = UI.Scale(new Padding(3));
-		L_SafeMode.Margin = L_PdxSyncInfo.Margin = L_SyncStatus.Margin = UI.Scale(new Padding(3, 3, 3, 10));
-		L_SyncStatusLabel.Margin = UI.Scale(new Padding(3, 3, 5, 10));
+		L_SafeMode.Margin = L_PdxSyncInfo.Margin = L_VerifyIntegrity.Margin = UI.Scale(new Padding(3, 3, 3, 10));
+		B_RunSync.Margin = UI.Scale(new Padding(10, 0, 10, 3));
+		L_SyncStatus.Margin = L_SyncStatusLabel.Margin = UI.Scale(new Padding(3, 3, 5, 3));
+		slickSpacer2.Height = UI.Scale(2);
+		slickSpacer2.Margin = UI.Scale(new Padding(3, 6, 3, 6));
 
 		foreach (Control item in P_Reset.Controls)
 		{
@@ -120,14 +126,14 @@ public partial class PC_Utilities : PanelContent
 
 	private void LoadModsFromText(string text, string title)
 	{
-		var matches = Regex.Matches(text, @"(?<!\.)\b(\d{5,6})\b(?:\: (.+?) (?:[\d\.]))?");
+		var matches = Regex.Matches(text, @"(?<!\.)\b(\d{5,8})\b(?:\: (.+?) (?:[\d\.]))?");
 		var packages = new List<IPackageIdentity>();
 
 		foreach (Match item in matches)
 		{
-			if (ulong.TryParse(item.Groups[1].Value, out var id) && !packages.Any(x => x.Id == id))
+			if (ulong.TryParse(item.Groups[1].Value, out var id) && !packages.Any(x => x.Id == id.ToString()))
 			{
-				packages.Add(new GenericPackageIdentity(id, item.Groups[2].Value));
+				packages.Add(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, id.ToString(), item.Groups[2].Value));
 			}
 		}
 
@@ -265,5 +271,14 @@ public partial class PC_Utilities : PanelContent
 		await Task.Delay(5000);
 
 		B_SafeMode.Loading = false;
+	}
+
+	private async void B_VerifyIntegrity_Click(object sender, EventArgs e)
+	{
+		B_VerifyIntegrity.Loading = integrityRunning = true;
+		Notifier_WorkshopSync();
+		await _workshopService.VerifyIntegrity();
+		B_VerifyIntegrity.Loading = integrityRunning = false;
+		Notifier_WorkshopSync();
 	}
 }

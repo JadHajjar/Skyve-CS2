@@ -38,6 +38,7 @@ using PdxPlatform = PDX.SDK.Contracts.Enums.Platform;
 using Platform = Extensions.Platform;
 
 namespace Skyve.Systems.CS2.Services;
+
 public class WorkshopService : IWorkshopService
 {
 	public event Action? OnLogin;
@@ -60,7 +61,6 @@ public class WorkshopService : IWorkshopService
 	private readonly Regex _modIdRegex = new(@"(\d+)_(\d+)?", RegexOptions.Compiled);
 
 	private bool loginWaitingConnection;
-	private bool syncOccurred;
 	private List<IWorkshopTag>? cachedTags;
 
 	private IContext? Context { get; set; }
@@ -155,7 +155,7 @@ public class WorkshopService : IWorkshopService
 				TelemetryDebugEnabled = false,
 				UnityEventTelemetryEnable = false,
 			},
-#if !DEBUG
+#if DEBUG
 			LogLevel = LogLevel.L1_Debug,
 			DefaultHeaders = new Dictionary<string, string>() { { "User-Agent", $"Skyve/9999" } },
 #else
@@ -196,13 +196,13 @@ public class WorkshopService : IWorkshopService
 			{
 				GameData = await Context.Mods.GetGameData();
 
-				var codeTag = GameData.Filters.Tags.FirstOrDefault(x => x.TagName == "Code Mod");
+				var codeTag = GameData.Filters.Tags?.FirstOrDefault(x => x.TagName == "Code Mod");
 				if (codeTag is not null)
 				{
 					codeTag.Order = 1;
 				}
 
-				var assetTag = GameData.Filters.Tags.FirstOrDefault(x => x.TagName == "Prefab");
+				var assetTag = GameData.Filters.Tags?.FirstOrDefault(x => x.TagName == "Prefab");
 				if (assetTag is not null)
 				{
 					assetTag.Order = 2;
@@ -399,7 +399,7 @@ public class WorkshopService : IWorkshopService
 
 	public IWorkshopInfo? GetInfo(IPackageIdentity identity)
 	{
-		if (identity.Id <= 0 || identity is IDlcInfo)
+		if (identity.Source != Defaults.WORKSHOP_SOURCE || identity is IDlcInfo)
 		{
 			return null;
 		}
@@ -409,7 +409,7 @@ public class WorkshopService : IWorkshopService
 
 	public async Task<IWorkshopInfo?> GetInfoAsync(IPackageIdentity identity)
 	{
-		if (identity.Id <= 0 || identity is IDlcInfo)
+		if (identity.Source != Defaults.WORKSHOP_SOURCE || identity is IDlcInfo)
 		{
 			return null;
 		}
@@ -419,7 +419,7 @@ public class WorkshopService : IWorkshopService
 
 	public bool IsInfoQueued(IPackageIdentity identity)
 	{
-		if (identity.Id <= 0 || identity is IDlcInfo)
+		if (identity.Source != Defaults.WORKSHOP_SOURCE || identity is IDlcInfo)
 		{
 			return false;
 		}
@@ -469,7 +469,7 @@ public class WorkshopService : IWorkshopService
 			};
 		}
 
-		return new PdxBannedMod(rgx.Groups[1].Value);
+		return null;
 	}
 
 	public IAuthor? GetUser(IUser? user)
@@ -812,18 +812,16 @@ public class WorkshopService : IWorkshopService
 		return !result.Success ? null : (IModComment)new PdxForumPost(result.Post);
 	}
 
-	internal async Task<bool> UnsubscribeBulk(IEnumerable<int> mods, string playset)
+	internal async Task<bool> UnsubscribeBulk(IEnumerable<IPackageIdentity> mods, string playset)
 	{
 		if (Context is null || playset is null || !mods.Any())
 		{
 			return false;
 		}
 
-		syncOccurred = true;
-
 		try
 		{
-			var result = await Context.Mods.UnsubscribeBulk(mods.Select(x => x.ToString()), playset);
+			var result = await Context.Mods.UnsubscribeBulk(mods.Select(x => new ModBase(x.Source, x.Id, x.Version)), playset);
 
 			await ProcessResult(result);
 
@@ -844,8 +842,6 @@ public class WorkshopService : IWorkshopService
 			return false;
 		}
 
-		syncOccurred = true;
-
 		try
 		{
 			var result = await Context.Mods.SubscribeBulk(mods, playset);
@@ -862,58 +858,22 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	internal async Task<bool> UnsubscribeBulk(IEnumerable<IModBase> mods, string playset)
-	{
-		if (Context is null || playset is null || !mods.Any())
-		{
-			return false;
-		}
-
-		syncOccurred = true;
-
-		try
-		{
-			var results = new List<IPartialResult>();
-
-			foreach (var name in mods)
-			{
-				var result = await Context.Mods.Unsubscribe(name, playset);
-
-				results.Add(await ProcessResult(result));
-
-				await Task.Delay(1000);
-			}
-
-			return results.All(x => x.Success != ResultStatus.Failure);
-		}
-		catch (Exception ex)
-		{
-			_logger.Exception(ex, memberName: "Catastrophic error during UnsubscribeBulk");
-
-			return false;
-		}
-	}
-
-	internal async Task<bool> UnsubscribeBulkCompletely(IEnumerable<int> mods)
+	internal async Task<bool> UnsubscribeBulkCompletely(IEnumerable<IPackageIdentity> mods)
 	{
 		if (Context is null)
 		{
 			return false;
 		}
 
-		syncOccurred = true;
-
 		try
 		{
 			var results = new List<IResult>();
 
-			foreach (var id in mods)
+			foreach (var mod in mods)
 			{
-				var result = await Context.Mods.Unsubscribe(id.ToString());
+				var result = await Context.Mods.UnsubscribeFromAllPlaysets(new ModBase(mod.Source, mod.Id));
 
 				results.Add(await ProcessResult(result));
-
-				await Task.Delay(1000);
 			}
 
 			return results.All(x => x.Success);
@@ -985,7 +945,7 @@ public class WorkshopService : IWorkshopService
 		await ProcessResult(await Context.Mods.SetLoadOrder(orderedMods, playset));
 	}
 
-	internal async Task<bool> SetEnableBulk(List<int> modKeys, string playset, bool enable)
+	internal async Task<bool> SetEnableBulk(IEnumerable<IPackageIdentity> modKeys, string playset, bool enable)
 	{
 		if (Context is null)
 		{
@@ -995,33 +955,8 @@ public class WorkshopService : IWorkshopService
 		try
 		{
 			var result = enable
-				? await Context.Mods.EnableBulk(modKeys.ConvertAll(x => x.ToString()), playset)
-				: await Context.Mods.DisableBulk(modKeys.ConvertAll(x => x.ToString()), playset);
-
-			await ProcessResult(result);
-
-			return result.Success != ResultStatus.Failure;
-		}
-		catch (Exception ex)
-		{
-			_logger.Exception(ex, memberName: $"Catastrophic error during SetEnableBulk({enable})");
-
-			return false;
-		}
-	}
-
-	internal async Task<bool> SetEnableBulk(List<IModBase> modNames, string playset, bool enable)
-	{
-		if (Context is null)
-		{
-			return false;
-		}
-
-		try
-		{
-			var result = enable
-				? await Context.Mods.EnableBulk(modNames, playset)
-				: await Context.Mods.DisableBulk(modNames, playset);
+				? await Context.Mods.EnableBulk(modKeys.Select(x => new ModBase(x.Source, x.Id, x.Version)), playset)
+				: await Context.Mods.DisableBulk(modKeys.Select(x => new ModBase(x.Source, x.Id, x.Version)), playset);
 
 			await ProcessResult(result);
 
@@ -1076,8 +1011,6 @@ public class WorkshopService : IWorkshopService
 			return;
 		}
 
-		syncOccurred = true;
-
 		try
 		{
 			try
@@ -1086,8 +1019,6 @@ public class WorkshopService : IWorkshopService
 				_notifier.OnWorkshopSyncStarted();
 
 				await ProcessResult(await Context.Mods.Sync(direction));
-
-				await Context.Mods.VerifyPdxModsIntegrity();
 			}
 			finally
 			{
@@ -1101,14 +1032,36 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	public async Task<IModStagingDataBuilder?> GetModStagingDataFromExistingMod(ulong modId)
+	public async Task VerifyIntegrity()
 	{
-		if (Context is null || modId <= 0)
+		if (Context is null)
+		{
+			return;
+		}
+
+		await ProcessResult(await Context.Mods.VerifyPdxModsIntegrity());
+	}
+
+	public async Task<IModStagingDataBuilder?> GetModStagingDataFromExistingMod(string modId)
+	{
+		if (Context is null || string.IsNullOrEmpty(modId))
 		{
 			return null;
 		}
 
-		return await Context.Mods.Publishing.GetModStagingDataFromExistingMod(modId.ToString(), null, ModPlatform.Windows);
+		return await Context.Mods.Publishing.GetModStagingDataFromExistingMod(modId, null, ModPlatform.Windows);
+	}
+
+	public async Task<IPlayset?> GetPlayset(string playsetId, string? playsetVersion = null)
+	{
+		if (Context is null || string.IsNullOrEmpty(playsetId))
+		{
+			return null;
+		}
+
+		var result = await ProcessResult(await Context.Mods.GetPlaysetDetails(playsetId, playsetVersion));
+
+		return new Skyve.Domain.CS2.Content.Playset(result.Playset);
 	}
 
 	public async Task<IModPublishingResult?> PublishMod(IModStagingData modStagingData)
@@ -1238,7 +1191,7 @@ public class WorkshopService : IWorkshopService
 
 	public bool IsLocal(IPackageIdentity identity)
 	{
-		return identity.Id <= 0 && identity is not LocalPdxPackage;
+		return identity.Source != Defaults.WORKSHOP_SOURCE;
 	}
 
 	private SearchOrder GetPdxOrder(WorkshopQuerySorting sorting)

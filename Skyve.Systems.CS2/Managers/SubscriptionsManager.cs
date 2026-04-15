@@ -188,9 +188,9 @@ internal class SubscriptionsManager : ISubscriptionsManager
 		}
 	}
 
-	public bool TryGetDownloadStatus(ulong id, out ISubscriptionStatus subscriptionStatus)
+	public bool TryGetDownloadStatus(IPackageIdentity package, out ISubscriptionStatus subscriptionStatus)
 	{
-		if (_workshopService.TryGetDownloadStatus(id, out var status))
+		if (modsService != null && modsService.TryGetDownloadStatus(new ModBase(package.Source, package.Id, package.Version), out var status))
 		{
 			subscriptionStatus = new SubscriptionStatus(status);
 			return true;

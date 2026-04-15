@@ -228,7 +228,7 @@ public class IncludedButton : SlickButton
 		{
 			iconRect = new Rectangle((Height - (buttonRect.Height * 3 / 5)) / 2, (Height - (buttonRect.Height * 3 / 5)) / 2, buttonRect.Height * 3 / 5, buttonRect.Height * 3 / 5);
 
-			if (!_subscriptionsManager.TryGetDownloadStatus(Package.Id, out var status) || status.Stage > ModDownloadStage.Started)
+			if (!_subscriptionsManager.TryGetDownloadStatus(Package, out var status) || status.Stage > ModDownloadStage.Started)
 			{
 				DrawLoader(e.Graphics, iconRect, iconColor);
 			}

@@ -80,7 +80,7 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 
 		foreach (var item in GetCache())
 		{
-			if (item.Id == id)
+			if (item.Id == id.ToString())
 			{
 				result = item;
 				return true;

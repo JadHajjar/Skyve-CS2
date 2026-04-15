@@ -272,7 +272,7 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 			return;
 		}
 
-		if (package.Id <= 0)
+		if (!ulong.TryParse( package.Id ,out _))
 		{
 			return;
 		}
@@ -438,10 +438,10 @@ public partial class PC_CompatibilityManagement : PC_PackagePageBase
 		}
 	}
 
-	private CompatibilityPackageReference StringToPackageReference(string arg)
-	{
-		return new CompatibilityPackageReference(new GenericPackageIdentity(ulong.Parse(arg)));
-	}
+	//private CompatibilityPackageReference StringToPackageReference(string arg)
+	//{
+	//	return new CompatibilityPackageReference(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, arg));
+	//}
 
 	private void B_Skip_Click(object sender, EventArgs e)
 	{

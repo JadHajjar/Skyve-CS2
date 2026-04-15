@@ -81,7 +81,7 @@ public class SkyveApiUtil
 		return ConvertDto<CompatibilityPackageData, PackageData, PackageDataDto>(await Get<CompatibilityPackageData[]>("/CompatibilityData"));
 	}
 
-	public async Task<PackageData?> GetPackageData(ulong packageId)
+	public async Task<PackageData?> GetPackageData(string packageId)
 	{
 		return ConvertDto<CompatibilityPackageData, PackageData, PackageDataDto>(await Get<CompatibilityPackageData>("/CompatibilityData/" + packageId));
 	}
@@ -116,7 +116,7 @@ public class SkyveApiUtil
 		return ConvertDto<ReviewRequestData, ReviewRequest, ReviewRequestDto>(await Get<ReviewRequestData[]>("/GetReviewRequests"));
 	}
 
-	public async Task<ReviewRequest?> GetReviewRequest(string userId, ulong packageId)
+	public async Task<ReviewRequest?> GetReviewRequest(string userId, string packageId)
 	{
 		return ConvertDto<ReviewRequestData, ReviewRequest, ReviewRequestDto>(await Get<ReviewRequestData>("/GetReviewRequest", (nameof(userId), userId), (nameof(packageId), packageId)));
 	}
@@ -126,7 +126,7 @@ public class SkyveApiUtil
 		return ConvertDto<AnnouncementData, AnnouncementNotification, AnnouncementDto>(await Get<AnnouncementData[]>("/Announcements"));
 	}
 
-	public async Task<PackageEdit[]?> GetPackageEdits(ulong packageId)
+	public async Task<PackageEdit[]?> GetPackageEdits(string packageId)
 	{
 		return ConvertDto<PackageEditData, PackageEdit, PackageEditDto>(await Get<PackageEditData[]>("/GetPackageEdits", (nameof(packageId), packageId)));
 	}
@@ -136,7 +136,7 @@ public class SkyveApiUtil
 		return ConvertDto<ReviewReplyData, ReviewReply, ReviewReplyDto>(await Get<ReviewReplyData[]>("/GetReviewMessages"));
 	}
 
-	public async Task<ReviewReply?> GetReviewStatus(ulong packageId)
+	public async Task<ReviewReply?> GetReviewStatus(string packageId)
 	{
 		return ConvertDto<ReviewReplyData, ReviewReply, ReviewReplyDto>(await Get<ReviewReplyData>("/GetReviewStatus", (nameof(packageId), packageId)));
 	}
@@ -146,7 +146,7 @@ public class SkyveApiUtil
 		return await Post<ReviewReplyData, ApiResponse>("/SendReviewMessage", ConvertDto<ReviewReply, ReviewReplyData, ReviewReplyDataDto>(reply)!);
 	}
 
-	public async Task<ApiResponse> DeleteReviewMessage(ulong packageId)
+	public async Task<ApiResponse> DeleteReviewMessage(string packageId)
 	{
 		return await Delete<ApiResponse>("/DeleteReviewMessage", (nameof(packageId), packageId));
 	}

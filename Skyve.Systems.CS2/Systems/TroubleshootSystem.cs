@@ -201,13 +201,13 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 			if (!keepSettings)
 			{
-				var originalPlayset = _playsetManager.GetPlayset(currentState.OriginalPlaysetId);
+				var originalPlayset = _playsetManager.GetPlayset(currentState.OriginalPlaysetId!);
 
 				if (originalPlayset != null)
 				{
 					await _playsetManager.ActivatePlayset(originalPlayset);
 
-					await _playsetManager.DeletePlayset(_playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId));
+					await _playsetManager.DeletePlayset(_playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId!));
 				}
 				else
 				{
@@ -336,7 +336,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 		if (_playsetManager.CurrentPlayset?.Id != currentState.TroubleshootingPlaysetId)
 		{
-			var playset = _playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId);
+			var playset = _playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId!);
 
 			if (playset is null)
 			{

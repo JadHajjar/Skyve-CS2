@@ -1,14 +1,14 @@
-﻿using Extensions;
-
-using PDX.SDK.Contracts.Service.Mods.Results;
+﻿using PDX.SDK.Contracts.Service.Mods.Results;
 
 using Skyve.Domain.CS2.Utilities;
 using Skyve.Domain.Systems;
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Skyve.Domain.CS2.Content;
+
 public class Playset : IPlayset
 {
 	public Playset()
@@ -47,11 +47,18 @@ public class Playset : IPlayset
 
 	public override int GetHashCode()
 	{
-		return 2108858624 + Id.GetHashCode();
+		return 2108858624 + EqualityComparer<string?>.Default.GetHashCode(Id);
 	}
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
+		if (Id is null)
+		{
+			thumbnail = null;
+			thumbnailUrl = null;
+			return false;
+		}
+
 		thumbnailUrl = ThumbnailUrl;
 		thumbnail = DomainUtils.GetThumbnail(imageService, null, thumbnailUrl, Id, "Playset");
 

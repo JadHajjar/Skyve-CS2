@@ -840,6 +840,16 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation UsedOutOfSpace => _instance.GetText("UsedOutOfSpace");
 
 	/// <summary>
+	/// Verify integrity of mod files
+	/// </summary>
+	public static Translation VerifyIntegrity => _instance.GetText("VerifyIntegrity");
+
+	/// <summary>
+	/// Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for.
+	/// </summary>
+	public static Translation VerifyIntegrityInfo => _instance.GetText("VerifyIntegrityInfo");
+
+	/// <summary>
 	/// View on PDX Mods
 	/// </summary>
 	public static Translation ViewOnWorkshop => _instance.GetText("ViewOnWorkshop");

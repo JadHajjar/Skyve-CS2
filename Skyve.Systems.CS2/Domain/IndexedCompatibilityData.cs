@@ -3,9 +3,6 @@
 using Skyve.Compatibility.Domain;
 using Skyve.Compatibility.Domain.Enums;
 using Skyve.Systems.CS2.Domain.Api;
-using Skyve.Systems.CS2.Domain.DTO;
-
-using SkyveApi.Domain.CS2;
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +12,7 @@ namespace Skyve.Systems.CS2.Domain;
 
 public class IndexedCompatibilityData
 {
-	public IndexedCompatibilityData(PackageData[]? packages = null, List<ulong>? blackListIds = null, List<string>? blackListNames = null)
+	public IndexedCompatibilityData(PackageData[]? packages = null, List<string>? blackListIds = null, List<string>? blackListNames = null)
 	{
 		Packages = packages?.ToDictionary(x => x.Id, x => GenerateIndexedPackage(x, packages)) ?? [];
 		PackageNames = new(StringComparer.InvariantCultureIgnoreCase);
@@ -67,8 +64,8 @@ public class IndexedCompatibilityData
 		return new IndexedPackage(package);
 	}
 
-	public Dictionary<string, ulong> PackageNames { get; }
-	public Dictionary<ulong, IndexedPackage> Packages { get; }
-	public HashSet<ulong> BlackListedIds { get; }
+	public Dictionary<string, string> PackageNames { get; }
+	public Dictionary<string, IndexedPackage> Packages { get; }
+	public HashSet<string> BlackListedIds { get; }
 	public HashSet<string> BlackListedNames { get; }
 }

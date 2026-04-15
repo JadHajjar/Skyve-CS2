@@ -61,15 +61,15 @@ public partial class PC_ViewReviewRequest : PC_PackagePageBase
 		}
 	}
 
-	private CompatibilityPackageReference StringToPackageReference(string arg)
-	{
-		if (ulong.TryParse(arg, out var id))
-		{
-			return new CompatibilityPackageReference(new GenericPackageIdentity(id));
-		}
+	//private CompatibilityPackageReference StringToPackageReference(string arg)
+	//{
+	//	if (ulong.TryParse(arg, out var id))
+	//	{
+	//		return new CompatibilityPackageReference(new GenericPackageIdentity(id));
+	//	}
 
-		return new(new GenericPackageIdentity(0));
-	}
+	//	return new(new GenericPackageIdentity(0));
+	//}
 
 	protected override void SetPackage(IPackageIdentity package)
 	{

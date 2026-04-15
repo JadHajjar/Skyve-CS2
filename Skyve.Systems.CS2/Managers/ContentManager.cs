@@ -253,7 +253,7 @@ internal class ContentManager : IContentManager
 		{
 			var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
 
-			if (pdxPackage is not null && (pdxPackage.Id == 0 || !packages.Any(x => x.Id == pdxPackage.Id && x.Version == ((IPackage)pdxPackage).Version)))
+			if (pdxPackage is not null)
 			{
 				packages.Add(pdxPackage);
 			}
@@ -481,7 +481,7 @@ internal class ContentManager : IContentManager
 
 		if (blackList.Count > 0)
 		{
-			await _workshopService.UnsubscribeBulkCompletely(blackList.Select(x => (int)x.Id));
+			await _workshopService.UnsubscribeBulkCompletely(blackList);
 		}
 
 		_logger.Info($"Applying analysis results..");

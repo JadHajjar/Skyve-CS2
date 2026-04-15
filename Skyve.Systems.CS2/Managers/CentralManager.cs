@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Domain;
 using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Utilities;
@@ -121,18 +122,22 @@ internal class CentralManager : ICentralManager
 		ConnectionHandler.AssumeInternetConnectivity = _settings.UserSettings.AssumeInternetConnectivity;
 		ConnectionHandler.Start();
 
-		var ping = await _skyveApiUtil.Ping();
-
-		if (!ping.Success && ping.Message == "Unauthorized")
+		try
 		{
-			_notifier.OnContentLoaded();
-			_compatibilityManager.CacheReport();
-			_workshopService.IsLoginPending = false;
-			_notifier.OnRefreshUI(true);
+			var ping = await _skyveApiUtil.Ping();
 
-			_notifier.OnVersionObsolete();
-			return;
+			if (!ping.Success && ping.Message == "Unauthorized")
+			{
+				_notifier.OnContentLoaded();
+				_compatibilityManager.CacheReport();
+				_workshopService.IsLoginPending = false;
+				_notifier.OnRefreshUI(true);
+
+				_notifier.OnVersionObsolete();
+				return;
+			}
 		}
+		catch { }
 
 		_citiesManager.GameClosed -= CitiesManager_GameClosed;
 		_citiesManager.GameClosed += CitiesManager_GameClosed;
@@ -340,7 +345,7 @@ internal class CentralManager : ICentralManager
 				case "mod":
 					if (ulong.TryParse(actions.TryGet(1), out var id))
 					{
-						_interfaceService.OpenPackagePage(new GenericPackageIdentity(id));
+						_interfaceService.OpenPackagePage(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, id.ToString()));
 					}
 
 					break;
@@ -361,12 +366,12 @@ internal class CentralManager : ICentralManager
 	public async Task UpdateSkyveVersionsInPlaysets()
 	{
 #if STABLE
-		const ulong MODID = 75804;
+		const string MODID = "75804";
 #else
-		const ulong MODID = 108773;
+		const string MODID = "108773";
 #endif
 		var modExists = false;
-		var workshopInfo = await _workshopService.GetInfoAsync(new GenericPackageIdentity(MODID));
+		var workshopInfo = await _workshopService.GetInfoAsync(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, MODID));
 
 		if (workshopInfo is null)
 			return;

@@ -123,7 +123,17 @@ public partial class PC_PlaysetAdd : PanelContent
 
 		try
 		{
-			await ServiceCenter.Get<IOnlinePlaysetUtil>().DownloadPlayset(result.Input);
+			B_ImportById.Loading = true;
+			var playset = await ServiceCenter.Get<IWorkshopService>().GetPlayset(result.Input);
+
+			if (playset is not null)
+			{
+				Form.PushPanel(new PC_PlaysetPage(playset, false, false));
+			}
+			else
+			{
+				App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(Locale.FailedToDownloadPlayset, PromptButtons.OK, PromptIcons.Error, form: App.Program.MainForm));
+			}
 		}
 		catch (Exception ex)
 		{
