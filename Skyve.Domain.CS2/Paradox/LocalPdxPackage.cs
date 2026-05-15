@@ -6,6 +6,7 @@ using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain.CS2.Content;
 using Skyve.Domain.CS2.Utilities;
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
@@ -46,6 +47,7 @@ public class LocalPdxPackage : Package, IModBase, IWorkshopInfo, IFullThumbnailO
 		InstalledDate = mod.SubscriptionDate;
 		SuggestedGameVersion = mod.RequiredGameVersion;
 		PdxLocalData = mod.LocalData;
+		AccessLevel = mod.AccessControlLevelState switch { ModAccessControlLevelState.Unlisted => AccessLevel.Unlisted, ModAccessControlLevelState.Private => AccessLevel.Private, _ => AccessLevel.Public };
 		ThumbnailPath = mod.LocalData.ThumbnailFilename is null ? string.Empty : CrossIO.Combine(mod.LocalData.FolderAbsolutePath, mod.LocalData.ThumbnailFilename);
 		ServerTime = mod.UpdatedDate ?? default;
 		ServerSize = (long)mod.Size;
@@ -97,6 +99,7 @@ public class LocalPdxPackage : Package, IModBase, IWorkshopInfo, IFullThumbnailO
 	public ModPlatform OperatingSystem { get; set; }
 	public List<ExternalLink> ExternalLinks { get; set; }
 	SourceType IModBase.Source => Source;
+	public AccessLevel AccessLevel { get; }
 
 	bool IWorkshopInfo.HasComments()
 	{

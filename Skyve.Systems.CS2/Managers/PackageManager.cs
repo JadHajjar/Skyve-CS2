@@ -13,7 +13,7 @@ using System.Linq;
 namespace Skyve.Systems.CS2.Managers;
 internal class PackageManager : IPackageManager
 {
-	private readonly Dictionary<int, IPackage> indexedPackages = [];
+	private readonly Dictionary<string, IPackage> indexedPackages = [];
 	private readonly Dictionary<string, List<IPackage>> indexedMods = [];
 	private readonly List<IPackage> packages = [];
 
@@ -136,7 +136,7 @@ internal class PackageManager : IPackageManager
 
 		if (indexedPackages is not null)
 		{
-			indexedPackages[package.GetKey()] = package;
+			indexedPackages[$"{package.Source}_{package.Id}"] = package;
 		}
 
 		if (package.IsCodeMod && package.LocalData is not null)
@@ -151,7 +151,7 @@ internal class PackageManager : IPackageManager
 	public void RemovePackage(IPackage package)
 	{
 		packages.Remove(package);
-		indexedPackages.Remove(package.GetKey());
+		indexedPackages.Remove($"{package.Source}_{package.Id}");
 
 		if (package.IsCodeMod)
 		{
@@ -185,7 +185,7 @@ internal class PackageManager : IPackageManager
 			}
 		}
 
-		if (indexedPackages?.TryGetValue(identity.GetKey(), out var package) ?? false)
+		if (indexedPackages?.TryGetValue($"{identity.Source}_{identity.Id}", out var package) ?? false)
 		{
 			return package?.LocalData;
 		}
@@ -206,10 +206,8 @@ internal class PackageManager : IPackageManager
 		indexedPackages.Clear();
 		indexedPackages.AddRange(content
 			.OrderBy(x => !x.IsLocal)
-			.GroupBy(x => x.GetKey())
+			.GroupBy(x => $"{x.Source}_{x.Id}")
 			.ToDictionary(x => x.Key, x => x.First()));
-
-		indexedPackages.Remove(0);
 
 		indexedMods.Clear();
 		indexedMods.AddRange(content

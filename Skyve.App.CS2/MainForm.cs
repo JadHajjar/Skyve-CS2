@@ -405,6 +405,8 @@ public partial class MainForm : BasePanelForm
 	{
 		base.OnFormClosing(e);
 
+		ServiceCenter.Get<IWorkshopService>()?.ReleaseLock();
+
 		if (!TopMost)
 		{
 			if (_settings.SessionSettings.WindowWasMaximized = WindowState == FormWindowState.Maximized)

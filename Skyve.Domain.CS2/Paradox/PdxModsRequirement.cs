@@ -12,7 +12,7 @@ public class PdxModsRequirement : IPackageRequirement
 
 	public PdxModsRequirement(ModDependency x)
 	{
-		if (string.IsNullOrEmpty(x.Id))
+		if (x.Type == DependencyType.Mod)
 		{
 			Id = x.Id;
 			Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";

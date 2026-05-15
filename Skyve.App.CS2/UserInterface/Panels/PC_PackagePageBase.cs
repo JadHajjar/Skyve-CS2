@@ -63,7 +63,7 @@ public partial class PC_PackagePageBase : PanelContent
 			_notifier.PackageInformationUpdated += Notifier_WorkshopInfoUpdated;
 		}
 
-		PB_DataLoading.Visible = PB_DataLoading.Loading = _workshopService.IsInfoQueued(package);
+		// PB_DataLoading.Visible = PB_DataLoading.Loading = _workshopService.IsInfoQueued(package);
 	}
 
 	private async void DD_Version_SelectedItemChanged(object sender, EventArgs e)
@@ -450,7 +450,7 @@ public partial class PC_PackagePageBase : PanelContent
 
 		if (regex.Success)
 		{
-			ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(new GenericPackageIdentity(ulong.Parse(regex.Groups[1].Value)), false);
+			ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, regex.Groups[1].Value), false);
 		}
 		else
 		{

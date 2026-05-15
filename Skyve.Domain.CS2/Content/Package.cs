@@ -6,7 +6,7 @@ namespace Skyve.Domain.CS2.Content;
 
 public class Package : IPackage, IEquatable<Package?>
 {
-	public string Source { get; protected set; } = Defaults.WORKSHOP_SOURCE;
+	public string Source { get; protected set; } = string.Empty;
 	public string Id { get; protected set; } = string.Empty;
 	public string Name { get; protected set; }
 	public string? Url { get; protected set; }

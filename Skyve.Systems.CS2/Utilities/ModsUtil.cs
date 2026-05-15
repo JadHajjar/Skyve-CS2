@@ -143,22 +143,24 @@ internal class ModsUtil : IModUtil
 
 	public bool IsIncluded(IPackageIdentity mod, string? playsetId = null, bool withVersion = true)
 	{
+		if (string.IsNullOrEmpty(mod.Source))
+		{
+			var folder = mod.GetLocalPackageIdentity()?.Folder;
+
+			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
+		}
+
 		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod, withVersion);
 	}
 
 	public bool IsEnabled(IPackageIdentity mod, string? playsetId = null, bool withVersion = true)
 	{
-		//if (mod.Source == Defaults.CUSTOM_LOCAL_SOURCE <= 0)
-		//{
-		//	if (mod is LocalPdxPackage)
-		//	{
-		//		return modConfig.IsEnabled(playsetId ?? currentPlayset, (mod as IModBase)!.Id);
-		//	}
+		if (string.IsNullOrEmpty(mod.Source))
+		{
+			var folder = mod.GetLocalPackageIdentity()?.Folder;
 
-		//	var folder = mod.GetLocalPackageIdentity()?.Folder;
-
-		//	return folder is null or "" || Path.GetFileName(folder)[0] != '.';
-		//}
+			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
+		}
 
 		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod, withVersion);
 	}
@@ -175,21 +177,20 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
-		var playset = playsetId ?? currentPlayset;
-
-		if (playset is null)
-		{
-			return;
-		}
-
 		if (!value)
 		{
 			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this, playsetId));
 		}
 
-		//await SetLocalModIncluded(mods.AllWhere(x => x.Id <= 0 && IsIncluded(x, playset) != value), playset, value);
+		var localMods = mods.Where(x => string.IsNullOrEmpty(x.Source));
 
-		if (!mods.Any())
+		SetLocalModIncluded(mods.Where(x => string.IsNullOrEmpty(x.Source)), value);
+
+		mods = mods.Where(x => !string.IsNullOrEmpty(x.Source));
+
+		var playset = playsetId ?? currentPlayset;
+
+		if (playset is null || !mods.Any())
 		{
 			return;
 		}
@@ -252,13 +253,6 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
-		var playset = playsetId ?? currentPlayset;
-
-		if (playset is null)
-		{
-			return;
-		}
-
 		//SaveHistory();
 
 		if (!value)
@@ -266,9 +260,15 @@ internal class ModsUtil : IModUtil
 			mods = mods.Where(x => !_modLogicManager.IsRequired(x.GetLocalPackageIdentity(), this, playsetId));
 		}
 
-		//await SetLocalModEnabled(mods.AllWhere(x => x.Id <= 0 && IsEnabled(x, playset) != value), playset, value);
+		var localMods = mods.Where(x => string.IsNullOrEmpty(x.Source));
 
-		if (!mods.Any())
+		SetLocalModIncluded(mods.Where(x => string.IsNullOrEmpty(x.Source)), value);
+
+		mods = mods.Where(x => !string.IsNullOrEmpty(x.Source));
+
+		var playset = playsetId ?? currentPlayset;
+
+		if (playset is null || !mods.Any())
 		{
 			return;
 		}
@@ -306,77 +306,31 @@ internal class ModsUtil : IModUtil
 		_notifier.OnRefreshUI(true);
 	}
 
-	//private async Task SetLocalModIncluded(List<IPackageIdentity> mods, string playset, bool value)
-	//{
-	//	if (mods.Count == 0)
-	//	{
-	//		return;
-	//	}
+	private void SetLocalModIncluded(IEnumerable<IPackageIdentity> mods, bool value)
+	{
+		foreach (var item in mods)
+		{
+			var localIdentity = item.GetLocalPackageIdentity();
 
-	//	foreach (var item in mods.Where(x => x is not LocalPdxPackage))
-	//	{
-	//		var localIdentity = item.GetLocalPackageIdentity();
+			if (localIdentity is null || IsIncluded(item, string.Empty) == value)
+			{
+				continue;
+			}
 
-	//		if (localIdentity is null)
-	//		{
-	//			continue;
-	//		}
-
-	//		SetLocalFolderIncluded(value, item, localIdentity);
-	//	}
-
-	//	var pdxMods = mods.Where(x => x is LocalPdxPackage ).Cast<IModBase>().ToList();
-
-	//	if (value)
-	//	{
-	//		await _workshopService.SubscribeBulk(pdxMods, playset);
-
-	//		pdxMods.ForEach(x => modConfig.SetEnabled(playset, x.Id, true));
-	//	}
-	//	else
-	//	{
-	//		await _workshopService.UnsubscribeBulk(pdxMods, playset);
-
-	//		pdxMods.ForEach(x => modConfig.Remove(playset, x.Id));
-	//	}
-	//}
-
-	//private async Task SetLocalModEnabled(List<IPackageIdentity> mods, string playset, bool value)
-	//{
-	//	if (mods.Count == 0)
-	//	{
-	//		return;
-	//	}
-
-	//	foreach (var item in mods)
-	//	{
-	//		if (item is LocalPdxPackage)
-	//		{
-	//			continue;
-	//		}
-
-	//		var localIdentity = item.GetLocalPackageIdentity();
-
-	//		if (localIdentity is null)
-	//		{
-	//			continue;
-	//		}
-
-	//		SetLocalFolderIncluded(value, item, localIdentity);
-	//	}
-
-	//	var pdxMods = mods.Where(x => x is LocalPdxPackage).Cast<IModBase>().ToList();
-
-	//	await _workshopService.SetEnableBulk(pdxMods, playset, value);
-
-	//	pdxMods.ForEach(x => modConfig.SetEnabled(playset, x.ToString(), value));
-	//}
+			SetLocalFolderIncluded(value, item, localIdentity);
+		}
+	}
 
 	private void SetLocalFolderIncluded(bool value, IPackageIdentity item, ILocalPackageIdentity localIdentity)
 	{
 		try
 		{
 			var newFolder = CrossIO.Combine(Path.GetDirectoryName(localIdentity.Folder), value ? Path.GetFileName(localIdentity.Folder).TrimStart('.') : ('.' + Path.GetFileName(localIdentity.Folder).TrimStart('.')));
+
+			if (Directory.Exists(newFolder))
+			{
+				CrossIO.DeleteFolder(newFolder);
+			}
 
 			Directory.Move(localIdentity.Folder, newFolder);
 
@@ -502,11 +456,11 @@ internal class ModsUtil : IModUtil
 
 		_notifier.OnRefreshUI(true);
 
-		var dictionary = new List<IModBase>();
+		var dictionary = new List<IPackageIdentity>();
 
 		foreach (var item in ids)
 		{
-			dictionary.Add(new PdxModBase(item.Id.ToString(), withVersion ? item.Version == "" || item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version : null));
+			dictionary.Add(new PdxModIdentityPackage(item.Id) { Version = withVersion ? item.Version == "" || item.GetWorkshopInfo()?.LatestVersion == item.Version ? null : item.Version : null });
 		}
 
 		var result = await _workshopService.SubscribeBulk(dictionary, currentPlayset);

@@ -108,7 +108,9 @@ internal class RightClickService : IRightClickService
 
 		if (lockedPackages.Count > 0)
 		{
-			var result = await ServiceCenter.Get<IWorkshopService, WorkshopService>().SubscribeBulk(lockedPackages.Select(x => new PdxModBase(x.Id.ToString(), null)), (lockedPackages[0] as IPlaysetPackage)!.PlaysetId);
+			lockedPackages.ForEach(x => x.Version = null);
+
+			var result = await ServiceCenter.Get<IWorkshopService, WorkshopService>().SubscribeBulk(lockedPackages, (lockedPackages[0] as IPlaysetPackage)!.PlaysetId);
 
 			if (result)
 			{

@@ -23,6 +23,8 @@ public class Playset : IPlayset
 		ModSize = playset.ModsSize;
 		DateUpdated = playset.Updated ?? DateTime.MinValue;
 		ThumbnailUrl = playset.DisplayImagePath;
+		Ownership = (PlaysetOwnership)(int)playset.Ownership;
+		OnlineInfo = playset.State == PDX.SDK.Contracts.Service.Mods.Enums.PlaysetState.Public ? new SharedPlayset(playset) : null;
 	}
 
 	public Playset(ICreatePlaysetResult createdPlayset)
@@ -37,7 +39,8 @@ public class Playset : IPlayset
 	public int ModCount { get; set; }
 	public ulong ModSize { get; set; }
 	public string? ThumbnailUrl { get; }
-	public bool Temporary { get; }
+	public PlaysetOwnership Ownership { get; }
+	public IOnlinePlayset? OnlineInfo { get; }
 
 	public override bool Equals(object? obj)
 	{

@@ -13,10 +13,10 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Utilities;
+
 internal class LogUtil : ILogUtil
 {
 	private readonly ICompatibilityManager _compatibilityManager;
@@ -185,14 +185,19 @@ internal class LogUtil : ILogUtil
 		var details = assembly.GetName();
 
 #if STABLE
-		CreateEntry(zipArchive,$"Skyve Stable v{details.Version.GetString()}", string.Empty);
+		CreateEntry(zipArchive, $"Skyve Stable v{details.Version.GetString()}", string.Empty);
 #elif RELEASE
 		CreateEntry(zipArchive,$"Skyve Beta v{details.Version.GetString()}", string.Empty);
 #else
 		CreateEntry(zipArchive, $"Skyve Debug v{details.Version.GetString()}", string.Empty);
 #endif
 
-		AddCompatibilityReport(zipArchive);
+		try
+		{ AddCompatibilityReport(zipArchive); }
+		catch (Exception ex)
+		{
+			_logger.Exception(ex, "Error during creation of the compatibility report");
+		}
 	}
 
 	private IEnumerable<string> EnumerateFilesystemFiles(int startFolderLength)

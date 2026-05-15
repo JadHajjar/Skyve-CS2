@@ -142,7 +142,7 @@ partial class PC_PlaysetAdd
 			// B_ImportById
 			// 
 			this.B_ImportById.ButtonText = "Continue";
-			this.B_ImportById.ColorStyle = Extensions.ColorStyle.Text;
+			this.B_ImportById.ColorStyle = Extensions.ColorStyle.Icon;
 			this.B_ImportById.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon4.Name = "LinkChain";
 			this.B_ImportById.ImageName = dynamicIcon4;

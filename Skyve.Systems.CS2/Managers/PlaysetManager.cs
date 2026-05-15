@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.Systems.CS2.Managers;
+
 internal class PlaysetManager : IPlaysetManager
 {
 	private readonly Dictionary<string, ICustomPlayset> _customPlaysets = [];
@@ -109,7 +110,11 @@ internal class PlaysetManager : IPlaysetManager
 			return false;
 		}
 
-		if (await _workshopService.DeletePlayset(playset.Id!))
+		var result = playset.Ownership == PlaysetOwnership.SubscribedByCurrentUser
+			? await _workshopService.UnsubscribePlayset(playset.Id!)
+			: await _workshopService.DeletePlayset(playset.Id!);
+
+		if (result)
 		{
 			lock (_playsets)
 			{
@@ -149,7 +154,13 @@ internal class PlaysetManager : IPlaysetManager
 
 	public async Task ActivatePlayset(IPlayset playset)
 	{
-		await Task.Delay(250);
+		if (playset.Ownership == PlaysetOwnership.Other && playset.OnlineInfo is not null)
+		{
+			var result = await _workshopService.SubscribeToPlayset(playset.Id, playset.OnlineInfo.Version);
+
+			if (!result)
+				return;
+		}
 
 		await _workshopService.ActivatePlayset(playset.Id!);
 
@@ -535,8 +546,37 @@ internal class PlaysetManager : IPlaysetManager
 		};
 	}
 
-	public Task<IPlayset?> ImportPlayset(string fileName)
+	public Task<bool> SharePlayset(IPlayset playset, string name, string description)
 	{
-		throw new NotImplementedException();
+		return _workshopService.SharePlayset(playset.Id!, name, description);
+	}
+
+	public Task<bool> SetPlaysetThumbnail(IPlayset playset, string selectedPath)
+	{
+		return _workshopService.SetPlaysetThumbnail(playset, selectedPath);
+	}
+
+	public async Task MigratePlaysetThumbnails()
+	{
+		foreach (var playset in _customPlaysets.Where(x => x.Value.IsCustomThumbnailSet))
+		{
+			var thumbnail = playset.Value.GetThumbnail();
+
+			if (thumbnail is null)
+				continue;
+
+			var path = CrossIO.GetTempFileName() + ".png";
+			thumbnail.Save(path);
+
+			var result = await _workshopService.SetPlaysetThumbnail(_playsets[playset.Key], path);
+
+			if (result)
+			{
+				playset.Value.SetThumbnail(null);
+				Save(playset.Value);
+			}
+
+			File.Delete(path);
+		}
 	}
 }

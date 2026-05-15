@@ -53,6 +53,8 @@ public class PdxPlaysetImport : ITemporaryPlayset
 	DateTime IPlayset.DateUpdated { get; } = DateTime.Now;
 	int IPlayset.ModCount { get => SubscribedMods?.Count ?? 0; set { } }
 	ulong IPlayset.ModSize { get; set; }
+	IOnlinePlayset? IPlayset.OnlineInfo { get; }
+	PlaysetOwnership IPlayset.Ownership { get; }
 
 	bool IThumbnailObject.GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{

@@ -177,16 +177,11 @@ namespace Skyve.Mod.CS2
 			var pdxPlatform = PlatformManager.instance.GetPSI<PdxSdkPlatform>("PdxSdk");
 			var context = typeof(PdxSdkPlatform).GetField("m_SDKContext", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(pdxPlatform) as IContext;
 
-			var activePlayset = await context.Mods.GetActivePlayset();
+			var activePlayset =  context.Mods.GetActivePlaysetId();
 			var enabledMods = await context.Mods.GetActivePlaysetEnabledMods();
 			var list = new List<string>() { "N/A" };
 
-			if (!activePlayset.Success)
-			{
-				Log.Warn(activePlayset.Error.ToString());
-			}
-
-			if (!enabledMods.Success)
+			if (activePlayset is not null && !enabledMods.Success)
 			{
 				Log.Warn(enabledMods.Error.ToString());
 			}
@@ -194,40 +189,12 @@ namespace Skyve.Mod.CS2
 			if (enabledMods.Mods?.Count > 0)
 			{
 				list = enabledMods.Mods.Select(x => $"{x.Name} - v{x.UserModVersion} ({x.Id})").ToList();
-			//TryFixUIMods(enabledMods);
 			}
 
-			Log.Info("\n======= Current User =======\n\t" + context.Config.UserId +
-					"\n======= Active Playset =======\n\t" + activePlayset.PlaysetId +
+			Log.Info("\n======= Active Playset =======\n\t" + activePlayset +
 					"\n======= Enabled Mods =======\n\t" + string.Join("\n\t", list) + "\n============================" +
 					"\n======= Loaded Assemblies =======\n\t" + string.Join("\n\t", GameManager.instance.modManager.ListModsEnabled()) + "\n============================");
 
-		}
-
-		private static void TryFixUIMods(PDX.SDK.Contracts.Service.Mods.Result.ModListResult enabledMods)
-		{
-			//typeof(ModManager).GetMethod("InitializeUIModules", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(GameManager.instance.modManager, new object[0]);
-			foreach (var item in enabledMods.Mods)
-			{
-				if (item.LocalData?.FolderAbsolutePath is null or "")
-				{
-					continue;
-				}
-
-				var mjs = Directory.EnumerateFiles(item.LocalData.FolderAbsolutePath, "*.mjs", SearchOption.AllDirectories).FirstOrDefault();
-
-				if (mjs is null or "")
-				{
-					continue;
-				}
-
-				var asset = AssetDatabase.global.GetAsset(SearchFilter<UIModuleAsset>.ByCondition(asset => asset.name == Path.GetFileName(mjs)));
-
-				if (asset == null)
-					continue;
-
-				GameManager.instance.modManager.AddUIModule(asset);
-			}
 		}
 
 		public static bool InstallApp()

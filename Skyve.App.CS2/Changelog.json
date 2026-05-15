@@ -2,12 +2,60 @@
   {
     "Stable": false,
     "Beta": false,
-    "Version": "1.2.0",
-    "Date": "2026-04-24",
+    "Version": "1.2.3",
+    "Date": "2026-05-03",
     "ChangeGroups": [
       {
         "Name": "Changes",
         "Changes": [
+          "Fixes to various download or sync errors.",
+          "Fixed the compatibility report blocking a log report from being generated."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.2.2",
+    "Date": "2026-04-29",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed the mod compatibility not knowing if a mod is included or enabled in your playset."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.2.1",
+    "Date": "2026-04-29",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed mod dependencies not working.",
+          "Fixed in-game sync failing to run after running the game from Skyve.",
+          "Fixed mod data getting stuck in loading."
+        ]
+      }
+    ]
+  },
+  {
+    "Stable": false,
+    "Beta": false,
+    "Version": "1.2.0",
+    "Date": "2026-04-29",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Updated to the PDX SDK v2.0 with support to the new mods folder structure.",
+          "Added support for parallel mod downloads.",
+          "Added partial support for playset sharing.",
           "Fixed mods being counted as banned incorrectly.",
           "Changed the format for searching by mod ID in the PDX Mods tab to '#1234' instead of '1234'."
         ]

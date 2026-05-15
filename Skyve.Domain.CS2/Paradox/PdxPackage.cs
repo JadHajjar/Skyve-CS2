@@ -6,6 +6,7 @@ using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.Domain.CS2.Paradox;
 using Skyve.Domain.CS2.Utilities;
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
@@ -49,6 +50,7 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 		Playsets = mod.Playsets;
 		IsSubscribedInActivePlayset = mod.IsSubscribedInActivePlayset;
 		IsEnabledInActivePlayset = mod.IsEnabledInActivePlayset;
+		AccessLevel = mod.AccessControlLevelState switch { ModAccessControlLevelState.Unlisted => AccessLevel.Unlisted, ModAccessControlLevelState.Private => AccessLevel.Private, _ => AccessLevel.Public };
 		Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
 
 		PdxLocalData = mod.LocalData;
@@ -111,6 +113,8 @@ public class PdxPackage : IPackage, PdxIMod, IWorkshopInfo, IThumbnailObject, IF
 	public List<PlaysetInMod> Playsets { get; set; }
 	public bool IsSubscribedInActivePlayset { get; set; }
 	public bool IsEnabledInActivePlayset { get; set; }
+	public AccessLevel AccessLevel { get; }
+
 	string IPackageIdentity.Source => Source;
 
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)

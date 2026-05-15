@@ -86,6 +86,8 @@ public class WorkshopService : IWorkshopService
 
 		_dlcManager = dlcManager;
 		_skyveDataManager = skyveDataManager;
+
+		_citiesManager.GameOpened += CitiesManager_GameOpened;
 	}
 
 	public async Task Initialize()
@@ -399,7 +401,7 @@ public class WorkshopService : IWorkshopService
 
 	public IWorkshopInfo? GetInfo(IPackageIdentity identity)
 	{
-		if (identity.Source != Defaults.WORKSHOP_SOURCE || identity is IDlcInfo)
+		if (identity.Source != SourceType.PdxMods || !uint.TryParse(identity.Id, out _) || identity is IDlcInfo)
 		{
 			return null;
 		}
@@ -409,7 +411,7 @@ public class WorkshopService : IWorkshopService
 
 	public async Task<IWorkshopInfo?> GetInfoAsync(IPackageIdentity identity)
 	{
-		if (identity.Source != Defaults.WORKSHOP_SOURCE || identity is IDlcInfo)
+		if (identity.Source != Defaults.WORKSHOP_SOURCE || !uint.TryParse(identity.Id, out _) || identity is IDlcInfo)
 		{
 			return null;
 		}
@@ -419,7 +421,7 @@ public class WorkshopService : IWorkshopService
 
 	public bool IsInfoQueued(IPackageIdentity identity)
 	{
-		if (identity.Source != Defaults.WORKSHOP_SOURCE || identity is IDlcInfo)
+		if (identity.Source != Defaults.WORKSHOP_SOURCE || !uint.TryParse(identity.Id, out _) || identity is IDlcInfo)
 		{
 			return false;
 		}
@@ -675,7 +677,7 @@ public class WorkshopService : IWorkshopService
 
 	public async Task<bool> ToggleVote(IPackageIdentity packageIdentity)
 	{
-		if (Context is null)
+		if (Context is null || !ValidateMod(packageIdentity))
 		{
 			return false;
 		}
@@ -735,7 +737,7 @@ public class WorkshopService : IWorkshopService
 
 	public ILink? GetCommentsPageUrl(IPackageIdentity packageIdentity)
 	{
-		if (Context is null)
+		if (Context is null || !ValidateMod(packageIdentity))
 		{
 			return null;
 		}
@@ -754,7 +756,7 @@ public class WorkshopService : IWorkshopService
 
 	public async Task<IModCommentsInfo?> GetComments(IPackageIdentity packageIdentity, int page = 1, int limit = 20)
 	{
-		if (Context is null)
+		if (Context is null || !ValidateMod(packageIdentity))
 		{
 			return null;
 		}
@@ -821,7 +823,7 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var result = await Context.Mods.UnsubscribeBulk(mods.Select(x => new ModBase(x.Source, x.Id, x.Version)), playset);
+			var result = await Context.Mods.UnsubscribeBulk(mods.Where(ValidateMod).Select(x => new ModBase(x.Source, x.Id, x.Version)).Distinct(), playset);
 
 			await ProcessResult(result);
 
@@ -835,7 +837,7 @@ public class WorkshopService : IWorkshopService
 		}
 	}
 
-	public async Task<bool> SubscribeBulk(IEnumerable<IModBase> mods, string playset)
+	public async Task<bool> SubscribeBulk(IEnumerable<IPackageIdentity> mods, string playset)
 	{
 		if (Context is null || playset is null || !mods.Any())
 		{
@@ -844,7 +846,7 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
-			var result = await Context.Mods.SubscribeBulk(mods, playset);
+			var result = await Context.Mods.SubscribeBulk(mods.Where(ValidateMod).Select(x => new ModBase(x.Source, x.Id, x.Version)).Distinct(), playset);
 
 			await ProcessResult(result);
 
@@ -869,7 +871,7 @@ public class WorkshopService : IWorkshopService
 		{
 			var results = new List<IResult>();
 
-			foreach (var mod in mods)
+			foreach (var mod in mods.Where(ValidateMod))
 			{
 				var result = await Context.Mods.UnsubscribeFromAllPlaysets(new ModBase(mod.Source, mod.Id));
 
@@ -945,7 +947,7 @@ public class WorkshopService : IWorkshopService
 		await ProcessResult(await Context.Mods.SetLoadOrder(orderedMods, playset));
 	}
 
-	internal async Task<bool> SetEnableBulk(IEnumerable<IPackageIdentity> modKeys, string playset, bool enable)
+	internal async Task<bool> SetEnableBulk(IEnumerable<IPackageIdentity> packages, string playset, bool enable)
 	{
 		if (Context is null)
 		{
@@ -954,9 +956,10 @@ public class WorkshopService : IWorkshopService
 
 		try
 		{
+			var mods = packages.Where(ValidateMod).Select(x => new ModBase(x.Source, x.Id, x.Version)).Distinct();
 			var result = enable
-				? await Context.Mods.EnableBulk(modKeys.Select(x => new ModBase(x.Source, x.Id, x.Version)), playset)
-				: await Context.Mods.DisableBulk(modKeys.Select(x => new ModBase(x.Source, x.Id, x.Version)), playset);
+				? await Context.Mods.EnableBulk(mods, playset)
+				: await Context.Mods.DisableBulk(mods, playset);
 
 			await ProcessResult(result);
 
@@ -1064,6 +1067,67 @@ public class WorkshopService : IWorkshopService
 		return new Skyve.Domain.CS2.Content.Playset(result.Playset);
 	}
 
+	public async Task<bool> SharePlayset(string playsetId, string displayName, string description)
+	{
+		if (Context is null)
+		{
+			return false;
+		}
+
+		var stagingData = await Context.Mods.Publishing.GetPlaysetStagingData(playsetId);
+
+		if (stagingData == null)
+		{
+			return false;
+		}
+
+		stagingData
+			.WithDisplayName(displayName)
+			.WithDescription(description);
+
+		var result = await ProcessResult(await Context.Mods.Publishing.PublishPlayset(stagingData));
+
+		return true;
+	}
+
+	internal async Task<bool> SubscribeToPlayset(string? id, string? version)
+	{
+		if (Context is null || string.IsNullOrEmpty(id))
+		{
+			return false;
+		}
+
+		return (await ProcessResult(await Context.Mods.SubscribePlayset(id, version))).Success;
+	}
+
+	internal async Task<bool> UnsubscribePlayset(string id)
+	{
+		if (Context is null || string.IsNullOrEmpty(id))
+		{
+			return false;
+		}
+
+		return (await ProcessResult(await Context.Mods.UnsubscribePlayset(id))).Success;
+	}
+
+	internal async Task<bool> SetPlaysetThumbnail(IPlayset playset, string selectedPath)
+	{
+		if (Context is null)
+		{
+			return false;
+		}
+
+		return (await ProcessResult(await Context.Mods.UpdatePlayset(playset.Id, new PlaysetPresentation { Name = playset.Name, DisplayImagePath = selectedPath }))).Success == ResultStatus.Success;
+	}
+
+	private bool ValidateMod(IPackageIdentity package)
+	{
+		if (package.Source == SourceType.PdxMods)
+			return uint.TryParse(package.Id, out _);
+
+		return !string.IsNullOrEmpty(package.Id);
+	}
+
 	public async Task<IModPublishingResult?> PublishMod(IModStagingData modStagingData)
 	{
 		if (Context is null || modStagingData is null)
@@ -1089,6 +1153,19 @@ public class WorkshopService : IWorkshopService
 		}
 
 		await ProcessResult(await Context.Mods.DeactivateActivePlayset());
+	}
+
+	private async void CitiesManager_GameOpened()
+	{
+		await ReleaseLock();
+	}
+
+	public async Task ReleaseLock()
+	{
+		if (Context is not null)
+		{
+			await Context.Mods.ReleaseConfigLock();
+		}
 	}
 
 	public async Task Shutdown()

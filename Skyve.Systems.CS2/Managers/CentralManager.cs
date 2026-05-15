@@ -190,6 +190,8 @@ internal class CentralManager : ICentralManager
 
 			await _updateManager.SendUnreadCommentsNotifications();
 
+			await _playsetManager.MigratePlaysetThumbnails();
+
 			await UpdateSkyveVersionsInPlaysets();
 		}
 

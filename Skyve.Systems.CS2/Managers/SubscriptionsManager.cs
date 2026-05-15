@@ -118,6 +118,9 @@ internal class SubscriptionsManager : ISubscriptionsManager
 			byteTracking[guid] = payload.DownloadedBytes;
 		}
 
+		if (speed > 1024 * 1024 * 1024)
+			return;
+
 		if (speed == 0)
 		{
 			speedTracking.Clear();

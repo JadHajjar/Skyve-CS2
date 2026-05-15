@@ -4,6 +4,7 @@ using PDX.SDK.Contracts.Service.Mods.Enums;
 using PDX.SDK.Contracts.Service.Mods.Interfaces;
 
 using Skyve.Domain.CS2.Utilities;
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
@@ -45,6 +46,7 @@ public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 		IsInvalid = mod.State is ModState.Unknown;
 		IsBanned = mod.State is not ModState.Published and not ModState.Publishing and not ModState.Removed and not ModState.Unknown;
 		ForumLink = mod.ForumLinks?.FirstOrDefault();
+		AccessLevel = mod.AccessControlLevelState switch { ModAccessControlLevelState.Unlisted => AccessLevel.Unlisted, ModAccessControlLevelState.Private => AccessLevel.Private, _ => AccessLevel.Public };
 		Tags = mod.Tags?.ToDictionary(x => x.Id, x => x.DisplayName) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
 		ServerTime = (mod.LatestModUpdate ?? Changelog.Max(x => x.ReleasedDate))?.ToUniversalTime() ?? default;
@@ -65,6 +67,7 @@ public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 	public string? Description { get; set; }
 	public long ServerSize { get; set; }
 	public string? ForumLink { get; set; }
+	public AccessLevel AccessLevel { get; set; }
 	public string VersionName { get; set; }
 	public string? Version { get; set; }
 	public int Subscribers { get; set; }
