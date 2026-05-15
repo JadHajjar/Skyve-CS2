@@ -48,7 +48,7 @@ partial class PC_PlaysetAdd
 			// 
 			// base_Text
 			// 
-			this.base_Text.Size = new System.Drawing.Size(150, 39);
+			this.base_Text.Size = new System.Drawing.Size(150, 41);
 			this.base_Text.Text = "AddPlayset";
 			// 
 			// TLP_New
@@ -87,9 +87,9 @@ partial class PC_PlaysetAdd
 			this.B_Cancel.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon1.Name = "Disposable";
 			this.B_Cancel.ImageName = dynamicIcon1;
-			this.B_Cancel.Location = new System.Drawing.Point(1094, 754);
+			this.B_Cancel.Location = new System.Drawing.Point(1090, 752);
 			this.B_Cancel.Name = "B_Cancel";
-			this.B_Cancel.Size = new System.Drawing.Size(85, 32);
+			this.B_Cancel.Size = new System.Drawing.Size(89, 34);
 			this.B_Cancel.SpaceTriggersClick = true;
 			this.B_Cancel.TabIndex = 3;
 			this.B_Cancel.Text = "Cancel";
@@ -142,7 +142,7 @@ partial class PC_PlaysetAdd
 			// B_ImportById
 			// 
 			this.B_ImportById.ButtonText = "Continue";
-			this.B_ImportById.ColorStyle = Extensions.ColorStyle.Text;
+			this.B_ImportById.ColorStyle = Extensions.ColorStyle.Icon;
 			this.B_ImportById.Cursor = System.Windows.Forms.Cursors.Hand;
 			dynamicIcon4.Name = "LinkChain";
 			this.B_ImportById.ImageName = dynamicIcon4;
@@ -152,7 +152,6 @@ partial class PC_PlaysetAdd
 			this.B_ImportById.TabIndex = 2;
 			this.B_ImportById.Text = "ImportFromLink";
 			this.B_ImportById.Title = "Import";
-			this.B_ImportById.Visible = false;
 			this.B_ImportById.Click += new System.EventHandler(this.B_ImportLink_Click);
 			// 
 			// L_Title

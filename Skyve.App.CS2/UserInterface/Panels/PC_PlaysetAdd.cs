@@ -1,8 +1,10 @@
 ﻿using Skyve.App.Interfaces;
 
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
+
 public partial class PC_PlaysetAdd : PanelContent
 {
 	private readonly IPlaysetManager _playsetManager = ServiceCenter.Get<IPlaysetManager>();
@@ -22,7 +24,7 @@ public partial class PC_PlaysetAdd : PanelContent
 
 		if (_playsetManager.CurrentPlayset is null)
 		{
-			B_ClonePlayset.Enabled=false;
+			B_ClonePlayset.Enabled = false;
 		}
 	}
 
@@ -121,13 +123,36 @@ public partial class PC_PlaysetAdd : PanelContent
 			return;
 		}
 
+		var match = Regex.Match(result.Input, @"https\://mods\.paradoxplaza\.com/playsets/cities_skylines_2/(\d+)");
+
+		if (match.Success)
+			result.Input = match.Groups[1].Value;
+
 		try
 		{
-			await ServiceCenter.Get<IOnlinePlaysetUtil>().DownloadPlayset(result.Input);
+			if (!int.TryParse(result.Input, out _))
+			{
+				App.Program.MainForm.TryInvoke(() => MessagePrompt.Show("Please enter a valid playset ID.", icon: PromptIcons.Error, form: App.Program.MainForm));
+				return;
+			}
+
+			B_ImportById.Loading = true;
+			var playset = await ServiceCenter.Get<IWorkshopService>().GetPlayset(result.Input);
+
+			if (playset is not null)
+			{
+				Form.PushPanel(new PC_PlaysetPage(playset, false, false));
+			}
+			else
+			{
+				App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(Locale.FailedToDownloadPlayset, PromptButtons.OK, PromptIcons.Error, form: App.Program.MainForm));
+			}
 		}
 		catch (Exception ex)
 		{
 			App.Program.MainForm.TryInvoke(() => MessagePrompt.Show(ex, Locale.FailedToDownloadPlayset, form: App.Program.MainForm));
 		}
+
+		B_ImportById.Loading = false;
 	}
 }

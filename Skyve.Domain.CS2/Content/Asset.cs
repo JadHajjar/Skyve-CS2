@@ -15,7 +15,8 @@ public class Asset : IAsset, IThumbnailObject
 	public AssetType AssetType { get; }
 	public string Folder { get; }
 	public string FilePath { get; }
-	public ulong Id => Package?.Id ?? 0;
+	public string Source => Package?.Source ?? string.Empty;
+	public string Id => Package?.Id ?? string.Empty;
 	public string Name { get; set; }
 	public string? Url => Package?.Url;
 	string? IPackageIdentity.Version { get => Package?.Version; set { if (Package is not null) Package.Version = value; } }

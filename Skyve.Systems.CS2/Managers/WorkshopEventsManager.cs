@@ -3,8 +3,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using PDX.SDK.Contracts;
-using PDX.SDK.Contracts.Events.Download;
-using PDX.SDK.Contracts.Events.Mods;
+using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Events;
 
 using Skyve.Domain;
 using Skyve.Domain.CS2.Notifications;
@@ -31,103 +31,47 @@ internal class WorkshopEventsManager
 		_subscriptionsManager = serviceProvider.GetService<ISubscriptionsManager>()!;
 	}
 
-	internal void RegisterModsCallbacks(IContext context)
-	{
-		context.Events.Subscribe<IModDownloadStarted>(OnDownloadStarted);
-		context.Events.Subscribe<IModDownloadCompleted>(OnDownloadComplete);
-		context.Events.Subscribe<ITransferStatusUpdated>(OnTransferUpdated);
-		context.Events.Subscribe<IInstallProgressEvent>(OnInstallProgress);
-		context.Events.Subscribe<IModDownloadFailed>(OnModDownloadFailed);
-		context.Events.Subscribe<IModDownloadCancelledByUser>(OnModDownloadCancelled);
-		//context.Events.Subscribe<IModUnsubscribed>(OnModUnsubscribe);
-	}
+	//internal void RegisterModsCallbacks(IContext context)
+	//{
+	//	context.Mods.Downloads.DownloadStageChanged += OnDownloadStatusChanged;
+	//}
 
-	private void OnModDownloadFailed(IModDownloadFailed failed)
-	{
-		var notification = _notificationsService.GetNotifications<PdxModDownloadFailed>().FirstOrDefault() ?? new PdxModDownloadFailed();
+	//private void DownloadProgressChanged(Guid guid, IModDownloadStatus payload)
+	//{
+	//	Debug.WriteLine($"{payload.Stage} - {payload.TotalProgress*100:0.0}%");
+	//	_subscriptionsManager.OnDownloadProgress(new PackageDownloadProgress
+	//	{
+	//		Status = payload.Stage.ToString(),
+	//		Id = ulong.Parse(payload.Mod.Id),
+	//		Progress = payload.TotalProgress,
+	//		ProcessedBytes = payload.DownloadedBytes,
+	//		Size = payload.TotalBytesToDownload
+	//	});
+	//}
 
-		notification.Time = DateTime.Now;
-		notification.Mods.Add((ulong)failed.ModId);
+	//private void OnDownloadStatusChanged(Guid guid, IModDownloadStatus payload)
+	//{
+	//	if (payload.Stage == ModDownloadStage.Failed)
+	//	{
+	//		SendDownloadFailedNotification(payload);
+	//	}
 
-		_notificationsService.RemoveNotificationsOfType<PdxModDownloadFailed>();
-		_notificationsService.SendNotification(notification);
+	//	if (payload.Stage == ModDownloadStage.Started)
+	//	{
+	//		Task.Run(() => _workshopService.GetInfoAsync(new GenericPackageIdentity(ulong.Parse(payload.Mod.Id))));
+	//	}
 
-		_subscriptionsManager.OnInstallFinished(new PackageInstallProgress
-		{
-			Id = (ulong)failed.ModId,
-			Progress = -1
-		});
-	}
+	//	DownloadProgressChanged(guid, payload);
+	//}
 
-	private void OnInstallProgress(IInstallProgressEvent @event)
-	{
-				Debug.WriteLine($"INSTALL {@event.Reference} {@event.CurrentStage} " + @event.Progress);
-		switch (@event.CurrentStage)
-		{
-			case PDX.SDK.Contracts.Enums.InstallStage.PreStepsStarted:
-			case PDX.SDK.Contracts.Enums.InstallStage.PatchDownloadStarted:
-				_subscriptionsManager.OnInstallStarted(new PackageInstallProgress
-				{
-					Id = (ulong)@event.Reference.SmartParse(),
-					Progress = 0
-				});
-				break;
-			case PDX.SDK.Contracts.Enums.InstallStage.PatchDownloadCancelled:
-				_subscriptionsManager.OnInstallProgress(new PackageInstallProgress
-				{
-					Id = (ulong)@event.Reference.SmartParse(),
-					Progress = -2f,
-				});
-				break;
-			default:
-				_subscriptionsManager.OnInstallProgress(new PackageInstallProgress
-				{
-					Id = (ulong)@event.Reference.SmartParse(),
-					Progress = @event.Progress,
-				});
-				break;
-		}
-	}
+	//private void SendDownloadFailedNotification(IModDownloadStatus payload)
+	//{
+	//	var notification = _notificationsService.GetNotifications<PdxModDownloadFailed>().FirstOrDefault() ?? new PdxModDownloadFailed();
 
-	private void OnTransferUpdated(ITransferStatusUpdated updated)
-	{
-		Debug.WriteLine("DOWNLOAD " + updated.TransferStatus.Progress);
-		_subscriptionsManager.OnDownloadProgress(new PackageDownloadProgress
-		{
-			Id = (ulong)updated.TransferStatus.Id.SmartParse(),
-			Progress = updated.TransferStatus.Progress,
-			ProcessedBytes = updated.TransferStatus.ProcessedBytes,
-			Size = updated.TransferStatus.Size
-		});
-	}
+	//	notification.Time = DateTime.Now;
+	//	notification.Mods.AddIfNotExist(ulong.Parse(payload.Mod.Id));
 
-	private void OnDownloadComplete(IModDownloadCompleted completed)
-	{
-		_subscriptionsManager.OnInstallFinished(new PackageInstallProgress
-		{
-			Id = (ulong)completed.ModId,
-			Progress = 1
-		});
-	}
-
-	private void OnModDownloadCancelled(IModDownloadCancelledByUser cancelled)
-	{
-				Debug.WriteLine($"CANCELLED {cancelled.ModId}");
-		_subscriptionsManager.OnDownloadCancelled(new PackageInstallProgress
-		{
-			Id = (ulong)cancelled.ModId,
-			Progress = -2
-		});
-	}
-
-	private void OnDownloadStarted(IModDownloadStarted started)
-	{
-		_subscriptionsManager.OnInstallStarted(new PackageInstallProgress
-		{
-			Id = (ulong)started.ModId,
-			Progress = 0
-		});
-
-		Task.Run(() => _workshopService.GetInfoAsync(new GenericPackageIdentity((ulong)started.ModId)));
-	}
+	//	_notificationsService.RemoveNotificationsOfType<PdxModDownloadFailed>();
+	//	_notificationsService.SendNotification(notification);
+	//}
 }

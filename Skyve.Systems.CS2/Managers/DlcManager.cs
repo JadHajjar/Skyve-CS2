@@ -111,7 +111,7 @@ internal class DlcManager : IDlcManager
 
 		var allDlcs = steamAppInfo["949230"].data?.dlc.ToList() ?? [];
 
-		allDlcs.RemoveAll(dlc => dlcs.TryGetValue(dlc, out var dlcInfo) && dlcInfo.Timestamp < DateTime.Now.AddDays(-7));
+		allDlcs.RemoveAll(dlc => dlcs.TryGetValue(dlc, out var dlcInfo) && dlcInfo.Timestamp > DateTime.Now.AddDays(-7));
 
 		await Task.WhenAll(allDlcs.Select(new Func<ulong, Task>(async (dlc) =>
 		{
@@ -128,10 +128,11 @@ internal class DlcManager : IDlcManager
 					Name = info.name!,
 					Description = info.short_description!,
 					IsFree = info.is_free,
+					ThumbnailUrl = info.header_image ?? $"https://cdn.akamai.steamstatic.com/steam/apps/{dlc}/header.jpg",
 					Price = info.price_overview?.final_formatted,
 					OriginalPrice = info.price_overview?.initial_formatted,
 					Discount = info.price_overview?.discount_percent ?? 0F,
-					Creators = info.developers?.Where(x => x is not "Colossal Order Ltd." and not "Paradox Interactive").ToArray(),
+					Creators = info.developers?.Where(x => x is not "Colossal Order Ltd." and not "Paradox Interactive" and not "Tantalus Media" and not "Iceflake Studios").ToArray(),
 					ExpectedRelease = ((info.release_date?.coming_soon ?? true) ? info.release_date?.date : string.Empty) ?? "TBD",
 					ReleaseDate = DateTime.TryParseExact(info.release_date?.date, "d MMM, yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt) ? dt : DateTime.MinValue
 				};

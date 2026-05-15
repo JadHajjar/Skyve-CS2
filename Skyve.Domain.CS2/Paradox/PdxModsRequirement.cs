@@ -2,19 +2,24 @@
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 namespace Skyve.Domain.CS2.Paradox;
+
 public class PdxModsRequirement : IPackageRequirement
 {
 	public PdxModsRequirement()
 	{
-		Name = string.Empty;
+		Id = Name = string.Empty;
 	}
 
 	public PdxModsRequirement(ModDependency x)
 	{
-		if (x.Id.HasValue)
+		if (x.Type == DependencyType.Mod)
 		{
-			Id = (ulong)x.Id.Value;
+			Id = x.Id;
 			Url = $"https://mods.paradoxplaza.com/mods/{Id}/Windows";
+		}
+		else
+		{ 
+			Id = x.DisplayName;
 		}
 
 		Name = x.DisplayName;
@@ -25,7 +30,8 @@ public class PdxModsRequirement : IPackageRequirement
 
 	public bool IsDlc { get; set; }
 	public bool IsOptional { get; set; }
-	public ulong Id { get; set; }
+	public string Source { get; } = Defaults.WORKSHOP_SOURCE;
+	public string Id { get; set; }
 	public string Name { get; set; }
 	public string? Url { get; set; }
 	public string? Version { get; set; }

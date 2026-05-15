@@ -1,4 +1,5 @@
 ﻿using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Interfaces;
 using PDX.SDK.Contracts.Service.Mods.Models;
 
 using Skyve.App.CS2.UserInterface.Content;
@@ -100,7 +101,7 @@ public partial class PC_PackageEdit : PanelContent
 
 					break;
 				case DependencyType.Mod:
-					var control = new MiniPackageControl(new GenericPackageIdentity((ulong)item.Id!, item.DisplayName)) { Dock = DockStyle.Top };
+					var control = new MiniPackageControl(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, item.Id, item.DisplayName)) { Dock = DockStyle.Top };
 					P_ModDependencies.Controls.Add(control);
 					break;
 			}
@@ -258,9 +259,9 @@ public partial class PC_PackageEdit : PanelContent
 		{
 			if (ulong.TryParse(item.Value, out var id))
 			{
-				if (!P_ModDependencies.Controls.OfType<MiniPackageControl>().Any(x => x.Id == id))
+				if (!P_ModDependencies.Controls.OfType<MiniPackageControl>().Any(x => x.Id == id.ToString()))
 				{
-					P_ModDependencies.Controls.Add(new MiniPackageControl(id) { Dock = DockStyle.Top });
+					P_ModDependencies.Controls.Add(new MiniPackageControl(id.ToString()) { Dock = DockStyle.Top });
 				}
 			}
 		}
@@ -268,18 +269,18 @@ public partial class PC_PackageEdit : PanelContent
 
 	private void I_AddPackages_Click(object sender, EventArgs e)
 	{
-		var form = new PC_WorkshopPackageSelection(P_ModDependencies.Controls.OfType<MiniPackageControl>().Select(x => x.Id));
+		var form = new PC_WorkshopPackageSelection(P_ModDependencies.Controls.OfType<MiniPackageControl>().Select(x => x.Package));
 
 		form.PackageSelected += Form_PackageSelected;
 
 		Form.PushPanel(form);
 	}
 
-	private void Form_PackageSelected(IEnumerable<ulong> packages)
+	private void Form_PackageSelected(IEnumerable<IPackageIdentity> packages)
 	{
 		foreach (var item in packages)
 		{
-			if (!P_ModDependencies.Controls.OfType<MiniPackageControl>().Any(x => x.Id == item))
+			if (!P_ModDependencies.Controls.OfType<MiniPackageControl>().Any(x => x.Id == item.Id))
 			{
 				P_ModDependencies.Controls.Add(new MiniPackageControl(item) { Dock = DockStyle.Top });
 			}
@@ -376,7 +377,7 @@ public partial class PC_PackageEdit : PanelContent
 			.WithRecommendedGameVersion(TB_GameVersion.Text)
 			.WithForumLinks(TB_ForumLink.Text)
 			.WithDependencies(DD_Dlcs.SelectedItems.Select(x => new ModDependency { Type = DependencyType.Dlc, DisplayName = x.ModsDependencyId })
-			.Concat(P_ModDependencies.Controls.OfType<MiniPackageControl>().Select(x => new ModDependency { Type = DependencyType.Mod, Id = (int)x.Id }))));
+			.Concat(P_ModDependencies.Controls.OfType<MiniPackageControl>().Select(x => new ModDependency { Type = DependencyType.Mod, Id = x.Id.ToString() }))));
 
 		var result = await (_workshopService as WorkshopService)!.PublishMod(_staging);
 

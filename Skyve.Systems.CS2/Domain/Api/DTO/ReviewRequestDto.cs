@@ -16,7 +16,7 @@ internal class ReviewRequestDto : IDTO<ReviewRequestData, ReviewRequest>, IDTO<R
 		{
 			IsMissingInfo = data.IsMissingInfo,
 			LogFile = data.LogFile,
-			PackageId = data.PackageId,
+			PackageId = ulong.Parse(data.PackageId),
 			PackageNote = data.PackageNote,
 			PackageStability = data.PackageStability,
 			PackageType = data.PackageType,
@@ -33,14 +33,13 @@ internal class ReviewRequestDto : IDTO<ReviewRequestData, ReviewRequest>, IDTO<R
 	{
 		if (data is null)
 		{
-			return new();
+			return new(string.Empty);
 		}
 
-		return new ReviewRequest
+		return new ReviewRequest(data.PackageId.ToString())
 		{
 			IsMissingInfo = data.IsMissingInfo,
 			LogFile = data.LogFile,
-			PackageId = data.PackageId,
 			PackageNote = data.PackageNote,
 			PackageStability = data.PackageStability,
 			PackageType = data.PackageType,

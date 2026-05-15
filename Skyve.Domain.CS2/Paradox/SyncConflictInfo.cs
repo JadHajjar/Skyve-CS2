@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PDX.SDK.Contracts.Service.Mods.Models;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +12,7 @@ public class SyncConflictInfo : ISyncConflictInfo
 	public string? LocalPlaysetName { get; }
 	public string? OnlinePlaysetName { get; }
 
-	public SyncConflictInfo(PDX.SDK.Contracts.Service.Mods.Result.PlaysetSyncConflict conflict)
+	public SyncConflictInfo(PlaysetSyncConflict conflict)
 	{
 		LocalPlaysetName = conflict.LocalPlayset?.Name;
 		OnlinePlaysetName = conflict.OnlinePlayset?.Name;

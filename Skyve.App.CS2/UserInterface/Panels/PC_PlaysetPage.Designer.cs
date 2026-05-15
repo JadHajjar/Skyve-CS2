@@ -35,7 +35,6 @@ partial class PC_PlaysetPage
 	private void InitializeComponent()
 	{
 			SlickControls.DynamicIcon dynamicIcon1 = new SlickControls.DynamicIcon();
-			SlickControls.DynamicIcon dynamicIcon2 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon3 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon4 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon5 = new SlickControls.DynamicIcon();
@@ -46,6 +45,8 @@ partial class PC_PlaysetPage
 			SlickControls.DynamicIcon dynamicIcon10 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon11 = new SlickControls.DynamicIcon();
 			SlickControls.DynamicIcon dynamicIcon12 = new SlickControls.DynamicIcon();
+			SlickControls.DynamicIcon dynamicIcon13 = new SlickControls.DynamicIcon();
+			SlickControls.DynamicIcon dynamicIcon2 = new SlickControls.DynamicIcon();
 			this.TLP_Options = new System.Windows.Forms.TableLayoutPanel();
 			this.DD_SaveFile = new Skyve.App.UserInterface.Generic.DragAndDropControl();
 			this.DD_NewMap = new Skyve.App.UserInterface.Generic.DragAndDropControl();
@@ -89,6 +90,7 @@ partial class PC_PlaysetPage
 			this.B_ClearColor = new SlickControls.SlickButton();
 			this.B_ClearThumbnail = new SlickControls.SlickButton();
 			this.T_LaunchSettings = new SlickControls.SlickTabControl.Tab();
+			this.B_Export = new SlickControls.SlickButton();
 			this.TLP_Options.SuspendLayout();
 			this.TLP_AdvancedDev.SuspendLayout();
 			this.P_Side.SuspendLayout();
@@ -262,7 +264,7 @@ partial class PC_PlaysetPage
 			this.TLP_AdvancedDev.ImageName = dynamicIcon1;
 			this.TLP_AdvancedDev.Location = new System.Drawing.Point(3, 384);
 			this.TLP_AdvancedDev.Name = "TLP_AdvancedDev";
-			this.TLP_AdvancedDev.Padding = new System.Windows.Forms.Padding(8, 47, 8, 8);
+			this.TLP_AdvancedDev.Padding = new System.Windows.Forms.Padding(9, 48, 9, 9);
 			this.TLP_AdvancedDev.RowCount = 5;
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -270,7 +272,7 @@ partial class PC_PlaysetPage
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_AdvancedDev.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_AdvancedDev.Size = new System.Drawing.Size(870, 279);
+			this.TLP_AdvancedDev.Size = new System.Drawing.Size(870, 284);
 			this.TLP_AdvancedDev.TabIndex = 3;
 			this.TLP_AdvancedDev.Text = "DevOptions";
 			// 
@@ -282,7 +284,7 @@ partial class PC_PlaysetPage
 			this.CB_UIDeveloperMode.ColorStyle = Extensions.ColorStyle.Red;
 			this.CB_UIDeveloperMode.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_UIDeveloperMode.EnterTriggersClick = false;
-			this.CB_UIDeveloperMode.Location = new System.Drawing.Point(438, 50);
+			this.CB_UIDeveloperMode.Location = new System.Drawing.Point(438, 51);
 			this.CB_UIDeveloperMode.Name = "CB_UIDeveloperMode";
 			this.CB_UIDeveloperMode.Size = new System.Drawing.Size(174, 44);
 			this.CB_UIDeveloperMode.SpaceTriggersClick = true;
@@ -295,14 +297,14 @@ partial class PC_PlaysetPage
 			this.TB_CustomArgs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
 			this.TLP_AdvancedDev.SetColumnSpan(this.TB_CustomArgs, 2);
 			this.TB_CustomArgs.LabelText = "CustomLaunchArguments";
-			this.TB_CustomArgs.Location = new System.Drawing.Point(11, 202);
+			this.TB_CustomArgs.Location = new System.Drawing.Point(12, 203);
 			this.TB_CustomArgs.Name = "TB_CustomArgs";
-			this.TB_CustomArgs.Padding = new System.Windows.Forms.Padding(7, 24, 7, 7);
+			this.TB_CustomArgs.Padding = new System.Windows.Forms.Padding(7, 25, 7, 7);
 			this.TB_CustomArgs.Placeholder = "LaunchArgsInfo";
 			this.TB_CustomArgs.SelectedText = "";
 			this.TB_CustomArgs.SelectionLength = 0;
 			this.TB_CustomArgs.SelectionStart = 0;
-			this.TB_CustomArgs.Size = new System.Drawing.Size(848, 66);
+			this.TB_CustomArgs.Size = new System.Drawing.Size(846, 69);
 			this.TB_CustomArgs.TabIndex = 2;
 			this.TB_CustomArgs.TextChanged += new System.EventHandler(this.ValueChanged);
 			// 
@@ -314,7 +316,7 @@ partial class PC_PlaysetPage
 			this.CB_DeveloperMode.ColorStyle = Extensions.ColorStyle.Red;
 			this.CB_DeveloperMode.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_DeveloperMode.EnterTriggersClick = false;
-			this.CB_DeveloperMode.Location = new System.Drawing.Point(11, 50);
+			this.CB_DeveloperMode.Location = new System.Drawing.Point(12, 51);
 			this.CB_DeveloperMode.Name = "CB_DeveloperMode";
 			this.CB_DeveloperMode.Size = new System.Drawing.Size(161, 44);
 			this.CB_DeveloperMode.SpaceTriggersClick = true;
@@ -329,7 +331,7 @@ partial class PC_PlaysetPage
 			this.CB_UseCitiesExe.ColorStyle = Extensions.ColorStyle.Red;
 			this.CB_UseCitiesExe.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_UseCitiesExe.EnterTriggersClick = false;
-			this.CB_UseCitiesExe.Location = new System.Drawing.Point(438, 100);
+			this.CB_UseCitiesExe.Location = new System.Drawing.Point(438, 101);
 			this.CB_UseCitiesExe.Name = "CB_UseCitiesExe";
 			this.CB_UseCitiesExe.Size = new System.Drawing.Size(191, 44);
 			this.CB_UseCitiesExe.SpaceTriggersClick = true;
@@ -344,7 +346,7 @@ partial class PC_PlaysetPage
 			this.CB_LogsToPlayerLog.ColorStyle = Extensions.ColorStyle.Red;
 			this.CB_LogsToPlayerLog.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_LogsToPlayerLog.EnterTriggersClick = false;
-			this.CB_LogsToPlayerLog.Location = new System.Drawing.Point(11, 100);
+			this.CB_LogsToPlayerLog.Location = new System.Drawing.Point(12, 101);
 			this.CB_LogsToPlayerLog.Name = "CB_LogsToPlayerLog";
 			this.CB_LogsToPlayerLog.Size = new System.Drawing.Size(166, 44);
 			this.CB_LogsToPlayerLog.SpaceTriggersClick = true;
@@ -369,7 +371,7 @@ partial class PC_PlaysetPage
         "TRACE",
         "VERBOSE",
         "ALL"};
-			this.DD_LogLevel.Location = new System.Drawing.Point(11, 150);
+			this.DD_LogLevel.Location = new System.Drawing.Point(12, 151);
 			this.DD_LogLevel.Name = "DD_LogLevel";
 			this.DD_LogLevel.Size = new System.Drawing.Size(266, 46);
 			this.DD_LogLevel.TabIndex = 6;
@@ -383,7 +385,7 @@ partial class PC_PlaysetPage
 			this.CB_DisableBurstCompile.ColorStyle = Extensions.ColorStyle.Red;
 			this.CB_DisableBurstCompile.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.CB_DisableBurstCompile.EnterTriggersClick = false;
-			this.CB_DisableBurstCompile.Location = new System.Drawing.Point(438, 150);
+			this.CB_DisableBurstCompile.Location = new System.Drawing.Point(438, 151);
 			this.CB_DisableBurstCompile.Name = "CB_DisableBurstCompile";
 			this.CB_DisableBurstCompile.Size = new System.Drawing.Size(190, 44);
 			this.CB_DisableBurstCompile.SpaceTriggersClick = true;
@@ -419,17 +421,18 @@ partial class PC_PlaysetPage
 			// 
 			this.tableLayoutPanel3.ColumnCount = 1;
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel3.Controls.Add(this.B_Export, 0, 1);
 			this.tableLayoutPanel3.Controls.Add(this.B_Share, 0, 0);
-			this.tableLayoutPanel3.Controls.Add(this.B_Deactivate, 0, 1);
-			this.tableLayoutPanel3.Controls.Add(this.B_Delete, 0, 2);
+			this.tableLayoutPanel3.Controls.Add(this.B_Deactivate, 0, 2);
+			this.tableLayoutPanel3.Controls.Add(this.B_Delete, 0, 3);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 3;
+			this.tableLayoutPanel3.RowCount = 4;
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel3.Size = new System.Drawing.Size(294, 930);
 			this.tableLayoutPanel3.TabIndex = 2;
 			// 
@@ -438,11 +441,11 @@ partial class PC_PlaysetPage
 			this.B_Share.AutoSize = true;
 			this.B_Share.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.B_Share.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon2.Name = "Share";
-			this.B_Share.ImageName = dynamicIcon2;
+			dynamicIcon3.Name = "Share";
+			this.B_Share.ImageName = dynamicIcon3;
 			this.B_Share.Location = new System.Drawing.Point(3, 3);
 			this.B_Share.Name = "B_Share";
-			this.B_Share.Size = new System.Drawing.Size(288, 32);
+			this.B_Share.Size = new System.Drawing.Size(288, 34);
 			this.B_Share.SpaceTriggersClick = true;
 			this.B_Share.TabIndex = 0;
 			this.B_Share.Text = "SharePlayset";
@@ -455,11 +458,11 @@ partial class PC_PlaysetPage
 			this.B_Deactivate.ColorStyle = Extensions.ColorStyle.Orange;
 			this.B_Deactivate.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.B_Deactivate.Dock = System.Windows.Forms.DockStyle.Top;
-			dynamicIcon3.Name = "Shutdown";
-			this.B_Deactivate.ImageName = dynamicIcon3;
-			this.B_Deactivate.Location = new System.Drawing.Point(3, 41);
+			dynamicIcon4.Name = "Shutdown";
+			this.B_Deactivate.ImageName = dynamicIcon4;
+			this.B_Deactivate.Location = new System.Drawing.Point(3, 83);
 			this.B_Deactivate.Name = "B_Deactivate";
-			this.B_Deactivate.Size = new System.Drawing.Size(288, 32);
+			this.B_Deactivate.Size = new System.Drawing.Size(288, 34);
 			this.B_Deactivate.SpaceTriggersClick = true;
 			this.B_Deactivate.TabIndex = 0;
 			this.B_Deactivate.Text = "DeactivatePlayset";
@@ -472,11 +475,11 @@ partial class PC_PlaysetPage
 			this.B_Delete.ColorStyle = Extensions.ColorStyle.Red;
 			this.B_Delete.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.B_Delete.Dock = System.Windows.Forms.DockStyle.Bottom;
-			dynamicIcon4.Name = "Trash";
-			this.B_Delete.ImageName = dynamicIcon4;
-			this.B_Delete.Location = new System.Drawing.Point(3, 895);
+			dynamicIcon5.Name = "Trash";
+			this.B_Delete.ImageName = dynamicIcon5;
+			this.B_Delete.Location = new System.Drawing.Point(3, 893);
 			this.B_Delete.Name = "B_Delete";
-			this.B_Delete.Size = new System.Drawing.Size(288, 32);
+			this.B_Delete.Size = new System.Drawing.Size(288, 34);
 			this.B_Delete.SpaceTriggersClick = true;
 			this.B_Delete.TabIndex = 0;
 			this.B_Delete.Text = "PlaysetDelete";
@@ -499,12 +502,12 @@ partial class PC_PlaysetPage
 			this.T_Content.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Content.Dock = System.Windows.Forms.DockStyle.Left;
 			this.T_Content.FillTab = true;
-			dynamicIcon5.Name = "Assets";
-			this.T_Content.IconName = dynamicIcon5;
+			dynamicIcon6.Name = "Assets";
+			this.T_Content.IconName = dynamicIcon6;
 			this.T_Content.LinkedControl = null;
 			this.T_Content.Location = new System.Drawing.Point(0, 5);
 			this.T_Content.Name = "T_Content";
-			this.T_Content.Size = new System.Drawing.Size(192, 84);
+			this.T_Content.Size = new System.Drawing.Size(206, 90);
 			this.T_Content.TabIndex = 1;
 			this.T_Content.TabStop = false;
 			this.T_Content.Text = "Content";
@@ -513,12 +516,12 @@ partial class PC_PlaysetPage
 			// 
 			this.T_Settings.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_Settings.Dock = System.Windows.Forms.DockStyle.Left;
-			dynamicIcon6.Name = "PlaysetSettings";
-			this.T_Settings.IconName = dynamicIcon6;
+			dynamicIcon7.Name = "PlaysetSettings";
+			this.T_Settings.IconName = dynamicIcon7;
 			this.T_Settings.LinkedControl = this.TLP_Side;
-			this.T_Settings.Location = new System.Drawing.Point(192, 5);
+			this.T_Settings.Location = new System.Drawing.Point(206, 5);
 			this.T_Settings.Name = "T_Settings";
-			this.T_Settings.Size = new System.Drawing.Size(192, 84);
+			this.T_Settings.Size = new System.Drawing.Size(206, 90);
 			this.T_Settings.TabIndex = 1;
 			this.T_Settings.TabStop = false;
 			this.T_Settings.Text = "Settings";
@@ -583,8 +586,8 @@ partial class PC_PlaysetPage
 			this.I_Color.ColorStyle = Extensions.ColorStyle.Green;
 			this.I_Color.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.I_Color.Enabled = false;
-			dynamicIcon7.Name = "Check";
-			this.I_Color.ImageName = dynamicIcon7;
+			dynamicIcon8.Name = "Check";
+			this.I_Color.ImageName = dynamicIcon8;
 			this.I_Color.Location = new System.Drawing.Point(3, 3);
 			this.I_Color.Name = "I_Color";
 			this.I_Color.Size = new System.Drawing.Size(29, 26);
@@ -624,7 +627,7 @@ partial class PC_PlaysetPage
 			this.I_Thumbnail.ColorStyle = Extensions.ColorStyle.Green;
 			this.I_Thumbnail.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.I_Thumbnail.Enabled = false;
-			this.I_Thumbnail.ImageName = dynamicIcon7;
+			this.I_Thumbnail.ImageName = dynamicIcon8;
 			this.I_Thumbnail.Location = new System.Drawing.Point(3, 3);
 			this.I_Thumbnail.Name = "I_Thumbnail";
 			this.I_Thumbnail.Size = new System.Drawing.Size(29, 26);
@@ -665,8 +668,8 @@ partial class PC_PlaysetPage
 			this.B_EditThumbnail.AutoSize = true;
 			this.TLP_Side.SetColumnSpan(this.B_EditThumbnail, 2);
 			this.B_EditThumbnail.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon8.Name = "EditImage";
-			this.B_EditThumbnail.ImageName = dynamicIcon8;
+			dynamicIcon9.Name = "EditImage";
+			this.B_EditThumbnail.ImageName = dynamicIcon9;
 			this.B_EditThumbnail.Location = new System.Drawing.Point(3, 216);
 			this.B_EditThumbnail.Name = "B_EditThumbnail";
 			this.B_EditThumbnail.Size = new System.Drawing.Size(149, 26);
@@ -725,8 +728,8 @@ partial class PC_PlaysetPage
 			this.B_EditColor.AutoSize = true;
 			this.TLP_Side.SetColumnSpan(this.B_EditColor, 2);
 			this.B_EditColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon9.Name = "Paint";
-			this.B_EditColor.ImageName = dynamicIcon9;
+			dynamicIcon10.Name = "Paint";
+			this.B_EditColor.ImageName = dynamicIcon10;
 			this.B_EditColor.Location = new System.Drawing.Point(3, 89);
 			this.B_EditColor.Name = "B_EditColor";
 			this.B_EditColor.Size = new System.Drawing.Size(143, 26);
@@ -740,8 +743,8 @@ partial class PC_PlaysetPage
 			this.B_ClearColor.AutoSize = true;
 			this.B_ClearColor.ColorStyle = Extensions.ColorStyle.Red;
 			this.B_ClearColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon10.Name = "Select";
-			this.B_ClearColor.ImageName = dynamicIcon10;
+			dynamicIcon11.Name = "Select";
+			this.B_ClearColor.ImageName = dynamicIcon11;
 			this.B_ClearColor.Location = new System.Drawing.Point(158, 89);
 			this.B_ClearColor.Name = "B_ClearColor";
 			this.B_ClearColor.Size = new System.Drawing.Size(133, 26);
@@ -755,8 +758,8 @@ partial class PC_PlaysetPage
 			this.B_ClearThumbnail.AutoSize = true;
 			this.B_ClearThumbnail.ColorStyle = Extensions.ColorStyle.Red;
 			this.B_ClearThumbnail.Cursor = System.Windows.Forms.Cursors.Hand;
-			dynamicIcon11.Name = "RemoveImage";
-			this.B_ClearThumbnail.ImageName = dynamicIcon11;
+			dynamicIcon12.Name = "RemoveImage";
+			this.B_ClearThumbnail.ImageName = dynamicIcon12;
 			this.B_ClearThumbnail.Location = new System.Drawing.Point(158, 216);
 			this.B_ClearThumbnail.Name = "B_ClearThumbnail";
 			this.B_ClearThumbnail.Size = new System.Drawing.Size(137, 26);
@@ -769,15 +772,31 @@ partial class PC_PlaysetPage
 			// 
 			this.T_LaunchSettings.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.T_LaunchSettings.Dock = System.Windows.Forms.DockStyle.Left;
-			dynamicIcon12.Name = "Launch";
-			this.T_LaunchSettings.IconName = dynamicIcon12;
+			dynamicIcon13.Name = "Launch";
+			this.T_LaunchSettings.IconName = dynamicIcon13;
 			this.T_LaunchSettings.LinkedControl = this.TLP_Options;
-			this.T_LaunchSettings.Location = new System.Drawing.Point(384, 5);
+			this.T_LaunchSettings.Location = new System.Drawing.Point(412, 5);
 			this.T_LaunchSettings.Name = "T_LaunchSettings";
-			this.T_LaunchSettings.Size = new System.Drawing.Size(192, 84);
+			this.T_LaunchSettings.Size = new System.Drawing.Size(206, 90);
 			this.T_LaunchSettings.TabIndex = 0;
 			this.T_LaunchSettings.TabStop = false;
 			this.T_LaunchSettings.Text = "Launch Settings";
+			// 
+			// B_Export
+			// 
+			this.B_Export.AutoSize = true;
+			this.B_Export.ButtonType = SlickControls.ButtonType.Dimmed;
+			this.B_Export.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.B_Export.Dock = System.Windows.Forms.DockStyle.Top;
+			dynamicIcon2.Name = "CircleArrowUp";
+			this.B_Export.ImageName = dynamicIcon2;
+			this.B_Export.Location = new System.Drawing.Point(3, 43);
+			this.B_Export.Name = "B_Export";
+			this.B_Export.Size = new System.Drawing.Size(288, 34);
+			this.B_Export.SpaceTriggersClick = true;
+			this.B_Export.TabIndex = 1;
+			this.B_Export.Text = "ExportPlayset";
+			this.B_Export.Click += new System.EventHandler(this.B_Export_Click);
 			// 
 			// PC_PlaysetPage
 			// 
@@ -854,4 +873,5 @@ partial class PC_PlaysetPage
 	private SlickButton B_Share;
 	private SlickButton B_Deactivate;
 	private SlickButton B_Delete;
+	private SlickButton B_Export;
 }

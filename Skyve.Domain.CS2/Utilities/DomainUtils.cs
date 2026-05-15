@@ -10,7 +10,7 @@ using System.IO;
 namespace Skyve.Domain.CS2.Utilities;
 internal static class DomainUtils
 {
-	internal static Bitmap? GetThumbnail(IImageService imageService, string? thumbnailPath, string? thumbnailUrl, ulong id, string version, bool downscale = true)
+	internal static Bitmap? GetThumbnail(IImageService imageService, string? thumbnailPath, string? thumbnailUrl, string id, string version, bool downscale = true)
 	{
 		var size = downscale ? UI.Scale(new Size(200, 200)) : (Size?)null;
 

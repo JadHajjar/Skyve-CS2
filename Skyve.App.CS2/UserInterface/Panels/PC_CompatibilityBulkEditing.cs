@@ -3,10 +3,10 @@ using Skyve.App.UserInterface.Panels;
 using Skyve.Systems.CS2.Utilities;
 
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
+
 public partial class PC_CompatibilityBulkEditing : PanelContent
 {
 	public PC_CompatibilityBulkEditing()
@@ -48,27 +48,25 @@ public partial class PC_CompatibilityBulkEditing : PanelContent
 			return;
 		}
 
-		var matches = Regex.Matches(Clipboard.GetText(), @"(?<!\.)\b(\d{5,6})\b(?:\: (.+?) (?:[\d\.]))?");
-		var packages = new List<ulong>();
+		var matches = Regex.Matches(Clipboard.GetText(), @"(?<!\.)\b(\d{5,8})\b(?:\: (.+?) (?:[\d\.]))?");
+		var packages = new List<IPackageIdentity>();
 
 		foreach (Match item in matches)
 		{
 			if (ulong.TryParse(item.Groups[1].Value, out var id))
-			{
-				packages.Add(id);
-			}
+				packages.Add(new PdxModIdentityPackage(id.ToString()));
 		}
 
 		OnPackageSelected(packages);
 	}
 
-	private void OnPackageSelected(IEnumerable<ulong> enumerable)
+	private void OnPackageSelected(IEnumerable<IPackageIdentity> enumerable)
 	{
-		foreach (var id in enumerable)
+		foreach (var package in enumerable)
 		{
-			if (!smartFlowPanel1.Controls.Any(x => (x as MiniPackageControl)!.Package.Id == id))
+			if (!smartFlowPanel1.Controls.Any(x => (x as MiniPackageControl)!.Package.Id == package.Id))
 			{
-				smartFlowPanel1.Controls.Add(new MiniPackageControl(id) { Dock = DockStyle.Top });
+				smartFlowPanel1.Controls.Add(new MiniPackageControl(package) { Dock = DockStyle.Top });
 			}
 		}
 	}
@@ -85,7 +83,7 @@ public partial class PC_CompatibilityBulkEditing : PanelContent
 
 		var response = await ServiceCenter.Get<SkyveApiUtil>().BulkUpdatePackageData(new()
 		{
-			Packages = smartFlowPanel1.Controls.Cast<MiniPackageControl>().ToList(x => x.Package.Id),
+			Packages = smartFlowPanel1.Controls.Cast<MiniPackageControl>().ToList(x => ulong.Parse(x.Package.Id)),
 			ReviewedGameVersion = ServiceCenter.Get<ICitiesManager>().GameVersion,
 			Stability = Compatibility.Domain.Enums.PackageStability.BrokenFromPatch
 		});

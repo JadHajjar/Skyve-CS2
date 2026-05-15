@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Domain;
 using Skyve.Domain.CS2.Notifications;
 using Skyve.Domain.Systems;
 using Skyve.Systems.CS2.Utilities;
@@ -15,7 +16,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
-
 internal class CentralManager : ICentralManager
 {
 	private readonly ICompatibilityManager _compatibilityManager;
@@ -120,19 +120,24 @@ internal class CentralManager : ICentralManager
 		_logger.Info("Checking for internet connection..");
 
 		ConnectionHandler.AssumeInternetConnectivity = _settings.UserSettings.AssumeInternetConnectivity;
-		ConnectionHandler.Start("94.231.106.4", 60_000);
+		ConnectionHandler.Start();
 
-		if (ConnectionHandler.CheckConnection())
+		try
 		{
-			if (!await Ping())
+			var ping = await _skyveApiUtil.Ping();
+
+			if (!ping.Success && ping.Message == "Unauthorized")
 			{
+				_notifier.OnContentLoaded();
+				_compatibilityManager.CacheReport();
+				_workshopService.IsLoginPending = false;
+				_notifier.OnRefreshUI(true);
+
+				_notifier.OnVersionObsolete();
 				return;
 			}
 		}
-		else
-		{
-			await ConnectionHandler.WhenConnected(Ping);
-		}
+		catch { }
 
 		_citiesManager.GameClosed -= CitiesManager_GameClosed;
 		_citiesManager.GameClosed += CitiesManager_GameClosed;
@@ -168,7 +173,7 @@ internal class CentralManager : ICentralManager
 
 		_logger.Info($"Compatibility report cached");
 
-		if (!ConnectionHandler.IsConnected)
+		if (!ConnectionHandler.CheckConnection())
 		{
 			_logger.Warning("Not connected to the internet, delaying remaining loads.");
 		}
@@ -185,6 +190,8 @@ internal class CentralManager : ICentralManager
 
 			await _updateManager.SendUnreadCommentsNotifications();
 
+			await _playsetManager.MigratePlaysetThumbnails();
+
 			await UpdateSkyveVersionsInPlaysets();
 		}
 
@@ -200,24 +207,6 @@ internal class CentralManager : ICentralManager
 		{
 			new BackgroundAction(RunBackupService);
 		}
-	}
-
-	private async Task<bool> Ping()
-	{
-		var ping = await _skyveApiUtil.Ping();
-
-		if (!ping.Success && ping.Message == "Unauthorized")
-		{
-			_notifier.OnContentLoaded();
-			_compatibilityManager.CacheReport();
-			_workshopService.IsLoginPending = false;
-			_notifier.OnRefreshUI(true);
-			_notifier.OnVersionObsolete();
-
-			return false;
-		}
-
-		return true;
 	}
 
 	private async Task LoadContent()
@@ -239,15 +228,13 @@ internal class CentralManager : ICentralManager
 
 	private void CitiesManager_GameClosed()
 	{
-		_ = Task.Run(CheckCorruptedSettingsFiles);
+		Task.Run(CheckCorruptedSettingsFiles);
 	}
 
 	private void CheckCorruptedSettingsFiles()
 	{
 		if (!Directory.Exists(_settings.FolderSettings.AppDataPath))
-		{
 			return;
-		}
 
 		var corruptedFiles = new List<string>();
 
@@ -360,7 +347,7 @@ internal class CentralManager : ICentralManager
 				case "mod":
 					if (ulong.TryParse(actions.TryGet(1), out var id))
 					{
-						_interfaceService.OpenPackagePage(new GenericPackageIdentity(id));
+						_interfaceService.OpenPackagePage(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, id.ToString()));
 					}
 
 					break;
@@ -381,17 +368,15 @@ internal class CentralManager : ICentralManager
 	public async Task UpdateSkyveVersionsInPlaysets()
 	{
 #if STABLE
-		const ulong MODID = 75804;
+		const string MODID = "75804";
 #else
-		const ulong MODID = 108773;
+		const string MODID = "108773";
 #endif
 		var modExists = false;
-		var workshopInfo = await _workshopService.GetInfoAsync(new GenericPackageIdentity(MODID));
+		var workshopInfo = await _workshopService.GetInfoAsync(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, MODID));
 
 		if (workshopInfo is null)
-		{
 			return;
-		}
 
 		foreach (var item in _playsetManager.Playsets)
 		{

@@ -16,8 +16,8 @@ namespace Skyve.Systems.CS2.Domain;
 public class IndexedPackage : IIndexedPackageCompatibilityInfo
 {
 	public PackageData Package { get; }
-	public Dictionary<ulong, IIndexedPackageCompatibilityInfo> Group { get; }
-	public Dictionary<ulong, IIndexedPackageCompatibilityInfo> RequirementAlternatives { get; }
+	public Dictionary<string, IIndexedPackageCompatibilityInfo> Group { get; }
+	public Dictionary<string, IIndexedPackageCompatibilityInfo> RequirementAlternatives { get; }
 	public Dictionary<StatusType, IList<IIndexedPackageStatus<StatusType>>> IndexedStatuses { get; }
 	public Dictionary<InteractionType, IList<IIndexedPackageStatus<InteractionType>>> IndexedInteractions { get; }
 	public IIndexedPackageStatus<InteractionType>? SucceededBy { get; private set; }
@@ -31,7 +31,7 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 		IndexedInteractions = [];
 	}
 
-	public void Load(Dictionary<ulong, IndexedPackage> packages)
+	public void Load(Dictionary<string, IndexedPackage> packages)
 	{
 		if (Package.Statuses is not null)
 		{
@@ -134,7 +134,7 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 
 		//			if (package.Interactions.ContainsKey(InteractionType.Alternative))
 		//			{
-		//				package.Interactions[InteractionType.Alternative][0].Interaction.Packages = linkedPackages.Concat(package.Interactions[InteractionType.Alternative][0].Interaction.Packages ?? new ulong[0]).Distinct().ToArray();
+		//				package.Interactions[InteractionType.Alternative][0].Interaction.Packages = linkedPackages.Concat(package.Interactions[InteractionType.Alternative][0].Interaction.Packages ?? new string[0]).Distinct().ToArray();
 		//			}
 		//			else
 		//			{
@@ -166,7 +166,7 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 					Type = InteractionType.SucceededBy,
 					Action = item.Status.Action,
 					Note = item.Status.Note,
-					Packages = [new(new GenericPackageIdentity(Package.Id))]
+					Packages = [new(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, Package.Id))]
 				}, new() { [Package.Id] = this });
 
 				if (package.IndexedInteractions.ContainsKey(InteractionType.Successor))
@@ -188,7 +188,8 @@ public class IndexedPackage : IIndexedPackageCompatibilityInfo
 	}
 
 	#region IPackageCompatibilityInfo
-	public ulong Id => Package.Id;
+	public string Source => Defaults.WORKSHOP_SOURCE;
+	public string Id => Package.Id;
 	public string Name => Package.Name ?? string.Empty;
 	public string? FileName => Package.FileName;
 	public string? AuthorId => Package.AuthorId;

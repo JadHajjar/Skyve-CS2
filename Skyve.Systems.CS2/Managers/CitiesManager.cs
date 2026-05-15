@@ -23,6 +23,7 @@ using System.Timers;
 using System.Windows.Forms;
 
 namespace Skyve.Systems.CS2.Managers;
+
 internal class CitiesManager : ICitiesManager
 {
 	private readonly ISettings _settings;
@@ -35,6 +36,7 @@ internal class CitiesManager : ICitiesManager
 	private bool lastRunningState;
 
 	public event MonitorTickDelegate? MonitorTick;
+	public event Action? GameOpened;
 	public event Action? GameClosed;
 	public event Action<bool>? LaunchingStatusChanged;
 
@@ -85,9 +87,9 @@ internal class CitiesManager : ICitiesManager
 		var isAvailable = IsAvailable();
 		var isRunning = IsRunning();
 
-		if (lastRunningState && !isRunning)
+		if (lastRunningState != isRunning)
 		{
-			GameClosed?.Invoke();
+			(isRunning ? GameOpened : GameClosed)?.Invoke();
 		}
 
 		MonitorTick?.Invoke(isAvailable, lastRunningState = isRunning);
@@ -110,9 +112,9 @@ internal class CitiesManager : ICitiesManager
 
 	public async void Launch()
 	{
-		var notifier = _serviceProvider.GetService<INotifier>();
+		var subscriptionsManager = _serviceProvider.GetService<ISubscriptionsManager>();
 
-		if (notifier!.IsWorkshopSyncInProgress)
+		if (subscriptionsManager!.IsRunning)
 		{
 			switch (MessagePrompt.Show(LocaleCS2.SyncOngoingLaunchGame, LocaleCS2.SyncOngoing, PromptButtons.YesNoCancel, PromptIcons.Hand, form: SystemsProgram.MainForm as SlickForm))
 			{
@@ -121,7 +123,7 @@ internal class CitiesManager : ICitiesManager
 				case DialogResult.Yes:
 					_logger.Info("Waiting for Synchronize to finish before launching the game");
 
-					while (notifier!.IsWorkshopSyncInProgress)
+					while (subscriptionsManager!.IsRunning)
 					{
 						await Task.Delay(50);
 					}
@@ -156,6 +158,8 @@ internal class CitiesManager : ICitiesManager
 		}
 		catch { }
 
+		GameOpened?.Invoke();
+
 		var args = GetCommandArgs(playsetManager);
 		var file = IsExeLaunch((playsetManager?.CurrentCustomPlayset as ExtendedPlayset)?.LaunchSettings)
 			? _locationManager.CitiesPathWithExe
@@ -168,9 +172,19 @@ internal class CitiesManager : ICitiesManager
 	{
 		var logDir = new DirectoryInfo(CrossIO.Combine(_settings.FolderSettings.AppDataPath, "Logs"));
 
-		if (logDir.Exists)
+		if (!logDir.Exists)
 		{
-			logDir.Delete(true);
+			return;
+		}
+
+		foreach (var dir in logDir.GetDirectories())
+		{
+			dir.Delete(true);
+		}
+
+		foreach (var file in logDir.GetFiles())
+		{
+			CrossIO.DeleteFile(file.FullName);
 		}
 	}
 

@@ -9,9 +9,9 @@ namespace Skyve.Systems.CS2.Domain;
 public class IndexedPackageInteraction : IIndexedPackageStatus<InteractionType>
 {
 	public IPackageStatus<InteractionType> Status { get; }
-	public Dictionary<ulong, IIndexedPackageCompatibilityInfo> Packages { get; }
+	public Dictionary<string, IIndexedPackageCompatibilityInfo> Packages { get; }
 
-	public IndexedPackageInteraction(PackageInteraction interaction, Dictionary<ulong, IndexedPackage> packages)
+	public IndexedPackageInteraction(PackageInteraction interaction, Dictionary<string, IndexedPackage> packages)
 	{
 		Status = interaction;
 		Packages = [];

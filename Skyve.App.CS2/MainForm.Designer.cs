@@ -77,8 +77,8 @@ namespace Skyve.App.CS2
 			// 
 			// base_P_Tabs
 			// 
-			this.base_P_Tabs.Location = new System.Drawing.Point(9, 126);
-			this.base_P_Tabs.Size = new System.Drawing.Size(289, 580);
+			this.base_P_Tabs.Location = new System.Drawing.Point(9, 134);
+			this.base_P_Tabs.Size = new System.Drawing.Size(310, 570);
 			// 
 			// base_P_Content
 			// 
@@ -90,20 +90,20 @@ namespace Skyve.App.CS2
 			this.base_P_SideControls.Controls.Add(this.TLP_SideBarTools);
 			this.base_P_SideControls.Font = new System.Drawing.Font("Nirmala UI", 6.75F);
 			this.base_P_SideControls.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(129)))), ((int)(((byte)(150)))));
-			this.base_P_SideControls.Location = new System.Drawing.Point(9, 706);
-			this.base_P_SideControls.Size = new System.Drawing.Size(289, 19);
+			this.base_P_SideControls.Location = new System.Drawing.Point(9, 704);
+			this.base_P_SideControls.Size = new System.Drawing.Size(310, 19);
 			// 
 			// base_TLP_Side
 			// 
 			this.base_TLP_Side.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(63)))), ((int)(((byte)(79)))));
-			this.base_TLP_Side.Location = new System.Drawing.Point(8, 8);
+			this.base_TLP_Side.Location = new System.Drawing.Point(9, 9);
 			this.base_TLP_Side.Padding = new System.Windows.Forms.Padding(9);
-			this.base_TLP_Side.Size = new System.Drawing.Size(307, 734);
+			this.base_TLP_Side.Size = new System.Drawing.Size(328, 732);
 			// 
 			// base_P_PanelContent
 			// 
-			this.base_P_PanelContent.Location = new System.Drawing.Point(315, 0);
-			this.base_P_PanelContent.Size = new System.Drawing.Size(904, 750);
+			this.base_P_PanelContent.Location = new System.Drawing.Point(337, 0);
+			this.base_P_PanelContent.Size = new System.Drawing.Size(882, 750);
 			// 
 			// base_P_Container
 			// 
@@ -227,7 +227,7 @@ namespace Skyve.App.CS2
 			this.TLP_SideBarTools.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_SideBarTools.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_SideBarTools.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_SideBarTools.Size = new System.Drawing.Size(289, 19);
+			this.TLP_SideBarTools.Size = new System.Drawing.Size(310, 19);
 			this.TLP_SideBarTools.TabIndex = 34;
 			// 
 			// L_Text
@@ -246,7 +246,7 @@ namespace Skyve.App.CS2
 			// 
 			this.L_Version.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.L_Version.AutoSize = true;
-			this.L_Version.Location = new System.Drawing.Point(240, 0);
+			this.L_Version.Location = new System.Drawing.Point(261, 0);
 			this.L_Version.Margin = new System.Windows.Forms.Padding(0);
 			this.L_Version.Name = "L_Version";
 			this.L_Version.Padding = new System.Windows.Forms.Padding(2);
@@ -316,7 +316,7 @@ namespace Skyve.App.CS2
 			this.ClientSize = new System.Drawing.Size(1232, 763);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.IconBounds = new System.Drawing.Rectangle(137, 37, 14, 42);
+			this.IconBounds = new System.Drawing.Rectangle(148, 41, 14, 42);
 			this.MaximizeBox = true;
 			this.MaximizedBounds = new System.Drawing.Rectangle(0, 0, 2560, 1380);
 			this.MinimizeBox = true;

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Skyve.App.CS2.UserInterface.Panels;
+
 public partial class PC_PackagePage : PC_PackagePageBase
 {
 	private readonly ItemListControl LC_Items;
@@ -41,14 +42,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 
 		Controls.Add(_packageCompatibilityControl = new(package) { Dock = DockStyle.Top });
 
-		if (_settings.UserSettings.ComplexListUI)
-		{
-			LC_Items = new ItemListControl.Complex(SkyvePage.SinglePackage) { IsPackagePage = true };
-		}
-		else
-		{
-			LC_Items = new ItemListControl.Simple(SkyvePage.SinglePackage) { IsPackagePage = true };
-		}
+		LC_Items = new ItemListControl.Simple(SkyvePage.SinglePackage) { IsPackagePage = true };
 
 		LC_References = new ContentList(SkyvePage.SinglePackage, true, GetItems, GetItemText);
 		LC_References.TB_Search.Placeholder = "SearchGenericPackages";
@@ -199,7 +193,7 @@ public partial class PC_PackagePage : PC_PackagePageBase
 
 		if (regex.Success)
 		{
-			ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(new GenericPackageIdentity(ulong.Parse(regex.Groups[1].Value)), false);
+			ServiceCenter.Get<IAppInterfaceService>().OpenPackagePage(new PdxModIdentityPackage(regex.Groups[1].Value), false);
 		}
 		else
 		{

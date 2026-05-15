@@ -6,7 +6,8 @@ namespace Skyve.Domain.CS2.Content;
 
 public class Package : IPackage, IEquatable<Package?>
 {
-	public ulong Id { get; protected set; }
+	public string Source { get; protected set; } = string.Empty;
+	public string Id { get; protected set; } = string.Empty;
 	public string Name { get; protected set; }
 	public string? Url { get; protected set; }
 	public bool IsCodeMod { get; protected set; }
@@ -44,18 +45,27 @@ public class Package : IPackage, IEquatable<Package?>
 
 	public override bool Equals(object? obj)
 	{
-		return Equals(obj as Package);
+		return obj is IPackageIdentity identity &&
+			Source == identity.Source &&
+			Id == identity.Id &&
+			Version == identity.Version;
 	}
 
-	public bool Equals(Package? other)
+	public bool Equals(Package? identity)
 	{
-		return other is not null &&
-			   LocalData.Folder == other.LocalData.Folder;
+		return identity is not null&&
+			Source == identity.Source &&
+			Id == identity.Id &&
+			Version == identity.Version;
 	}
 
 	public override int GetHashCode()
 	{
-		return 539060726 + EqualityComparer<string>.Default.GetHashCode(LocalData.Folder);
+		var hashCode = -781363793;
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Source);
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Id);
+		hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(Version);
+		return hashCode;
 	}
 
 	public static bool operator ==(Package? left, Package? right)

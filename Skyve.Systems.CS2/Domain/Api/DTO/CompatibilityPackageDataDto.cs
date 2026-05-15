@@ -22,7 +22,7 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 
 		return new PackageData
 		{
-			Id = data.Id,
+			Id = data.Id.ToString(),
 			Name = data.Name,
 			AuthorId = data.AuthorId,
 			FileName = data.FileName,
@@ -50,7 +50,7 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 		{
 			Type = data.Type.TryCast<InteractionType>(),
 			Action = data.Action.TryCast<StatusAction>(),
-			Packages = data.Packages?.ToList(x => new CompatibilityPackageReference(new GenericPackageIdentity(x))),
+			Packages = data.Packages?.ToList(x => new CompatibilityPackageReference(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, x.ToString()))),
 			Note = data.Note
 		};
 	}
@@ -61,7 +61,7 @@ internal class PackageDataDto : IDTO<CompatibilityPackageData, PackageData>
 		{
 			Type = data.Type.TryCast<StatusType>(),
 			Action = data.Action.TryCast<StatusAction>(),
-			Packages = data.Packages?.ToList(x => new CompatibilityPackageReference(new GenericPackageIdentity(x))),
+			Packages = data.Packages?.ToList(x => new CompatibilityPackageReference(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, x.ToString()))),
 			Note = data.Note
 		};
 	}

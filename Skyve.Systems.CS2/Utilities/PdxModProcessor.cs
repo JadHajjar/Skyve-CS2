@@ -19,7 +19,7 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 	private readonly SaveHandler _saveHandler;
 	private readonly INotifier _notifier;
 
-	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(35, 7500, 2000, GetCachedInfo(saveHandler))
+	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(15, 2500, 0, GetCachedInfo(saveHandler))
 	{
 		_workshopService = workshopService;
 		_saveHandler = saveHandler;
@@ -80,7 +80,7 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 
 		foreach (var item in GetCache())
 		{
-			if (item.Id == id)
+			if (item.Id == id.ToString())
 			{
 				result = item;
 				return true;

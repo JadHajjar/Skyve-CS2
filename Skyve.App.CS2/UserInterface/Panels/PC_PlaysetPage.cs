@@ -54,6 +54,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 			}
 		}
 
+		B_Share.Visible = playset.Ownership is PlaysetOwnership.OwnedByCurrentUser or PlaysetOwnership.SubscribedByCurrentUser;
 		B_Deactivate.Visible = _playsetManager.CurrentPlayset == playset;
 
 		var customPlayset = playset.GetCustomPlayset();
@@ -106,7 +107,7 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 	private void Notifier_PlaysetUpdated()
 	{
-		Playset = _playsetManager.GetPlayset(Playset.Id) ?? Playset;
+		Playset = _playsetManager.GetPlayset(Playset.Id!) ?? Playset;
 
 		SideControl.Playset = Playset;
 		SideControl.Invalidate();
@@ -160,9 +161,9 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		P_Side.Width = UI.Scale(250);
 		P_Side.Padding = UI.Scale(new Padding(15, 0, 15, 15));
 		slickSpacer1.Margin = B_EditThumbnail.Margin = B_EditColor.Margin = B_ClearThumbnail.Margin = B_ClearColor.Margin = UI.Scale(new Padding(5));
-		B_Deactivate.Margin = B_Share.Margin = B_Delete.Margin = UI.Scale(new Padding(17, 12, 17, 0));
-		B_Deactivate.Padding = B_Share.Padding = B_Delete.Padding = UI.Scale(new Padding(5));
-		B_Deactivate.Font = B_Share.Font = B_Delete.Font = UI.Font(9F);
+		B_Deactivate.Margin = B_Share.Margin = B_Export.Margin = B_Delete.Margin = UI.Scale(new Padding(17, 12, 17, 0));
+		B_Deactivate.Padding = B_Share.Padding = B_Export.Padding = B_Delete.Padding = UI.Scale(new Padding(5));
+		B_Deactivate.Font = B_Share.Font = B_Export.Font = B_Delete.Font = UI.Font(9F);
 		slickSpacer1.Height = (int)UI.FontScale;
 
 		I_Color.Size = I_Thumbnail.Size = UI.Scale(new Size(24, 24));
@@ -292,20 +293,25 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		SideControl.Invalidate();
 	}
 
-	private void B_EditThumbnail_Click(object sender, EventArgs e)
+	private async void B_EditThumbnail_Click(object sender, EventArgs e)
 	{
 		if (imagePrompt.PromptFile(Form) == DialogResult.OK)
 		{
 			try
 			{
-				var customPlayset = Playset.GetCustomPlayset();
+				var result = await _playsetManager.SetPlaysetThumbnail(Playset, imagePrompt.SelectedPath);
 
-				customPlayset.SetThumbnail(Image.FromFile(imagePrompt.SelectedPath));
+				if (!result)
+				{
+					var customPlayset = Playset.GetCustomPlayset();
 
-				_playsetManager.Save(customPlayset);
+					customPlayset.SetThumbnail(Image.FromFile(imagePrompt.SelectedPath));
 
-				I_Thumbnail.Visible = B_ClearThumbnail.Visible = customPlayset.IsCustomThumbnailSet;
-				L_ThumbnailInfo.Text = customPlayset.IsCustomThumbnailSet ? Locale.PlaysetThumbnailSet : Locale.PlaysetThumbnailNotSet;
+					_playsetManager.Save(customPlayset);
+
+					I_Thumbnail.Visible = B_ClearThumbnail.Visible = customPlayset.IsCustomThumbnailSet;
+					L_ThumbnailInfo.Text = customPlayset.IsCustomThumbnailSet ? Locale.PlaysetThumbnailSet : Locale.PlaysetThumbnailNotSet;
+				}
 
 				SideControl.Invalidate();
 			}
@@ -342,18 +348,27 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 
 	private async void B_Share_Click(object sender, EventArgs e)
 	{
+		var input = ShowInputPrompt(Locale.EditPlaysetName, Locale.SharePlayset, Playset.Name);
+
+		if (input.DialogResult != DialogResult.OK || string.IsNullOrWhiteSpace(input.Input))
+		{
+			return;
+		}
+
 		B_Share.Loading = true;
 
 		try
 		{
-			var playset = await _playsetManager.GenerateImportPlayset(Playset, true);
-			var path = CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveDataPath, "Playsets", "Shared", $"{Playset.Name} {DateTime.Now:yy-MM-dd}.json");
+			var result = await _playsetManager.SharePlayset(Playset, input.Input, string.Empty);
 
-			Directory.CreateDirectory(Path.GetDirectoryName(path));
-
-			File.WriteAllText(path, Newtonsoft.Json.JsonConvert.SerializeObject(playset));
-
-			PlatformUtil.OpenFolder(path);
+			if (result)
+			{
+				ShowPrompt(Locale.PlaysetSharedSuccessfully, PromptButtons.OK, PromptIcons.Info);
+			}
+			else
+			{
+				ShowPrompt(Locale.FailedToSharePlayset, PromptButtons.OK, PromptIcons.Error);
+			}
 		}
 		catch (Exception ex)
 		{
@@ -387,5 +402,28 @@ public partial class PC_PlaysetPage : PlaysetSettingsPanel
 		}
 
 		B_Delete.Loading = false;
+	}
+
+	private async void B_Export_Click(object sender, EventArgs e)
+	{
+		B_Export.Loading = true;
+
+		try
+		{
+			var playset = await _playsetManager.GenerateImportPlayset(Playset, true);
+			var path = CrossIO.Combine(ServiceCenter.Get<ILocationService>().SkyveDataPath, "Playsets", "Shared", $"{Playset.Name} {DateTime.Now:yy-MM-dd}.json");
+
+			Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+			File.WriteAllText(path, Newtonsoft.Json.JsonConvert.SerializeObject(playset));
+
+			PlatformUtil.OpenFolder(path);
+		}
+		catch (Exception ex)
+		{
+			MessagePrompt.Show(ex, form: Form);
+		}
+
+		B_Export.Loading = false;
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
+using PDX.SDK.Contracts.Service.Mods.Interfaces;
 
 using Skyve.Compatibility.Domain.Interfaces;
 using Skyve.Domain;
@@ -250,14 +251,11 @@ internal class ContentManager : IContentManager
 
 		foreach (var mod in subscribedItems.Where(x => x.LocalData is not null))
 		{
-			if (mod.LocalData.LocalType is not LocalType.WorkInProgress)
-			{
-				var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
+			var pdxPackage = GetPackage(mod.LocalData.FolderAbsolutePath, true, mod);
 
-				if (pdxPackage is not null && (pdxPackage.Id == 0 || !packages.Any(x => x.Id == pdxPackage.Id && x.Version == ((IPackage)pdxPackage).Version)))
-				{
-					packages.Add(pdxPackage);
-				}
+			if (pdxPackage is not null)
+			{
+				packages.Add(pdxPackage);
 			}
 		}
 
@@ -282,7 +280,7 @@ internal class ContentManager : IContentManager
 		return packages;
 	}
 
-	internal Package? GetPackage(string folder, bool withSubDirectories = true, PDX.SDK.Contracts.Service.Mods.Models.Mod? pdxMod = null)
+	internal Package? GetPackage(string folder, bool withSubDirectories = true, IMod? pdxMod = null)
 	{
 		try
 		{
@@ -483,7 +481,7 @@ internal class ContentManager : IContentManager
 
 		if (blackList.Count > 0)
 		{
-			await _workshopService.UnsubscribeBulkCompletely(blackList.Select(x => (int)x.Id));
+			await _workshopService.UnsubscribeBulkCompletely(blackList);
 		}
 
 		_logger.Info($"Applying analysis results..");

@@ -1,4 +1,6 @@
-﻿using Skyve.App.CS2.UserInterface.Panels;
+﻿using PDX.SDK.Contracts.Service.Mods.Models;
+
+using Skyve.App.CS2.UserInterface.Panels;
 using Skyve.App.Interfaces;
 using Skyve.App.UserInterface.Forms;
 using Skyve.App.Utilities;
@@ -43,7 +45,7 @@ internal class RightClickService : IRightClickService
 			new(Locale.ViewOnWorkshop, "Link", () => PlatformUtil.OpenUrl(list[0].Url), visible: list.Count == 1 && !string.IsNullOrWhiteSpace(list[0].Url)),
 			new(Locale.OpenPackagePage, "Package", () => interfaceService.OpenPackagePage(list[0]), visible: list.Count == 1),
 			new(Locale.OpenPackageFolder.FormatPlural(list.Count), "Folder", () => list.Select(x => x.GetLocalPackageIdentity()?.FilePath).WhereNotEmpty().Foreach(PlatformUtil.OpenFolder), visible: anyInstalled),
-			new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "PC", () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => ServiceCenter.Get<IPackageManager>().MoveToLocalFolder(x!.Package)), visible: settings.UserSettings.ComplexListUI && anyWorkshopAndInstalled),
+			//new(Locale.MovePackageToLocalFolder.FormatPlural(list.Count), "PC", () => list.SelectWhereNotNull(x => x.GetLocalPackage()).Foreach(x => ServiceCenter.Get<IPackageManager>().MoveToLocalFolder(x!.Package)), visible: anyWorkshopAndInstalled),
 
 			SlickStripItem.Empty,
 
@@ -106,7 +108,9 @@ internal class RightClickService : IRightClickService
 
 		if (lockedPackages.Count > 0)
 		{
-			var result = await ServiceCenter.Get<IWorkshopService, WorkshopService>().SubscribeBulk(lockedPackages.ToDictionary(x => (int)x.Id, x => (string?)null), (lockedPackages[0] as IPlaysetPackage)!.PlaysetId);
+			lockedPackages.ForEach(x => x.Version = null);
+
+			var result = await ServiceCenter.Get<IWorkshopService, WorkshopService>().SubscribeBulk(lockedPackages, (lockedPackages[0] as IPlaysetPackage)!.PlaysetId);
 
 			if (result)
 			{

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Skyve.Systems.CS2.Domain.Api;
 public class PackageData
 {
-	public ulong Id { get; set; }
+	public string Id { get; set; }
 	public string? Name { get; set; }
 	public string? FileName { get; set; }
 	public string? AuthorId { get; set; }
@@ -31,7 +31,8 @@ public class PackageData
 
 	public PackageData()
     {
-        Tags = [];
+		Id = string.Empty;
+		Tags = [];
 		Links = [];
 		Statuses = [];
 		Interactions = [];

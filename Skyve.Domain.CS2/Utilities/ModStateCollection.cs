@@ -1,128 +1,109 @@
-﻿using System;
+﻿using Skyve.Systems;
+
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Skyve.Domain.CS2.Utilities;
+
 public class ModStateCollection
 {
-	private readonly Dictionary<int, Dictionary<ulong, bool>> _enabledConfig;
-	private readonly Dictionary<int, Dictionary<string, bool>> _enabledLocalConfig;
-	private readonly Dictionary<int, Dictionary<ulong, string>> _versionConfig;
+	private readonly Dictionary<string, Dictionary<string, bool>> _enabledConfig;
+	private readonly Dictionary<string, Dictionary<string, string>> _versionConfig;
 
 	public ModStateCollection()
 	{
 		_enabledConfig = [];
-		_enabledLocalConfig = [];
 		_versionConfig = [];
 	}
 
-	public ModStateCollection(Dictionary<int, Dictionary<ulong, bool>> enabledConfig, Dictionary<int, Dictionary<string, bool>> enabledLocalConfig, Dictionary<int, Dictionary<ulong, string>> versionConfig)
+	public ModStateCollection(Dictionary<string, Dictionary<string, bool>> enabledConfig, Dictionary<string, Dictionary<string, string>> versionConfig)
 	{
 		_enabledConfig = enabledConfig;
-		_enabledLocalConfig = enabledLocalConfig;
 		_versionConfig = versionConfig;
 	}
 
 	public bool IsEmpty => _enabledConfig.Count == 0 && _versionConfig.Count == 0;
 
-	public bool IsIncluded(int playset, ulong modId, string? version)
+	public bool IsIncluded(string? playset, IPackageIdentity package, bool withVersion = true)
 	{
-		if (!_enabledConfig.TryGetValue(playset, out var dic)
-			|| !dic.ContainsKey(modId))
+		var key = $"{package.Source}_{package.Id}";
+
+		if (playset is null
+			|| !_enabledConfig.TryGetValue(playset, out var dic)
+			|| !dic.ContainsKey(key))
 		{
 			return false;
 		}
 
-		if (version is null or "")
+		if (!withVersion || package.Version is null or "")
 		{
 			return true;
 		}
 
 		return _versionConfig.TryGetValue(playset, out var versionDic)
-			&& versionDic.TryGetValue(modId, out var ver)
-			&& (ver == version || ver == "");
+			&& versionDic.TryGetValue(key, out var ver)
+			&& (ver == package.Version || ver == "");
 	}
 
-	public bool IsIncluded(int playset, string modName)
+	public void Remove(string? playset, IPackageIdentity package)
 	{
-		return _enabledLocalConfig.TryGetValue(playset, out var dic)
-			&& dic.ContainsKey(modName);
-	}
+		if (playset is null)
+			return;
 
-	public void Remove(int playset, ulong modId)
-	{
+		var key = $"{package.Source}_{package.Id}";
+
 		if (_enabledConfig.TryGetValue(playset, out var dic1))
 		{
-			dic1.Remove(modId);
+			dic1.Remove(key);
 		}
 
 		if (_versionConfig.TryGetValue(playset, out var dic2))
 		{
-			dic2.Remove(modId);
+			dic2.Remove(key);
 		}
 	}
 
-	public void Remove(int playset, string modName)
+	public bool IsEnabled(string? playset, IPackageIdentity package, bool withVersion = true)
 	{
-		if (_enabledLocalConfig.TryGetValue(playset, out var dic1))
-		{
-			dic1.Remove(modName);
-		}
-	}
+		var key = $"{package.Source}_{package.Id}";
 
-	public bool IsEnabled(int playset, ulong modId, string? version)
-	{
-		if (!_enabledConfig.TryGetValue(playset, out var dic)
-			|| !dic.TryGetValue(modId, out var enabled)
+		if (playset is null
+			|| !_enabledConfig.TryGetValue(playset, out var dic)
+			|| !dic.TryGetValue(key, out var enabled)
 			|| !enabled)
 		{
 			return false;
 		}
 
-		if (version is null or "")
+		if (!withVersion || package.Version is null or "")
 		{
 			return true;
 		}
 
 		return _versionConfig.TryGetValue(playset, out var versionDic)
-			&& versionDic.TryGetValue(modId, out var ver)
-			&& (ver == version || ver == "");
+			&& versionDic.TryGetValue(key, out var ver)
+			&& (ver == package.Version || ver == "");
 	}
 
-	public bool IsEnabled(int playset, string modName)
+	public void SetEnabled(string? playset, IPackageIdentity package, bool enabled)
 	{
-		return _enabledLocalConfig.TryGetValue(playset, out var dic)
-			&& dic.TryGetValue(modName, out var enabled)
-			&& enabled;
-	}
+		if (playset is null)
+			return;
 
-	public void SetEnabled(int playset, ulong modId, bool enabled)
-	{
+		var key = $"{package.Source}_{package.Id}";
+
 		if (_enabledConfig.TryGetValue(playset, out var dic))
 		{
-			dic[modId] = enabled;
+			dic[key] = enabled;
 		}
 		else
 		{
-			_enabledConfig[playset] = new() { [modId] = enabled };
+			_enabledConfig[playset] = new() { [key] = enabled };
 		}
 	}
 
-	public void SetEnabled(int playset, string name, bool enabled)
+	public string? GetVersion(string? playset, IPackageIdentity package)
 	{
-		if (_enabledLocalConfig.TryGetValue(playset, out var dic))
-		{
-			dic[name] = enabled;
-		}
-		else
-		{
-			_enabledLocalConfig[playset] = new() { [name] = enabled };
-		}
-	}
-
-	public string? GetVersion(int playset, ulong modId)
-	{
-		if (_versionConfig.TryGetValue(playset, out var dic) && dic.TryGetValue(modId, out var version))
+		if (playset is not null && _versionConfig.TryGetValue(playset, out var dic) && dic.TryGetValue($"{package.Source}_{package.Id}", out var version))
 		{
 			return version;
 		}
@@ -130,22 +111,23 @@ public class ModStateCollection
 		return null;
 	}
 
-	public IEnumerable<int> GetIncludedPlaysets(ulong modId, string? version, bool andEnabled)
+	public IEnumerable<string> GetIncludedPlaysets(IPackageIdentity package, bool andEnabled, bool withVersion = true)
 	{
+		var key = $"{package.Source}_{package.Id}";
 		foreach (var item in _enabledConfig)
 		{
 			if (!_enabledConfig.TryGetValue(item.Key, out var dic)
-				|| !dic.TryGetValue(modId, out var enabled)
+				|| !dic.TryGetValue(key, out var enabled)
 				|| (!enabled && andEnabled))
 			{
 				continue;
 			}
 
-			if (version is not null and not "")
+			if (!withVersion || package.Version is not null and not "")
 			{
 				if (!_versionConfig.TryGetValue(item.Key, out var versionDic)
-					|| !versionDic.TryGetValue(modId, out var ver)
-					|| (ver != version && ver != ""))
+					|| !versionDic.TryGetValue(key, out var ver)
+					|| (ver != package.Version && ver != ""))
 				{
 					continue;
 				}
@@ -155,126 +137,33 @@ public class ModStateCollection
 		}
 	}
 
-	public void SetVersion(int playset, ulong modId, string version)
+	public void SetVersion(string? playset, IPackageIdentity package)
 	{
+		if (playset is null)
+			return;
+
+		var key = $"{package.Source}_{package.Id}";
+
 		if (_versionConfig.TryGetValue(playset, out var dic))
 		{
-			dic[modId] = version;
-		}
-		else
-		{
-			_versionConfig[playset] = new() { [modId] = version };
-		}
-	}
-
-	public void SetState(int playset, IPackageIdentity mod, bool enabled, string version)
-	{
-		if (mod.Id == 0)
-		{
-			SetEnabled(playset, mod.Name, enabled);
-		}
-		else
-		{
-			SetEnabled(playset, mod.Id, enabled);
-			SetVersion(playset, mod.Id, version);
-		}
-	}
-
-	public ModStateCollection Clone()
-	{
-		return new ModStateCollection(
-			_enabledConfig.ToDictionary(x => x.Key, y => new Dictionary<ulong, bool>(y.Value)),
-			_enabledLocalConfig.ToDictionary(x => x.Key, y => new Dictionary<string, bool>(y.Value)),
-			_versionConfig.ToDictionary(x => x.Key, y => new Dictionary<ulong, string>(y.Value))
-		);
-	}
-
-	public Dictionary<int, Dictionary<ulong, (bool IsEnabled, string? Version)>> ToDictionary()
-	{
-		var finalDic = new Dictionary<int, Dictionary<ulong, (bool, string?)>>();
-
-		foreach (var playsetId in _enabledConfig.Keys)
-		{
-			var enabledDict = _enabledConfig[playsetId];
-			var versionDict = _versionConfig[playsetId];
-			var combinedDict = new Dictionary<ulong, (bool IsEnabled, string? Version)>();
-
-			foreach (var modId in enabledDict.Keys)
+			if (package.Version is null)
 			{
-				combinedDict[modId] = (enabledDict[modId], versionDict.TryGetValue(modId, out var version) ? version : null);
+				dic.Remove(key);
 			}
-
-			finalDic[playsetId] = combinedDict;
-		}
-
-		return finalDic;
-	}
-
-	//public Fragment CreateFragment(int playsetId)
-	//{
-	//	return new Fragment(playsetId
-	//		, _enabledConfig.TryGetValue(playsetId, out var enabledConfig) ? enabledConfig : []
-	//		, _versionConfig.TryGetValue(playsetId, out var versionConfig) ? versionConfig : []);
-	//}
-
-	//public class Fragment
-	//{
-	//	private readonly Dictionary<ulong, bool> _enabledConfig;
-	//	private readonly Dictionary<ulong, string> _versionConfig;
-
-	//	public int PlaysetId { get; }
-
-	//	public Fragment(int playsetId, Dictionary<ulong, bool> enabledConfig, Dictionary<ulong, string> versionConfig)
-	//	{
-	//		PlaysetId = playsetId;
-	//		_enabledConfig = new(enabledConfig);
-	//		_versionConfig = new(versionConfig);
-	//	}
-	//}
-
-	public override bool Equals(object obj)
-	{
-		if (obj is not ModStateCollection modStateCollection)
-		{
-			return false;
-		}
-
-		if (_enabledConfig.Keys.SequenceEqual(modStateCollection._enabledConfig.Keys))
-		{
-			return false;
-		}
-
-		foreach (var key in _enabledConfig.Keys)
-		{
-			if (!_enabledConfig.ContainsKey(key))
+			else
 			{
-				if (modStateCollection._enabledConfig.ContainsKey(key))
-				{
-					return false;
-				}
-
-				continue;
-			}
-
-			if (!modStateCollection._enabledConfig.ContainsKey(key))
-			{
-				return false;
-			}
-
-			if (!_enabledConfig[key].SequenceEqual(modStateCollection._enabledConfig[key]))
-			{
-				return false;
+				dic[key] = package.Version;
 			}
 		}
-
-		return true;
+		else if (package.Version is not null)
+		{
+			_versionConfig[playset] = new() { [key] = package.Version };
+		}
 	}
 
-	public override int GetHashCode()
+	public void SetState(string? playset, IPackageIdentity mod, bool enabled)
 	{
-		var hashCode = 19070429;
-		hashCode = (hashCode * -1521134295) + EqualityComparer<Dictionary<int, Dictionary<ulong, bool>>>.Default.GetHashCode(_enabledConfig);
-		hashCode = (hashCode * -1521134295) + EqualityComparer<Dictionary<int, Dictionary<ulong, string>>>.Default.GetHashCode(_versionConfig);
-		return hashCode;
+		SetEnabled(playset, mod, enabled);
+		SetVersion(playset, mod);
 	}
 }

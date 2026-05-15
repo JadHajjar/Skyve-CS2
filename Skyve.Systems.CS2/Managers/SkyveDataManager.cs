@@ -12,11 +12,11 @@ using Skyve.Systems.CS2.Utilities;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Skyve.Systems.CS2.Managers;
+
 public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService _userService, SkyveApiUtil _skyveApiUtil, ICompatibilityUtil _compatibilityUtil, INotificationsService _notificationsService, SaveHandler saveHandler) : ISkyveDataManager
 {
 	private readonly Dictionary<IPackageIdentity, CompatibilityInfo> _cache = new(new IPackageEqualityComparer());
@@ -69,14 +69,14 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 				saveHandler.Save(new CompatibilityData
 				{
 					Packages = packages,
-					BlackListedIds = blackList.BlackListedIds,
+					BlackListedIds = blackList.BlackListedIds.ToList(x => x.ToString()),
 					BlackListedNames = blackList.BlackListedNames,
 				});
 			}
 
 			((UserService)_userService).SetKnownUsers(users);
 
-			CompatibilityData = new IndexedCompatibilityData(packages, blackList.BlackListedIds, blackList.BlackListedNames);
+			CompatibilityData = new IndexedCompatibilityData(packages, blackList.BlackListedIds.ToList(x => x.ToString()), blackList.BlackListedNames);
 
 			_notifier.OnCompatibilityDataLoaded();
 
@@ -123,19 +123,19 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 			|| CompatibilityData.BlackListedNames.Contains(package.Name ?? string.Empty);
 	}
 
-	public bool IsBlacklisted(ulong packageId)
+	public bool IsBlacklisted(string packageId)
 	{
 		return CompatibilityData.BlackListedIds.Contains(packageId);
 	}
 
-	public ulong GetIdFromModName(string fileName)
+	public string GetIdFromModName(string fileName)
 	{
 		return CompatibilityData.PackageNames.TryGet(fileName);
 	}
 
 	public IIndexedPackageCompatibilityInfo? GetPackageCompatibilityInfo(IPackageIdentity identity)
 	{
-		if (identity.Id > 0)
+		if (identity.Source == Defaults.WORKSHOP_SOURCE)
 		{
 			var packageData = CompatibilityData.Packages.TryGet(identity.Id);
 
@@ -240,12 +240,12 @@ public class SkyveDataManager(ILogger _logger, INotifier _notifier, IUserService
 		return info;
 	}
 
-	public IIndexedPackageCompatibilityInfo TryGetPackageInfo(ulong id)
+	public IIndexedPackageCompatibilityInfo TryGetPackageInfo(string id)
 	{
 		return CompatibilityData.Packages.TryGet(id);
 	}
 
-	public IEnumerable<ulong> GetPackagesKeys()
+	public IEnumerable<string> GetPackagesKeys()
 	{
 		return CompatibilityData.Packages.Keys;
 	}

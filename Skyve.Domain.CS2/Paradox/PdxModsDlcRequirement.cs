@@ -43,6 +43,9 @@ public class PdxModsDlcRequirement : IPackageRequirement, IDlcInfo, IThumbnailOb
 	public bool IsFree { get; set; }
 	public string? ExpectedRelease { get; set; }
 
+	string IPackageIdentity.Source => "dlc";
+	string IPackageIdentity.Id => Id.ToString();
+
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = Id > 10 ? $"https://cdn.akamai.steamstatic.com/steam/apps/{Id}/header.jpg" : null;

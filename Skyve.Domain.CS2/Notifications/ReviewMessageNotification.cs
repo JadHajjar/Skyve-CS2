@@ -13,7 +13,7 @@ public class ReviewMessageNotification(ReviewReply reply, IInterfaceService inte
 {
 	public DateTime Time { get; } = reply.Timestamp.ToLocalTime();
 	public string Title => Locale.ReviewRequestNotification;
-	public string? Description => Locale.ReviewRequestNotificationInfo.Format(new GenericPackageIdentity(reply.PackageId).CleanName());
+	public string? Description => Locale.ReviewRequestNotificationInfo.Format(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, reply.PackageId!).CleanName());
 	public string Icon { get; } = "RequestReview";
 	public Color? Color { get; }
 	public bool HasAction { get; } = true;
@@ -21,7 +21,7 @@ public class ReviewMessageNotification(ReviewReply reply, IInterfaceService inte
 
 	public void OnClick()
 	{
-		interfaceService.OpenPackagePage(new GenericPackageIdentity(reply.PackageId), openCompatibilityPage: true);
+		interfaceService.OpenPackagePage(new GenericPackageIdentity(Defaults.WORKSHOP_SOURCE, reply.PackageId!), openCompatibilityPage: true);
 	}
 
 	public void OnRead()

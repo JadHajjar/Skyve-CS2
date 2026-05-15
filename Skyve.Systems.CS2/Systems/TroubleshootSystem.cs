@@ -201,13 +201,13 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 			if (!keepSettings)
 			{
-				var originalPlayset = _playsetManager.GetPlayset(currentState.OriginalPlaysetId);
+				var originalPlayset = _playsetManager.GetPlayset(currentState.OriginalPlaysetId!);
 
 				if (originalPlayset != null)
 				{
 					await _playsetManager.ActivatePlayset(originalPlayset);
 
-					await _playsetManager.DeletePlayset(_playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId));
+					await _playsetManager.DeletePlayset(_playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId!));
 				}
 				else
 				{
@@ -336,7 +336,7 @@ internal class TroubleshootSystem : ITroubleshootSystem
 
 		if (_playsetManager.CurrentPlayset?.Id != currentState.TroubleshootingPlaysetId)
 		{
-			var playset = _playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId);
+			var playset = _playsetManager.GetPlayset(currentState.TroubleshootingPlaysetId!);
 
 			if (playset is null)
 			{
@@ -504,8 +504,8 @@ internal class TroubleshootSystem : ITroubleshootSystem
 	public class TroubleshootState : ITroubleshootSettings
 	{
 		public string? PlaysetName { get; set; }
-		public int OriginalPlaysetId { get; set; }
-		public int TroubleshootingPlaysetId { get; set; }
+		public string? OriginalPlaysetId { get; set; }
+		public string? TroubleshootingPlaysetId { get; set; }
 		public List<GenericLocalPackageIdentity>? UnprocessedItems { get; set; }
 		public PackageList? LeftProcessingItems { get; set; }
 		public PackageList? RightProcessingItems { get; set; }

@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
+using PDX.SDK.Contracts.Service.Mods.Models;
+
 using Skyve.Compatibility.Domain.Interfaces;
+using Skyve.Domain;
 using Skyve.Domain.Systems;
 using Skyve.Systems.Compatibility.Domain;
 using Skyve.Systems.CS2.Managers;
@@ -14,6 +17,8 @@ public static class Startup
 {
 	public static IServiceCollection AddCs2SkyveSystems(this IServiceCollection services)
 	{
+		Defaults.WORKSHOP_SOURCE = SourceType.PdxMods;
+
 		services.AddSingleton<ICitiesManager, CitiesManager>();
 		services.AddSingleton<ILocationService, LocationService>();
 		services.AddSingleton<IModLogicManager, ModLogicManager>();

@@ -93,7 +93,8 @@ public class LocalPackageData : ILocalPackageData, IThumbnailObject, IEquatable<
 	}
 
 	bool ILocalPackageData.IsCodeMod => Package.IsCodeMod;
-	ulong IPackageIdentity.Id => Package.Id;
+	string IPackageIdentity.Source => Package.Source;
+	string IPackageIdentity.Id => Package.Id;
 	string IPackageIdentity.Name => Package.Name;
 	string? IPackageIdentity.Url => Package.Url;
 	string? IPackageIdentity.Version { get => Package.Version; set => Package.Version = value; }

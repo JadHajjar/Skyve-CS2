@@ -9,9 +9,9 @@ namespace Skyve.Systems.CS2.Domain;
 public class IndexedPackageStatus : IIndexedPackageStatus<StatusType>
 {
 	public IPackageStatus<StatusType> Status { get; }
-	public Dictionary<ulong, IIndexedPackageCompatibilityInfo> Packages { get; }
+	public Dictionary<string, IIndexedPackageCompatibilityInfo> Packages { get; }
 
-	public IndexedPackageStatus(PackageStatus status, Dictionary<ulong, IndexedPackage> packages)
+	public IndexedPackageStatus(PackageStatus status, Dictionary<string, IndexedPackage> packages)
 	{
 		Status = status;
 		Packages = [];

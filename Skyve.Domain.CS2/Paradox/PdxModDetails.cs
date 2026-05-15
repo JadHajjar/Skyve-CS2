@@ -1,9 +1,10 @@
 ﻿using Extensions;
 
 using PDX.SDK.Contracts.Service.Mods.Enums;
-using PDX.SDK.Contracts.Service.Mods.Models;
+using PDX.SDK.Contracts.Service.Mods.Interfaces;
 
 using Skyve.Domain.CS2.Utilities;
+using Skyve.Domain.Enums;
 using Skyve.Domain.Systems;
 
 using System;
@@ -13,11 +14,11 @@ using System.Linq;
 
 namespace Skyve.Domain.CS2.Paradox;
 
-public class PdxModDetails : IModDetails, IFullThumbnailObject
+public class PdxModDetails : IInternalModDetails, IFullThumbnailObject
 {
-	[Obsolete("", true)]
 	public PdxModDetails()
 	{
+		Id = string.Empty;
 		Name = string.Empty;
 		Guid = string.Empty;
 		Version = null;
@@ -25,12 +26,12 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 		Tags = [];
 	}
 
-	public PdxModDetails(ModDetails mod)
+	public PdxModDetails(IModDetails mod)
 	{
-		Id = (ulong)mod.Id;
+		Id = mod.Id;
 		Name = mod.DisplayName;
 		Guid = mod.Name;
-		ThumbnailUrl = mod.ThumbnailPath;
+		ThumbnailUrl = mod.ThumbnailUrl;
 		AuthorId = mod.Author;
 		ShortDescription = mod.ShortDescription;
 		Description = mod.LongDescription;
@@ -39,21 +40,23 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 		VersionName = mod.UserModVersion.IfEmpty(mod.Version);
 		SuggestedGameVersion = mod.RequiredGameVersion;
 		Subscribers = mod.SubscriptionsTotal;
-		HasVoted = mod.HasLiked;
+		HasVoted = mod.HasLiked ?? false;
 		VoteCount = mod.RatingsTotal;
 		IsRemoved = mod.State is ModState.Removed;
 		IsInvalid = mod.State is ModState.Unknown;
-		IsBanned = mod.State is ModState.Rejected or ModState.AutoBlocked;
+		IsBanned = mod.State is not ModState.Published and not ModState.Publishing and not ModState.Removed and not ModState.Unknown;
 		ForumLink = mod.ForumLinks?.FirstOrDefault();
+		AccessLevel = mod.AccessControlLevelState switch { ModAccessControlLevelState.Unlisted => AccessLevel.Unlisted, ModAccessControlLevelState.Private => AccessLevel.Private, _ => AccessLevel.Public };
 		Tags = mod.Tags?.ToDictionary(x => x.Id, x => x.DisplayName) ?? [];
 		Changelog = mod.Changelog?.ToArray(x => new ModChangelog(x)) ?? [];
-		ServerTime = (mod.LatestUpdate ?? Changelog.Max(x => x.ReleasedDate))?.ToUniversalTime() ?? default;
+		ServerTime = (mod.LatestModUpdate ?? Changelog.Max(x => x.ReleasedDate))?.ToUniversalTime() ?? default;
 		Images = mod.Screenshots?.ToArray(x => new ParadoxScreenshot(x.Image, Id, mod.Version, false));
 		Links = mod.ExternalLinks?.ToArray(x => new ParadoxLink(x));
 		Timestamp = DateTime.Now;
 	}
 
-	public ulong Id { get; set; }
+	public string Source { get; } = Defaults.WORKSHOP_SOURCE;
+	public string Id { get; set; }
 	public DateTime Timestamp { get; set; }
 	public string Name { get; set; }
 	public string Guid { get; set; }
@@ -64,6 +67,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 	public string? Description { get; set; }
 	public long ServerSize { get; set; }
 	public string? ForumLink { get; set; }
+	public AccessLevel AccessLevel { get; set; }
 	public string VersionName { get; set; }
 	public string? Version { get; set; }
 	public int Subscribers { get; set; }
@@ -92,7 +96,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 	IEnumerable<ILink> IWorkshopInfo.Links => Links ?? [];
 	bool IWorkshopInfo.IsPartialInfo { get; }
 	bool IPackage.IsBuiltIn { get; }
-	public string? LatestVersion => Changelog.LastOrDefault()?.VersionId ?? "1";
+	public string? LatestVersion => Changelog?.LastOrDefault()?.VersionId ?? "1";
 	IEnumerable<IPackageRequirement> IWorkshopInfo.Requirements
 	{
 		get
@@ -117,7 +121,7 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 	public bool GetThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, Version ?? "");
+		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id.ToString(), Version ?? "");
 
 		return true;
 	}
@@ -125,8 +129,24 @@ public class PdxModDetails : IModDetails, IFullThumbnailObject
 	public bool GetFullThumbnail(IImageService imageService, out Bitmap? thumbnail, out string? thumbnailUrl)
 	{
 		thumbnailUrl = ThumbnailUrl;
-		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id, Version ?? "", false);
+		thumbnail = DomainUtils.GetThumbnail(imageService, null, ThumbnailUrl, Id.ToString(), Version ?? "", false);
 
 		return true;
+	}
+	public override bool Equals(object? obj)
+	{
+		return obj is IPackageIdentity identity &&
+			   Source == identity.Source &&
+			   Id == identity.Id &&
+			   Version == identity.Version;
+	}
+
+	public override int GetHashCode()
+	{
+		var hashCode = -781363793;
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Source);
+		hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Id);
+		hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(Version);
+		return hashCode;
 	}
 }

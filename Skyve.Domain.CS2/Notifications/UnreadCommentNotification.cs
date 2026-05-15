@@ -41,7 +41,7 @@ public class UnreadCommentNotification : INotificationInfo
 	public Color? Color { get; }
 	public bool HasAction { get; }
 	public bool CanBeRead { get; }
-	public ulong PackageId { get; }
+	public string PackageId { get; }
 
 	public void OnClick()
 	{

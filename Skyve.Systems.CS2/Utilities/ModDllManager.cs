@@ -30,7 +30,7 @@ public class ModDllManager : IModDllManager
 		{
 			foreach (var dll in cache)
 			{
-				if (dll.Path is not null or "")
+				if (dll.Path is not null and not "")
 				{
 					_dllCache[dll.Path] = dll;
 				}
