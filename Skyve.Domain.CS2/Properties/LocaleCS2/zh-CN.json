@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "您的网络连接异常，请检查您的连接，然后点击此处重试。",
   "ParadoxLoginFailedBadCredentials": "使用已保存的用户名或密码登录失败。请点击此处更新您的信息。",
   "ParadoxLoginFailedEmpty": "您的会话可能已过期。请尝试重新启动游戏登录，或点击此处通过 Skyve 登录。",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "下载完毕",
   "DownloadStarted": "正在开始下载...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "下载失败",
   "DownloadCancelled": "已取消下載",
   "Downloading": "正在下载...",
@@ -212,5 +216,7 @@
   "EditModInfo": "编辑这个模组的信息",
   "SkyveVersionBlockedTitle": "Skyve 需要更新",
   "SkyveVersionBlockedDescription": "您当前的 Skyve 版本已经过时，可能无法使用最新版模组更新。\n\n请按照更新说明了解如何更新 Skyve，以便顺利地继续创作和游玩。",
-  "ViewUpdateInstructions": "查看更新说明"
+  "ViewUpdateInstructions": "查看更新说明",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }
