@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "U bent niet verbonden met het internet, controleer uw verbinding en klik hier om het opnieuw te proberen.",
   "ParadoxLoginFailedBadCredentials": "Uw opgeslagen gebruikersnaam/wachtwoord kon niet inloggen. Klik hier om uw gegevens bij te werken.",
   "ParadoxLoginFailedEmpty": "Je sessie is waarschijnlijk verlopen. Probeer het spel op te starten om opnieuw in te loggen, of klik hier om in te loggen via Skyve.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "Download voltooid",
   "DownloadStarted": "Download is gestart...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "Downloaden mislukt",
   "DownloadCancelled": "Download geannuleerd",
   "Downloading": "Downloadenchar@@0",
@@ -212,5 +216,7 @@
   "EditModInfo": "Bewerk de informatie van deze mod",
   "SkyveVersionBlockedTitle": "Update vereist voor Skyve",
   "SkyveVersionBlockedDescription": "Je huidige Skyve versie is verouderd en werkt mogelijk niet met de nieuwste mods update.\r\n\r\nVolg de update-instructies om te leren hoe te upgraden en terug te keren naar creëren en zonder problemen te spelen.",
-  "ViewUpdateInstructions": "Instructies voor bijwerken bekijken"
+  "ViewUpdateInstructions": "Instructies voor bijwerken bekijken",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }
