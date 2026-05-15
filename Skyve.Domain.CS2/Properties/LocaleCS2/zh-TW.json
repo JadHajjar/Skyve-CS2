@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "檢測不到網路，請檢查網路連接後再試",
   "ParadoxLoginFailedBadCredentials": "保存的登入帳號/密碼無法登入，點擊以更新您的登入資訊",
   "ParadoxLoginFailedEmpty": "您的工作階段似乎已經過期，請開啟遊戲並重新登入，或者點擊這裡透過Skyve登入",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "下載已完成",
   "DownloadStarted": "Download starting...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "下載失敗",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "正在下載...",
@@ -212,5 +216,7 @@
   "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Skyve 需要更新",
   "SkyveVersionBlockedDescription": "您目前的 Skyve 版本已過時，可能無法與最新的模組更新相容。\n請遵循更新指示，了解如何升級，並回到無問題的創作與遊玩。",
-  "ViewUpdateInstructions": "查看更新指示"
+  "ViewUpdateInstructions": "查看更新指示",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }
