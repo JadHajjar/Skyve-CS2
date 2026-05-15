@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "Du musst mit dem Internet verbunden sein, um dich anzumelden. Bitte überprüfe deine Internetverbindung und versuche es erneut.",
   "ParadoxLoginFailedBadCredentials": "Dein gespeicherter Benutzername/Passwort konnte sich nicht einloggen. Klicke hier, um Deine Daten zu aktualisieren.",
   "ParadoxLoginFailedEmpty": "Deine Sitzung ist wahrscheinlich abgelaufen. Versuche, das Spiel zu starten, um dich erneut anzumelden, oder klicke hier, um dich über Skyve anzumelden.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "Herunterladen abgeschlossen",
   "DownloadStarted": "Herunterladen gestartet...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "Download fehlgeschlagen",
   "DownloadCancelled": "Herunterladen abgebrochen",
   "Downloading": "Wird heruntergeladen...",
@@ -211,6 +215,8 @@
   "TitleDesc": "Titel & Beschreibungen",
   "EditModInfo": "Diese Mod-Informationen bearbeiten",
   "SkyveVersionBlockedTitle": "Update erforderlich für Skyve",
-  "SkyveVersionBlockedDescription": "Deine aktuelle Skyve Version ist veraltet und funktioniert möglicherweise nicht mit dem neuesten Mods Update.\r\n\r\nFolgen Sie den Update-Anweisungen, um zu erfahren, wie Sie upgraden können und zurück zum Erstellen und Spielen ohne Probleme kommen.",
-  "ViewUpdateInstructions": "Update-Anweisungen anzeigen"
+  "SkyveVersionBlockedDescription": "Deine aktuelle Skyve Version ist veraltet und funktioniert möglicherweise nicht mit den neuesten Mod-Updates.\n\nFolge den Update-Anweisungen, um zu erfahren, wie du upgraden kannst und zurück zum Erstellen und Spielen ohne Probleme kommst.",
+  "ViewUpdateInstructions": "Update-Anweisungen anzeigen",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }
