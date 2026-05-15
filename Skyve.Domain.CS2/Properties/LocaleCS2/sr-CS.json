@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "Niste povezani na internet, proverite svoju vezu i kliknite ovde da pokušate ponovo.",
   "ParadoxLoginFailedBadCredentials": "Vaše sačuvano korisničko ime/lozinka nisu uspeli da se prijave. Kliknite ovde da ažurirate svoje informacije.",
   "ParadoxLoginFailedEmpty": "Vaša sesija je verovatno istekla. Pokušajte da pokrenete igru da se ponovo prijavite, ili kliknite ovde da se prijavite preko Skyve-a.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "Preuzimanje završeno",
   "DownloadStarted": "Download starting...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "Preuzimanje nije uspelo",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "Preuzimanje...",
@@ -212,5 +216,7 @@
   "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Update Required for Skyve",
   "SkyveVersionBlockedDescription": "Your current Skyve version has become outdated and may not work with the latest mods update.\r\n\r\nFollow the update instructions to learn how to upgrade and get back to creating and playing without issues.",
-  "ViewUpdateInstructions": "View Update Instructions"
+  "ViewUpdateInstructions": "View Update Instructions",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }
