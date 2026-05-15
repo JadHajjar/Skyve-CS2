@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "인터넷이 연결되지 않았습니다. 연결 상태를 확인하고 여기를 클릭하여 다시 시도하십시오.",
   "ParadoxLoginFailedBadCredentials": "저장된 닉네임/비밀번호로 로그인에 실패하였습니다. 여기를 클릭하여 로그인 정보를 업데이트 하십시오.",
   "ParadoxLoginFailedEmpty": "현재 세션이 만료된 것으로 보입니다. 게임을 실행하여 로그인을 다시 하거나, Skyve를 통해 로그인하려면 여기를 클릭하세요.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "다운로드 완료",
   "DownloadStarted": "Download starting...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "다운로드 실패",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "다운로드 중...",
@@ -210,7 +214,9 @@
   },
   "TitleDesc": "Title & Descriptions",
   "EditModInfo": "Edit this mod's information",
-  "SkyveVersionBlockedTitle": "Update Required for Skyve",
-  "SkyveVersionBlockedDescription": "Your current Skyve version has become outdated and may not work with the latest mods update.\r\n\r\nFollow the update instructions to learn how to upgrade and get back to creating and playing without issues.",
-  "ViewUpdateInstructions": "View Update Instructions"
+  "SkyveVersionBlockedTitle": "Skyve 업데이트 필요",
+  "SkyveVersionBlockedDescription": "현재 Skyve 버전이 오래되어 최신 모드 업데이트와 호환되지 않을 수 있습니다.\n\n업데이트 지침에 따라 업그레이드 방법과 문제없이 게임을 즐기는 방법을 확인하세요.",
+  "ViewUpdateInstructions": "업데이트 지침 보기",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }

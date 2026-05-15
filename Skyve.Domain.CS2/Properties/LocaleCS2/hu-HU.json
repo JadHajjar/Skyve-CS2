@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "Nem csatlakozol az internethez. Kérjük, ellenőrizd a kapcsolatot, és kattints ide az újrapróbálkozáshoz.",
   "ParadoxLoginFailedBadCredentials": "A mentett felhasználónév/jelszó nem jó a bejelentkezéshez. Kattints ide az adatok frissítéséhez.",
   "ParadoxLoginFailedEmpty": "A munkamenet valószínűleg lejárt. Próbáld meg elindítani a játékot az újbóli bejelentkezéshez, vagy kattints ide a Skyve-on keresztüli bejelentkezéshez.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "A letöltés befejeződött",
   "DownloadStarted": "Download starting...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "Letöltés sikertelen",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "Letöltés...",
@@ -212,5 +216,7 @@
   "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Update Required for Skyve",
   "SkyveVersionBlockedDescription": "Your current Skyve version has become outdated and may not work with the latest mods update.\r\n\r\nFollow the update instructions to learn how to upgrade and get back to creating and playing without issues.",
-  "ViewUpdateInstructions": "View Update Instructions"
+  "ViewUpdateInstructions": "View Update Instructions",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }

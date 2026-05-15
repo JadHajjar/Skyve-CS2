@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "Et ole yhteydessä internetiin, ole hyvä ja tarkista yhteytesi ja yritä uudelleen.",
   "ParadoxLoginFailedBadCredentials": "Tallennetun käyttäjänimesi/salasanasi kirjautuminen epäonnistui. Päivitä tiedot napsauttamalla tätä.",
   "ParadoxLoginFailedEmpty": "Istuntosi on todennäköisesti vanhentunut. Kokeile käynnistää peli kirjautuaksesi uudelleen tai klikkaa tästä kirjautuaksesi sisään Skyven kautta.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "Lataus suoritettu",
   "DownloadStarted": "Lataus käynnistyy...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "Lataus epäonnistui",
   "DownloadCancelled": "Lataus peruttu",
   "Downloading": "Ladataan...",
@@ -212,5 +216,7 @@
   "EditModInfo": "Muokkaa tämän modin tietoja",
   "SkyveVersionBlockedTitle": "Päivitys vaaditaan Skyvelle",
   "SkyveVersionBlockedDescription": "Nykyinen Skyve-versiosi on vanhentunut eikä välttämättä toimi uusimpien modien päivityksen kanssa.\r\n\r\nNoudata päivitysohjeita ja opi päivittämään ja palaamaan luomaan ja pelaamaan ilman ongelmia.",
-  "ViewUpdateInstructions": "Näytä Päivitysohjeet"
+  "ViewUpdateInstructions": "Näytä Päivitysohjeet",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }

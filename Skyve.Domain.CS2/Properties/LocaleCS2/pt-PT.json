@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "Não estás ligado à internet, verifica a tua ligação e clica aqui para tentar novamente.",
   "ParadoxLoginFailedBadCredentials": "O teu nome de utilizador/palavra-passe falhou ao iniciar sessão. Clica aqui para atualizar a tua informação.",
   "ParadoxLoginFailedEmpty": "A tua sessão provavelmente expirou. Tenta iniciar o jogo para iniciar sessão novamente ou clica aqui para iniciar sessão pelo Skyve.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "Transferência concluída",
   "DownloadStarted": "A transferir...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "Falha na transferência",
   "DownloadCancelled": "Transferência cancelada",
   "Downloading": "A transferir...",
@@ -211,6 +215,8 @@
   "TitleDesc": "Título e descrições",
   "EditModInfo": "Editar as informações deste mod",
   "SkyveVersionBlockedTitle": "Atualização necessária para o Skyve",
-  "SkyveVersionBlockedDescription": "Sua versão atual do Skyve ficou desatualizada e pode não funcionar com as últimas atualizações de mods. U\r\n\r\nSiga as instruções de atualização para aprender como fazer o upgrade e voltar a criar e jogar sem problemas.",
-  "ViewUpdateInstructions": "Ver Instruções de Atualização"
+  "SkyveVersionBlockedDescription": "A tua versão atual do Skyve ficou desatualizada e pode não funcionar com as últimas atualizações de mods.\n\nSegue as instruções de atualização para aprender a atualizar e voltar a criar e jogar sem problemas.",
+  "ViewUpdateInstructions": "Ver instruções de atualização",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }

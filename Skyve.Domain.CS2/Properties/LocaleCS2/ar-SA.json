@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "أنت غير متصل بالإنترنت، الرجاء التحقق من اتصالك وانقر هنا لإعادة المحاولة.",
   "ParadoxLoginFailedBadCredentials": "إسم المستخدم/كلمة المرور المحفوظة فشل في تسجيل الدخول. انقر هنا لتحديث المعلومات الخاصة بك.",
   "ParadoxLoginFailedEmpty": "قد انتهت صلاحية جلستك على الأرجح. حاول بدء اللعبة لتسجيل الدخول مرة أخرى، أو انقر هنا لتسجيل الدخول من خلال Skyve.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "اكتمل التحميل",
   "DownloadStarted": "Download starting...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "فشل التحميل",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "تنزيل...",
@@ -212,5 +216,7 @@
   "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "التحديث مطلوب للسماء",
   "SkyveVersionBlockedDescription": "إصدار Skyve الحالي الخاص بك أصبح قديماً وقد لا يعمل مع أحدث تحديث للموديات.\r\n\r\nاتبع تعليمات التحديث لتعلم كيفية الترقية والعودة إلى الإنشاء والتشغيل بدون مشاكل.",
-  "ViewUpdateInstructions": "عرض تعليمات التحديث"
+  "ViewUpdateInstructions": "عرض تعليمات التحديث",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }

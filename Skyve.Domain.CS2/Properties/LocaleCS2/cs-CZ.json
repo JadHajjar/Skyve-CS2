@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "Nejste připojeni k Internetu, zkontrolujte prosím připojení a klikněte zde a zkuste to znovu.",
   "ParadoxLoginFailedBadCredentials": "Vaše uložené uživatelské jméno/heslo se nepodařilo přihlásit. Klikněte zde pro aktualizaci vašich informací.",
   "ParadoxLoginFailedEmpty": "Vaše relace pravděpodobně vypršela. Zkuste spustit hru a znovu se přihlásit, nebo klikněte zde pro přihlášení přes Skyve.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "Stahování dokončeno",
   "DownloadStarted": "Download starting...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "Stahování selhalo",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "Stahuji...",
@@ -212,5 +216,7 @@
   "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Vyžadována aktualizace pro Skyve",
   "SkyveVersionBlockedDescription": "Vaše aktuální verze Skyve je zastaralá a nemusí fungovat s nejnovější aktualizací módů.\r\n\r\nPostupujte podle instrukcí o aktualizaci, abyste se dozvěděli jak aktualizovat a vrátit se k vytváření a hraní bez problémů.",
-  "ViewUpdateInstructions": "Zobrazit pokyny k aktualizaci"
+  "ViewUpdateInstructions": "Zobrazit pokyny k aktualizaci",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }

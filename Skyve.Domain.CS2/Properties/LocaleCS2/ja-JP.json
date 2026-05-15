@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "インターネットに接続されていません。接続を確認してここをクリックしてもう一度お試しください。",
   "ParadoxLoginFailedBadCredentials": "保存されたユーザー名/パスワードはログインに失敗しました。情報を更新するにはここをクリックしてください。",
   "ParadoxLoginFailedEmpty": "セッションの有効期限が切れている可能性があります。ゲームを起動して再度ログインするか、Skyve経由でログインするにはここをクリックしてください。",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "ダウンロード完了",
   "DownloadStarted": "Download starting...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "ダウンロード失敗",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "ダウンロード中...",
@@ -212,5 +216,7 @@
   "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Skyveにアップデートが必要です",
   "SkyveVersionBlockedDescription": "現在のSkyveバージョンが古くなっており、最新のMODのアップデートでは動作しない可能性があります。\r\n\r\nアップグレード方法については、アップグレードの手順に従って、問題なく作成および再生する方法を学んでください。",
-  "ViewUpdateInstructions": "更新手順を表示"
+  "ViewUpdateInstructions": "更新手順を表示",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }

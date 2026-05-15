@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "Δεν είστε συνδεδεμένοι στο διαδίκτυο, παρακαλώ ελέγξτε τη σύνδεσή σας και κάντε κλικ εδώ για να προσπαθήσετε ξανά.",
   "ParadoxLoginFailedBadCredentials": "Το αποθηκευμένο όνομα χρήστη/κωδικός πρόσβασης απέτυχε να συνδεθεί. Κάντε κλικ εδώ για να ενημερώσετε τις πληροφορίες σας.",
   "ParadoxLoginFailedEmpty": "Η συνεδρία σας έχει πιθανότατα λήξει. Δοκιμάστε να εκκινήσετε το παιχνίδι για να συνδεθείτε ξανά, ή κάντε κλικ εδώ για να συνδεθείτε μέσω του Skyve.",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "Η λήψη ολοκληρώθηκε",
   "DownloadStarted": "Download starting...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "Αποτυχία λήψης",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "Λήψη...",
@@ -212,5 +216,7 @@
   "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Απαιτείται ενημέρωση για το Skyve",
   "SkyveVersionBlockedDescription": "Η τρέχουσα έκδοση Skyve σας έχει γίνει ξεπερασμένη και μπορεί να μην λειτουργεί με την τελευταία ενημέρωση mods.\r\n\r\nΑκολουθήστε τις οδηγίες ενημέρωσης για να μάθετε πώς να αναβαθμίσετε και να επιστρέψετε στη δημιουργία και να παίξετε χωρίς προβλήματα.",
-  "ViewUpdateInstructions": "Προβολή Οδηγιών Ενημέρωσης"
+  "ViewUpdateInstructions": "Προβολή Οδηγιών Ενημέρωσης",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }
