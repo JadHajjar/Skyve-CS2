@@ -48,8 +48,12 @@
   "ParadoxLoginFailedNoConnection": "คุณไม่ได้เชื่อมต่อกับอินเทอร์เน็ต โปรดตรวจสอบการเชื่อมต่อของคุณและคลิกที่นี่เพื่อลองอีกครั้ง",
   "ParadoxLoginFailedBadCredentials": "ชื่อผู้ใช้/รหัสผ่านที่คุณบันทึกไว้ไม่สามารถเข้าสู่ระบบได้ คลิกที่นี่เพื่ออัปเดตข้อมูลของคุณ",
   "ParadoxLoginFailedEmpty": "เซสชันของคุณอาจหมดอายุแล้ว ลองเปิดเกมเพื่อเข้าสู่ระบบอีกครั้ง หรือคลิกที่นี่เพื่อเข้าสู่ระบบผ่าน Skyve",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "ดาวน์โหลดเสร็จสมบูรณ์แล้ว",
   "DownloadStarted": "Download starting...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "ดาวน์โหลดล้มเหลว",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "กำลังดาวน์โหลด...",
@@ -212,5 +216,7 @@
   "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Update Required for Skyve",
   "SkyveVersionBlockedDescription": "Your current Skyve version has become outdated and may not work with the latest mods update.\r\n\r\nFollow the update instructions to learn how to upgrade and get back to creating and playing without issues.",
-  "ViewUpdateInstructions": "View Update Instructions"
+  "ViewUpdateInstructions": "View Update Instructions",
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
 }
