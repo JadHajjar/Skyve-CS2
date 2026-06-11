@@ -218,5 +218,10 @@
   "SkyveVersionBlockedDescription": "Sua versão atual do Skyve ficou desatualizada e pode não funcionar com as últimas atualizações de mods. U\r\n\r\nSiga as instruções de atualização para aprender como fazer o upgrade e voltar a criar e jogar sem problemas.",
   "ViewUpdateInstructions": "Ver Instruções de Atualização",
   "VerifyIntegrity": "Verifique a integridade dos arquivos dos mods",
-  "VerifyIntegrityInfo": "Faltando alguns mods ou tendo problemas inesperados de carregamento? Você pode verificar a integridade dos seus mods para ter certeza que todos foram contabilizados."
+  "VerifyIntegrityInfo": "Faltando alguns mods ou tendo problemas inesperados de carregamento? Você pode verificar a integridade dos seus mods para ter certeza que todos foram contabilizados.",
+  "ConfigLockedTitle": "Configuration Locked",
+  "ConfigLockedInfo": "Configuration in use by another client, you are currently managing mods another client: \"{0}\".",
+  "ConfigLockedRetry": "If you are still making changes, save and close the {0} client, then click Retry.",
+  "ConfigLockedTakeLock": "Otherwise, you can ignore this and continue managing mods here. This will overwrite any changes made in {0}.",
+  "ConfigLockedTakeLockButton": "Ignore & continue"
 }
