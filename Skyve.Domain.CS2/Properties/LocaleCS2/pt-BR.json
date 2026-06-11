@@ -48,12 +48,12 @@
   "ParadoxLoginFailedNoConnection": "Você não está conectado à internet, por favor verifique sua conexão e clique aqui para tentar novamente.",
   "ParadoxLoginFailedBadCredentials": "Não foi possível acessar seu usuário/senha salvos. Clique aqui para atualizar seus dados.",
   "ParadoxLoginFailedEmpty": "A sua sessão provavelmente expirou. Tente iniciar o jogo para entrar novamente, ou clique aqui para entrar pelo Skyve.",
-  "DownloadPending": "Download pending...",
+  "DownloadPending": "Download pendente...",
   "DownloadComplete": "Baixado com sucesso",
   "DownloadStarted": "Download starting...",
-  "CheckingIntegrity": "Checking integrity...",
-  "Processing": "Processing files...",
-  "CleaningUp": "Cleaning up...",
+  "CheckingIntegrity": "Verificando integridade...",
+  "Processing": "Processando arquivos...",
+  "CleaningUp": "Limpando...",
   "DownloadFailed": "Falha no download",
   "DownloadCancelled": "Download cancelled",
   "Downloading": "Baixando...",
@@ -217,6 +217,6 @@
   "SkyveVersionBlockedTitle": "Atualização necessária para o Skyve",
   "SkyveVersionBlockedDescription": "Sua versão atual do Skyve ficou desatualizada e pode não funcionar com as últimas atualizações de mods. U\r\n\r\nSiga as instruções de atualização para aprender como fazer o upgrade e voltar a criar e jogar sem problemas.",
   "ViewUpdateInstructions": "Ver Instruções de Atualização",
-  "VerifyIntegrity": "Verify integrity of mod files",
-  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
+  "VerifyIntegrity": "Verifique a integridade dos arquivos dos mods",
+  "VerifyIntegrityInfo": "Faltando alguns mods ou tendo problemas inesperados de carregamento? Você pode verificar a integridade dos seus mods para ter certeza que todos foram contabilizados."
 }
