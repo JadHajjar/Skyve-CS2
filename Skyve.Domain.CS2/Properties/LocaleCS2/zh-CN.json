@@ -218,5 +218,10 @@
   "SkyveVersionBlockedDescription": "您当前的 Skyve 版本已经过时，可能无法使用最新版模组更新。\n\n请按照更新说明了解如何更新 Skyve，以便顺利地继续创作和游玩。",
   "ViewUpdateInstructions": "查看更新说明",
   "VerifyIntegrity": "验证模组文件的完整性。",
-  "VerifyIntegrityInfo": "缺少某些模组或遇到意外的加载问题？您可以验证模组的完整性，确保所有文件都已安装。"
+  "VerifyIntegrityInfo": "缺少某些模组或遇到意外的加载问题？您可以验证模组的完整性，确保所有文件都已安装。",
+  "ConfigLockedTitle": "Configuration Locked",
+  "ConfigLockedInfo": "Configuration in use by another client, you are currently managing mods another client: \"{0}\".",
+  "ConfigLockedRetry": "If you are still making changes, save and close the {0} client, then click Retry.",
+  "ConfigLockedTakeLock": "Otherwise, you can ignore this and continue managing mods here. This will overwrite any changes made in {0}.",
+  "ConfigLockedTakeLockButton": "Ignore & continue"
 }
