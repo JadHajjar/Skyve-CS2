@@ -53,9 +53,9 @@ partial class ParadoxLoginForm
 			// 
 			// base_P_Container
 			// 
-			this.base_P_Container.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(203)))), ((int)(((byte)(145)))));
+			this.base_P_Container.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(228)))), ((int)(((byte)(199)))), ((int)(((byte)(145)))));
 			this.base_P_Container.Controls.Add(this.TLP);
-			this.base_P_Container.Size = new System.Drawing.Size(354, 432);
+			this.base_P_Container.Size = new System.Drawing.Size(364, 432);
 			// 
 			// TLP
 			// 
@@ -91,7 +91,7 @@ partial class ParadoxLoginForm
 			this.TLP.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.TLP.Size = new System.Drawing.Size(352, 430);
+			this.TLP.Size = new System.Drawing.Size(362, 430);
 			this.TLP.TabIndex = 0;
 			// 
 			// L_Disclaimer
@@ -99,24 +99,23 @@ partial class ParadoxLoginForm
 			this.L_Disclaimer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
 			this.L_Disclaimer.AutoSize = true;
 			this.TLP.SetColumnSpan(this.L_Disclaimer, 2);
-			this.L_Disclaimer.Location = new System.Drawing.Point(61, 359);
+			this.L_Disclaimer.Location = new System.Drawing.Point(66, 378);
 			this.L_Disclaimer.Name = "L_Disclaimer";
-			this.L_Disclaimer.Size = new System.Drawing.Size(229, 13);
+			this.L_Disclaimer.Size = new System.Drawing.Size(229, 19);
 			this.L_Disclaimer.TabIndex = 6;
 			this.L_Disclaimer.Text = "label1";
 			this.L_Disclaimer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// I_Paradox
 			// 
-			this.I_Paradox.ActiveColor = null;
 			this.I_Paradox.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.TLP.SetColumnSpan(this.I_Paradox, 2);
 			this.I_Paradox.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.I_Paradox.Enabled = false;
 			dynamicIcon1.Name = "Paradox";
 			this.I_Paradox.ImageName = dynamicIcon1;
-			this.I_Paradox.Location = new System.Drawing.Point(126, 85);
-			this.I_Paradox.Name = "Paradox";
+			this.I_Paradox.Location = new System.Drawing.Point(131, 60);
+			this.I_Paradox.Name = "I_Paradox";
 			this.I_Paradox.Size = new System.Drawing.Size(99, 85);
 			this.I_Paradox.TabIndex = 0;
 			this.I_Paradox.TabStop = false;
@@ -125,16 +124,16 @@ partial class ParadoxLoginForm
 			// 
 			this.TLP.SetColumnSpan(this.TB_Email, 2);
 			this.TB_Email.LabelText = "";
-			this.TB_Email.Location = new System.Drawing.Point(61, 189);
+			this.TB_Email.Location = new System.Drawing.Point(66, 170);
 			this.TB_Email.Name = "TB_Email";
-			this.TB_Email.Padding = new System.Windows.Forms.Padding(6);
+			this.TB_Email.Padding = new System.Windows.Forms.Padding(7);
 			this.TB_Email.Placeholder = "Email Address";
 			this.TB_Email.Required = true;
 			this.TB_Email.SelectedText = "";
 			this.TB_Email.SelectionLength = 0;
 			this.TB_Email.SelectionStart = 0;
 			this.TB_Email.ShowLabel = false;
-			this.TB_Email.Size = new System.Drawing.Size(200, 39);
+			this.TB_Email.Size = new System.Drawing.Size(200, 51);
 			this.TB_Email.TabIndex = 0;
 			this.TB_Email.Validation = SlickControls.ValidationType.Regex;
 			this.TB_Email.ValidationRegex = "[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-" +
@@ -146,9 +145,9 @@ partial class ParadoxLoginForm
 			dynamicIcon2.Name = "PasswordShow";
 			this.TB_Password.ImageName = dynamicIcon2;
 			this.TB_Password.LabelText = "";
-			this.TB_Password.Location = new System.Drawing.Point(61, 234);
+			this.TB_Password.Location = new System.Drawing.Point(66, 227);
 			this.TB_Password.Name = "TB_Password";
-			this.TB_Password.Padding = new System.Windows.Forms.Padding(6);
+			this.TB_Password.Padding = new System.Windows.Forms.Padding(7, 7, 85, 7);
 			this.TB_Password.Password = true;
 			this.TB_Password.Placeholder = "Password";
 			this.TB_Password.Required = true;
@@ -156,7 +155,7 @@ partial class ParadoxLoginForm
 			this.TB_Password.SelectionLength = 0;
 			this.TB_Password.SelectionStart = 0;
 			this.TB_Password.ShowLabel = false;
-			this.TB_Password.Size = new System.Drawing.Size(200, 39);
+			this.TB_Password.Size = new System.Drawing.Size(200, 51);
 			this.TB_Password.TabIndex = 1;
 			this.TB_Password.IconClicked += new System.EventHandler(this.TB_Password_IconClicked);
 			// 
@@ -165,9 +164,9 @@ partial class ParadoxLoginForm
 			this.L_Title.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
 			this.L_Title.AutoSize = true;
 			this.TLP.SetColumnSpan(this.L_Title, 2);
-			this.L_Title.Location = new System.Drawing.Point(61, 173);
+			this.L_Title.Location = new System.Drawing.Point(66, 148);
 			this.L_Title.Name = "L_Title";
-			this.L_Title.Size = new System.Drawing.Size(229, 13);
+			this.L_Title.Size = new System.Drawing.Size(229, 19);
 			this.L_Title.TabIndex = 2;
 			this.L_Title.Text = "label1";
 			this.L_Title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -175,14 +174,13 @@ partial class ParadoxLoginForm
 			// I_Close
 			// 
 			this.I_Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.I_Close.AnimatedValue = 0;
 			this.I_Close.Color = SlickControls.TopIcon.IconStyle.Close;
 			this.TLP.SetColumnSpan(this.I_Close, 2);
 			this.I_Close.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.I_Close.LoaderSpeed = 1D;
-			this.I_Close.Location = new System.Drawing.Point(300, 0);
+			this.I_Close.Location = new System.Drawing.Point(310, 0);
 			this.I_Close.Margin = new System.Windows.Forms.Padding(0);
-			this.I_Close.Name = "Close";
+			this.I_Close.Name = "I_Close";
 			this.TLP.SetRowSpan(this.I_Close, 2);
 			this.I_Close.Size = new System.Drawing.Size(52, 50);
 			this.I_Close.TabIndex = 4;
@@ -195,9 +193,9 @@ partial class ParadoxLoginForm
 			this.B_Login.AutoSize = true;
 			this.B_Login.ButtonType = SlickControls.ButtonType.Active;
 			this.B_Login.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.B_Login.Location = new System.Drawing.Point(241, 292);
+			this.B_Login.Location = new System.Drawing.Point(235, 303);
 			this.B_Login.Name = "B_Login";
-			this.B_Login.Size = new System.Drawing.Size(49, 28);
+			this.B_Login.Size = new System.Drawing.Size(60, 34);
 			this.B_Login.SpaceTriggersClick = true;
 			this.B_Login.TabIndex = 2;
 			this.B_Login.Text = "Login";
@@ -208,17 +206,14 @@ partial class ParadoxLoginForm
 			this.CB_RememberMe.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.CB_RememberMe.AutoSize = true;
 			this.CB_RememberMe.Checked = false;
-			this.CB_RememberMe.CheckedText = null;
 			this.CB_RememberMe.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.CB_RememberMe.DefaultValue = false;
 			this.CB_RememberMe.EnterTriggersClick = false;
-			this.CB_RememberMe.Location = new System.Drawing.Point(61, 292);
+			this.CB_RememberMe.Location = new System.Drawing.Point(66, 303);
 			this.CB_RememberMe.Name = "CB_RememberMe";
-			this.CB_RememberMe.Size = new System.Drawing.Size(133, 44);
+			this.CB_RememberMe.Size = new System.Drawing.Size(156, 46);
 			this.CB_RememberMe.SpaceTriggersClick = true;
 			this.CB_RememberMe.TabIndex = 3;
 			this.CB_RememberMe.Text = "Remember me";
-			this.CB_RememberMe.UncheckedText = null;
 			this.CB_RememberMe.CheckChanged += new System.EventHandler(this.CB_RememberMe_CheckChanged);
 			// 
 			// L_LoginFailed
@@ -226,9 +221,9 @@ partial class ParadoxLoginForm
 			this.L_LoginFailed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
 			this.L_LoginFailed.AutoSize = true;
 			this.TLP.SetColumnSpan(this.L_LoginFailed, 2);
-			this.L_LoginFailed.Location = new System.Drawing.Point(61, 276);
+			this.L_LoginFailed.Location = new System.Drawing.Point(66, 281);
 			this.L_LoginFailed.Name = "L_LoginFailed";
-			this.L_LoginFailed.Size = new System.Drawing.Size(229, 13);
+			this.L_LoginFailed.Size = new System.Drawing.Size(229, 19);
 			this.L_LoginFailed.TabIndex = 2;
 			this.L_LoginFailed.Text = "label1";
 			this.L_LoginFailed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -239,9 +234,9 @@ partial class ParadoxLoginForm
 			this.L_RememberMeInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
 			this.L_RememberMeInfo.AutoSize = true;
 			this.TLP.SetColumnSpan(this.L_RememberMeInfo, 2);
-			this.L_RememberMeInfo.Location = new System.Drawing.Point(61, 346);
+			this.L_RememberMeInfo.Location = new System.Drawing.Point(66, 359);
 			this.L_RememberMeInfo.Name = "L_RememberMeInfo";
-			this.L_RememberMeInfo.Size = new System.Drawing.Size(229, 13);
+			this.L_RememberMeInfo.Size = new System.Drawing.Size(229, 19);
 			this.L_RememberMeInfo.TabIndex = 2;
 			this.L_RememberMeInfo.Text = "label1";
 			this.L_RememberMeInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -251,7 +246,7 @@ partial class ParadoxLoginForm
 			// 
 			this.TLP.SetColumnSpan(this.spacer, 2);
 			this.spacer.Dock = System.Windows.Forms.DockStyle.Top;
-			this.spacer.Location = new System.Drawing.Point(61, 342);
+			this.spacer.Location = new System.Drawing.Point(66, 355);
 			this.spacer.Name = "spacer";
 			this.spacer.Size = new System.Drawing.Size(229, 1);
 			this.spacer.TabIndex = 7;
@@ -261,9 +256,9 @@ partial class ParadoxLoginForm
 			// ParadoxLoginForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(365, 443);
+			this.ClientSize = new System.Drawing.Size(375, 443);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
-			this.MaximizedBounds = new System.Drawing.Rectangle(0, 0, 1920, 1032);
+			this.MaximizedBounds = new System.Drawing.Rectangle(0, 0, 2560, 1377);
 			this.Name = "ParadoxLoginForm";
 			this.Opacity = 0D;
 			this.ShowIcon = false;

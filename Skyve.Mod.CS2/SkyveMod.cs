@@ -137,7 +137,7 @@ namespace Skyve.Mod.CS2
 		{
 			try
 			{
-				var config = new DlcConfig();
+				DlcConfig config = null;
 
 				try
 				{
@@ -151,11 +151,13 @@ namespace Skyve.Mod.CS2
 					Log.Error(ex);
 				}
 
+				config ??= new DlcConfig();
 				config.AvailableDLCs = new();
 
 				foreach (var item in PlatformManager.instance.EnumerateDLCs())
 				{
 					Log.Info($"{item.backendId} {item.backendName}");
+
 					if (PlatformManager.instance.IsDlcOwned(item) && uint.TryParse(item.backendId, out var id))
 					{
 						config.AvailableDLCs.Add(id);
@@ -177,7 +179,7 @@ namespace Skyve.Mod.CS2
 			var pdxPlatform = PlatformManager.instance.GetPSI<PdxSdkPlatform>("PdxSdk");
 			var context = typeof(PdxSdkPlatform).GetField("m_SDKContext", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(pdxPlatform) as IContext;
 
-			var activePlayset =  context.Mods.GetActivePlaysetId();
+			var activePlayset = await context.Mods.GetActivePlayset();
 			var enabledMods = await context.Mods.GetActivePlaysetEnabledMods();
 			var list = new List<string>() { "N/A" };
 
@@ -188,13 +190,12 @@ namespace Skyve.Mod.CS2
 
 			if (enabledMods.Mods?.Count > 0)
 			{
-				list = enabledMods.Mods.Select(x => $"{x.Name} - v{x.UserModVersion} ({x.Id})").ToList();
+				list = enabledMods.Mods.Select(x => $"{x.DisplayName} - v{x.UserModVersion} ({x.Id})" + (x.LocalData is null ? " [MISSING]" : "")).ToList();
 			}
 
-			Log.Info("\n======= Active Playset =======\n\t" + activePlayset +
+			Log.Info("\n======= Active Playset =======\n\t" + (activePlayset.Playset is null ? "N/A" : $"{activePlayset.Playset.Id} ({activePlayset.Playset.Id})") +
 					"\n======= Enabled Mods =======\n\t" + string.Join("\n\t", list) + "\n============================" +
 					"\n======= Loaded Assemblies =======\n\t" + string.Join("\n\t", GameManager.instance.modManager.ListModsEnabled()) + "\n============================");
-
 		}
 
 		public static bool InstallApp()

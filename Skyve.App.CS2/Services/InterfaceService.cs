@@ -45,6 +45,11 @@ internal class InterfaceService : IAppInterfaceService
 		App.Program.MainForm.TryInvoke(() => new SyncConflictForm(conflicts).ShowDialog(App.Program.MainForm));
 	}
 
+	void IInterfaceService.OpenConfgLockPrompt(string lockHolder)
+	{
+		App.Program.MainForm.TryInvoke(() => new ConfigLockedForm(lockHolder).ShowDialog(App.Program.MainForm));
+	}
+
 	PanelContent IAppInterfaceService.NewPlaysetPanel()
 	{
 		return new PC_PlaysetAdd();

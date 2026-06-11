@@ -90,13 +90,12 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_10.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="1.2.3" />
+  <ModVersion Value="1.2.5" />
   <GameVersion Value="*" />
   <ChangeLog>
-# v1.2.3
+# v1.2.5
 ## Changes
-* Fixes to various download or sync errors.
-* Fixed the compatibility report blocking a log report from being generated.
+* Fixed an issue where Skyve would get stuck trying to get a mod's information in a loop.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

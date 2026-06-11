@@ -95,6 +95,9 @@
 		<Compile Update="UserInterface\Dashboard\D_PdxModsUpdated.cs" />
 		<Compile Update="UserInterface\Dashboard\D_DiskInfo.cs" />
 		<Compile Update="UserInterface\Dashboard\D_Playsets.cs" />
+		<Compile Update="UserInterface\Forms\ConfigLockedForm.cs">
+		  <SubType>Form</SubType>
+		</Compile>
 		<Compile Update="UserInterface\Forms\SyncConflictForm.cs">
 		  <SubType>Form</SubType>
 		</Compile>

@@ -208,7 +208,7 @@ public partial class PC_Utilities : PanelContent
 	private async void B_ResetSteamCache_Click(object sender, EventArgs e)
 	{
 		var img = B_ResetSteamCache.ImageName;
-		_workshopService.ClearCache();
+		await _workshopService.ClearCache();
 		B_ResetSteamCache.ImageName = "Check";
 		await Task.Delay(1500);
 		B_ResetSteamCache.ImageName = img;

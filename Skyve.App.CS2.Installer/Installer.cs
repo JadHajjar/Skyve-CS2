@@ -78,7 +78,9 @@ public class Installer
 
 		await Task.Delay(150);
 
-		File.Copy(Application.ExecutablePath, uninstallPath, true);
+		try
+		{ File.Copy(Application.ExecutablePath, uninstallPath, true); }
+		catch { }
 
 		CreateUninstallRegistry(exePath, uninstallPath);
 

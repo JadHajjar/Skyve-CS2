@@ -454,17 +454,17 @@ internal class ContentManager : IContentManager
 
 			if (package.IsCodeMod)
 			{
-				if (_settings.UserSettings.LinkModAssets && package.LocalData is not null)
-				{
-					await _packageUtil.SetIncluded(package.LocalData.Assets, _modUtil.IsIncluded(package));
-				}
+				//if (_settings.UserSettings.LinkModAssets && package.LocalData is not null)
+				//{
+				//	await _packageUtil.SetIncluded(package.LocalData.Assets, _modUtil.IsIncluded(package));
+				//}
 
 				_modLogicManager.Analyze(package, _modUtil);
 
-				if (!firstTime && !_updateManager.IsPackageKnown(package.LocalData!))
-				{
-					await _modUtil.SetEnabled(package, _modUtil.IsIncluded(package));
-				}
+				//if (!firstTime && !_updateManager.IsPackageKnown(package.LocalData!))
+				//{
+				//	await _modUtil.SetEnabled(package, _modUtil.IsIncluded(package));
+				//}
 			}
 		}
 

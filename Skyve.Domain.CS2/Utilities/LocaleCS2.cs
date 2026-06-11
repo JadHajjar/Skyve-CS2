@@ -94,6 +94,31 @@ public class LocaleCS2 : LocaleHelper, ILocale
 	public static Translation CleaningUp => _instance.GetText("CleaningUp");
 
 	/// <summary>
+	/// Configuration in use by another client, you are currently managing mods another client: "{0}".
+	/// </summary>
+	public static Translation ConfigLockedInfo => _instance.GetText("ConfigLockedInfo");
+
+	/// <summary>
+	/// If you are still making changes, save and close the {0} client, then click Retry.
+	/// </summary>
+	public static Translation ConfigLockedRetry => _instance.GetText("ConfigLockedRetry");
+
+	/// <summary>
+	/// Otherwise, you can ignore this and continue managing mods here. This will overwrite any changes made in {0}.
+	/// </summary>
+	public static Translation ConfigLockedTakeLock => _instance.GetText("ConfigLockedTakeLock");
+
+	/// <summary>
+	/// Ignore &amp; continue
+	/// </summary>
+	public static Translation ConfigLockedTakeLockButton => _instance.GetText("ConfigLockedTakeLockButton");
+
+	/// <summary>
+	/// Configuration Locked
+	/// </summary>
+	public static Translation ConfigLockedTitle => _instance.GetText("ConfigLockedTitle");
+
+	/// <summary>
 	/// <para>Copy PDX Mods ID</para>
 	/// <para>Plural: Copy the selected packages' PDX Mods IDs</para>
 	/// </summary>

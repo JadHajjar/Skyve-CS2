@@ -23,7 +23,7 @@ namespace Skyve.Systems.CS2.Utilities;
 
 internal class ModsUtil : IModUtil
 {
-	private string? currentPlayset;
+	//private string? currentPlayset;
 	//private int currentHistoryIndex;
 	private ModStateCollection modConfig = new();
 	private Dictionary<string, int> _orderedMods = [];
@@ -54,8 +54,8 @@ internal class ModsUtil : IModUtil
 		_serviceProvider = serviceProvider;
 		_interfaceService = interfaceService;
 		_notifier.CompatibilityDataLoaded += BuildLoadOrder;
-		_notifier.PlaysetChanged += Notifier_PlaysetChanged;
-		_notifier.WorkshopSyncEnded += async () => await RefreshModConfig();
+		//_notifier.PlaysetChanged += Notifier_PlaysetChanged;
+		//_notifier.WorkshopSyncEnded += async () => await RefreshModConfig();
 	}
 
 	public bool IsEnabling(IPackageIdentity package)
@@ -63,31 +63,31 @@ internal class ModsUtil : IModUtil
 		return _enabling.Contains(package.GetKey());
 	}
 
-	private void Notifier_PlaysetChanged()
-	{
-		currentPlayset = _serviceProvider.GetService<IPlaysetManager>()?.CurrentPlayset?.Id;
-	}
+	//private void Notifier_PlaysetChanged()
+	//{
+	//	currentPlayset = _serviceProvider.GetService<IPlaysetManager>()?.CurrentPlayset?.Id;
+	//}
 
-	private async Task RefreshModConfig()
-	{
-		//SaveHistory();
+	//private async Task RefreshModConfig()
+	//{
+	//	//SaveHistory();
 
-		var mods = await _workshopService.GetLocalPackages();
+	//	var mods = await _workshopService.GetLocalPackages();
 
-		var config = new ModStateCollection();
+	//	var config = new ModStateCollection();
 
-		foreach (var mod in mods)
-		{
-			foreach (var item in mod.Playsets)
-			{
-				config.SetState(item.PlaysetId
-					, new GenericPackageIdentity(mod.Source, mod.Id, version: item.PreferredVersion)
-					, item.ModIsEnabled);
-			}
-		}
+	//	foreach (var mod in mods)
+	//	{
+	//		foreach (var item in mod.Playsets)
+	//		{
+	//			config.SetState(item.PlaysetId
+	//				, new GenericPackageIdentity(mod.Source, mod.Id, version: item.PreferredVersion)
+	//				, item.ModIsEnabled);
+	//		}
+	//	}
 
-		modConfig = config;
-	}
+	//	modConfig = config;
+	//}
 
 	private async void BuildLoadOrder()
 	{
@@ -96,7 +96,7 @@ internal class ModsUtil : IModUtil
 			return;
 		}
 
-		var playset = await _workshopService.GetActivePlaysetId();
+		var playset = _workshopService.Context?.Mods.GetActivePlaysetId();
 
 		if (playset is null)
 		{
@@ -150,7 +150,7 @@ internal class ModsUtil : IModUtil
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
 		}
 
-		return modConfig.IsIncluded(playsetId ?? currentPlayset, mod, withVersion);
+		return _workshopService.Context?.Mods.IsIncludedInPlayset(new ModBase(mod.Source, mod.Id, withVersion ? mod.Version : null), playsetId, out _) == true;
 	}
 
 	public bool IsEnabled(IPackageIdentity mod, string? playsetId = null, bool withVersion = true)
@@ -162,7 +162,8 @@ internal class ModsUtil : IModUtil
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
 		}
 
-		return modConfig.IsEnabled(playsetId ?? currentPlayset, mod, withVersion);
+		return _workshopService.Context?.Mods.IsIncludedInPlayset(new ModBase(mod.Source, mod.Id, withVersion ? mod.Version : null), playsetId, out var isEnabled) == true
+			&& isEnabled;
 	}
 
 	public async Task SetIncluded(IPackageIdentity mod, bool value, string? playsetId = null, bool withVersion = true, bool promptForDependencies = true)
@@ -188,7 +189,7 @@ internal class ModsUtil : IModUtil
 
 		mods = mods.Where(x => !string.IsNullOrEmpty(x.Source));
 
-		var playset = playsetId ?? currentPlayset;
+		var playset = playsetId ?? _workshopService.Context?.Mods.GetActivePlaysetId();
 
 		if (playset is null || !mods.Any())
 		{
@@ -266,7 +267,7 @@ internal class ModsUtil : IModUtil
 
 		mods = mods.Where(x => !string.IsNullOrEmpty(x.Source));
 
-		var playset = playsetId ?? currentPlayset;
+		var playset = playsetId ?? _workshopService.Context?.Mods.GetActivePlaysetId();
 
 		if (playset is null || !mods.Any())
 		{
@@ -428,14 +429,16 @@ internal class ModsUtil : IModUtil
 
 	public async Task Initialize()
 	{
-		Notifier_PlaysetChanged();
+		//Notifier_PlaysetChanged();
 
-		await RefreshModConfig();
+		//await RefreshModConfig();
 	}
 
 	public string? GetSelectedVersion(IPackageIdentity package, string? playsetId = null)
 	{
-		return modConfig.GetVersion(playsetId ?? currentPlayset, package);
+		playsetId ??= _workshopService.Context?.Mods.GetActivePlaysetId();
+
+		return _workshopService.Context?.Mods.GetLocalModData(new ModBase(package.Source, package.Id))?.Playsets?.FirstOrDefault(x => x.PlaysetId == playsetId)?.PreferredVersion;
 	}
 
 	private async Task<bool> Subscribe(IEnumerable<IPackageIdentity> ids, string? playsetId = null, bool withVersion = true)
@@ -445,7 +448,7 @@ internal class ModsUtil : IModUtil
 			return false;
 		}
 
-		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
+		var currentPlayset = playsetId ?? _workshopService.Context?.Mods.GetActivePlaysetId();
 
 		if (currentPlayset is null)
 		{
@@ -480,7 +483,7 @@ internal class ModsUtil : IModUtil
 			return false;
 		}
 
-		var currentPlayset = playsetId ?? await _workshopService.GetActivePlaysetId();
+		var currentPlayset = playsetId ?? _workshopService.Context?.Mods.GetActivePlaysetId();
 
 		if (currentPlayset is null)
 		{
@@ -503,7 +506,6 @@ internal class ModsUtil : IModUtil
 
 	public bool IsIncludedInOtherPlaysets(ILocalPackageIdentity mod, string? playsetId = null, bool withVersion = true, bool andEnabled = false)
 	{
-		return modConfig.GetIncludedPlaysets(mod, andEnabled, withVersion)
-			.Any(x => x != (playsetId ?? currentPlayset));
+		return _workshopService.Context?.Mods.IsIncludedInPlayset(new ModBase(mod.Source, mod.Id, withVersion ? mod.Version : null), playsetId, out _) == true;
 	}
 }

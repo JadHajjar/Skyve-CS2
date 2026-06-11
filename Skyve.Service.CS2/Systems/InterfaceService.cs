@@ -11,6 +11,10 @@ internal class InterfaceService : IInterfaceService
 		return false;
 	}
 
+	public void OpenConfgLockPrompt(string lockHolder)
+	{
+	}
+
 	public void OpenLogReport(bool save)
 	{
 	}

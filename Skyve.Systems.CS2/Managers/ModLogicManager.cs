@@ -43,7 +43,7 @@ internal class ModLogicManager : IModLogicManager
 		if (IsForbidden(mod.LocalData))
 		{
 			modUtil.SetIncluded(mod, false);
-			modUtil.SetEnabled(mod, false);
+			//modUtil.SetEnabled(mod, false);
 		}
 		else if (IsPseudoMod(mod) && _settings.UserSettings.HidePseudoMods)
 		{

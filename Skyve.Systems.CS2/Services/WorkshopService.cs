@@ -60,10 +60,11 @@ public class WorkshopService : IWorkshopService
 	private readonly PdxUserProcessor _userProcessor;
 	private readonly Regex _modIdRegex = new(@"(\d+)_(\d+)?", RegexOptions.Compiled);
 
+	private bool errorPromptOpen;
 	private bool loginWaitingConnection;
 	private List<IWorkshopTag>? cachedTags;
 
-	private IContext? Context { get; set; }
+	internal IContext? Context { get; set; }
 	public bool IsLoggedIn { get; private set; }
 	public bool IsLoginPending { get; set; } = true;
 	public bool IsAvailable => Context is not null;
@@ -393,10 +394,13 @@ public class WorkshopService : IWorkshopService
 		return result.Success;
 	}
 
-	public void ClearCache()
+	public async Task ClearCache()
 	{
 		_modProcessor.Clear();
 		_userProcessor.Clear();
+
+		if (Context is not null)
+			await Context.Mods.ClearDetailsCache();
 	}
 
 	public IWorkshopInfo? GetInfo(IPackageIdentity identity)
@@ -1307,11 +1311,28 @@ public class WorkshopService : IWorkshopService
 #endif
 			, lineNumber, memberName);
 
-		if (result.Error.Code == ModSyncErrorCode.SyncConflict)
+		if (errorPromptOpen)
 		{
-			var conflicts = await Context!.Mods.GetSyncConflicts();
+			return result;
+		}
 
+		if (result.Error.Code == ModErrorCode.PlaysetConfigLocked)
+		{
+			errorPromptOpen = true;
+
+			var conflicts = await Context!.Mods.GetSyncConflicts();
+			_interfaceService.OpenConfgLockPrompt(conflicts.ConfigurationLockHolder);
+
+			errorPromptOpen = false;
+		}
+		else if (result.Error.Code == ModSyncErrorCode.SyncConflict)
+		{
+			errorPromptOpen = true;
+
+			var conflicts = await Context!.Mods.GetSyncConflicts();
 			_interfaceService.OpenSyncConflictPrompt(conflicts.Conflicts.ToArray(x => new SyncConflictInfo(x)));
+
+			errorPromptOpen = false;
 		}
 
 		return result;

@@ -89,7 +89,7 @@ public partial class InstallingForm : SlickForm
 			}
 			else
 			{
-				MessagePrompt.Show(ex, "Something unexpected went wrong while installing Skyve:");
+				MessagePrompt.Show(ex, "Something unexpected went wrong while installing Skyve");
 			}
 		}
 		finally
@@ -111,7 +111,7 @@ public partial class InstallingForm : SlickForm
 		{
 			Invoke(Hide);
 
-			MessagePrompt.Show(ex, "Something unexpected went wrong while un-installing Skyve:");
+			MessagePrompt.Show(ex, "Something unexpected went wrong while un-installing Skyve");
 		}
 		finally
 		{

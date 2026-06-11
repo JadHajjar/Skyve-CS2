@@ -18,6 +18,7 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 	private readonly WorkshopService _workshopService;
 	private readonly SaveHandler _saveHandler;
 	private readonly INotifier _notifier;
+	private readonly HashSet<string> _failedItems = new();
 
 	public PdxModProcessor(WorkshopService workshopService, SaveHandler saveHandler, INotifier notifier) : base(15, 2500, 0, GetCachedInfo(saveHandler))
 	{
@@ -37,6 +38,8 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 		var failed = false;
 		var results = new ConcurrentDictionary<string, PdxModDetails>();
 
+		entities.RemoveAll(_failedItems.Contains);
+
 		await Task.WhenAll(entities.Select(async item =>
 		{
 			try
@@ -47,6 +50,13 @@ internal class PdxModProcessor : PeriodicProcessor<string, PdxModDetails>
 				{
 					results[item] = package;
 					results[$"{package.Id}_{package.Version}"] = package;
+				}
+				else
+				{
+					lock (this)
+					{
+						_failedItems.Add(item);
+					}
 				}
 			}
 			catch
