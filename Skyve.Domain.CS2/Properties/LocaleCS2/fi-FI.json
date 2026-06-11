@@ -218,5 +218,10 @@
   "SkyveVersionBlockedDescription": "Nykyinen Skyve-versiosi on vanhentunut eikä välttämättä toimi uusimpien modien päivityksen kanssa.\r\n\r\nNoudata päivitysohjeita ja opi päivittämään ja palaamaan luomaan ja pelaamaan ilman ongelmia.",
   "ViewUpdateInstructions": "Näytä Päivitysohjeet",
   "VerifyIntegrity": "Tarkista moditiedostojen eheys",
-  "VerifyIntegrityInfo": "Puuttuvia modeja tai ongelmia latauksessa? Tarkista modiesi eheys."
+  "VerifyIntegrityInfo": "Puuttuvia modeja tai ongelmia latauksessa? Tarkista modiesi eheys.",
+  "ConfigLockedTitle": "Configuration Locked",
+  "ConfigLockedInfo": "Configuration in use by another client, you are currently managing mods another client: \"{0}\".",
+  "ConfigLockedRetry": "If you are still making changes, save and close the {0} client, then click Retry.",
+  "ConfigLockedTakeLock": "Otherwise, you can ignore this and continue managing mods here. This will overwrite any changes made in {0}.",
+  "ConfigLockedTakeLockButton": "Ignore & continue"
 }
