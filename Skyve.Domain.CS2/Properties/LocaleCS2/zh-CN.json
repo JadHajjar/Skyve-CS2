@@ -219,9 +219,9 @@
   "ViewUpdateInstructions": "查看更新说明",
   "VerifyIntegrity": "验证模组文件的完整性。",
   "VerifyIntegrityInfo": "缺少某些模组或遇到意外的加载问题？您可以验证模组的完整性，确保所有文件都已安装。",
-  "ConfigLockedTitle": "Configuration Locked",
-  "ConfigLockedInfo": "Configuration in use by another client, you are currently managing mods another client: \"{0}\".",
-  "ConfigLockedRetry": "If you are still making changes, save and close the {0} client, then click Retry.",
-  "ConfigLockedTakeLock": "Otherwise, you can ignore this and continue managing mods here. This will overwrite any changes made in {0}.",
-  "ConfigLockedTakeLockButton": "Ignore & continue"
+  "ConfigLockedTitle": "配置已锁定",
+  "ConfigLockedInfo": "当前配置正被其他客户端使用，您当前正在管理其他客户端的模组：“{0}”。",
+  "ConfigLockedRetry": "如果您仍在进行更改，请保存并关闭 {0} 客户端，然后点击“重试”。",
+  "ConfigLockedTakeLock": "否则，您可以忽略此操作并继续在此处管理模组。这将覆盖在 {0} 中所做的任何更改。",
+  "ConfigLockedTakeLockButton": "忽略并继续"
 }
