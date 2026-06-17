@@ -159,7 +159,7 @@
   "Tag_Building": "Edificio",
   "Tag_Building Extension": "Extensión de Edificio",
   "Tag_Zone": "Zona",
-  "Tag_Asset Pack": "Asset Pack",
+  "Tag_Asset Pack": "Paquete de recursos",
   "Backup_SaveGames": {
     "One": "Partida guardada",
     "Plural": "{0} partridas guardadas"
@@ -169,8 +169,8 @@
     "Plural": "{0} mapas"
   },
   "Backup_ActivePlayset": {
-    "One": "Playset",
-    "Plural": "{0} playsets"
+    "One": "Conjunto de mods",
+    "Plural": "{0} conjuntos de mods"
   },
   "Backup_SettingsFiles": {
     "One": "Archivos de configuración",
