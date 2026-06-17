@@ -218,5 +218,10 @@
   "SkyveVersionBlockedDescription": "現在のSkyveバージョンが古くなっており、最新のMODのアップデートでは動作しない可能性があります。\r\n\r\nアップグレード方法については、アップグレードの手順に従って、問題なく作成および再生する方法を学んでください。",
   "ViewUpdateInstructions": "更新手順を表示",
   "VerifyIntegrity": "Verify integrity of mod files",
-  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for."
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for.",
+  "ConfigLockedTitle": "Configuration Locked",
+  "ConfigLockedInfo": "Configuration in use by another client, you are currently managing mods another client: \"{0}\".",
+  "ConfigLockedRetry": "If you are still making changes, save and close the {0} client, then click Retry.",
+  "ConfigLockedTakeLock": "Otherwise, you can ignore this and continue managing mods here. This will overwrite any changes made in {0}.",
+  "ConfigLockedTakeLockButton": "Ignore & continue"
 }
