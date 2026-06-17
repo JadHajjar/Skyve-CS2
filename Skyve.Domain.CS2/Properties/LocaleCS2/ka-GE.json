@@ -28,7 +28,7 @@
   "IncludeItem": "თქვენს აქტიურ playset-ში დამატება",
   "ExcludeItem": "თქვენი აქტიური playset-იდან წაშლა",
   "SubscribeToItem": {
-    "One": "თქვენს აქტიურ playset-ში დამატება",
+    "One": "Add to your active playset",
     "Plural": "ამათი თქვენს აქტიურ playset-ში დამატება"
   },
   "IncludeThisItemInAllPlaysets": {
