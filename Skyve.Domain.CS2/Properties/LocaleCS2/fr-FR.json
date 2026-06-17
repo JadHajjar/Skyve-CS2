@@ -28,7 +28,7 @@
   "IncludeItem": "Ajouter à votre playset actif",
   "ExcludeItem": "Retirer de votre playset actif",
   "SubscribeToItem": {
-    "One": "Ajouter cet élément à votre playset actif",
+    "One": "Ajouter à votre playset actif",
     "Plural": "Ajouter ces éléments à votre playset actif"
   },
   "IncludeThisItemInAllPlaysets": {
