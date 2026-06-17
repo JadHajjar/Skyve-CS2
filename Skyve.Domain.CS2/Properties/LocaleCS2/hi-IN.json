@@ -28,7 +28,7 @@
   "IncludeItem": "अपने सक्रिय प्लेसेट में जोड़ें",
   "ExcludeItem": "अपने सक्रिय प्लेसेट से हटाएँ",
   "SubscribeToItem": {
-    "One": "अपने सक्रिय प्लेसेट में जोड़ें",
+    "One": "Add to your active playset",
     "Plural": "इन्हें अपने सक्रिय प्लेसेट में जोड़ें"
   },
   "IncludeThisItemInAllPlaysets": {
