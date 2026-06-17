@@ -155,7 +155,7 @@
   "SearchTime_SixMonths": "6 Kuukautta",
   "SearchTime_Year": "1 Vuosi",
   "TotalBackupSize": "Varmuuskopioiden Koko Yhteensä",
-  "Tag_Static Object": "Prop",
+  "Tag_Static Object": "Rekvisiitta",
   "Tag_Building": "Rakennus",
   "Tag_Building Extension": "Rakennuksen Lisäosa",
   "Tag_Zone": "Alue",
@@ -202,15 +202,15 @@
   "RecentBackups": "Viimeisimmät Varmuuskopiot",
   "DisableLogCleanup": "Poista lokit käytöstä pelin käynnistämisen yhteydessä",
   "DisableLogCleanup_Tip": "Ohittaa lokit -kansion poiston, kun peli käynnistetään Skyven kautta.",
-  "SyncCloud": "Use cloud data",
-  "SyncLocal": "Use local data",
-  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
-  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
-  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
-  "SyncConflictTitle": "Sync Conflicts Detected",
+  "SyncCloud": "Käytä pilvitietoja",
+  "SyncLocal": "Käytä paikallisia tietoja",
+  "SyncCloudInfo": "Lataa kaikki puuttuvat tiedot Paradox Mods -palvelusta ja ratkaisee ristiriidat käyttämällä pilvitietoja paikallisten sijaan.",
+  "SyncLocalInfo": "Lataa kaikki paikalliset tiedot Paradox Mods -palveluun; kaikki playsetit, jotka ovat pilvessä mutta eivät paikallisissa tiedoissasi, ladataan.",
+  "SyncConflictInfo": "Paikallisten playsettiesi ja Paradox Mods -palvelun pilvitietojen välillä havaittiin ristiriitoja. Sinun on valittava ratkaisu alta, ennen kuin voit saada päivityksiä modeihisi.",
+  "SyncConflictTitle": "Synkronointiristiriitoja havaittu",
   "SyncAffectedPlaysets": {
-    "One": "Affected playset: {1}",
-    "Plural": "Affected playsets: {1}"
+    "One": "Vaikutuksen kohteena oleva playset: {1}",
+    "Plural": "Vaikutuksen kohteena olevat playsetit: {1}"
   },
   "TitleDesc": "Otsikko ja Kuvaus",
   "EditModInfo": "Muokkaa tämän modin tietoja",
@@ -219,9 +219,9 @@
   "ViewUpdateInstructions": "Näytä Päivitysohjeet",
   "VerifyIntegrity": "Tarkista moditiedostojen eheys",
   "VerifyIntegrityInfo": "Puuttuvia modeja tai ongelmia latauksessa? Tarkista modiesi eheys.",
-  "ConfigLockedTitle": "Configuration Locked",
-  "ConfigLockedInfo": "Configuration in use by another client, you are currently managing mods another client: \"{0}\".",
-  "ConfigLockedRetry": "If you are still making changes, save and close the {0} client, then click Retry.",
-  "ConfigLockedTakeLock": "Otherwise, you can ignore this and continue managing mods here. This will overwrite any changes made in {0}.",
-  "ConfigLockedTakeLockButton": "Ignore & continue"
+  "ConfigLockedTitle": "Määritykset lukittu",
+  "ConfigLockedInfo": "Määritykset ovat toisen asiakassovelluksen käytössä, hallitset parhaillaan modeja toisessa asiakassovelluksessa: \"{0}\".",
+  "ConfigLockedRetry": "Jos teet edelleen muutoksia, tallenna ja sulje asiakassovellus {0} ja napsauta sitten Yritä uudelleen.",
+  "ConfigLockedTakeLock": "Muussa tapauksessa voit jättää tämän huomiotta ja jatkaa modien hallintaa täällä. Tämä korvaa kaikki asiakassovelluksessa {0} tehdyt muutokset.",
+  "ConfigLockedTakeLockButton": "Ohita ja jatka"
 }
