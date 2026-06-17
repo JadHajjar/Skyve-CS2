@@ -28,7 +28,7 @@
   "IncludeItem": "আপনার সক্রিয় প্লেসেটে যোগ করুন",
   "ExcludeItem": "আপনার সক্রিয় প্লেসেট থেকে সরান",
   "SubscribeToItem": {
-    "One": "Add to your active playset",
+    "One": "আপনার সক্রিয় প্লেসেটে যোগ করুন",
     "Plural": "এগুলো আপনার সক্রিয় প্লেসেটে যোগ করুন"
   },
   "IncludeThisItemInAllPlaysets": {
