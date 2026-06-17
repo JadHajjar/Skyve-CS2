@@ -50,12 +50,12 @@
   "ParadoxLoginFailedEmpty": "Vaše relace pravděpodobně vypršela. Zkuste spustit hru a znovu se přihlásit, nebo klikněte zde pro přihlášení přes Skyve.",
   "DownloadPending": "Čeká se na stažení...",
   "DownloadComplete": "Stahování dokončeno",
-  "DownloadStarted": "Zahajuje se stahování...",
+  "DownloadStarted": "Download starting...",
   "CheckingIntegrity": "Kontrola integrity...",
   "Processing": "Zpracování souborů...",
   "CleaningUp": "Úklid...",
   "DownloadFailed": "Stahování selhalo",
-  "DownloadCancelled": "Stahování zrušeno",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "Stahuji...",
   "ModsDownloadFailed": {
     "One": "Mód se nepodařilo stáhnout",
@@ -77,7 +77,7 @@
   "LogLevel": "Úrovně logu",
   "ParadoxAccount": "Účet Paradox",
   "LoggingIn": "Přihlašování...",
-  "Logout": "Odhlásit se",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "Nejste přihlášeni do Paradoxu, zkontrolujte vaše oznámení pro více informací.",
   "HideUserSection": "Skrýt profil v hlavním menu",
   "DeveloperMode": "Povolit Vývojářský Mód",
@@ -169,7 +169,7 @@
     "Plural": "{0} mapy"
   },
   "Backup_ActivePlayset": {
-    "One": "Sada",
+    "One": "Playset",
     "Plural": "{0} playsety"
   },
   "Backup_SettingsFiles": {
@@ -202,18 +202,18 @@
   "RecentBackups": "Nedávné zálohy",
   "DisableLogCleanup": "Zakázat odstranění logů při spuštění hry",
   "DisableLogCleanup_Tip": "Přeskočí smazání složky Logs při spuštění hry přes Skyve.",
-  "SyncCloud": "Použít cloudová data",
-  "SyncLocal": "Použít místní data",
-  "SyncCloudInfo": "Stáhne všechny chybějící informace z Paradox Mods a vyřeší konflikty použitím cloudových dat namísto místních.",
-  "SyncLocalInfo": "Nahraje všechny místní informace do Paradox Mods, jakákoli sada, která je v cloudu, ale ne ve vašich místních datech, bude stažena.",
-  "SyncConflictInfo": "Mezi vašimi místními sadami a cloudovými daty na Paradox Mods byly zjištěny konflikty. Než budete moci získat aktualizace svých modů, musíte níže vybrat řešení.",
-  "SyncConflictTitle": "Zjištěny konflikty synchronizace",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
   "SyncAffectedPlaysets": {
-    "One": "Dotčená sada: {1}",
-    "Plural": "Dotčené sady: {1}"
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
   },
-  "TitleDesc": "Název a popisy",
-  "EditModInfo": "Upravit informace o tomto modu",
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Vyžadována aktualizace pro Skyve",
   "SkyveVersionBlockedDescription": "Vaše aktuální verze Skyve je zastaralá a nemusí fungovat s nejnovější aktualizací módů.\r\n\r\nPostupujte podle instrukcí o aktualizaci, abyste se dozvěděli jak aktualizovat a vrátit se k vytváření a hraní bez problémů.",
   "ViewUpdateInstructions": "Zobrazit pokyny k aktualizaci",
