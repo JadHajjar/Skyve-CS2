@@ -219,9 +219,9 @@
   "ViewUpdateInstructions": "Ver instruções de atualização",
   "VerifyIntegrity": "Verificar integridade dos ficheiros do mod",
   "VerifyIntegrityInfo": "Falta algum mod ou estás a ter problemas inesperados de carregamento? Podes verificar a integridade dos teus mods para garantir que todos os ficheiros estão presentes.",
-  "ConfigLockedTitle": "Configuration Locked",
-  "ConfigLockedInfo": "Configuration in use by another client, you are currently managing mods another client: \"{0}\".",
-  "ConfigLockedRetry": "If you are still making changes, save and close the {0} client, then click Retry.",
-  "ConfigLockedTakeLock": "Otherwise, you can ignore this and continue managing mods here. This will overwrite any changes made in {0}.",
-  "ConfigLockedTakeLockButton": "Ignore & continue"
+  "ConfigLockedTitle": "Configuração bloqueada",
+  "ConfigLockedInfo": "Configuração em utilização por outro cliente, estás a gerir mods de outro cliente: \"{0}\".",
+  "ConfigLockedRetry": "Se ainda estiveres a fazer alterações, guarda e fecha o cliente {0} e clica em Tentar novamente.",
+  "ConfigLockedTakeLock": "Caso contrário, podes ignorar isso e continuar a gerir mods aqui. Isto substituirá quaisquer alterações feitas em {0}.",
+  "ConfigLockedTakeLockButton": "Ignorar e continuar"
 }
