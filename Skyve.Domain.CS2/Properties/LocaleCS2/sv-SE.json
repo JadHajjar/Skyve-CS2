@@ -50,12 +50,12 @@
   "ParadoxLoginFailedEmpty": "Din session har sannolikt löpt ut. Prova att starta spelet för att logga in igen, eller klicka här för att logga in via Skyve.",
   "DownloadPending": "Nedladdning väntar...",
   "DownloadComplete": "Nedladdning slutförd",
-  "DownloadStarted": "Nedladdning startar...",
+  "DownloadStarted": "Download starting...",
   "CheckingIntegrity": "Kontrollerar integritet...",
   "Processing": "Bearbetar filer...",
   "CleaningUp": "Rensar upp...",
   "DownloadFailed": "Nedladdning misslyckades",
-  "DownloadCancelled": "Nedladdning avbruten",
+  "DownloadCancelled": "Download cancelled",
   "Downloading": "Hämtar...",
   "ModsDownloadFailed": {
     "One": "En mod gick inte att ladda ner",
@@ -77,7 +77,7 @@
   "LogLevel": "Loggnivå",
   "ParadoxAccount": "Paradox konto",
   "LoggingIn": "Loggar in...",
-  "Logout": "Logga ut",
+  "Logout": "Log out",
   "NotLoggedInCheckNotification": "Du är inte inloggad på Paradox, kontrollera dina aviseringar för mer information.",
   "HideUserSection": "Dölj din profil i huvudmenyn",
   "DeveloperMode": "Aktivera utvecklarläge",
@@ -155,13 +155,13 @@
   "SearchTime_SixMonths": "6 månader",
   "SearchTime_Year": "1 år",
   "TotalBackupSize": "Total storlek på säkerhetskopior",
-  "Tag_Static Object": "Rekvisita",
+  "Tag_Static Object": "Prop",
   "Tag_Building": "Byggnad",
   "Tag_Building Extension": "Bygger tillägg",
   "Tag_Zone": "Zon",
   "Tag_Asset Pack": "Tillgång Paket",
   "Backup_SaveGames": {
-    "One": "Sparfil",
+    "One": "Savegame",
     "Plural": "{0} sparegam"
   },
   "Backup_Maps": {
@@ -178,7 +178,7 @@
   },
   "Backup_ModsSettingsFiles": {
     "One": "Mod inställningar mappar",
-    "Plural": "{0} moddinställningsmappar"
+    "Plural": "{0} mod settings folders"
   },
   "Backup_LocalMods": {
     "One": "Lokalt mod",
@@ -188,7 +188,7 @@
   "ParadoxContextFailedInfo": "Något gör att paradox backend misslyckas.\r\nKlicka på detta meddelande för att försöka reparera det.\r\n\r\nOm reparationen inte lyckas, be om hjälp på tech supportforum.",
   "BackupStartingNow": "Automatisk säkerhetskopiering startar nu...",
   "BackupServiceUnavailable": "Tjänsten Skyve är inte installerad. Automatiska säkerhetskopior fungerar bara när appen Skyve är öppen.",
-  "BackupServiceAvailable": "Skyve-tjänsten online",
+  "BackupServiceAvailable": "Skyve service online",
   "NextScheduledBackup": "Nästa schemalagda säkerhetskopiering är {0}",
   "LastSettingsBackup": "Senaste säkerhetskopia av inställningar var {0}",
   "NoSettingsBackup": "Inga tillgängliga inställningar är tillgängliga",
@@ -202,18 +202,18 @@
   "RecentBackups": "Senaste säkerhetskopior",
   "DisableLogCleanup": "Inaktivera rensning av loggar när spelet startar",
   "DisableLogCleanup_Tip": "Hoppa över borttagning av Loggmappen när spelet startar via Skyve.",
-  "SyncCloud": "Använd molndata",
-  "SyncLocal": "Använd lokal data",
-  "SyncCloudInfo": "Laddar ner all saknad information från Paradox Mods och löser konflikter genom att använda molndata istället för den lokala.",
-  "SyncLocalInfo": "Laddar upp all lokal information till Paradox Mods; alla speluppsättningar som finns i molnet men inte i din lokala data laddas ner.",
-  "SyncConflictInfo": "Konflikter upptäcktes mellan dina lokala speluppsättningar och molndatan på Paradox Mods. Du måste välja en lösning nedan innan du kan få uppdateringar till dina moddar.",
-  "SyncConflictTitle": "Synkroniseringskonflikter upptäckta",
+  "SyncCloud": "Use cloud data",
+  "SyncLocal": "Use local data",
+  "SyncCloudInfo": "Downloads any missing information from Paradox Mods, and resolves conflicts by using the cloud data instead of the local one.",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
+  "SyncConflictInfo": "Some conflicts were detected between your local playsets and the cloud data on Paradox Mods. You need to select a resolution below before you can get updates to your mods.",
+  "SyncConflictTitle": "Sync Conflicts Detected",
   "SyncAffectedPlaysets": {
-    "One": "Påverkad speluppsättning: {1}",
-    "Plural": "Påverkade speluppsättningar: {1}"
+    "One": "Affected playset: {1}",
+    "Plural": "Affected playsets: {1}"
   },
-  "TitleDesc": "Titel och beskrivningar",
-  "EditModInfo": "Redigera den här moddens information",
+  "TitleDesc": "Title & Descriptions",
+  "EditModInfo": "Edit this mod's information",
   "SkyveVersionBlockedTitle": "Uppdatering krävs för Skyve",
   "SkyveVersionBlockedDescription": "Din nuvarande Skyve-version har blivit föråldrad och kanske inte fungerar med den senaste mods-uppdateringen.\r\n\r\nFölj uppdateringsinstruktionerna för att lära dig att uppgradera och återgå till att skapa och spela utan problem.",
   "ViewUpdateInstructions": "Visa uppdateringsinstruktioner",
