@@ -205,7 +205,7 @@
   "SyncCloud": "Usar dados da nuvem",
   "SyncLocal": "Usar dados locais",
   "SyncCloudInfo": "Baixa qualquer informação ausente do Paradox Mods e resolve conflitos usando os dados da nuvem em vez dos locais.",
-  "SyncLocalInfo": "",
+  "SyncLocalInfo": "Uploads all local information to Paradox Mods, any playset that is in the cloud but not in your local data will be downloaded.",
   "SyncConflictInfo": "Alguns conflitos foram detectados entre seus playsets locais e os dados da nuvem no Paradox Mods. Você precisa selecionar uma resolução abaixo antes de poder receber atualizações para seus mods.",
   "SyncConflictTitle": "Conflitos de sincronização detectados",
   "SyncAffectedPlaysets": {
