@@ -1,6 +1,6 @@
 {
   "StartCities": "Begin Cities: Skylines",
-  "StopCities": "Cities: Skylines stoppen",
+  "StopCities": "Stop Cities: Skylines",
   "NoWorkshop": "Geen workshoppakketten",
   "ExcludeAll": "Verwijder alle items van je actieve playset",
   "ExcludeAllDisabled": "Verwijder alle uitgeschakelde items van je actieve playset",
@@ -75,7 +75,7 @@
   "VoteMod": "Like deze mod",
   "UnVoteMod": "Un-like deze mod",
   "LogLevel": "Log niveau",
-  "ParadoxAccount": "Paradox-account",
+  "ParadoxAccount": "Paradox Account",
   "LoggingIn": "Bezig met inloggen",
   "Logout": "Afmelden",
   "NotLoggedInCheckNotification": "U bent niet ingelogd bij Paradox, controleer uw meldingen voor meer informatie.",
@@ -159,9 +159,9 @@
   "Tag_Building": "Gebouw",
   "Tag_Building Extension": "Bouw Extensie",
   "Tag_Zone": "Zone:",
-  "Tag_Asset Pack": "Asset-pakket",
+  "Tag_Asset Pack": "Asset Pack",
   "Backup_SaveGames": {
-    "One": "Opgeslagen spel",
+    "One": "Savegame",
     "Plural": "{0} spaarpotten"
   },
   "Backup_Maps": {
@@ -188,7 +188,7 @@
   "ParadoxContextFailedInfo": "Iets zorgt ervoor dat de paradox backend mislukt.\r\nKlik op dit bericht om het te proberen en te repareren.\r\n\r\nAls de reparatie niet succesvol is, vraag om hulp op tech support forums.",
   "BackupStartingNow": "Automatische back-up begint nu...",
   "BackupServiceUnavailable": "De Skyve service is niet geïnstalleerd. Automatische back-ups werken alleen als de Skyve app is geopend.",
-  "BackupServiceAvailable": "Skyve-service online",
+  "BackupServiceAvailable": "Skyve service online",
   "NextScheduledBackup": "Volgende geplande back-up is {0}",
   "LastSettingsBackup": "Laatste instellingen back-up was {0}",
   "NoSettingsBackup": "Geen instellingen back-up beschikbaar",

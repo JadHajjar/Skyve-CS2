@@ -161,8 +161,8 @@
   "Tag_Zone": "Alan",
   "Tag_Asset Pack": "Asset Paketi",
   "Backup_SaveGames": {
-    "One": "Kayıt dosyası",
-    "Plural": "{0} kayıt dosyası"
+    "One": "Savegame",
+    "Plural": "{0} savegames"
   },
   "Backup_Maps": {
     "One": "Harita",
