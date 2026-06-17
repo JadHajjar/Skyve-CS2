@@ -48,12 +48,12 @@
   "ParadoxLoginFailedNoConnection": "İnternet'e bağlı değilsiniz. Lütfen bağlantınızı kontrol edin ve buraya tıklayarak tekrar deneyin.",
   "ParadoxLoginFailedBadCredentials": "Kayıtlı kullanıcı adı/şifre ile giriş yapılamadı. Bilgilerinizi güncellemek için buraya tıklayın.",
   "ParadoxLoginFailedEmpty": "Oturumunuzun süresi doldu. Tekrar giriş yapmak için ya oyunu başlatıp giriş yapın ya da Skyve üzerinden giriş yapmak için buraya tıklayın.",
-  "DownloadPending": "İndirme bekleniyor...",
+  "DownloadPending": "Download pending...",
   "DownloadComplete": "İndirme tamamlandı",
   "DownloadStarted": "İndirme başlatılıyor...",
-  "CheckingIntegrity": "Bütünlük kontrol ediliyor...",
-  "Processing": "Dosyalar işleniyor...",
-  "CleaningUp": "Temizleniyor...",
+  "CheckingIntegrity": "Checking integrity...",
+  "Processing": "Processing files...",
+  "CleaningUp": "Cleaning up...",
   "DownloadFailed": "İndirme başarısız",
   "DownloadCancelled": "İndirme iptal edildi",
   "Downloading": "İndiriliyor...",
@@ -161,8 +161,8 @@
   "Tag_Zone": "Alan",
   "Tag_Asset Pack": "Asset Paketi",
   "Backup_SaveGames": {
-    "One": "Kayıt dosyası",
-    "Plural": "{0} kayıt dosyası"
+    "One": "Savegame",
+    "Plural": "{0} savegames"
   },
   "Backup_Maps": {
     "One": "Harita",
@@ -217,11 +217,11 @@
   "SkyveVersionBlockedTitle": "Skyve için Güncelleme Gerekli",
   "SkyveVersionBlockedDescription": "Mevcut Skyve sürümün artık güncel değil ve en son mod güncellemeleriyle uyumlu çalışmayabilir.\n\nSorunsuz şekilde tekrar oluşturmak ve oynamak için nasıl güncelleyeceğini anlatan talimatları takip et.",
   "ViewUpdateInstructions": "Güncelleme Talimatlarını Görüntüle",
-  "VerifyIntegrity": "Mod dosyalarının bütünlüğünü doğrula",
-  "VerifyIntegrityInfo": "Bazı modlar mı eksik ya da beklenmedik yükleme sorunları mı yaşıyorsunuz? Tüm dosyalarının yerinde olduğundan emin olmak için modlarınızın bütünlüğünü doğrulayabilirsiniz.",
-  "ConfigLockedTitle": "Yapılandırma Kilitli",
-  "ConfigLockedInfo": "Yapılandırma başka bir istemci tarafından kullanılıyor, şu anda modları başka bir istemcide yönetiyorsunuz: \"{0}\".",
-  "ConfigLockedRetry": "Hâlâ değişiklik yapıyorsanız, {0} istemcisini kaydedip kapatın, ardından Yeniden Dene'ye tıklayın.",
-  "ConfigLockedTakeLock": "Aksi takdirde bunu yok sayıp modları burada yönetmeye devam edebilirsiniz. Bu, {0} içinde yapılan tüm değişikliklerin üzerine yazacaktır.",
-  "ConfigLockedTakeLockButton": "Yok say ve devam et"
+  "VerifyIntegrity": "Verify integrity of mod files",
+  "VerifyIntegrityInfo": "Missing some mods or having unexpected loading issues? You can verify your mods' integrity to make sure all their files are accounted for.",
+  "ConfigLockedTitle": "Configuration Locked",
+  "ConfigLockedInfo": "Configuration in use by another client, you are currently managing mods another client: \"{0}\".",
+  "ConfigLockedRetry": "If you are still making changes, save and close the {0} client, then click Retry.",
+  "ConfigLockedTakeLock": "Otherwise, you can ignore this and continue managing mods here. This will overwrite any changes made in {0}.",
+  "ConfigLockedTakeLockButton": "Ignore & continue"
 }
