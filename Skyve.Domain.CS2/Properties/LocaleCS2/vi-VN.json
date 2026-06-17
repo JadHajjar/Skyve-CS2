@@ -28,7 +28,7 @@
   "IncludeItem": "Thêm vào bộ chơi đang hoạt động",
   "ExcludeItem": "Xóa khỏi bộ chơi đang hoạt động",
   "SubscribeToItem": {
-    "One": "Thêm vào bộ chơi đang hoạt động",
+    "One": "Add to your active playset",
     "Plural": "Thêm các mục này vào bộ chơi đang hoạt động"
   },
   "IncludeThisItemInAllPlaysets": {
