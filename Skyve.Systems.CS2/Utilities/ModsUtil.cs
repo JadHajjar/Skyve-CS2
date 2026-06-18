@@ -150,6 +150,8 @@ internal class ModsUtil : IModUtil
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
 		}
 
+		playsetId ??= _workshopService.Context?.Mods.GetActivePlaysetId();
+
 		return _workshopService.Context?.Mods.IsIncludedInPlayset(new ModBase(mod.Source, mod.Id, withVersion ? mod.Version : null), playsetId, out _) == true;
 	}
 
@@ -161,6 +163,8 @@ internal class ModsUtil : IModUtil
 
 			return folder is null or "" || Path.GetFileName(folder)[0] != '.';
 		}
+
+		playsetId ??= _workshopService.Context?.Mods.GetActivePlaysetId();
 
 		return _workshopService.Context?.Mods.IsIncludedInPlayset(new ModBase(mod.Source, mod.Id, withVersion ? mod.Version : null), playsetId, out var isEnabled) == true
 			&& isEnabled;
@@ -506,6 +510,8 @@ internal class ModsUtil : IModUtil
 
 	public bool IsIncludedInOtherPlaysets(ILocalPackageIdentity mod, string? playsetId = null, bool withVersion = true, bool andEnabled = false)
 	{
+		playsetId ??= _workshopService.Context?.Mods.GetActivePlaysetId();
+
 		return _workshopService.Context?.Mods.IsIncludedInPlayset(new ModBase(mod.Source, mod.Id, withVersion ? mod.Version : null), playsetId, out _) == true;
 	}
 }
