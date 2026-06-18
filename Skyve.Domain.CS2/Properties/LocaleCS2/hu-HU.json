@@ -170,7 +170,7 @@
   },
   "Backup_ActivePlayset": {
     "One": "Profil",
-    "Plural": ""
+    "Plural": "{0} playsets"
   },
   "Backup_SettingsFiles": {
     "One": "Beállítási fájl",
