@@ -627,7 +627,7 @@ public class WorkshopService : IWorkshopService
 
 		var gameData = await ProcessResult(GameData);
 
-		return cachedTags = gameData.Filters.Tags.Where(x => !x.Hidden).OrderBy(x => x.Order).ToList(x => GetNestedTag(x, 0));
+		return cachedTags = gameData.Filters?.Tags?.Where(x => x?.Hidden == false).OrderBy(x => x.Order).ToList(x => GetNestedTag(x, 0)) ?? [];
 	}
 
 	private IWorkshopTag GetNestedTag(ModTagNode tag, int depth)
@@ -638,7 +638,7 @@ public class WorkshopService : IWorkshopService
 			IsSelectable = tag.Selectable,
 			Order = tag.Order,
 			Depth = depth,
-			Children = tag.Children?.Where(x => !x.Hidden).OrderBy(x => x.Order).ToArray(x => GetNestedTag(x, depth + 1)) ?? []
+			Children = tag.Children?.Where(x => x?.Hidden == false).OrderBy(x => x.Order).ToArray(x => GetNestedTag(x, depth + 1)) ?? []
 		};
 	}
 

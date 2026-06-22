@@ -90,12 +90,19 @@ You can also customize the theme, colors, and UI scale of the app in the Theme C
   <Screenshot Value="Properties/Release/Screenshot_10.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/skyve.1644654" />
-  <ModVersion Value="1.2.5" />
+  <ModVersion Value="1.3.0" />
   <GameVersion Value="*" />
   <ChangeLog>
-# v1.2.5
-## Changes
-* Fixed an issue where Skyve would get stuck trying to get a mod's information in a loop.
+# v1.3.0
+## Summer Solstice Update
+* Updated to the PDX SDK v2.2.3
+* Updated the inclusion &amp; enabled check within Skyve to be taken directly from the SDK rather than being managed by Skyve.
+* Updated the cache clearing buttons in the Utilities tab.
+* Updated the PDX Mods cache clear button to also clear the SDK cache.
+* Added the configuration locked popup that shows when someone other than Skyve has a hold over the config files.
+* Fixed not being able to import a playset file.
+* Fixed an issue where a mod would incorrectly be unsubscribed on startup.
+* Added missing translations for all supported languages.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/Skyve" />

@@ -21,6 +21,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using SourceType = PDX.SDK.Contracts.Service.Mods.Models.SourceType;
+
 namespace Skyve.Systems.CS2.Managers;
 
 internal class PlaysetManager : IPlaysetManager
@@ -339,6 +341,8 @@ internal class PlaysetManager : IPlaysetManager
 
 		if (playset.SubscribedMods is not null)
 		{
+			playset.SubscribedMods.Foreach(x => x.Value.Source = SourceType.PdxMods);
+
 			await _packageUtil.SetIncluded(playset.SubscribedMods.Values, true, newPlayset.Id);
 
 			await _packageUtil.SetEnabled(playset.SubscribedMods.Values.Where(x => !x.IsEnabled), false, newPlayset.Id);
@@ -346,6 +350,8 @@ internal class PlaysetManager : IPlaysetManager
 
 		if (playset.LocalMods is not null)
 		{
+			playset.LocalMods.Foreach(x => x.Value.Source = SourceType.PdxMods);
+
 			await _packageUtil.SetIncluded(playset.LocalMods.Values, true, newPlayset.Id);
 
 			await _packageUtil.SetEnabled(playset.LocalMods.Values.Where(x => !x.IsEnabled), false, newPlayset.Id);

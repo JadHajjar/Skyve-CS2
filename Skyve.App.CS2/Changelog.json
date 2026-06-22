@@ -13,7 +13,9 @@
           "Updated the cache clearing buttons in the Utilities tab.",
           "Updated the PDX Mods cache clear button to also clear the SDK cache.",
           "Added the configuration locked popup that shows when someone other than Skyve has a hold over the config files.",
-          "Fixed an issue where a mod would incorrectly be unsubscribed on startup."
+          "Fixed not being able to import a playset file.",
+          "Fixed an issue where a mod would incorrectly be unsubscribed on startup.",
+          "Added missing translations for all supported languages."
         ]
       }
     ]
