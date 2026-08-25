@@ -155,13 +155,13 @@
   "SearchTime_SixMonths": "6 maanden",
   "SearchTime_Year": "1 jaar",
   "TotalBackupSize": "Totale grootte van back-ups",
-  "Tag_Static Object": "Prop",
+  "Tag_Static Object": "Rekwisiet",
   "Tag_Building": "Gebouw",
   "Tag_Building Extension": "Bouw Extensie",
   "Tag_Zone": "Zone:",
-  "Tag_Asset Pack": "Asset Pack",
+  "Tag_Asset Pack": "Assetpack",
   "Backup_SaveGames": {
-    "One": "Savegame",
+    "One": "Spelbestand",
     "Plural": "{0} spaarpotten"
   },
   "Backup_Maps": {
