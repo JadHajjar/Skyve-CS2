@@ -47,7 +47,7 @@
   "ParadoxLoginFailedTitle": "无法登录到 Paradox Mods",
   "ParadoxLoginFailedNoConnection": "您的网络连接异常，请检查您的连接，然后点击此处重试。",
   "ParadoxLoginFailedBadCredentials": "使用已保存的用户名或密码登录失败。请点击此处更新您的信息。",
-  "ParadoxLoginFailedEmpty": "您的会话可能已过期。请尝试重新启动游戏登录，或点击此处通过 Skyve 登录。",
+  "ParadoxLoginFailedEmpty": "您的会话可能已过期。请尝试启动游戏来重新登录，或点击此处通过 Skyve 登录。",
   "DownloadPending": "等待下载...",
   "DownloadComplete": "下载完毕",
   "DownloadStarted": "正在开始下载...",
@@ -85,7 +85,7 @@
   "LogsToPlayerLog": "将日志复制到 Player.log",
   "InvalidFolderSettings": "检测到无效设置",
   "InvalidFolderSettingsInfo": "Skyve 无法找到都市：天际线2正确的数据文件夹。\n\n点击此处以手动选择数据文件夹。",
-  "SkyvenotSetUpInfo": "Skyve 尚未设置完毕。请先启用 Skyve ，然后启动都市：天际线2以完成设置。\n\n请确保模组已成功加载。如果加载失败，请尝试创建一个仅包含 Skyve 的新配组。",
+  "SkyvenotSetUpInfo": "Skyve 尚未设置完毕。请先启用 Skyve 模组，然后启动都市：天际线2以完成设置。\n\n请确保模组已成功加载。如果加载失败，请尝试创建一个仅包含 Skyve 的新配组。",
   "InvalidFolderSettingsFail": "您选择的路径不正确。请在您的 AppData 文件夹中选择“Cities: Skylines II”文件夹。",
   "DefaultLocation": "默认用户数据位置",
   "JunctionTitle": "自定义内容存储位置",
@@ -115,7 +115,7 @@
   "UsedOutOfSpace": "{1}盘 共 {0}",
   "LowSpaceCreateJunction": {
     "Zero": "你的磁盘空间即将耗尽，请清理部分存储空间或增加额外的硬盘。",
-    "One": "你的磁盘空间即将耗尽，请前往设置选项，更改游戏内容的存储位置。"
+    "One": "你的磁盘空间即将耗尽，请前往设置页面，更改游戏内容的存储位置。"
   },
   "ModsYouAreAddingRequireDependencies": {
     "One": "“{1}”需要依赖项",
