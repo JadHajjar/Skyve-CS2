@@ -29,14 +29,14 @@
   "ExcludeItem": "Aus aktivem Spielset entfernen",
   "SubscribeToItem": {
     "One": "Zum aktiven Spielset hinzufügen",
-    "Plural": "Füge diese zu deinem Spielset Playset hinzu"
+    "Plural": "Füge diese zu Deinem Spielset hinzu"
   },
   "IncludeThisItemInAllPlaysets": {
     "One": "Zu allen Spielsets hinzufügen",
     "Plural": "Ausgewählte Elemente zu allen Spielsets hinzufügen"
   },
   "ExcludeThisItemInAllPlaysets": {
-    "One": "Entferne von all deinen Spielsets",
+    "One": "Entferne aus all Deinen Spielsets",
     "Plural": "Ausgewählte Elemente aus allen Spielsets entfernen"
   },
   "PackageIsRemoved": "'{0}' ist auf PDX Mods nicht mehr verfügbar",
@@ -45,9 +45,9 @@
   "OpenCitiesAppData": "C:S II's AppData Ordner öffnen",
   "ResetSteamCache": "PDX Mods Cache leeren",
   "ParadoxLoginFailedTitle": "Konnte dich nicht bei PDX Mods anmelden",
-  "ParadoxLoginFailedNoConnection": "Du musst mit dem Internet verbunden sein, um dich anzumelden. Bitte überprüfe deine Internetverbindung und versuche es erneut.",
+  "ParadoxLoginFailedNoConnection": "Du musst mit dem Internet verbunden sein, um Dich anzumelden. Bitte überprüfe Deine Internetverbindung und versuche es erneut.",
   "ParadoxLoginFailedBadCredentials": "Dein gespeicherter Benutzername/Passwort konnte sich nicht einloggen. Klicke hier, um Deine Daten zu aktualisieren.",
-  "ParadoxLoginFailedEmpty": "Deine Sitzung ist wahrscheinlich abgelaufen. Versuche, das Spiel zu starten, um dich erneut anzumelden, oder klicke hier, um dich über Skyve anzumelden.",
+  "ParadoxLoginFailedEmpty": "Deine Sitzung ist wahrscheinlich abgelaufen. Versuche, das Spiel zu starten, um Dich erneut anzumelden, oder klicke hier, um Dich über Skyve anzumelden.",
   "DownloadPending": "Herunterladen noch ausstehend...",
   "DownloadComplete": "Herunterladen abgeschlossen",
   "DownloadStarted": "Herunterladen gestartet...",
@@ -94,12 +94,12 @@
   "ChangeLocation": "Inhaltsort ändern",
   "ResetLocation": "Standort zurücksetzen",
   "JunctionRestart": "Skyve und Cities: Skylines II wird während dieses Prozesses geschlossen.\n\nSkyve wird automatisch neu starten, sobald es beendet ist.",
-  "PlaysetAlreadyImported": "Dieses Spielset ist bei dir bereits vorhanden.",
+  "PlaysetAlreadyImported": "Dieses Spielset ist bei Dir bereits vorhanden.",
   "JunctionInvalidFolder": "Der ausgewählte Ordner ist kein gültiges Ziel. Bitte wähle einen anderen.",
   "CouldNotRetrieveMods": "Konnte Mod-Daten nicht abrufen",
   "NewGameUpdate": "Neues Cities: Skylines II Update",
-  "NewGameUpdateInfo": "Patch {0} ist jetzt verfügbar.\nBitte überprüfe deinen Kompatibilitätsbericht, bevor du dein Spiel startest.",
-  "PdxSyncInfo": "Der PDX-Synchronisierungsprozess verwaltet das Herunterladen und Aktualisieren deiner Mods sowie das Synchronisieren der Einstellungen und Spielsets zwischen deinem lokalen Computer und den PDX Mods-Diensten.",
+  "NewGameUpdateInfo": "Patch {0} ist jetzt verfügbar.\nBitte überprüfe Deinen Kompatibilitätsbericht, bevor Du Dein Spiel startest.",
+  "PdxSyncInfo": "Der PDX-Synchronisierungsprozess verwaltet das Herunterladen und Aktualisieren Deiner Mods sowie das Synchronisieren der Einstellungen und Spielsets zwischen Deinem lokalen Computer und den PDX Mods-Diensten.",
   "SyncOngoing": "Synchronisation läuft",
   "PdxSync": "PDX Mods Synchronisation",
   "RunSync": "Synchronisierung starten",
@@ -115,7 +115,7 @@
   "UsedOutOfSpace": "von insgesamt {0} auf Laufwerk {1}",
   "LowSpaceCreateJunction": {
     "Zero": "Deine Festplatte hat kaum noch freien Speicherplatz. Schaffe entweder mehr Platz durch das Löschen nicht benötigter Dateien, oder nutze eine andere Festplatte.",
-    "One": "Deine Festplatte hat kaum noch freien Speicherplatz. In den Optionen kannst du einstellen, wo das Spiel seine Dateien speichert."
+    "One": "Deine Festplatte hat kaum noch freien Speicherplatz. In den Optionen kannst Du einstellen, wo das Spiel seine Dateien speichert."
   },
   "ModsYouAreAddingRequireDependencies": {
     "One": "'{1}' hat Abhängigkeiten",
@@ -123,14 +123,14 @@
   },
   "AddingDependencies": {
     "One": "\"{1}\" wird für die Mod(s) benötigt.\n\nMöchtest Du \"{1}\" dem aktuellen Spielset hinzufügen?",
-    "Plural": "Die Mod(s), die du hinzufügen möchtest haben {0} Abhängigkeiten: {1}\n\nMöchtest du diese dem aktuellen Spielset hinzufügen?"
+    "Plural": "Die Mod(s), die Du hinzufügen möchtest haben {0} Abhängigkeiten: {1}\n\nMöchtest Du diese dem aktuellen Spielset hinzufügen?"
   },
   "Dependency_Automatic": "Abhängigkeiten automatisch hinzufügen",
   "Dependency_Ask": "Immer nachfragen",
   "Dependency_None": "Nichts tun",
   "DependencyResolution": "Handhabung von Abhängigkeiten",
   "DependencyResolution_Tip": "Was soll passieren, wenn Du eine Mod hinzufügen, die von anderen, nicht installierten Mods, abhängt?",
-  "SyncOngoingLaunchGame": "Skyve synchronisiert deine Mods noch. Möchtest du das Spiel starten, sobald alle Mods bereit sind?\nWähle \"Nein\", um das Spiel sofort zu starten.",
+  "SyncOngoingLaunchGame": "Skyve synchronisiert Deine Mods noch. Möchtest Du das Spiel starten, sobald alle Mods bereit sind?\nWähle \"Nein\", um das Spiel sofort zu starten.",
   "StartingWithNoPlayset": "Du bist dabei das Spiel ohne aktiven Spielset zu starten.\nDas bedeutet, dass keine Mods im Spiel aktiviert werden.",
   "SyncBeforeLaunching": "Mods synchronisieren, bevor das Spiel gestartet wird",
   "SyncBeforeLaunching_Tip": "Führt vor dem Start eine Mod-Sync aus, um sicherzustellen, dass alle Mods auf dem neuesten Stand sind.",
@@ -145,7 +145,7 @@
   "UnreadComment": "Neue Kommentare zu '{0}'",
   "SafeMode": "Abgesicherter Modus",
   "LaunchInSafeMode": "Im abgesicherten Modus starten",
-  "SafeModeInfo": "Starte das Spiel im abgesicherten Modus, um Probleme mit Abstürzen zu identifizieren.\n\nEs ist schwer, die Quelle eines Absturzes zu identifizieren und manchmal ist es unmögliche einen Speicherstand wiederherzustellen.\nDer abgesicherte Modus ermöglicht es dem Spiel Abstürze zu vermeiden, was es dir ermöglicht, einen Speicherstand wiederherzustellen. Ebenfalls protokolliert er Fehler, die vom technische Support analysiert werden sollten.",
+  "SafeModeInfo": "Starte das Spiel im abgesicherten Modus, um Probleme mit Abstürzen zu identifizieren.\n\nEs ist schwer, die Quelle eines Absturzes zu identifizieren und manchmal ist es unmögliche einen Speicherstand wiederherzustellen.\nDer abgesicherte Modus ermöglicht es dem Spiel Abstürze zu vermeiden, was es Dir ermöglicht, einen Speicherstand wiederherzustellen. Ebenfalls protokolliert er Fehler, die vom technische Support analysiert werden sollten.",
   "SearchTime": "Zeitraum",
   "SearchTime_AllTime": "Allzeit",
   "SearchTime_Day": "24 Stunden",
@@ -197,7 +197,7 @@
     "One": "Beschädigte Einstellungs-Datei erkannt",
     "Plural": "{0} Beschädigte Einstellungs-Dateien erkannt"
   },
-  "CorruptedSettingsFilesBackupAvailable": "Skyve hat verfügbare Sicherungen gefunden, um deine Einstellungen in ihrem vorherigen Zustand wiederherzustellen.\n\nKlicke hier, um sie jetzt wiederherzustellen.",
+  "CorruptedSettingsFilesBackupAvailable": "Skyve hat verfügbare Sicherungen gefunden, um Deine Einstellungen in ihrem vorherigen Zustand wiederherzustellen.\n\nKlicke hier, um sie jetzt wiederherzustellen.",
   "CorruptedSettingsFilesNoBackup": "Es sind keine Sicherungen verfügbar, um Ihre Einstellungen wiederherzustellen. Richten Sie Ihre Einstellungs-Sicherungen ein, um Ihre Einstellungen in Zukunft zu sichern.\n\nKlicken Sie hier, um die beschädigten Dateien zu löschen.",
   "RecentBackups": "Neueste Sicherungen",
   "DisableLogCleanup": "Aufräumen der Logs beim Starten des Spiels deaktivieren",
@@ -206,7 +206,7 @@
   "SyncLocal": "Lokale Daten verwenden",
   "SyncCloudInfo": "Lädt alle fehlenden Daten von Paradox Mods herunter und löst Konflikte, durch Verwendung der Cloud-Daten anstelle der lokalen Daten.",
   "SyncLocalInfo": "Lädt alle lokalen Daten hoch auf Paradox Mods, alle in der Cloud liegenden Spielsets, welche nicht lokal vorliegen, werden heruntergeladen.",
-  "SyncConflictInfo": "Einige Konflikte wurden zwischen deinen lokalen Spielsets und den Cloud-Daten auf Paradox Mods entdeckt. Du musst eine Konfliktlösung unten auswählen, bevor du weitere Updates für deine Mods erhalten kannst.",
+  "SyncConflictInfo": "Einige Konflikte wurden zwischen Deinen lokalen Spielsets und den Cloud-Daten auf Paradox Mods entdeckt. Du musst eine Konfliktlösung unten auswählen, bevor Du weitere Updates für Deine Mods erhalten kannst.",
   "SyncConflictTitle": "Synchronisationskonflikt erkannt",
   "SyncAffectedPlaysets": {
     "One": "Betroffenes Spielset: {1}",
@@ -215,13 +215,13 @@
   "TitleDesc": "Titel & Beschreibungen",
   "EditModInfo": "Diese Mod-Informationen bearbeiten",
   "SkyveVersionBlockedTitle": "Update erforderlich für Skyve",
-  "SkyveVersionBlockedDescription": "Deine aktuelle Skyve Version ist veraltet und funktioniert möglicherweise nicht mit den neuesten Mod-Updates.\n\nFolge den Update-Anweisungen, um zu erfahren, wie du upgraden kannst und zurück zum Erstellen und Spielen ohne Probleme kommst.",
+  "SkyveVersionBlockedDescription": "Deine aktuelle Skyve Version ist veraltet und funktioniert möglicherweise nicht mit den neuesten Mod-Updates.\n\nFolge den Update-Anweisungen, um zu erfahren, wie Du upgraden kannst und zurück zum Erstellen und Spielen ohne Probleme kommst.",
   "ViewUpdateInstructions": "Update-Anweisungen anzeigen",
   "VerifyIntegrity": "Verifiziere die Integrität der Mod Dateien",
-  "VerifyIntegrityInfo": "Fehlen dir Mods oder treten unerwartete Ladeprobleme auf? Du kannst die Integrität deiner Mods überprüfen, um sicherzustellen, dass alle Dateien vollständig vorhanden sind.",
+  "VerifyIntegrityInfo": "Fehlen Dir Mods oder treten unerwartete Ladeprobleme auf? Du kannst die Integrität Deiner Mods überprüfen, um sicherzustellen, dass alle Dateien vollständig vorhanden sind.",
   "ConfigLockedTitle": "Konfiguration gesperrt",
-  "ConfigLockedInfo": "Die Konfiguration wird von einem anderen Client verwendet, du verwaltest derzeit Mods auf einem anderen Client: \"{0}\".",
-  "ConfigLockedRetry": "Wenn du noch Änderungen vornimmst, speichere und schließe den Client {0} und klicke dann auf Erneut versuchen.",
-  "ConfigLockedTakeLock": "Andernfalls kannst du dies ignorieren und die Mods hier weiter verwalten. Dadurch werden alle in {0} vorgenommenen Änderungen überschrieben.",
+  "ConfigLockedInfo": "Die Konfiguration wird von einem anderen Client verwendet, Du verwaltest derzeit Mods auf einem anderen Client: \"{0}\".",
+  "ConfigLockedRetry": "Wenn Du noch Änderungen vornimmst, speichere und schließe den Client {0} und klicke dann auf Erneut versuchen.",
+  "ConfigLockedTakeLock": "Andernfalls kannst Du dies ignorieren und die Mods hier weiter verwalten. Dadurch werden alle in {0} vorgenommenen Änderungen überschrieben.",
   "ConfigLockedTakeLockButton": "Ignorieren & fortfahren"
 }
