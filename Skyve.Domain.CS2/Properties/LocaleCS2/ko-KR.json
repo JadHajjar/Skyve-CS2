@@ -1,5 +1,5 @@
 {
-  "StartCities": "Cities Skylines 2 실행",
+  "StartCities": "시티즈: 스카이라인 II 실행",
   "StopCities": "Cities Skylines 2 종료",
   "NoWorkshop": "창작마당 패키지 비활성화",
   "ExcludeAll": "현재 PLAYSET에서 모든 항목 제거",
@@ -72,8 +72,8 @@
   "CantRunAppFromHere": "이 폴더에서는 Skyve를 실행할 수 없습니다.\n\n프로그램 목록의 앱이나 모드 폴더의 Skyve 설치 파일을 실행하세요.",
   "UpdateAvailable": "새 업데이트가 있습니다",
   "UpdateAvailableInfo": "클릭하여 Skyve 업데이트",
-  "VoteMod": "이 모드를 추천합니다",
-  "UnVoteMod": "이 모드를 추천하지 않습니다",
+  "VoteMod": "이 모드 좋아요하기",
+  "UnVoteMod": "이 모드 좋아요 취소하기",
   "LogLevel": "로그 수준",
   "ParadoxAccount": "Paradox 계정",
   "LoggingIn": "로그인 중...",
